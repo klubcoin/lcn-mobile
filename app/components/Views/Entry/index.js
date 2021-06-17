@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
-import { Animated, Dimensions, StyleSheet, View, Text } from 'react-native';
+import { Animated, Dimensions, StyleSheet, View, Text, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Engine from '../../../core/Engine';
 import LottieView from 'lottie-react-native';
@@ -211,8 +211,25 @@ const Entry = props => {
 
 	return (
 		<View style={styles.main}>
-			<Animated.View style={[styles.logoWrapper, { opacity }]}>
-				<Text>Welcome</Text>
+			<Animated.View
+				style={{
+					...styles.logoWrapper,
+					opacity,
+					alignItems: 'center',
+					justifyContent: 'center'
+				}}>
+				<Image
+					source={require('../../../images/logo.png')}
+					style={{
+						width: 100,
+						height: 100
+					}}
+				/>
+				<Text style={{
+					fontSize: 14,
+					fontWeight: 'bold',
+					textAlign: 'center'
+				}}>LIQUICHAIN</Text>
 			</Animated.View>
 		</View>
 	);

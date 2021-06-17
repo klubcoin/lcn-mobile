@@ -191,7 +191,7 @@ class LockScreen extends PureComponent {
 		return (
 			<View style={baseStyles.flexGrow}>
 				<Animated.View style={[styles.logoWrapper, { opacity: this.opacity }]}>
-					<View style={styles.fox}>{this.renderAnimations()}</View>
+					<View style={styles.fox}>{/*this.renderAnimations()*/}</View>
 				</Animated.View>
 			</View>
 		);
