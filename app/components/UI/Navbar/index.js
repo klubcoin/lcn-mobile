@@ -824,6 +824,36 @@ export function getPaymentSelectorMethodNavbar(navigation) {
 	};
 }
 
+export function getPayPalNavbar(navigation) {
+	const rightAction = navigation.dismiss;
+
+	return {
+		headerTitle: <Text style={styles.centeredTitle}>PayPal Checkout</Text>,
+		headerLeft: <View />,
+		headerRight: (
+			// eslint-disable-next-line react/jsx-no-bind
+			<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
+				<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+			</TouchableOpacity>
+		)
+	};
+}
+
+export function getPurchaseMethodNavbar(navigation) {
+	const rightAction = navigation.dismiss;
+
+	return {
+		headerTitle: <Text style={styles.centeredTitle}>{strings('fiat_on_ramp.purchase_method')}</Text>,
+		headerLeft: <View />,
+		headerRight: (
+			// eslint-disable-next-line react/jsx-no-bind
+			<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
+				<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+			</TouchableOpacity>
+		)
+	};
+}
+
 export function getPaymentMethodApplePayNavbar(navigation) {
 	return {
 		title: strings('fiat_on_ramp.amount_to_buy'),

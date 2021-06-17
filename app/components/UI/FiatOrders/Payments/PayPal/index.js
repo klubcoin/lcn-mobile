@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -10,6 +10,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { getPayPalNavbar } from '../../../../UI/Navbar';
+import ScreenView from '../../components/ScreenView';
+import Title from '../../components/Title';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import API from 'services/api'
+import Routes from 'common/routes'
 const Colors = {
   primary: '#370e75',
   secondary: '#eee',
@@ -21,92 +28,66 @@ const Colors = {
   white: '#fff',
   gray: '#555'
 }
-const height = Math.round(Dimensions.get('window').height)
-export default class PayPal extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      from: {
-        currency: 'EUR',
-        amount: 0, 
-      },
-      to: {
-        currency: 'LCN',
-        amount: 0
-      },
-      currencies: [],
-      selected: null,
-      errorMessage: null,
-      isLoading: false
-    }
-  }
+const height = Math.round(Dimensions.get('window').height);
+function PayPal({selectedAddress, ...props}){
 
+ const [from, setFrom] = useState({
+  currency: 'EUR',
+  amount: 0
+ });
+ const [to, setTo] = useState({
+  currency: 'LCN',
+  amount: 0
+ });
+ const [selected, setSelected] = useState(null);
+ const [currencies, setCurrencies] = useState([])
+ const [errorMessage, setErrorMessage] = useState(null)
+  
 
-  getFeatherIcon(name, size) {
-		return <FeatherIcon name={name} size={size || 24} color={colors.grey400} />;
-  }
-
-  componentDidMount(){
-    const { network } = this.props.state;
-    if(!network){
-      return
-    }
-    this.setState({
-      isLoading: true
-    })
-    API.getRequest(network.route + Routes.getConversions, response => {
-      if(response.data.length > 0){
-        this.setState({
-          currencies: response.data,
-          isLoading: false
-        })
-        this.manageCurrencies()
-      }else{
-        this.setState({
-          currencies: [],
-          isLoading: false
-        })
-      }
-    }, error => {
-      console.log(error)
-      this.setState({
-        isLoading: false
+  useEffect(() => {
+    if(currencies.length == 0){
+      API.getRequest(Routes.getConversions, response => {
+        if(response.data.length > 0){
+          setCurrencies(response.data)
+          manageCurrencies()
+        }else{
+          setCurrencies([])
+        }
+      }, error => {
+        console.log(error)
       })
-    })
-  }
+    }
+  });
 
-  manageCurrencies(){
-    const { currencies, from, to } = this.state;
+
+  manageCurrencies = () => {
     for (var i = 0; i < currencies.length; i++) {
       let item = currencies[i]
       if(item.from.currency == from.currency && item.to.currency == to.currency){
-        this.setState({
-          selected: item
-        })
+        setSelected(item)
         break
       }
     }
   }
 
-  payWithPayPal(){
+  getFeatherIcon = (name, size) => {
+    return (<FeatherIcon name={name} size={size || 24} color={Colors.gray} />)
+  }
+
+  payWithPayPal = () => {
     const { from, selected } = this.state;
     if(from == null || selected == null){
-      this.setState({
-        errorMessage: 'Fields are required'
-      })
+      setErrorMessage('Fields are required')
       return
     }
     const { network } = this.state
     if(network == null){
-      this.setState({
-        errorMessage: 'Invalid network or no network available'
-      })
+      setErrorMessage('Invalid network or no network available')
       return
     }
   }
 
-  stepper(){
-    const { from, selected } = this.state;
+  stepper = () => {
     return(
       <View style={{
         borderLeftColor: Colors.lightGray,
@@ -130,7 +111,7 @@ export default class PayPal extends React.Component{
               borderRadius: 12,
               alignItems: 'center',
             }}>
-              {this.getFeatherIcon('menu', 24)}
+              {getFeatherIcon('menu', 24)}
               <Text>PayPal</Text>
             </View>
           </TouchableOpacity>
@@ -175,7 +156,9 @@ export default class PayPal extends React.Component{
       </View>
     )
   }
-  amount(){
+
+
+  amount = () => {
     return(
       <View style={{
         borderColor: Colors.lightGray,
@@ -199,14 +182,12 @@ export default class PayPal extends React.Component{
             style={{
               fontSize: 24
             }}
-            value={this.state.from.amount}
+            value={from.amount}
             keyboardType={'numeric'}
             onChangeText={(input) => {
-              this.setState({
-                from: {
-                  ...this.state.from,
-                  amount: input
-                }
+              setFrom({
+                ...from,
+                amount: input
               })
             }}
             />
@@ -228,9 +209,7 @@ export default class PayPal extends React.Component{
       </View>
     )
   }
-  receive(){
-    const { network } = this.props.state;
-    const { from, selected } = this.state;
+  receive = () => {
     return(
       <View style={{
         borderColor: Colors.lightGray,
@@ -246,7 +225,7 @@ export default class PayPal extends React.Component{
         }}>
           <Text style={{
             color: Colors.gray
-          }}>{Helper.APP_NAME} receive(estimate)</Text>
+          }}>receive(estimate)</Text>
 
           <Text style={{
             fontSize: 24,
@@ -274,7 +253,7 @@ export default class PayPal extends React.Component{
             }}/>*/}
             <Text>LCN</Text>
           </View>
-          {
+          {/*
             network && (
               <Text style={{
                 width: '100%',
@@ -282,60 +261,96 @@ export default class PayPal extends React.Component{
                 fontSize: 11
               }}>{network.name}</Text>
             )
-          }
+          */}
           
         </View>
       </View>
     )
   }
-  render(){
-    const { selected } = this.state;
-    return(
-      <SafeAreaView style={{
-        flex: 1
-      }}>
-        <ScrollView style={{
-        }}
-        showsVerticalScrollIndicator={false}
-        >
-          <View style={{
-            paddingLeft: 20,
-            paddingRight: 20
-          }}>
 
-            <Text style={{
-              width: '100%',
-              paddingLeft: 20,
-              paddingRight: 20,
-              paddingTop: 20,
-              textAlign: 'center'
-            }}>Buy Cryto to your wallet</Text>
-
-
-            {this.amount()}
-            <View style={{
-              marginLeft: 40
-            }}>
-            {this.stepper()}
-            </View>
-            {
-              selected && (
-                this.receive()
-              )
-            }
-            
-
-          </View>
-        </ScrollView>
+  console.log(selected)
+  return(
+    <SafeAreaView style={{
+      flex: 1
+    }}>
+      <ScrollView style={{
+      }}
+      showsVerticalScrollIndicator={false}
+      >
         <View style={{
-          position: 'absolute',
-          bottom: 10,
-          width: '100%',
           paddingLeft: 20,
           paddingRight: 20
         }}>
+
+          <Text style={{
+            width: '100%',
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 20,
+            textAlign: 'center'
+          }}>Buy Cryto to your wallet</Text>
+
+
+          {amount()}
+          <View style={{
+            marginLeft: 40
+          }}>
+          {stepper()}
+          </View>
+          {
+            selected && (
+              receive()
+            )
+          }
+          
+
         </View>
-      </SafeAreaView>
-    )
-  }
+      </ScrollView>
+      {
+        (selected && from && from.amount > 0) && (
+          <View style={{
+            position: 'absolute',
+            bottom: 10,
+            width: '100%',
+            paddingLeft: 20,
+            paddingRight: 20
+          }}>
+            <TouchableOpacity
+              style={{
+                borderRadius: 25,
+                height: 50,
+                backgroundColor: Colors.primary,
+                borderColor: Colors.primary,
+                borderWidth: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 25,
+                width: '100%'
+              }}
+
+              onPress={() => {
+                props.navigation.navigate('BuyWithPayPal')
+              }}
+              >
+              <Text style={{
+                color: Colors.white,
+              }}>Proceed Checkout</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+    </SafeAreaView>
+  )
 }
+
+PayPal.propTypes = {
+  selectedAddress: PropTypes.string.isRequired
+};
+
+PayPal.navigationOptions = ({ navigation }) => getPayPalNavbar(navigation);
+
+const mapStateToProps = state => ({
+  selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
+});
+
+export default connect(mapStateToProps)(PayPal);
