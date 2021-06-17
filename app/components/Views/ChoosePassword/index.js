@@ -332,7 +332,6 @@ class ChoosePassword extends PureComponent {
 			await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
 			this.props.passwordSet();
 			this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
-
 			this.setState({ loading: false });
 			this.props.navigation.navigate('AccountBackupStep1');
 		} catch (error) {
@@ -395,6 +394,7 @@ class ChoosePassword extends PureComponent {
 		const selectedAddress = this.props.selectedAddress;
 		let preferencesControllerState = PreferencesController.state;
 
+		
 		// Create previous accounts again
 		for (let i = 0; i < existingAccountCount - 1; i++) {
 			await KeyringController.addNewAccount();

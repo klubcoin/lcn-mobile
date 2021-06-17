@@ -66,7 +66,7 @@
 		"title2": "Manage your digital assets",
 		"title3": "Your gateway to web3",
 		"subtitle1": "Trusted by millions, Liquichain is a secure wallet making the world of web3 accessible to all.",
-		"subtitle2": "Store, spend and send digital assets like tokens, ethereum, unique collectibles.",
+		"subtitle2": "Store, spend and send digital assets like tokens, liquichain, unique collectibles.",
 		"subtitle3": "Login with Liquichain and make transactions to invest, earn, play games, sell and more!",
 		"get_started": "Get started"
 	},
@@ -80,8 +80,8 @@
 		},
 		"step1": {
 			"title": "Welcome to your new wallet!",
-			"content1": "To use the blockchain, you need a wallet! Some actions cost Ether (ETH).",
-			"content2": "We'll show you how to buy ETH, or you can request some from a friend."
+			"content1": "To use the blockchain, you need a wallet! Some actions cost LCN.",
+			"content2": "We'll show you how to buy LCN, or you can request some from a friend."
 		},
 		"step2": {
 			"title": "Your Accounts",
@@ -489,7 +489,7 @@
 		"conversion_title": "Currency conversion",
 		"conversion_desc": "Display fiat values in using a specific currency throughout the application.",
 		"primary_currency_title": "Primary Currency",
-		"primary_currency_desc": "Select Native to prioritize displaying values in the native currency of the chain (e.g. ETH). Select Fiat to prioritize displaying values in your selected fiat currency.",
+		"primary_currency_desc": "Select Native to prioritize displaying values in the native currency of the chain (e.g. LCN). Select Fiat to prioritize displaying values in your selected fiat currency.",
 		"primary_currency_text_first": "Native",
 		"primary_currency_text_second": "Fiat",
 		"language_desc": "Translate the application to a different supported language.",
@@ -504,7 +504,7 @@
 		"metametrics_title": "Participate in MetaMetrics",
 		"metametrics_description": "Participate in MetaMetrics to help us make Liquichain better.",
 		"third_party_title": "Get incoming transactions",
-		"third_party_description": "Third party APIs (Etherscan) are used to show your incoming transactions in the history. Turn off if you don’t want us to pull data from those services.",
+		"third_party_description": "Third party APIs (Liquichain) are used to show your incoming transactions in the history. Turn off if you don’t want us to pull data from those services.",
 		"metametrics_opt_out": "MetaMetrics Opt-out",
 		"metrametrics_restart_required": "You need to restart the app for the changes to take effect.",
 		"create_password": "Create Password",
@@ -581,7 +581,7 @@
 	"account_details": {
 		"title": "Account Details",
 		"share_account": "Share",
-		"view_account": "View account on Etherscan",
+		"view_account": "View account on Liquichain",
 		"show_private_key": "Show private key",
 		"account_copied_to_clipboard": "Public address copied to clipboard",
 		"share_public_key": "Sharing my public key: "
@@ -634,8 +634,8 @@
 		"review_hex_data": "Hex data",
 		"insufficient": "Insufficient funds",
 		"insufficient_amount": "You need {{amount}} more {{tokenSymbol}} to complete this transaction.",
-		"buy_more_eth": "Buy more ETH",
-		"get_ether": "Get Ether for the {{networkName}} network.",
+		"buy_more_eth": "Buy more LCN",
+		"get_ether": "Get LCN for the {{networkName}} network.",
 		"insufficient_tokens": "Insufficient {{token}}",
 		"invalid_address": "Invalid address",
 		"invalid_amount": "Invalid amount",
@@ -702,7 +702,7 @@
 		"save": "Save",
 		"warning_gas_limit": "Gas limit must be greater than 20999 and less than 7920027",
 		"warning_gas_limit_estimated": "Estimated gas limit is {{gas}}, use it as minimum value",
-		"cost_explanation": "The network fee covers the cost of processing your transaction on the Ethereum network. Liquichain does not profit from this fee. The higher the fee the better chances of your transaction getting processed."
+		"cost_explanation": "The network fee covers the cost of processing your transaction on the Liquichian network. Liquichain does not profit from this fee. The higher the fee the better chances of your transaction getting processed."
 	},
 	"spend_limit_edition": {
 		"save": "Save",
@@ -804,14 +804,14 @@
 		"tx_review_transfer_from": "Transfer From",
 		"tx_review_unknown": "Unknown Method",
 		"tx_review_approve": "Approve",
-		"sent_ether": "Sent Ether",
-		"self_sent_ether": "Sent Yourself Ether",
-		"received_ether": "Received Ether",
+		"sent_ether": "Sent LCN",
+		"self_sent_ether": "Sent Yourself LCN",
+		"received_ether": "Received LCN",
 		"sent_dai": "Sent DAI",
 		"self_sent_dai": "Sent Yourself DAI",
 		"received_dai": "Received DAI",
 		"sent_tokens": "Sent Tokens",
-		"ether": "Ether",
+		"ether": "LCN",
 		"sent_unit": "Sent {{unit}}",
 		"self_sent_unit": "Sent Yourself {{unit}}",
 		"received_unit": "Received {{unit}}",
@@ -834,7 +834,7 @@
 		"gas_price": "Gas Price (GWEI)",
 		"total": "Total",
 		"view_on": "VIEW ON",
-		"view_on_etherscan": "View on Etherscan",
+		"view_on_etherscan": "View on Liquichain",
 		"hash_copied_to_clipboard": "Transaction hash copied to clipboard",
 		"address_copied_to_clipboard": "Address copied to clipboard",
 		"transaction_error": "Transaction error",
@@ -876,7 +876,7 @@
 	"transaction_submitted": {
 		"title": "Transaction Submitted",
 		"your_tx_hash_is": "Your transaction hash is:",
-		"view_on_etherscan": "View on Etherscan"
+		"view_on_etherscan": "View on Liquichain"
 	},
 	"sync_with_extension": {
 		"title": "Sync data from Extension",
@@ -941,7 +941,8 @@
 		"balance": "Balance"
 	},
 	"unit": {
-		"eth": "ETH",
+		"lcn": "LCN",
+		"eth": "LCN",
 		"sai": "SAI",
 		"dai": "DAI",
 		"negative": "-",
@@ -954,7 +955,7 @@
 		"hour": "hr",
 		"minute": "min",
 		"second": "sec",
-		"empty_data": "0x"
+		"empty_data": "0x",
 	},
 	"biometrics": {
 		"enable_touchid": "Sign in with Touch ID?",
@@ -1156,13 +1157,13 @@
 		"cancel": "Cancel"
 	},
 	"phishing": {
-		"ethereum_phishing_detection": "Ethereum Phishing Detection",
-		"ethereum_phishing_detector": "Ethereum Phishing Detector",
+		"ethereum_phishing_detection": "Liquichain Phishing Detection",
+		"ethereum_phishing_detector": "Liquichain Phishing Detector",
 		"intro": " is currently on the Liquichain domain warning list. This means that based on information available to us, Liquichain believes this domain could currently compromise your security and, as an added safety feature, Liquichain has restricted access to the site. To override this, please read the rest of this warning for instructions on how to continue at your own risk.",
 		"reasons": "There are many reasons sites can appear on our warning list, and our warning list compiles from other widely used industry lists. Such reasons can include known fraud or security risks, such as domains that test positive on the ",
 		"list_content": "Domains on these warning lists may include outright malicious websites and legitimate websites that have been compromised by a malicious actor.",
 		"to_read_more": "To read more about this site ",
-		"review_on_etherscam": "please review the domain on Etherscam.",
+		"review_on_etherscam": "please review the domain on Liquichain.",
 		"warning": "Note that this warning list is compiled on a voluntary basis. This list may be inaccurate or incomplete. Just because a domain does not appear on this list is not an implicit guarantee of that domain's safety. As always, your transactions are your own responsibility. If you wish to interact with any domain on our warning list, you can do so by ",
 		"continue_on_your_own": "continuing at your own risk.",
 		"file_an_issue_intro": "If you think this domain is incorrectly flagged or if a blocked legitimate website has resolved its security issues, ",
@@ -1193,7 +1194,7 @@
 		"received_message": "Tap to view this transaction",
 		"received_payment_message": "You received {{amount}} DAI",
 		"prompt_title": "Enable Push Notifications",
-		"prompt_desc": "Enable notifications so Liquichain can let you know when you've received ETH or when your transactions have been confirmed.",
+		"prompt_desc": "Enable notifications so Liquichain can let you know when you've received LCN or when your transactions have been confirmed.",
 		"prompt_ok": "Yes",
 		"prompt_cancel": "No, thanks",
 		"wc_connected_title": "Connected to {{title}}",
@@ -1293,7 +1294,7 @@
 		"depositing_to": "Depositing to:"
 	},
 	"fiat_on_ramp": {
-		"buy_eth": "Buy ETH",
+		"buy_eth": "Buy LCN",
 		"purchased_currency": "Purchased {{currency}}",
 		"network_not_supported": "Current network not supported",
 		"switch_network": "Please switch to Mainnet",
@@ -1320,7 +1321,7 @@
 		"purchase_method_modal_close": "Close",
 		"modal_transak_support": "Transak Support",
 		"modal_wyre_support": "Wyre Support",
-		"transak_cta": "Buy ETH with Transak",
+		"transak_cta": "Buy LCN with Transak",
 		"transak_modal_text": "Exact payment methods and fees vary depending on location. Supported countries are:",
 		"apple_pay": "Apple Pay",
 		"via": "via",
@@ -1379,7 +1380,7 @@
 		"feature_off_title": "Temporarily unavailable",
 		"feature_off_body": "Liquichain Swaps is undergoing maintenance. Please check back later.",
 		"wrong_network_title": "Swaps not available",
-		"wrong_network_body": "You’re only able to swap tokens on the Ethereum Main Network.",
+		"wrong_network_body": "You’re only able to swap tokens on the Liquichain Main Network.",
 		"unallowed_asset_title": "Can’t swap this token",
 		"unallowed_asset_body": "Some tokens with unique mechanics are currently not supported for swapping.",
 		"convert_from": "Convert from",

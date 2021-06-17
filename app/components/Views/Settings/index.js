@@ -92,7 +92,7 @@ class Settings extends PureComponent {
 					onPress={this.onPressAdvanced}
 					title={strings('app_settings.advanced_title')}
 				/>
-				<SettingsDrawer
+				{/*<SettingsDrawer
 					description={strings('app_settings.contacts_desc')}
 					onPress={this.onPressContacts}
 					title={strings('app_settings.contacts_title')}
@@ -108,6 +108,7 @@ class Settings extends PureComponent {
 					onPress={this.onPressExperimental}
 				/>
 				<SettingsDrawer title={strings('app_settings.info_title')} onPress={this.onPressInfo} />
+				*/}
 			</ScrollView>
 		);
 	};

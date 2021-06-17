@@ -49,6 +49,8 @@ import TransakWebView from '../../UI/FiatOrders/TransakWebView';
 import ActivityView from '../../Views/ActivityView';
 import SwapsAmountView from '../../UI/Swaps';
 import SwapsQuotesView from '../../UI/Swaps/QuotesView';
+import PayPal from '../../Views/Payments/PayPal/drawer';
+import PurchaseMethods from '../../Views/Payments/Purchase/drawer'
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -115,6 +117,12 @@ export default createStackNavigator(
 					mode: 'modal'
 				}
 			)
+		},
+		PurchaseMethods: {
+			screen: PurchaseMethods
+		},
+		PayPal: {
+			screen: PayPal
 		},
 		SettingsView: {
 			screen: createStackNavigator({
@@ -263,7 +271,7 @@ export default createStackNavigator(
 			screen: createStackNavigator({
 				PaymentMethodSelector: { screen: PaymentMethodSelector },
 				PaymentMethodApplePay: { screen: PaymentMethodApplePay },
-				TransakFlow: { screen: TransakWebView }
+				TransakFlow: { screen: TransakWebView },
 			})
 		},
 		Swaps: {
