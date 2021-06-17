@@ -1,0 +1,54 @@
+[ {
+  "active" : true,
+  "code" : "LIQUICHAIN_API",
+  "description" : "Liquichain json-rpc API",
+  "license" : "GPL",
+  "currentVersion" : "0.2",
+  "transient" : true,
+  "inDraft" : true,
+  "codeOnly" : false,
+  "moduleItems" : [ {
+    "dtoClassName" : "org.meveo.api.dto.technicalservice.endpoint.EndpointDto",
+    "dtoData" : {
+      "code" : "jsonrpc",
+      "description" : "eth json rpc api",
+      "secured" : false,
+      "checkPathParams" : false,
+      "serviceCode" : "io.liquichain.api.rpc.EthApiScript",
+      "synchronous" : true,
+      "method" : "POST",
+      "parameterMappings" : [ ],
+      "pathParameters" : [ ],
+      "roles" : [ ],
+      "returnedVariableName" : "result",
+      "serializeResult" : false
+    }
+  }, {
+    "dtoClassName" : "org.meveo.api.dto.ScriptInstanceDto",
+    "dtoData" : {
+      "active" : true,
+      "code" : "io.liquichain.api.rpc.EthApiScript",
+      "description" : "eth rpc api",
+      "inputs" : [ ],
+      "outputs" : [ {
+        "name" : "result",
+        "type" : "String",
+        "description" : null
+      } ],
+      "generateOutputs" : false,
+      "type" : "JAVA",
+      "transactionType" : "SAME",
+      "script" : "package io.liquichain.api.rpc;\r\n\r\nimport java.util.Map;\r\n\r\nimport org.meveo.service.script.Script;\r\nimport org.meveo.admin.exception.BusinessException;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport java.math.BigInteger;\r\n\r\npublic class EthApiScript extends Script {\r\n    private static final Logger log = LoggerFactory.getLogger(EthApiScript.class);\r\n  \r\n    private String result;\r\n    private int networkId=7;\r\n    private int blockHeight = 10;\r\n    private BigInteger balance = new BigInteger(\"999965000000000000000\");\r\n    private String exampleBlock=\"{\"\r\n      +\"\\\"difficulty\\\":\\\"0x5\\\",\"\r\n      +\"\\\"extraData\\\":\\\"0xd58301090083626f7286676f312e3133856c696e75780000000000000000000021c9effaf6549e725463c7877ddebe9a2916e03228624e4bfd1e3f811da792772b54d9e4eb793c54afb4a29f014846736755043e4778999046d0577c6e57e72100\\\",\"\r\n      +\"\\\"gasLimit\\\":\\\"0xe984c2\\\",\"\r\n      +\"\\\"gasUsed\\\":\\\"0x0\\\",\"\r\n      +\"\\\"hash\\\":\\\"0xaa14340feb15e26bc354bb839b2aa41cc7984676249c155ac5e4d281a8d08809\\\",\"\r\n      +\"\\\"logsBloom\\\":\\\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\\\",\"\r\n      +\"\\\"miner\\\":\\\"0x0000000000000000000000000000000000000000\\\",\"\r\n      +\"\\\"mixHash\\\":\\\"0x0000000000000000000000000000000000000000000000000000000000000000\\\",\"\r\n      +\"\\\"nonce\\\":\\\"0x0000000000000000\\\",\"\r\n      +\"\\\"number\\\":\\\"0x1b4\\\",\"\r\n      +\"\\\"parentHash\\\":\\\"0xc8ccb81f484a428a3a1669d611f55f880b362b612f726711947d98f5bc5af573\\\",\"\r\n      +\"\\\"receiptsRoot\\\":\\\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\\\",\"\r\n      +\"\\\"sha3Uncles\\\":\\\"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347\\\",\"\r\n      +\"\\\"size\\\":\\\"0x260\\\",\"\r\n      +\"\\\"stateRoot\\\":\\\"0xffcb834d62706995e9e7bf10cc9a9e42a82fea998d59b3a5cfad8975dbfe3f87\\\",\"\r\n      +\"\\\"timestamp\\\":\\\"0x5ed9a43f\\\",\"\r\n      +\"\\\"totalDifficulty\\\":\\\"0x881\\\",\"\r\n      +\"\\\"transactions\\\":[\"\r\n      +\"],\"\r\n      +\"\\\"transactionsRoot\\\":\\\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\\\",\"\r\n      +\"\\\"uncles\\\":[  \"      \r\n      +\"]}\";\r\n  \r\n    public String getResult(){\r\n      return result;\r\n    }\r\n  \r\n\t@Override\r\n\tpublic void execute(Map<String, Object> parameters) throws BusinessException {\r\n        log.info(\"parameters:{}\",parameters);\r\n      \tString method = (String) parameters.get(\"method\");\r\n        long requestId = Long.parseLong(\"\"+parameters.get(\"id\"));\r\n      \tswitch(method){\r\n          case \"eth_chainId\":\r\n            result = createResponse(requestId,\"0x4c\");\r\n            break;\r\n          case \"web3_clientVersion\":\r\n            result = createResponse(requestId,\"liquichainCentral\");\r\n            break;\r\n          case \"net_version\":\r\n            result = createResponse(requestId,\"\"+networkId);\r\n            break;\r\n          case \"eth_blockNumber\":\r\n            result = createResponse(requestId,Integer.toHexString(blockHeight));\r\n            break;\r\n          case \"eth_getBalance\":\r\n            log.info(\"params={}\",parameters.get(\"params\"));\r\n            //params[0] contains the hash of the wallet \r\n            //TODO retrieve the wallet from db then get the balance\r\n            result = createResponse(requestId,balance.toString(16));\r\n            break;\r\n          case \"eth_getBlockByNumber\":\r\n            result = createResponse(requestId,exampleBlock);\r\n            break;\r\n      \t}\r\n\t}\r\n\r\n    private String createResponse(long requestId,String result){\r\n      String res = \"{\\n\";\r\n      res+=\"  \\\"id\\\": \"+requestId+\",\\n\";\r\n      res+=\"  \\\"jsonrpc\\\": \\\"2.0\\\",\\n\";\r\n      res+=\"  \\\"result\\\": \\\"\"+result+\"\\\"\\n\";\r\n      res+=\"}\";\r\n      log.info(\"res:{}\",res);\r\n      return res;\r\n    }\r\n      \r\n}",
+      "executionRoles" : [ ],
+      "sourcingRoles" : [ ],
+      "mavenDependencies" : [ ],
+      "importScriptInstances" : [ ]
+    }
+  } ],
+  "moduleDependencies" : [ {
+    "code" : "LIQUICHAIN",
+    "description" : "Liquichain accounts",
+    "currentVersion" : "0.1"
+  } ],
+  "moduleFiles" : [ ]
+} ]

@@ -1,0 +1,49 @@
+[ {
+  "active" : true,
+  "code" : "LIQUICHAIN_API",
+  "description" : "Liquichain json-rpc API",
+  "license" : "GPL",
+  "currentVersion" : "0.1",
+  "transient" : true,
+  "codeOnly" : false,
+  "inDraft" : true,
+  "moduleItems" : [ {
+    "dtoClassName" : "org.meveo.api.dto.technicalservice.endpoint.EndpointDto",
+    "dtoData" : {
+      "code" : "jsonrpc",
+      "description" : "Returns the current client version.",
+      "secured" : false,
+      "checkPathParams" : true,
+      "serviceCode" : "io.liquichain.api.rpc.LiquichainApiScript",
+      "synchronous" : false,
+      "method" : "POST",
+      "parameterMappings" : [ ],
+      "pathParameters" : [ "projectId" ],
+      "roles" : [ ],
+      "serializeResult" : false,
+      "contentType" : "application/json"
+    }
+  }, {
+    "dtoClassName" : "org.meveo.api.dto.ScriptInstanceDto",
+    "dtoData" : {
+      "active" : true,
+      "code" : "io.liquichain.api.rpc.LiquichainApiScript",
+      "inputs" : [ {
+        "name" : "projectId",
+        "type" : "String",
+        "description" : null
+      } ],
+      "outputs" : [ ],
+      "generateOutputs" : false,
+      "type" : "JAVA",
+      "transactionType" : "SAME",
+      "script" : "package io.liquichain.api.rpc;\r\n\r\nimport java.util.Map;\r\n\r\nimport org.meveo.service.script.Script;\r\nimport org.meveo.admin.exception.BusinessException;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\n\r\npublic class LiquichainApiScript extends Script {\r\n    private static final Logger log = LoggerFactory.getLogger(LiquichainApiScript.class);\r\n  \r\n    String projectId;\r\n  \r\n\t@Override\r\n\tpublic void execute(Map<String, Object> parameters) throws BusinessException {\r\n        log.info(\"projectId:{} parameters:{}\",projectId,parameters);\r\n\t}\r\n  \r\n    public void setProjectId(String projectId){\r\n      this.projectId=projectId;\r\n    }\r\n\t\r\n}",
+      "executionRoles" : [ ],
+      "sourcingRoles" : [ ],
+      "mavenDependencies" : [ ],
+      "importScriptInstances" : [ ]
+    }
+  } ],
+  "moduleDependencies" : [ ],
+  "moduleFiles" : [ ]
+} ]

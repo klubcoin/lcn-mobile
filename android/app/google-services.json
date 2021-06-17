@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "660429102656",
+    "project_id": "liquichain",
+    "storage_bucket": "liquichain.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660429102656:android:00350e932705dddcf509a5",
+        "android_client_info": {
+          "package_name": "com.liquichain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660429102656-5baip1gcacdk9uq6r0lkh2mk958ju5sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdaRQWggTDFbtYTiMFHlBZ4uAp2sCJVhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660429102656-5baip1gcacdk9uq6r0lkh2mk958ju5sm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
