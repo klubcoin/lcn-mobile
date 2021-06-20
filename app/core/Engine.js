@@ -415,6 +415,7 @@ class Engine {
 		await KeyringController.createNewVaultAndRestore(pass, seed);
 		for (let i = 0; i < accounts.hd.length - 1; i++) {
 			await KeyringController.addNewAccount();
+			console.log('create new accounts')
 		}
 
 		// Recreate imported accounts

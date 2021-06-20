@@ -50,6 +50,7 @@ export const recreateVaultWithSamePassword = async (password = '', selectedAddre
 	// Create previous accounts again
 	for (let i = 0; i < existingAccountCount - 1; i++) {
 		await KeyringController.addNewAccount();
+			console.log('create new accounts')
 	}
 
 	try {

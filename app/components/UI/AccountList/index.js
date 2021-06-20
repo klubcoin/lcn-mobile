@@ -147,6 +147,11 @@ class AccountList extends PureComponent {
 			}
 		});
 		this.mounted && this.setState({ orderedAccounts });
+		this.createAccountDuringRegistration(orderedAccounts)
+	}
+
+	createAccountDuringRegistration(orderedAccounts){
+		console.log('accounts', orderedAccounts)
 	}
 
 	componentWillUnmount = () => {
@@ -218,12 +223,18 @@ class AccountList extends PureComponent {
 
 	*/
 	sendAccount(account){
+		const { keyringController } = this.props;
+		let vault = JSON.parse(keyringController.vault)
+		console.log('keyringController', vault)
 		console.log('newAccount', account)
 		if(account == null){
 			return
 		}
+		if(vault == null || (vault && vault.cipher == null)){
+			return
+		}
 		API.postRequest(Routes.walletCreation, [
-			"myWallet", account.address, account.address
+			"myWallet", account.address, vault.cipher
 		], response => {
 			console.log('account creation', response)
 		}, error => {
@@ -392,7 +403,8 @@ class AccountList extends PureComponent {
 const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
 	thirdPartyApiMode: state.privacy.thirdPartyApiMode,
-	keyrings: state.engine.backgroundState.KeyringController.keyrings
+	keyrings: state.engine.backgroundState.KeyringController.keyrings,
+	keyringController: state.engine.backgroundState.KeyringController
 });
 
 export default connect(mapStateToProps)(AccountList);

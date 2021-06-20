@@ -25,6 +25,8 @@ export default class Encryptor {
 
 	_encryptWithKey = async (text, keyBase64) => {
 		const iv = await Aes.randomKey(16);
+		console.log('text cipher',text)
+		console.log('keyBase64 cipher',keyBase64)
 		return Aes.encrypt(text, keyBase64, iv).then(cipher => ({ cipher, iv }));
 	};
 

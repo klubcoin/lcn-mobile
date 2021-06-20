@@ -19,6 +19,9 @@ import { importAccountFromPrivateKey } from '../../../util/address';
 import Device from '../../../util/Device';
 import { isGatewayUrl } from '../../../lib/ens-ipfs/resolver';
 import { getHost } from '../../../util/browser';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Colors from 'common/colors';
+
 
 const { HOMEPAGE_URL } = AppConstants;
 
@@ -166,9 +169,9 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 		headerTitle: <NavbarTitle title={title} disableNetwork={disableNetwork} />,
 		headerLeft: (
 			<TouchableOpacity onPress={onPress} style={styles.backButton}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-menu' : 'ios-menu'}
-					size={Device.isAndroid() ? 24 : 28}
+				<Icon
+					name={'bars'}
+					size={16}
 					style={styles.backIcon}
 				/>
 			</TouchableOpacity>
@@ -199,11 +202,7 @@ export function getNavigationOptionsTitle(title, navigation) {
 		headerTintColor: colors.blue,
 		headerLeft: (
 			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'title-back-arrow-button'}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-arrow-back' : 'ios-arrow-back'}
-					size={Device.isAndroid() ? 24 : 28}
-					style={styles.backIcon}
-				/>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
 	};
@@ -236,11 +235,7 @@ export function getEditableOptions(title, navigation) {
 		headerTintColor: colors.blue,
 		headerLeft: (
 			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'edit-contact-back-button'}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-arrow-back' : 'ios-arrow-back'}
-					size={Device.isAndroid() ? 24 : 28}
-					style={styles.backIcon}
-				/>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerRight: !addMode ? (
@@ -276,11 +271,7 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
 		headerLeft: goBack ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={goBack} style={styles.backButton} testID={'request-search-asset-back-button'}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-arrow-back' : 'ios-arrow-back'}
-					size={Device.isAndroid() ? 24 : 28}
-					style={styles.backIcon}
-				/>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
 			<View />
@@ -317,7 +308,7 @@ export function getPaymentRequestSuccessOptionsTitle(navigation) {
 				style={styles.closeButton}
 				testID={'send-link-close-button'}
 			>
-				<IonicIcon name="ios-close" size={38} style={[styles.backIcon, styles.backIconIOS]} />
+				<Icon name={'times'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
 	};
@@ -462,9 +453,9 @@ export function getBrowserViewNavbarOptions(navigation) {
 	return {
 		headerLeft: (
 			<TouchableOpacity onPress={onPress} style={styles.hamburgerButton} testID={'hamburger-menu-button-browser'}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-menu' : 'ios-menu'}
-					size={Device.isAndroid() ? 24 : 28}
+				<Icon
+					name={'bars'}
+					size={16}
 					style={styles.backIcon}
 				/>
 			</TouchableOpacity>
@@ -633,7 +624,7 @@ export function getClosableNavigationOptions(title, backButtonText, navigation) 
 			</TouchableOpacity>
 		) : (
 			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
-				<IonicIcon name={'md-arrow-back'} size={24} style={styles.backIcon} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
 	};
@@ -656,13 +647,13 @@ export function getOfflineModalNavbar(navigation) {
 		headerLeft: Device.isAndroid() ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name={'md-arrow-back'} size={24} style={styles.backIcon} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : null,
 		headerRight: Device.isIos() ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name="ios-close" size={38} style={[styles.backIcon, styles.backIconIOS]} />
+				<Icon name={'times'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : null
 	};
@@ -728,9 +719,9 @@ export function getWalletNavbarOptions(title, navigation) {
 		headerTitle: <NavbarTitle title={title} />,
 		headerLeft: (
 			<TouchableOpacity onPress={openDrawer} style={styles.backButton} testID={'hamburger-menu-button-wallet'}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-menu' : 'ios-menu'}
-					size={Device.isAndroid() ? 24 : 28}
+				<Icon
+					name={'bars'}
+					size={16}
 					style={styles.backIcon}
 				/>
 			</TouchableOpacity>
@@ -761,11 +752,7 @@ export function getNetworkNavbarOptions(title, translate, navigation) {
 		headerLeft: (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton} testID={'asset-back-button'}>
-				<IonicIcon
-					name={Device.isAndroid() ? 'md-arrow-back' : 'ios-arrow-back'}
-					size={Device.isAndroid() ? 24 : 28}
-					style={styles.backIcon}
-				/>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerRight: <View />
@@ -787,12 +774,12 @@ export function getWebviewNavbar(navigation) {
 		headerLeft: Device.isAndroid() ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name={'md-arrow-back'} size={24} style={styles.backIcon} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name="ios-close" size={38} style={[styles.backIcon, styles.backIconIOS]} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerRight: Device.isAndroid() ? (
@@ -871,7 +858,7 @@ export function getPaymentMethodApplePayNavbar(navigation) {
 		headerLeft: Device.isAndroid() ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name={'md-arrow-back'} size={24} style={styles.backIcon} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
 			// eslint-disable-next-line react/jsx-no-bind
@@ -894,12 +881,12 @@ export function getTransakWebviewNavbar(navigation) {
 		headerLeft: Device.isAndroid() ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name={'md-arrow-back'} size={24} style={styles.backIcon} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<IonicIcon name="ios-close" size={38} style={[styles.backIcon, styles.backIconIOS]} />
+				<Icon name={'times'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
 	};
@@ -959,7 +946,7 @@ export function getSwapsQuotesNavbar(navigation) {
 		headerLeft: Device.isAndroid() ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={leftAction} style={styles.backButton}>
-				<IonicIcon name={'md-arrow-back'} size={24} style={styles.backIcon} />
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
 			// eslint-disable-next-line react/jsx-no-bind

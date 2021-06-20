@@ -274,7 +274,7 @@ class AccountOverview extends PureComponent {
 
 		if (!address) return null;
 		const { accountLabelEditable, accountLabel } = this.state;
-
+	
 		return (
 			<View style={baseStyles.flexGrow} ref={this.scrollViewContainer} collapsable={false}>
 				<ScrollView

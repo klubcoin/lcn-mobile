@@ -41,6 +41,7 @@ import InvalidCustomNetworkAlert from '../InvalidCustomNetworkAlert';
 import { RPC } from '../../../constants/network';
 import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorState } from '../../../util/general';
 import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
+import Colors from 'common/colors'
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -619,8 +620,8 @@ class DrawerView extends PureComponent {
 		return hasBlockExplorer(providerType);
 	};
 
-	getIcon(name, size) {
-		return <Icon name={name} size={size || 24} color={colors.grey400} />;
+	getIcon(name, size, color = null) {
+		return <Icon name={name} size={size || 24} color={color ? color : colors.grey400} />;
 	}
 
 	getFeatherIcon(name, size) {
@@ -681,8 +682,8 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.transaction_history'),
-					icon: this.getFeatherIcon('list'),
-					selectedIcon: this.getSelectedFeatherIcon('list'),
+					icon: this.getIcon('list'),
+					selectedIcon: this.getIcon('list'),
 					action: this.goToTransactionHistory,
 					routeNames: ['TransactionsView']
 				}
@@ -690,7 +691,7 @@ class DrawerView extends PureComponent {
 			[
 				{
 					name: strings('drawer.share_address'),
-					icon: this.getMaterialIcon('share-variant'),
+					icon: this.getIcon('share'),
 					action: this.onShare
 				},
 				{
@@ -704,13 +705,13 @@ class DrawerView extends PureComponent {
 			[
 				{
 					name: strings('drawer.settings'),
-					icon: this.getFeatherIcon('settings'),
+					icon: this.getIcon('cog'),
 					warning: strings('drawer.settings_warning_short'),
 					action: this.showSettings
 				},
 				{
 					name: strings('drawer.help'),
-					icon: this.getFeatherIcon('help-circle'),
+					icon: this.getIcon('help'),
 					action: this.showHelp
 				},
 				// {
@@ -720,7 +721,7 @@ class DrawerView extends PureComponent {
 				// },
 				{
 					name: strings('drawer.logout'),
-					icon: this.getFeatherIcon('log-out'),
+					icon: this.getIcon('sign-out'),
 					action: this.logout
 				}
 			]
@@ -905,12 +906,7 @@ class DrawerView extends PureComponent {
 							testID={'drawer-send-button'}
 						>
 							<View style={styles.buttonContent}>
-								<MaterialIcon
-									name={'arrow-top-right'}
-									size={22}
-									color={colors.blue}
-									style={styles.buttonIcon}
-								/>
+								{this.getIcon('paper-plane', 16, Colors.primary)}
 								<Text style={styles.buttonText}>{strings('drawer.send_button')}</Text>
 							</View>
 						</StyledButton>
@@ -921,12 +917,7 @@ class DrawerView extends PureComponent {
 							testID={'drawer-receive-button'}
 						>
 							<View style={styles.buttonContent}>
-								<MaterialIcon
-									name={'keyboard-tab'}
-									size={22}
-									color={colors.blue}
-									style={[styles.buttonIcon, styles.buttonReceive]}
-								/>
+								{this.getIcon('dollar', 16, Colors.primary)}
 								<Text style={styles.buttonText}>{strings('drawer.receive_button')}</Text>
 							</View>
 						</StyledButton>

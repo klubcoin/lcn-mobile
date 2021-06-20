@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { getPayPalNavbar } from '../../../../UI/Navbar';
 import ScreenView from '../../components/ScreenView';
 import Title from '../../components/Title';
@@ -17,6 +18,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import API from 'services/api'
 import Routes from 'common/routes'
+import Engine from '@core/Engine'
+import { renderAccountName } from '@util/address';
+import { renderFromWei, weiToFiat, hexToBN } from '@util/number';
+import { getTicker } from '@util/transactions';
 const Colors = {
   primary: '#370e75',
   secondary: '#eee',
@@ -42,8 +47,9 @@ function PayPal({selectedAddress, ...props}){
  const [selected, setSelected] = useState(null);
  const [currencies, setCurrencies] = useState([])
  const [errorMessage, setErrorMessage] = useState(null)
-  
+ const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 
+ const accountOverviewRef = React.createRef();
   useEffect(() => {
     if(currencies.length == 0){
       API.getRequest(Routes.getConversions, response => {
@@ -59,6 +65,9 @@ function PayPal({selectedAddress, ...props}){
     }
   });
 
+  onRef = ref => {
+    this.accountOverviewRef = ref;
+  }
 
   manageCurrencies = () => {
     for (var i = 0; i < currencies.length; i++) {
@@ -75,15 +84,61 @@ function PayPal({selectedAddress, ...props}){
   }
 
   payWithPayPal = () => {
-    const { from, selected } = this.state;
+    const {
+      accounts,
+      identities,
+      tokens,
+      ticker,
+      conversionRate,
+      currentCurrency
+    } = props;
+
+    const selectedAddress = '0x0819D6bfcEc0B634D5E3598917038a9C7B4d5aBb'
+
+    console.log(props.selectedAddress)
+    let balance = 0;
+    let assets = tokens;
+    if (accounts[selectedAddress]) {
+      balance = renderFromWei(accounts[selectedAddress].balance);
+      assets = [
+        {
+          name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
+          symbol: getTicker(ticker),
+          isETH: true,
+          balance,
+          balanceFiat: weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency),
+          logo: '../images/logo.png'
+        },
+        ...tokens
+      ];
+    } else {
+      assets = tokens;
+    }
+    const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+
+
+    console.log({
+      account
+    })
     if(from == null || selected == null){
       setErrorMessage('Fields are required')
       return
     }
-    const { network } = this.state
-    if(network == null){
-      setErrorMessage('Invalid network or no network available')
+    // if(network == null){
+    //   setErrorMessage('Invalid network or no network available')
+    //   return
+    // }
+    if(from.amount <= 0){
+      setErrorMessage('Amount must be greater than 0')
       return
+    }
+    let params = {
+      from,
+      to,
+      account: {
+        publicAddress: '12312',
+        publicKey: '12312312'
+      }
     }
   }
 
@@ -104,15 +159,17 @@ function PayPal({selectedAddress, ...props}){
           }}>
             <View style={{
               padding: 10,
-              width: '40%',
+              width: '50%',
               flexDirection: 'row',
               borderColor: Colors.primary,
               borderWidth: 1,
               borderRadius: 12,
               alignItems: 'center',
             }}>
-              {getFeatherIcon('menu', 24)}
-              <Text>PayPal</Text>
+              <Icon name={'paypal'} size={22} color={Colors.primary} />
+              <Text style={{
+                paddingLeft: 10
+              }}>PayPal</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -196,15 +253,17 @@ function PayPal({selectedAddress, ...props}){
           borderLeftWidth: 1,
           borderLeftColor: Colors.lightGray,
           width: '30%',
-          paddingTop: 10,
-          paddingBottom: 10,
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          {/*<Flag
-            code="FR"
-            size={32}
-          />*/}
+          {
+            from && (
+              <Text style={{
+                fontSize: 24,
+                color: Colors.primary
+              }}>{from.currency}</Text>
+            )
+          }
         </View>
       </View>
     )
@@ -225,7 +284,7 @@ function PayPal({selectedAddress, ...props}){
         }}>
           <Text style={{
             color: Colors.gray
-          }}>receive(estimate)</Text>
+          }}>Receive(estimate)</Text>
 
           <Text style={{
             fontSize: 24,
@@ -245,13 +304,21 @@ function PayPal({selectedAddress, ...props}){
           <View style={{
             alignItems: 'center',
             justifyContent: 'center',
-            flexDirection: 'row'
+            flexDirection: 'row',
+            flex: 1
           }}>
-            {/*<Image source={require('assets/logo.png')} style={{
+            <Image source={require('images/logo.png')} style={{
               width: 30,
               height: 30
-            }}/>*/}
-            <Text>LCN</Text>
+            }}/>
+            {
+              to && (
+                <Text style={{
+                  fontSize: 24,
+                  color: Colors.primary
+                }}>{to.currency}</Text>
+              )
+            }
           </View>
           {/*
             network && (
@@ -268,7 +335,6 @@ function PayPal({selectedAddress, ...props}){
     )
   }
 
-  console.log(selected)
   return(
     <SafeAreaView style={{
       flex: 1
@@ -280,7 +346,9 @@ function PayPal({selectedAddress, ...props}){
         <View style={{
           paddingLeft: 20,
           paddingRight: 20
-        }}>
+        }}
+        onRef={onRef()}
+        >
 
           <Text style={{
             width: '100%',
@@ -329,7 +397,7 @@ function PayPal({selectedAddress, ...props}){
               }}
 
               onPress={() => {
-                props.navigation.navigate('BuyWithPayPal')
+                payWithPayPal()
               }}
               >
               <Text style={{
@@ -344,13 +412,27 @@ function PayPal({selectedAddress, ...props}){
 }
 
 PayPal.propTypes = {
-  selectedAddress: PropTypes.string.isRequired
+  selectedAddress: PropTypes.string,
+  accounts: PropTypes.object,
+  identities: PropTypes.object,
+  chainId: PropTypes.string,
+  ticker: PropTypes.string,
+  currentCurrency: PropTypes.string,
+  tokens: PropTypes.array,
+  currentCurrency: PropTypes.string,
 };
 
 PayPal.navigationOptions = ({ navigation }) => getPayPalNavbar(navigation);
 
 const mapStateToProps = state => ({
-  selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
+  tokens: state.engine.backgroundState.AssetsController.tokens,
+  accounts: state.engine.backgroundState.AccountTrackerController.accounts,
+  currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
+  selectedAddress: state.engine.backgroundState.PreferencesController,
+  identities: state.engine.backgroundState.PreferencesController.identities,
+  chainId: state.engine.backgroundState.NetworkController.provider.chainId,
+  ticker: state.engine.backgroundState.NetworkController.provider.ticker,
+  conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
 });
 
 export default connect(mapStateToProps)(PayPal);

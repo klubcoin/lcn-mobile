@@ -6,7 +6,9 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colors } from '../../../styles/common';
 import Device from '../../../util/Device';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';
+import Colors from 'common/colors';
 
 const styles = StyleSheet.create({
 	button: {
@@ -55,16 +57,18 @@ const styles = StyleSheet.create({
 	}
 });
 
+
+
 function getIcon(type) {
 	switch (type) {
 		case 'send': {
-			return <MaterialCommunityIcon name={'arrow-top-right'} size={20} style={styles.buttonIcon} />;
+			return <Icon name={'send'} size={12} style={styles.buttonIcon} />;
 		}
 		case 'receive': {
 			return (
-				<MaterialCommunityIcon
-					name={'keyboard-tab'}
-					size={20}
+				<Icon
+					name={'dollar'}
+					size={12}
 					color={colors.white}
 					style={[styles.buttonIcon, styles.receive]}
 				/>
@@ -80,7 +84,7 @@ function getIcon(type) {
 			return <MaterialCommunityIcon name="repeat" size={22} style={[styles.buttonIcon, styles.swapsIcon]} />;
 		}
 		case 'buy': {
-			return <FeatherIcon name="credit-card" size={20} style={[styles.buttonIcon, styles.buyIcon]} />;
+			return <Icon name="credit-card" size={12} style={[styles.buttonIcon, styles.buyIcon]} />;
 		}
 		default: {
 			return null;

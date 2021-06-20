@@ -327,7 +327,7 @@ PODS:
     - Sentry (= 6.1.4)
   - RNShare (5.3.0):
     - React-Core
-  - RNSVG (12.1.0):
+  - RNSVG (12.1.1):
     - React
   - RNVectorIcons (6.7.0):
     - React
@@ -607,7 +607,7 @@ SPEC CHECKSUMS:
   RNSensors: c363d486c879e181905dea84a2535e49af1c2d25
   RNSentry: e86fb2e2fec0365644f4b582938bf66be515acce
   RNShare: 4df87d1791f50a2c7b1d89432fb9bbb7c02a9c9a
-  RNSVG: ce9d996113475209013317e48b05c21ee988d42e
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
   Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
