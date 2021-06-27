@@ -36,6 +36,7 @@ const Colors = {
   gray: '#555'
 }
 const height = Math.round(Dimensions.get('window').height);
+const width = Math.round(Dimensions.get('window').width);
 function PayPal({selectedAddress, ...props}){
 
  const [from, setFrom] = useState({
@@ -111,6 +112,24 @@ function PayPal({selectedAddress, ...props}){
       console.log(error)
     })
   }
+
+  manageRequest = (url) => {
+    console.log(url)
+    if(url){
+      API.directGetRequest(url, response => {
+        // manage response here
+        if(url.contains('error')){
+          // display error message here
+        }else{
+          // redirect to thank you page
+          // update states of the accounts and balance
+        }
+      }, error => {
+        console.log(error.message)
+      })
+    }
+  }
+
   payWithPayPal = () => {
 
     console.log({
@@ -218,8 +237,6 @@ function PayPal({selectedAddress, ...props}){
           )
         }
         
-
-
       </View>
     )
   }
@@ -347,7 +364,9 @@ function PayPal({selectedAddress, ...props}){
 
   return(
     <SafeAreaView style={{
-      flex: 1
+      flex: 1,
+      width: '100%',
+      height: '100%'
     }}>
 
       {
@@ -389,14 +408,37 @@ function PayPal({selectedAddress, ...props}){
 
       {
         payPalUrl !== null && (
-          <View style={{
-            flex: 1
-          }}>
-            <WebView
-              source={{ uri: payPalUrl }}
-              renderLoading={() => <ActivityIndicator size="small" /> }
-              />
-          </View>
+          <WebView
+            source={{ uri: payPalUrl }}
+            startInLoadingState={true}
+            renderLoading={() => (<View style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              width: '100%',
+              top: -(height * 0.25)
+            }}>
+                <ActivityIndicator size="large" color={Colors.primary} />
+              </View>
+            )}
+            onLoadEnd={() => {
+              console.log('Loaded')
+            }}
+            onShouldStartLoadWithRequest={(request) => {
+              console.log({
+                request
+              })
+              if(request && request.url.startsWith('https://www.sandbox.paypal.com')){
+                console.log('This should load')
+                return true
+              }else if(request){
+                manageRequest(request.url)
+              }else{
+                return false
+              }
+            }}
+            />
         )
       }
       {

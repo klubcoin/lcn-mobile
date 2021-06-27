@@ -39,6 +39,18 @@ const Api = {
       }
     })
   },
+  directGetRequest: (url, callback, errorCallback = null) => {
+    const fetchOptions = {
+      method: 'GET'
+    }
+    fetch(url, fetchOptions).then(response => response.json()).then(json => {
+      callback(json)
+    }).catch(error => {
+      if(errorCallback){
+        errorCallback(error)
+      }
+    })
+  },
   getRequest: (route, callback, errorCallback = null) => {
     let url = routes.mainNetWork.route + route
     const fetchOptions = {
