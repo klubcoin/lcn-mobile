@@ -307,7 +307,7 @@ class ChoosePassword extends PureComponent {
 			return
 		}
 		API.postRequest(Routes.walletCreation, [
-			"myWallet", selectedAddress, vault.cipher
+			"myWallet", selectedAddress
 		], response => {
 			console.log('account creation', response)
 		}, error => {

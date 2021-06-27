@@ -1,4 +1,5 @@
 import routes from 'common/routes'
+import Config from 'app/config.js'
 const Api = {
   postRequest: (method, parameters, callback, errorCallback = null) => {
     let url = routes.mainNetWork.url
@@ -49,6 +50,44 @@ const Api = {
     }).catch(error => {
       if(errorCallback){
         errorCallback(error)
+      }
+    })
+  },
+  paypalPostRequest: (callback, errorCallback = null) => {
+    let username = null
+    let password = null
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(Config.paypalCredentials.sandbox.clientId + ":" + Config.paypalCredentials.sandbox.secret),
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials'
+    }
+    console.log(fetchOptions)
+    fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', fetchOptions).then(response => response.json()).then(json => {
+      callback(json)
+    }).catch(error => {
+      if(errorCallback){
+        errorCallback(error.message)
+      }
+    })
+  },
+  paypalCreateOrderRequest: (data, token, callback, errorCallback = null) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }
+    console.log(fetchOptions)
+    fetch('https://api-m.sandbox.paypal.com/v2/checkout/orders', fetchOptions).then(response => response.json()).then(json => {
+      callback(json)
+    }).catch(error => {
+      if(errorCallback){
+        errorCallback(error.message)
       }
     })
   }

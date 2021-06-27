@@ -106,6 +106,10 @@ export default class MessageSign extends PureComponent {
 		const rawSig = await KeyringController.signMessage(cleanMessageParams);
 		MessageManager.setMessageStatusSigned(messageId, rawSig);
 		this.showWalletConnectNotification(messageParams, true);
+		console.log("[SIGN MESSAGE]", {
+			cleanMessageParams,
+			rawSig
+		})
 	};
 
 	rejectMessage = () => {

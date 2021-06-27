@@ -8,6 +8,7 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -22,6 +23,7 @@ import Engine from '@core/Engine'
 import { renderAccountName } from '@util/address';
 import { renderFromWei, weiToFiat, hexToBN } from '@util/number';
 import { getTicker } from '@util/transactions';
+import { WebView } from 'react-native-webview';
 const Colors = {
   primary: '#370e75',
   secondary: '#eee',
@@ -48,8 +50,8 @@ function PayPal({selectedAddress, ...props}){
  const [currencies, setCurrencies] = useState([])
  const [errorMessage, setErrorMessage] = useState(null)
  const { AssetsDetectionController, AccountTrackerController } = Engine.context;
+ const [payPalUrl, setPayPalUrl] = useState(null)
 
- const accountOverviewRef = React.createRef();
   useEffect(() => {
     if(currencies.length == 0){
       API.getRequest(Routes.getConversions, response => {
@@ -65,10 +67,6 @@ function PayPal({selectedAddress, ...props}){
     }
   });
 
-  onRef = ref => {
-    this.accountOverviewRef = ref;
-  }
-
   manageCurrencies = () => {
     for (var i = 0; i < currencies.length; i++) {
       let item = currencies[i]
@@ -83,63 +81,75 @@ function PayPal({selectedAddress, ...props}){
     return (<FeatherIcon name={name} size={size || 24} color={Colors.gray} />)
   }
 
+  paypalDirect = () => {
+    API.paypalPostRequest(response => {
+      console.log(response)
+      if(response && response.access_token != null){
+        API.paypalCreateOrderRequest({
+          intent: 'CAPTURE',
+          purchase_units: [{
+            amount: {
+              currency_code: 'USD',
+              value: "100.00"
+            }
+          }]
+        }, response.access_token, orderResponse => {
+          console.log(orderResponse)
+          if(orderResponse && (orderResponse.links || (orderResponse.links && orderResponse.links.length > 0))){
+            orderResponse.links.map((item) => {
+              if(item.rel == 'approve'){
+                console.log('load link', item.href)
+                setPayPalUrl(item.href) 
+              }
+            })
+          }
+        }, errorOrderResponse => {
+          console.log('error', errorOrderResponse.message)
+        })
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
   payWithPayPal = () => {
-    const {
-      accounts,
-      identities,
-      tokens,
-      ticker,
-      conversionRate,
-      currentCurrency
-    } = props;
-
-    const selectedAddress = '0x0819D6bfcEc0B634D5E3598917038a9C7B4d5aBb'
-
-    console.log(props.selectedAddress)
-    let balance = 0;
-    let assets = tokens;
-    if (accounts[selectedAddress]) {
-      balance = renderFromWei(accounts[selectedAddress].balance);
-      assets = [
-        {
-          name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
-          symbol: getTicker(ticker),
-          isETH: true,
-          balance,
-          balanceFiat: weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency),
-          logo: '../images/logo.png'
-        },
-        ...tokens
-      ];
-    } else {
-      assets = tokens;
-    }
-    const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
-
 
     console.log({
-      account
+      selectedAddress
     })
     if(from == null || selected == null){
       setErrorMessage('Fields are required')
       return
     }
-    // if(network == null){
-    //   setErrorMessage('Invalid network or no network available')
-    //   return
-    // }
+
     if(from.amount <= 0){
       setErrorMessage('Amount must be greater than 0')
       return
     }
+
+    if(selectedAddress == null){
+      return
+    }
+
     let params = {
       from,
       to,
-      account: {
-        publicAddress: '12312',
-        publicKey: '12312312'
-      }
+      account: [selectedAddress.selectedAddress]
     }
+
+    API.standardPostRequest(Routes.paypalCreateOrder, params, response => {
+      if(response && response.links.length > 0){
+        response.links.map((item) => {
+          if(item.rel == 'approve'){
+            console.log('load link', item.href)
+            setPayPalUrl(item.href) 
+          }
+        })
+      }else{
+        // error
+      }
+    }, error => {
+      console.log('error', error.message)
+    })
   }
 
   stepper = () => {
@@ -339,43 +349,58 @@ function PayPal({selectedAddress, ...props}){
     <SafeAreaView style={{
       flex: 1
     }}>
-      <ScrollView style={{
-      }}
-      showsVerticalScrollIndicator={false}
-      >
-        <View style={{
-          paddingLeft: 20,
-          paddingRight: 20
-        }}
-        onRef={onRef()}
-        >
 
-          <Text style={{
-            width: '100%',
-            paddingLeft: 20,
-            paddingRight: 20,
-            paddingTop: 20,
-            textAlign: 'center'
-          }}>Buy Cryto to your wallet</Text>
-
-
-          {amount()}
-          <View style={{
-            marginLeft: 40
-          }}>
-          {stepper()}
-          </View>
-          {
-            selected && (
-              receive()
-            )
-          }
-          
-
-        </View>
-      </ScrollView>
       {
-        (selected && from && from.amount > 0) && (
+        payPalUrl == null && (
+          <ScrollView style={{
+          }}
+          showsVerticalScrollIndicator={false}
+          >
+            <View style={{
+              paddingLeft: 20,
+              paddingRight: 20
+            }}
+            >
+              <View>
+                <Text style={{
+                  width: '100%',
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  paddingTop: 20,
+                  textAlign: 'center'
+                }}>Buy Cryto to your wallet</Text>
+
+
+                {amount()}
+                <View style={{
+                  marginLeft: 40
+                }}>
+                {stepper()}
+                </View>
+                {
+                  selected && (
+                    receive()
+                  )
+                }
+              </View>
+            </View>
+        </ScrollView>)
+      }
+
+      {
+        payPalUrl !== null && (
+          <View style={{
+            flex: 1
+          }}>
+            <WebView
+              source={{ uri: payPalUrl }}
+              renderLoading={() => <ActivityIndicator size="small" /> }
+              />
+          </View>
+        )
+      }
+      {
+        (selected && from && from.amount > 0 && payPalUrl == null) && (
           <View style={{
             position: 'absolute',
             bottom: 10,

@@ -328,7 +328,7 @@ class SendFlow extends PureComponent {
 			}
 
 			// Check if it's token contract address on mainnet
-			const networkId = NetworkList[providerType].networkId;
+			const networkId = `NetworkList`[providerType].networkId;
 			if (networkId === 1) {
 				try {
 					const symbol = await AssetsContractController.getAssetSymbol(toSelectedAddress);

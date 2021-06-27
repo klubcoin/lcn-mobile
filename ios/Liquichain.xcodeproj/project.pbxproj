@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4B5176B8338F3AE10EEEC761 /* libPods-Liquichain-LiquichainTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FAAEA53EB66E664984A67B4 /* libPods-Liquichain-LiquichainTests.a */; };
+		5212FCDF2682C16B0058A247 /* LCN-Mobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5212FCDE2682C16B0058A247 /* LCN-Mobile.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		EEC4A35A4C49C6B3AE50BFE7 /* libPods-Liquichain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88489BF028DB8ADE119B8DD1 /* libPods-Liquichain.a */; };
 /* End PBXBuildFile section */
@@ -40,6 +41,8 @@
 		21433FE9A83F8EBB67B52465 /* Pods-Liquichain-LiquichainTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquichain-LiquichainTests.release.xcconfig"; path = "Target Support Files/Pods-Liquichain-LiquichainTests/Pods-Liquichain-LiquichainTests.release.xcconfig"; sourceTree = "<group>"; };
 		39675396663D5FA571C22752 /* Pods-Liquichain.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquichain.debug.xcconfig"; path = "Target Support Files/Pods-Liquichain/Pods-Liquichain.debug.xcconfig"; sourceTree = "<group>"; };
 		4FAAEA53EB66E664984A67B4 /* libPods-Liquichain-LiquichainTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquichain-LiquichainTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5212FCDD2682C16A0058A247 /* Liquichain-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Liquichain-Bridging-Header.h"; sourceTree = "<group>"; };
+		5212FCDE2682C16B0058A247 /* LCN-Mobile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LCN-Mobile.swift"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Liquichain/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		88489BF028DB8ADE119B8DD1 /* libPods-Liquichain.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquichain.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7E3E681CD4DE0AA45B19696 /* Pods-Liquichain.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquichain.release.xcconfig"; path = "Target Support Files/Pods-Liquichain/Pods-Liquichain.release.xcconfig"; sourceTree = "<group>"; };
@@ -92,6 +95,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				5212FCDE2682C16B0058A247 /* LCN-Mobile.swift */,
+				5212FCDD2682C16A0058A247 /* Liquichain-Bridging-Header.h */,
 			);
 			name = Liquichain;
 			sourceTree = "<group>";
@@ -205,7 +210,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1200;
 					};
 				};
 			};
@@ -375,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				5212FCDF2682C16B0058A247 /* LCN-Mobile.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,6 +400,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0C6150BFD76ACB15A4931E85 /* Pods-Liquichain-LiquichainTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -421,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21433FE9A83F8EBB67B52465 /* Pods-Liquichain-LiquichainTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = LiquichainTests/Info.plist;
@@ -462,6 +470,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Liquichain;
+				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -488,6 +497,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Liquichain;
+				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

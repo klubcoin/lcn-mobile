@@ -80,6 +80,7 @@ class AccountList extends PureComponent {
 		 * Map of accounts to information objects including balances
 		 */
 		accounts: PropTypes.object,
+		network: PropTypes.string,
 		/**
 		 * An object containing each identity in the format address => account
 		 */
@@ -223,10 +224,9 @@ class AccountList extends PureComponent {
 
 	*/
 	sendAccount(account){
-		const { keyringController } = this.props;
+		const { keyringController, network } = this.props;
 		let vault = JSON.parse(keyringController.vault)
-		console.log('keyringController', vault)
-		console.log('newAccount', account)
+		console.log("network", network)
 		if(account == null){
 			return
 		}
@@ -234,7 +234,7 @@ class AccountList extends PureComponent {
 			return
 		}
 		API.postRequest(Routes.walletCreation, [
-			"myWallet", account.address, vault.cipher
+			"myWallet", account.address
 		], response => {
 			console.log('account creation', response)
 		}, error => {
@@ -404,7 +404,8 @@ const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
 	thirdPartyApiMode: state.privacy.thirdPartyApiMode,
 	keyrings: state.engine.backgroundState.KeyringController.keyrings,
-	keyringController: state.engine.backgroundState.KeyringController
+	keyringController: state.engine.backgroundState.KeyringController,
+	network: state.engine.backgroundState.NetworkController.network
 });
 
 export default connect(mapStateToProps)(AccountList);

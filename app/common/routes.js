@@ -15,4 +15,6 @@ export default{
     "params": null // [mywallet, publicAddress, publicKey]
   },
   getConversions: 'currconv',
+  paypalCreateOrder: "payment",
+  paypalPaymentCapture: "payment-capture"
 }
