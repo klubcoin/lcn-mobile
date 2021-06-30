@@ -52,6 +52,7 @@ function PayPal({selectedAddress, ...props}){
  const [errorMessage, setErrorMessage] = useState(null)
  const { AssetsDetectionController, AccountTrackerController } = Engine.context;
  const [payPalUrl, setPayPalUrl] = useState(null)
+ const [orderId, setOrderId] = useState(null)
 
   useEffect(() => {
     if(currencies.length == 0){
@@ -113,20 +114,36 @@ function PayPal({selectedAddress, ...props}){
     })
   }
 
+  capturePayPalOrder = () => {
+    if(orderId == null){
+      return
+    }
+    console.log('orderId', orderId)
+    API.standardPostRequest(Routes.paypalPaymentCapture + '/' + orderId, params, response => {
+      if(response){
+        // success
+        props.navigation.navigate('PurchaseMethods')
+      }else{
+        // error
+        // alert error here
+        props.navigation.navigate('PurchaseMethods')
+      }
+    }, error => {
+      // alert error here
+      console.log('error', error.message)
+      props.navigation.navigate('PurchaseMethods')
+    }) 
+  }
+
   manageRequest = (url) => {
-    console.log(url)
-    if(url){
-      API.directGetRequest(url, response => {
-        // manage response here
-        if(url.contains('error')){
-          // display error message here
-        }else{
-          // redirect to thank you page
-          // update states of the accounts and balance
-        }
-      }, error => {
-        console.log(error.message)
-      })
+    if(url && url.includes("error")){
+      console.log('navigate to PurchaseMethods')
+      props.navigation.navigate('PurchaseMethods')
+    }else if(url && url.includes("success")){
+      capturePayPalOrder()
+    }else{
+      // unknown url
+      capturePayPalOrder()
     }
   }
 
@@ -135,6 +152,7 @@ function PayPal({selectedAddress, ...props}){
     console.log({
       selectedAddress
     })
+
     if(from == null || selected == null){
       setErrorMessage('Fields are required')
       return
@@ -152,11 +170,16 @@ function PayPal({selectedAddress, ...props}){
     let params = {
       from,
       to,
-      account: [selectedAddress.selectedAddress]
+      // account: selectedAddress.selectedAddress,
+      account: 'B51b96f26923F5c9Ac438E0D74E0cD8F5171F412',
+      returnUrl: 'https://liquichain.io'
     }
+
+    console.log(params)
 
     API.standardPostRequest(Routes.paypalCreateOrder, params, response => {
       if(response && response.links.length > 0){
+        setOrderId(response.id)
         response.links.map((item) => {
           if(item.rel == 'approve'){
             console.log('load link', item.href)
@@ -426,14 +449,12 @@ function PayPal({selectedAddress, ...props}){
               console.log('Loaded')
             }}
             onShouldStartLoadWithRequest={(request) => {
-              console.log({
-                request
-              })
               if(request && request.url.startsWith('https://www.sandbox.paypal.com')){
                 console.log('This should load')
                 return true
               }else if(request){
                 manageRequest(request.url)
+                return false
               }else{
                 return false
               }
