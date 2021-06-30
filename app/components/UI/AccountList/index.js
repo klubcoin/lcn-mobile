@@ -234,7 +234,7 @@ class AccountList extends PureComponent {
 			return
 		}
 		API.postRequest(Routes.walletCreation, [
-			"myWallet", account.address
+			"myWallet", account.address, account.address
 		], response => {
 			console.log('account creation', response)
 		}, error => {

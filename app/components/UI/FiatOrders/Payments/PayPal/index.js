@@ -167,12 +167,13 @@ function PayPal({selectedAddress, ...props}){
       return
     }
 
+    let address = selectedAddress.selectedAddress
+
     let params = {
       from,
       to,
-      // account: selectedAddress.selectedAddress,
-      account: 'B51b96f26923F5c9Ac438E0D74E0cD8F5171F412',
-      returnUrl: 'https://liquichain.io'
+      account: address ? address.substring(2, address.length) : null,
+      // account: 'B51b96f26923F5c9Ac438E0D74E0cD8F5171F412'
     }
 
     console.log(params)
