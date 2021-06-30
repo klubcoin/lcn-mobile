@@ -114,7 +114,7 @@ function PayPal({selectedAddress, ...props}){
     })
   }
 
-  capturePayPalOrder = () => {
+  capturePayPalOrder = (url) => {
     if(orderId == null){
       return
     }
@@ -140,7 +140,7 @@ function PayPal({selectedAddress, ...props}){
       console.log('navigate to PurchaseMethods')
       props.navigation.navigate('PurchaseMethods')
     }else if(url && url.includes("success")){
-      capturePayPalOrder()
+      capturePayPalOrder(url)
     }else{
       // unknown url
       capturePayPalOrder()
