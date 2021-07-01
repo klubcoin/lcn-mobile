@@ -18,7 +18,8 @@ import { getTicker } from '../../../util/transactions';
 import OnboardingWizard from '../../UI/OnboardingWizard';
 import { showTransactionNotification, hideCurrentNotification } from '../../../actions/notification';
 import ErrorBoundary from '../ErrorBoundary';
-
+import API from 'services/api'
+import Routes from 'common/routes';
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
@@ -104,9 +105,9 @@ class Wallet extends PureComponent {
 	componentDidMount = () => {
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
-			AssetsDetectionController.detectAssets();
-			AccountTrackerController.refresh();
-
+			//AssetsDetectionController.detectAssets();
+			// AccountTrackerController.refresh();
+			this.getBalance()
 			this.mounted = true;
 		});
 	};
@@ -130,6 +131,23 @@ class Wallet extends PureComponent {
 			this.setState({ refreshing: false });
 		});
 	};
+
+	getBalance = async() => {
+		const { accounts } = this.props;
+		for(const account in accounts){
+			let params = [account]
+			await API.postRequest(Routes.getBalance, params, response => {
+				console.log(response)
+				const balance = response.result ? response.result : 0x00
+				accounts[account] = {
+					balance: balance
+				}
+				console.log({[account]: accounts[account]})
+			}, error => {
+				console.log(error.message)
+			})
+		}
+	}
 
 	componentWillUnmount() {
 		this.mounted = false;
@@ -238,7 +256,7 @@ class Wallet extends PureComponent {
 			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
 				<ScrollView
 					style={styles.wrapper}
-					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
 				>
 					{this.props.selectedAddress ? this.renderContent() : this.renderLoader()}
 				</ScrollView>

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
 import Engine from '../../../core/Engine';
 import { showAlert } from '../../../actions/alert';
-import Transactions from '../../UI/Transactions';
+import Transactions from '@UI/Transactions';
 import { safeToChecksumAddress } from '../../../util/address';
 import { addAccountTimeFlagFilter } from '../../../util/transactions';
 import { toLowerCaseCompare } from '../../../util/general';
