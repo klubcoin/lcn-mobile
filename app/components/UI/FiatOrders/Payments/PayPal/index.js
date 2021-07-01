@@ -119,39 +119,63 @@ function PayPal({selectedAddress, ...props}){
       return
     }
     console.log('orderId', orderId)
-    API.standardPostRequest(Routes.paypalPaymentCapture + '/' + orderId, params, response => {
-      if(response){
+    API.standardPostRequest(Routes.paypalPaymentCapture + '/' + orderId, {}, response => {
+      console.log(response)
+      if(response.status == 200){
         // success
-        props.navigation.navigate('PurchaseMethods')
+        console.log('success paypal transactions')
+        props.navigation.navigate('Home')
       }else{
-        // error
-        // alert error here
+        // should alert an error here
+        console.log('error paypal transactions')
         props.navigation.navigate('PurchaseMethods')
       }
     }, error => {
-      // alert error here
-      console.log('error', error.message)
-      props.navigation.navigate('PurchaseMethods')
-    }) 
+      console.log({
+        error: error.message
+      })
+    })
   }
 
+  // capturePayPalOrder = (url) => {
+  //   if(orderId == null){
+  //     return
+  //   }
+  //   console.log('orderId', orderId)
+  //   API.directGetRequest(url, response => {
+  //     if(response){
+  //       // success
+  //       console.log('error', response)
+  //       // props.navigation.navigate('PurchaseMethods')
+  //     }else{
+  //       // error
+  //       console.log('error', response)
+  //       // alert error here
+  //       // props.navigation.navigate('PurchaseMethods')
+  //     }
+  //   }, error => {
+  //     // alert error here
+  //     console.log('error', error.message)
+  //     // props.navigation.navigate('PurchaseMethods')
+  //   }) 
+  // }
+
   manageRequest = (url) => {
+    console.log({
+      url
+    })
     if(url && url.includes("error")){
       console.log('navigate to PurchaseMethods')
-      props.navigation.navigate('PurchaseMethods')
-    }else if(url && url.includes("success")){
+      // props.navigation.navigate('PurchaseMethods')
+    }else if(url && url.includes("https://account.liquichain.io")){
       capturePayPalOrder(url)
     }else{
       // unknown url
-      capturePayPalOrder()
+      // capturePayPalOrder()
     }
   }
 
   payWithPayPal = () => {
-
-    console.log({
-      selectedAddress
-    })
 
     if(from == null || selected == null){
       setErrorMessage('Fields are required')
@@ -297,6 +321,12 @@ function PayPal({selectedAddress, ...props}){
                 ...from,
                 amount: input
               })
+              if(selected && selected.to){
+                setTo({
+                  ...to,
+                  amount: selected.to.value * input
+                })  
+              }
             }}
             />
         </View>
@@ -414,7 +444,7 @@ function PayPal({selectedAddress, ...props}){
                 }}>Buy Cryto to your wallet</Text>
 
 
-                {amount()}
+                {selected && amount()}
                 <View style={{
                   marginLeft: 40
                 }}>
