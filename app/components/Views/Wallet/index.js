@@ -6,7 +6,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import AccountOverview from '../../UI/AccountOverview';
-import Tokens from '../../UI/Tokens';
+import Tokens from '@UI/Tokens';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { renderFromWei, weiToFiat, hexToBN } from '../../../util/number';
@@ -95,7 +95,9 @@ class Wallet extends PureComponent {
 	};
 
 	state = {
-		refreshing: false
+		refreshing: false,
+		selectedAccount: null,
+		selectedForAsset: null
 	};
 
 	accountOverviewRef = React.createRef();
@@ -105,7 +107,7 @@ class Wallet extends PureComponent {
 	componentDidMount = () => {
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
-			//AssetsDetectionController.detectAssets();
+			AssetsDetectionController.detectAssets();
 			// AccountTrackerController.refresh();
 			this.getBalance()
 			this.mounted = true;
@@ -133,20 +135,23 @@ class Wallet extends PureComponent {
 	};
 
 	getBalance = async() => {
-		const { accounts } = this.props;
-		for(const account in accounts){
-			let params = [account]
+		const { accounts, selectedAddress, identities } = this.props;
+		// for(const account in accounts){
+			let params = [selectedAddress]
 			await API.postRequest(Routes.getBalance, params, response => {
 				console.log(response)
 				const balance = response.result ? response.result : 0x00
-				accounts[account] = {
+				accounts[selectedAddress] = {
 					balance: balance
 				}
-				console.log({[account]: accounts[account]})
+				this.setState({
+					selectedForAsset: accounts[selectedAddress],
+					selectedAccount: { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] }
+				})
 			}, error => {
 				console.log(error.message)
 			})
-		}
+		// }
 	}
 
 	componentWillUnmount() {
@@ -193,17 +198,24 @@ class Wallet extends PureComponent {
 			ticker
 		} = this.props;
 
+		const { selectedAccount, selectedForAsset } = this.state;
+
 		let balance = 0;
 		let assets = tokens;
-		if (accounts[selectedAddress]) {
-			balance = renderFromWei(accounts[selectedAddress].balance);
+		console.log({
+			selectedForAsset
+		})
+		if (selectedForAsset) {
+			// balance = renderFromWei(selectedForAsset.balance);
+			balance = selectedForAsset.balance
 			assets = [
 				{
 					name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
 					symbol: getTicker(ticker),
 					isETH: true,
 					balance,
-					balanceFiat: weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency),
+					balanceFiat: weiToFiat(hexToBN(selectedForAsset.balance), conversionRate, currentCurrency),
+					// balanceFiat: selectedForAsset.balance,
 					logo: '../images/logo.png'
 				},
 				...tokens
@@ -211,16 +223,22 @@ class Wallet extends PureComponent {
 		} else {
 			assets = tokens;
 		}
-		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+
+		// const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+		
 		return (
 			<View style={styles.wrapper}>
-				<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
+				{
+					selectedAccount && (
+						<AccountOverview account={selectedAccount} navigation={navigation} onRef={this.onRef} />
+					)
+				}
 				<ScrollableTabView
 					renderTabBar={this.renderTabBar}
 					// eslint-disable-next-line react/jsx-no-bind
 					onChangeTab={obj => this.onChangeTab(obj)}
 				>
-					<Tokens navigation={navigation} tabLabel={'LCN Tokens'} tokens={assets} />
+					<Tokens navigation={navigation} tabLabel={'LCN Tokens'} tokens={assets}  />
 					{/*<CollectibleContracts
 						navigation={navigation}
 						tabLabel={strings('wallet.collectibles')}
