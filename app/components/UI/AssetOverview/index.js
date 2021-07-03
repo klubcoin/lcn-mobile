@@ -248,8 +248,9 @@ class AssetOverview extends PureComponent {
 		let mainBalance, secondaryBalance;
 		const itemAddress = safeToChecksumAddress(address);
 		let balance, balanceFiat;
+
 		if (isETH) {
-			balance = renderFromWei(accounts[selectedAddress] && accounts[selectedAddress].balance);
+			balance = accounts[selectedAddress].balance;
 			balanceFiat = isMainNet(chainId)
 				? weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency)
 				: null;
@@ -280,7 +281,7 @@ class AssetOverview extends PureComponent {
 							<Text style={styles.amount} testID={'token-amount'}>
 								{mainBalance}
 							</Text>
-							{secondaryBalance && <Text style={styles.amountFiat}>{secondaryBalance}</Text>}
+							{secondaryBalance && <Text style={styles.amountFiat}>EUR</Text>}
 						</>
 					)}
 				</View>

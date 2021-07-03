@@ -24,6 +24,9 @@ import { renderAccountName } from '@util/address';
 import { renderFromWei, weiToFiat, hexToBN } from '@util/number';
 import { getTicker } from '@util/transactions';
 import { WebView } from 'react-native-webview';
+import { BaseController } from '@metamask/controllers';
+import { NavigationActions, StackActions} from 'react-navigation';
+
 const Colors = {
   primary: '#370e75',
   secondary: '#eee',
@@ -83,6 +86,25 @@ function PayPal({selectedAddress, ...props}){
     return (<FeatherIcon name={name} size={size || 24} color={Colors.gray} />)
   }
 
+  getBalance = async() => {
+    const { accounts, identities } = props;
+      let params = [selectedAddress.selectedAddress]
+      await API.postRequest(Routes.getBalance, params, response => {
+        const balance = response.result ? response.result : 0x00
+        console.log({
+          getBalance: response
+        })
+        accounts[selectedAddress] = {
+          balance: balance
+        }
+        BaseController.update({ accounts: Object.assign({}, accounts) })
+        props.navigation.navigate('Home')
+      }, error => {
+        console.log(error.message)
+      })
+    // }
+  }
+
   paypalDirect = () => {
     API.paypalPostRequest(response => {
       console.log(response)
@@ -120,11 +142,18 @@ function PayPal({selectedAddress, ...props}){
     }
     console.log('orderId', orderId)
     API.standardPostRequest(Routes.paypalPaymentCapture + '/' + orderId, {}, response => {
-      console.log(response)
       if(response.status == 200){
         // success
         console.log('success paypal transactions')
-        props.navigation.navigate('Home')
+        // const navigationAction = NavigationActions.navigate({
+        //   routeName: 'Home',
+        //   action: StackActions.reset({
+        //     index: 0,
+        //     key: null
+        //   })
+        // })
+        // props.navigation.dispatch(navigationAction)
+        props.navigation.push('Home')
       }else{
         // should alert an error here
         console.log('error paypal transactions')

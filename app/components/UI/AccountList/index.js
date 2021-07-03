@@ -23,6 +23,7 @@ import AccountElement from './AccountElement';
 import { connect } from 'react-redux';
 import API from 'services/api'
 import Routes from 'common/routes'
+import { BaseController } from '@metamask/controllers';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -116,7 +117,9 @@ class AccountList extends PureComponent {
 		/**
 		 * Indicates whether third party API mode is enabled
 		 */
-		thirdPartyApiMode: PropTypes.bool
+		thirdPartyApiMode: PropTypes.bool,
+
+		identities: PropTypes.object,
 	};
 
 	state = {
@@ -150,6 +153,8 @@ class AccountList extends PureComponent {
 		this.mounted && this.setState({ orderedAccounts });
 		this.createAccountDuringRegistration(orderedAccounts)
 	}
+
+	
 
 	createAccountDuringRegistration(orderedAccounts){
 		console.log('accounts', orderedAccounts)
@@ -237,9 +242,31 @@ class AccountList extends PureComponent {
 			"myWallet", account.address, account.address
 		], response => {
 			console.log('account creation', response)
+			this.getBalance(account.address)
 		}, error => {
 			console.log('error account', error)
 		})
+	}
+
+	getBalance = async(selectedAddress) => {
+		const { accounts, identities } = this.props;
+		// for(const account in accounts){
+			let params = [selectedAddress]
+			await API.postRequest(Routes.getBalance, params, response => {
+				console.log(response)
+				const balance = response.result ? response.result : 0x00
+				accounts[selectedAddress] = {
+					balance: balance
+				}
+				this.setState({
+					selectedForAsset: accounts[selectedAddress],
+					selectedAccount: { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] }
+				})
+				BaseController.update({ accounts: Object.assign({}, accounts) })
+			}, error => {
+				console.log(error.message)
+			})
+		// }
 	}
 
 	addAccount = async () => {
@@ -405,7 +432,8 @@ const mapStateToProps = state => ({
 	thirdPartyApiMode: state.privacy.thirdPartyApiMode,
 	keyrings: state.engine.backgroundState.KeyringController.keyrings,
 	keyringController: state.engine.backgroundState.KeyringController,
-	network: state.engine.backgroundState.NetworkController.network
+	network: state.engine.backgroundState.NetworkController.network,
+	identities: state.engine.backgroundState.PreferencesController.identities,
 });
 
 export default connect(mapStateToProps)(AccountList);

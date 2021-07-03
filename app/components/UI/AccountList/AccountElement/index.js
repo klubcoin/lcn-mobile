@@ -147,7 +147,7 @@ class AccountElement extends PureComponent {
 							</Text>
 							<View style={styles.accountBalanceWrapper}>
 								<Text style={styles.accountBalance}>
-									{renderFromWei(updatedBalanceFromStore)} LCN {/*getTicker(ticker)*/}
+									{updatedBalanceFromStore} LCN {/*getTicker(ticker)*/}
 								</Text>
 								{!!balanceError && (
 									<Text style={[styles.accountBalance, styles.accountBalanceError]}>

@@ -333,7 +333,7 @@ class AccountOverview extends PureComponent {
 								</TouchableOpacity>
 							)}
 						</View>
-						{isMainNet(chainId) && <Text style={styles.amountFiat}>{fiatBalance}</Text>}
+						{isMainNet(chainId) && <Text style={styles.amountFiat}>EUR 200</Text>}
 						<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
 							<EthereumAddress address={address} style={styles.address} type={'short'} />
 						</TouchableOpacity>

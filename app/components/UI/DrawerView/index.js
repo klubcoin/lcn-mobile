@@ -882,7 +882,7 @@ class DrawerView extends PureComponent {
 									</Text>
 									<Icon name="caret-down" size={24} style={styles.caretDown} />
 								</View>
-								{isMainNet(chainId) && <Text style={styles.accountBalance}>{fiatBalanceStr}</Text>}
+								{isMainNet(chainId) && <Text style={styles.accountBalance}>EUR 200</Text>}
 								<EthereumAddress
 									address={account.address}
 									style={styles.accountAddress}

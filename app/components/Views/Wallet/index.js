@@ -20,6 +20,7 @@ import { showTransactionNotification, hideCurrentNotification } from '../../../a
 import ErrorBoundary from '../ErrorBoundary';
 import API from 'services/api'
 import Routes from 'common/routes';
+import { BaseController } from '@metamask/controllers';
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
@@ -148,6 +149,7 @@ class Wallet extends PureComponent {
 					selectedForAsset: accounts[selectedAddress],
 					selectedAccount: { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] }
 				})
+				BaseController.update({ accounts: Object.assign({}, accounts) })
 			}, error => {
 				console.log(error.message)
 			})
@@ -203,18 +205,18 @@ class Wallet extends PureComponent {
 		let balance = 0;
 		let assets = tokens;
 		console.log({
-			selectedForAsset
+			selectedAddress
 		})
-		if (selectedForAsset) {
-			// balance = renderFromWei(selectedForAsset.balance);
-			balance = selectedForAsset.balance
+		if (selectedAddress && accounts[selectedAddress]) {
+			balance = accounts[selectedAddress].balance
+			// balance = 0
 			assets = [
 				{
 					name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
 					symbol: getTicker(ticker),
 					isETH: true,
 					balance,
-					balanceFiat: weiToFiat(hexToBN(selectedForAsset.balance), conversionRate, currentCurrency),
+					balanceFiat: weiToFiat(hexToBN(balance), conversionRate, currentCurrency),
 					// balanceFiat: selectedForAsset.balance,
 					logo: '../images/logo.png'
 				},
@@ -224,13 +226,14 @@ class Wallet extends PureComponent {
 			assets = tokens;
 		}
 
-		// const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+
+		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 		
 		return (
 			<View style={styles.wrapper}>
 				{
-					selectedAccount && (
-						<AccountOverview account={selectedAccount} navigation={navigation} onRef={this.onRef} />
+					selectedAddress && (
+						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
 					)
 				}
 				<ScrollableTabView

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { swapsUtils } from '@metamask/swaps-controller/';
 
 import { colors } from '../../../styles/common';
-import AssetOverview from '../../UI/AssetOverview';
+import AssetOverview from '@UI/AssetOverview';
 import Transactions from '../../UI/Transactions';
 import { getNetworkNavbarOptions } from '../../UI/Navbar';
 import Engine from '../../../core/Engine';

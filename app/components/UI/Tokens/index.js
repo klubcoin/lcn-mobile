@@ -222,7 +222,7 @@ class Tokens extends PureComponent {
 					<Text style={styles.balance}>{mainBalance}</Text>
 					{secondaryBalance ? (
 						<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
-							{secondaryBalance}
+							EUR
 						</Text>
 					) : null}
 				</View>
