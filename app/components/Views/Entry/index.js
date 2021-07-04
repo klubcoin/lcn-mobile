@@ -90,7 +90,13 @@ const Entry = props => {
 			} else if (viewToGo === 'Onboarding') {
 				props.navigation.navigate('OnboardingRootNav');
 			} else {
-				props.navigation.navigate('HomeNav');
+				const { selectedAddress } = props;
+				if(selectedAddress){
+					props.navigation.navigate('HomeNav');	
+				}else{
+					props.navigation.navigate('OnboardingRootNav');
+				}
+				
 			}
 		});
 	}, [opacity, viewToGo, props.navigation]);
