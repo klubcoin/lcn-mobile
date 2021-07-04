@@ -348,7 +348,9 @@ class AccountList extends PureComponent {
 		const allKeyrings = keyrings && keyrings.length ? keyrings : Engine.context.KeyringController.state.keyrings;
 
 		const accountsOrdered = allKeyrings.reduce((list, keyring) => list.concat(keyring.accounts), []);
-		return accountsOrdered
+		
+		if(accounts){
+			return accountsOrdered
 			.filter(address => !!identities[toChecksumAddress(address)])
 			.map((addr, index) => {
 				const checksummedAddress = toChecksumAddress(addr);
@@ -359,7 +361,7 @@ class AccountList extends PureComponent {
 				const isImported = this.isImported(allKeyrings, identityAddressChecksummed);
 				let balance = 0x0;
 				if (accounts[identityAddressChecksummed]) {
-					balance = accounts[identityAddressChecksummed].balance;
+					balance = accounts[identityAddressChecksummed] ? accounts[identityAddressChecksummed].balance : null;
 				}
 
 				const balanceError = getBalanceError ? getBalanceError(balance) : null;
@@ -372,7 +374,9 @@ class AccountList extends PureComponent {
 					isImported,
 					balanceError
 				};
-			});
+			});	
+		}
+		
 	}
 
 	keyExtractor = item => item.address;

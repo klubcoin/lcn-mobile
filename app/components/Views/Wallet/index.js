@@ -213,9 +213,9 @@ class Wallet extends PureComponent {
 
 		let balance = 0;
 		let assets = tokens;
-		if (selectedAddress && accounts[selectedAddress] && typeof accounts[selectedAddress].balance !== 'undefined') {
-			// balance = accounts[selectedAddress].balance
-			balance = "0x00"
+		if (selectedAddress && accounts) {
+			balance = accounts[selectedAddress].balance
+			// balance = "0x00"
 			assets = [
 				{
 					name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
@@ -241,7 +241,7 @@ class Wallet extends PureComponent {
 		return (
 			<View style={styles.wrapper}>
 				{
-					selectedAddress && (
+					(selectedAddress && account) && (
 						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
 					)
 				}
@@ -288,7 +288,7 @@ class Wallet extends PureComponent {
 					style={styles.wrapper}
 					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
 				>
-					{this.props.selectedAddress ? this.renderContent() : this.renderLoader()}
+					{(this.props.selectedAddress &&  this.props.accounts) ? this.renderContent() : this.renderLoader()}
 				</ScrollView>
 				{this.renderOnboardingWizard()}
 			</View>

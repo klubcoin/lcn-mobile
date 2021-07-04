@@ -192,7 +192,7 @@ class Tokens extends PureComponent {
 		// const balanceValue = `${balance} ${asset.symbol}`;
 
 		let account = null
-		if(selectedAddress){
+		if(selectedAddress && typeof accounts[selectedAddress] != 'undefined'){
 			account = accounts[selectedAddress]
 			balance = accounts[selectedAddress].balance
 		}

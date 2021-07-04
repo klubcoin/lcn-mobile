@@ -272,7 +272,7 @@ class AssetOverview extends PureComponent {
 			secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
 		}
 
-		const conversion = accounts[selectedAddress] && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
+		const conversion = typeof accounts[selectedAddress] != 'undefined' && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
 		return (
 			<View style={styles.wrapper} testID={'token-asset-overview'}>
 				<View style={styles.assetLogo}>{this.renderLogo()}</View>

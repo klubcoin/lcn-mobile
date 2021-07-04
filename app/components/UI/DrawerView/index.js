@@ -827,11 +827,13 @@ class DrawerView extends PureComponent {
 		} = this.props;
 
 		const { invalidCustomNetwork, showProtectWalletModal } = this.state;
-
-		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+		let account, balance, conversion
+		if(accounts && accounts[selectedAddress]){
+			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+			balance = typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00'
+			conversion = typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
+		}
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
-		const balance = accounts[selectedAddress] && typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00'
-		const conversion = accounts[selectedAddress] && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
 				<ScrollView>
@@ -873,17 +875,26 @@ class DrawerView extends PureComponent {
 								testID={'navbar-account-button'}
 							>
 								<View style={styles.accountNameWrapper}>
-									<Text style={styles.accountName} numberOfLines={1}>
-										{account.name}
-									</Text>
+								{
+									account && (
+										<Text style={styles.accountName} numberOfLines={1}>
+											{account.name}
+										</Text>
+									)
+								}
 									<Icon name="caret-down" size={24} style={styles.caretDown} />
 								</View>
 								{isMainNet(chainId) && <Text style={styles.accountBalance}>{Helper.convertToEur(balance, conversion)}</Text>}
-								<EthereumAddress
-									address={account.address}
-									style={styles.accountAddress}
-									type={'short'}
-								/>
+								
+								{
+									account && (
+										<EthereumAddress
+											address={account.address}
+											style={styles.accountAddress}
+											type={'short'}
+										/>
+									)
+								}
 								{this.isCurrentAccountImported() && (
 									<View style={styles.importedWrapper}>
 										<Text numberOfLines={1} style={styles.importedText}>
