@@ -42,6 +42,7 @@ import { RPC } from '../../../constants/network';
 import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorState } from '../../../util/general';
 import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
 import Colors from 'common/colors'
+import Helper from 'common/Helper'
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -828,14 +829,9 @@ class DrawerView extends PureComponent {
 		const { invalidCustomNetwork, showProtectWalletModal } = this.state;
 
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
-		account.balance = (accounts[selectedAddress] && renderFromWei(accounts[selectedAddress].balance)) || 0;
-		const fiatBalance = Engine.getTotalFiatAccountBalance();
-		if (fiatBalance !== this.previousBalance) {
-			this.previousBalance = this.currentBalance;
-		}
-		this.currentBalance = fiatBalance;
-		const fiatBalanceStr = renderFiat(this.currentBalance, currentCurrency);
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
+		const balance = accounts[selectedAddress] && typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00'
+		const conversion = accounts[selectedAddress] && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
 				<ScrollView>
@@ -882,7 +878,7 @@ class DrawerView extends PureComponent {
 									</Text>
 									<Icon name="caret-down" size={24} style={styles.caretDown} />
 								</View>
-								{isMainNet(chainId) && <Text style={styles.accountBalance}>EUR 200</Text>}
+								{isMainNet(chainId) && <Text style={styles.accountBalance}>{Helper.convertToEur(balance, conversion)}</Text>}
 								<EthereumAddress
 									address={account.address}
 									style={styles.accountAddress}

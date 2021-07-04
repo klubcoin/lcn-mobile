@@ -24,6 +24,7 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
+import Helper from 'common/Helper'
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -249,7 +250,7 @@ class AssetOverview extends PureComponent {
 		const itemAddress = safeToChecksumAddress(address);
 		let balance, balanceFiat;
 
-		if (isETH) {
+		if (selectedAddress && typeof accounts[selectedAddress].balance != 'undefined') {
 			balance = accounts[selectedAddress].balance;
 			balanceFiat = isMainNet(chainId)
 				? weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency)
@@ -270,6 +271,8 @@ class AssetOverview extends PureComponent {
 			mainBalance = !balanceFiat ? `${balance} LCN` : balanceFiat;
 			secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
 		}
+
+		const conversion = accounts[selectedAddress] && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
 		return (
 			<View style={styles.wrapper} testID={'token-asset-overview'}>
 				<View style={styles.assetLogo}>{this.renderLogo()}</View>
@@ -281,7 +284,7 @@ class AssetOverview extends PureComponent {
 							<Text style={styles.amount} testID={'token-amount'}>
 								{mainBalance}
 							</Text>
-							{secondaryBalance && <Text style={styles.amountFiat}>EUR</Text>}
+							{secondaryBalance && <Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>}
 						</>
 					)}
 				</View>

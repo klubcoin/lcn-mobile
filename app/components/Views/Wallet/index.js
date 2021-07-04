@@ -97,8 +97,7 @@ class Wallet extends PureComponent {
 
 	state = {
 		refreshing: false,
-		selectedAccount: null,
-		selectedForAsset: null
+		currentConversion: null
 	};
 
 	accountOverviewRef = React.createRef();
@@ -113,7 +112,21 @@ class Wallet extends PureComponent {
 			this.getBalance()
 			this.mounted = true;
 		});
+		this.getCurrentConversion()
 	};
+
+
+	getCurrentConversion = () => {
+		API.getRequest(Routes.getConversions, response => {
+      if(response.data.length > 0){
+      	this.setState({
+      		currentConversion: response.data[0].to
+      	})
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
 
 	onRefresh = async () => {
 		requestAnimationFrame(async () => {
@@ -143,18 +156,15 @@ class Wallet extends PureComponent {
 				console.log(response)
 				const balance = response.result ? response.result : 0x00
 				accounts[selectedAddress] = {
-					balance: balance
+					balance: balance,
+					conversion: this.state.currentConversion
 				}
-				this.setState({
-					selectedForAsset: accounts[selectedAddress],
-					selectedAccount: { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] }
-				})
 				BaseController.update({ accounts: Object.assign({}, accounts) })
 			}, error => {
 				console.log(error.message)
 			})
 		// }
-	}
+	};
 
 	componentWillUnmount() {
 		this.mounted = false;
@@ -200,16 +210,12 @@ class Wallet extends PureComponent {
 			ticker
 		} = this.props;
 
-		const { selectedAccount, selectedForAsset } = this.state;
 
 		let balance = 0;
 		let assets = tokens;
-		console.log({
-			selectedAddress
-		})
-		if (selectedAddress && accounts[selectedAddress]) {
-			balance = accounts[selectedAddress].balance
-			// balance = 0
+		if (selectedAddress && accounts[selectedAddress] && typeof accounts[selectedAddress].balance !== 'undefined') {
+			// balance = accounts[selectedAddress].balance
+			balance = "0x00"
 			assets = [
 				{
 					name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
@@ -217,7 +223,6 @@ class Wallet extends PureComponent {
 					isETH: true,
 					balance,
 					balanceFiat: weiToFiat(hexToBN(balance), conversionRate, currentCurrency),
-					// balanceFiat: selectedForAsset.balance,
 					logo: '../images/logo.png'
 				},
 				...tokens
@@ -225,6 +230,10 @@ class Wallet extends PureComponent {
 		} else {
 			assets = tokens;
 		}
+
+		console.log({
+			accounts
+		})
 
 
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };

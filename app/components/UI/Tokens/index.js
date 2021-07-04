@@ -18,6 +18,7 @@ import StyledButton from '../StyledButton';
 import { allowedToBuy } from '../FiatOrders';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { isMainNet } from '../../../util/networks';
+import Helper from 'common/Helper'
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -104,6 +105,8 @@ class Tokens extends PureComponent {
 		 * Navigation object required to push
 		 * the Asset detail view
 		 */
+		accounts: PropTypes.object,
+		selectedAddress: PropTypes.string,
 		navigation: PropTypes.object,
 		/**
 		 * Array of assets (in this case ERC20 tokens)
@@ -173,7 +176,9 @@ class Tokens extends PureComponent {
 			currentCurrency,
 			tokenBalances,
 			tokenExchangeRates,
-			primaryCurrency
+			primaryCurrency,
+			selectedAddress,
+			accounts
 		} = this.props;
 		const itemAddress = safeToChecksumAddress(asset.address);
 		const logo = asset.logo || ((contractMap[itemAddress] && contractMap[itemAddress].logo) || undefined);
@@ -185,6 +190,11 @@ class Tokens extends PureComponent {
 			? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
 			: null;
 		// const balanceValue = `${balance} ${asset.symbol}`;
+
+		let account = null
+		if(selectedAddress){
+			account = accounts[selectedAddress]
+		}
 
 		const balanceValue = `${balance} LCN`;
 
@@ -220,9 +230,9 @@ class Tokens extends PureComponent {
 
 				<View style={styles.balances} testID={'balance'}>
 					<Text style={styles.balance}>{mainBalance}</Text>
-					{secondaryBalance ? (
+					{account ? (
 						<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
-							EUR
+							{Helper.convertToEur(account.balance, account.conversion)}
 						</Text>
 					) : null}
 				</View>
@@ -325,6 +335,8 @@ class Tokens extends PureComponent {
 }
 
 const mapStateToProps = state => ({
+	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	chainId: state.engine.backgroundState.NetworkController.provider.chainId,
 	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
 	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,

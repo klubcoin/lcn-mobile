@@ -250,23 +250,17 @@ class AccountList extends PureComponent {
 
 	getBalance = async(selectedAddress) => {
 		const { accounts, identities } = this.props;
-		// for(const account in accounts){
-			let params = [selectedAddress]
-			await API.postRequest(Routes.getBalance, params, response => {
-				console.log(response)
-				const balance = response.result ? response.result : 0x00
-				accounts[selectedAddress] = {
-					balance: balance
-				}
-				this.setState({
-					selectedForAsset: accounts[selectedAddress],
-					selectedAccount: { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] }
-				})
-				BaseController.update({ accounts: Object.assign({}, accounts) })
-			}, error => {
-				console.log(error.message)
-			})
-		// }
+		let params = [selectedAddress]
+		await API.postRequest(Routes.getBalance, params, response => {
+			console.log(response)
+			const balance = response.result ? response.result : 0x00
+			accounts[selectedAddress] = {
+				balance: balance
+			}
+			BaseController.update({ accounts: Object.assign({}, accounts) })
+		}, error => {
+			console.log(error.message)
+		})
 	}
 
 	addAccount = async () => {

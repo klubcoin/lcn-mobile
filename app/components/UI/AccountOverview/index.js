@@ -29,6 +29,7 @@ import EthereumAddress from '../EthereumAddress';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
+import Helper from 'common/Helper'
 
 const styles = StyleSheet.create({
 	scrollView: {
@@ -263,14 +264,12 @@ class AccountOverview extends PureComponent {
 
 	render() {
 		const {
-			account: { name, address },
+			account: { name, address, balance, conversion },
 			currentCurrency,
 			onboardingWizard,
 			chainId,
 			swapsIsLive
 		} = this.props;
-
-		const fiatBalance = `${renderFiat(Engine.getTotalFiatAccountBalance(), currentCurrency)}`;
 
 		if (!address) return null;
 		const { accountLabelEditable, accountLabel } = this.state;
@@ -333,7 +332,7 @@ class AccountOverview extends PureComponent {
 								</TouchableOpacity>
 							)}
 						</View>
-						{isMainNet(chainId) && <Text style={styles.amountFiat}>EUR 200</Text>}
+						{isMainNet(chainId) && <Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>}
 						<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
 							<EthereumAddress address={address} style={styles.address} type={'short'} />
 						</TouchableOpacity>
