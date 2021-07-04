@@ -183,7 +183,7 @@ class Tokens extends PureComponent {
 		const itemAddress = safeToChecksumAddress(asset.address);
 		const logo = asset.logo || ((contractMap[itemAddress] && contractMap[itemAddress].logo) || undefined);
 		const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
-		const balance =
+		let balance =
 			asset.balance ||
 			(itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], asset.decimals) : 0);
 		const balanceFiat = isMainNet(chainId)
@@ -194,6 +194,7 @@ class Tokens extends PureComponent {
 		let account = null
 		if(selectedAddress){
 			account = accounts[selectedAddress]
+			balance = accounts[selectedAddress].balance
 		}
 
 		const balanceValue = `${balance} LCN`;
