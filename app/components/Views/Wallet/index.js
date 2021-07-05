@@ -153,8 +153,8 @@ class Wallet extends PureComponent {
 		// for(const account in accounts){
 			let params = [selectedAddress]
 			await API.postRequest(Routes.getBalance, params, response => {
-				console.log(response)
-				const balance = response.result ? response.result : 0x00
+				// console.log(parseInt(response.result, 16))
+				const balance = response.result ? parseInt(response.result, 16) : 0
 				accounts[selectedAddress] = {
 					balance: balance,
 					conversion: this.state.currentConversion
