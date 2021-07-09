@@ -264,11 +264,12 @@ class AssetOverview extends PureComponent {
 				: null;
 		}
 		// choose balances depending on 'primaryCurrency'
+		let newBalance = Helper.demosToLiquichain(balance)
 		if (primaryCurrency === 'ETH') {
-			mainBalance = `${balance} LCN`;
+			mainBalance = `${newBalance} LCN`;
 			secondaryBalance = balanceFiat;
 		} else {
-			mainBalance = !balanceFiat ? `${balance} LCN` : balanceFiat;
+			mainBalance = !balanceFiat ? `${newBalance} LCN` : balanceFiat;
 			secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
 		}
 
@@ -281,7 +282,10 @@ class AssetOverview extends PureComponent {
 						this.renderWarning()
 					) : (
 						<>
-							<Text style={styles.amount} testID={'token-amount'}>
+							<Text style={{
+								...styles.amount,
+								fontSize: 16
+							}} testID={'token-amount'}>
 								{mainBalance}
 							</Text>
 							{secondaryBalance && <Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>}

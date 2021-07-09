@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { swapsUtils } from '@metamask/swaps-controller/';
 
-import { colors } from '../../../styles/common';
 import AssetOverview from '@UI/AssetOverview';
 import Transactions from '../../UI/Transactions';
 import { getNetworkNavbarOptions } from '../../UI/Navbar';
@@ -12,17 +11,18 @@ import Engine from '../../../core/Engine';
 import { safeToChecksumAddress } from '../../../util/address';
 import { addAccountTimeFlagFilter } from '../../../util/transactions';
 import { toLowerCaseCompare } from '../../../util/general';
+import Colors from 'common/colors'
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: 'white',
 		flex: 1
 	},
 	assetOverviewWrapper: {
 		height: 280
 	},
 	loader: {
-		backgroundColor: colors.white,
+		backgroundColor: 'white',
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center'
@@ -97,6 +97,9 @@ class Asset extends PureComponent {
 		getNetworkNavbarOptions(navigation.getParam('symbol', ''), false, navigation);
 
 	componentDidMount() {
+		this.setState({
+			loading: true
+		})
 		InteractionManager.runAfterInteractions(() => {
 			this.normalizeTransactions();
 			this.mounted = true;
@@ -254,8 +257,12 @@ class Asset extends PureComponent {
 	}
 
 	renderLoader = () => (
-		<View style={styles.loader}>
-			<ActivityIndicator style={styles.loader} size="small" />
+		<View style={{
+			flex: 1,
+			alignItems: 'center',
+			justifyContent: 'center'
+		}}>
+			<ActivityIndicator color={Colors.primary} size="large" />
 		</View>
 	);
 
@@ -277,31 +284,39 @@ class Asset extends PureComponent {
 			selectedAddress,
 			chainId
 		} = this.props;
-
+		console.log({
+			loading
+		})
 		return (
 			<View style={styles.wrapper}>
-				{loading ? (
-					this.renderLoader()
-				) : (
-					<Transactions
-						header={
-							<View style={styles.assetOverviewWrapper}>
-								<AssetOverview navigation={navigation} asset={navigation && params} />
-							</View>
-						}
-						assetSymbol={navigation && params.symbol}
-						navigation={navigation}
-						transactions={transactions}
-						submittedTransactions={submittedTxs}
-						confirmedTransactions={confirmedTxs}
-						selectedAddress={selectedAddress}
-						conversionRate={conversionRate}
-						currentCurrency={currentCurrency}
-						networkType={chainId}
-						loading={!transactionsUpdated}
-						headerHeight={280}
-					/>
-				)}
+				{
+					loading && (
+						<ActivityIndicator color={Colors.primary} size="large" />
+					)
+				}
+				{
+					!loading && (
+						<Transactions
+							header={
+								<View style={styles.assetOverviewWrapper}>
+									<AssetOverview navigation={navigation} asset={navigation && params} />
+								</View>
+							}
+							assetSymbol={navigation && params.symbol}
+							navigation={navigation}
+							transactions={transactions}
+							submittedTransactions={submittedTxs}
+							confirmedTransactions={confirmedTxs}
+							selectedAddress={selectedAddress}
+							conversionRate={conversionRate}
+							currentCurrency={currentCurrency}
+							networkType={chainId}
+							loading={!transactionsUpdated}
+							headerHeight={280}
+						/>
+					)
+				}
+					
 			</View>
 		);
 	};

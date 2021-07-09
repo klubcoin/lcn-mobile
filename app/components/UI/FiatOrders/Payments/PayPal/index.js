@@ -56,10 +56,13 @@ function PayPal({selectedAddress, ...props}){
  const { AssetsDetectionController, AccountTrackerController } = Engine.context;
  const [payPalUrl, setPayPalUrl] = useState(null)
  const [orderId, setOrderId] = useState(null)
+ const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
     if(currencies.length == 0){
+      setLoading(true)
       API.getRequest(Routes.getConversions, response => {
+        setLoading(false)
         if(response.data.length > 0){
           setCurrencies(response.data)
           manageCurrencies()
@@ -453,7 +456,7 @@ function PayPal({selectedAddress, ...props}){
     }}>
 
       {
-        payPalUrl == null && (
+        (payPalUrl == null && isLoading == false) && (
           <ScrollView style={{
           }}
           showsVerticalScrollIndicator={false}
@@ -470,7 +473,7 @@ function PayPal({selectedAddress, ...props}){
                   paddingRight: 20,
                   paddingTop: 20,
                   textAlign: 'center'
-                }}>Buy Cryto to your wallet</Text>
+                }}>Buy Crypto to your wallet</Text>
 
 
                 {selected && amount()}
@@ -552,6 +555,17 @@ function PayPal({selectedAddress, ...props}){
                 color: Colors.white,
               }}>Proceed Checkout</Text>
             </TouchableOpacity>
+          </View>
+        )
+      }
+      {
+        isLoading && (
+          <View style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <ActivityIndicator size="large" color={Colors.primary} />
           </View>
         )
       }

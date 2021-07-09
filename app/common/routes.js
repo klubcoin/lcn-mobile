@@ -2,6 +2,7 @@ export default{
   jsonRPC: 'jsonrpc',
   walletCreation: 'wallet_creation',
   getBalance: 'eth_getBalance',
+  getTransaction: 'eth_getTransactionByHash',
   mainNetWork: {
     name: 'Liquichain Main Network',
     url: 'https://account.liquichain.io/meveo/rest/jsonrpc',

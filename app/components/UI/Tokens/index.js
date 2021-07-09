@@ -197,7 +197,9 @@ class Tokens extends PureComponent {
 			balance = accounts[selectedAddress].balance
 		}
 
-		const balanceValue = `${balance} LCN`;
+		balance = Helper.demosToLiquichain(balance)
+
+		let balanceValue = `${balance} LCN`;
 
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;

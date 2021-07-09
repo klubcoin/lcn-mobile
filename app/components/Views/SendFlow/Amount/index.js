@@ -54,6 +54,8 @@ import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { isMainNet } from '../../../../util/networks';
 import { toLowerCaseCompare } from '../../../../util/general';
+import Helper from 'common/Helper'
+import Routes from 'common/routes'
 
 const { hexToBN, BNToHex } = util;
 
@@ -382,7 +384,8 @@ class Amount extends PureComponent {
 		assetsModalVisible: false,
 		internalPrimaryCurrencyIsCrypto: this.props.primaryCurrency === 'ETH',
 		estimatedTotalGas: undefined,
-		hasExchangeRate: false
+		hasExchangeRate: false,
+		conversion: null
 	};
 
 	amountInput = React.createRef();
@@ -401,6 +404,8 @@ class Amount extends PureComponent {
 		// For analytics
 		navigation.setParams({ providerType });
 
+		this.getCurrentConversion()
+
 		this.tokens = [getEther(ticker), ...tokens];
 		this.collectibles = this.processCollectibles();
 		this.amountInput && this.amountInput.current && this.amountInput.current.focus();
@@ -412,7 +417,39 @@ class Amount extends PureComponent {
 			estimatedTotalGas,
 			inputValue: readableValue
 		});
+
 	};
+
+	getCurrentConversion = () => {
+		API.getRequest(Routes.getConversions, response => {
+      if(response.data.length > 0){
+      	this.setState({
+      		currentConversion: response.data[0].to
+      	})
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
+
+	getBalance = async() => {
+		const { accounts, selectedAddress, identities } = this.props;
+		// for(const account in accounts){
+			let params = [selectedAddress]
+			await API.postRequest(Routes.getBalance, params, response => {
+				// console.log(parseInt(response.result, 16))
+				const balance = response.result
+				accounts[selectedAddress] = {
+					balance: balance,
+					conversion: this.state.currentConversion
+				}
+				BaseController.update({ accounts: Object.assign({}, accounts) })
+			}, error => {
+				console.log(error.message)
+			})
+		// }
+	};
+
 
 	validateCollectibleOwnership = async () => {
 		const { AssetsContractController } = Engine.context;
@@ -732,7 +769,7 @@ class Amount extends PureComponent {
 		this.setState({
 			inputValue,
 			inputValueConversion,
-			renderableInputValueConversion,
+			renderableInputValueConversion: '5 EUR',
 			amountError: undefined,
 			hasExchangeRate,
 			maxFiatInput: !useMax && undefined
@@ -748,11 +785,11 @@ class Amount extends PureComponent {
 		const { accounts, selectedAddress, contractBalances } = this.props;
 		let currentBalance;
 		if (renderableBalance) {
-			currentBalance = `${renderableBalance} ${symbol}`;
+			currentBalance = `${Helper.demosToLiquichain(renderableBalance)} ${symbol}`;
 		} else if (isETH) {
-			currentBalance = `${renderFromWei(accounts[selectedAddress].balance)} ${symbol}`;
+			currentBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${symbol}`;
 		} else {
-			currentBalance = `${renderFromTokenMinimalUnit(contractBalances[address], decimals)} ${symbol}`;
+			currentBalance = `${Helper.demosToLiquichain(contractBalances[address], decimals)} ${symbol}`;
 		}
 		this.setState({ currentBalance });
 	};
@@ -918,6 +955,9 @@ class Amount extends PureComponent {
 			internalPrimaryCurrencyIsCrypto,
 			currentBalance
 		} = this.state;
+		console.log({
+			currentBalance
+		})
 		const { currentCurrency } = this.props;
 		return (
 			<View>

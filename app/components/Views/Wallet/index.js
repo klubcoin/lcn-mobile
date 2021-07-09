@@ -21,6 +21,7 @@ import ErrorBoundary from '../ErrorBoundary';
 import API from 'services/api'
 import Routes from 'common/routes';
 import { BaseController } from '@metamask/controllers';
+import Helper from 'common/Helper'
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
@@ -154,7 +155,7 @@ class Wallet extends PureComponent {
 			let params = [selectedAddress]
 			await API.postRequest(Routes.getBalance, params, response => {
 				// console.log(parseInt(response.result, 16))
-				const balance = response.result ? parseInt(response.result, 16) : 0
+				const balance = response.result
 				accounts[selectedAddress] = {
 					balance: balance,
 					conversion: this.state.currentConversion
