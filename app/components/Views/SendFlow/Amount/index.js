@@ -56,6 +56,8 @@ import { isMainNet } from '../../../../util/networks';
 import { toLowerCaseCompare } from '../../../../util/general';
 import Helper from 'common/Helper'
 import Routes from 'common/routes'
+import { BaseController } from '@metamask/controllers';
+import API from 'services/api'
 
 const { hexToBN, BNToHex } = util;
 
@@ -385,7 +387,9 @@ class Amount extends PureComponent {
 		internalPrimaryCurrencyIsCrypto: this.props.primaryCurrency === 'ETH',
 		estimatedTotalGas: undefined,
 		hasExchangeRate: false,
-		conversion: null
+		conversion: null,
+		currentConversion: null,
+		currentBalance: null
 	};
 
 	amountInput = React.createRef();
@@ -405,12 +409,12 @@ class Amount extends PureComponent {
 		navigation.setParams({ providerType });
 
 		this.getCurrentConversion()
+		this.getBalance()
 
 		this.tokens = [getEther(ticker), ...tokens];
 		this.collectibles = this.processCollectibles();
 		this.amountInput && this.amountInput.current && this.amountInput.current.focus();
 		this.onInputChange(readableValue);
-		!selectedAsset.tokenId && this.handleSelectedAssetBalance(selectedAsset);
 
 		const estimatedTotalGas = await this.estimateTransactionTotalGas();
 		this.setState({
@@ -423,8 +427,11 @@ class Amount extends PureComponent {
 	getCurrentConversion = () => {
 		API.getRequest(Routes.getConversions, response => {
       if(response.data.length > 0){
+      	console.log({
+      		currentConversion: response.data[1].to
+      	})
       	this.setState({
-      		currentConversion: response.data[0].to
+      		currentConversion: response.data[1].to
       	})
       }
     }, error => {
@@ -440,10 +447,10 @@ class Amount extends PureComponent {
 				// console.log(parseInt(response.result, 16))
 				const balance = response.result
 				accounts[selectedAddress] = {
-					balance: balance,
-					conversion: this.state.currentConversion
+					balance: balance
 				}
 				BaseController.update({ accounts: Object.assign({}, accounts) })
+				this.handleSelectedAssetBalance()
 			}, error => {
 				console.log(error.message)
 			})
@@ -714,7 +721,7 @@ class Amount extends PureComponent {
 
 	onInputChange = (inputValue, selectedAsset, useMax) => {
 		const { contractExchangeRates, conversionRate, currentCurrency, chainId, ticker } = this.props;
-		const { internalPrimaryCurrencyIsCrypto } = this.state;
+		const { internalPrimaryCurrencyIsCrypto, currentConversion } = this.state;
 		let inputValueConversion, renderableInputValueConversion, hasExchangeRate, comma;
 		// Remove spaces from input
 		inputValue = inputValue && inputValue.replace(/\s+/g, '');
@@ -729,47 +736,52 @@ class Amount extends PureComponent {
 		if (selectedAsset.isETH) {
 			hasExchangeRate = isMainNet(chainId) ? !!conversionRate : false;
 			if (internalPrimaryCurrencyIsCrypto) {
-				inputValueConversion = `${weiToFiatNumber(toWei(processedInputValue), conversionRate)}`;
-				renderableInputValueConversion = `${weiToFiat(
-					toWei(processedInputValue),
-					conversionRate,
-					currentCurrency
-				)}`;
+				// inputValueConversion = `${weiToFiatNumber(toWei(processedInputValue), conversionRate)}`;
+				// renderableInputValueConversion = `${weiToFiat(
+				// 	toWei(processedInputValue),
+				// 	conversionRate,
+				// 	currentCurrency
+				// )}`;
 			} else {
-				inputValueConversion = `${renderFromWei(fiatNumberToWei(processedInputValue, conversionRate))}`;
-				renderableInputValueConversion = `${inputValueConversion} ${processedTicker}`;
+				// inputValueConversion = `${renderFromWei(fiatNumberToWei(processedInputValue, conversionRate))}`;
+				// renderableInputValueConversion = `${inputValueConversion} ${processedTicker}`;
 			}
 		} else {
 			const exchangeRate = contractExchangeRates[selectedAsset.address];
 			hasExchangeRate = isMainNet(chainId) ? !!exchangeRate : false;
 			// If !hasExchangeRate we have to handle crypto amount
 			if (internalPrimaryCurrencyIsCrypto || !hasExchangeRate) {
-				inputValueConversion = `${balanceToFiatNumber(processedInputValue, conversionRate, exchangeRate)}`;
-				renderableInputValueConversion = `${balanceToFiat(
-					processedInputValue,
-					conversionRate,
-					exchangeRate,
-					currentCurrency
-				)}`;
+				// inputValueConversion = `${balanceToFiatNumber(processedInputValue, conversionRate, exchangeRate)}`;
+				// renderableInputValueConversion = `${balanceToFiat(
+				// 	processedInputValue,
+				// 	conversionRate,
+				// 	exchangeRate,
+				// 	currentCurrency
+				// )}`;
 			} else {
-				inputValueConversion = `${renderFromTokenMinimalUnit(
-					fiatNumberToTokenMinimalUnit(
-						processedInputValue,
-						conversionRate,
-						exchangeRate,
-						selectedAsset.decimals
-					),
-					selectedAsset.decimals
-				)}`;
-				renderableInputValueConversion = `${inputValueConversion} ${selectedAsset.symbol}`;
+				// inputValueConversion = `${renderFromTokenMinimalUnit(
+				// 	fiatNumberToTokenMinimalUnit(
+				// 		processedInputValue,
+				// 		conversionRate,
+				// 		exchangeRate,
+				// 		selectedAsset.decimals
+				// 	),
+				// 	selectedAsset.decimals
+				// )}`;
+				// renderableInputValueConversion = `${inputValueConversion} ${selectedAsset.symbol}`;
 			}
 		}
+
 		if (comma) inputValue = inputValue && inputValue.replace('.', ',');
 		inputValueConversion = inputValueConversion === '0' ? undefined : inputValueConversion;
+		
+		console.log({
+			currentConversion
+		})
 		this.setState({
 			inputValue,
 			inputValueConversion,
-			renderableInputValueConversion: '5 EUR',
+			renderableInputValueConversion: 'EUR ' + (inputValue / currentConversion.value).toFixed(2),
 			amountError: undefined,
 			hasExchangeRate,
 			maxFiatInput: !useMax && undefined
@@ -781,17 +793,16 @@ class Amount extends PureComponent {
 		this.setState({ assetsModalVisible: !assetsModalVisible });
 	};
 
-	handleSelectedAssetBalance = ({ address, decimals, symbol, isETH }, renderableBalance) => {
+	handleSelectedAssetBalance = () => {
+		console.log({
+			test: currentBalance
+		})
 		const { accounts, selectedAddress, contractBalances } = this.props;
-		let currentBalance;
-		if (renderableBalance) {
-			currentBalance = `${Helper.demosToLiquichain(renderableBalance)} ${symbol}`;
-		} else if (isETH) {
-			currentBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${symbol}`;
-		} else {
-			currentBalance = `${Helper.demosToLiquichain(contractBalances[address], decimals)} ${symbol}`;
+		if(accounts && accounts[selectedAddress]){
+			this.setState({
+				currentBalance: `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${symbol}`
+			});	
 		}
-		this.setState({ currentBalance });
 	};
 
 	pickSelectedAsset = selectedAsset => {
@@ -799,7 +810,7 @@ class Amount extends PureComponent {
 		this.props.setSelectedAsset(selectedAsset);
 		if (!selectedAsset.tokenId) {
 			this.onInputChange(undefined, selectedAsset);
-			this.handleSelectedAssetBalance(selectedAsset);
+			// this.handleSelectedAssetBalance(selectedAsset);
 			// Wait for input to mount first
 			setTimeout(() => this.amountInput && this.amountInput.current && this.amountInput.current.focus(), 500);
 		}
@@ -996,9 +1007,14 @@ class Amount extends PureComponent {
 						</View>
 					</View>
 				)}
-				<View style={styles.balanceWrapper}>
-					<Text style={styles.balanceText}>{`${strings('transaction.balance')}: ${currentBalance}`}</Text>
-				</View>
+				{
+					currentBalance && (
+						<View style={styles.balanceWrapper}>
+							<Text style={styles.balanceText}>{`${strings('transaction.balance')}: ${currentBalance}`}</Text>
+						</View>
+					)
+				}
+				
 				{amountError && (
 					<View style={styles.errorMessageWrapper} testID={'amount-error'}>
 						<ErrorMessage errorMessage={amountError} />
