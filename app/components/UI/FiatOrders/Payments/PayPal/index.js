@@ -47,7 +47,7 @@ function PayPal({selectedAddress, ...props}){
   amount: 0
  });
  const [to, setTo] = useState({
-  currency: 'LCN',
+  currency: 'DEM',
   amount: 0
  });
  const [selected, setSelected] = useState(null);
@@ -70,6 +70,7 @@ function PayPal({selectedAddress, ...props}){
           setCurrencies([])
         }
       }, error => {
+        setLoading(false)
         console.log(error)
       })
     }
@@ -160,7 +161,8 @@ function PayPal({selectedAddress, ...props}){
       }else{
         // should alert an error here
         console.log('error paypal transactions')
-        props.navigation.navigate('PurchaseMethods')
+        // props.navigation.navigate('PurchaseMethods')
+        props.navigation.push('Home')
       }
     }, error => {
       console.log({
@@ -512,6 +514,7 @@ function PayPal({selectedAddress, ...props}){
               console.log('Loaded')
             }}
             onShouldStartLoadWithRequest={(request) => {
+              console.log({request})
               if(request && request.url.startsWith('https://www.sandbox.paypal.com')){
                 console.log('This should load')
                 return true
