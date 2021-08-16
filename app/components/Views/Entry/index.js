@@ -91,12 +91,11 @@ const Entry = props => {
 				props.navigation.navigate('OnboardingRootNav');
 			} else {
 				const { selectedAddress } = props;
-				if(selectedAddress){
-					props.navigation.navigate('HomeNav');	
-				}else{
+				if (selectedAddress) {
+					props.navigation.navigate('HomeNav');
+				} else {
 					props.navigation.navigate('OnboardingRootNav');
 				}
-				
 			}
 		});
 	}, [opacity, viewToGo, props.navigation]);
@@ -149,7 +148,7 @@ const Entry = props => {
 				props.navigation.navigate('HomeNav');
 			}
 		} catch (error) {
-			Logger.log(`Keychain couldn't be accessed`, error);
+			Logger.log("Keychain couldn't be accessed", error);
 			animateAndGoTo('Login');
 		}
 	}, [animateAndGoTo, props]);
@@ -161,7 +160,9 @@ const Entry = props => {
 				const currentVersion = await getVersion();
 				const savedVersion = await AsyncStorage.getItem(CURRENT_APP_VERSION);
 				if (currentVersion !== savedVersion) {
-					if (savedVersion) await AsyncStorage.setItem(LAST_APP_VERSION, savedVersion);
+					if (savedVersion) {
+						await AsyncStorage.setItem(LAST_APP_VERSION, savedVersion);
+					}
 					await AsyncStorage.setItem(CURRENT_APP_VERSION, currentVersion);
 				}
 
@@ -187,6 +188,7 @@ const Entry = props => {
 		}
 
 		startApp();
+		setTimeout(onAnimationFinished.bind(this), 1000);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -223,7 +225,8 @@ const Entry = props => {
 					opacity,
 					alignItems: 'center',
 					justifyContent: 'center'
-				}}>
+				}}
+			>
 				<Image
 					source={require('../../../images/logo.png')}
 					style={{
@@ -231,11 +234,15 @@ const Entry = props => {
 						height: 100
 					}}
 				/>
-				<Text style={{
-					fontSize: 14,
-					fontWeight: 'bold',
-					textAlign: 'center'
-				}}>LIQUICHAIN</Text>
+				<Text
+					style={{
+						fontSize: 14,
+						fontWeight: 'bold',
+						textAlign: 'center'
+					}}
+				>
+					LIQUICHAIN
+				</Text>
 			</Animated.View>
 		</View>
 	);
