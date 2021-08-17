@@ -28,6 +28,14 @@ build/
 .gradle
 local.properties
 *.iml
+android/app/src/main/res/raw/app*
+android/app/src/main/res/raw/locales*
+android/app/src/main/res/drawable-mdpi/app_*
+android/app/src/main/res/drawable-mdpi/node_*
+android/app/src/main/res/drawable-xhdpi/app_*
+android/app/src/main/res/drawable-xhdpi/node_*
+android/app/src/main/res/drawable-xxhdpi/app_*
+android/app/src/main/res/drawable-xxhdpi/node_*
 
 # node.js
 #
