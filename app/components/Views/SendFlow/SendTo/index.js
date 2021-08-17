@@ -36,7 +36,7 @@ import NetworkList from '../../../../util/networks';
 import Text from '../../../Base/Text';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { collectConfusables, hasZeroWidthPoints } from '../../../../util/validators';
-import Helper from 'common/Helper'
+import Helper from 'common/Helper';
 
 const { hexToBN } = util;
 const styles = StyleSheet.create({
@@ -274,15 +274,15 @@ class SendFlow extends PureComponent {
 		}
 	};
 
-// 	1. Get address
-// 2. Get the current network
-// 3. check if selectedAddress is valid? Since get only transaction from backend
-// 4. if address response is correct, then addToaddress = true
-// 5. else, 
-// get networkid, which is not necessary since we only have 1 network
-// create new method on on selectAddress
+	// 	1. Get address
+	// 2. Get the current network
+	// 3. check if selectedAddress is valid? Since get only transaction from backend
+	// 4. if address response is correct, then addToaddress = true
+	// 5. else,
+	// get networkid, which is not necessary since we only have 1 network
+	// create new method on on selectAddress
 
-	onToSelectedAddressChangeDirect = async (toSelectedAddress) => {
+	onToSelectedAddressChangeDirect = async toSelectedAddress => {
 		const { AssetsContractController } = Engine.context;
 		const { addressBook, network, identities, providerType } = this.props;
 		const networkAddressBook = addressBook[network] || {};
@@ -335,7 +335,7 @@ class SendFlow extends PureComponent {
 			isOnlyWarning,
 			confusableCollection
 		});
-	}
+	};
 
 	toggleFromAccountModal = () => {
 		const { fromAccountModalVisible } = this.state;
@@ -369,7 +369,7 @@ class SendFlow extends PureComponent {
 	onToSelectedAddressChange = async toSelectedAddress => {
 		console.log({
 			toSelectedAddress
-		})
+		});
 		const { AssetsContractController } = Engine.context;
 		const { addressBook, network, identities, providerType } = this.props;
 		const networkAddressBook = addressBook[network] || {};
@@ -395,7 +395,7 @@ class SendFlow extends PureComponent {
 			}
 
 			// Check if it's token contract address on mainnet
-			const networkId = `NetworkList`[providerType].networkId;
+			const networkId = NetworkList[providerType].networkId;
 			if (networkId === 1) {
 				try {
 					const symbol = await AssetsContractController.getAssetSymbol(toSelectedAddress);
