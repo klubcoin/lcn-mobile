@@ -252,7 +252,7 @@ class AccountList extends PureComponent {
 		const { accounts, identities } = this.props;
 		let params = [selectedAddress]
 		await API.postRequest(Routes.getBalance, params, response => {
-			console.log(response)
+			// console.log(response)
 			const balance = response.result ? response.result : 0x00
 			accounts[selectedAddress] = {
 				balance: balance

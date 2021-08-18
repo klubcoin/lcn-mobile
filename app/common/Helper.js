@@ -7,12 +7,14 @@ export default{
     }
     if(balance){
       const convertedBalance = parseInt(balance, 16)
+      /*
       console.log({
         convertedBalance: {
           value: convertedBalance,
           conversion: conversion.value
         }
       })
+      */
       return conversion ? `EUR ${convertedBalance * conversion.value}` : null  
     }else{
       return 0
