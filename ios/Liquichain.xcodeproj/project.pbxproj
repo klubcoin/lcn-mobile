@@ -559,8 +559,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X2FUMU684Z;
+				DEVELOPMENT_TEAM = 75C9U59DUL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Liquichain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -572,8 +574,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.cgrade.liquichain;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liquichain;
 				PRODUCT_NAME = Liquichain;
+				PROVISIONING_PROFILE_SPECIFIER = "Liquichain DEV";
 				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -587,8 +590,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X2FUMU684Z;
+				DEVELOPMENT_TEAM = 75C9U59DUL;
 				INFOPLIST_FILE = Liquichain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -599,8 +604,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.cgrade.liquichain;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liquichain;
 				PRODUCT_NAME = Liquichain;
+				PROVISIONING_PROFILE_SPECIFIER = "Liquichain DISTRIBUTION";
 				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
