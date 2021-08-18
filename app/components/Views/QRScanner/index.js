@@ -114,12 +114,14 @@ export default class QrScanner extends PureComponent {
 			const { KeyringController } = Engine.context;
 			const isUnlocked = KeyringController.isUnlocked();
 
+			/*
 			if (!isUnlocked) {
 				this.props.navigation.goBack();
 				Alert.alert(strings('qr_scanner.error'), strings('qr_scanner.attempting_to_scan_with_wallet_locked'));
 				this.mounted = false;
 				return;
 			}
+			*/
 			// Let ethereum:address go forward
 			if (content.split('ethereum:').length > 1 && !parse(content).function_name) {
 				this.shouldReadBarCode = false;
