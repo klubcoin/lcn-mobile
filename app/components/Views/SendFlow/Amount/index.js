@@ -414,7 +414,7 @@ class Amount extends PureComponent {
 		this.tokens = [getEther(ticker), ...tokens];
 		this.collectibles = this.processCollectibles();
 		this.amountInput && this.amountInput.current && this.amountInput.current.focus();
-		this.onInputChange(readableValue);
+		this.onInputChange && this.onInputChange(readableValue);
 
 		const estimatedTotalGas = await this.estimateTransactionTotalGas();
 		this.setState({
@@ -731,7 +731,7 @@ class Amount extends PureComponent {
 			inputValue = inputValue.replace(',', '.');
 		}
 		const processedTicker = getTicker(ticker);
-		const processedInputValue = isDecimal(inputValue) ? handleWeiNumber(inputValue) : '0';
+		const processedInputValue = inputValue && isDecimal(inputValue) ? handleWeiNumber(inputValue) : '0';
 		selectedAsset = selectedAsset || this.props.selectedAsset;
 		if (selectedAsset.isETH) {
 			hasExchangeRate = isMainNet(chainId) ? !!conversionRate : false;
@@ -778,10 +778,11 @@ class Amount extends PureComponent {
 		console.log({
 			currentConversion
 		})
+		const conversionValue = currentConversion?.value || 2;
 		this.setState({
 			inputValue,
 			inputValueConversion,
-			renderableInputValueConversion: 'EUR ' + (inputValue / currentConversion.value).toFixed(2),
+			renderableInputValueConversion: 'EUR ' + ((inputValue || 0) / conversionValue).toFixed(2),
 			amountError: undefined,
 			hasExchangeRate,
 			maxFiatInput: !useMax && undefined
