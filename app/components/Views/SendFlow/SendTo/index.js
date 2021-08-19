@@ -397,7 +397,6 @@ class SendFlow extends PureComponent {
 			// Check if it's token contract address on mainnet
 			const networkId = NetworkList[providerType].networkId;
 			if (networkId === 1) {
-				/* // TODO: AssetsContractController.getAssetSymbol got stuck and needs to be fixed later
 				try {
 					const symbol = await AssetsContractController.getAssetSymbol(toSelectedAddress);
 					if (symbol) {
@@ -413,7 +412,6 @@ class SendFlow extends PureComponent {
 				} catch (e) {
 					// Not a token address
 				}
-				*/
 			}
 
 			/**
