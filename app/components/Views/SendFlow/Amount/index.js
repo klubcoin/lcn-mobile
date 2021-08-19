@@ -449,7 +449,8 @@ class Amount extends PureComponent {
 				accounts[selectedAddress] = {
 					balance: balance
 				}
-				BaseController.update({ accounts: Object.assign({}, accounts) })
+				const { AccountTrackerController } = Engine.context;
+				AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
 				this.handleSelectedAssetBalance()
 			}, error => {
 				console.log(error.message)

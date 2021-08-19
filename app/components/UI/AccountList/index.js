@@ -257,7 +257,8 @@ class AccountList extends PureComponent {
 			accounts[selectedAddress] = {
 				balance: balance
 			}
-			BaseController.update({ accounts: Object.assign({}, accounts) })
+			const { AccountTrackerController } = Engine.context;
+			AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
 		}, error => {
 			console.log(error.message)
 		})

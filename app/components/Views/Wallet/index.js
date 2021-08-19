@@ -160,7 +160,8 @@ class Wallet extends PureComponent {
 					balance: balance,
 					conversion: this.state.currentConversion
 				}
-				BaseController.update({ accounts: Object.assign({}, accounts) })
+				const { AccountTrackerController } = Engine.context;
+				AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
 			}, error => {
 				console.log(error.message)
 			})

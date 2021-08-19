@@ -101,7 +101,8 @@ function PayPal({selectedAddress, ...props}){
         accounts[selectedAddress] = {
           balance: balance
         }
-        BaseController.update({ accounts: Object.assign({}, accounts) })
+        const { AccountTrackerController } = Engine.context;
+        AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
         props.navigation.navigate('Home')
       }, error => {
         console.log(error.message)
