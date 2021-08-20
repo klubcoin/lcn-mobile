@@ -47,7 +47,7 @@ function PayPal({selectedAddress, ...props}){
   amount: 0
  });
  const [to, setTo] = useState({
-  currency: 'DEM',
+  currency: 'LCN',
   amount: 0
  });
  const [selected, setSelected] = useState(null);
@@ -98,7 +98,7 @@ function PayPal({selectedAddress, ...props}){
         console.log({
           getBalance: response
         })
-        accounts[selectedAddress] = {
+        accounts[selectedAddress.selectedAddress] = {
           balance: balance
         }
         const { AccountTrackerController } = Engine.context;
@@ -578,7 +578,7 @@ function PayPal({selectedAddress, ...props}){
 }
 
 PayPal.propTypes = {
-  selectedAddress: PropTypes.string,
+  selectedAddress: PropTypes.any,
   accounts: PropTypes.object,
   identities: PropTypes.object,
   chainId: PropTypes.string,
