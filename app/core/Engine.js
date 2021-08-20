@@ -20,6 +20,7 @@ import {
 	WalletDevice
 } from '@metamask/controllers';
 
+import Routes from '../common/routes'
 import SwapsController from '@metamask/swaps-controller';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -71,10 +72,10 @@ class Engine {
 				infuraProjectId: AppConstants.MM_INFURA_PROJECT_ID || NON_EMPTY,
 				providerConfig: {
 					type: 'rpc',
-					rpcTarget: 'https://account.liquichain.io/meveo/rest/jsonrpc',
-					chainId: 'Liquichain',
+					rpcTarget: Routes.mainNetWork.url,
+					chainId: Routes.mainNetWork.chainId,
 					ticker: 'LCN',
-					nickname: 'liquichain',
+					nickname: Routes.mainNetWork.name,
 					static: {
 						eth_sendTransaction: async (payload, next, end) => {
 							const { TransactionController } = this.context;
@@ -101,10 +102,10 @@ class Engine {
 				}
 			});
 			networkController.setRpcTarget(
-				'https://account.liquichain.io/meveo/rest/jsonrpc',
-				'Liquichain',
+				Routes.mainNetWork.url,
+				Routes.mainNetWork.chainId,
 				'LCN',
-				'liquichain',
+				Routes.mainNetWork.name,
 			);
 			const assetsContractController = new AssetsContractController();
 			const assetsController = new AssetsController({
