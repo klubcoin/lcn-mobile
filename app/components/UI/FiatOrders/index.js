@@ -18,7 +18,7 @@ import processOrder from './orderProcessor';
 const POLLING_FREQUENCY = AppConstants.FIAT_ORDERS.POLLING_FREQUENCY;
 const NOTIFICATION_DURATION = 5000;
 
-export const allowedToBuy = network => network === '1' || (network === '42' && Device.isIos());
+export const allowedToBuy = network => network === '7' || network === '1' || (network === '42' && Device.isIos());
 
 const baseNotificationDetails = {
 	duration: NOTIFICATION_DURATION
