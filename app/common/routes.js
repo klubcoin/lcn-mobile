@@ -6,7 +6,7 @@ export default{
   mainNetWork: {
     name: 'Liquichain Main Network',
     url: 'https://account.liquichain.io/meveo/rest/jsonrpc',
-    chainId: 76,
+    chainId: '76',
     symbol: null,
     route: 'https://account.liquichain.io/meveo/rest/',
     blockExploreUrl: 'https://liquichain.io'
