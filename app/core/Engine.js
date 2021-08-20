@@ -101,12 +101,6 @@ class Engine {
 					}
 				}
 			});
-			networkController.setRpcTarget(
-				Routes.mainNetWork.url,
-				Routes.mainNetWork.chainId,
-				'LCN',
-				Routes.mainNetWork.name,
-			);
 			const assetsContractController = new AssetsContractController();
 			const assetsController = new AssetsController({
 				onPreferencesStateChange: listener => preferencesController.subscribe(listener),
@@ -198,6 +192,12 @@ class Engine {
 					controller.update(initialState[controller.name]);
 				}
 			}
+			networkController.setRpcTarget(
+				Routes.mainNetWork.url,
+				Routes.mainNetWork.chainId,
+				'LCN',
+				Routes.mainNetWork.name,
+			);
 
 			this.datamodel = new ComposableController(controllers, this.controllerMessenger);
 			this.context = controllers.reduce((context, controller) => {
@@ -213,7 +213,7 @@ class Engine {
 			} = this.context;
 
 			assets.setApiKey(process.env.MM_OPENSEA_KEY);
-			// network.refreshNetwork();
+			network.refreshNetwork();
 			transaction.configure({ sign: keyring.signTransaction.bind(keyring) });
 			network.subscribe(state => {
 				if (state.network !== 'loading' && state.provider.chainId !== currentChainId) {
