@@ -339,7 +339,7 @@ class Amount extends PureComponent {
 		/**
 		 * Chain Id
 		 */
-		chainId: PropTypes.any,
+		chainId: PropTypes.string,
 		/**
 		 * Current provider ticker
 		 */
