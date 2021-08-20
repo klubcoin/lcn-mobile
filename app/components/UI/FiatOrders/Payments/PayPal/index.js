@@ -26,6 +26,7 @@ import { getTicker } from '@util/transactions';
 import { WebView } from 'react-native-webview';
 import { BaseController } from '@metamask/controllers';
 import { NavigationActions, StackActions} from 'react-navigation';
+import CookieManager from '@react-native-community/cookies';
 
 const Colors = {
   primary: '#370e75',
@@ -60,6 +61,8 @@ function PayPal({selectedAddress, ...props}){
 
   useEffect(() => {
     if(currencies.length == 0){
+      CookieManager.clearAll(true)
+
       setLoading(true)
       API.getRequest(Routes.getConversions, response => {
         setLoading(false)
