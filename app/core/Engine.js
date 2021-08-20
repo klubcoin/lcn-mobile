@@ -70,6 +70,11 @@ class Engine {
 			const networkController = new NetworkController({
 				infuraProjectId: AppConstants.MM_INFURA_PROJECT_ID || NON_EMPTY,
 				providerConfig: {
+					type: 'rpc',
+					rpcTarget: 'https://account.liquichain.io/meveo/rest/jsonrpc',
+					chainId: 'Liquichain',
+					ticker: 'LCN',
+					nickname: 'liquichain',
 					static: {
 						eth_sendTransaction: async (payload, next, end) => {
 							const { TransactionController } = this.context;
@@ -95,6 +100,12 @@ class Engine {
 					}
 				}
 			});
+			networkController.setRpcTarget(
+				'https://account.liquichain.io/meveo/rest/jsonrpc',
+				'Liquichain',
+				'LCN',
+				'liquichain',
+			);
 			const assetsContractController = new AssetsContractController();
 			const assetsController = new AssetsController({
 				onPreferencesStateChange: listener => preferencesController.subscribe(listener),
@@ -201,7 +212,7 @@ class Engine {
 			} = this.context;
 
 			assets.setApiKey(process.env.MM_OPENSEA_KEY);
-			network.refreshNetwork();
+			// network.refreshNetwork();
 			transaction.configure({ sign: keyring.signTransaction.bind(keyring) });
 			network.subscribe(state => {
 				if (state.network !== 'loading' && state.provider.chainId !== currentChainId) {
@@ -440,12 +451,12 @@ class Engine {
 					chainId !== `0x1`
 						? preferences.accountTokens[address][chainId]
 						: preferences.accountTokens[address][chainId]
-								.filter(({ address }) =>
-									contractMap[toChecksumAddress(address)]
-										? contractMap[toChecksumAddress(address)].erc20
-										: true
-								)
-								.map(token => ({ ...token, address: toChecksumAddress(token.address) }));
+							.filter(({ address }) =>
+								contractMap[toChecksumAddress(address)]
+									? contractMap[toChecksumAddress(address)].erc20
+									: true
+							)
+							.map(token => ({ ...token, address: toChecksumAddress(token.address) }));
 			});
 		});
 		await AssetsController.update({ allTokens });
