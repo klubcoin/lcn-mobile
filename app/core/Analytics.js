@@ -35,7 +35,7 @@ class Analytics {
 	 * Identify current user to mixpanel people
 	 */
 	_peopleIdentify = () => {
-		RCTAnalytics.peopleIdentify();
+		RCTAnalytics?.peopleIdentify();
 	};
 
 	/**
@@ -45,14 +45,14 @@ class Analytics {
 		if (!this.enabled) return;
 		if (!__DEV__) {
 			if (!anonymously) {
-				RCTAnalytics.trackEvent({
+				RCTAnalytics?.trackEvent({
 					...event,
 					...params,
 					value,
 					info
 				});
 			} else {
-				RCTAnalytics.trackEventAnonymously({
+				RCTAnalytics?.trackEventAnonymously({
 					...event,
 					...params,
 					value,
@@ -73,7 +73,7 @@ class Analytics {
 			this.listeners = [];
 			Analytics.instance = this;
 			if (!__DEV__) {
-				RCTAnalytics.optIn(this.enabled);
+				RCTAnalytics?.optIn(this.enabled);
 				this._peopleIdentify();
 			}
 		}
@@ -85,7 +85,7 @@ class Analytics {
 	 */
 	enable = () => {
 		this.enabled = true;
-		RCTAnalytics.optIn(this.enabled);
+		RCTAnalytics?.optIn(this.enabled);
 		this._notify();
 	};
 
@@ -94,7 +94,7 @@ class Analytics {
 	 */
 	disable = () => {
 		this.enabled = false;
-		RCTAnalytics.optIn(this.enabled);
+		RCTAnalytics?.optIn(this.enabled);
 		this._notify();
 	};
 
@@ -120,7 +120,7 @@ class Analytics {
 	 * Get current tracking id
 	 */
 	getDistinctId = async () => {
-		const id = await RCTAnalytics.getDistinctId();
+		const id = await RCTAnalytics?.getDistinctId();
 		return id;
 	};
 
@@ -211,7 +211,7 @@ export default {
 	init: async enabled => {
 		instance = new Analytics(enabled);
 		try {
-			const vars = await RCTAnalytics.getRemoteVariables();
+			const vars = await RCTAnalytics?.getRemoteVariables();
 			instance.remoteVariables = JSON.parse(vars);
 		} catch (e) {
 			// Do nothing
@@ -247,7 +247,7 @@ export default {
 	},
 	refreshRemoteVariables: async () => {
 		try {
-			const vars = await RCTAnalytics.getRemoteVariables();
+			const vars = await RCTAnalytics?.getRemoteVariables();
 			instance.remoteVariables = JSON.parse(vars);
 		} catch (e) {
 			// Do nothing
