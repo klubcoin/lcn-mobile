@@ -15,6 +15,7 @@ import { name } from './app.json';
 
 // List of warnings that we're ignoring
 console.ignoredYellowBox = ['Warning: Each']
+LogBox.ignoreAllLogs(true);
 LogBox.ignoreLogs([
   '{}',
   // Uncomment the below lines (21 and 22) to run browser-tests.spec.js in debug mode
