@@ -55,13 +55,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
-	animation: {
-		width: 110,
-		height: 110,
-		alignSelf: 'center',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
 	fox: {
 		width: 110,
 		height: 110,
@@ -73,43 +66,34 @@ const styles = StyleSheet.create({
 
 const Entry = props => {
 	const [viewToGo, setViewToGo] = useState(null);
-
-	const animation = useRef(null);
-	const animationName = useRef(null);
 	const opacity = useRef(new Animated.Value(1)).current;
 
-	const onAnimationFinished = useCallback(() => {
-		Animated.timing(opacity, {
-			toValue: 0,
-			duration: 300,
-			useNativeDriver: true,
-			isInteraction: false
-		}).start(() => {
-			if (viewToGo && (viewToGo !== 'WalletView' || viewToGo !== 'Onboarding')) {
-				props.navigation.navigate(viewToGo);
-			} else if (viewToGo === 'Onboarding') {
-				props.navigation.navigate('OnboardingRootNav');
+	const onAnimationFinished = useCallback((viewToGo) => {
+		if (viewToGo && (viewToGo !== 'WalletView' || viewToGo !== 'Onboarding')) {
+			props.navigation.navigate(viewToGo);
+		} else if (viewToGo === 'Onboarding') {
+			props.navigation.navigate('OnboardingRootNav');
+		} else {
+			const { selectedAddress } = props;
+			if (selectedAddress) {
+				props.navigation.navigate('HomeNav');
 			} else {
-				const { selectedAddress } = props;
-				if (selectedAddress) {
-					props.navigation.navigate('HomeNav');
-				} else {
-					props.navigation.navigate('OnboardingRootNav');
-				}
+				props.navigation.navigate('OnboardingRootNav');
 			}
-		});
+		}
 	}, [opacity, viewToGo, props.navigation]);
 
 	const animateAndGoTo = useCallback(
 		viewToGo => {
 			setViewToGo(viewToGo);
-			if (Device.isAndroid()) {
-				animation && animation.current ? animation.current.play(0, 25) : onAnimationFinished();
-				animationName && animationName.current && animationName.current.play();
-			} else {
-				animation && animation.current && animation.current.play();
-				animation && animation.current && animationName.current.play();
-			}
+			Animated.timing(opacity, {
+				toValue: 0,
+				duration: 300,
+				useNativeDriver: true,
+				isInteraction: false
+			}).start(() => {
+				onAnimationFinished(viewToGo);
+			});
 		},
 		[onAnimationFinished]
 	);
@@ -188,34 +172,9 @@ const Entry = props => {
 		}
 
 		startApp();
-		setTimeout(onAnimationFinished.bind(this), 1000);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const renderAnimations = () => {
-		if (!viewToGo) {
-			return <LottieView style={styles.animation} autoPlay source={require('../../../animations/bounce.json')} />;
-		}
-
-		return (
-			<View style={styles.foxAndName}>
-				<LottieView
-					ref={animation}
-					style={styles.animation}
-					loop={false}
-					source={require('../../../animations/fox-in.json')}
-					onAnimationFinish={onAnimationFinished}
-				/>
-				<LottieView
-					ref={animationName}
-					style={styles.metamaskName}
-					loop={false}
-					source={require('../../../animations/wordmark.json')}
-				/>
-			</View>
-		);
-	};
 
 	return (
 		<View style={styles.main}>
