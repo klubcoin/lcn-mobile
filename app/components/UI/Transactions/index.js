@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { makeObservable, observable } from 'mobx'
 import {
 	ScrollView,
 	ActivityIndicator,
@@ -18,13 +19,16 @@ import TransactionElement from '../TransactionElement';
 import Engine from '../../../core/Engine';
 import { showAlert } from '../../../actions/alert';
 import NotificationManager from '../../../core/NotificationManager';
-import { CANCEL_RATE, SPEED_UP_RATE } from '@metamask/controllers';
+import { CANCEL_RATE, SPEED_UP_RATE, WalletDevice } from '@metamask/controllers';
 import { renderFromWei } from '../../../util/number';
 import Device from '../../../util/Device';
 import TransactionActionModal from '../TransactionActionModal';
 import { validateTransactionActionBalance } from '../../../util/transactions';
 import APIService from 'services/APIService'
 import Routes from 'common/routes'
+import moment from 'moment';
+
+
 const styles = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.white,
@@ -142,7 +146,17 @@ class Transactions extends PureComponent {
 
 	selectedTx = null;
 
+	uses3rdPartyAPI = false;
+	transactions = [];
 	flatList = React.createRef();
+
+	constructor(props) {
+		super(props);
+		makeObservable(this, {
+			uses3rdPartyAPI: observable,
+			transactions: observable,
+		})
+	}
 
 	componentDidMount() {
 		this.mounted = true
@@ -163,13 +177,56 @@ class Transactions extends PureComponent {
 		}
 	}
 
-	retrieveTransactions() {
-		const { selectedAddress } = this.props;
-		APIService.getTransactionHistory(selectedAddress, (success, response) => {
-			this.setState({ ready: true })
-			if (success && response) {
+	map3rdPartyTransaction = (e) => {
+		const { mainNetWork } = Routes;
+		const { NetworkController } = Engine.context;
+		const network = NetworkController.state.network;
 
-			}
+		return ({
+			id: e.hash,
+			networkID: network,
+			chainId: mainNetWork.chainId,
+			origin: mainNetWork.name,
+			status: e.blockNumber && e.blockNumber != 'null' ? 'confirmed' : 'failed',
+			time: moment(e.timeStamp).unix() * 1000,
+			transaction: {
+				from: e.from,
+				gas: e.gas,
+				gasPrice: e.gasPrice,
+				nonce: e.nonce,
+				to: e.to,
+				value: e.value,
+			},
+			deviceConfirmedOn: WalletDevice.MM_MOBILE,
+			rawTransaction: '',
+			transactionHash: e.hash,
+		});
+	};
+
+	async retrieveTransactions() {
+		const transactions = this.props.transactions || [];
+		const { selectedAddress } = this.props;
+		const { NetworkController } = Engine.context;
+		const network = NetworkController.state.network;
+
+		this.uses3rdPartyAPI = network == '7';
+		if (!selectedAddress || !this.uses3rdPartyAPI) return;
+
+		await new Promise((resolve, reject) => {
+			APIService.getTransactionHistory(selectedAddress, (success, response) => {
+				this.setState({ ready: true })
+				if (success && response) {
+					this.transactions = response.result.map(e => {
+						const transaction = transactions.find(t => t.transactionHash == e.hash);
+						if (transaction) return transaction;
+
+						return this.map3rdPartyTransaction(e);
+					});
+					resolve(response);
+				} else {
+					reject(response);
+				}
+			});
 		});
 	}
 
@@ -216,7 +273,8 @@ class Transactions extends PureComponent {
 
 	onRefresh = async () => {
 		this.setState({ refreshing: true });
-		this.props.thirdPartyApiMode && (await Engine.refreshTransactionHistory());
+		if (this.uses3rdPartyAPI) await this.retrieveTransactions();
+		else this.props.thirdPartyApiMode && (await Engine.refreshTransactionHistory());
 		this.setState({ refreshing: false });
 	};
 
@@ -317,9 +375,10 @@ class Transactions extends PureComponent {
 		const { submittedTransactions, confirmedTransactions, header } = this.props;
 		const { cancelConfirmDisabled, speedUpConfirmDisabled } = this.state;
 		const transactions =
-			submittedTransactions && submittedTransactions.length
-				? submittedTransactions.concat(confirmedTransactions)
-				: this.props.transactions;
+			this.uses3rdPartyAPI ? this.transactions :
+				submittedTransactions && submittedTransactions.length
+					? submittedTransactions.concat(confirmedTransactions)
+					: this.props.transactions;
 
 		return (
 			<View style={styles.wrapper} testID={'transactions-screen'}>
