@@ -23,7 +23,7 @@ import { renderFromWei } from '../../../util/number';
 import Device from '../../../util/Device';
 import TransactionActionModal from '../TransactionActionModal';
 import { validateTransactionActionBalance } from '../../../util/transactions';
-import API from 'services/api'
+import APIService from 'services/APIService'
 import Routes from 'common/routes'
 const styles = StyleSheet.create({
 	wrapper: {
@@ -145,13 +145,8 @@ class Transactions extends PureComponent {
 	flatList = React.createRef();
 
 	componentDidMount() {
-		// this.mounted = true;
-		// setTimeout(() => {
-		// 	this.mounted && this.setState({ ready: true });
-		// 	this.init();
-		// 	this.props.onRefSet && this.props.onRefSet(this.flatList);
-		// }, 100);
 		this.mounted = true
+		this.props.onRefSet && this.props.onRefSet(this.flatList);
 		this.retrieveTransactions()
 	}
 
@@ -168,13 +163,14 @@ class Transactions extends PureComponent {
 		}
 	}
 
-	retrieveTransactions(){
+	retrieveTransactions() {
 		const { selectedAddress } = this.props;
-		API.postRequest(Routes.getTransaction, [selectedAddress], response => {
-			console.log(response)
-		}, error => {
-			console.log(error)
-		})
+		APIService.getTransactionHistory(selectedAddress, (success, response) => {
+			this.setState({ ready: true })
+			if (success && response) {
+
+			}
+		});
 	}
 
 	componentWillUnmount() {
