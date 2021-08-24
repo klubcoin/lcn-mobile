@@ -71,7 +71,7 @@ export default {
 	MAX_SAFE_CHAIN_ID: 4503599627370476,
 	URLS: {
 		TERMS_AND_CONDITIONS: 'https://liquichain.io/terms-of-use/',
-		PRIVACY_POLICY: 'hhttps://liquichain.io/privacy-policy/',
+		PRIVACY_POLICY: 'https://liquichain.io/privacy-policy/',
 		CONNECTIVITY_ISSUES: 'https://liquichain.io',
 		NFT: 'https://liquichain.io'
 	},
