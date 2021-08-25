@@ -30,13 +30,13 @@ export default class OrderSummary extends PureComponent {
 			<DetailsModal>
 				<DetailsModal.Body>
 					<DetailsModal.SectionTitle style={styles.heading}>
-						{strings('order_summary.order_summary')}
+						{strings('payQR.order_summary')}
 					</DetailsModal.SectionTitle>
 					<DetailsModal.Section >
 						<Summary style={styles.section}>
 							<Summary.Row>
 								<Text small primary>
-									{strings('order_summary.order_number')}
+									{strings('payQR.order_number')}
 								</Text>
 								<Text small primary>
 									{orderNumber}
@@ -54,7 +54,7 @@ export default class OrderSummary extends PureComponent {
 					</DetailsModal.Section>
 
 					<DetailsModal.SectionTitle>
-						{strings('order_summary.billing_address')}
+						{strings('payQR.billing_address')}
 					</DetailsModal.SectionTitle>
 					<DetailsModal.Section>
 						<Summary style={styles.section}>
@@ -65,7 +65,7 @@ export default class OrderSummary extends PureComponent {
 										return (
 											<Summary.Row>
 												<Text small primary>
-													{strings(`order_summary.${k}`)}
+													{strings(`payQR.${k}`)}
 												</Text>
 												<Text small primary>
 													{info}

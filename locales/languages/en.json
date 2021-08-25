@@ -580,6 +580,15 @@
 		"for_help": "for help.",
 		"could_not_fetch_order_info": "Could not fetch order information"
 	},
+	"payQR": {
+		"order_summary": "Order Summary",
+		"order_number": "Order number",
+		"billing_address": "Billing Address",
+		"streetAndNumber": "Address",
+		"city": "City",
+		"postalCode": "Postal Code",
+		"country": "Country"
+	},
 	"account_details": {
 		"title": "Account Details",
 		"share_account": "Share",
