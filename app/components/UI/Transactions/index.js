@@ -164,6 +164,12 @@ class Transactions extends PureComponent {
 		this.retrieveTransactions()
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.selectedAddress != this.props.selectedAddress) {
+			this.retrieveTransactions();
+		}
+	}
+
 	init() {
 		this.mounted && this.setState({ ready: true });
 		const txToView = NotificationManager.getTransactionToView();
