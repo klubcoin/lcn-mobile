@@ -89,7 +89,12 @@ export default class QrScanner extends PureComponent {
 
 		let data = {};
 
-		if (content.split('metamask-sync:').length > 1) {
+		if (content.includes('lcn_ord:')) {
+			this.shouldReadBarCode = false;
+			data = {
+				orderId: content.replace('lcn_ord:', ''),
+			};
+		} else if (content.split('metamask-sync:').length > 1) {
 			this.shouldReadBarCode = false;
 			data = { content };
 			if (this.props.navigation.state.params.onStartScan) {
