@@ -1,4 +1,4 @@
-export default{
+export default {
   jsonRPC: 'jsonrpc',
   walletCreation: 'wallet_creation',
   getBalance: 'eth_getBalance',
@@ -9,7 +9,9 @@ export default{
     chainId: '76',
     symbol: null,
     route: 'https://account.liquichain.io/meveo/rest/',
-    blockExploreUrl: 'https://liquichain.io'
+    blockExploreUrl: 'https://liquichain.io',
+    accountUrl: 'https://account.liquichain.io',
+    helpSupportUrl: 'https://docs.liquichain.io',
   },
   basicMethod: {
     "jsonrpc": "2.0",

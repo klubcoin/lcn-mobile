@@ -43,6 +43,7 @@ import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorSta
 import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
 import Colors from 'common/colors'
 import Helper from 'common/Helper'
+import Routes from '../../../common/routes'
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -561,17 +562,17 @@ class DrawerView extends PureComponent {
 		} = this.props;
 		const url = getEtherscanAddressUrl(network.provider.type, selectedAddress);
 		const etherscan_url = getEtherscanBaseUrl(network.provider.type).replace('https://', '');
-		this.goToBrowserUrl('https://liquichain.io', 'Liquichain');
+		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, 'Liquichain');
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_VIEW_ETHERSCAN);
 	};
 
 	submitFeedback = () => {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_SEND_FEEDBACK);
-		this.goToBrowserUrl('https://liquichain.io', 'Liquichain Support');
+		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Liquichain Support');
 	};
 
 	showHelp = () => {
-		this.goToBrowserUrl('https://liquichain.io', 'Liquichain Support');
+		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Liquichain Support');
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
