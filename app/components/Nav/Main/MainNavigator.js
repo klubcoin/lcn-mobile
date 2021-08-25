@@ -51,6 +51,7 @@ import SwapsAmountView from '../../UI/Swaps';
 import SwapsQuotesView from '../../UI/Swaps/QuotesView';
 import PayPal from '../../UI/FiatOrders/Payments/PayPal';
 import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase'
+import PayQR from '../../Views/PayQRFlow/PayQR';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -209,6 +210,13 @@ export default createStackNavigator(
 				Confirm: {
 					screen: Confirm
 				}
+			})
+		},
+		PayQRFlow: {
+			screen: createStackNavigator({
+				PayQR: {
+					screen: PayQR
+				},
 			})
 		},
 		ApprovalView: {
