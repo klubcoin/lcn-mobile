@@ -566,6 +566,7 @@
 	"asset_overview": {
 		"send_button": "Send",
 		"buy_button": "Buy",
+		"pay_button": "Pay",
 		"receive_button": "Receive",
 		"add_collectible_button": "Add",
 		"info": "Info",
@@ -576,7 +577,8 @@
 		"were_unable": "We’re unable to load your",
 		"balance": "balance. See the support article",
 		"troubleshooting_missing": "troubleshooting missing balances",
-		"for_help": "for help."
+		"for_help": "for help.",
+		"could_not_fetch_order_info": "Could not fetch order information"
 	},
 	"account_details": {
 		"title": "Account Details",

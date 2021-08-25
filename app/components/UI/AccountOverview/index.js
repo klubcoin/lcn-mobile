@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, TextInput, StyleSheet, Text, View, TouchableOpacity, InteractionManager } from 'react-native';
+import { ScrollView, TextInput, StyleSheet, Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { swapsUtils } from '@metamask/swaps-controller';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import AppConstants from '../../../core/AppConstants';
 import { strings } from '../../../../locales/i18n';
+import APIService from '../../../services/APIService'
 
 import { swapsLivenessSelector } from '../../../reducers/swaps';
 import { showAlert } from '../../../actions/alert';
@@ -250,6 +251,37 @@ class AccountOverview extends PureComponent {
 		navigation.navigate('SendFlowView');
 	};
 
+	fetchOrder = (orderId) => {
+		APIService.getOrderInfo(orderId, (success, response) => {
+			if (success && response) {
+				// navigation.navigate('PayQR');
+			} else {
+				Alert.alert(
+					strings('qr_scanner.error'),
+					strings('asset_overview.could_not_fetch_order_info'), [
+					{ text: strings('navigation.ok') }
+				]);
+			}
+		})
+	};
+
+	onPayQR = () => {
+		const { navigation } = this.props;
+		navigation.navigate('QRScanner', {
+			onScanSuccess: data => {
+				if (data.orderId) {
+					this.fetchOrder(data.orderId);
+				} else {
+					Alert.alert(
+						strings('qr_scanner.error'),
+						strings('qr_scanner.invalid_qr_code_title'), [
+						{ text: strings('navigation.ok') }
+					]);
+				}
+			}
+		});
+	};
+
 	onBuy = () => {
 		this.props.navigation.navigate('PurchaseMethods');
 		InteractionManager.runAfterInteractions(() => {
@@ -273,7 +305,7 @@ class AccountOverview extends PureComponent {
 
 		if (!address) return null;
 		const { accountLabelEditable, accountLabel } = this.state;
-	
+
 		return (
 			<View style={baseStyles.flexGrow} ref={this.scrollViewContainer} collapsable={false}>
 				<ScrollView
@@ -355,6 +387,11 @@ class AccountOverview extends PureComponent {
 								icon="send"
 								onPress={this.onSend}
 								label={strings('asset_overview.send_button')}
+							/>
+							<AssetActionButton
+								icon="send"
+								onPress={this.onPayQR}
+								label={strings('asset_overview.pay_button')}
 							/>
 							{/*AppConstants.SWAPS.ACTIVE && (
 								<AssetSwapButton
