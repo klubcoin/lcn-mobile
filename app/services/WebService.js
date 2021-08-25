@@ -11,6 +11,14 @@ export default class WebService {
       callback(false, error);
     });
   }
+
+  static sendPost(url, data, callback) {
+    api.standardPostRequest(url, data, (json) => {
+      callback(true, json)
+    }, (error) => {
+      callback(false, error);
+    });
+  }
 }
 
 export const queryParamsURLEncodedString = (params) => {
