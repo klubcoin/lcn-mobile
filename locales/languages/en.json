@@ -587,7 +587,9 @@
 		"streetAndNumber": "Address",
 		"city": "City",
 		"postalCode": "Postal Code",
-		"country": "Country"
+		"country": "Country",
+		"success": "Success",
+		"payment_complete": "Your payment completed successfully"
 	},
 	"account_details": {
 		"title": "Account Details",

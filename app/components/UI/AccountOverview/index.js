@@ -255,7 +255,7 @@ class AccountOverview extends PureComponent {
 		const { navigation } = this.props;
 		APIService.getOrderInfo(orderId, (success, response) => {
 			if (success && response.orderNumber) {
-				navigation.navigate('PayQR', { order: response });
+				navigation.navigate('PayQR', { orderId, order: response });
 			} else {
 				Alert.alert(
 					strings('qr_scanner.error'),
