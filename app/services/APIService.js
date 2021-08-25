@@ -4,6 +4,7 @@ export default class APIService {
 
   static API_KEY = 'toto';
   static apiEtherScan = () => 'etherscan/api';
+  static apiGetOrderById = () => 'pg/v1/orders/<orderId>';
 
   static getTransactionHistory(address, callback) {
     const data = {
@@ -16,4 +17,8 @@ export default class APIService {
     WebService.sendGet(this.apiEtherScan(), data, callback);
   }
 
+  static getOrderInfo(orderId, callback) {
+    const route = this.apiGetOrderById().replace('<orderId>', orderId);
+    WebService.sendGet(route, null, callback);
+  }
 }
