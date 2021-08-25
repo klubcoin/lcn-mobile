@@ -7,4 +7,10 @@ rm drawable-mdpi/node_modules*
 rm drawable-xhdpi/node_modules*
 rm drawable-xxhdpi/node_modules*
 rm drawable-xxxhdpi/node_modules*
+
+rm drawable-hdpi/app_images*
+rm drawable-mdpi/app_images*
+rm drawable-xhdpi/app_images*
+rm drawable-xxhdpi/app_images*
+rm drawable-xxxhdpi/app_images*
 cd -
