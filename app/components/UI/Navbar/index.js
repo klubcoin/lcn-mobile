@@ -390,7 +390,9 @@ export function getSendFlowTitle(title, navigation, screenProps) {
 		navigation.dismiss();
 	};
 	const leftAction = () => navigation.pop();
-	const canGoBack = title !== 'send.send_to' && !screenProps.isPaymentRequest;
+	const canGoBack = title !== 'send.send_to'
+		&& title !== 'order_summary.order_summary'
+		&& !screenProps.isPaymentRequest;
 
 	const titleToRender = title;
 
