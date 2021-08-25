@@ -166,6 +166,7 @@ class Transactions extends PureComponent {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.selectedAddress != this.props.selectedAddress) {
+			this.setState({ ready: false, loading: true });
 			this.retrieveTransactions();
 		}
 	}
@@ -220,7 +221,7 @@ class Transactions extends PureComponent {
 
 		await new Promise((resolve, reject) => {
 			APIService.getTransactionHistory(selectedAddress, (success, response) => {
-				this.setState({ ready: true })
+				this.setState({ ready: true, loading: false })
 				if (success && response) {
 					this.transactions = response.result.map(e => {
 						const transaction = transactions.find(t => t.transactionHash == e.hash);
