@@ -194,7 +194,7 @@ class Transactions extends PureComponent {
 			networkID: network,
 			chainId: mainNetWork.chainId,
 			origin: mainNetWork.name,
-			status: e.blockNumber && e.blockNumber != 'null' ? 'confirmed' : 'failed',
+			status: e.blockNumber && e.blockNumber != 'null' ? 'confirmed' : 'pending',
 			time: moment(e.timeStamp).unix() * 1000,
 			transaction: {
 				from: e.from,
