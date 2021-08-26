@@ -22,13 +22,13 @@ const Colors = {
   gray: '#555'
 }
 const height = Math.round(Dimensions.get('window').height)
-export default class PayPal extends React.Component{
-  constructor(props){
+export default class PayPal extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
       from: {
         currency: 'EUR',
-        amount: 0, 
+        amount: 0,
       },
       to: {
         currency: 'LCN',
@@ -43,25 +43,25 @@ export default class PayPal extends React.Component{
 
 
   getFeatherIcon(name, size) {
-		return <FeatherIcon name={name} size={size || 24} color={colors.grey400} />;
+    return <FeatherIcon name={name} size={size || 24} color={colors.grey400} />;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { network } = this.props.state;
-    if(!network){
+    if (!network) {
       return
     }
     this.setState({
       isLoading: true
     })
     API.getRequest(network.route + Routes.getConversions, response => {
-      if(response.data.length > 0){
+      if (response.data.length > 0) {
         this.setState({
           currencies: response.data,
           isLoading: false
         })
         this.manageCurrencies()
-      }else{
+      } else {
         this.setState({
           currencies: [],
           isLoading: false
@@ -75,11 +75,11 @@ export default class PayPal extends React.Component{
     })
   }
 
-  manageCurrencies(){
+  manageCurrencies() {
     const { currencies, from, to } = this.state;
     for (var i = 0; i < currencies.length; i++) {
       let item = currencies[i]
-      if(item.from.currency == from.currency && item.to.currency == to.currency){
+      if (item.from.currency == from.currency && item.to.currency == to.currency) {
         this.setState({
           selected: item
         })
@@ -88,16 +88,16 @@ export default class PayPal extends React.Component{
     }
   }
 
-  payWithPayPal(){
+  payWithPayPal() {
     const { from, selected } = this.state;
-    if(from == null || selected == null){
+    if (from == null || selected == null) {
       this.setState({
         errorMessage: 'Fields are required'
       })
       return
     }
     const { network } = this.state
-    if(network == null){
+    if (network == null) {
       this.setState({
         errorMessage: 'Invalid network or no network available'
       })
@@ -105,9 +105,9 @@ export default class PayPal extends React.Component{
     }
   }
 
-  stepper(){
+  stepper() {
     const { from, selected } = this.state;
-    return(
+    return (
       <View style={{
         borderLeftColor: Colors.lightGray,
         borderLeftWidth: 5,
@@ -157,7 +157,7 @@ export default class PayPal extends React.Component{
             </TouchableOpacity>
           )
         }
-        
+
 
         {
           (selected && from) && (
@@ -169,14 +169,14 @@ export default class PayPal extends React.Component{
             </TouchableOpacity>
           )
         }
-        
+
 
 
       </View>
     )
   }
-  amount(){
-    return(
+  amount() {
+    return (
       <View style={{
         borderColor: Colors.lightGray,
         borderWidth: 1,
@@ -209,7 +209,7 @@ export default class PayPal extends React.Component{
                 }
               })
             }}
-            />
+          />
         </View>
         <View style={{
           borderLeftWidth: 1,
@@ -228,10 +228,10 @@ export default class PayPal extends React.Component{
       </View>
     )
   }
-  receive(){
+  receive() {
     const { network } = this.props.state;
     const { from, selected } = this.state;
-    return(
+    return (
       <View style={{
         borderColor: Colors.lightGray,
         borderWidth: 1,
@@ -272,7 +272,7 @@ export default class PayPal extends React.Component{
               width: 30,
               height: 30
             }}/>*/}
-            <Text>LCN</Text>
+            <Text>{this.state.to.currency}</Text>
           </View>
           {
             network && (
@@ -283,20 +283,20 @@ export default class PayPal extends React.Component{
               }}>{network.name}</Text>
             )
           }
-          
+
         </View>
       </View>
     )
   }
-  render(){
+  render() {
     const { selected } = this.state;
-    return(
+    return (
       <SafeAreaView style={{
         flex: 1
       }}>
         <ScrollView style={{
         }}
-        showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
           <View style={{
             paddingLeft: 20,
@@ -316,14 +316,14 @@ export default class PayPal extends React.Component{
             <View style={{
               marginLeft: 40
             }}>
-            {this.stepper()}
+              {this.stepper()}
             </View>
             {
               selected && (
                 this.receive()
               )
             }
-            
+
 
           </View>
         </ScrollView>

@@ -235,6 +235,7 @@ class AssetOverview extends PureComponent {
 	render() {
 		const {
 			accounts,
+			ticker,
 			asset: { address, isETH = undefined, decimals, symbol, balanceError = null },
 			primaryCurrency,
 			selectedAddress,
@@ -266,10 +267,10 @@ class AssetOverview extends PureComponent {
 		// choose balances depending on 'primaryCurrency'
 		let newBalance = Helper.demosToLiquichain(balance)
 		if (primaryCurrency === 'ETH') {
-			mainBalance = `${newBalance} LCN`;
+			mainBalance = `${newBalance} ${ticker}`;
 			secondaryBalance = balanceFiat;
 		} else {
-			mainBalance = !balanceFiat ? `${newBalance} LCN` : balanceFiat;
+			mainBalance = !balanceFiat ? `${newBalance} ${ticker}` : balanceFiat;
 			secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
 		}
 

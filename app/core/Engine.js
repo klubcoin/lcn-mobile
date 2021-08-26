@@ -74,7 +74,7 @@ class Engine {
 					type: 'rpc',
 					rpcTarget: Routes.mainNetWork.url,
 					chainId: Routes.mainNetWork.chainId,
-					ticker: 'LCN',
+					ticker: Routes.mainNetWork.ticker,
 					nickname: Routes.mainNetWork.name,
 					static: {
 						eth_sendTransaction: async (payload, next, end) => {
@@ -195,7 +195,7 @@ class Engine {
 			networkController.setRpcTarget(
 				Routes.mainNetWork.url,
 				Routes.mainNetWork.chainId,
-				'LCN',
+				Routes.mainNetWork.ticker,
 				Routes.mainNetWork.name,
 			);
 

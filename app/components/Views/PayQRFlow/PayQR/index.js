@@ -135,12 +135,12 @@ class PayQR extends PureComponent {
 	}
 
 	componentDidMount = async () => {
-		const { selectedAddress, accounts, network, navigation, providerType } = this.props;
+		const { selectedAddress, accounts, network, navigation, providerType, ticker } = this.props;
 		const { fromAccountName } = this.state;
 		// For analytics
 		navigation.setParams({ providerType });
 		const ens = await doENSReverseLookup(selectedAddress, network);
-		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} LCN`;
+		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${ticker}`;
 
 		this.setState({
 			fromAccountName: ens || fromAccountName,

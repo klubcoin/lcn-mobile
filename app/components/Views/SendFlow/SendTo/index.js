@@ -253,7 +253,7 @@ class SendFlow extends PureComponent {
 		navigation.setParams({ providerType });
 		const networkAddressBook = addressBook[network] || {};
 		const ens = await doENSReverseLookup(selectedAddress, network);
-		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} LCN`;
+		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${Routes.mainNetWork.ticker}`;
 
 		setTimeout(() => {
 			this.setState({

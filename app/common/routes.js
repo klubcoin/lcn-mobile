@@ -8,6 +8,7 @@ export default {
     url: 'https://account.liquichain.io/meveo/rest/jsonrpc',
     chainId: '76',
     symbol: null,
+    ticker: 'LCN',
     route: 'https://account.liquichain.io/meveo/rest/',
     blockExploreUrl: 'https://liquichain.io',
     accountUrl: 'https://account.liquichain.io',

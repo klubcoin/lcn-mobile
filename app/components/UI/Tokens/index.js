@@ -19,6 +19,7 @@ import { allowedToBuy } from '../FiatOrders';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { isMainNet } from '../../../util/networks';
 import Helper from 'common/Helper'
+import Routes from '../../../common/routes';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -192,14 +193,14 @@ class Tokens extends PureComponent {
 		// const balanceValue = `${balance} ${asset.symbol}`;
 
 		let account = null
-		if(selectedAddress && typeof accounts[selectedAddress] != 'undefined'){
+		if (selectedAddress && typeof accounts[selectedAddress] != 'undefined') {
 			account = accounts[selectedAddress]
 			balance = accounts[selectedAddress].balance
 		}
 
 		balance = Helper.demosToLiquichain(balance)
 
-		let balanceValue = `${balance} LCN`;
+		let balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;
@@ -270,7 +271,7 @@ class Tokens extends PureComponent {
 					<Text style={styles.tokensHomeText}>{strings('wallet.ready_to_explore')}</Text>
 				)}
 				<StyledButton type="blue" onPress={this.goToBuy} containerStyle={styles.tokensHomeButton}>
-					Buy LCN
+					Buy {Routes.mainNetWork.ticker}
 				</StyledButton>
 			</View>
 		);
@@ -280,10 +281,10 @@ class Tokens extends PureComponent {
 		const { tokens, hideZeroBalanceTokens, tokenBalances } = this.props;
 		const tokensToDisplay = hideZeroBalanceTokens
 			? tokens.filter(token => {
-					const { address, isETH } = token;
-					return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
-					// eslint-disable-next-line no-mixed-spaces-and-tabs
-			  })
+				const { address, isETH } = token;
+				return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+			})
 			: tokens;
 
 		return (

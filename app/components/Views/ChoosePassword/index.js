@@ -292,12 +292,6 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
-	/*
-
-			LCN Implementation
-		
-
-	*/
 	sendAccount(){
 		const { selectedAddress, keyringController } = this.props;
 		let vault = JSON.parse(keyringController.vault)
