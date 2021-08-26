@@ -168,9 +168,9 @@ class TransactionElement extends PureComponent {
 		const { tx, selectedAddress } = this.props;
 		const incoming = safeToChecksumAddress(tx.transaction.to) === selectedAddress;
 		const selfSent = incoming && safeToChecksumAddress(tx.transaction.from) === selectedAddress;
-		return `${
+		return `#${parseInt(tx.transaction.nonce, 16)} - ${
 			(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
-				? `#${parseInt(tx.transaction.nonce, 16)} - ${toDateFormat(tx.time)} ${strings(
+				? `${toDateFormat(tx.time)} ${strings(
 						'transactions.from_device_label'
 						// eslint-disable-next-line no-mixed-spaces-and-tabs
 				  )}`
