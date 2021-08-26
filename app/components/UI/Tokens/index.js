@@ -187,10 +187,9 @@ class Tokens extends PureComponent {
 		let balance =
 			asset.balance ||
 			(itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], asset.decimals) : 0);
-		const balanceFiat = isMainNet(chainId)
+		const balanceFiat = isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
 			? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
 			: null;
-		// const balanceValue = `${balance} ${asset.symbol}`;
 
 		let account = null
 		if (selectedAddress && typeof accounts[selectedAddress] != 'undefined') {
@@ -200,7 +199,7 @@ class Tokens extends PureComponent {
 
 		balance = Helper.demosToLiquichain(balance)
 
-		let balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
+		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;
@@ -234,11 +233,9 @@ class Tokens extends PureComponent {
 
 				<View style={styles.balances} testID={'balance'}>
 					<Text style={styles.balance}>{mainBalance}</Text>
-					{account ? (
-						<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
-							{Helper.convertToEur(account.balance, account.conversion)}
-						</Text>
-					) : null}
+					<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
+						{secondaryBalance}
+					</Text>
 				</View>
 			</AssetElement>
 		);

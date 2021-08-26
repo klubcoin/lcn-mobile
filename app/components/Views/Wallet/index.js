@@ -119,15 +119,15 @@ class Wallet extends PureComponent {
 
 	getCurrentConversion = () => {
 		API.getRequest(Routes.getConversions, response => {
-      if(response.data.length > 0){
-      	this.setState({
-      		currentConversion: response.data[0].to
-      	})
-      }
-    }, error => {
-      console.log(error)
-    })
-  }
+			if (response.data.length > 0) {
+				this.setState({
+					currentConversion: response.data[0].to
+				})
+			}
+		}, error => {
+			console.log(error)
+		})
+	}
 
 	onRefresh = async () => {
 		requestAnimationFrame(async () => {
@@ -149,22 +149,22 @@ class Wallet extends PureComponent {
 		});
 	};
 
-	getBalance = async() => {
+	getBalance = async () => {
 		const { accounts, selectedAddress, identities } = this.props;
 		// for(const account in accounts){
-			let params = [selectedAddress]
-			await API.postRequest(Routes.getBalance, params, response => {
-				// console.log(parseInt(response.result, 16))
-				const balance = response.result
-				accounts[selectedAddress] = {
-					balance: balance,
-					conversion: this.state.currentConversion
-				}
-				const { AccountTrackerController } = Engine.context;
-				AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
-			}, error => {
-				console.log(error.message)
-			})
+		let params = [selectedAddress]
+		await API.postRequest(Routes.getBalance, params, response => {
+			// console.log(parseInt(response.result, 16))
+			const balance = response.result
+			accounts[selectedAddress] = {
+				balance: balance,
+				conversion: this.state.currentConversion
+			}
+			const { AccountTrackerController } = Engine.context;
+			AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
+		}, error => {
+			console.log(error.message)
+		})
 		// }
 	};
 
@@ -212,6 +212,7 @@ class Wallet extends PureComponent {
 			ticker
 		} = this.props;
 
+		const { currentConversion } = this.state;
 
 		let balance = 0;
 		let assets = tokens;
@@ -224,7 +225,7 @@ class Wallet extends PureComponent {
 					symbol: getTicker(ticker),
 					isETH: true,
 					balance,
-					balanceFiat: weiToFiat(hexToBN(balance), conversionRate, currentCurrency),
+					balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
 					logo: '../images/logo.png'
 				},
 				...tokens
@@ -239,7 +240,7 @@ class Wallet extends PureComponent {
 
 
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
-		
+
 		return (
 			<View style={styles.wrapper}>
 				{
@@ -252,7 +253,7 @@ class Wallet extends PureComponent {
 					// eslint-disable-next-line react/jsx-no-bind
 					onChangeTab={obj => this.onChangeTab(obj)}
 				>
-					<Tokens navigation={navigation} tabLabel={'LCN Tokens'} tokens={assets}  />
+					<Tokens navigation={navigation} tabLabel={'LCN Tokens'} tokens={assets} />
 					{/*<CollectibleContracts
 						navigation={navigation}
 						tabLabel={strings('wallet.collectibles')}
@@ -290,7 +291,7 @@ class Wallet extends PureComponent {
 					style={styles.wrapper}
 					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
 				>
-					{(this.props.selectedAddress &&  this.props.accounts) ? this.renderContent() : this.renderLoader()}
+					{(this.props.selectedAddress && this.props.accounts) ? this.renderContent() : this.renderLoader()}
 				</ScrollView>
 				{this.renderOnboardingWizard()}
 			</View>
