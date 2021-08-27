@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
 	},
 	buttonNextWrapper: {
 		flexDirection: 'row',
-		alignItems: 'flex-end'
+		alignItems: 'flex-end',
+		marginBottom: 20,
 	},
 	buttonNext: {
 		flex: 1,
