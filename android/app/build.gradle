@@ -227,7 +227,8 @@ android {
         }
     }
 
-    def foxCode = System.getenv('MM_FOX_CODE').trim()
+    def env = System.getenv()
+    def foxCode = env['MM_FOX_CODE'] ? env['MM_FOX_CODE'].trim() : ''
     buildTypes.each {
         it.buildConfigField 'String', 'foxCode', "\"$foxCode\""
 
