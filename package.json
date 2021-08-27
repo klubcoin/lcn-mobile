@@ -44,7 +44,8 @@
 		"stacktrace:ios": "stack-beautifier sourcemaps/ios/index.js.map -t sourcemaps/trace.txt",
 		"update-changelog": "./scripts/auto-changelog.sh",
 		"dev:android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && sh scripts/clean-android-duplicate-resources.sh",
-		"bundle:android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && sh scripts/clean-android-duplicate-resources.sh"
+		"bundle:android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && sh scripts/clean-android-duplicate-resources.sh",
+		"apply:patches": "python scripts/apply-patches.py"
 	},
 	"prettier": {
 		"printWidth": 120,
