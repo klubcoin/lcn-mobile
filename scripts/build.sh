@@ -302,7 +302,7 @@ checkAuthToken() {
 
 	if [ -n "${MM_SENTRY_AUTH_TOKEN}" ]; then
 		sed -i'' -e "s/auth.token.*/auth.token=${MM_SENTRY_AUTH_TOKEN}/" "./${propertiesFileName}";
-	elif ! grep -qE '^auth.token=[[:alnum:]]+$' "./${propertiesFileName}"; then
+	elif ! grep -qE 'auth.token=[[:alnum:]]+' "./${propertiesFileName}"; then
 		printError "Missing auth token in '${propertiesFileName}'; add the token, or set it as MM_SENTRY_AUTH_TOKEN"
 		exit 1
 	fi
@@ -315,6 +315,7 @@ printTitle
 if [ "$MODE" == "release" ] || [ "$MODE" == "releaseE2E" ] ; then
 	checkAuthToken 'sentry.release.properties'
 	export SENTRY_PROPERTIES="${REPO_ROOT_DIR}/sentry.release.properties"
+	METAMASK_ENVIRONMENT='production'
 	if [ -z "$METAMASK_ENVIRONMENT" ]; then
 		printError "Missing METAMASK_ENVIRONMENT; set to 'production' for a production release, 'prerelease' for a pre-release, or 'local' otherwise"
 		exit 1
