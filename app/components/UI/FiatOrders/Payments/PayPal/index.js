@@ -352,7 +352,7 @@ function PayPal({selectedAddress, ...props}){
             style={{
               fontSize: 24
             }}
-            value={from.amount}
+            value={`${from.amount}`}
             keyboardType={'numeric'}
             onChangeText={(input) => {
               setFrom({
@@ -503,6 +503,9 @@ function PayPal({selectedAddress, ...props}){
           <WebView
             source={{ uri: payPalUrl }}
             startInLoadingState={true}
+            javaScriptEnabled={true}
+            thirdPartyCookiesEnabled={true}
+            incognito={true}
             renderLoading={() => (<View style={{
               flex: 1,
               justifyContent: 'center',
