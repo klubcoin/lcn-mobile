@@ -8,7 +8,7 @@ echo "2. jetify"
 npx jetify
 
 echo "3. Patch npm packages"
-npx patch-package
+#npx patch-package
 
 echo "4. Create xcconfig files..."
 echo "" > ios/debug.xcconfig
