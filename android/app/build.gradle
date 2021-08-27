@@ -166,8 +166,8 @@ android {
         applicationId "com.liquichain"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 34
-        versionName "2.8"
+        versionCode 35
+        versionName "2.8.35"
         multiDexEnabled true
         testBuildType System.getProperty('testBuildType', 'debug')
         missingDimensionStrategy "minReactNative", "minReactNative46"
