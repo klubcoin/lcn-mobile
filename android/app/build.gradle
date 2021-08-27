@@ -226,8 +226,10 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    def foxCode = System.getenv('MM_FOX_CODE').trim()
     buildTypes.each {
-        it.buildConfigField 'String', 'foxCode', "\"$System.env.MM_FOX_CODE\""
+        it.buildConfigField 'String', 'foxCode', "\"$foxCode\""
 
     }
     // applicationVariants are e.g. debug, release
