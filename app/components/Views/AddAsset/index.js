@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
+import Routes from '../../../common/routes';
 import { connect } from 'react-redux';
 import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
 import AddCustomToken from '../../UI/AddCustomToken';
+import AddCustomTokenOrApp from '../../UI/AddCustomTokenOrApp';
 import SearchTokenAutocomplete from '../../UI/SearchTokenAutocomplete';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import PropTypes from 'prop-types';
@@ -74,6 +76,7 @@ class AddAsset extends PureComponent {
 
 	render = () => {
 		const {
+			chainId,
 			navigation: {
 				state: {
 					params: { assetType, collectibleContract }
@@ -83,28 +86,34 @@ class AddAsset extends PureComponent {
 		} = this.props;
 		return (
 			<SafeAreaView style={styles.wrapper} testID={`add-${assetType}-screen`}>
-				{assetType === 'token' ? (
-					<ScrollableTabView renderTabBar={this.renderTabBar}>
-						{NetworksChainId.mainnet === this.props.chainId && (
-							<SearchTokenAutocomplete
-								navigation={navigation}
-								tabLabel={strings('add_asset.search_token')}
-								testID={'tab-search-token'}
-							/>
-						)}
-						<AddCustomToken
+				{assetType === 'token' ?
+					chainId == Routes.mainNetWork.chainId ? (
+						<AddCustomTokenOrApp
 							navigation={navigation}
 							tabLabel={strings('add_asset.custom_token')}
-							testID={'tab-add-custom-token'}
 						/>
-					</ScrollableTabView>
-				) : (
-					<AddCustomCollectible
-						navigation={navigation}
-						collectibleContract={collectibleContract}
-						testID={'add-custom-collectible'}
-					/>
-				)}
+					) : (
+						<ScrollableTabView renderTabBar={this.renderTabBar}>
+							{NetworksChainId.mainnet === this.props.chainId && (
+								<SearchTokenAutocomplete
+									navigation={navigation}
+									tabLabel={strings('add_asset.search_token')}
+									testID={'tab-search-token'}
+								/>
+							)}
+							<AddCustomToken
+								navigation={navigation}
+								tabLabel={strings('add_asset.custom_token')}
+								testID={'tab-add-custom-token'}
+							/>
+						</ScrollableTabView>
+					) : (
+						<AddCustomCollectible
+							navigation={navigation}
+							collectibleContract={collectibleContract}
+							testID={'add-custom-collectible'}
+						/>
+					)}
 			</SafeAreaView>
 		);
 	};
