@@ -342,6 +342,7 @@
 		"action_description_6": "Never sell data for profit. Ever!"
 	},
 	"token": {
+		"select_type": "Select type",
 		"token_symbol": "Token Symbol",
 		"token_address": "Token Address",
 		"token_precision": "Token of Precision",
