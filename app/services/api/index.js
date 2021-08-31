@@ -22,8 +22,7 @@ const Api = {
       }
     })
   },
-  standardPostRequest: (route, parameters, callback, errorCallback = null) => {
-    let url = routes.mainNetWork.route + route
+  directPostRequest: (url, parameters, callback, errorCallback = null) => {
     const fetchOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
@@ -38,6 +37,10 @@ const Api = {
         errorCallback(error)
       }
     })
+  },
+  standardPostRequest: (route, parameters, callback, errorCallback = null) => {
+    let url = routes.mainNetWork.route + route
+    Api.directPostRequest(url, parameters, callback, errorCallback);
   },
   directGetRequest: (url, callback, errorCallback = null) => {
     const fetchOptions = {
