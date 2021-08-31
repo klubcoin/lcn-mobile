@@ -3,8 +3,7 @@ import api from './api'
 export default class WebService {
 
   static sendGetDirect(url, data, callback) {
-    const route = url + '?' + queryParamsURLEncodedString(data || {});
-    api.directGetRequest(route, (json) => {
+    api.directGetRequest(url, data, (json) => {
       callback(true, json)
     }, (error) => {
       callback(false, error);

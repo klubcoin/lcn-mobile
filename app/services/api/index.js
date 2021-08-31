@@ -1,13 +1,14 @@
 import routes from 'common/routes'
 import Config from 'app/config.js'
-import * as base64  from 'base-64';
+import * as base64 from 'base-64';
+import { queryParamsURLEncodedString } from '../WebService';
 
 const Api = {
   postRequest: (method, parameters, callback, errorCallback = null) => {
     let url = routes.mainNetWork.url
     const fetchOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...routes.basicMethod,
         method: method,
@@ -19,7 +20,7 @@ const Api = {
     fetch(url, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if(errorCallback){
+      if (errorCallback) {
         errorCallback(error)
       }
     })
@@ -27,10 +28,10 @@ const Api = {
   directPostRequest: (url, parameters, callback, errorCallback = null) => {
     const headers = { 'Content-Type': 'application/json' };
 
-    if (parameters.basicAuth) {
+    if (parameters?.basicAuth) {
       headers.Authorization = `Basic ${base64.encode(parameters.basicAuth)}`;
       delete parameters.basicAuth;
-    } else if (parameters.jwt) {
+    } else if (parameters?.jwt) {
       headers.Authorization = `Bearer ${parameters.jwt}`;
       delete parameters.jwt;
     }
@@ -45,7 +46,7 @@ const Api = {
     fetch(url, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if(errorCallback){
+      if (errorCallback) {
         errorCallback(error)
       }
     })
@@ -54,14 +55,26 @@ const Api = {
     let url = routes.mainNetWork.route + route
     Api.directPostRequest(url, parameters, callback, errorCallback);
   },
-  directGetRequest: (url, callback, errorCallback = null) => {
-    const fetchOptions = {
-      method: 'GET'
+  directGetRequest: (url, parameters, callback, errorCallback = null) => {
+    const headers = {};
+
+    if (parameters?.basicAuth) {
+      headers.Authorization = `Basic ${base64.encode(parameters.basicAuth)}`;
+      delete parameters.basicAuth;
+    } else if (parameters?.jwt) {
+      headers.Authorization = `Bearer ${parameters.jwt}`;
+      delete parameters.jwt;
     }
-    fetch(url, fetchOptions).then(response => response.json()).then(json => {
+    const route = url + '?' + queryParamsURLEncodedString(parameters || {});
+
+    const fetchOptions = {
+      method: 'GET',
+      headers,
+    }
+    fetch(route, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if(errorCallback){
+      if (errorCallback) {
         errorCallback(error)
       }
     })
@@ -75,7 +88,7 @@ const Api = {
     fetch(url, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if(errorCallback){
+      if (errorCallback) {
         errorCallback(error)
       }
     })
@@ -95,7 +108,7 @@ const Api = {
     fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if(errorCallback){
+      if (errorCallback) {
         errorCallback(error.message)
       }
     })
@@ -113,7 +126,7 @@ const Api = {
     fetch('https://api-m.sandbox.paypal.com/v2/checkout/orders', fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if(errorCallback){
+      if (errorCallback) {
         errorCallback(error.message)
       }
     })
