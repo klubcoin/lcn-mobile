@@ -1,11 +1,16 @@
 import WebService from './WebService';
 
+const basicAuth = 'apitest:apitest';
+
 export default class APIService {
 
   static API_KEY = 'toto';
   static apiEtherScan = () => 'etherscan/api';
   static apiGetOrderById = () => 'pg/v1/orders/<orderId>';
   static apiProceedOrder = () => 'pg/v1/orderpayments';
+
+  static routeAccountAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
+  static apiListApps = () => APIService.routeAccountAPI() + 'LiquichainApp/list';
 
   static getTransactionHistory(address, callback) {
     const data = {
@@ -30,5 +35,10 @@ export default class APIService {
       sig: signature,
     }
     WebService.sendPost(this.apiProceedOrder(), data, callback);
+  }
+
+  static getAppList(callback) {
+    const data = { basicAuth };
+    WebService.sendPostDirect(this.apiListApps(), data, callback);
   }
 }
