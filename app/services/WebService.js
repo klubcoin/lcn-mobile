@@ -2,8 +2,8 @@ import api from './api'
 
 export default class WebService {
 
-  static sendGet(url, data, callback) {
-    const route = url + '?' + queryParamsURLEncodedString(data || {});
+  static sendGet(path, data, callback) {
+    const route = path + '?' + queryParamsURLEncodedString(data || {});
 
     api.getRequest(route, (json) => {
       callback(true, json)
@@ -12,8 +12,8 @@ export default class WebService {
     });
   }
 
-  static sendPost(url, data, callback) {
-    api.standardPostRequest(url, data, (json) => {
+  static sendPost(path, data, callback) {
+    api.standardPostRequest(path, data, (json) => {
       callback(true, json)
     }, (error) => {
       callback(false, error);
