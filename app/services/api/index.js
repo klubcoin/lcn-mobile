@@ -1,5 +1,7 @@
 import routes from 'common/routes'
 import Config from 'app/config.js'
+import * as base64  from 'base-64';
+
 const Api = {
   postRequest: (method, parameters, callback, errorCallback = null) => {
     let url = routes.mainNetWork.url
@@ -23,9 +25,19 @@ const Api = {
     })
   },
   directPostRequest: (url, parameters, callback, errorCallback = null) => {
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (parameters.basicAuth) {
+      headers.Authorization = `Basic ${base64.encode(parameters.basicAuth)}`;
+      delete parameters.basicAuth;
+    } else if (parameters.jwt) {
+      headers.Authorization = `Bearer ${parameters.jwt}`;
+      delete parameters.jwt;
+    }
+
     const fetchOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
+      headers,
       body: JSON.stringify(parameters)
     }
     console.log('url', url)
