@@ -10,6 +10,7 @@ import ModalSelector from './ModalSelector';
 import contractMap from '@metamask/contract-metadata';
 import AddByTokenAddress from './AddByTokenAddress';
 import AddContractsERC from './AddContractsERC';
+import APIService from '../../../services/APIService';
 
 const TypeOptions = () => ({
 	address: strings('asset_overview.address'),
@@ -76,17 +77,32 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	selectedType = TypeKeys[0];
 	showTypes = false;
 
+	appList = [];
+
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			selectedType: observable,
 			showTypes: observable,
+			appList: observable,
 		})
 	}
 
 	onBack = () => {
 		this.props.navigation.goBack();
 	};
+
+	componentDidMount() {
+		this.fetchApps();
+	}
+
+	fetchApps() {
+		APIService.getAppList((success, json) => {
+			if (success && json) {
+				this.appList = [...json];
+			}
+		})
+	}
 
 	renderSelectTypes = () => {
 		const options = TypeKeys.map(key => ({ key, value: TypeOptions()[key] }));
