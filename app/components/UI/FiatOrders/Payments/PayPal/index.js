@@ -175,29 +175,6 @@ function PayPal({selectedAddress, ...props}){
     })
   }
 
-  // capturePayPalOrder = (url) => {
-  //   if(orderId == null){
-  //     return
-  //   }
-  //   console.log('orderId', orderId)
-  //   API.directGetRequest(url, response => {
-  //     if(response){
-  //       // success
-  //       console.log('error', response)
-  //       // props.navigation.navigate('PurchaseMethods')
-  //     }else{
-  //       // error
-  //       console.log('error', response)
-  //       // alert error here
-  //       // props.navigation.navigate('PurchaseMethods')
-  //     }
-  //   }, error => {
-  //     // alert error here
-  //     console.log('error', error.message)
-  //     // props.navigation.navigate('PurchaseMethods')
-  //   }) 
-  // }
-
   manageRequest = (url) => {
     console.log({
       url

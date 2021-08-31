@@ -1,6 +1,7 @@
 import WebService from './WebService';
 
 const basicAuth = 'apitest:apitest';
+const basicAuthAdmin = 'meveo.admin:meveo';
 
 export default class APIService {
 
@@ -11,6 +12,9 @@ export default class APIService {
 
   static routeAccountAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
   static apiListApps = () => APIService.routeAccountAPI() + 'LiquichainApp/list';
+  static apiGetAppInstances = () => APIService.routeAccountAPI() + '{cetCode}/list';
+  static apiGetWalletContract = () => APIService.routeAccountAPI() + 'Wallet/{appWallet}';
+
 
   static getTransactionHistory(address, callback) {
     const data = {
@@ -40,5 +44,17 @@ export default class APIService {
   static getAppList(callback) {
     const data = { basicAuth };
     WebService.sendPostDirect(this.apiListApps(), data, callback);
+  }
+
+  static getAppInstances(cetCode, callback) {
+    const route = this.apiGetAppInstances().replace('{cetCode}', cetCode);
+    const data = { basicAuth };
+    WebService.sendPostDirect(route, data, callback);
+  }
+
+  static getWalletContract(appWallet, callback) {
+    const route = this.apiGetWalletContract().replace('{appWallet}', appWallet);
+    const data = { basicAuth: basicAuthAdmin };
+    WebService.sendGetDirect(route, data, callback);
   }
 }
