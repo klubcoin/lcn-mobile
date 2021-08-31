@@ -2,6 +2,23 @@ import api from './api'
 
 export default class WebService {
 
+  static sendGetDirect(url, data, callback) {
+    const route = url + '?' + queryParamsURLEncodedString(data || {});
+    api.directGetRequest(route, (json) => {
+      callback(true, json)
+    }, (error) => {
+      callback(false, error);
+    });
+  }
+
+  static sendPostDirect(url, data, callback) {
+    api.directPostRequest(url, data, (json) => {
+      callback(true, json)
+    }, (error) => {
+      callback(false, error);
+    });
+  }
+
   static sendGet(path, data, callback) {
     const route = path + '?' + queryParamsURLEncodedString(data || {});
 
