@@ -4,13 +4,14 @@ import {
 	FlatList,
 	TouchableOpacity,
 	StyleSheet,
-	Text,
 	View,
 	SafeAreaView,
 } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import Device from '../../../util/Device';
 import Modal from 'react-native-modal';
+import RemoteImage from '../../Base/RemoteImage';
+import Text from '../../Base/Text';
 
 
 const styles = StyleSheet.create({
@@ -43,10 +44,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	option: {
+		flexDirection: 'row',
 		alignItems: 'center',
 		paddingVertical: 20,
 		marginHorizontal: 20,
 		borderBottomWidth: StyleSheet.hairlineWidth,
+	},
+	logo: {
+		width: 32,
+		height: 32,
+		borderRadius: 16,
+		marginRight: 10,
 	},
 	value: fontStyles.bold
 });
@@ -65,6 +73,7 @@ class ModalSelector extends PureComponent {
 
 	renderItem = ({ item }) => {
 		const { onSelect } = this.props;
+		const { key, value, desc, icon } = item;
 
 		return (
 			<TouchableOpacity
@@ -72,7 +81,15 @@ class ModalSelector extends PureComponent {
 				activeOpacity={0.55}
 				onPress={() => onSelect(item)}
 			>
-				<Text style={styles.value}>{item.value}</Text>
+				<RemoteImage
+					resizeMode={'contain'}
+					source={{ uri: icon }}
+					style={styles.logo}
+				/>
+				<View>
+					<Text black style={styles.value}>{value} {key ? `(${key})` : ''}</Text>
+					{!!desc && <Text small style={styles.desc}>{desc}</Text>}
+				</View>
 			</TouchableOpacity>
 		);
 	};
