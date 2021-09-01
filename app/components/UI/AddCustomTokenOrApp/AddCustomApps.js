@@ -107,8 +107,9 @@ export default class AddCustomApps extends PureComponent {
     } else if (item.appWallet) {
       this.selectedAsset = item;
       this.getContractAddress(item.appWallet);
-    } else {
+    } else if (item.ownerWallet) {
       this.selectedAsset = item;
+      this.getContractAddress(item.ownerWallet);
     }
   }
 
