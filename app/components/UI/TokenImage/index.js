@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 
 export function TokenImage({ asset, containerStyle, iconStyle, logoDefined, swapsTokens }) {
 	const completeAsset = useMemo(() => {
-		if (!logoDefined && !asset.logo) {
+		if (!logoDefined && !asset.logo && !asset.image) {
 			const checksumAddress = toChecksumAddress(asset.address);
 			if (checksumAddress in contractMap) {
 				asset.logo = contractMap[checksumAddress].logo;
