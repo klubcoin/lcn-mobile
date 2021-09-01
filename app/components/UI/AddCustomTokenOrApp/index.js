@@ -110,8 +110,8 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	fetchApps() {
 		APIService.getAppList((success, json) => {
 			if (success && json) {
-				this.appList = [...json];
-				this.typeOptions = [AddTokenByAddress(), ...json];
+				this.appList = [...json].filter(e => e.shortCode !== 'LIC');
+				this.typeOptions = [AddTokenByAddress(), ...this.appList];
 			}
 		})
 	}
@@ -159,7 +159,6 @@ export default class AddCustomTokenOrApp extends PureComponent {
 				/>
 			default:
 				return <AddCustomApps
-					apps={this.appList}
 					selectedApp={this.selectedType}
 					onCancel={this.onBack.bind(this)}
 					onAddToken={this.onBack.bind(this)}
