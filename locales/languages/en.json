@@ -300,6 +300,11 @@
 		"ready_to_explore": "Ready to start exploring blockchain applications?",
 		"unable_to_load": "Unable to load balance"
 	},
+	"voting": {
+		"title": "Voting",
+		"see_lawbook": "See lawbook",
+		"section": "Section"
+	},
 	"activity_view": {
 		"title": "Activity"
 	},
