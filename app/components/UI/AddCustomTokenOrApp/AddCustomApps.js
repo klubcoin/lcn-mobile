@@ -10,6 +10,7 @@ import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Text from '../../Base/Text';
 import RemoteImage from '../../Base/RemoteImage';
+import { addHexPrefix } from 'ethereumjs-util';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -88,8 +89,9 @@ export default class AddCustomApps extends PureComponent {
 
   addApp = async () => {
     const { AssetsController } = Engine.context;
-    const { address, symbol, decimals } = this.selectedAsset;
-    await AssetsController.addToken(address, symbol, decimals);
+    const { hexHash, name, symbol, decimals } = this.selectedAsset;
+    const address = addHexPrefix(hexHash);
+    await AssetsController.addToken(address, symbol || name, decimals || 0);
 
     const { onAddToken } = this.props;
     if (onAddToken) onAddToken();
