@@ -9,6 +9,7 @@ import { colors } from '../../../../styles/common';
 /* eslint-disable import/no-commonjs */
 const ethLogo = require('../../../../images/logo.png');
 const bnbLogo = require('../../../../images/bnb-logo.png');
+const lcnLogo = ({ uri: 'licoin' })
 /* eslint-enable import/no-commonjs */
 
 const REGULAR_SIZE = 24;
@@ -86,6 +87,20 @@ function TokenIcon({ symbol, icon, medium, big, biggest, style }) {
 			<RemoteImage
 				fadeIn
 				source={symbol === 'ETH' ? ethLogo : bnbLogo}
+				style={[
+					styles.icon,
+					medium && styles.iconMedium,
+					big && styles.iconBig,
+					biggest && styles.iconBiggest,
+					style
+				]}
+			/>
+		);
+	} else if (symbol === 'LCN') {
+		return (
+			<RemoteImage
+				fadeIn
+				source={lcnLogo}
 				style={[
 					styles.icon,
 					medium && styles.iconMedium,
