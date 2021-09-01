@@ -90,8 +90,11 @@ export default class AddCustomApps extends PureComponent {
   addApp = async () => {
     const { AssetsController } = Engine.context;
     const { hexHash, name, symbol, decimals } = this.selectedAsset;
+    const { iconUrl } = this.selectedInstance;
+    const { selectedApp } = this.props;
     const address = addHexPrefix(hexHash);
-    await AssetsController.addToken(address, symbol || name, decimals || 0);
+    const icon = iconUrl || selectedApp.iconUrl;
+    await AssetsController.addToken(address, symbol || name, decimals || 0, icon);
 
     const { onAddToken } = this.props;
     if (onAddToken) onAddToken();
