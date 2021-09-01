@@ -221,7 +221,7 @@ class Wallet extends PureComponent {
 			// balance = "0x00"
 			assets = [
 				{
-					name: 'Ether', // FIXME: use 'Ether' for mainnet only, what should it be for custom networks?
+					name: 'Liquichain',
 					symbol: getTicker(ticker),
 					isETH: true,
 					balance,
