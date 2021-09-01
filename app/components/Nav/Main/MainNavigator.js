@@ -52,6 +52,7 @@ import SwapsQuotesView from '../../UI/Swaps/QuotesView';
 import PayPal from '../../UI/FiatOrders/Payments/PayPal';
 import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase'
 import PayQR from '../../Views/PayQRFlow/PayQR';
+import VotingApp from '../../Views/VotingApp';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -84,6 +85,11 @@ export default createStackNavigator(
 						},
 						RevealPrivateCredentialView: {
 							screen: RevealPrivateCredential
+						}
+					}),
+					VotingAppHome: createStackNavigator({
+						VotingApp: {
+							screen: VotingApp
 						}
 					}),
 					BrowserTabHome: createStackNavigator({

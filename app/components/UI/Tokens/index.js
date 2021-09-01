@@ -184,7 +184,12 @@ class Tokens extends PureComponent {
 	);
 
 	onItemPress = token => {
-		this.props.navigation.navigate('Asset', { ...token, transactions: this.props.transactions });
+		const app = this.savedApps.find(e => e.address == `${token.address}`.toLowerCase());
+		if (app) {
+			this.props.navigation.navigate('VotingApp', { app });
+		} else {
+			this.props.navigation.navigate('Asset', { ...token, transactions: this.props.transactions });
+		}
 	};
 
 	renderFooter = () => (
