@@ -3,7 +3,7 @@ export const CLIENT_OPTIONS = {
 		// Required
 		description: 'Liquichain Mobile app',
 		url: 'https://liquichain.io',
-		icons: ['https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg'],
+		icons: ['https://docs.liquichain.io/media/app/licoin.png'],
 		name: 'Liquichain',
 		ssl: true
 	}
