@@ -11,7 +11,10 @@ import SecureKeychain from '../../../core/SecureKeychain';
 import EntryScriptWeb3 from '../../../core/EntryScriptWeb3';
 import Logger from '../../../util/Logger';
 import ErrorBoundary from '../ErrorBoundary';
+import { Provider as ProviderMobX } from 'mobx-react'
+import preferences from '../../../../app/store/preferences'
 
+preferences.load();
 /**
  * Top level of the component hierarchy
  * App component is wrapped by the provider from react-redux
@@ -39,11 +42,13 @@ export default class Root extends PureComponent {
 
 	render = () => (
 		<Provider store={store}>
-			<PersistGate persistor={persistor}>
-				<ErrorBoundary onError={this.errorHandler} view="Root">
-					<App />
-				</ErrorBoundary>
-			</PersistGate>
+			<ProviderMobX store={preferences}>
+				<PersistGate persistor={persistor}>
+					<ErrorBoundary onError={this.errorHandler} view="Root">
+						<App />
+					</ErrorBoundary>
+				</PersistGate>
+			</ProviderMobX>
 		</Provider>
 	);
 }
