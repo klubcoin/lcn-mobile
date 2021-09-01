@@ -11,13 +11,8 @@ import contractMap from '@metamask/contract-metadata';
 import AddByTokenAddress from './AddByTokenAddress';
 import AddContractsERC from './AddContractsERC';
 import APIService from '../../../services/APIService';
-
-const TypeOptions = () => ({
-	address: strings('asset_overview.address'),
-	erc20: 'ERC20',
-	erc721: 'ERC721',
-});
-const TypeKeys = Object.keys(TypeOptions());
+import AddCustomApps from './AddCustomApps';
+import RemoteImage from '../../Base/RemoteImage';
 
 const contracts = Object.keys(contractMap)
 	.map(address => ({
@@ -25,6 +20,13 @@ const contracts = Object.keys(contractMap)
 		...contractMap[address],
 		watchedAsset: true,
 	}));
+
+const AddTokenByAddress = () => ({
+	type: 'address',
+	name: strings('asset_overview.address'),
+	description: 'Add token by address',
+	iconUrl: 'https://docs.liquichain.io/media/app/licoin.png',
+});
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -39,6 +41,13 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 4,
 		borderColor: colors.grey100,
+		alignItems: 'center'
+	},
+	logo: {
+		width: 32,
+		height: 32,
+		borderRadius: 16,
+		marginLeft: 10,
 	},
 	type: {
 		flex: 1,
@@ -74,7 +83,8 @@ export default class AddCustomTokenOrApp extends PureComponent {
 		navigation: PropTypes.object
 	};
 
-	selectedType = TypeKeys[0];
+	typeOptions = [AddTokenByAddress()];
+	selectedType = this.typeOptions[0];
 	showTypes = false;
 
 	appList = [];
@@ -82,6 +92,7 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
+			typeOptions: observable,
 			selectedType: observable,
 			showTypes: observable,
 			appList: observable,
@@ -100,12 +111,18 @@ export default class AddCustomTokenOrApp extends PureComponent {
 		APIService.getAppList((success, json) => {
 			if (success && json) {
 				this.appList = [...json];
+				this.typeOptions = [AddTokenByAddress(), ...json];
 			}
 		})
 	}
 
 	renderSelectTypes = () => {
-		const options = TypeKeys.map(key => ({ key, value: TypeOptions()[key] }));
+		const options = this.typeOptions.map(e => ({
+			key: e.shortCode,
+			value: e.name,
+			desc: e.description,
+			icon: e.iconUrl,
+		}));
 
 		return (
 			<ModalSelector
@@ -113,7 +130,7 @@ export default class AddCustomTokenOrApp extends PureComponent {
 				options={options}
 				onSelect={(item) => {
 					this.selectedAsset = null;
-					this.selectedType = item.key;
+					this.selectedType = this.typeOptions.find(e => e.shortCode === item.key);
 					this.showTypes = false;
 				}}
 				onClose={() => this.showTypes = false}
@@ -122,18 +139,28 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	};
 
 	renderForm() {
-		switch (this.selectedType) {
-			case TypeKeys[0]:
-				return <AddByTokenAddress
+		const { name, shortCode } = this.selectedType;
+		if (name === AddTokenByAddress().name) {
+			return <AddByTokenAddress
+				onCancel={this.onBack.bind(this)}
+				onAddToken={this.onBack.bind(this)}
+			/>
+		}
+
+		switch (shortCode) {
+			case 'E20':
+			case 'E72':
+				return <AddContractsERC
+					contracts={contracts.filter((e) =>
+						(e.erc20 && shortCode == 'E20') || (e.erc721 && shortCode == 'E72')
+					)}
 					onCancel={this.onBack.bind(this)}
 					onAddToken={this.onBack.bind(this)}
 				/>
 			default:
-				return <AddContractsERC
-					contracts={contracts.filter((e) =>
-						(e.erc20 && this.selectedType == 'erc20')
-						|| (e.erc721 && this.selectedType == 'erc721')
-					)}
+				return <AddCustomApps
+					apps={this.appList}
+					selectedApp={this.selectedType}
 					onCancel={this.onBack.bind(this)}
 					onAddToken={this.onBack.bind(this)}
 				/>
@@ -141,6 +168,8 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	}
 
 	renderSelectType() {
+		const { name, iconUrl } = this.selectedType;
+
 		return (
 			<View style={styles.rowWrapper}>
 				<Text style={fontStyles.normal}>{strings('token.select_type')}</Text>
@@ -149,8 +178,13 @@ export default class AddCustomTokenOrApp extends PureComponent {
 					activeOpacity={0.8}
 					onPress={() => this.showTypes = true}
 				>
+					<RemoteImage
+						resizeMode={'contain'}
+						source={{ uri: iconUrl }}
+						style={styles.logo}
+					/>
 					<Text style={[fontStyles.normal, styles.type]}>
-						{TypeOptions()[this.selectedType]}
+						{name}
 					</Text>
 					<FontAwesome
 						name={'caret-down'}
