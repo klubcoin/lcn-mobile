@@ -275,7 +275,7 @@
 		"collectibles": "NFTs",
 		"transactions": "TRANSACTIONS",
 		"no_collectibles": "Don’t see your NFT?",
-		"add_tokens": "ADD TOKENS",
+		"add_tokens": "ADD TOKENS/APPS",
 		"no_tokens": "You don't have any tokens!",
 		"no_nfts_yet": "No NFTs yet",
 		"learn_more": "Learn more",
@@ -311,6 +311,8 @@
 		"title_nft": "Add NFT",
 		"search_token": "SEARCH",
 		"custom_token": "CUSTOM TOKEN",
+		"add_app": "Add App",
+		"cancel": "Cancel",
 		"tokens": {
 			"cancel_add_token": "CANCEL",
 			"add_token": "ADD TOKEN"
