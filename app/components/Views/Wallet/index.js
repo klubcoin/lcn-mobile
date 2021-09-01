@@ -253,7 +253,7 @@ class Wallet extends PureComponent {
 					// eslint-disable-next-line react/jsx-no-bind
 					onChangeTab={obj => this.onChangeTab(obj)}
 				>
-					<Tokens navigation={navigation} tabLabel={'LCN Tokens'} tokens={assets} />
+					<Tokens navigation={navigation} tabLabel={'LCN Tokens/Apps'} tokens={assets} />
 					{/*<CollectibleContracts
 						navigation={navigation}
 						tabLabel={strings('wallet.collectibles')}

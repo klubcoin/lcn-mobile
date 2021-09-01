@@ -8,5 +8,5 @@ const pack = require('../../package.json'); // eslint-disable-line
 export default function getAssetLogoPath(logo) {
 	const version = pack.dependencies['@metamask/contract-metadata']?.replace('^', '');
 	if (!logo) return;
-	return `https://docs.liquichain.io/media/app/${logo}?v=${version}`;
+	return `https://raw.githubusercontent.com/MetaMask/contract-metadata/master/images/${logo}?v=${version}`;
 }
