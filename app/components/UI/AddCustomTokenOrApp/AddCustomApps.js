@@ -66,7 +66,7 @@ export class AddCustomApps extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.prefs = props.prefs;
+    this.prefs = props.store;
     makeObservable(this, {
       appInstances: observable,
       selectedInstance: observable,
@@ -192,4 +192,4 @@ export class AddCustomApps extends PureComponent {
   };
 }
 
-export default inject('prefs')(observer(AddCustomApps));
+export default inject('store')(observer(AddCustomApps));
