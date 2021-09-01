@@ -20,6 +20,7 @@ import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { isMainNet } from '../../../util/networks';
 import Helper from 'common/Helper'
 import Routes from '../../../common/routes';
+import preferences, { kAppList } from '../../../store/preferences'
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -69,6 +70,20 @@ const styles = StyleSheet.create({
 	footer: {
 		flex: 1,
 		paddingBottom: 30
+	},
+	row: {
+		flex: 1,
+		flexDirection: 'row',
+	},
+	name: {
+		fontSize: 16,
+		color: colors.fontPrimary,
+		...fontStyles.normal,
+	},
+	desc: {
+		fontSize: 12,
+		color: colors.fontSecondary,
+		...fontStyles.normal,
 	},
 	balances: {
 		flex: 1,
@@ -147,9 +162,20 @@ class Tokens extends PureComponent {
 		hideZeroBalanceTokens: PropTypes.bool
 	};
 
+	savedApps = [];
 	actionSheet = null;
 
 	tokenToRemove = null;
+
+	componentDidMount() {
+		this.fetchApps();
+	}
+
+	async fetchApps() {
+		await preferences.fetch(kAppList);
+		this.savedApps = await preferences.getSavedAppList();
+		this.setState({});
+	}
 
 	renderEmpty = () => (
 		<View style={styles.emptyView}>
@@ -200,10 +226,15 @@ class Tokens extends PureComponent {
 		balance = Helper.demosToLiquichain(balance)
 
 		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
+		const app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
 
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;
-		if (primaryCurrency === 'ETH') {
+		if (app && app.name) {
+			const { application } = app;
+			mainBalance = app.name;
+			secondaryBalance = application.description;
+		} else if (primaryCurrency === 'ETH') {
 			mainBalance = balanceValue;
 			secondaryBalance = balanceFiat;
 		} else {
@@ -225,18 +256,30 @@ class Tokens extends PureComponent {
 				onLongPress={asset.isETH ? null : this.showRemoveMenu}
 				asset={asset}
 			>
-				{asset.isETH ? (
-					<NetworkMainAssetLogo big style={styles.ethLogo} testID={'eth-logo'} />
+				{app ? (
+					<View style={styles.row}>
+						<TokenImage asset={asset} containerStyle={styles.ethLogo} />
+						<View style={styles.app}>
+							<Text style={styles.name}>{mainBalance}</Text>
+							<Text style={styles.desc}>{secondaryBalance}</Text>
+						</View>
+					</View>
 				) : (
-					<TokenImage asset={asset} containerStyle={styles.ethLogo} />
-				)}
+					<View style={styles.row}>
+						{asset.isETH ? (
+							<NetworkMainAssetLogo big style={styles.ethLogo} testID={'eth-logo'} />
+						) : (
+							<TokenImage asset={asset} containerStyle={styles.ethLogo} />
+						)}
 
-				<View style={styles.balances} testID={'balance'}>
-					<Text style={styles.balance}>{mainBalance}</Text>
-					<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
-						{secondaryBalance}
-					</Text>
-				</View>
+						<View style={styles.balances} testID={'balance'}>
+							<Text style={styles.balance}>{mainBalance}</Text>
+							<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
+								{secondaryBalance}
+							</Text>
+						</View>
+					</View>
+				)}
 			</AssetElement>
 		);
 	};

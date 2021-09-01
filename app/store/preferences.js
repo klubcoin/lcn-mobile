@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage"
 import { makeAutoObservable } from "mobx";
 
-const kAppList = 'AppList';
+export const kAppList = 'AppList';
 
 class Preferences {
   storage = {};
