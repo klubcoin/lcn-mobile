@@ -7,7 +7,7 @@ import ActionView from '../ActionView';
 import Engine from '../../../core/Engine';
 import APIService from '../../../services/APIService';
 import { makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import Text from '../../Base/Text';
 import RemoteImage from '../../Base/RemoteImage';
 import { addHexPrefix } from 'ethereumjs-util';
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 /**
  * PureComponent that provides ability to add select contracts
  */
-export default class AddCustomApps extends PureComponent {
+export class AddCustomApps extends PureComponent {
 
   static propTypes = {
     selectedApp: PropTypes.object,
@@ -66,6 +66,7 @@ export default class AddCustomApps extends PureComponent {
 
   constructor(props) {
     super(props);
+    this.prefs = props.prefs;
     makeObservable(this, {
       appInstances: observable,
       selectedInstance: observable,
@@ -95,6 +96,11 @@ export default class AddCustomApps extends PureComponent {
     const address = addHexPrefix(hexHash);
     const icon = iconUrl || selectedApp.iconUrl;
     await AssetsController.addToken(address, symbol || name, decimals || 0, icon);
+
+    await this.prefs.saveApp({
+      address,
+      ...this.selectedAsset,
+    })
 
     const { onAddToken } = this.props;
     if (onAddToken) onAddToken();
@@ -186,4 +192,4 @@ export default class AddCustomApps extends PureComponent {
   };
 }
 
-observer(AddCustomApps);
+export default inject('prefs')(observer(AddCustomApps));
