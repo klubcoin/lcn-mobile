@@ -3,6 +3,10 @@ import { makeAutoObservable } from "mobx";
 
 export const kAppList = 'AppList';
 
+const keys = [
+  kAppList,
+];
+
 class Preferences {
   storage = {};
 
@@ -11,7 +15,6 @@ class Preferences {
   }
 
   async load() {
-    const keys = await AsyncStorage.getAllKeys();
     keys.map((key) => this.fetch(key));
   }
 
