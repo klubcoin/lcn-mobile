@@ -40,6 +40,7 @@ import {
 	ORIGINAL,
 	EXISTING_USER
 } from '../../../constants/storage';
+import { keycloakAuthUnset } from '../../../actions/user';
 import { passwordRequirementsMet } from '../../../util/password';
 import ErrorBoundary from '../ErrorBoundary';
 import WarningExistingUserModal from '../../UI/WarningExistingUserModal';
@@ -364,6 +365,7 @@ class Login extends PureComponent {
 
 	deleteExistingUser = async () => {
 		try {
+			this.props.keycloakAuthUnset();
 			await AsyncStorage.removeItem(EXISTING_USER);
 			this.props.navigation.navigate('Onboarding', { delete: true });
 		} catch (error) {
@@ -610,7 +612,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	setOnboardingWizardStep: step => dispatch(setOnboardingWizardStep(step))
+	setOnboardingWizardStep: step => dispatch(setOnboardingWizardStep(step)),
+	keycloakAuthUnset: () => dispatch(keycloakAuthUnset()),
 });
 
 export default connect(
