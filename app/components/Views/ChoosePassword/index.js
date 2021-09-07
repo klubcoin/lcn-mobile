@@ -374,6 +374,7 @@ class ChoosePassword extends PureComponent {
 		await AsyncStorage.setItem(EXISTING_USER, TRUE);
 		await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
 		this.props.passwordUnset();
+		this.props.keycloakAuthUnset();
 		this.props.setLockTime(-1);
 		// Should we force people to enable passcode / biometrics?
 		if (error.toString() === PASSCODE_NOT_SET_ERROR) {
@@ -538,9 +539,43 @@ class ChoosePassword extends PureComponent {
 
 	onUsePassword = () => { this.setState({ usePasswordAuth: true }) };
 
-	onKeycloakResult = (error) => {
+	onKeycloakResult = async (error) => {
 		if (!error) {
-			alert('Login successfully!');
+			try {
+				const password = '';
+				this.setState({ loading: true });
+
+				const previous_screen = this.props.navigation.getParam(PREVIOUS_SCREEN);
+
+				if (previous_screen === ONBOARDING) {
+					await this.createNewVaultAndKeychain(password);
+					this.props.seedphraseNotBackedUp();
+					await AsyncStorage.removeItem(NEXT_MAKER_REMINDER);
+					await AsyncStorage.setItem(EXISTING_USER, TRUE);
+					await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
+				} else {
+					await this.recreateVault(password);
+				}
+
+				// Set state in app as it was with password
+				await SecureKeychain.resetGenericPassword();
+				if (this.state.biometryType && this.state.biometryChoice) {
+					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
+				} else if (this.state.rememberMe) {
+					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
+				} else {
+					await SecureKeychain.resetGenericPassword();
+				}
+				await AsyncStorage.setItem(EXISTING_USER, TRUE);
+				await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
+				this.sendAccount()
+				this.props.keycloakAuthSet();
+				this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
+				this.setState({ loading: false });
+				this.props.navigation.navigate('AccountBackupStep1');
+			} catch (error) {
+				this.onError(error);
+			}
 		}
 	};
 
