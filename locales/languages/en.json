@@ -128,7 +128,7 @@
 	"login": {
 		"title": "Welcome Back!",
 		"password": "Password",
-		"login_liquichain_with_keycloak": "Log into Liquichain with keycloak",
+		"login_liquichain_with_keycloak": "Log into Liquichain",
 		"login_button": "LOG IN",
 		"go_back": "Can’t login? You can ERASE your current wallet and setup a new one",
 		"reset_wallet": "Reset Wallet",
