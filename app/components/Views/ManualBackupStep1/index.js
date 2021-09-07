@@ -11,7 +11,9 @@ import {
 	TouchableOpacity
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import preferences from '../../../store/preferences';
 import StyledButton from '../../UI/StyledButton';
 import OnboardingProgress from '../../UI/OnboardingProgress';
 import { strings } from '../../../../locales/i18n';
@@ -23,6 +25,7 @@ import Engine from '../../../core/Engine';
 import PreventScreenshot from '../../../core/PreventScreenshot';
 import SecureKeychain from '../../../core/SecureKeychain';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
+import LoginWithKeycloak from '../LoginWithKeycloak';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
 	MANUAL_BACKUP_STEPS,
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
 	},
 	buttonWrapper: {
 		flex: 1,
+		width: '100%',
 		marginTop: 20,
 		justifyContent: 'flex-end'
 	},
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
  * View that's shown during the second step of
  * the backup seed phrase flow
  */
-export default class ManualBackupStep1 extends PureComponent {
+export class ManualBackupStep1 extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
 
 	static propTypes = {
@@ -289,9 +293,16 @@ export default class ManualBackupStep1 extends PureComponent {
 		}
 	};
 
-	tryUnlock = () => {
+	tryUnlock = (hash) => {
 		const { password } = this.state;
-		this.tryUnlockWithPassword(password);
+		this.tryUnlockWithPassword(hash || password);
+	};
+
+	onKeycloakResult = async (error) => {
+		if (!error) {
+			const hash = await preferences.getKeycloakHash();
+			this.tryUnlock(hash);
+		}
 	};
 
 	renderLoader = () => (
@@ -324,6 +335,7 @@ export default class ManualBackupStep1 extends PureComponent {
 	);
 
 	renderConfirmPassword() {
+		const { keycloakAuth } = this.props;
 		const { warningIncorrectPassword } = this.state;
 		return (
 			<KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={'padding'}>
@@ -334,28 +346,38 @@ export default class ManualBackupStep1 extends PureComponent {
 							<View style={styles.text}>
 								<Text style={styles.label}>{strings('manual_backup_step_1.before_continiuing')}</Text>
 							</View>
-							<TextInput
-								style={styles.input}
-								placeholder={'Password'}
-								placeholderTextColor={colors.grey100}
-								onChangeText={this.onPasswordChange}
-								secureTextEntry
-								onSubmitEditing={this.tryUnlock}
-								testID={'private-credential-password-text-input'}
-							/>
-							{warningIncorrectPassword && (
-								<Text style={styles.warningMessageText}>{warningIncorrectPassword}</Text>
-							)}
-						</View>
-						<View style={styles.buttonWrapper}>
-							<StyledButton
-								containerStyle={styles.button}
-								type={'confirm'}
-								onPress={this.tryUnlock}
-								testID={'submit-button'}
-							>
-								{strings('manual_backup_step_1.confirm')}
-							</StyledButton>
+							{keycloakAuth ?
+								<LoginWithKeycloak
+									type={'sign'}
+									label={strings('manual_backup_step_1.confirm_password')}
+									onSuccess={this.onKeycloakResult}
+									onError={this.onKeycloakResult}
+								/> :
+								<>
+									<TextInput
+										style={styles.input}
+										placeholder={'Password'}
+										placeholderTextColor={colors.grey100}
+										onChangeText={this.onPasswordChange}
+										secureTextEntry
+										onSubmitEditing={this.tryUnlock}
+										testID={'private-credential-password-text-input'}
+									/>
+									{warningIncorrectPassword && (
+										<Text style={styles.warningMessageText}>{warningIncorrectPassword}</Text>
+									)}
+									<View style={styles.buttonWrapper}>
+										<StyledButton
+											containerStyle={styles.button}
+											type={'confirm'}
+											onPress={this.tryUnlock}
+											testID={'submit-button'}
+										>
+											{strings('manual_backup_step_1.confirm')}
+										</StyledButton>
+									</View>
+								</>
+							}
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
@@ -416,3 +438,11 @@ export default class ManualBackupStep1 extends PureComponent {
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+	keycloakAuth: state.user.keycloakAuth,
+});
+
+export default connect(
+	mapStateToProps,
+)(ManualBackupStep1);

@@ -6,6 +6,7 @@ import StyledButton from '../../UI/StyledButton';
 const styles = {
   container: {
     marginTop: 20,
+    width: '100%',
   },
   button: {},
 };
