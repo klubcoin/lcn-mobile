@@ -2,9 +2,11 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { makeAutoObservable } from "mobx";
 
 export const kAppList = 'AppList';
+export const kSecureHashKeycloak = 'KeycloakHash';
 
 const keys = [
   kAppList,
+  kSecureHashKeycloak,
 ];
 
 class Preferences {
@@ -49,6 +51,14 @@ class Preferences {
   async getAppByAddress(address) {
     const apps = this.storage[kAppList] || {};
     return apps[address];
+  }
+
+  async setKeycloakHash(encryptedHash) {
+    await this.save(kSecureHashKeycloak, encryptedHash);
+  }
+
+  async getKeycloakHash() {
+    return await this.fetch(kSecureHashKeycloak);
   }
 }
 
