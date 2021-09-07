@@ -29,6 +29,7 @@ import Device from '../../../util/Device';
 import { OutlinedTextField } from 'react-native-material-textfield';
 import BiometryButton from '../../UI/BiometryButton';
 import { recreateVaultWithSamePassword } from '../../../core/Vault';
+import preferences from '../../../../app/store/preferences';
 import Logger from '../../../util/Logger';
 import {
 	BIOMETRY_CHOICE_DISABLED,
@@ -457,7 +458,8 @@ class Login extends PureComponent {
 
 	onKeycloakResult = async (error) => {
 		if (!error) {
-			this.handleLogin('');
+			const hash = await preferences.getKeycloakHash();
+			this.handleLogin(hash);
 		} else {
 			this.setState({ loading: false, error: error.toString() });
 		}
