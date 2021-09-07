@@ -478,8 +478,8 @@ class Onboarding extends PureComponent {
 	};
 
 	onLogin = async () => {
-		const { passwordSet } = this.props;
-		if (!passwordSet) {
+		const { passwordSet, keycloakAuth } = this.props;
+		if (!passwordSet && !keycloakAuth) {
 			const { KeyringController } = Engine.context;
 			// Restore vault with empty password
 			await KeyringController.submitPassword('');
@@ -711,6 +711,7 @@ const mapStateToProps = state => ({
 	selectedAddress: state?.engine?.backgroundState?.PreferencesController?.selectedAddress,
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
 	passwordSet: state.user.passwordSet,
+	keycloakAuth: state.user.keycloakAuth,
 	loading: state.user.loadingSet,
 	loadingMsg: state.user.loadingMsg
 });
