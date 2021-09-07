@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 
+import { ReactNativeKeycloakProvider } from '@react-keycloak/native';
+import keycloak from '../../../../keycloak';
+
 import { store, persistor } from '../../../store/';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -41,14 +44,28 @@ export default class Root extends PureComponent {
 	}
 
 	render = () => (
-		<Provider store={store}>
-			<ProviderMobX store={preferences}>
-				<PersistGate persistor={persistor}>
-					<ErrorBoundary onError={this.errorHandler} view="Root">
-						<App />
-					</ErrorBoundary>
-				</PersistGate>
-			</ProviderMobX>
-		</Provider>
+		<ReactNativeKeycloakProvider
+			authClient={keycloak}
+			initOptions={{
+				redirectUri: 'liquichain://auth',
+				inAppBrowserOptions: {},
+				onEvent: (event, error) => {
+					console.log('keycloak onEvent', event, error);
+				},
+				onTokens: (tokens) => {
+					console.log('keycloak onTokens', tokens);
+				},
+			}}
+		>
+			<Provider store={store}>
+				<ProviderMobX store={preferences}>
+					<PersistGate persistor={persistor}>
+						<ErrorBoundary onError={this.errorHandler} view="Root">
+							<App />
+						</ErrorBoundary>
+					</PersistGate>
+				</ProviderMobX>
+			</Provider>
+		</ReactNativeKeycloakProvider>
 	);
 }
