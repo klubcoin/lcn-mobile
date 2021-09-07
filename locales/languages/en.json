@@ -179,7 +179,10 @@
 		"i_understand": "I understand that Liquichain cannot recover this password for me.",
 		"learn_more": "Learn more.",
 		"secure": "Secure wallet",
-		"confirm": "Confirm Secret Recovery Phrase"
+		"confirm": "Confirm Secret Recovery Phrase",
+		"setup_liquichain_account": "Setup liquichain account",
+		"setup_local_account": "Setup local account (geek)",
+		"or": "Or"
 	},
 	"reset_password": {
 		"title": "Change password",

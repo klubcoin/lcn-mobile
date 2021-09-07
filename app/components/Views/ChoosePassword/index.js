@@ -34,6 +34,7 @@ import API from 'services/api'
 import Routes from 'common/routes'
 
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
+import LoginWithKeycloak from '../LoginWithKeycloak';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -92,6 +93,11 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		justifyContent: 'center',
 		...fontStyles.normal
+	},
+	or: {
+		marginVertical: 20,
+		textAlign: 'center',
+		fontWeight: '600'
 	},
 	checkboxContainer: {
 		marginTop: 10,
@@ -243,6 +249,7 @@ class ChoosePassword extends PureComponent {
 		rememberMe: false,
 		loading: false,
 		error: null,
+		usePasswordAuth: false,
 		inputWidth: { width: '99%' }
 	};
 
@@ -292,12 +299,12 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
-	sendAccount(){
+	sendAccount() {
 		const { selectedAddress, keyringController } = this.props;
 		let vault = JSON.parse(keyringController.vault)
 		console.log('selected', selectedAddress)
 		console.log('keyringController', vault)
-		if(selectedAddress == null){
+		if (selectedAddress == null) {
 			return
 		}
 		API.postRequest(Routes.walletCreation, [
@@ -414,7 +421,7 @@ class ChoosePassword extends PureComponent {
 		const selectedAddress = this.props.selectedAddress;
 		let preferencesControllerState = PreferencesController.state;
 
-		
+
 		// Create previous accounts again
 		for (let i = 0; i < existingAccountCount - 1; i++) {
 			await KeyringController.addNewAccount();
@@ -525,6 +532,14 @@ class ChoosePassword extends PureComponent {
 
 	setConfirmPassword = val => this.setState({ confirmPassword: val });
 
+	onUsePassword = () => { this.setState({ usePasswordAuth: true }) };
+
+	onKeycloakResult = (error) => {
+		if (!error) {
+			alert('Login successfully!');
+		}
+	};
+
 	render() {
 		const {
 			isSelected,
@@ -534,7 +549,8 @@ class ChoosePassword extends PureComponent {
 			confirmPassword,
 			secureTextEntry,
 			error,
-			loading
+			loading,
+			usePasswordAuth,
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
 		const canSubmit = passwordsMatch && isSelected;
@@ -570,94 +586,115 @@ class ChoosePassword extends PureComponent {
 							contentContainerStyle={styles.keyboardScrollableWrapper}
 							resetScrollToCoords={{ x: 0, y: 0 }}
 						>
-							<View testID={'create-password-screen'}>
-								<View style={styles.content}>
-									<Text style={styles.title}>{strings('choose_password.title')}</Text>
-									<View style={styles.text}>
-										<Text style={styles.subtitle}>{strings('choose_password.subtitle')}</Text>
-									</View>
-								</View>
-								<View style={styles.field}>
-									<Text style={styles.hintLabel}>{strings('choose_password.password')}</Text>
-									<Text onPress={this.toggleShowHide} style={[styles.hintLabel, styles.showPassword]}>
-										{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
-									</Text>
-									<TextInput
-										style={[styles.input, inputWidth]}
-										value={password}
-										onChangeText={this.onPasswordChange}
-										secureTextEntry={secureTextEntry}
-										placeholder=""
-										testID="input-password"
-										onSubmitEditing={this.jumpToConfirmPassword}
-										returnKeyType="next"
-										autoCapitalize="none"
-									/>
-									{(password !== '' && (
-										<Text style={styles.passwordStrengthLabel}>
-											{strings('choose_password.password_strength')}
-											<Text style={styles[`strength_${passwordStrengthWord}`]}>
-												{' '}
-												{strings(`choose_password.strength_${passwordStrengthWord}`)}
+							<LoginWithKeycloak
+								label={strings('choose_password.setup_liquichain_account')}
+								onSuccess={this.onKeycloakResult}
+								onError={this.onKeycloakResult}
+							/>
+							{!usePasswordAuth && (
+								<>
+									<Text style={styles.or}>{strings('choose_password.or')}</Text>
+									<StyledButton
+										style={styles.button}
+										type={'normal'}
+										onPress={this.onUsePassword}
+									>
+										{strings('choose_password.setup_local_account')}
+									</StyledButton>
+								</>
+							)}
+							{usePasswordAuth && (
+								<>
+									<View testID={'create-password-screen'}>
+										<View style={styles.content}>
+											<Text style={styles.title}>{strings('choose_password.title')}</Text>
+											<View style={styles.text}>
+												<Text style={styles.subtitle}>{strings('choose_password.subtitle')}</Text>
+											</View>
+										</View>
+										<View style={styles.field}>
+											<Text style={styles.hintLabel}>{strings('choose_password.password')}</Text>
+											<Text onPress={this.toggleShowHide} style={[styles.hintLabel, styles.showPassword]}>
+												{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
 											</Text>
-										</Text>
-									)) || <Text style={styles.passwordStrengthLabel} />}
-								</View>
-								<View style={styles.field}>
-									<Text style={styles.hintLabel}>{strings('choose_password.confirm_password')}</Text>
-									<TextInput
-										ref={this.confirmPasswordInput}
-										style={[styles.input, inputWidth]}
-										value={confirmPassword}
-										onChangeText={this.setConfirmPassword}
-										secureTextEntry={secureTextEntry}
-										placeholder={''}
-										placeholderTextColor={colors.grey100}
-										testID={'input-password-confirm'}
-										onSubmitEditing={this.onPressCreate}
-										returnKeyType={'done'}
-										autoCapitalize="none"
-									/>
-									<View style={styles.showMatchingPasswords}>
-										{passwordsMatch ? (
-											<Icon name="check" size={16} color={colors.green300} />
-										) : null}
+											<TextInput
+												style={[styles.input, inputWidth]}
+												value={password}
+												onChangeText={this.onPasswordChange}
+												secureTextEntry={secureTextEntry}
+												placeholder=""
+												testID="input-password"
+												onSubmitEditing={this.jumpToConfirmPassword}
+												returnKeyType="next"
+												autoCapitalize="none"
+											/>
+											{(password !== '' && (
+												<Text style={styles.passwordStrengthLabel}>
+													{strings('choose_password.password_strength')}
+													<Text style={styles[`strength_${passwordStrengthWord}`]}>
+														{' '}
+														{strings(`choose_password.strength_${passwordStrengthWord}`)}
+													</Text>
+												</Text>
+											)) || <Text style={styles.passwordStrengthLabel} />}
+										</View>
+										<View style={styles.field}>
+											<Text style={styles.hintLabel}>{strings('choose_password.confirm_password')}</Text>
+											<TextInput
+												ref={this.confirmPasswordInput}
+												style={[styles.input, inputWidth]}
+												value={confirmPassword}
+												onChangeText={this.setConfirmPassword}
+												secureTextEntry={secureTextEntry}
+												placeholder={''}
+												placeholderTextColor={colors.grey100}
+												testID={'input-password-confirm'}
+												onSubmitEditing={this.onPressCreate}
+												returnKeyType={'done'}
+												autoCapitalize="none"
+											/>
+											<View style={styles.showMatchingPasswords}>
+												{passwordsMatch ? (
+													<Icon name="check" size={16} color={colors.green300} />
+												) : null}
+											</View>
+											<Text style={styles.passwordStrengthLabel}>
+												{strings('choose_password.must_be_at_least', { number: MIN_PASSWORD_LENGTH })}
+											</Text>
+										</View>
+										<View>{this.renderSwitch()}</View>
+										<View style={styles.checkboxContainer}>
+											<CheckBox
+												value={isSelected}
+												onValueChange={this.setSelection}
+												style={styles.checkbox}
+												tintColors={{ true: colors.blue }}
+												boxType="square"
+												testID={'password-understand-box'}
+											/>
+											<Text style={styles.label} onPress={this.setSelection} testID={'i-understand-text'}>
+												{strings('choose_password.i_understand')}{' '}
+												<Text onPress={this.learnMore} style={styles.learnMore}>
+													{strings('choose_password.learn_more')}
+												</Text>
+											</Text>
+										</View>
+
+										{!!error && <Text style={styles.errorMsg}>{error}</Text>}
 									</View>
-									<Text style={styles.passwordStrengthLabel}>
-										{strings('choose_password.must_be_at_least', { number: MIN_PASSWORD_LENGTH })}
-									</Text>
-								</View>
-								<View>{this.renderSwitch()}</View>
-								<View style={styles.checkboxContainer}>
-									<CheckBox
-										value={isSelected}
-										onValueChange={this.setSelection}
-										style={styles.checkbox}
-										tintColors={{ true: colors.blue }}
-										boxType="square"
-										testID={'password-understand-box'}
-									/>
-									<Text style={styles.label} onPress={this.setSelection} testID={'i-understand-text'}>
-										{strings('choose_password.i_understand')}{' '}
-										<Text onPress={this.learnMore} style={styles.learnMore}>
-											{strings('choose_password.learn_more')}
-										</Text>
-									</Text>
-								</View>
 
-								{!!error && <Text style={styles.errorMsg}>{error}</Text>}
-							</View>
-
-							<View style={styles.ctaWrapper}>
-								<StyledButton
-									type={'blue'}
-									onPress={this.onPressCreate}
-									testID={'submit-button'}
-									disabled={!canSubmit}
-								>
-									{strings('choose_password.create_button')}
-								</StyledButton>
-							</View>
+									<View style={styles.ctaWrapper}>
+										<StyledButton
+											type={'blue'}
+											onPress={this.onPressCreate}
+											testID={'submit-button'}
+											disabled={!canSubmit}
+										>
+											{strings('choose_password.create_button')}
+										</StyledButton>
+									</View>
+								</>
+							)}
 						</KeyboardAwareScrollView>
 					</View>
 				)}
