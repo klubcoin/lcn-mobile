@@ -7,8 +7,10 @@ import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
+import * as base64 from 'base-64';
 import { keycloakAuthSet, keycloakAuthUnset, passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
+import preferences from '../../../../app/store/preferences';
 import StyledButton from '../../UI/StyledButton';
 import Engine from '../../../core/Engine';
 import Device from '../../../util/Device';
@@ -395,11 +397,11 @@ class ChoosePassword extends PureComponent {
 	 */
 	recreateVault = async password => {
 		const { KeyringController, PreferencesController } = Engine.context;
-		const seedPhrase = await this.getSeedPhrase();
+		const seedPhrase = await this.getSeedPhrase(password);
 
 		let importedAccounts = [];
 		try {
-			const keychainPassword = this.keyringControllerPasswordSet ? this.state.password : '';
+			const keychainPassword = this.keyringControllerPasswordSet ? password : '';
 			// Get imported accounts
 			const simpleKeyrings = KeyringController.state.keyrings.filter(
 				keyring => keyring.type === 'Simple Key Pair'
@@ -541,7 +543,9 @@ class ChoosePassword extends PureComponent {
 	onKeycloakResult = async (error) => {
 		if (!error) {
 			try {
-				const password = '';
+				const password = base64.encode(`${new Date().getUTCMilliseconds()}`);
+				preferences.setKeycloakHash(password);
+
 				this.setState({ loading: true });
 
 				const previous_screen = this.props.navigation.getParam(PREVIOUS_SCREEN);
