@@ -45,6 +45,7 @@ import WarningExistingUserModal from '../../UI/WarningExistingUserModal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { tlc, toLowerCaseCompare } from '../../../util/general';
+import LoginWithKeycloak from '../LoginWithKeycloak';
 
 const isTextDelete = text => tlc(text) === 'delete';
 const deviceHeight = Device.getDeviceHeight();
@@ -207,6 +208,10 @@ class Login extends PureComponent {
 		 */
 		passwordSet: PropTypes.bool,
 		/**
+		 * Boolean flag that determines if keycloak authentication has been set
+		 */
+		keycloakAuth: PropTypes.bool,
+		/**
 		 * A string representing the selected address => account
 		 */
 		selectedAddress: PropTypes.string
@@ -232,7 +237,7 @@ class Login extends PureComponent {
 	fieldRef = React.createRef();
 
 	async componentDidMount() {
-		if (!this.props.passwordSet) {
+		if (!this.props.passwordSet && !this.props.keycloakAuth) {
 			try {
 				const { KeyringController } = Engine.context;
 				await KeyringController.submitPassword('');
@@ -277,22 +282,26 @@ class Login extends PureComponent {
 		const locked = !passwordRequirementsMet(password);
 		if (locked) this.setState({ error: strings('login.invalid_password') });
 		if (this.state.loading || locked) return;
+		this.handleLogin(password);
+	};
+
+	handleLogin = async (password) => {
 		try {
 			this.setState({ loading: true, error: null });
 			const { KeyringController } = Engine.context;
 
 			// Restore vault with user entered password
-			await KeyringController.submitPassword(this.state.password);
+			await KeyringController.submitPassword(password);
 			const encryptionLib = await AsyncStorage.getItem(ENCRYPTION_LIB);
 			const existingUser = await AsyncStorage.getItem(EXISTING_USER);
 			if (encryptionLib !== ORIGINAL && existingUser) {
-				await recreateVaultWithSamePassword(this.state.password, this.props.selectedAddress);
+				await recreateVaultWithSamePassword(password, this.props.selectedAddress);
 				await AsyncStorage.setItem(ENCRYPTION_LIB, ORIGINAL);
 			}
 			if (this.state.biometryChoice && this.state.biometryType) {
-				await SecureKeychain.setGenericPassword(this.state.password, SecureKeychain.TYPES.BIOMETRICS);
+				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
 			} else if (this.state.rememberMe) {
-				await SecureKeychain.setGenericPassword(this.state.password, SecureKeychain.TYPES.REMEMBER_ME);
+				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
 			} else {
 				await SecureKeychain.resetGenericPassword();
 			}
@@ -446,6 +455,14 @@ class Login extends PureComponent {
 		return true;
 	};
 
+	onKeycloakResult = async (error) => {
+		if (!error) {
+			this.handleLogin('');
+		} else {
+			this.setState({ loading: false, error: error.toString() });
+		}
+	};
+
 	render = () => (
 		<ErrorBoundary view="Login">
 			<WarningExistingUserModal
@@ -512,54 +529,63 @@ class Login extends PureComponent {
 							/>
 						</View>
 						<Text style={styles.title}>{strings('login.title')}</Text>
-						<View style={styles.field}>
-							<Text style={styles.label}>{strings('login.password')}</Text>
-							<OutlinedTextField
-								style={styles.input}
-								placeholder={'Password'}
-								testID={'login-password-input'}
-								returnKeyType={'done'}
-								autoCapitalize="none"
-								secureTextEntry
-								ref={this.fieldRef}
-								onChangeText={this.setPassword}
-								value={this.state.password}
-								baseColor={colors.grey500}
-								tintColor={colors.blue}
-								onSubmitEditing={this.onLogin}
-								renderRightAccessory={() => (
-									<BiometryButton
-										onPress={this.tryBiometric}
-										hidden={
-											!(
-												this.state.biometryChoice &&
-												this.state.biometryType &&
-												this.state.hasCredentials
-											)
-										}
-										type={this.state.biometryType}
+						{this.props.keycloakAuth ?
+							<LoginWithKeycloak
+								type={'sign'}
+								label={strings('login.login_liquichain_with_keycloak')}
+								onSuccess={this.onKeycloakResult}
+								onError={this.onKeycloakResult}
+							/> : <>
+								<View style={styles.field}>
+									<Text style={styles.label}>{strings('login.password')}</Text>
+									<OutlinedTextField
+										style={styles.input}
+										placeholder={'Password'}
+										testID={'login-password-input'}
+										returnKeyType={'done'}
+										autoCapitalize="none"
+										secureTextEntry
+										ref={this.fieldRef}
+										onChangeText={this.setPassword}
+										value={this.state.password}
+										baseColor={colors.grey500}
+										tintColor={colors.blue}
+										onSubmitEditing={this.onLogin}
+										renderRightAccessory={() => (
+											<BiometryButton
+												onPress={this.tryBiometric}
+												hidden={
+													!(
+														this.state.biometryChoice &&
+														this.state.biometryType &&
+														this.state.hasCredentials
+													)
+												}
+												type={this.state.biometryType}
+											/>
+										)}
 									/>
+								</View>
+
+								{this.renderSwitch()}
+
+								{!!this.state.error && (
+									<Text style={styles.errorMsg} testID={'invalid-password-error'}>
+										{this.state.error}
+									</Text>
 								)}
-							/>
-						</View>
 
-						{this.renderSwitch()}
-
-						{!!this.state.error && (
-							<Text style={styles.errorMsg} testID={'invalid-password-error'}>
-								{this.state.error}
-							</Text>
-						)}
-
-						<View style={styles.ctaWrapper} testID={'log-in-button'}>
-							<StyledButton type={'confirm'} onPress={this.onLogin}>
-								{this.state.loading ? (
-									<ActivityIndicator size="small" color="white" />
-								) : (
-									strings('login.login_button')
-								)}
-							</StyledButton>
-						</View>
+								<View style={styles.ctaWrapper} testID={'log-in-button'}>
+									<StyledButton type={'confirm'} onPress={this.onLogin}>
+										{this.state.loading ? (
+											<ActivityIndicator size="small" color="white" />
+										) : (
+											strings('login.login_button')
+										)}
+									</StyledButton>
+								</View>
+							</>
+						}
 
 						<View style={styles.footer}>
 							<Text style={styles.cant}>{strings('login.go_back')}</Text>
@@ -576,6 +602,7 @@ class Login extends PureComponent {
 }
 
 const mapStateToProps = state => ({
+	keycloakAuth: state.user.keycloakAuth,
 	passwordSet: state.user.passwordSet,
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
 });

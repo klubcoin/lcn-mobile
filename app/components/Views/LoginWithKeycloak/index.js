@@ -10,7 +10,7 @@ const styles = {
   button: {},
 };
 
-const LoginWithKeycloak = ({ label, onSuccess, onError }) => {
+const LoginWithKeycloak = ({ label, type, onSuccess, onError }) => {
   const { keycloak } = useKeycloak();
 
   const handleLogin = () => {
@@ -30,7 +30,7 @@ const LoginWithKeycloak = ({ label, onSuccess, onError }) => {
     <View style={styles.container}>
       <StyledButton
         style={styles.button}
-        type={'normal'}
+        type={type || 'normal'}
         onPress={handleLogin}
       >{label || ''}</StyledButton>
     </View>
