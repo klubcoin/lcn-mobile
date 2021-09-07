@@ -362,24 +362,28 @@ class ChoosePassword extends PureComponent {
 			this.setState({ loading: false });
 			this.props.navigation.navigate('AccountBackupStep1');
 		} catch (error) {
-			await this.recreateVault('');
-			// Set state in app as it was with no password
-			await SecureKeychain.resetGenericPassword();
-			await AsyncStorage.removeItem(NEXT_MAKER_REMINDER);
-			await AsyncStorage.setItem(EXISTING_USER, TRUE);
-			await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
-			this.props.passwordUnset();
-			this.props.setLockTime(-1);
-			// Should we force people to enable passcode / biometrics?
-			if (error.toString() === PASSCODE_NOT_SET_ERROR) {
-				Alert.alert(
-					strings('choose_password.security_alert_title'),
-					strings('choose_password.security_alert_message')
-				);
-				this.setState({ loading: false });
-			} else {
-				this.setState({ loading: false, error: error.toString() });
-			}
+			this.onError(error);
+		}
+	};
+
+	onError = async (error) => {
+		await this.recreateVault('');
+		// Set state in app as it was with no password
+		await SecureKeychain.resetGenericPassword();
+		await AsyncStorage.removeItem(NEXT_MAKER_REMINDER);
+		await AsyncStorage.setItem(EXISTING_USER, TRUE);
+		await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
+		this.props.passwordUnset();
+		this.props.setLockTime(-1);
+		// Should we force people to enable passcode / biometrics?
+		if (error.toString() === PASSCODE_NOT_SET_ERROR) {
+			Alert.alert(
+				strings('choose_password.security_alert_title'),
+				strings('choose_password.security_alert_message')
+			);
+			this.setState({ loading: false });
+		} else {
+			this.setState({ loading: false, error: error.toString() });
 		}
 	};
 
