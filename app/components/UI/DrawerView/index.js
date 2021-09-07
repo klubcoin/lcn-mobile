@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Alert, TouchableOpacity, View, Image, StyleSheet, Text, ScrollView, InteractionManager } from 'react-native';
+import { TouchableOpacity, View, Image, StyleSheet, Text, ScrollView, InteractionManager } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,12 +13,11 @@ import Identicon from '../Identicon';
 import StyledButton from '../StyledButton';
 import AccountList from '../AccountList';
 import NetworkList from '../NetworkList';
-import { renderFromWei, renderFiat } from '../../../util/number';
 import { strings } from '../../../../locales/i18n';
 import { DrawerActions } from 'react-navigation-drawer';
 import Modal from 'react-native-modal';
 import SecureKeychain from '../../../core/SecureKeychain';
-import { toggleNetworkModal, toggleAccountsModal, toggleReceiveModal } from '../../../actions/modals';
+import { toggleNetworkModal, toggleAccountsModal, toggleReceiveModal, toggleConfirmLogoutModal } from '../../../actions/modals';
 import { showAlert } from '../../../actions/alert';
 import { getEtherscanAddressUrl, getEtherscanBaseUrl } from '../../../util/etherscan';
 import Engine from '../../../core/Engine';
@@ -44,6 +43,7 @@ import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
 import Colors from 'common/colors'
 import Helper from 'common/Helper'
 import Routes from '../../../common/routes'
+import ConfirmLogout from '../ConfirmLogout';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -325,6 +325,14 @@ class DrawerView extends PureComponent {
 		 */
 		receiveModalVisible: PropTypes.bool.isRequired,
 		/**
+		 * Boolean that determines the status of the logout modal
+		 */
+		confirmLogoutModalVisible: PropTypes.bool.isRequired,
+		/**
+		 * Action that toggles the logout modal
+		 */
+		toggleConfirmLogoutModal: PropTypes.func,
+		/**
 		 * Start transaction with asset
 		 */
 		newAssetTransaction: PropTypes.func.isRequired,
@@ -336,6 +344,10 @@ class DrawerView extends PureComponent {
 		 * Boolean that determines if the user has set a password before
 		 */
 		passwordSet: PropTypes.bool,
+		/**
+		 * Boolean that determines if the user has set a keycloak authentication
+		 */
+		keycloakAuth: PropTypes.bool,
 		/**
 		 * Wizard onboarding state
 		 */
@@ -456,6 +468,10 @@ class DrawerView extends PureComponent {
 		this.props.toggleReceiveModal();
 	};
 
+	toggleLogoutModal = () => {
+		this.props.toggleConfirmLogoutModal();
+	};
+
 	onNetworksModalClose = async manualClose => {
 		this.toggleNetworksModal();
 		if (!manualClose) {
@@ -519,12 +535,12 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_SETTINGS);
 	};
 
-	onPress = async () => {
-		const { passwordSet } = this.props;
+	onLogout = async () => {
+		const { passwordSet, keycloakAuth } = this.props;
 		const { KeyringController } = Engine.context;
 		await SecureKeychain.resetGenericPassword();
 		await KeyringController.setLocked();
-		if (!passwordSet) {
+		if (!passwordSet && !keycloakAuth) {
 			this.props.navigation.navigate('Onboarding');
 		} else {
 			this.props.navigation.navigate('Login');
@@ -532,22 +548,7 @@ class DrawerView extends PureComponent {
 	};
 
 	logout = () => {
-		Alert.alert(
-			strings('drawer.logout_title'),
-			'',
-			[
-				{
-					text: strings('drawer.logout_cancel'),
-					onPress: () => null,
-					style: 'cancel'
-				},
-				{
-					text: strings('drawer.logout_ok'),
-					onPress: this.onPress
-				}
-			],
-			{ cancelable: false }
-		);
+		this.toggleLogoutModal();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_LOGOUT);
 	};
 
@@ -829,7 +830,7 @@ class DrawerView extends PureComponent {
 
 		const { invalidCustomNetwork, showProtectWalletModal } = this.state;
 		let account, balance, conversion
-		if(accounts && accounts[selectedAddress]){
+		if (accounts && accounts[selectedAddress]) {
 			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 			balance = typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00'
 			conversion = typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
@@ -843,20 +844,20 @@ class DrawerView extends PureComponent {
 							{/*<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
 														<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
 							<View style={{
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}>
-                <Image source={require('../../../images/logo.png')} style={{
-                  width: 30,
-                  height: 30
-                }}/>
-                <Text style={{
-                  fontSize: 20,
-                  color: '#370e75',
-                  fontWeight: 'bold'
-                }}>LIQUICHAIN</Text>
-              </View>
+								marginTop: 10,
+								flexDirection: 'row',
+								alignItems: 'center'
+							}}>
+								<Image source={require('../../../images/logo.png')} style={{
+									width: 30,
+									height: 30
+								}} />
+								<Text style={{
+									fontSize: 20,
+									color: '#370e75',
+									fontWeight: 'bold'
+								}}>LIQUICHAIN</Text>
+							</View>
 						</View>
 					</View>
 					<View style={styles.account}>
@@ -876,17 +877,17 @@ class DrawerView extends PureComponent {
 								testID={'navbar-account-button'}
 							>
 								<View style={styles.accountNameWrapper}>
-								{
-									account && (
-										<Text style={styles.accountName} numberOfLines={1}>
-											{account.name}
-										</Text>
-									)
-								}
+									{
+										account && (
+											<Text style={styles.accountName} numberOfLines={1}>
+												{account.name}
+											</Text>
+										)
+									}
 									<Icon name="caret-down" size={24} style={styles.caretDown} />
 								</View>
 								{isMainNet(chainId) && <Text style={styles.accountBalance}>{Helper.convertToEur(balance, conversion)}</Text>}
-								
+
 								{
 									account && (
 										<EthereumAddress
@@ -1051,6 +1052,24 @@ class DrawerView extends PureComponent {
 				</Modal>
 				<WhatsNewModal navigation={this.props.navigation} enabled={showProtectWalletModal === false} />
 
+				<Modal
+					isVisible={this.props.confirmLogoutModalVisible}
+					onBackdropPress={this.toggleLogoutModal}
+					onBackButtonPress={this.toggleLogoutModal}
+					onSwipeComplete={this.toggleLogoutModal}
+					swipeDirection={'down'}
+					propagateSwipe
+					style={styles.bottomModal}
+				>
+					<ConfirmLogout
+						title={strings('drawer.logout')}
+						message={strings('drawer.logout_title')}
+						confirmLabel={strings('drawer.logout_ok')}
+						cancelLabel={strings('drawer.logout_cancel')}
+						onConfirm={this.onLogout}
+						hideModal={this.toggleLogoutModal}
+					/>
+				</Modal>
 				{/*this.renderProtectModal()*/}
 			</View>
 		);
@@ -1068,7 +1087,9 @@ const mapStateToProps = state => ({
 	networkModalVisible: state.modals.networkModalVisible,
 	accountsModalVisible: state.modals.accountsModalVisible,
 	receiveModalVisible: state.modals.receiveModalVisible,
+	confirmLogoutModalVisible: state.modals.confirmLogoutModalVisible,
 	passwordSet: state.user.passwordSet,
+	keycloakAuth: state.user.keycloakAuth,
 	wizard: state.wizard,
 	chainId: state.engine.backgroundState.NetworkController.provider.chainId,
 	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
@@ -1082,6 +1103,7 @@ const mapDispatchToProps = dispatch => ({
 	toggleNetworkModal: () => dispatch(toggleNetworkModal()),
 	toggleAccountsModal: () => dispatch(toggleAccountsModal()),
 	toggleReceiveModal: () => dispatch(toggleReceiveModal()),
+	toggleConfirmLogoutModal: () => dispatch(toggleConfirmLogoutModal()),
 	showAlert: config => dispatch(showAlert(config)),
 	newAssetTransaction: selectedAsset => dispatch(newAssetTransaction(selectedAsset)),
 	protectWalletModalVisible: () => dispatch(protectWalletModalVisible())
