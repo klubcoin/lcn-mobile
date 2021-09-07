@@ -24,6 +24,13 @@ export function toggleReceiveModal(asset) {
 	};
 }
 
+export function toggleConfirmLogoutModal(visible) {
+	return {
+		type: 'TOGGLE_CONFIRM_LOGOUT_MODAL',
+		visible
+	};
+}
+
 export function toggleDappTransactionModal(show) {
 	return {
 		type: 'TOGGLE_DAPP_TRANSACTION_MODAL',

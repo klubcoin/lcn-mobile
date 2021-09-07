@@ -3,6 +3,7 @@ const initialState = {
 	accountsModalVisible: false,
 	collectibleContractModalVisible: false,
 	receiveModalVisible: false,
+	confirmLogoutModalVisible: false,
 	receiveAsset: undefined,
 	dappTransactionModalVisible: false,
 	approveModalVisible: false
@@ -20,6 +21,12 @@ const modalsReducer = (state = initialState, action) => {
 				...state,
 				receiveModalVisible: !state.receiveModalVisible,
 				receiveAsset: action.asset
+			};
+		}
+		case 'TOGGLE_CONFIRM_LOGOUT_MODAL': {
+			return {
+				...state,
+				confirmLogoutModalVisible: !state.confirmLogoutModalVisible,
 			};
 		}
 		case 'TOGGLE_ACCOUNT_MODAL':
