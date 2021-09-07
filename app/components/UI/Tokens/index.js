@@ -228,7 +228,7 @@ class Tokens extends PureComponent {
 			balance = accounts[selectedAddress].balance
 		}
 
-		balance = Helper.demosToLiquichain(balance)
+		balance = Helper.demosToLiquichain(balance || 0)
 
 		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 		const app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
