@@ -7,7 +7,7 @@ import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
-import { passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
+import { keycloakAuthSet, keycloakAuthUnset, passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
 import StyledButton from '../../UI/StyledButton';
 import Engine from '../../../core/Engine';
@@ -713,6 +713,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+	keycloakAuthSet: () => dispatch(keycloakAuthSet()),
+	keycloakAuthUnset: () => dispatch(keycloakAuthUnset()),
 	passwordSet: () => dispatch(passwordSet()),
 	passwordUnset: () => dispatch(passwordUnset()),
 	setLockTime: time => dispatch(setLockTime(time)),

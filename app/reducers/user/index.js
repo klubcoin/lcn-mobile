@@ -27,6 +27,16 @@ const userReducer = (state = initialState, action) => {
 				...state,
 				loadingSet: false
 			};
+		case 'KEYCLOAK_AUTH_SET':
+			return {
+				...state,
+				keycloakAuth: true
+			};
+		case 'KEYCLOAK_AUTH_UNSET':
+			return {
+				...state,
+				keycloakAuth: false
+			};
 		case 'PASSWORD_SET':
 			return {
 				...state,

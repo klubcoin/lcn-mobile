@@ -1,3 +1,15 @@
+export function keycloakAuthSet() {
+	return {
+		type: 'KEYCLOAK_AUTH_SET'
+	};
+}
+
+export function keycloakAuthUnset() {
+	return {
+		type: 'KEYCLOAK_AUTH_UNSET'
+	};
+}
+
 export function passwordSet() {
 	return {
 		type: 'PASSWORD_SET'
