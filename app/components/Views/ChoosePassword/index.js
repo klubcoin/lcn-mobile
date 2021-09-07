@@ -461,9 +461,8 @@ class ChoosePassword extends PureComponent {
 	 * It does it using an empty password or a password set by the user
 	 * depending on the state the app is currently in
 	 */
-	getSeedPhrase = async () => {
+	getSeedPhrase = async (password) => {
 		const { KeyringController } = Engine.context;
-		const { password } = this.state;
 		const keychainPassword = this.keyringControllerPasswordSet ? password : '';
 		const mnemonic = await KeyringController.exportSeedPhrase(keychainPassword);
 		return JSON.stringify(mnemonic).replace(/"/g, '');
