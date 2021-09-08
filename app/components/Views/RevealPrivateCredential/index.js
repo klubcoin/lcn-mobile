@@ -26,6 +26,8 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
 import PreventScreenshot from '../../../core/PreventScreenshot';
 import { BIOMETRY_CHOICE } from '../../../constants/storage';
+import LoginWithKeycloak from '../LoginWithKeycloak';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -234,9 +236,16 @@ class RevealPrivateCredential extends PureComponent {
 		}
 	}
 
-	tryUnlock = () => {
+	tryUnlock = (hash) => {
 		const { password } = this.state;
-		this.tryUnlockWithPassword(password);
+		this.tryUnlockWithPassword(hash || password);
+	};
+
+	onKeycloakResult = async (error) => {
+		if (!error) {
+			const hash = await preferences.getKeycloakHash();
+			this.tryUnlock(hash);
+		}
 	};
 
 	onPasswordChange = password => {
@@ -271,6 +280,7 @@ class RevealPrivateCredential extends PureComponent {
 	}
 
 	render = () => {
+		const { keycloakAuth } = this.props;
 		const { unlocked, privateCredential } = this.state;
 		const privateCredentialName =
 			this.props.privateCredentialName || this.props.navigation.state.params.privateCredentialName;
@@ -334,25 +344,31 @@ class RevealPrivateCredential extends PureComponent {
 										</View>
 									</View>
 								</ScrollableTabView>
-							) : (
-								<View>
-									<Text style={styles.enterPassword}>
-										{strings('reveal_credential.enter_password')}
-									</Text>
-									<TextInput
-										style={styles.input}
-										testID={'private-credential-password-text-input'}
-										placeholder={'Password'}
-										placeholderTextColor={colors.grey100}
-										onChangeText={this.onPasswordChange}
-										secureTextEntry
-										onSubmitEditing={this.tryUnlock}
-									/>
-									<Text style={styles.warningText} testID={'password-warning'}>
-										{this.state.warningIncorrectPassword}
-									</Text>
-								</View>
-							)}
+							) : keycloakAuth ?
+								<LoginWithKeycloak
+									type={'sign'}
+									label={strings('reveal_credential.confirm_password')}
+									onSuccess={this.onKeycloakResult}
+									onError={this.onKeycloakResult}
+								/> : (
+									<View>
+										<Text style={styles.enterPassword}>
+											{strings('reveal_credential.enter_password')}
+										</Text>
+										<TextInput
+											style={styles.input}
+											testID={'private-credential-password-text-input'}
+											placeholder={'Password'}
+											placeholderTextColor={colors.grey100}
+											onChangeText={this.onPasswordChange}
+											secureTextEntry
+											onSubmitEditing={this.tryUnlock}
+										/>
+										<Text style={styles.warningText} testID={'password-warning'}>
+											{this.state.warningIncorrectPassword}
+										</Text>
+									</View>
+								)}
 						</View>
 					</View>
 				</ActionView>
@@ -363,7 +379,8 @@ class RevealPrivateCredential extends PureComponent {
 
 const mapStateToProps = state => ({
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
-	passwordSet: state.user.passwordSet
+	passwordSet: state.user.passwordSet,
+	keycloakAuth: state.user.keycloakAuth,
 });
 
 const mapDispatchToProps = dispatch => ({
