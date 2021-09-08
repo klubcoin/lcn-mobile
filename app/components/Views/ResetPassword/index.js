@@ -20,9 +20,11 @@ import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
+import preferences from '../../../store/preferences';
 import { passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
 import StyledButton from '../../UI/StyledButton';
+import LoginWithKeycloak from '../LoginWithKeycloak';
 import Engine from '../../../core/Engine';
 import Device from '../../../util/Device';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
@@ -546,9 +548,16 @@ class ResetPassword extends PureComponent {
 		}
 	};
 
-	tryUnlock = () => {
+	tryUnlock = (hash) => {
 		const { password } = this.state;
-		this.tryUnlockWithPassword(password);
+		this.tryUnlockWithPassword(hash || password);
+	};
+
+	onKeycloakResult = async (error) => {
+		if (!error) {
+			const hash = await preferences.getKeycloakHash();
+			this.tryUnlock(hash);
+		}
 	};
 
 	onPasswordChange = val => {
@@ -577,6 +586,7 @@ class ResetPassword extends PureComponent {
 	setConfirmPassword = val => this.setState({ confirmPassword: val });
 
 	renderConfirmPassword() {
+		const { keycloakAuth } = this.props;
 		const { warningIncorrectPassword } = this.state;
 		return (
 			<KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={'padding'}>
@@ -589,28 +599,38 @@ class ResetPassword extends PureComponent {
 									{strings('manual_backup_step_1.before_continiuing')}
 								</Text>
 							</View>
-							<TextInput
-								style={styles.confirm_input}
-								placeholder={'Password'}
-								placeholderTextColor={colors.grey100}
-								onChangeText={this.onPasswordChange}
-								secureTextEntry
-								onSubmitEditing={this.tryUnlock}
-								testID={'private-credential-password-text-input'}
-							/>
-							{warningIncorrectPassword && (
-								<Text style={styles.warningMessageText}>{warningIncorrectPassword}</Text>
-							)}
-						</View>
-						<View style={styles.buttonWrapper}>
-							<StyledButton
-								containerStyle={styles.button}
-								type={'confirm'}
-								onPress={this.tryUnlock}
-								testID={'submit-button'}
-							>
-								{strings('manual_backup_step_1.confirm')}
-							</StyledButton>
+							{keycloakAuth ?
+								<LoginWithKeycloak
+									type={'sign'}
+									label={strings('manual_backup_step_1.confirm_password')}
+									onSuccess={this.onKeycloakResult}
+									onError={this.onKeycloakResult}
+								/> :
+								<>
+									<TextInput
+										style={styles.confirm_input}
+										placeholder={'Password'}
+										placeholderTextColor={colors.grey100}
+										onChangeText={this.onPasswordChange}
+										secureTextEntry
+										onSubmitEditing={this.tryUnlock}
+										testID={'private-credential-password-text-input'}
+									/>
+									{warningIncorrectPassword && (
+										<Text style={styles.warningMessageText}>{warningIncorrectPassword}</Text>
+									)}
+									<View style={styles.buttonWrapper}>
+										<StyledButton
+											containerStyle={styles.button}
+											type={'confirm'}
+											onPress={this.tryUnlock}
+											testID={'submit-button'}
+										>
+											{strings('manual_backup_step_1.confirm')}
+										</StyledButton>
+									</View>
+								</>
+							}
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
@@ -775,6 +795,7 @@ class ResetPassword extends PureComponent {
 }
 
 const mapStateToProps = state => ({
+	keycloakAuth: state.user.keycloakAuth,
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
 });
 
