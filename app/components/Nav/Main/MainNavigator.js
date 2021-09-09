@@ -87,9 +87,7 @@ export default createStackNavigator(
 						},
 						RevealPrivateCredentialView: {
 							screen: RevealPrivateCredential
-						}
-					}),
-					ContactsHome: createStackNavigator({
+						},
 						Contacts: {
 							screen: Contacts
 						}
