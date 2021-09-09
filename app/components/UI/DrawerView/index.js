@@ -7,6 +7,7 @@ import Share from 'react-native-share';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { colors, fontStyles } from '../../../styles/common';
 import { hasBlockExplorer, findBlockExplorerForRpc, getBlockExplorerName, isMainNet } from '../../../util/networks';
 import Identicon from '../Identicon';
@@ -529,6 +530,12 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_TRANSACTION_HISTORY);
 	};
 
+	gotoContacts = () => {
+		this.props.navigation.navigate('Contacts');
+		this.hideDrawer();
+		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_CONTACTS);
+	};
+
 	showSettings = async () => {
 		this.props.navigation.navigate('SettingsView');
 		this.hideDrawer();
@@ -631,6 +638,10 @@ class DrawerView extends PureComponent {
 		return <FeatherIcon name={name} size={size || 24} color={colors.grey400} />;
 	}
 
+	getAntDesignIcon(name, size) {
+		return <AntDesignIcon name={name} size={size || 24} color={colors.grey400} />;
+	}
+
 	getMaterialIcon(name, size) {
 		return <MaterialIcon name={name} size={size || 24} color={colors.grey400} />;
 	}
@@ -689,6 +700,15 @@ class DrawerView extends PureComponent {
 					selectedIcon: this.getIcon('list'),
 					action: this.goToTransactionHistory,
 					routeNames: ['TransactionsView']
+				}
+			],
+			[
+				{
+					name: strings('drawer.contacts'),
+					icon: this.getAntDesignIcon('contacts'),
+					selectedIcon: this.getAntDesignIcon('contacts'),
+					action: this.gotoContacts,
+					routeNames: ['Contacts']
 				}
 			],
 			[

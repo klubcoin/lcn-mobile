@@ -14,7 +14,7 @@ import ExperimentalSettings from '../../Views/Settings/ExperimentalSettings';
 import NetworksSettings from '../../Views/Settings/NetworksSettings';
 import NetworkSettings from '../../Views/Settings/NetworksSettings/NetworkSettings';
 import AppInformation from '../../Views/Settings/AppInformation';
-import Contacts from '../../Views/Settings/Contacts';
+import ContactsSettings from '../../Views/Settings/Contacts';
 import Wallet from '../../Views/Wallet';
 import Asset from '../../Views/Asset';
 import AddAsset from '../../Views/AddAsset';
@@ -53,6 +53,8 @@ import PayPal from '../../UI/FiatOrders/Payments/PayPal';
 import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase'
 import PayQR from '../../Views/PayQRFlow/PayQR';
 import VotingApp from '../../Views/VotingApp';
+import Contacts from '../../Views/Contacts';
+
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -85,6 +87,11 @@ export default createStackNavigator(
 						},
 						RevealPrivateCredentialView: {
 							screen: RevealPrivateCredential
+						}
+					}),
+					ContactsHome: createStackNavigator({
+						Contacts: {
+							screen: Contacts
 						}
 					}),
 					VotingAppHome: createStackNavigator({
@@ -152,7 +159,7 @@ export default createStackNavigator(
 					screen: AppInformation
 				},
 				ContactsSettings: {
-					screen: Contacts
+					screen: ContactsSettings
 				},
 				ContactForm: {
 					screen: ContactForm
