@@ -29,6 +29,7 @@ import Logger from '../../../util/Logger';
 import Branch from 'react-native-branch';
 import AppConstants from '../../../core/AppConstants';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
+import { Linking } from 'react-native';
 
 /**
  * Stack navigator responsible for the onboarding process
@@ -172,6 +173,7 @@ const AppNavigator = createSwitchNavigator(
 const AppContainer = createAppContainer(AppNavigator);
 
 class App extends PureComponent {
+	deeplinkListener;
 	unsubscribeFromBranch;
 
 	componentDidMount = () => {
@@ -183,7 +185,24 @@ class App extends PureComponent {
 		if (!this.unsubscribeFromBranch) {
 			this.unsubscribeFromBranch = Branch.subscribe(this.handleDeeplinks);
 		}
+
+		this.handleInitialDeepLink();
+		this.deeplinkListener = Linking.addEventListener('url', this.handleDeepLink.bind(this))
 	};
+
+	async handleInitialDeepLink() {
+		const deepLink = await Linking.getInitialURL();
+		deepLink && this.handleDeepLink(deepLink);
+	}
+
+	async handleDeepLink(event) {
+		const deeplink = event.url || event;
+		const { KeyringController } = Engine.context;
+		const isUnlocked = KeyringController.isUnlocked();
+		isUnlocked
+			? SharedDeeplinkManager.parse(deeplink, { origin: AppConstants.DEEPLINKS.ORIGIN_DEEPLINK })
+			: SharedDeeplinkManager.setDeeplink(deeplink);
+	}
 
 	handleDeeplinks = async ({ error, params, uri }) => {
 		if (error) {
@@ -208,6 +227,7 @@ class App extends PureComponent {
 	};
 
 	componentWillUnmount = () => {
+		this.deeplinkListener && this.deeplinkListener.remove();
 		this.unsubscribeFromBranch && this.unsubscribeFromBranch();
 	};
 
