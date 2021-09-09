@@ -187,6 +187,11 @@ class DeeplinkManager {
 					WalletConnect.newSession(href, redirect, autosign);
 				}
 				break;
+			case 'liquichain':
+				if (url.includes('://namecard') && params['q']) {
+					this.navigation.navigate('Contacts', { data: params['q'] });
+				}
+				break;
 			default:
 				return false;
 		}
