@@ -93,6 +93,7 @@ const Main = props => {
 	const [showExpandedMessage, setShowExpandedMessage] = useState(false);
 	const [currentPageTitle, setCurrentPageTitle] = useState('');
 	const [currentPageUrl, setCurrentPageUrl] = useState('');
+	const [currentPageIcon, setCurrentPageIcon] = useState('');
 
 	const [showRemindLaterModal, setShowRemindLaterModal] = useState(false);
 	const [skipCheckbox, setSkipCheckbox] = useState(false);
@@ -128,12 +129,13 @@ const Main = props => {
 	}, [backgroundMode, props.thirdPartyApiMode]);
 
 	const onUnapprovedMessage = (messageParams, type) => {
-		const { title: currentPageTitle, url: currentPageUrl } = messageParams.meta;
+		const { title: currentPageTitle, url: currentPageUrl, icon } = messageParams.meta;
 		delete messageParams.meta;
 		setSignMessageParams(messageParams);
 		setSignType(type);
 		setCurrentPageTitle(currentPageTitle);
 		setCurrentPageUrl(currentPageUrl);
+		setCurrentPageIcon(icon);
 		setSignMessage(true);
 	};
 
@@ -323,7 +325,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-							swapsUtils.getSwapsContractAddress(props.chainId)))
+						swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -472,7 +474,7 @@ const Main = props => {
 					messageParams={signMessageParams}
 					onCancel={onSignAction}
 					onConfirm={onSignAction}
-					currentPageInformation={{ title: currentPageTitle, url: currentPageUrl }}
+					currentPageInformation={{ title: currentPageTitle, url: currentPageUrl, icon: currentPageIcon }}
 					toggleExpandedMessage={toggleExpandedMessage}
 					showExpandedMessage={showExpandedMessage}
 				/>
