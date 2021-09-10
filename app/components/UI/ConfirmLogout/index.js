@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 	},
 	actionRow: {
 		flexDirection: 'row',
+		marginTop: 30,
 		marginBottom: 30,
 	},
 	actionButton: {
@@ -39,7 +40,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'center',
 		marginTop: 10,
-		marginBottom: 30,
+	},
+	subMessage: {
+		...fontStyles.normal,
+		color: colors.fontPrimary,
+		fontSize: 14,
+		flexDirection: 'row',
+		alignSelf: 'center',
+		marginTop: 10,
 	},
 	titleWrapper: {
 		marginTop: 10
@@ -53,6 +61,7 @@ export default class ConfirmLogout extends PureComponent {
 	static propTypes = {
 		title: PropTypes.string,
 		message: PropTypes.string,
+		subMessage: PropTypes.string,
 		confirmLabel: PropTypes.string,
 		cancelLabel: PropTypes.string,
 		onConfirm: PropTypes.func,
@@ -76,7 +85,7 @@ export default class ConfirmLogout extends PureComponent {
 	}
 
 	render() {
-		const { title, message, confirmLabel, cancelLabel } = this.props;
+		const { title, message, subMessage, confirmLabel, cancelLabel } = this.props;
 		return (
 			<SafeAreaView style={styles.wrapper}>
 				<ModalDragger />
@@ -85,6 +94,11 @@ export default class ConfirmLogout extends PureComponent {
 					{!!message &&
 						<Text style={styles.message} >
 							{message}
+						</Text>
+					}
+					{!!subMessage &&
+						<Text style={styles.subMessage} >
+							{subMessage}
 						</Text>
 					}
 				</View>
