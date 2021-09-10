@@ -11,6 +11,7 @@ import { generateApproveData } from '../util/transactions';
 import { strings } from '../../locales/i18n';
 import { getNetworkTypeById } from '../util/networks';
 import { WalletDevice } from '@metamask/controllers/';
+import moment from 'moment';
 
 class DeeplinkManager {
 	constructor(_navigation) {
@@ -189,7 +190,7 @@ class DeeplinkManager {
 				break;
 			case 'liquichain':
 				if (url.includes('://namecard') && params['q']) {
-					this.navigation.navigate('Contacts', { data: params['q'] });
+					this.navigation.navigate('Contacts', { data: params['q'], key: moment().unix() });
 				}
 				break;
 			default:
