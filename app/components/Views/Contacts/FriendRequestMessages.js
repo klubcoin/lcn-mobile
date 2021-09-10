@@ -3,6 +3,7 @@ import routes from "../../../common/routes";
 export const FriendRequestTypes = ({
   Request: 'Friend Request',
   Accept: 'Accept Friend',
+  Revoke: 'Friend Revoked',
 });
 
 export const LiquichainNameCard = (selectedAddress, type) => ({
