@@ -68,11 +68,6 @@ export default class ConfirmLogout extends PureComponent {
 		hideModal: PropTypes.func,
 	};
 
-	constructor(props) {
-		super(props)
-		console.log(props)
-	}
-
 	onConfirm() {
 		const { onConfirm, hideModal } = this.props;
 		hideModal && hideModal();
