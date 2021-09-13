@@ -45,7 +45,8 @@
 		"update-changelog": "./scripts/auto-changelog.sh",
 		"dev:android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && sh scripts/clean-android-duplicate-resources.sh",
 		"bundle:android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && sh scripts/clean-android-duplicate-resources.sh",
-		"apply:patches": "python scripts/apply-patches.py"
+		"apply:patches": "python scripts/apply-patches.py",
+		"fixGlog": "cp node_modules/react-native/ReactAndroid/src/main/jni/third-party/glog/config.h ios/Pods/glog/src"
 	},
 	"prettier": {
 		"printWidth": 120,
