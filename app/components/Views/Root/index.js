@@ -49,12 +49,12 @@ export default class Root extends PureComponent {
 			initOptions={{
 				redirectUri: 'liquichain://auth',
 				inAppBrowserOptions: {},
-				onEvent: (event, error) => {
-					console.log('keycloak onEvent', event, error);
-				},
-				onTokens: (tokens) => {
-					console.log('keycloak onTokens', tokens);
-				},
+			}}
+			onEvent={(event, error) => {
+				console.log('=======>keycloak onEvent', event, error);
+			}}
+			onTokens={(tokens) => {
+				console.log('=========>keycloak onTokens', tokens);
 			}}
 		>
 			<Provider store={store}>
