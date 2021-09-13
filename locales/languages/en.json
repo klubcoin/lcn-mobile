@@ -259,6 +259,18 @@
 		"metamask_support": "Liquichain Support",
 		"public_address": "Public Address"
 	},
+	"contacts": {
+		"create_friend_request": "Create Friend Request",
+		"delete_contact": "Delete contact",
+		"delete": "Delete",
+		"cancel": "Cancel",
+		"friend_request": "Friend Request",
+		"accept_friend_request": "Accept friend request",
+		"friend_request_accepted": "Friend request accepted",
+		"add_this_contact": "Add this contact",
+		"accept": "Accept",
+		"reject": "Reject"
+	},
 	"send": {
 		"title": "Send",
 		"deeplink_failure": "Ooops! Something went wrong! Please try again",
