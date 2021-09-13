@@ -269,7 +269,8 @@
 		"friend_request_accepted": "Friend request accepted",
 		"add_this_contact": "Add this contact",
 		"accept": "Accept",
-		"reject": "Reject"
+		"reject": "Reject",
+		"invalid_signature": "Invalid signature"
 	},
 	"send": {
 		"title": "Send",
@@ -994,7 +995,7 @@
 		"hour": "hr",
 		"minute": "min",
 		"second": "sec",
-		"empty_data": "0x",
+		"empty_data": "0x"
 	},
 	"biometrics": {
 		"enable_touchid": "Sign in with Touch ID?",
