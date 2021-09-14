@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
-import { colors } from '../../../styles/common';
+import { FlatList, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+import { colors, fontStyles } from '../../../styles/common';
 import { PropTypes } from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Engine from '../../../core/Engine';
 import StyledButton from '../../UI/StyledButton';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { FriendRequestTypes, LiquichainNameCard } from './FriendRequestMessages'
 import CryptoSignature from '../../../core/CryptoSignature'
 import base64 from 'base-64';
@@ -25,6 +26,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginBottom: 16
   },
+  searchSection: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: colors.grey100,
+  },
+  textInput: {
+    flex: 1,
+    height: 30,
+    ...fontStyles.normal,
+  },
+  icon: {
+    padding: 16
+  }
 });
 
 const EDIT = 'edit';
@@ -49,6 +67,7 @@ class Contacts extends PureComponent {
 
   state = {
     contacts: [],
+    searchQuery: '',
     confirmDeleteVisible: false,
     friendRequestVisible: false,
     acceptedNameCardVisible: false,
@@ -265,19 +284,42 @@ class Contacts extends PureComponent {
     );
   }
 
+  handleSearch = text => {
+    this.setState({ searchQuery: text });
+  };
+
+  filterContacts = (contacts) => contacts.filter(e => {
+    const { searchQuery } = this.state;
+    const query = searchQuery.toLocaleLowerCase();
+    return e.name.toLocaleLowerCase().includes(query)
+      || e.address.toLocaleLowerCase().includes(query);
+  });
+
   render() {
     const {
       contacts,
       friendRequestVisible,
       acceptedNameCardVisible,
       confirmDeleteVisible,
-      address
+      address,
+      searchQuery
     } = this.state;
 
     return (
       <SafeAreaView style={styles.wrapper} testID={'contacts-screen'}>
+        <View style={styles.searchSection}>
+          <Icon name="search" size={22} style={styles.icon} />
+          <TextInput
+            style={styles.textInput}
+            value={searchQuery}
+            placeholder={`${strings('contacts.search')}...`}
+            placeholderTextColor={colors.grey100}
+            onChangeText={this.handleSearch}
+          />
+        </View>
+
         <FlatList
-          data={contacts}
+          data={this.filterContacts(contacts)}
           keyExtractor={(item) => item.toString()}
           renderItem={(data) => this.renderContact(data)}
           style={styles.optionList}

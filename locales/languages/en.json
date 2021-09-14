@@ -260,6 +260,7 @@
 		"public_address": "Public Address"
 	},
 	"contacts": {
+		"search": "Search",
 		"create_friend_request": "Create Friend Request",
 		"delete_contact": "Delete contact",
 		"delete": "Delete",
