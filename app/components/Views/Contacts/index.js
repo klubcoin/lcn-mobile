@@ -357,11 +357,12 @@ class Contacts extends PureComponent {
           hideModal={this.toggleFriendRequestModal}
         />
 
-        <ConfirmModal
+        <FriendMessageOverview
           visible={acceptedNameCardVisible}
+          data={this.data?.data}
+          networkInfo={this.data?.data.meta}
           title={strings('contacts.friend_request_accepted')}
           message={`${strings('contacts.add_this_contact')}?`}
-          subMessage={address}
           confirmLabel={strings('contacts.accept')}
           cancelLabel={strings('contacts.reject')}
           onConfirm={this.onAddContact.bind(this)}
