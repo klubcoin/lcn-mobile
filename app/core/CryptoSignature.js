@@ -1,4 +1,5 @@
 import * as sigUtil from 'eth-sig-util';
+import * as sha3JS from 'js-sha3';
 import * as ethUtil from 'ethereumjs-util';
 import Engine from './Engine';
 
@@ -10,9 +11,23 @@ export default class CryptoSignature {
 	 */
 	static async signMessage(from, data) {
 		const { KeyringController } = Engine.context;
-		const dataBuffer = ethUtil.bufferToHex(Buffer.from(data, 'utf8'));
-		const params = { from, data: dataBuffer };
+		const hash = sha3JS.keccak_256(data);
+		const params = { from, data: hash };
 		return await KeyringController.signMessage(params);
+	}
+	/**
+	 * 
+	 * @param {*} data which was used to generate signature
+	 * @param {*} signature 
+	 * @returns address of sender
+	 */
+	static recoverMessageSignature(data, signature) {
+		const hash = Buffer.from(sha3JS.keccak_256(data), 'hex');
+		const sigParams = ethUtil.fromRpcSig(ethUtil.toBuffer(signature));
+		const publicKey = ethUtil.ecrecover(hash, sigParams.v, sigParams.r, sigParams.s);
+
+		const sender = ethUtil.publicToAddress(publicKey);
+		return ethUtil.bufferToHex(sender);
 	}
 	/**
 	 * @param {*} from sender address
