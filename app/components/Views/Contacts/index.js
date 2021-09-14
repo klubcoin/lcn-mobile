@@ -16,6 +16,7 @@ import Share from 'react-native-share';
 import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
 import Messaging, { WSEvent } from '../../../services/Messaging';
+import FriendMessageOverview from './widgets/FriendMessageOverview';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -344,11 +345,12 @@ class Contacts extends PureComponent {
           hideModal={this.toggleConfirmDeleteModal}
         />
 
-        <ConfirmModal
+        <FriendMessageOverview
           visible={friendRequestVisible}
+          data={this.data?.data}
+          networkInfo={this.data?.data.meta}
           title={strings('contacts.friend_request')}
           message={`${strings('contacts.accept_friend_request')}?`}
-          subMessage={address}
           confirmLabel={strings('contacts.accept')}
           cancelLabel={strings('contacts.reject')}
           onConfirm={() => setTimeout(this.onAcceptFriend.bind(this), 1000)}
