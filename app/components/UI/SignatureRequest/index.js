@@ -228,7 +228,7 @@ class SignatureRequest extends PureComponent {
 	);
 
 	render() {
-		const { showWarning, currentPageInformation, type } = this.props;
+		const { showWarning, message, cancelLabel, confirmLabel, currentPageInformation, type } = this.props;
 		let expandedHeight;
 		if (Device.isMediumDevice()) {
 			expandedHeight = styles.expandedHeight2;
@@ -241,8 +241,8 @@ class SignatureRequest extends PureComponent {
 				<ActionView
 					cancelTestID={'request-signature-cancel-button'}
 					confirmTestID={'request-signature-confirm-button'}
-					cancelText={strings('signature_request.cancel')}
-					confirmText={strings('signature_request.sign')}
+					cancelText={cancelLabel || strings('signature_request.cancel')}
+					confirmText={confirmLabel || strings('signature_request.sign')}
 					onCancelPress={this.onCancel}
 					onConfirmPress={this.onConfirm}
 					confirmButtonMode="sign"
@@ -250,7 +250,7 @@ class SignatureRequest extends PureComponent {
 					<View>
 						<TransactionHeader currentPageInformation={currentPageInformation} type={type} />
 						<View style={styles.signingInformation}>
-							<Text style={styles.signText}>{strings('signature_request.signing')}</Text>
+							<Text style={styles.signText}>{message || strings('signature_request.signing')}</Text>
 							{showWarning ? (
 								<TouchableOpacity style={styles.warningWrapper} onPress={this.goToWarning}>
 									<WarningMessage warningMessage={this.renderWarning()} />
