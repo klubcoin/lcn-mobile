@@ -5,6 +5,8 @@ import { PropTypes } from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { connect } from 'react-redux';
+import { toChecksumAddress } from 'ethereumjs-util';
+import Engine from '../../../core/Engine';
 import StyledButton from '../../UI/StyledButton';
 import { FriendRequestTypes, LiquichainNameCard } from './FriendRequestMessages'
 import CryptoSignature from '../../../core/CryptoSignature'
@@ -183,17 +185,23 @@ class Contacts extends PureComponent {
   }
 
   onAddContact = () => {
+    const { network } = this.props;
+    const { AddressBookController } = Engine.context;
     const json = this.data;
 
     const { data } = json || {};
     if (data && data.data) {
       const payload = JSON.parse(data.data);
       const { message } = payload;
+      const name = message.name || '';
+      const address = toChecksumAddress(data.from);
       const contacts = [...this.state.contacts];
 
+      AddressBookController.set(address, name, network);
+
       contacts.push({
-        name: message.name,
-        address: data.from,
+        name,
+        address,
       })
       this.setState({ contacts });
     }
