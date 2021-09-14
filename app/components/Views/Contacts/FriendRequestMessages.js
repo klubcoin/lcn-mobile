@@ -14,6 +14,7 @@ export const LiquichainNameCard = (selectedAddress, type) => ({
     icon: 'logo.png',
   },
   data: JSON.stringify({
+    /*
     domain: {
       chainId: routes.mainNetWork.chainId,
       name: routes.mainNetWork.name,
@@ -30,6 +31,7 @@ export const LiquichainNameCard = (selectedAddress, type) => ({
       ]
     },
     primaryType: 'LiquichainNameCard',
+    */
     message: {
       type: type || 'Name Card', // type or action for name card
       from: selectedAddress,
