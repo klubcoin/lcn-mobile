@@ -238,14 +238,18 @@ class Contacts extends PureComponent {
   };
 
   deleteContact = async () => {
-    const contact = this.contactToRemove;
-    const index = this.state.contacts.findIndex((e) => e.address == contact.address);
+    const { address } = this.contactToRemove;
+    const index = this.state.contacts.findIndex((e) => e.address == address);
     this.state.contacts.splice(index, 1);
     this.setState({ contact: [...this.state.contacts] });
 
+    const { AddressBookController } = Engine.context;
+    const { network } = this.props;
+    AddressBookController.delete(network, address);
+
     const { selectedAddress } = this.props;
     const data = LiquichainNameCard(selectedAddress, FriendRequestTypes.Revoke);
-    this.messaging.message(contact.address, { data });
+    this.messaging.message(address, { data });
   };
 
   renderContact = ({ item }) => {
