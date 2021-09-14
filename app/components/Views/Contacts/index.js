@@ -221,7 +221,10 @@ class Contacts extends PureComponent {
       mode: EDIT,
       editMode: EDIT,
       address,
-      onDelete: () => this.updateAddressList()
+      onDelete: () => {
+        this.contactToRemove = { address };
+        this.deleteContact()
+      }
     });
   };
 
