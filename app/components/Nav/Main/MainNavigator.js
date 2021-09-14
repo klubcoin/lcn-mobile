@@ -90,7 +90,10 @@ export default createStackNavigator(
 						},
 						Contacts: {
 							screen: Contacts
-						}
+						},
+						ContactForm: {
+							screen: ContactForm
+						},
 					}),
 					VotingAppHome: createStackNavigator({
 						VotingApp: {
