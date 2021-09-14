@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import { colors } from '../../../styles/common';
+import { PropTypes } from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { connect } from 'react-redux';
@@ -34,6 +35,14 @@ class Contacts extends PureComponent {
     getNavigationOptionsTitle(strings('app_settings.contacts_title'), navigation);
 
   static propTypes = {
+    /**
+     * Map representing the address book
+     */
+    addressBook: PropTypes.object,
+    /**
+     * Network id
+     */
+    network: PropTypes.string
   };
 
   state = {
@@ -56,6 +65,11 @@ class Contacts extends PureComponent {
   }
 
   componentDidMount() {
+    const { addressBook, network } = this.props;
+    const addresses = addressBook[network] || {};
+    const contacts = Object.keys(addresses).map(addr => addresses[addr]);
+    this.setState({ contacts })
+
     this.messaging.initConnection();
     this.data = this.props.navigation.getParam('data');
     this.handleFriendRequestUpdate();
@@ -195,7 +209,7 @@ class Contacts extends PureComponent {
   }
 
   onContactTap = address => {
-    this.props.navigation.navigate('ContactEdit', {
+    this.props.navigation.navigate('ContactForm', {
       mode: EDIT,
       editMode: EDIT,
       address,
@@ -230,7 +244,7 @@ class Contacts extends PureComponent {
         key={address}
         address={address}
         name={name}
-        onAccountPress={() => this.onContactTap(item)}
+        onAccountPress={() => this.onContactTap(address)}
         onAccountLongPress={() => this.onContactLongPress(item)}
       />
     );
@@ -300,6 +314,8 @@ class Contacts extends PureComponent {
 }
 
 const mapStateToProps = state => ({
+  addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+  network: state.engine.backgroundState.NetworkController.network,
   selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 });
 
