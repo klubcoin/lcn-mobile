@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { SafeAreaView, StyleSheet, TextInput, View, } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, TextInput, View, } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import Text from '../../Base/Text';
 import ModalDragger from '../../Base/ModalDragger';
@@ -93,46 +93,48 @@ export default class ConfirmInput extends PureComponent {
 		const { value } = this.state;
 
 		return (
-			<SafeAreaView style={styles.wrapper}>
-				<ModalDragger />
-				<View style={styles.titleWrapper}>
-					<Text style={styles.title}>{title}</Text>
-					{!!message &&
-						<Text style={styles.message} >
-							{message}
-						</Text>
-					}
-				</View>
-				<View style={styles.body}>
-					<TextInput
-						autoCapitalize='sentences'
-						autoCorrect={false}
-						onChangeText={this.onChange}
-						placeholder={placeholder || '...'}
-						placeholderTextColor={colors.grey100}
-						spellCheck={false}
-						style={styles.input}
-						value={value}
-						numberOfLines={1}
-					/>
-					<View style={styles.actionRow}>
-						<StyledButton
-							type={'normal'}
-							onPress={this.onCancel.bind(this)}
-							containerStyle={styles.actionButton}
-						>
-							{cancelLabel || strings('action_view.cancel')}
-						</StyledButton>
-						<StyledButton
-							type={'confirm'}
-							onPress={this.onConfirm.bind(this)}
-							containerStyle={styles.actionButton}
-						>
-							{confirmLabel || strings('action_view.confirm')}
-						</StyledButton>
+			<KeyboardAvoidingView behavior={'padding'}>
+				<SafeAreaView style={styles.wrapper}>
+					<ModalDragger />
+					<View style={styles.titleWrapper}>
+						<Text style={styles.title}>{title}</Text>
+						{!!message &&
+							<Text style={styles.message} >
+								{message}
+							</Text>
+						}
 					</View>
-				</View>
-			</SafeAreaView>
+					<View style={styles.body}>
+						<TextInput
+							autoCapitalize='sentences'
+							autoCorrect={false}
+							onChangeText={this.onChange}
+							placeholder={placeholder || '...'}
+							placeholderTextColor={colors.grey100}
+							spellCheck={false}
+							style={styles.input}
+							value={value}
+							numberOfLines={1}
+						/>
+						<View style={styles.actionRow}>
+							<StyledButton
+								type={'normal'}
+								onPress={this.onCancel.bind(this)}
+								containerStyle={styles.actionButton}
+							>
+								{cancelLabel || strings('action_view.cancel')}
+							</StyledButton>
+							<StyledButton
+								type={'confirm'}
+								onPress={this.onConfirm.bind(this)}
+								containerStyle={styles.actionButton}
+							>
+								{confirmLabel || strings('action_view.confirm')}
+							</StyledButton>
+						</View>
+					</View>
+				</SafeAreaView>
+			</KeyboardAvoidingView>
 		);
 	}
 }
