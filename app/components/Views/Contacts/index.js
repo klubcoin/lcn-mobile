@@ -216,6 +216,9 @@ class Contacts extends PureComponent {
       const { message } = payload;
       const name = message.name || '';
       const address = toChecksumAddress(data.from);
+
+      if (this.state.contacts.find(e => e.address == address)) return;
+
       const contacts = [...this.state.contacts];
 
       AddressBookController.set(address, name, network);
