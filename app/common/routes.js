@@ -1,6 +1,7 @@
 export default {
   jsonRPC: 'jsonrpc',
   walletCreation: 'wallet_creation',
+  walletUpdate: 'wallet_update',
   getBalance: 'eth_getBalance',
   getTransaction: 'eth_getTransactionByHash',
   mainNetWork: {

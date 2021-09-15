@@ -73,7 +73,7 @@ export default class ConfirmInput extends PureComponent {
 
 	onConfirm() {
 		const { onConfirm, hideModal } = this.props;
-		const { value } = this.props;
+		const { value } = this.state;
 
 		hideModal && hideModal();
 		onConfirm && onConfirm(value);

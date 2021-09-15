@@ -45,6 +45,9 @@ import Colors from 'common/colors'
 import Helper from 'common/Helper'
 import Routes from '../../../common/routes'
 import ConfirmLogout from '../ConfirmLogout';
+import ConfirmInputModal from '../ConfirmInputModal';
+import CryptoSignature from '../../../core/CryptoSignature';
+import API from '../../../services/api';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -465,6 +468,31 @@ class DrawerView extends PureComponent {
 		!this.props.accountsModalVisible && this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_ACCOUNT_NAME);
 	};
 
+	toggleEditWalletName = () => {
+		this.setState({ editWalletNameVisible: !this.state.editWalletNameVisible });
+	}
+
+	saveWalletName = async (name) => {
+		const { selectedAddress } = this.props;
+		const { PreferencesController } = Engine.context;
+
+		const address = selectedAddress;
+		const message = `"${name}","${address}"`;
+		const signature = await CryptoSignature.signMessage(address, message);
+
+		API.postRequest(Routes.walletUpdate, [
+			name, address, signature
+		], response => {
+			if (response.error) {
+				alert(`${response.error.message}`)
+			} else {
+				PreferencesController.setAccountLabel(selectedAddress, name);
+			}
+		}, error => {
+			alert(`${error.toString()}`)
+		})
+	}
+
 	toggleReceiveModal = () => {
 		this.props.toggleReceiveModal();
 	};
@@ -848,7 +876,7 @@ class DrawerView extends PureComponent {
 			seedphraseBackedUp
 		} = this.props;
 
-		const { invalidCustomNetwork, showProtectWalletModal } = this.state;
+		const { invalidCustomNetwork, showProtectWalletModal, editWalletNameVisible } = this.state;
 		let account, balance, conversion
 		if (accounts && accounts[selectedAddress]) {
 			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
@@ -884,7 +912,7 @@ class DrawerView extends PureComponent {
 						<View style={styles.accountBgOverlay}>
 							<TouchableOpacity
 								style={styles.identiconWrapper}
-								onPress={this.toggleAccountsModal}
+								onPress={this.toggleEditWalletName}
 								testID={'navbar-account-identicon'}
 							>
 								<View style={styles.identiconBorder}>
@@ -1090,6 +1118,16 @@ class DrawerView extends PureComponent {
 						hideModal={this.toggleLogoutModal}
 					/>
 				</Modal>
+
+				<ConfirmInputModal
+					visible={editWalletNameVisible}
+					title={strings('drawer.wallet_account_name')}
+					value={account?.name}
+					confirmLabel={strings('drawer.save')}
+					cancelLabel={strings('drawer.cancel')}
+					onConfirm={(text) => this.saveWalletName(text)}
+					hideModal={this.toggleEditWalletName}
+				/>
 				{/*this.renderProtectModal()*/}
 			</View>
 		);
