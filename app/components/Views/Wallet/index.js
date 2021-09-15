@@ -20,8 +20,8 @@ import { showTransactionNotification, hideCurrentNotification } from '../../../a
 import ErrorBoundary from '../ErrorBoundary';
 import API from 'services/api'
 import Routes from 'common/routes';
-import { BaseController } from '@metamask/controllers';
-import Helper from 'common/Helper'
+
+
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
@@ -111,11 +111,27 @@ class Wallet extends PureComponent {
 			AssetsDetectionController.detectAssets();
 			// AccountTrackerController.refresh();
 			this.getBalance()
+			this.getWalletInfo();
 			this.mounted = true;
 		});
 		this.getCurrentConversion()
 	};
 
+	async getWalletInfo() {
+		const { selectedAddress } = this.props;
+		const { PreferencesController } = Engine.context;
+
+		API.postRequest(Routes.walletInfo, [
+			selectedAddress
+		], response => {
+			if (response.result) {
+				const name = response.result;
+				PreferencesController.setAccountLabel(selectedAddress, name);
+			}
+		}, error => {
+			console.warn('error wallet info', error)
+		})
+	}
 
 	getCurrentConversion = () => {
 		API.getRequest(Routes.getConversions, response => {
