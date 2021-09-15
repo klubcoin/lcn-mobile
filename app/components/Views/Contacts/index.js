@@ -187,9 +187,10 @@ class Contacts extends PureComponent {
   }
 
   createFriendRequest = async () => {
-    const { selectedAddress } = this.props;
+    const { selectedAddress, identities } = this.props;
+    const account = identities[selectedAddress];
 
-    const data = LiquichainNameCard(selectedAddress, FriendRequestTypes.Request);
+    const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Request);
     const rawSig = await CryptoSignature.signMessage(selectedAddress, data.data);
     const base64Content = base64.encode(JSON.stringify({ data, signature: rawSig }));
 
@@ -230,9 +231,10 @@ class Contacts extends PureComponent {
   onAcceptFriend = async () => {
     this.onAddContact();
 
-    const { selectedAddress } = this.props;
+    const { selectedAddress, identities } = this.props;
+    const account = identities[selectedAddress];
     const to = this.data.data.from;
-    const data = LiquichainNameCard(selectedAddress, FriendRequestTypes.Accept);
+    const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Accept);
     this.messaging.message(to, { data });
   }
 
@@ -267,8 +269,9 @@ class Contacts extends PureComponent {
     const { network } = this.props;
     AddressBookController.delete(network, address);
 
-    const { selectedAddress } = this.props;
-    const data = LiquichainNameCard(selectedAddress, FriendRequestTypes.Revoke);
+    const { selectedAddress, identities } = this.props;
+    const account = identities[selectedAddress];
+    const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Revoke);
     this.messaging.message(address, { data });
   };
 
@@ -338,6 +341,7 @@ class Contacts extends PureComponent {
         <ConfirmModal
           visible={confirmDeleteVisible}
           title={strings('contacts.delete_contact')}
+          message={`${this.contactToRemove?.name}`}
           subMessage={`${this.contactToRemove?.address}?`}
           confirmLabel={strings('contacts.delete')}
           cancelLabel={strings('contacts.cancel')}
@@ -377,6 +381,7 @@ const mapStateToProps = state => ({
   addressBook: state.engine.backgroundState.AddressBookController.addressBook,
   network: state.engine.backgroundState.NetworkController.network,
   selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+  identities: state.engine.backgroundState.PreferencesController.identities,
 });
 
 export default connect(mapStateToProps)(Contacts);

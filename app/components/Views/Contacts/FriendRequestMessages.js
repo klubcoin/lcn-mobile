@@ -6,7 +6,7 @@ export const FriendRequestTypes = ({
   Revoke: 'Friend Revoked',
 });
 
-export const LiquichainNameCard = (selectedAddress, type) => ({
+export const LiquichainNameCard = (selectedAddress, name, type) => ({
   from: selectedAddress,
   meta: {
     title: routes.mainNetWork.name,
@@ -35,6 +35,7 @@ export const LiquichainNameCard = (selectedAddress, type) => ({
     message: {
       type: type || 'Name Card', // type or action for name card
       from: selectedAddress,
+      name,
       content: `${selectedAddress} - ${routes.mainNetWork.name}`,
     },
   }),
