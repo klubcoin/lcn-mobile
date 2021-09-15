@@ -257,7 +257,10 @@
 		"logout_cancel": "NO",
 		"feedback": "Feedback",
 		"metamask_support": "Liquichain Support",
-		"public_address": "Public Address"
+		"public_address": "Public Address",
+		"wallet_account_name": "Wallet account name",
+		"save": "Save",
+		"cancel": "Cancel"
 	},
 	"contacts": {
 		"search": "Search",
