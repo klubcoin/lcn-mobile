@@ -246,6 +246,7 @@ class Contacts extends PureComponent {
       mode: EDIT,
       editMode: EDIT,
       address,
+      onUpdate: () => this.updateAddressList(),
       onDelete: () => {
         this.contactToRemove = { address };
         this.deleteContact()
@@ -254,7 +255,11 @@ class Contacts extends PureComponent {
   };
 
   updateAddressList = () => {
-
+    const { network } = this.props;
+    const { AddressBookController } = Engine.state;
+    const addresses = AddressBookController.addressBook[network] || {};
+    const contacts = Object.keys(addresses).map(addr => addresses[addr]);
+    this.setState({ contacts });
   };
 
   onContactLongPress = contact => {
@@ -327,7 +332,7 @@ class Contacts extends PureComponent {
 
         <FlatList
           data={this.filterContacts(contacts)}
-          keyExtractor={(item) => item.toString()}
+          keyExtractor={(item) => `${item.name}${item.address}`}
           renderItem={(data) => this.renderContact(data)}
           style={styles.optionList}
         />

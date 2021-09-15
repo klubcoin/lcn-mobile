@@ -224,6 +224,8 @@ class ContactForm extends PureComponent {
 		const { AddressBookController } = Engine.context;
 		if (!name || !address) return;
 		AddressBookController.set(toChecksumAddress(address), name, network, memo);
+		const onUpdate = navigation.getParam('onUpdate');
+		onUpdate && onUpdate();
 		navigation.pop();
 	};
 
