@@ -64,7 +64,7 @@ export default class Messaging {
 
   _onMessage = (evt) => {
     const { data } = evt;
-    if (data == 'message correctly processed') {
+    if (!this._ready && data == 'message correctly processed') {
       this._ready = true;
       this._sendQueue();
       this._onEvent(WSEvent.ready, data);
