@@ -29,6 +29,8 @@ export const WSEvent = {
  */
 export default class Messaging {
   _walletAddress = '';
+  _ready = false;
+  _queue = [];
   ws = null;
 
   _events = {};
@@ -63,6 +65,8 @@ export default class Messaging {
   _onMessage = (evt) => {
     const { data } = evt;
     if (data == 'message correctly processed') {
+      this._ready = true;
+      this._sendQueue();
       this._onEvent(WSEvent.ready, data);
     } else {
       this._onEvent(WSEvent.message, data);
@@ -70,6 +74,7 @@ export default class Messaging {
   }
 
   _onClose = () => {
+    this._ready = false;
     this._onEvent(WSEvent.close);
 
     if (!this.terminated) {
@@ -111,10 +116,23 @@ export default class Messaging {
     this.send(message);
   }
 
+  _sendQueue = async () => {
+    if (this._queue.length == 0) return;
+    await this.send(this._queue.shift());
+
+    if (this._queue.length > 0) {
+      setTimeout(this._sendQueue, 10);
+    }
+  };
+
   async send(data) {
     if (!data) return;
 
-    this._ws.send(JSON.stringify(data));
+    if (!this._ready && data.action != Register().action) {
+      this._queue.push(data);
+    } else {
+      this._ws.send(JSON.stringify(data));
+    }
   }
 
   async _signMessage(data) {
