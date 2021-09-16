@@ -15,7 +15,7 @@ import base64 from 'base-64';
 import Share from 'react-native-share';
 import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
-import Messaging, { WSEvent } from '../../../services/Messaging';
+import Messaging, { Ping, Pong, WSEvent } from '../../../services/Messaging';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
 
 const styles = StyleSheet.create({
@@ -43,6 +43,15 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 16
+  },
+  online: {
+    position: 'absolute',
+    top: 8,
+    right: 10,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.green500,
   }
 });
 
@@ -95,6 +104,7 @@ class Contacts extends PureComponent {
     this.messaging.initConnection();
     this.data = this.props.navigation.getParam('data');
     this.handleFriendRequestUpdate();
+    this.pingFriends(contacts);
   }
 
   componentDidUpdate = prevProps => {
@@ -109,6 +119,14 @@ class Contacts extends PureComponent {
 
   componentWillUnmount() {
     this.messaging && this.messaging.disconnect();
+  }
+
+  pingFriends(contacts) {
+    const { selectedAddress } = this.props;
+    contacts.map(e => {
+      e.online = false;
+      this.messaging.send(new Ping(selectedAddress, e.address));
+    })
   }
 
   approveFriendRequest(data) {
@@ -136,12 +154,23 @@ class Contacts extends PureComponent {
   }
 
   handleWSMessage(json) {
+    const { selectedAddress } = this.props;
+    const { contacts } = this.state;
     try {
       const data = JSON.parse(json);
-      if (data && data.data && data.data.from) {
+      if (data.data && data.data.from) {
         this.data = data;
 
         this.handleFriendRequestUpdate();
+      } else if (data.action == 'ping') {
+        this.messaging.send(new Pong(selectedAddress, data.from));
+      } else if (data.action == 'pong') {
+        const from = data.from.toLocaleLowerCase();
+        const contact = contacts.find(e => e.address.toLocaleLowerCase() == from);
+        if (contact) {
+          contact.online = true;
+          this.setState({ contacts: [...contacts] });
+        }
       }
     } catch (e) { }
   }
@@ -284,15 +313,19 @@ class Contacts extends PureComponent {
   };
 
   renderContact = ({ item }) => {
-    const { address, name } = item;
+    const { address, name, online } = item;
+
     return (
-      <AddressElement
-        key={address}
-        address={address}
-        name={name}
-        onAccountPress={() => this.onContactTap(address)}
-        onAccountLongPress={() => this.onContactLongPress(item)}
-      />
+      <>
+        <AddressElement
+          key={address}
+          address={address}
+          name={name}
+          onAccountPress={() => this.onContactTap(address)}
+          onAccountLongPress={() => this.onContactLongPress(item)}
+        />
+        {online && <View style={styles.online} />}
+      </>
     );
   }
 

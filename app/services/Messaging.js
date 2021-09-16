@@ -13,6 +13,10 @@ export const Message = (to, data) => ({
   message: JSON.stringify(data),
 });
 
+export const Ping = (from, to) => Message(to, { from, action: 'ping' });
+export const Pong = (from, to) => Message(to, { from, action: 'pong' });
+export const Online = (from, to) => Message(to, { from, action: 'online' });
+
 export const WSEvent = {
   ready: 'ready',
   message: 'message',
