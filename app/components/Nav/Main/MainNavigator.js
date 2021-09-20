@@ -159,6 +159,9 @@ export default createStackNavigator(
 				CompanySettings: {
 					screen: AppInformation
 				},
+				Contacts: {
+					screen: Contacts
+				},
 				ContactsSettings: {
 					screen: ContactsSettings
 				},
