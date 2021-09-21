@@ -2,14 +2,34 @@ import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react'
 import { View, Text, StyleSheet, KeyboardAvoidingView, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native'
+import Drawer from 'react-native-drawer'
 import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import Device from '../../../util/Device';
 import RemoteImage from '../../Base/RemoteImage';
-import getNavbarOptions from '../../UI/Navbar';
+import { getVoteAppNavbar } from '../../UI/Navbar';
 import moment from 'moment';
+import APIService from '../../../services/APIService';
+import preferences from '../../../store/preferences';
+import VoteDrawer from './Drawer';
+import NavbarTitle from '../../UI/NavbarTitle';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const styles = StyleSheet.create({
+  navBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  navButton: {
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backIcon: {
+    color: colors.blue
+  },
   logo: {
     width: 60,
     height: 60
@@ -112,73 +132,110 @@ const sections = [
     users,
   },
   {
+    title: 'Proposals',
+    key: 'proposal',
+    data: [],
+  },
+  {
     title: 'Past ballots',
     key: 'past',
     users,
   }
 ]
 
-const OngoingBallot = ({ item }) => {
+const OngoingBallot = ({ item, voteInstance }) => {
   const { index } = item;
-  const { avatar, name } = item.item;
-  console.log('vgar', index, item)
+  const { avatar, title } = item.item;
+  const { application } = voteInstance || {};
   return (
     <View style={styles.item}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
-        source={{ uri: avatar }}
+        source={{ uri: application?.iconUrl }}
         style={styles.avatar}
       />
-      <Text style={styles.name}>{name}</Text>
+      <Text style={styles.name}>{title}</Text>
       <Text style={styles.sectionIndex}>{strings('voting.section')} {index}</Text>
       <Image source={{ uri: 'licoin.png' }} style={styles.vote} />
     </View>
   );
 };
-const ComingBallot = ({ item }) => {
-  const { avatar, name } = item.item;
+
+const ComingBallot = ({ item, voteInstance }) => {
+  const { voteStartDate, title } = item.item;
+  const { application } = voteInstance || {};
   return (
     <View style={styles.item}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
-        source={{ uri: avatar }}
+        source={{ uri: application?.iconUrl }}
         style={styles.avatar}
       />
-      <Text style={styles.name}>{name}</Text>
-      <Text>{moment().format('MMM DD YYYY')}</Text>
+      <Text style={styles.name}>{title}</Text>
+      <Text>{moment(voteStartDate.epochSecond * 1000).format('MMM DD YYYY')}</Text>
     </View>
   );
 };
-const PastBallot = ({ item }) => {
-  const { avatar, name } = item.item;
+
+const Proposal = ({ item, voteInstance, onTap }) => {
+  const { index } = item;
+  const { title } = item.item;
+  const { application } = voteInstance || {};
+  console.log('voteInstance', JSON.parse(JSON.stringify(application)))
   return (
-    <View style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={onTap}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
-        source={{ uri: avatar }}
+        source={{ uri: application?.iconUrl }}
         style={styles.avatar}
       />
-      <Text style={styles.name}>{name}</Text>
-      <Text>{moment().format('MMM DD YYYY')}</Text>
-    </View>
+      <Text style={styles.name}>{title}</Text>
+      <Image source={{ uri: 'licoin.png' }} style={styles.vote} />
+    </TouchableOpacity>
+  );
+};
+
+const PastBallot = ({ item, voteInstance }) => {
+  const { voteEndDate, title } = item.item;
+  const { application } = voteInstance || {};
+  return (
+    <TouchableOpacity style={styles.item}>
+      <RemoteImage
+        fadeIn
+        resizeMode='contain'
+        source={{ uri: application?.iconUrl }}
+        style={styles.avatar}
+      />
+      <Text style={styles.name}>{title}</Text>
+      <Text>{moment(voteEndDate.epochSecond * 1000).format('MMM DD YYYY')}</Text>
+    </TouchableOpacity>
   );
 };
 
 
 export class VotingApp extends PureComponent {
-  static navigationOptions = ({ navigation }) => {
-    return getNavbarOptions('voting.title', navigation, true);
-  };
+  static navigationOptions = () => ({ header: null });
 
   app = {};
+  proposals = [];
+  ongoingVotes = [];
+  comingVotes = [];
+  pastVotes = [];
+  openProposals = [];
+  voteInstance = {};
 
   constructor(props) {
     super(props);
     makeObservable(this, {
       app: observable,
+      openProposals: observable,
+      voteInstance: observable,
+      ongoingVotes: observable,
+      comingVotes: observable,
+      pastVotes: observable,
     })
 
     this.prefs = props.store;
@@ -186,61 +243,151 @@ export class VotingApp extends PureComponent {
     this.app = params.app;
   }
 
+  componentDidMount() {
+    this.fetchProposals();
+    this.fetchVotes();
+  }
+
+  onBack = () => {
+    this.drawer && this.drawer.open();
+  }
+
+  async fetchProposals() {
+    const voteInstance = await preferences.getVoteInstance();
+    const voterId = await preferences.getVoterId();
+
+    this.voteInstance = voteInstance;
+    this.voterId = voterId;
+    this.app = voteInstance.application;
+
+    APIService.getVoteProposals(voteInstance.uuid, voterId,
+      (success, json) => {
+        this.proposals = [...json];
+        this.openProposals = json.filter(e => e.status == 'OPEN');
+        console.warn('openProposals', JSON.parse(JSON.stringify(this.openProposals)))
+
+      })
+  }
+
+  async fetchVotes() {
+    const voteInstance = await preferences.getVoteInstance();
+    const voterId = await preferences.getVoterId();
+
+    APIService.getVoteList(voteInstance.uuid, voterId,
+      (success, json) => {
+        console.warn('fetchVotes', json)
+        this.votes = [...json];
+        const currentTime = moment().unix();
+        this.ongoingVotes = json.filter(e => e.voteStartDate.epochSecond < currentTime && currentTime < e.voteEndDate.epochSecond);
+        this.comingVotes = json.filter(e => currentTime < e.voteStartDate.epochSecond);
+        this.pastVotes = json.filter(e => currentTime > e.voteEndDate.epochSecond);
+      })
+  }
+
+  openProposal(proposal) {
+    //this.props.navigation.navigate('Proposal', { proposal })
+    console.log('appro', JSON.stringify(proposal))
+    APIService.approveVoteProposal(proposal.uuid, this.voterId, (success, json) => {
+      console.warn('approve', json)
+    })
+  }
+
+  dataForSection(key) {
+    return ({
+      proposal: this.openProposals,
+      ongoing: this.ongoingVotes,
+      coming: this.comingVotes,
+      past: this.pastVotes
+    })[key];
+  }
+
   renderItem(item, section) {
     switch (section) {
       case 0:
-        return <OngoingBallot item={item} />;
+        return <OngoingBallot item={item} voteInstance={this.voteInstance} />;
       case 1:
-        return <ComingBallot item={item} />;
+        return <ComingBallot item={item} voteInstance={this.voteInstance} />;
       case 2:
-        return <PastBallot item={item} />;
+        return <Proposal item={item} voteInstance={this.voteInstance}
+          onTap={() => this.openProposal(item.item)} />;
+      case 3:
+        return <PastBallot item={item} voteInstance={this.voteInstance} />;
     }
   }
 
-  render() {
-    const { name, application } = this.app;
-    const { iconUrl } = application;
+  renderNavBar() {
+    const { application } = this.voteInstance || {};
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={'padding'}
-        keyboardVerticalOffset={120}
-        enabled={Device.isIos()}
-      >
-        <ScrollView contentContainerStyle={{ paddingBottom: 80, }}>
-          <View style={styles.header}>
-            <RemoteImage
-              fadeIn
-              resizeMode='contain'
-              source={{ uri: iconUrl }}
-              style={styles.logo}
+      <SafeAreaView >
+        <View style={styles.navBar}>
+          <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.navButton}>
+            <Icon
+              name={'bars'}
+              size={16}
+              style={styles.backIcon}
             />
-            <View style={styles.heading}>
-              <Text style={styles.title}>{name}</Text>
-              <TouchableOpacity activeOpacity={0.6} onPress={() => { }}>
-                <Text style={styles.lawbook}>{strings('voting.see_lawbook')}</Text>
-              </TouchableOpacity>
+          </TouchableOpacity>
+          <NavbarTitle title={'voting.title'} disableNetwork />
+          <View style={styles.navButton} />
+        </View>
+      </SafeAreaView>
+    )
+  }
+
+  render() {
+    const { name } = this.app;
+    const { application } = this.voteInstance || {};
+    const { iconUrl } = application || {};
+    return (
+      <Drawer
+        ref={e => this.drawer = e}
+        type={'overlay'}
+        content={<VoteDrawer drawer={this.drawer} />}
+        openDrawerOffset={100}
+      >
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={'padding'}
+          keyboardVerticalOffset={120}
+          enabled={Device.isIos()}
+        >
+          {this.renderNavBar()}
+          <ScrollView contentContainerStyle={{ paddingBottom: 80, }}>
+            <View style={styles.header}>
+              <RemoteImage
+                fadeIn
+                resizeMode='contain'
+                source={{ uri: iconUrl }}
+                style={styles.logo}
+              />
+              <View style={styles.heading}>
+                <Text style={styles.title}>{name}</Text>
+                <TouchableOpacity activeOpacity={0.6} onPress={() => { }}>
+                  <Text style={styles.lawbook}>{strings('voting.see_lawbook')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          {
-            sections.map((section, index) => {
-              return (
-                <View style={styles.section}>
-                  <Text style={styles.sectionHeading}>
-                    {section.title}
-                  </Text>
-                  <FlatList
-                    data={section.users}
-                    keyExtractor={(item) => item.toString()}
-                    renderItem={(data) => this.renderItem(data, index)}
-                    style={styles.optionList}
-                  />
-                </View>
-              );
-            })
-          }
-        </ScrollView>
-      </KeyboardAvoidingView>
+            {
+              sections.map((section, index) => {
+                let data = this.dataForSection(section.key);
+                return (
+                  <View style={styles.section}>
+                    <Text style={styles.sectionHeading}>
+                      {section.title}
+                    </Text>
+                    <FlatList
+                      data={data}
+                      keyExtractor={(item) => item.uuid}
+                      renderItem={(data) => this.renderItem(data, index)}
+                      style={styles.optionList}
+                    />
+                  </View>
+                );
+              })
+            }
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </Drawer>
     );
   }
 }

@@ -17,6 +17,9 @@ import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
 import Messaging, { Ping, Pong, WSEvent } from '../../../services/Messaging';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
+import { StoreFile } from '../../../services/FileStore';
+import FileTransfer from '../../../services/FileTransfer';
+
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -52,6 +55,13 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: colors.green500,
+  },
+  selectedBar: {
+    position: 'absolute',
+    width: 5,
+    height: '100%',
+    left: 0,
+    backgroundColor: colors.blue,
   }
 });
 
@@ -77,6 +87,7 @@ class Contacts extends PureComponent {
 
   state = {
     contacts: [],
+    selectedContacts: [],
     searchQuery: '',
     confirmDeleteVisible: false,
     friendRequestVisible: false,
@@ -89,6 +100,7 @@ class Contacts extends PureComponent {
   constructor(props) {
     super(props);
     const { selectedAddress } = props;
+    this.contactSelection = props.navigation.getParam('contactSelection');
     this.messaging = new Messaging(selectedAddress);
     this.messaging.on(WSEvent.message, (data) => {
       this.handleWSMessage(data);
@@ -125,7 +137,7 @@ class Contacts extends PureComponent {
     const { selectedAddress } = this.props;
     contacts.map(e => {
       e.online = false;
-      this.messaging.send(new Ping(selectedAddress, e.address));
+      this.messaging.send(Ping(selectedAddress, e.address));
     })
   }
 
@@ -153,17 +165,13 @@ class Contacts extends PureComponent {
     return false;
   }
 
-  handleWSMessage(json) {
+  async handleWSMessage(json) {
     const { selectedAddress } = this.props;
     const { contacts } = this.state;
     try {
       const data = JSON.parse(json);
-      if (data.data && data.data.from) {
-        this.data = data;
-
-        this.handleFriendRequestUpdate();
-      } else if (data.action == 'ping') {
-        this.messaging.send(new Pong(selectedAddress, data.from));
+      if (data.action == 'ping') {
+        this.messaging.send(Pong(selectedAddress, data.from));
       } else if (data.action == 'pong') {
         const from = data.from.toLocaleLowerCase();
         const contact = contacts.find(e => e.address.toLocaleLowerCase() == from);
@@ -173,6 +181,12 @@ class Contacts extends PureComponent {
         }
       }
     } catch (e) { }
+  }
+
+  onConfirm() {
+    const { selectedContacts } = this.state;
+    const onConfirm = this.props.navigation.getParam('onConfirm');
+    if (onConfirm) onConfirm(selectedContacts);
   }
 
   handleFriendRequestUpdate() {
@@ -195,10 +209,6 @@ class Contacts extends PureComponent {
           return;
         }
         this.approveFriendRequest(data);
-      } else if (payload.message?.type == FriendRequestTypes.Accept) {
-        this.handleAcceptedNameCard(data);
-      } else if (payload.message?.type == FriendRequestTypes.Revoke) {
-        this.revokeFriend(data);
       }
     }
   }
@@ -270,6 +280,17 @@ class Contacts extends PureComponent {
     this.messaging.message(to, { data });
   }
 
+  onSelectContact = (contact) => {
+    const { selectedContacts } = this.state;
+
+    if (selectedContacts.find(e => e.address == contact.address)) {
+      selectedContacts.splice(selectedContacts.indexOf(contact), 1);
+    } else {
+      selectedContacts.push(contact);
+    }
+    this.setState({ selectedContacts: [...selectedContacts] })
+  }
+
   onContactTap = address => {
     this.props.navigation.navigate('ContactForm', {
       mode: EDIT,
@@ -313,7 +334,9 @@ class Contacts extends PureComponent {
   };
 
   renderContact = ({ item }) => {
+    const { selectedContacts } = this.state;
     const { address, name, online } = item;
+    const selected = !!selectedContacts.find(e => e.address == address);
 
     return (
       <>
@@ -321,10 +344,11 @@ class Contacts extends PureComponent {
           key={address}
           address={address}
           name={name}
-          onAccountPress={() => this.onContactTap(address)}
-          onAccountLongPress={() => this.onContactLongPress(item)}
+          onAccountPress={() => this.contactSelection ? this.onSelectContact(item) : this.onContactTap(address)}
+          onAccountLongPress={() => !this.contactSelection && this.onContactLongPress(item)}
         />
         {online && <View style={styles.online} />}
+        {this.contactSelection && selected && <View style={styles.selectedBar} />}
       </>
     );
   }
@@ -346,7 +370,6 @@ class Contacts extends PureComponent {
       friendRequestVisible,
       acceptedNameCardVisible,
       confirmDeleteVisible,
-      address,
       searchQuery
     } = this.state;
 
@@ -369,15 +392,23 @@ class Contacts extends PureComponent {
           renderItem={(data) => this.renderContact(data)}
           style={styles.optionList}
         />
-
-        <StyledButton
-          type={'confirm'}
-          containerStyle={styles.addContact}
-          onPress={this.createFriendRequest}
-          testID={'add-contact-button'}
-        >
-          {strings('contacts.create_friend_request')}
-        </StyledButton>
+        {this.contactSelection
+          ? <StyledButton
+            type={'confirm'}
+            containerStyle={styles.addContact}
+            onPress={this.onConfirm.bind(this)}
+          >
+            {strings('contacts.confirm')}
+          </StyledButton>
+          : <StyledButton
+            type={'confirm'}
+            containerStyle={styles.addContact}
+            onPress={this.createFriendRequest}
+            testID={'add-contact-button'}
+          >
+            {strings('contacts.create_friend_request')}
+          </StyledButton>
+        }
 
         <ConfirmModal
           visible={confirmDeleteVisible}
