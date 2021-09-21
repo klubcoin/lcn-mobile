@@ -11,6 +11,7 @@ import { inject, observer } from 'mobx-react';
 import Text from '../../Base/Text';
 import RemoteImage from '../../Base/RemoteImage';
 import { addHexPrefix } from 'ethereumjs-util';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -76,7 +77,7 @@ export class AddCustomApps extends PureComponent {
 
   componentDidMount() {
     const { selectedApp } = this.props;
-    this.fetchIstances(selectedApp.cetCode);
+    this.fetchIstances(selectedApp.cetCode || 'LiquivoteInstance');
   }
 
   componentDidUpdate(prevProps) {
@@ -90,9 +91,10 @@ export class AddCustomApps extends PureComponent {
 
   addApp = async () => {
     const { AssetsController } = Engine.context;
+    const { selectedAddress } = Engine.state.PreferencesController;
     const { hexHash, name, symbol, decimals } = this.selectedAsset;
-    const { iconUrl } = this.selectedInstance;
-    const { selectedApp } = this.props;
+    const { uuid, iconUrl } = this.selectedInstance;
+    const { selectedApp, onAddToken } = this.props;
     const address = addHexPrefix(hexHash);
     const icon = iconUrl || selectedApp.iconUrl;
     await AssetsController.addToken(address, symbol || name, decimals || 0, icon);
@@ -102,8 +104,19 @@ export class AddCustomApps extends PureComponent {
       ...this.selectedAsset,
     })
 
-    const { onAddToken } = this.props;
-    if (onAddToken) onAddToken();
+    const isVotingApp = selectedApp.name?.toLowerCase().includes('vote')
+      || selectedApp.description?.toLowerCase().includes('vote');
+
+    if (isVotingApp) {
+      APIService.registerVoter(uuid, selectedAddress, (success, json) => {
+        if (success && json.registration) {
+          preferences.setVoteInstance({ ...this.selectedInstance, application: selectedApp });
+          preferences.setVoterId(json.registration);
+
+          if (onAddToken) onAddToken();
+        }
+      })
+    } else if (onAddToken) onAddToken();
   };
 
   cancelAddToken = () => {
