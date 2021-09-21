@@ -274,7 +274,8 @@
 		"add_this_contact": "Add this contact",
 		"accept": "Accept",
 		"reject": "Reject",
-		"invalid_signature": "Invalid signature"
+		"invalid_signature": "Invalid signature",
+		"confirm": "Confirm"
 	},
 	"send": {
 		"title": "Send",
@@ -562,6 +563,13 @@
 		"support_center": "Visit our Support Center",
 		"web_site": "Visit our Website",
 		"contact_us": "Contact Us"
+	},
+	"private_key": {
+		"backup_private_key": "Backup private key",
+		"backup_private_key_desc": "Backup your private key onto your network. You can retrieve it at any time later without worry of losing it.",
+		"recover_private_key": "Recover private key",
+		"recover_private_key_desc": "Recover your private key which was sent to your network to backup",
+		"must_select_at_least_2_contacts": "Must select at least 2 contacts"
 	},
 	"reveal_credential": {
 		"seed_phrase_title": "Reveal Secret Recovery Phrase",
