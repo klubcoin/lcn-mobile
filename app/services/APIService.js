@@ -7,7 +7,7 @@ export default class APIService {
 
   static API_KEY = 'toto';
   static apiEtherScan = () => 'etherscan/api';
-  static apiGetOrderById = () => 'pg/v1/orders/<orderId>';
+  static apiGetOrderById = (orderId) => `pg/v1/orders/${orderId}`;
   static apiProceedOrder = () => 'pg/v1/orderpayments';
   static apiPeerAnnounce = () => 'announce';
 
@@ -18,8 +18,8 @@ export default class APIService {
 
   static routeAccountAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
   static apiListApps = () => APIService.routeAccountAPI() + 'LiquichainApp/list';
-  static apiGetAppInstances = () => APIService.routeAccountAPI() + '{cetCode}/list';
-  static apiGetWalletContract = () => APIService.routeAccountAPI() + 'Wallet/{appWallet}';
+  static apiGetAppInstances = (cetCode) => APIService.routeAccountAPI() + `${cetCode}/list`;
+  static apiGetWalletContract = (appWallet) => APIService.routeAccountAPI() + `Wallet/${appWallet}`;
 
   static announcePeerOnlineStatus(peerId, infoHash, left, callback) {
     const data = {
@@ -42,7 +42,7 @@ export default class APIService {
   }
 
   static getOrderInfo(orderId, callback) {
-    const route = this.apiGetOrderById().replace('<orderId>', orderId);
+    const route = this.apiGetOrderById(orderId);
     WebService.sendGet(route, null, callback);
   }
 
@@ -61,13 +61,13 @@ export default class APIService {
   }
 
   static getAppInstances(cetCode, callback) {
-    const route = this.apiGetAppInstances().replace('{cetCode}', cetCode);
+    const route = this.apiGetAppInstances(cetCode);
     const data = { basicAuth };
     WebService.sendPostDirect(route, data, callback);
   }
 
   static getWalletContract(appWallet, callback) {
-    const route = this.apiGetWalletContract().replace('{appWallet}', appWallet);
+    const route = this.apiGetWalletContract(appWallet);
     const data = { basicAuth: basicAuthAdmin };
     WebService.sendGetDirect(route, data, callback);
   }
