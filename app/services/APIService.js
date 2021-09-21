@@ -11,6 +11,11 @@ export default class APIService {
   static apiProceedOrder = () => 'pg/v1/orderpayments';
   static apiPeerAnnounce = () => 'announce';
 
+  static apiRegisterVoter = (instanceId, walletHash) => `registerVoter/${instanceId}/${walletHash}`;
+  static apiGetVoteProposals = (instanceId, voterId) => `listProposals/${instanceId}/${voterId}`;
+  static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
+  static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
+
   static routeAccountAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
   static apiListApps = () => APIService.routeAccountAPI() + 'LiquichainApp/list';
   static apiGetAppInstances = () => APIService.routeAccountAPI() + '{cetCode}/list';
@@ -65,5 +70,21 @@ export default class APIService {
     const route = this.apiGetWalletContract().replace('{appWallet}', appWallet);
     const data = { basicAuth: basicAuthAdmin };
     WebService.sendGetDirect(route, data, callback);
+  }
+
+  static registerVoter(instanceId, walletHash, callback) {
+    WebService.sendPost(this.apiRegisterVoter(instanceId, walletHash), {}, callback);
+  }
+
+  static getVoteProposals(instanceId, voterId, callback) {
+    WebService.sendGet(this.apiGetVoteProposals(instanceId, voterId), {}, callback);
+  }
+
+  static approveVoteProposal(proposalId, voterId, callback) {
+    WebService.sendPost(this.apiApproveVoteProposal(proposalId, voterId), {}, callback);
+  }
+
+  static getVoteList(instanceId, voterId, callback) {
+    WebService.sendGet(this.apiListVotes(instanceId, voterId), {}, callback);
   }
 }
