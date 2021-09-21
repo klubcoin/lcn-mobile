@@ -7,7 +7,8 @@ import {
 	View,
 	Alert,
 	InteractionManager,
-	PushNotificationIOS // eslint-disable-line react-native/split-platform-components
+	PushNotificationIOS, // eslint-disable-line react-native/split-platform-components
+	DeviceEventEmitter
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import PropTypes from 'prop-types';
@@ -30,6 +31,8 @@ import TypedSign from '../../UI/TypedSign';
 import Modal from 'react-native-modal';
 import WalletConnect from '../../../core/WalletConnect';
 import Device from '../../../util/Device';
+import * as RNFS from 'react-native-fs';
+import moment from 'moment';
 import {
 	getMethodData,
 	TOKEN_METHOD_TRANSFER,
@@ -37,7 +40,7 @@ import {
 	APPROVE_FUNCTION_SIGNATURE,
 	decodeApproveData
 } from '../../../util/transactions';
-import { BN } from 'ethereumjs-util';
+import { BN, toChecksumAddress } from 'ethereumjs-util';
 import Logger from '../../../util/Logger';
 import contractMap from '@metamask/contract-metadata';
 import MessageSign from '../../UI/MessageSign';
@@ -65,6 +68,11 @@ import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import BigNumber from 'bignumber.js';
 import { setInfuraAvailabilityBlocked, setInfuraAvailabilityNotBlocked } from '../../../actions/infuraAvailability';
+import Messaging, { Message, Pong, WSEvent } from '../../../services/Messaging';
+import FileTransfer from '../../../services/FileTransfer';
+import { ContainFiles, ReadFile, ReadFileResult, StoreFile } from '../../../services/FileStore';
+import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
+import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -83,6 +91,11 @@ const styles = StyleSheet.create({
 	}
 });
 const Main = props => {
+	const [messaging, setMessaging] = useState(null);
+	const [messageEvent, setMessageEvent] = useState(null);
+	const [friendMessage, setFriendMessage] = useState(null);
+	const [acceptedNameCardVisible, showAcceptedNameCard] = useState(null);
+
 	const [connected, setConnected] = useState(true);
 	const [forceReload, setForceReload] = useState(false);
 	const [signMessage, setSignMessage] = useState(false);
@@ -575,10 +588,89 @@ const Main = props => {
 		}
 	});
 
+	const handleWSMessage = async (messaging, json) => {
+		const { selectedAddress } = props;
+		try {
+			const data = JSON.parse(json);
+			if (data.data && data.data.from) {
+				handleFriendRequestUpdate(data);
+			} else if (data.action == 'ping') {
+				messaging.send(Pong(selectedAddress, data.from));
+			} else if (data.action == StoreFile().action) {
+				FileTransfer.storeFile(data)
+					.then(message => messaging.send(message));
+			} else if (data.action == ContainFiles().action) {
+				DeviceEventEmitter.emit('FTSuccess', data);
+			} else if (data.action == ReadFile().action && data.from != selectedAddress) {
+				const { from, hash, name } = data;
+				const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+				if (! await RNFS.exists(folder)) await RNFS.mkdir(folder);
+
+				const files = await RNFS.readDir(folder);
+
+				const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
+				foundFiles.map(async (e) => {
+					const content = await RNFS.readFile(e.path, 'utf8');
+					const partId = e.name.split('.').reverse()[0];
+					const message = new Message(from, ReadFileResult(
+						from, hash, name,
+						moment(e.mtime).unix(),
+						[{ i: partId, v: content }]
+					))
+					messaging.send(message);
+				})
+			} else if (data.action == ReadFileResult().action) {
+				//responded file
+			}
+		} catch (e) { }
+	}
+
+	const handleFriendRequestUpdate = (message) => {
+		if (!message) return;
+		if (!message.data) {
+			message = JSON.parse(base64.decode(message));
+		}
+
+		setFriendMessage(message);
+		const { data } = message || {};
+
+		if (data && data.data) {
+			const payload = JSON.parse(data.data);
+			if (payload.message?.type == FriendRequestTypes.Accept) {
+				handleAcceptedNameCard(data);
+			} else if (payload.message?.type == FriendRequestTypes.Revoke) {
+				revokeFriend(data);
+			}
+		}
+	}
+
+	const handleAcceptedNameCard = (data) => {
+		showAcceptedNameCard(data.from);
+	}
+
+	const revokeFriend = (data) => {
+		const { from } = data;
+		const { message } = JSON.parse(data.data);
+		const { name } = message;
+		alert(`${name} (${from}) revoked friend`);
+	}
 	// Remove all notifications that aren't visible
 	useEffect(
 		() => {
+			const { selectedAddress } = props;
 			props.removeNotVisibleNotifications();
+
+			const messaging = new Messaging(selectedAddress);
+			setMessaging(messaging);
+			messaging.initConnection();
+			messaging.on(WSEvent.message, (data) => handleWSMessage(messaging, data));
+
+			const evt = DeviceEventEmitter.addListener('FileTransfer', (data) => messaging.send(data));
+			setMessageEvent(evt);
+			return () => {
+				messaging && messaging.disconnect();
+				messageEvent && messageEvent.remove();
+			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
@@ -656,6 +748,45 @@ const Main = props => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const onAddContact = () => {
+		const { addressBook, network } = props;
+		const { AddressBookController } = Engine.context;
+
+		const addresses = addressBook[network] || {};
+		const { data } = friendMessage || {};
+
+		if (data && data.data) {
+			const payload = JSON.parse(data.data);
+			const { message } = payload;
+			const name = message.name || '';
+			const address = toChecksumAddress(data.from);
+
+			if (addresses[address]) return;
+
+			AddressBookController.set(address, name, network);
+		}
+	}
+
+	const toggleAcceptContactModal = () => {
+		showAcceptedNameCard(null);
+	}
+
+	const renderAcceptedFriendNameCard = () => {
+		return (
+			<FriendMessageOverview
+				visible={acceptedNameCardVisible}
+				data={friendMessage?.data}
+				networkInfo={friendMessage?.data.meta}
+				title={strings('contacts.friend_request_accepted')}
+				message={`${strings('contacts.add_this_contact')}?`}
+				confirmLabel={strings('contacts.accept')}
+				cancelLabel={strings('contacts.reject')}
+				onConfirm={onAddContact}
+				hideModal={toggleAcceptContactModal}
+			/>
+		)
+	}
+
 	return (
 		<React.Fragment>
 			<View style={styles.flex}>
@@ -689,6 +820,7 @@ const Main = props => {
 			{renderWalletConnectSessionRequestModal()}
 			{renderDappTransactionModal()}
 			{renderApproveModal()}
+			{renderAcceptedFriendNameCard()}
 		</React.Fragment>
 	);
 };
@@ -790,7 +922,10 @@ const mapStateToProps = state => ({
 	dappTransactionModalVisible: state.modals.dappTransactionModalVisible,
 	approveModalVisible: state.modals.approveModalVisible,
 	swapsTransactions: state.engine.backgroundState.TransactionController.swapsTransactions || {},
-	providerType: state.engine.backgroundState.NetworkController.provider.type
+	providerType: state.engine.backgroundState.NetworkController.provider.type,
+	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+	network: state.engine.backgroundState.NetworkController.network,
+	identities: state.engine.backgroundState.PreferencesController.identities,
 });
 
 const mapDispatchToProps = dispatch => ({
