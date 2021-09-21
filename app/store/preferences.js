@@ -3,6 +3,8 @@ import { makeAutoObservable } from "mobx";
 
 export const kAppList = 'AppList';
 export const kSecureHashKeycloak = 'KeycloakHash';
+export const kVoteInstance = 'VoteInstance';
+export const kVoteRegistrationId = 'VoteRegistrationId';
 
 const keys = [
   kAppList,
@@ -60,6 +62,23 @@ class Preferences {
   async getKeycloakHash() {
     return await this.fetch(kSecureHashKeycloak);
   }
+
+  async setVoteInstance(instance) {
+    await this.save(kVoteInstance, instance);
+  }
+
+  async getVoteInstance() {
+    return await this.fetch(kVoteInstance);
+  }
+
+  async setVoterId(registrationId) {
+    await this.save(kVoteRegistrationId, registrationId);
+  }
+
+  async getVoterId() {
+    return await this.fetch(kVoteRegistrationId);
+  }
+
 }
 
 export default new Preferences();
