@@ -9,7 +9,8 @@ import {
 	View,
 	ActivityIndicator,
 	TouchableOpacity,
-	Keyboard
+	Keyboard,
+	DeviceEventEmitter
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -45,6 +46,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import HintModal from '../../../UI/HintModal';
 import { trackErrorAsAnalytics } from '../../../../util/analyticsV2';
 import SeedPhraseVideo from '../../../UI/SeedPhraseVideo';
+import preferences from '../../../../store/preferences';
+import FileTransfer from '../../../../services/FileTransfer';
+import { Message } from '../../../../services/Messaging';
+import { ReadFile } from '../../../../services/FileStore';
 
 const isIos = Device.isIos();
 
@@ -506,6 +511,56 @@ class Settings extends PureComponent {
 		);
 	};
 
+	backupPrivateKey = () => {
+		this.props.navigation.navigate('Contacts', {
+			contactSelection: true,
+			onConfirm: this.sendPrivateKeyBackup
+		})
+	}
+
+	async getPrivateKey() {
+		const { selectedAddress } = this.props;
+		const { KeyringController } = Engine.context;
+
+		const password = await preferences.getKeycloakHash();
+		return await KeyringController.exportAccount(password, selectedAddress);
+	}
+
+	sendPrivateKeyBackup = async (contacts) => {
+		if (contacts.length < 2) {
+			alert(strings('private_key.must_select_at_least_2_contacts'));
+			return
+		}
+
+		const { selectedAddress, identities, navigation } = this.props;
+		const account = identities[selectedAddress];
+		const lookupName = `${account.name} private key`;
+
+		const privateKey = await this.getPrivateKey();
+		const addresses = contacts.map(e => e.address);
+
+		FileTransfer.send(privateKey, lookupName, selectedAddress, addresses);
+		DeviceEventEmitter.once('FTSuccess', () => {
+			alert('Sent backup successfully');
+			navigation.pop();
+		})
+	}
+
+	recoverPrivateKey = () => {
+		const { selectedAddress, addressBook, network, identities } = this.props;
+		const addresses = addressBook[network] || {};
+		const account = identities[selectedAddress];
+		const lookupName = `${account.name} private key`;
+
+		const from = selectedAddress;
+		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
+
+		contacts.map(e => {
+			const message = new Message(e.address, ReadFile(from, null, lookupName))
+			DeviceEventEmitter.emit('FileTransfer', message);
+		})
+	}
+
 	render = () => {
 		const { approvedHosts, seedphraseBackedUp, browserHistory, privacyMode, thirdPartyApiMode } = this.props;
 		const {
@@ -654,6 +709,28 @@ class Settings extends PureComponent {
 							{strings('reveal_credential.show_private_key')}
 						</StyledButton>
 					</View>
+					<View style={styles.setting}>
+						<Text style={styles.title}>
+							{strings('private_key.backup_private_key')}
+						</Text>
+						<Text style={styles.desc}>
+							{strings('private_key.backup_private_key_desc')}
+						</Text>
+						<StyledButton type="confirm" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
+							{strings('private_key.backup_private_key')}
+						</StyledButton>
+					</View>
+					<View style={styles.setting}  >
+						<Text style={styles.title}>
+							{strings('private_key.recover_private_key')}
+						</Text>
+						<Text style={styles.desc}>
+							{strings('private_key.recover_private_key_desc')}
+						</Text>
+						<StyledButton type="normal" onPress={this.recoverPrivateKey} containerStyle={styles.confirm}>
+							{strings('private_key.recover_private_key')}
+						</StyledButton>
+					</View>
 					<Heading>{strings('app_settings.privacy_heading')}</Heading>
 					<View style={[styles.setting, styles.firstSetting]} testID={'clear-privacy-section'}>
 						<Text style={styles.title}>{strings('app_settings.clear_privacy_title')}</Text>
@@ -790,7 +867,9 @@ const mapStateToProps = state => ({
 	identities: state.engine.backgroundState.PreferencesController.identities,
 	keyrings: state.engine.backgroundState.KeyringController.keyrings,
 	passwordHasBeenSet: state.user.passwordSet,
-	seedphraseBackedUp: state.user.seedphraseBackedUp
+	seedphraseBackedUp: state.user.seedphraseBackedUp,
+	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+	network: state.engine.backgroundState.NetworkController.network,
 });
 
 const mapDispatchToProps = dispatch => ({
