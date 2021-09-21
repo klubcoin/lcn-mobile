@@ -1,13 +1,12 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, KeyboardAvoidingView, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Image, FlatList, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import Device from '../../../util/Device';
 import RemoteImage from '../../Base/RemoteImage';
-import { getVoteAppNavbar } from '../../UI/Navbar';
 import moment from 'moment';
 import APIService from '../../../services/APIService';
 import preferences from '../../../store/preferences';
@@ -15,6 +14,9 @@ import VoteDrawer from './Drawer';
 import NavbarTitle from '../../UI/NavbarTitle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+const window = Dimensions.get('window');
+const screenWidth = window.width;
 
 const styles = StyleSheet.create({
   navBar: {
@@ -122,33 +124,33 @@ const users = [
 
 const sections = [
   {
-    title: 'Ongoing ballots',
+    title: strings('voting.ongoing_votes'),
     key: 'ongoing',
     users,
   },
   {
-    title: 'Coming ballots',
+    title: strings('voting.coming_votes'),
     key: 'coming',
     users,
   },
   {
-    title: 'Proposals',
+    title: strings('voting.proposals'),
     key: 'proposal',
     data: [],
   },
   {
-    title: 'Past ballots',
+    title: strings('voting.past_votes'),
     key: 'past',
     users,
   }
 ]
 
-const OngoingBallot = ({ item, voteInstance }) => {
+const OngoingVote = ({ item, voteInstance, onTap }) => {
   const { index } = item;
   const { avatar, title } = item.item;
   const { application } = voteInstance || {};
   return (
-    <View style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={onTap} activeOpacity={0.6}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
@@ -158,15 +160,15 @@ const OngoingBallot = ({ item, voteInstance }) => {
       <Text style={styles.name}>{title}</Text>
       <Text style={styles.sectionIndex}>{strings('voting.section')} {index}</Text>
       <Image source={{ uri: 'licoin.png' }} style={styles.vote} />
-    </View>
+    </TouchableOpacity>
   );
 };
 
-const ComingBallot = ({ item, voteInstance }) => {
+const ComingVote = ({ item, voteInstance, onTap }) => {
   const { voteStartDate, title } = item.item;
   const { application } = voteInstance || {};
   return (
-    <View style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={onTap} activeOpacity={0.6}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
@@ -175,7 +177,7 @@ const ComingBallot = ({ item, voteInstance }) => {
       />
       <Text style={styles.name}>{title}</Text>
       <Text>{moment(voteStartDate.epochSecond * 1000).format('MMM DD YYYY')}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -185,7 +187,7 @@ const Proposal = ({ item, voteInstance, onTap }) => {
   const { application } = voteInstance || {};
   console.log('voteInstance', JSON.parse(JSON.stringify(application)))
   return (
-    <TouchableOpacity style={styles.item} onPress={onTap}>
+    <TouchableOpacity style={styles.item} onPress={onTap} activeOpacity={0.6}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
@@ -198,11 +200,11 @@ const Proposal = ({ item, voteInstance, onTap }) => {
   );
 };
 
-const PastBallot = ({ item, voteInstance }) => {
+const PastVote = ({ item, voteInstance, onTap }) => {
   const { voteEndDate, title } = item.item;
   const { application } = voteInstance || {};
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={onTap} activeOpacity={0.6}>
       <RemoteImage
         fadeIn
         resizeMode='contain'
@@ -301,17 +303,21 @@ export class VotingApp extends PureComponent {
     })[key];
   }
 
+  openVote(vote) {
+    this.props.navigation.navigate('VoteDetails', { vote });
+  }
+
   renderItem(item, section) {
     switch (section) {
       case 0:
-        return <OngoingBallot item={item} voteInstance={this.voteInstance} />;
+        return <OngoingVote item={item} voteInstance={this.voteInstance} onTap={() => this.openVote(item.item)} />;
       case 1:
-        return <ComingBallot item={item} voteInstance={this.voteInstance} />;
+        return <ComingVote item={item} voteInstance={this.voteInstance} onTap={() => this.openVote(item.item)} />;
       case 2:
         return <Proposal item={item} voteInstance={this.voteInstance}
           onTap={() => this.openProposal(item.item)} />;
       case 3:
-        return <PastBallot item={item} voteInstance={this.voteInstance} />;
+        return <PastVote item={item} voteInstance={this.voteInstance} onTap={() => this.openVote(item.item)} />;
     }
   }
 
@@ -335,15 +341,18 @@ export class VotingApp extends PureComponent {
   }
 
   render() {
+    const { navigation } = this.props;
     const { name } = this.app;
     const { application } = this.voteInstance || {};
     const { iconUrl } = application || {};
+
     return (
       <Drawer
         ref={e => this.drawer = e}
         type={'overlay'}
-        content={<VoteDrawer drawer={this.drawer} />}
-        openDrawerOffset={100}
+        content={<VoteDrawer drawer={this.drawer} navigation={navigation} menuKey={'votes'} />}
+        openDrawerOffset={screenWidth - 200}
+        tapToClose={true}
       >
         <KeyboardAvoidingView
           style={{ flex: 1 }}
