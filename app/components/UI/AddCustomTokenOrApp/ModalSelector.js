@@ -72,7 +72,7 @@ class ModalSelector extends PureComponent {
 	};
 
 	renderItem = ({ item }) => {
-		const { onSelect } = this.props;
+		const { onSelect, hideKey } = this.props;
 		const { key, value, desc, icon } = item;
 
 		return (
@@ -87,7 +87,7 @@ class ModalSelector extends PureComponent {
 					style={styles.logo}
 				/>
 				<View>
-					<Text black style={styles.value}>{value} {key ? `(${key})` : ''}</Text>
+					<Text black style={styles.value}>{value} {key && !hideKey ? `(${key})` : ''}</Text>
 					{!!desc && <Text small style={styles.desc}>{desc}</Text>}
 				</View>
 			</TouchableOpacity>
