@@ -54,6 +54,10 @@ import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase'
 import PayQR from '../../Views/PayQRFlow/PayQR';
 import VotingApp from '../../Views/VotingApp';
 import Contacts from '../../Views/Contacts';
+import VoteDetails from '../../Views/VotingApp/VoteDetails';
+import VoteProposals from '../../Views/VotingApp/Proposals';
+import VoteProposalDetails from '../../Views/VotingApp/ProposalDetails';
+import VoteProposalAddEdit from '../../Views/VotingApp/ProposalAddEdit';
 
 
 const styles = StyleSheet.create({
@@ -98,6 +102,18 @@ export default createStackNavigator(
 					VotingAppHome: createStackNavigator({
 						VotingApp: {
 							screen: VotingApp
+						},
+						VoteDetails: {
+							screen: VoteDetails,
+						},
+						VoteProposals: {
+							screen: VoteProposals,
+						},
+						VoteProposalDetails: {
+							screen: VoteProposalDetails
+						},
+						VoteProposalAddEdit: {
+							screen: VoteProposalAddEdit,
 						}
 					}),
 					BrowserTabHome: createStackNavigator({
