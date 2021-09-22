@@ -102,6 +102,8 @@ export class AddCustomApps extends PureComponent {
     await this.prefs.saveApp({
       address,
       ...this.selectedAsset,
+      instance: this.selectedInstance,
+      application: selectedApp,
     })
 
     const isVotingApp = selectedApp.name?.toLowerCase().includes('vote')

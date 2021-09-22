@@ -236,9 +236,9 @@ class Tokens extends PureComponent {
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;
 		if (app && app.name) {
-			const { application } = app;
-			mainBalance = app.name;
-			secondaryBalance = application.description;
+			const { application, instance } = app;
+			mainBalance = instance?.name || application.name;
+			secondaryBalance = instance?.description || application.description;
 		} else if (primaryCurrency === 'ETH') {
 			mainBalance = balanceValue;
 			secondaryBalance = balanceFiat;
