@@ -112,6 +112,7 @@ export class ProposalDetails extends PureComponent {
     APIService.approveVoteProposal(this.proposal.uuid, voterId, (success, json) => {
       if (success && !json.error) {
         alert(strings('voting.thanks_for_approving'));
+        this.canApprove = false;
       } else {
         alert(json.error);
       }
