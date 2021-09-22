@@ -287,11 +287,7 @@ export class VotingApp extends PureComponent {
   }
 
   openProposal(proposal) {
-    //this.props.navigation.navigate('Proposal', { proposal })
-    console.log('appro', JSON.stringify(proposal))
-    APIService.approveVoteProposal(proposal.uuid, this.voterId, (success, json) => {
-      console.warn('approve', json)
-    })
+    this.props.navigation.navigate('VoteProposalDetails', { proposal })
   }
 
   dataForSection(key) {
