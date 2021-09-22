@@ -66,6 +66,7 @@ export class ProposalDetails extends PureComponent {
   type = '';
   title = '';
   content = '';
+  canApprove = false;
 
   constructor(props) {
     super(props);
@@ -74,6 +75,7 @@ export class ProposalDetails extends PureComponent {
       type: observable,
       title: observable,
       content: observable,
+      canApprove: observable,
     })
 
     this.prefs = props.store;
@@ -83,6 +85,17 @@ export class ProposalDetails extends PureComponent {
     this.category = category;
     this.title = title;
     this.content = content;
+  }
+
+  componentDidMount() {
+    this.readApprovalStatus()
+  }
+
+  async readApprovalStatus() {
+    const voterId = await preferences.getVoterId();
+
+    const { approvals, status } = this.proposal || {};
+    this.canApprove = status == 'OPEN' && !approvals.find(e => e.uuid == voterId);
   }
 
   onBack = () => {
@@ -130,7 +143,7 @@ export class ProposalDetails extends PureComponent {
   }
 
   render() {
-    const canApprove = true;
+    const canApprove = this.canApprove;
 
     return (
       <KeyboardAvoidingView
