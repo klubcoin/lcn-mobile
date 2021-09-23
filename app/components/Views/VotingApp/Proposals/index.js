@@ -114,8 +114,9 @@ export class Proposals extends PureComponent {
   }
 
   async fetchProposals() {
-    const voteInstance = await preferences.getVoteInstance();
-    const voterId = await preferences.getVoterId();
+    const app = await preferences.getCurrentApp();
+    const voteInstance = app.instance;
+    const voterId = app.voterId;
 
     APIService.getVoteProposals(voteInstance.uuid, voterId,
       (success, json) => {
