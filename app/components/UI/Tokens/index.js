@@ -171,6 +171,12 @@ class Tokens extends PureComponent {
 		this.fetchApps();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (this.props != prevProps) {
+			this.fetchApps();
+		}
+	}
+
 	async fetchApps() {
 		await preferences.fetch(kAppList);
 		this.savedApps = await preferences.getSavedAppList();
