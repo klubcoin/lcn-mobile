@@ -99,21 +99,19 @@ export class AddCustomApps extends PureComponent {
     const icon = iconUrl || selectedApp.iconUrl;
     await AssetsController.addToken(address, symbol || name, decimals || 0, icon);
 
-    await this.prefs.saveApp({
-      address,
-      ...this.selectedAsset,
-      instance: this.selectedInstance,
-      application: selectedApp,
-    })
-
     const isVotingApp = selectedApp.name?.toLowerCase().includes('vote')
       || selectedApp.description?.toLowerCase().includes('vote');
 
     if (isVotingApp) {
-      APIService.registerVoter(uuid, selectedAddress, (success, json) => {
+      APIService.registerVoter(uuid, selectedAddress, async (success, json) => {
         if (success && json.registration) {
-          preferences.setVoteInstance({ ...this.selectedInstance, application: selectedApp });
-          preferences.setVoterId(json.registration);
+          await this.prefs.saveApp({
+            address,
+            ...this.selectedAsset,
+            instance: this.selectedInstance,
+            application: selectedApp,
+            voterId: json.registration,
+          })
 
           if (onAddToken) onAddToken();
         }
