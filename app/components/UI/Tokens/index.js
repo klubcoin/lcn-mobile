@@ -189,9 +189,10 @@ class Tokens extends PureComponent {
 		</View>
 	);
 
-	onItemPress = token => {
+	onItemPress = async token => {
 		const app = this.savedApps.find(e => e.address == `${token.address}`.toLowerCase());
 		if (app) {
+			await preferences.setCurentAppId(app.address);
 			this.props.navigation.navigate('VotingApp', { app });
 		} else {
 			this.props.navigation.navigate('Asset', { ...token, transactions: this.props.transactions });
