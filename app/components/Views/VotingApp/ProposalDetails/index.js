@@ -92,7 +92,8 @@ export class ProposalDetails extends PureComponent {
   }
 
   async readApprovalStatus() {
-    const voterId = await preferences.getVoterId();
+    const app = await preferences.getCurrentApp();
+    const voterId = app.voterId;
 
     const { approvals, status } = this.proposal || {};
     this.canApprove = status == 'OPEN' && !approvals.find(e => e.uuid == voterId);
@@ -107,7 +108,8 @@ export class ProposalDetails extends PureComponent {
   }
 
   async approveProposal() {
-    const voterId = await preferences.getVoterId();
+    const app = await preferences.getCurrentApp();
+    const voterId = app.voterId;
 
     APIService.approveVoteProposal(this.proposal.uuid, voterId, (success, json) => {
       if (success && !json.error) {
