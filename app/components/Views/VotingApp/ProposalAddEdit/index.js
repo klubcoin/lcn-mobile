@@ -121,7 +121,8 @@ export class ProposalAddEdit extends PureComponent {
   }
 
   async fetchData() {
-    const voteInstance = await preferences.getVoteInstance();
+    const app = await preferences.getCurrentApp();
+    const voteInstance = app.instance;
     this.categories = [...voteInstance.delegationCategories];
   }
 
