@@ -185,7 +185,7 @@ const Proposal = ({ item, voteInstance, onTap }) => {
   const { index } = item;
   const { title } = item.item;
   const { application } = voteInstance || {};
-  console.log('voteInstance', JSON.parse(JSON.stringify(application)))
+
   return (
     <TouchableOpacity style={styles.item} onPress={onTap} activeOpacity={0.6}>
       <RemoteImage
@@ -246,21 +246,33 @@ export class VotingApp extends PureComponent {
   }
 
   componentDidMount() {
-    this.fetchProposals();
-    this.fetchVotes();
+    this.fetchApp();
+  }
+
+  componentDidUpdate(prevProp) {
+    if (this.props != prevProp) {
+      this.fetchApp();
+    }
   }
 
   onBack = () => {
     this.drawer && this.drawer.open();
   }
 
-  async fetchProposals() {
-    const voteInstance = await preferences.getVoteInstance();
-    const voterId = await preferences.getVoterId();
+  async fetchApp() {
+    const app = await preferences.getCurrentApp();
 
-    this.voteInstance = voteInstance;
-    this.voterId = voterId;
-    this.app = voteInstance.application;
+    this.voteInstance = app.instance;
+    this.voterId = app.voterId;
+    this.app = app.application;
+
+    this.fetchProposals();
+    this.fetchVotes();
+  }
+
+  async fetchProposals() {
+    const voteInstance = this.voteInstance;
+    const voterId = this.voterId;
 
     APIService.getVoteProposals(voteInstance.uuid, voterId,
       (success, json) => {
@@ -272,12 +284,11 @@ export class VotingApp extends PureComponent {
   }
 
   async fetchVotes() {
-    const voteInstance = await preferences.getVoteInstance();
-    const voterId = await preferences.getVoterId();
+    const voteInstance = this.voteInstance;
+    const voterId = this.voterId;
 
     APIService.getVoteList(voteInstance.uuid, voterId,
       (success, json) => {
-        console.warn('fetchVotes', json)
         this.votes = [...json];
         const currentTime = moment().unix();
         this.ongoingVotes = json.filter(e => e.voteStartDate.epochSecond < currentTime && currentTime < e.voteEndDate.epochSecond);
