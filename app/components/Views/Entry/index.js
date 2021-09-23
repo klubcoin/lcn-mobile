@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
 
 const Entry = props => {
 	const [viewToGo, setViewToGo] = useState(null);
+	const [fingerScanned, setFingerScanned] = useState(false);
 	const opacity = useRef(new Animated.Value(1)).current;
 
 	const onAnimationFinished = useCallback((viewToGo) => {
@@ -102,7 +103,8 @@ const Entry = props => {
 		try {
 			// Retreive the credentials
 			const { KeyringController } = Engine.context;
-			const credentials = await SecureKeychain.getGenericPassword();
+			const credentials = fingerScanned ? null : await SecureKeychain.getGenericPassword();
+			setFingerScanned(true);
 			if (credentials) {
 				// Restore vault with existing credentials
 
