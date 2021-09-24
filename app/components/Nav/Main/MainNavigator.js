@@ -58,7 +58,9 @@ import VoteDetails from '../../Views/VotingApp/VoteDetails';
 import VoteProposals from '../../Views/VotingApp/Proposals';
 import VoteProposalDetails from '../../Views/VotingApp/ProposalDetails';
 import VoteProposalAddEdit from '../../Views/VotingApp/ProposalAddEdit';
-
+import VoteDelegations from '../../Views/VotingApp/Delegations';
+import VoteDelegationDetails from '../../Views/VotingApp/DelegationDetails';
+import VoteDelegationAddEdit from '../../Views/VotingApp/DelegationAddEdit';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -114,6 +116,15 @@ export default createStackNavigator(
 						},
 						VoteProposalAddEdit: {
 							screen: VoteProposalAddEdit,
+						},
+						VoteDelegations: {
+							screen: VoteDelegations,
+						},
+						VoteDelegationDetails: {
+							screen: VoteDelegationDetails
+						},
+						VoteDelegationAddEdit: {
+							screen: VoteDelegationAddEdit,
 						}
 					}),
 					BrowserTabHome: createStackNavigator({
