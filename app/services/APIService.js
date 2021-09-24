@@ -21,6 +21,8 @@ export default class APIService {
   static apiGetAppInstances = (cetCode) => APIService.routeAccountAPI() + `${cetCode}/list`;
   static apiGetWalletContract = (appWallet) => APIService.routeAccountAPI() + `Wallet/${appWallet}`;
 
+  static apiVoteDelegations = () => APIService.routeAccountAPI() + `LiquivoteDelegation/list`;
+
   static announcePeerOnlineStatus(peerId, infoHash, left, callback) {
     const data = {
       peer_id: peerId,
@@ -86,5 +88,10 @@ export default class APIService {
 
   static getVoteList(instanceId, voterId, callback) {
     WebService.sendGet(this.apiListVotes(instanceId, voterId), {}, callback);
+  }
+
+  static getVoteDelegations(callback) {
+    const data = { basicAuth };
+    WebService.sendPostDirect(this.apiVoteDelegations(), data, callback);
   }
 }

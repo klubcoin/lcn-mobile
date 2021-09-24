@@ -354,7 +354,16 @@
 		"propsal_title": "Title",
 		"proposal_content": "Proposal content",
 		"approve": "Approve",
-		"thanks_for_approving": "Thanks for approving"
+		"thanks_for_approving": "Thanks for approving",
+		"manage_delegations": "Manage Delegations",
+		"search_delegations": "Search Delegations",
+		"active_delegations": "Active Delegations",
+		"inactive_delegations": "Inactive Delegations",
+		"delegation": "Delegation",
+		"delegee": "Delegee",
+		"category": "Category",
+		"from": "From",
+		"to": "To"
 	},
 	"activity_view": {
 		"title": "Activity"
