@@ -130,6 +130,10 @@ export class Delegations extends PureComponent {
     this.props.navigation.navigate('VoteDelegationAddEdit')
   }
 
+  editDelegation(delegation) {
+    this.props.navigation.navigate('VoteDelegationAddEdit', { delegation })
+  }
+
   deleteDelegation() {
     alert('delete delegation')
   }
@@ -154,7 +158,7 @@ export class Delegations extends PureComponent {
         />
         <Text style={styles.name} numberOfLines={2}>{category}</Text>
         <Text>{moment(toDate).format('MMM DD YYYY')}</Text>
-        <TouchableOpacity onPress={this.addDelegation.bind(this)} style={styles.navButton}>
+        <TouchableOpacity onPress={() => this.editDelegation(item)} style={styles.navButton}>
           <Icon
             name={'pencil'}
             size={16}
@@ -188,7 +192,7 @@ export class Delegations extends PureComponent {
         />
         <Text style={styles.name} numberOfLines={2}>{category}</Text>
         <Text>{moment(toDate).format('MMM DD YYYY')}</Text>
-        <TouchableOpacity onPress={this.addDelegation.bind(this)} style={styles.navButton}>
+        <TouchableOpacity onPress={() => this.editDelegation(item)} style={styles.navButton}>
           <Icon
             name={'pencil'}
             size={16}
