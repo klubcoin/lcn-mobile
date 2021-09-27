@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 import { useKeycloak } from '@react-keycloak/native';
 import StyledButton from '../../UI/StyledButton';
+import preferences from '../../../store/preferences';
 
 const styles = {
   container: {
@@ -19,8 +20,10 @@ const LoginWithKeycloak = ({ label, type, onSuccess, onError }) => {
       {
         prompt: 'login',
         redirectUri: 'liquichain://auth',
+        clientSecret: '5ccd4a10-e42b-4af9-a609-25f8c0ca094b',
       }).then(() => {
-        if (onSuccess) onSuccess();
+        preferences.setKeycloakAccount(keycloak.tokenParsed);
+        if (onSuccess) onSuccess(keycloak.tokenParsed);
       })
       .catch((error) => {
         if (onError) onError(error);

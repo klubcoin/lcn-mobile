@@ -3,11 +3,15 @@ import { makeAutoObservable } from "mobx";
 
 export const kAppList = 'AppList';
 export const kSecureHashKeycloak = 'KeycloakHash';
+export const kTokenKeycloak = 'KeycloakToken';
+export const kAccountKeycloak = 'KeycloakAccount';
 export const kCurrentAppId = 'CurrentAppId';
 
 const keys = [
   kAppList,
   kSecureHashKeycloak,
+  kTokenKeycloak,
+  kAccountKeycloak,
   kCurrentAppId,
 ];
 
@@ -71,6 +75,22 @@ class Preferences {
     const hash = await this.fetch(kCurrentAppId);
     if (!hash) return null;
     return await this.getAppByAddress(hash);
+  }
+
+  async setKeycloakToken(token) {
+    await this.save(kTokenKeycloak, token);
+  }
+
+  async getKeycloakToken() {
+    return await this.fetch(kTokenKeycloak);
+  }
+
+  async setKeycloakAccount(account) {
+    await this.save(kAccountKeycloak, account);
+  }
+
+  async getKeycloakAccount() {
+    return await this.fetch(kAccountKeycloak);
   }
 }
 
