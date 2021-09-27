@@ -3,6 +3,7 @@ import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, Image, Linking,
 import PropTypes from 'prop-types';
 import RevealPrivateCredential from '../RevealPrivateCredential';
 import Logger from '../../../util/Logger';
+import routes from '../../../common/routes';
 import { colors, fontStyles } from '../../../styles/common';
 import { ScrollView } from 'react-native-gesture-handler';
 import Clipboard from '@react-native-community/clipboard';
@@ -198,7 +199,7 @@ class ErrorBoundary extends Component {
 	};
 
 	openTicket = () => {
-		const url = 'https://metamask.zendesk.com/hc/en-us/requests/new';
+		const url = routes.mainNetWork.reportIssueUrl;
 		Linking.openURL(url);
 	};
 
