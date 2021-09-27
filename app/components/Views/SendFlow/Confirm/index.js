@@ -929,7 +929,7 @@ class Confirm extends PureComponent {
 	};
 
 	gotoFaucet = () => {
-		const mmFaucetUrl = 'https://faucet.metamask.io/';
+		const mmFaucetUrl = 'https://faucet.liquichain.io/';
 		InteractionManager.runAfterInteractions(() => {
 			this.props.navigation.navigate('BrowserView', {
 				newTabUrl: mmFaucetUrl

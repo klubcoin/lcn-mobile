@@ -631,7 +631,7 @@ class ApproveTransactionReview extends PureComponent {
 	};
 
 	gotoFaucet = () => {
-		const mmFaucetUrl = 'https://faucet.metamask.io/';
+		const mmFaucetUrl = 'https://faucet.liquichain.io/';
 		InteractionManager.runAfterInteractions(() => {
 			this.onCancelPress();
 			this.props.navigation.navigate('BrowserView', {
