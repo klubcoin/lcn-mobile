@@ -3,6 +3,7 @@ import { Alert, BackHandler, Text, View, SafeAreaView, StyleSheet, Keyboard, Tou
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { colors, fontStyles } from '../../../styles/common';
+import routes from '../../../common/routes';
 import Emoji from 'react-native-emoji';
 import AsyncStorage from '@react-native-community/async-storage';
 import OnboardingProgress from '../../UI/OnboardingProgress';
@@ -111,7 +112,7 @@ class ManualBackupStep3 extends PureComponent {
 
 	learnMore = () =>
 		this.props.navigation.navigate('Webview', {
-			url: 'https://support.metamask.io',
+			url: routes.mainNetWork.helpSupportUrl,
 			title: strings('drawer.metamask_support')
 		});
 

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { getApplicationName, getVersion, getBuildNumber } from 'react-native-device-info';
 import { colors, fontStyles } from '../../../../styles/common';
+import routes from '../../../../common/routes';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
@@ -124,8 +125,8 @@ export default class AppInformation extends PureComponent {
 	};
 
 	onWebSite = () => {
-		const url = 'https://metamask.io/';
-		this.goTo(url, 'metamask.io');
+		const url = routes.mainNetWork.accountUrl;
+		this.goTo(url, 'liquichain.io');
 	};
 
 	onContactUs = () => {

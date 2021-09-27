@@ -31,7 +31,7 @@ export default {
 	MM_INFURA_PROJECT_ID: 'aece2b99680d44839ec28ff077670ec6',
 	SAI_ADDRESS: '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359',
 	HOMEPAGE_URL: 'https://home.liquichain.io/',
-	SHORT_HOMEPAGE_URL: 'MetaMask.io',
+	SHORT_HOMEPAGE_URL: 'liquichain.io',
 	ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
 	USER_AGENT: Device.isAndroid()
 		? 'Mozilla/5.0 (Linux; Android 10; Android SDK built for x86 Build/OSM1.180201.023) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.92 Mobile Safari/537.36'
