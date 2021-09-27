@@ -23,7 +23,7 @@ const LoginWithKeycloak = ({ label, type, onSuccess, onError }) => {
         clientSecret: '5ccd4a10-e42b-4af9-a609-25f8c0ca094b',
       }).then(() => {
         preferences.setKeycloakAccount(keycloak.tokenParsed);
-        if (onSuccess) onSuccess(keycloak.tokenParsed);
+        if (onSuccess) onSuccess();
       })
       .catch((error) => {
         if (onError) onError(error);

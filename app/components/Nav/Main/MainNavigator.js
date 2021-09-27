@@ -61,6 +61,7 @@ import VoteProposalAddEdit from '../../Views/VotingApp/ProposalAddEdit';
 import VoteDelegations from '../../Views/VotingApp/Delegations';
 import VoteDelegationDetails from '../../Views/VotingApp/DelegationDetails';
 import VoteDelegationAddEdit from '../../Views/VotingApp/DelegationAddEdit';
+import Profile from '../../Views/Profile';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -100,6 +101,9 @@ export default createStackNavigator(
 						ContactForm: {
 							screen: ContactForm
 						},
+						Profile: {
+							screen: Profile
+						}
 					}),
 					VotingAppHome: createStackNavigator({
 						VotingApp: {
