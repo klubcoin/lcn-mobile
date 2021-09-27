@@ -178,7 +178,7 @@ const AccountBackupStep1 = props => {
 				testID={'account-backup-step-1-screen'}
 			>
 				<View style={styles.wrapper} testID={'protect-your-account-screen'}>
-					<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={1} />
+					<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={2} />
 					<View style={styles.content}>
 						<Text style={styles.title}>{strings('account_backup_step_1.title')}</Text>
 						<SeedPhraseVideo />

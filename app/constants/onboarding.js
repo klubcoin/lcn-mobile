@@ -1,6 +1,7 @@
 import { strings } from '../../locales/i18n';
 
 export const CHOOSE_PASSWORD_STEPS = [
+	strings('choose_password.profile'),
 	strings('choose_password.title'),
 	strings('choose_password.secure'),
 	strings('choose_password.confirm')

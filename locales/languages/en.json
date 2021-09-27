@@ -183,7 +183,9 @@
 		"confirm": "Confirm Secret Recovery Phrase",
 		"setup_liquichain_account": "Setup liquichain account",
 		"setup_local_account": "Setup local account (geek)",
-		"or": "Or"
+		"or": "Or",
+		"profile": "Profile",
+		"continue": "Continue"
 	},
 	"reset_password": {
 		"title": "Change password",

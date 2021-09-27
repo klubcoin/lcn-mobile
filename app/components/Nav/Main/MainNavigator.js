@@ -62,6 +62,7 @@ import VoteDelegations from '../../Views/VotingApp/Delegations';
 import VoteDelegationDetails from '../../Views/VotingApp/DelegationDetails';
 import VoteDelegationAddEdit from '../../Views/VotingApp/DelegationAddEdit';
 import Profile from '../../Views/Profile';
+import ProfileOnboard from '../../Views/ProfileOnboard';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -337,6 +338,9 @@ export default createStackNavigator(
 				{
 					ChoosePassword: {
 						screen: ChoosePassword
+					},
+					ProfleOnboard: {
+						screen: ProfileOnboard
 					},
 					AccountBackupStep1: {
 						screen: AccountBackupStep1

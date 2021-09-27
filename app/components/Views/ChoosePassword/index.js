@@ -623,7 +623,7 @@ class ChoosePassword extends PureComponent {
 					</View>
 				) : (
 					<View style={styles.wrapper} testID={'choose-password-screen'}>
-						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} />
+						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={1} />
 						<KeyboardAwareScrollView
 							style={styles.scrollableWrapper}
 							contentContainerStyle={styles.keyboardScrollableWrapper}

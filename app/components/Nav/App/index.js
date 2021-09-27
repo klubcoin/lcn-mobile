@@ -30,6 +30,7 @@ import Branch from 'react-native-branch';
 import AppConstants from '../../../core/AppConstants';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { Linking } from 'react-native';
+import ProfileOnboard from '../../Views/ProfileOnboard';
 
 /**
  * Stack navigator responsible for the onboarding process
@@ -48,6 +49,9 @@ const OnboardingNav = createStackNavigator(
 		},
 		ChoosePassword: {
 			screen: ChoosePassword
+		},
+		ProfleOnboard: {
+			screen: ProfileOnboard
 		},
 		AccountBackupStep1: {
 			screen: AccountBackupStep1
