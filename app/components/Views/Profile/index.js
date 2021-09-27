@@ -5,12 +5,14 @@ import { makeObservable, observable } from 'mobx';
 import preferences from '../../../store/preferences';
 import { strings } from '../../../../locales/i18n';
 import Engine from '../../../core/Engine';
+import routes from '../../../common/routes';
 import Identicon from '../../UI/Identicon';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import RemoteImage from '../../../components/Base/RemoteImage';
 import Text from '../../../components/Base/Text';
 import ImagePicker from 'react-native-image-crop-picker';
 import { colors } from '../../../styles/common';
+import AccountList from '../../UI/AccountList';
 
 
 const styles = StyleSheet.create({
@@ -44,6 +46,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+  accounts: {
+    marginTop: 30,
+    width: '100%'
+  }
 });
 
 class Profile extends PureComponent {
@@ -84,6 +90,7 @@ class Profile extends PureComponent {
 
   render() {
     const { email, name, avatar } = this.account;
+    const { identities } = Engine.state.PreferencesController;
 
     return (
       <View style={styles.container}>
@@ -98,6 +105,14 @@ class Profile extends PureComponent {
           </TouchableOpacity>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.email}>{email}</Text>
+          <View style={styles.accounts}>
+            <AccountList
+              enableAccountsAddition={false}
+              identities={identities}
+              selectedAddress={this.selectedAddress}
+              ticker={routes.mainNetWork.ticker}
+            />
+          </View>
         </View>
       </View>
     )
