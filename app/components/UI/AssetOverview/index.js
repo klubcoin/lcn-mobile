@@ -10,6 +10,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { toggleReceiveModal } from '../../../actions/modals';
 import { connect } from 'react-redux';
+import routes from '../../../common/routes';
 import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei, weiToFiat, hexToBN } from '../../../util/number';
 import { safeToChecksumAddress } from '../../../util/address';
 import { isMainNet } from '../../../util/networks';
@@ -219,8 +220,7 @@ class AssetOverview extends PureComponent {
 			asset: { symbol }
 		} = this.props;
 
-		const supportArticleUrl =
-			'https://metamask.zendesk.com/hc/en-us/articles/360028059272-What-to-do-when-your-balance-of-ETH-and-or-ERC20-tokens-is-incorrect-inaccurate';
+		const supportArticleUrl = routes.mainNetWork.helpSupportUrl;
 		return (
 			<TouchableOpacity onPress={() => this.goToBrowserUrl(supportArticleUrl)}>
 				<Text style={styles.warning}>

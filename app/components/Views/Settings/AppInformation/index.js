@@ -115,12 +115,12 @@ export default class AppInformation extends PureComponent {
 	};
 
 	onAttributions = () => {
-		const url = 'https://metamask.io/attributions.html';
+		const url = 'https://docs.liquichain.io/attributions.html';
 		this.goTo(url, strings('app_information.attributions'));
 	};
 
 	onSupportCenter = () => {
-		const url = 'https://metamask.zendesk.com/hc/en-us';
+		const url = routes.mainNetWork.helpSupportUrl;
 		this.goTo(url, strings('drawer.metamask_support'));
 	};
 
@@ -130,7 +130,7 @@ export default class AppInformation extends PureComponent {
 	};
 
 	onContactUs = () => {
-		const url = 'https://metamask.zendesk.com/hc/en-us/requests/new';
+		const url = routes.mainNetWork.reportIssueUrl;
 		this.goTo(url, strings('drawer.metamask_support'));
 	};
 

@@ -12,9 +12,11 @@ export default {
     symbol: null,
     ticker: 'LCN',
     route: 'https://account.liquichain.io/meveo/rest/',
+    hostDomain: 'liquichain.io',
     blockExploreUrl: 'https://liquichain.io',
     accountUrl: 'https://account.liquichain.io',
     helpSupportUrl: 'https://docs.liquichain.io',
+    reportIssueUrl: 'https://github.com/liquichain/lcn-mobile/issues',
   },
   basicMethod: {
     "jsonrpc": "2.0",

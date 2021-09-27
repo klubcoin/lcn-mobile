@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity, Text, View, SafeAreaView, StyleSheet, Image, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
+import routes from '../../../common/routes';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors, fontStyles } from '../../../styles/common';
 import StyledButton from '../../UI/StyledButton';
@@ -201,7 +202,7 @@ const AccountBackupStep1B = props => {
 	const learnMore = () => {
 		setWhySecureWalletModal(false);
 		props.navigation.navigate('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360015489591-Basic-Safety-Tips',
+			url: routes.mainNetWork.helpSupportUrl,
 			title: strings('drawer.metamask_support')
 		});
 	};

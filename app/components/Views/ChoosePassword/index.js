@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import * as base64 from 'base-64';
 import { keycloakAuthSet, keycloakAuthUnset, passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
+import routes from '../../../common/routes';
 import preferences from '../../../../app/store/preferences';
 import StyledButton from '../../UI/StyledButton';
 import Engine from '../../../core/Engine';
@@ -531,8 +532,8 @@ class ChoosePassword extends PureComponent {
 
 	learnMore = () => {
 		this.props.navigation.push('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360039616872-How-can-I-reset-my-password-',
-			title: 'metamask.zendesk.com'
+			url: routes.mainNetWork.helpSupportUrl,
+			title: strings('drawer.metamask_support')
 		});
 	};
 

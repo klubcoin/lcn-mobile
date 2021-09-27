@@ -5,6 +5,7 @@ import { StyleSheet, View, TouchableOpacity, ScrollView, Linking } from 'react-n
 import TransactionHeader from '../TransactionHeader';
 import { strings } from '../../../../locales/i18n';
 import { colors, fontStyles } from '../../../styles/common';
+import routes from '../../../common/routes';
 import Device from '../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Alert from '../../Base/Alert';
@@ -216,10 +217,10 @@ const AddCustomNetwork = ({ customNetworkInformation, currentPageInformation, on
 	);
 
 	const openHowToUseCustomNetworks = () => {
-		Linking.openURL('https://metamask.zendesk.com/hc/en-us/articles/360056196151');
+		Linking.openURL(routes.mainNetWork.helpSupportUrl);
 	};
 	const openHowToVerifyCustomNetworks = () => {
-		Linking.openURL('https://metamask.zendesk.com/hc/en-us/articles/360057142392');
+		Linking.openURL(routes.mainNetWork.helpSupportUrl);
 	};
 
 	const renderAlert = () => {

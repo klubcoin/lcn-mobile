@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import PropTypes from 'prop-types';
+import routes from '../../../common/routes';
 import { colors, fontStyles } from '../../../styles/common';
 import StyledButton from '../../UI/StyledButton';
 import Icon from 'react-native-vector-icons/Feather';
@@ -167,7 +168,7 @@ export default class ImportPrivateKey extends PureComponent {
 
 	learnMore = () =>
 		this.props.navigation.navigate('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360015289932-What-are-imported-accounts-',
+			url: routes.mainNetWork.helpSupportUrl,
 			title: strings('drawer.metamask_support')
 		});
 

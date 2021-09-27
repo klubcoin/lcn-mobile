@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import ActionModal from '../ActionModal';
 import { fontStyles, colors } from '../../../styles/common';
+import routes from '../../../common/routes';
 import { connect } from 'react-redux';
 import { protectWalletModalNotVisible } from '../../../actions/user';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -87,7 +88,7 @@ class ProtectYourWalletModal extends PureComponent {
 	onLearnMore = () => {
 		this.props.protectWalletModalNotVisible();
 		this.props.navigation.navigate('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360015489591-Basic-Safety-Tips',
+			url: routes.mainNetWork.helpSupportUrl,
 			title: strings('protect_wallet_modal.title')
 		});
 	};

@@ -5,6 +5,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import { getHost } from '../../../util/browser';
 import { strings } from '../../../../locales/i18n';
 import { connect } from 'react-redux';
+import routes from '../../../common/routes';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import WebsiteIcon from '../WebsiteIcon';
 import ActionView from '../ActionView';
@@ -183,8 +184,8 @@ class SignatureRequest extends PureComponent {
 	goToWarning = () => {
 		this.props.onCancel();
 		this.props.navigation.push('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360015488751',
-			title: 'metamask.zendesk.com'
+			url: routes.mainNetWork.helpSupportUrl,
+			title: strings('drawer.metamask_support')
 		});
 	};
 

@@ -11,6 +11,7 @@ import {
 	ScrollView
 } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
+import routes from '../../../common/routes';
 import { strings } from '../../../../locales/i18n';
 import StyledButton from '../../UI/StyledButton';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
@@ -151,7 +152,7 @@ class SyncWithExtensionSuccess extends PureComponent {
 
 	learnMore = () => {
 		this.props.navigation.navigate('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360015489591-Basic-Safety-Tips',
+			url: routes.mainNetWork.helpSupportUrl,
 			title: strings('drawer.metamask_support')
 		});
 	};

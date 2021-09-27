@@ -20,6 +20,7 @@ import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
+import routes from '../../../common/routes';
 import preferences from '../../../store/preferences';
 import { passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
@@ -572,8 +573,8 @@ class ResetPassword extends PureComponent {
 
 	learnMore = () => {
 		this.props.navigation.push('Webview', {
-			url: 'https://metamask.zendesk.com/hc/en-us/articles/360039616872-How-can-I-reset-my-password-',
-			title: 'metamask.zendesk.com'
+			url: routes.mainNetWork.helpSupportUrl,
+			title: strings('drawer.metamask_support')
 		});
 	};
 
