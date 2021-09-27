@@ -1,0 +1,13 @@
+--- a/node_modules/@react-keycloak/keycloak-ts/lib/commonjs/client.js	2021-09-27 19:03:53.000000000 +0700
++++ b/node_modules/@react-keycloak/keycloak-ts/lib/commonjs/client.js	2021-09-27 18:59:53.000000000 +0700
+@@ -574,6 +574,10 @@
+       params.set('client_id', this.clientId);
+       params.set('redirect_uri', oauth.redirectUri);
+ 
++      if (oauth.clientSecret) {
++        params.set('client_secret', oauth.clientSecret);
++      }
++
+       if (oauth.pkceCodeVerifier) {
+         params.set('code_verifier', oauth.pkceCodeVerifier);
+       }

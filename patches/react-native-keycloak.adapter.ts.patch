@@ -1,0 +1,11 @@
+--- a/node_modules/@react-keycloak/native/src/keycloak/adapter.ts	2021-09-27 19:05:12.000000000 +0700
++++ b/node_modules/@react-keycloak/native/src/keycloak/adapter.ts	2021-09-27 19:01:05.000000000 +0700
+@@ -53,7 +53,7 @@
+ 
+       if (res.type === 'success' && res.url) {
+         const oauth = this.client.parseCallback(res.url);
+-        return this.client.processCallback(oauth);
++        return this.client.processCallback(Object.assign({clientSecret: options.clientSecret}, oauth));
+       }
+ 
+       throw new Error('Authentication flow failed');
