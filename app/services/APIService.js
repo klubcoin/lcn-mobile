@@ -115,4 +115,28 @@ export default class APIService {
     const data = { basicAuth };
     WebService.sendPostDirect(this.apiVoteDelegations(), data, callback);
   }
+
+  static createVoteDelegation({ voterId, category, delegatedTo, fromDate, toDate }, callback) {
+    const entity = {
+      cetCode: 'LiquivoteDelegation',
+      voter: voterId,
+      category,
+      delegatedTo,
+      fromDate: moment(fromDate).format(dateFormatMeveo),
+      toDate: moment(toDate).format(dateFormatMeveo),
+    };
+
+    APIService.postPersistence(this.routePersistenceAPI(), entity, callback);
+  }
+
+  static postPersistence(url, entity, callback) {
+    const data = {
+      basicAuth,
+      headers: {
+        'Persistence-Mode': 'list',
+      },
+      rawBody: [entity]
+    };
+    WebService.sendPostDirect(url, data, callback);
+  }
 }
