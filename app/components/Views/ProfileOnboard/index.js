@@ -10,7 +10,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { colors, fontStyles } from '../../../styles/common';
 import OnboardingProgress from '../../UI/OnboardingProgress';
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
-import { PREVIOUS_SCREEN } from '../../../constants/navigation';
+import { ONBOARDING, PREVIOUS_SCREEN } from '../../../constants/navigation';
 import StyledButton from '../../UI/StyledButton';
 import { strings } from '../../../../locales/i18n';
 import { TextInput } from 'react-native-gesture-handler';
@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    resizeMode: 'cover',
     overflow: 'hidden',
     alignSelf: 'center',
   },
@@ -122,7 +121,7 @@ class ProfileOnboard extends PureComponent {
     })
 
     this.props.navigation.navigate('ChoosePassword', {
-      [PREVIOUS_SCREEN]: 'ProfileOnboard'
+      [PREVIOUS_SCREEN]: ONBOARDING
     });
   }
 
