@@ -35,6 +35,7 @@ import {
 import { getPasswordStrengthWord, passwordRequirementsMet, MIN_PASSWORD_LENGTH } from '../../../util/password';
 import API from 'services/api'
 import Routes from 'common/routes'
+import * as sha3JS from 'js-sha3';
 
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import LoginWithKeycloak from '../LoginWithKeycloak';
@@ -302,7 +303,7 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
-	sendAccount() {
+	async sendAccount() {
 		const { selectedAddress, keyringController } = this.props;
 		let vault = JSON.parse(keyringController.vault)
 		console.log('selected', selectedAddress)
@@ -310,8 +311,12 @@ class ChoosePassword extends PureComponent {
 		if (selectedAddress == null) {
 			return
 		}
+		const { firstname, lastname } = preferences.onboardProfile;
+		const name = `${firstname} ${lastname}`;
+		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress);
+
 		API.postRequest(Routes.walletCreation, [
-			"myWallet", selectedAddress, selectedAddress
+			name, selectedAddress, hash
 		], response => {
 			console.log('account creation', response)
 		}, error => {
