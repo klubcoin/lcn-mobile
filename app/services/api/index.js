@@ -35,11 +35,13 @@ const Api = {
       headers.Authorization = `Bearer ${parameters.jwt}`;
       delete parameters.jwt;
     }
-
+    if (parameters.headers) {
+      Object.assign(headers, parameters.headers);
+    }
     const fetchOptions = {
       method: 'POST',
       headers,
-      body: JSON.stringify(parameters)
+      body: JSON.stringify(parameters?.rawBody ? parameters.rawBody : parameters)
     }
     console.log('url', url)
     console.log('fetchOptions', fetchOptions)
