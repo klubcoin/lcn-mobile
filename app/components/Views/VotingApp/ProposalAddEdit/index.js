@@ -118,6 +118,25 @@ export class ProposalAddEdit extends PureComponent {
 
   componentDidMount() {
     this.fetchData()
+    this.addProposal()
+  }
+
+  async addProposal() {
+    const app = await preferences.getCurrentApp();
+    const voteInstance = app.instance;
+    APIService.createVoteProposal({
+      liquivoteInstance: voteInstance.uuid,
+      category: 'test1',
+      title: 'title test1',
+      content: 'content test1',
+    }, (success, json) => {
+      console.warn('wowoow', success, json)
+      if (success && json.result) {
+
+      } else {
+        alert(JSON.stringify(json));
+      }
+    })
   }
 
   async fetchData() {

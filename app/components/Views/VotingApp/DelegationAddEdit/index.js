@@ -13,6 +13,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import StyledButton from '../../../UI/StyledButton';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import APIService from '../../../../services/APIService';
+import preferences from '../../../../store/preferences';
 
 
 const styles = StyleSheet.create({
@@ -132,6 +134,27 @@ export class DelegationAddEdit extends PureComponent {
 
   componentDidMount() {
     this.fetchData()
+    this.addDelegation();
+  }
+
+  async addDelegation() {
+    const app = await preferences.getCurrentApp();
+    const wallet = app.uuid;
+
+    APIService.createVoteDelegation({
+      voterId: wallet,
+      category: 'test1',
+      delegatedTo: wallet,
+      fromDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+      toDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }, (success, json) => {
+      console.warn('wowoow', success, json)
+      if (success && json.result) {
+
+      } else {
+        alert(JSON.stringify(json));
+      }
+    })
   }
 
   async fetchData() {
