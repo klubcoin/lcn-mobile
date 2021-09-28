@@ -1,7 +1,10 @@
+import moment from 'moment';
 import WebService from './WebService';
 
 const basicAuth = 'apitest:apitest';
 const basicAuthAdmin = 'meveo.admin:meveo';
+
+const dateFormatMeveo = 'YYYY-MM-DD HH:mm:ss';
 
 export default class APIService {
 
@@ -16,12 +19,12 @@ export default class APIService {
   static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
   static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-  static routeAccountAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
-  static apiListApps = () => APIService.routeAccountAPI() + 'LiquichainApp/list';
-  static apiGetAppInstances = (cetCode) => APIService.routeAccountAPI() + `${cetCode}/list`;
-  static apiGetWalletContract = (appWallet) => APIService.routeAccountAPI() + `Wallet/${appWallet}`;
+  static routePersistenceAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
+  static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
+  static apiGetAppInstances = (cetCode) => APIService.routePersistenceAPI() + `${cetCode}/list`;
+  static apiGetWalletContract = (appWallet) => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;
 
-  static apiVoteDelegations = () => APIService.routeAccountAPI() + `LiquivoteDelegation/list`;
+  static apiVoteDelegations = () => APIService.routePersistenceAPI() + `LiquivoteDelegation/list`;
 
   static announcePeerOnlineStatus(peerId, infoHash, left, callback) {
     const data = {
@@ -88,6 +91,24 @@ export default class APIService {
 
   static getVoteList(instanceId, voterId, callback) {
     WebService.sendGet(this.apiListVotes(instanceId, voterId), {}, callback);
+  }
+
+  static createVoteProposal({ liquivoteInstance, category, title, content }, callback) {
+    const entity = {
+      cetCode: 'LiquivoteProposal',
+      liquivoteInstance,
+      creationDate: moment().format(dateFormatMeveo),
+      category, title, content
+    };
+
+    const data = {
+      basicAuth,
+      headers: {
+        'Persistence-Mode': 'list',
+      },
+      rawBody: [entity]
+    };
+    WebService.sendPostDirect(this.routePersistenceAPI(), data, callback);
   }
 
   static getVoteDelegations(callback) {
