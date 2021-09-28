@@ -6,6 +6,7 @@ export const kSecureHashKeycloak = 'KeycloakHash';
 export const kTokenKeycloak = 'KeycloakToken';
 export const kAccountKeycloak = 'KeycloakAccount';
 export const kCurrentAppId = 'CurrentAppId';
+export const kOnboardProfile = 'OnboardProfile';
 
 const keys = [
   kAppList,
@@ -13,6 +14,7 @@ const keys = [
   kTokenKeycloak,
   kAccountKeycloak,
   kCurrentAppId,
+  kOnboardProfile,
 ];
 
 class Preferences {
@@ -28,6 +30,8 @@ class Preferences {
   }
 
   async fetch(key) {
+    if (!!this.storage[key]) return this.storage[key];
+
     const data = await AsyncStorage.getItem(key);
     this.storage[key] = data ? JSON.parse(data) : data;
     return this.storage[key];
@@ -96,6 +100,12 @@ class Preferences {
 
   setOnboardProfile(profile) {
     this.onboardProfile = profile;
+    this.save(kOnboardProfile, profile);
+  }
+
+  async getOnboardProfile() {
+    this.onboardProfile = await this.fetch(kOnboardProfile);
+    return this.onboardProfile;
   }
 }
 

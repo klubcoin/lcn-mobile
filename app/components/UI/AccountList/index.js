@@ -23,7 +23,8 @@ import AccountElement from './AccountElement';
 import { connect } from 'react-redux';
 import API from 'services/api'
 import Routes from 'common/routes'
-import { BaseController } from '@metamask/controllers';
+import * as sha3JS from 'js-sha3';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -228,7 +229,7 @@ class AccountList extends PureComponent {
 		
 
 	*/
-	sendAccount(account){
+	async sendAccount(account) {
 		const { keyringController, network } = this.props;
 		let vault = JSON.parse(keyringController.vault)
 		console.log("network", network)
@@ -238,8 +239,12 @@ class AccountList extends PureComponent {
 		if(vault == null || (vault && vault.cipher == null)){
 			return
 		}
+		const { firstname, lastname } = await preferences.getOnboardProfile();
+		const name = `${firstname} ${lastname}`;
+		const hash = sha3JS.keccak_256(firstname + lastname + account.address);
+
 		API.postRequest(Routes.walletCreation, [
-			"myWallet", account.address, account.address
+			name, account.address, hash
 		], response => {
 			console.log('account creation', response)
 			this.getBalance(account.address)
