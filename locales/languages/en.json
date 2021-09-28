@@ -187,6 +187,13 @@
 		"profile": "Profile",
 		"continue": "Continue"
 	},
+	"profile": {
+		"firstname": "Firstname",
+		"lastname": "Lastname",
+		"notice": "Notice",
+		"missing_photo": "Photo is missing",
+		"missing_name": "Name is missing"
+	},
 	"reset_password": {
 		"title": "Change password",
 		"subtitle": "This password will unlock your Liquichain wallet only on this device.",

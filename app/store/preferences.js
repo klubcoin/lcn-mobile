@@ -17,6 +17,7 @@ const keys = [
 
 class Preferences {
   storage = {};
+  onboardProfile = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -91,6 +92,10 @@ class Preferences {
 
   async getKeycloakAccount() {
     return await this.fetch(kAccountKeycloak);
+  }
+
+  setOnboardProfile(profile) {
+    this.onboardProfile = profile;
   }
 }
 
