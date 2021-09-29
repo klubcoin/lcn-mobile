@@ -1,7 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableOpacity, } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableOpacity, ActivityIndicator, } from 'react-native'
 import { strings } from '../../../../../locales/i18n';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
@@ -15,6 +15,7 @@ import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import { TextInput } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
+import ConfirmModal from '../../../UI/ConfirmModal';
 
 
 const styles = StyleSheet.create({
@@ -91,6 +92,8 @@ export class ProposalAddEdit extends PureComponent {
   showTypes = false;
   title = '';
   content = '';
+  confirmDeleteVisible = false;
+  processing = false;
 
   constructor(props) {
     super(props);
@@ -103,6 +106,8 @@ export class ProposalAddEdit extends PureComponent {
       showTypes: observable,
       title: observable,
       content: observable,
+      confirmDeleteVisible: observable,
+      processing: observable,
     })
 
     this.prefs = props.store;
@@ -178,7 +183,12 @@ export class ProposalAddEdit extends PureComponent {
   }
 
   onDelete() {
+    if (this.processing) return;
+    this.processing = true;
+
+    this.confirmDeleteVisible = false;
     APIService.deleteVoteProposal(this.uuid, (success, json) => {
+      this.processing = false;
       if (success) {
         const onDelete = this.props.navigation.getParam('onDelete');
         if (onDelete) onDelete();
@@ -272,6 +282,20 @@ export class ProposalAddEdit extends PureComponent {
     )
   }
 
+  renderConfirmDelete() {
+    return (
+      <ConfirmModal
+        visible={this.confirmDeleteVisible}
+        title={strings('proposal.delete')}
+        message={strings('proposal.confirm_delete_message')}
+        confirmLabel={strings('proposal.yes')}
+        cancelLabel={strings('proposal.no')}
+        onConfirm={() => this.onDelete()}
+        hideModal={() => this.confirmDeleteVisible = false}
+      />
+    )
+  }
+
   render() {
     const editing = !!this.uuid;
 
@@ -342,9 +366,12 @@ export class ProposalAddEdit extends PureComponent {
               <StyledButton
                 type={'danger'}
                 containerStyle={styles.cancel}
-                onPress={this.onDelete.bind(this)}
+                onPress={() => this.confirmDeleteVisible = true}
               >
-                {strings('proposal.delete')}
+                {this.processing
+                  ? <ActivityIndicator color={colors.white} size={18} />
+                  : strings('proposal.delete')
+                }
               </StyledButton> :
               <StyledButton
                 type={'normal'}
@@ -359,6 +386,7 @@ export class ProposalAddEdit extends PureComponent {
 
         {this.renderCategoryModal()}
         {this.renderVoteTypeModal()}
+        {this.renderConfirmDelete()}
       </KeyboardAvoidingView>
     );
   }

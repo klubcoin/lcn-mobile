@@ -380,7 +380,11 @@
 		"missing_title": "Title is missing",
 		"missing_content": "Content is missing",
 		"saved_successfully": "Saved successfully",
-		"delete": "Delete"
+		"delete": "Delete",
+		"cancel": "Cancel",
+		"yes": "Yes",
+		"no": "No",
+		"confirm_delete_message": "Do you confirm to delete?"
 	},
 	"activity_view": {
 		"title": "Activity"
