@@ -24,6 +24,7 @@ export default class APIService {
   static apiGetAppInstances = (cetCode) => APIService.routePersistenceAPI() + `${cetCode}/list`;
   static apiGetWalletContract = (appWallet) => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;
 
+  static apiVoteProposal = (uuid) => APIService.routePersistenceAPI() + `LiquivoteProposal/${uuid}`;
   static apiVoteDelegations = () => APIService.routePersistenceAPI() + `LiquivoteDelegation/list`;
 
   static announcePeerOnlineStatus(peerId, infoHash, left, callback) {
@@ -109,6 +110,11 @@ export default class APIService {
       rawBody: [entity]
     };
     WebService.sendPostDirect(this.routePersistenceAPI(), data, callback);
+  }
+
+  static deleteVoteProposal(uuid, callback) {
+    const data = { basicAuth };
+    WebService.sendDelete(this.apiVoteProposal(uuid), data, callback);
   }
 
   static getVoteDelegations(callback) {
