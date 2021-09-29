@@ -15,6 +15,7 @@ import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import APIService from '../../../../services/APIService';
 import preferences from '../../../../store/preferences';
+import Toast from 'react-native-toast-message';
 
 
 const styles = StyleSheet.create({
@@ -89,6 +90,8 @@ const styles = StyleSheet.create({
   }
 });
 
+const dateFormat = 'YYYY-MM-DD';
+
 export class DelegationAddEdit extends PureComponent {
   static navigationOptions = () => ({ header: null });
 
@@ -125,16 +128,25 @@ export class DelegationAddEdit extends PureComponent {
     this.prefs = props.store;
     this.delegation = props.navigation.getParam('delegation');
 
-    const { category, delegatedTo, fromDate, toDate } = this.delegation || {};
+    const { uuid, category, delegatedTo, fromDate, toDate } = this.delegation || {};
+    this.uuid = uuid;
     this.category = category;
     this.delegee = delegatedTo;
-    this.fromDate = moment(fromDate).format('DD/MM/YYYY');
-    this.toDate = moment(toDate).format('DD/MM/YYYY');
+    this.fromDate = moment(fromDate).format(dateFormat);
+    this.toDate = moment(toDate).format(dateFormat);
   }
 
   componentDidMount() {
     this.fetchData()
-    this.addDelegation();
+  }
+
+  showNotice(message, type) {
+    Toast.show({
+      type: type || 'error',
+      text1: message,
+      text2: strings('profile.notice'),
+      visibilityTime: 1000
+    });
   }
 
   async addDelegation() {
@@ -142,17 +154,20 @@ export class DelegationAddEdit extends PureComponent {
     const wallet = app.uuid;
 
     APIService.createVoteDelegation({
+      uuid: this.uuid,
       voterId: wallet,
-      category: 'test1',
+      category: this.category,
       delegatedTo: wallet,
-      fromDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-      toDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+      fromDate: this.fromDate,
+      toDate: this.toDate,
     }, (success, json) => {
-      console.warn('wowoow', success, json)
-      if (success && json.result) {
-
+      if (success && Array.isArray(json)) {
+        this.showNotice(strings('proposal.saved_successfully'), 'success');
+        const onUpdate = this.props.navigation.getParam('onUpdate');
+        if (onUpdate) onUpdate(json[0]);
+        this.onBack();
       } else {
-        alert(JSON.stringify(json));
+        this.showNotice(json.error);
       }
     })
   }
@@ -167,7 +182,14 @@ export class DelegationAddEdit extends PureComponent {
   }
 
   onSave() {
-    this.onBack();
+    if (!this.delegee) {
+      return this.showNotice(strings('delegation.missing_delegee'));
+    }
+    if (!this.category) {
+      return this.showNotice(strings('delegation.missing_category'));
+    }
+
+    this.addDelegation();
   }
 
   onCancel() {
@@ -283,10 +305,10 @@ export class DelegationAddEdit extends PureComponent {
           <Text style={styles.heading}>{strings('voting.from')}</Text>
           <View style={styles.date}>{
             <DateTimePicker
-              value={new Date()}
+              value={new Date(fromDate)}
               mode={'date'}
               display={'compact'}
-              onChange={(date) => console.warn(date)}
+              onChange={(evt, date) => this.fromDate = moment(date).format(dateFormat)}
             />
           }</View>
 
@@ -294,10 +316,10 @@ export class DelegationAddEdit extends PureComponent {
           <Text style={styles.heading}>{strings('voting.to')}</Text>
           <View style={styles.date}>
             <DateTimePicker
-              value={new Date()}
+              value={new Date(toDate)}
               mode={'date'}
               display={'compact'}
-              onChange={(date) => console.warn(date)}
+              onChange={(evt, date) => this.toDate = moment(date).format(dateFormat)}
             />
           </View>
 

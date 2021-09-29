@@ -386,6 +386,10 @@
 		"no": "No",
 		"confirm_delete_message": "Do you confirm to delete?"
 	},
+	"delegation": {
+		"missing_delegee": "Delegee is missing",
+		"missing_category": "Category is missing"
+	},
 	"activity_view": {
 		"title": "Activity"
 	},
