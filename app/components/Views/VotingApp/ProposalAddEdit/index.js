@@ -108,11 +108,12 @@ export class ProposalAddEdit extends PureComponent {
     this.prefs = props.store;
     this.proposal = props.navigation.getParam('proposal');
 
-    const { category, title, content, type } = this.proposal || {};
+    const { uuid, category, title, content, type } = this.proposal || {};
     this.category = category;
     this.title = title;
     this.content = content;
     this.type = type;
+    this.uuid = uuid;
 
     // this.voteTypes = [this.type];
   }
@@ -173,6 +174,18 @@ export class ProposalAddEdit extends PureComponent {
     }
 
     this.addProposal();
+  }
+
+  onDelete() {
+    APIService.deleteVoteProposal(this.uuid, (success, json) => {
+      if (success) {
+        const onDelete = this.props.navigation.getParam('onDelete');
+        if (onDelete) onDelete();
+        this.onBack();
+      } else {
+        this.showNotice(json.error);
+      }
+    })
   }
 
   onCancel() {
@@ -259,6 +272,8 @@ export class ProposalAddEdit extends PureComponent {
   }
 
   render() {
+    const editing = !!this.uuid;
+
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -322,13 +337,22 @@ export class ProposalAddEdit extends PureComponent {
             >
               {strings('voting.save')}
             </StyledButton>
-            <StyledButton
-              type={'normal'}
-              containerStyle={styles.cancel}
-              onPress={this.onCancel.bind(this)}
-            >
-              {strings('voting.cancel')}
-            </StyledButton>
+            {editing ?
+              <StyledButton
+                type={'danger'}
+                containerStyle={styles.cancel}
+                onPress={this.onDelete.bind(this)}
+              >
+                {strings('proposal.delete')}
+              </StyledButton> :
+              <StyledButton
+                type={'normal'}
+                containerStyle={styles.cancel}
+                onPress={this.onCancel.bind(this)}
+              >
+                {strings('voting.cancel')}
+              </StyledButton>
+            }
           </View>
         </ScrollView>
 

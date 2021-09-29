@@ -379,7 +379,8 @@
 		"missing_category": "Category is missing",
 		"missing_title": "Title is missing",
 		"missing_content": "Content is missing",
-		"saved_successfully": "Saved successfully"
+		"saved_successfully": "Saved successfully",
+		"delete": "Delete"
 	},
 	"activity_view": {
 		"title": "Activity"

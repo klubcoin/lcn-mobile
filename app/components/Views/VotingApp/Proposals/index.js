@@ -129,7 +129,7 @@ export class Proposals extends PureComponent {
   }
 
   openProposal(proposal) {
-    this.props.navigation.navigate('VoteProposalDetails', { proposal })
+    this.props.navigation.navigate('VoteProposalDetails', { proposal, onUpdate: () => this.fetchProposals() })
   }
 
   renderItem({ item }) {
