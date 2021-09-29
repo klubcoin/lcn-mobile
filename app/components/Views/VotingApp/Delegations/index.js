@@ -14,6 +14,8 @@ import NavbarTitle from '../../../UI/NavbarTitle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
+import Toast from 'react-native-toast-message';
+import ConfirmModal from '../../../UI/ConfirmModal';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -97,12 +99,14 @@ export class Delegations extends PureComponent {
 
   delegations = [];
   searchQuery = '';
+  confirmDeleteVisible = false;
 
   constructor(props) {
     super(props);
     makeObservable(this, {
       delegations: observable,
       searchQuery: observable,
+      confirmDeleteVisible: observable,
     })
 
     this.prefs = props.store;
@@ -127,19 +131,48 @@ export class Delegations extends PureComponent {
   }
 
   addDelegation() {
-    this.props.navigation.navigate('VoteDelegationAddEdit')
+    this.props.navigation.navigate('VoteDelegationAddEdit', { onUpdate: () => this.fetchDelegations() })
   }
 
   editDelegation(delegation) {
     this.props.navigation.navigate('VoteDelegationAddEdit', { delegation })
   }
 
-  deleteDelegation() {
-    alert('delete delegation')
+  deleteDelegation(item) {
+    this.itemToDelete = item;
+    this.confirmDeleteVisible = true;
   }
 
   openDelegation(delegation) {
     this.props.navigation.navigate('VoteDelegationDetails', { delegation })
+  }
+
+  showNotice(message, type) {
+    Toast.show({
+      type: type || 'error',
+      text1: message,
+      text2: strings('profile.notice'),
+      visibilityTime: 1000
+    });
+  }
+
+  onDelete() {
+    const uuid = this.itemToDelete.uuid;
+    this.confirmDeleteVisible = false;
+
+    APIService.deleteVoteDelegation(uuid, (success, json) => {
+      if (success) {
+        this.removeFromList(this.itemToDelete);
+      } else {
+        this.showNotice(json.error);
+      }
+    })
+  }
+
+  removeFromList(itemToDelete) {
+    const removeIndex = this.delegations.indexOf(itemToDelete);
+    this.delegations.splice(removeIndex, 1);
+    this.setState({});
   }
 
   renderActiveItem({ item }) {
@@ -165,7 +198,7 @@ export class Delegations extends PureComponent {
             style={styles.addIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.deleteDelegation.bind(this)} style={styles.navButton}>
+        <TouchableOpacity onPress={() => this.deleteDelegation(item)} style={styles.navButton}>
           <Icon
             name={'trash'}
             size={16}
@@ -244,6 +277,20 @@ export class Delegations extends PureComponent {
     )
   }
 
+  renderConfirmDelete() {
+    return (
+      <ConfirmModal
+        visible={this.confirmDeleteVisible}
+        title={strings('proposal.delete')}
+        message={strings('proposal.confirm_delete_message')}
+        confirmLabel={strings('proposal.yes')}
+        cancelLabel={strings('proposal.no')}
+        onConfirm={() => this.onDelete()}
+        hideModal={() => this.confirmDeleteVisible = false}
+      />
+    )
+  }
+
   render() {
     const { navigation } = this.props;
     const filteredItems = this.filterItems();
@@ -298,6 +345,7 @@ export class Delegations extends PureComponent {
               />
             </View>
           </ScrollView>
+          {this.renderConfirmDelete()}
         </KeyboardAvoidingView>
       </Drawer>
     );
