@@ -135,7 +135,7 @@ export class Delegations extends PureComponent {
   }
 
   editDelegation(delegation) {
-    this.props.navigation.navigate('VoteDelegationAddEdit', { delegation })
+    this.props.navigation.navigate('VoteDelegationAddEdit', { delegation, onUpdate: () => this.fetchDelegations() })
   }
 
   deleteDelegation(item) {
