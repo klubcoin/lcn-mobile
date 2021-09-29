@@ -94,12 +94,12 @@ export default class APIService {
     WebService.sendGet(this.apiListVotes(instanceId, voterId), {}, callback);
   }
 
-  static createVoteProposal({ liquivoteInstance, category, title, content }, callback) {
+  static createVoteProposal({ uuid, liquivoteInstance, category, title, content }, callback) {
     const entity = {
       cetCode: 'LiquivoteProposal',
       liquivoteInstance,
       creationDate: moment().format(dateFormatMeveo),
-      category, title, content
+      uuid, category, title, content
     };
 
     const data = {
@@ -110,6 +110,11 @@ export default class APIService {
       rawBody: [entity]
     };
     WebService.sendPostDirect(this.routePersistenceAPI(), data, callback);
+  }
+
+  static getVoteProposal(uuid, callback) {
+    const data = { basicAuth };
+    WebService.sendGetDirect(this.apiVoteProposal(uuid), data, callback);
   }
 
   static deleteVoteProposal(uuid, callback) {
