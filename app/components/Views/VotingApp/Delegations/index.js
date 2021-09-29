@@ -259,7 +259,6 @@ export class Delegations extends PureComponent {
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={'padding'}
-          keyboardVerticalOffset={120}
           enabled={Device.isIos()}
         >
           {this.renderNavBar()}
