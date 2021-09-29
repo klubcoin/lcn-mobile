@@ -45,8 +45,12 @@ const Api = {
     }
     console.log('url', url)
     console.log('fetchOptions', fetchOptions)
-    fetch(url, fetchOptions).then(response => response.json()).then(json => {
-      callback(json)
+    fetch(url, fetchOptions).then(response => response.text()).then(text => {
+      try {
+        callback(JSON.parse(text))
+      } catch (e) {
+        errorCallback && errorCallback(text)
+      }
     }).catch(error => {
       if (errorCallback) {
         errorCallback(error)
