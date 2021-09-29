@@ -1,4 +1,5 @@
 import api from './api'
+import * as base64 from 'base-64';
 
 export default class WebService {
 
@@ -34,6 +35,45 @@ export default class WebService {
     }, (error) => {
       callback(false, error);
     });
+  }
+
+  static sendDelete(url, parameters, callback) {
+    WebService.sendFetch('DELETE', url, parameters, callback);
+  }
+
+  static sendFetch(method, url, parameters, callback) {
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (parameters?.basicAuth) {
+      headers.Authorization = `Basic ${base64.encode(parameters.basicAuth)}`;
+      delete parameters.basicAuth;
+    } else if (parameters?.jwt) {
+      headers.Authorization = `Bearer ${parameters.jwt}`;
+      delete parameters.jwt;
+    }
+    if (parameters.headers) {
+      Object.assign(headers, parameters.headers);
+    }
+    const fetchOptions = {
+      method: method || 'POST',
+      headers,
+      body: JSON.stringify(parameters?.rawBody ? parameters.rawBody : parameters)
+    }
+    console.log('url', url)
+    console.log('fetchOptions', fetchOptions)
+    fetch(url, fetchOptions)
+      .then(response => response.text())
+      .then(text => {
+        try {
+          const json = JSON.parse(text);
+          callback && callback(true, json);
+        } catch (e) {
+          callback && callback(true, text);
+        }
+      })
+      .catch(error => {
+        callback && callback(false, error);
+      })
   }
 }
 
