@@ -26,6 +26,7 @@ export default class APIService {
 
   static apiVoteProposal = (uuid) => APIService.routePersistenceAPI() + `LiquivoteProposal/${uuid}`;
   static apiVoteDelegations = () => APIService.routePersistenceAPI() + `LiquivoteDelegation/list`;
+  static apiVoteDelegation = (uuid) => APIService.routePersistenceAPI() + `LiquivoteDelegation/${uuid}`;
 
   static announcePeerOnlineStatus(peerId, infoHash, left, callback) {
     const data = {
@@ -127,8 +128,9 @@ export default class APIService {
     WebService.sendPostDirect(this.apiVoteDelegations(), data, callback);
   }
 
-  static createVoteDelegation({ voterId, category, delegatedTo, fromDate, toDate }, callback) {
+  static createVoteDelegation({ uuid, voterId, category, delegatedTo, fromDate, toDate }, callback) {
     const entity = {
+      uuid,
       cetCode: 'LiquivoteDelegation',
       voter: voterId,
       category,
@@ -138,6 +140,11 @@ export default class APIService {
     };
 
     APIService.postPersistence(this.routePersistenceAPI(), entity, callback);
+  }
+
+  static deleteVoteDelegation(uuid, callback) {
+    const data = { basicAuth };
+    WebService.sendDelete(this.apiVoteDelegation(uuid), data, callback);
   }
 
   static postPersistence(url, entity, callback) {
