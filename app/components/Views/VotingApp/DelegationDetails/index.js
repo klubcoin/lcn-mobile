@@ -84,7 +84,23 @@ export class DelegationDetails extends PureComponent {
   }
 
   onEdit = () => {
-    this.props.navigation.navigate('VoteDelegationAddEdit', { delegation: this.delegation })
+    const onUpdate = this.props.navigation.getParam('onUpdate');
+    const onDelete = () => {
+      if (onUpdate) onUpdate();
+      this.onBack();
+    }
+    this.props.navigation.navigate('VoteDelegationAddEdit', { delegation: this.delegation, onUpdate: this.onUpdate, onDelete })
+  }
+
+  onUpdate = (delegation) => {
+    const { delegatedTo, category, fromDate, toDate } = delegation.properties;
+    this.delegatedTo = delegatedTo;
+    this.category = category;
+    this.fromDate = moment(fromDate).format('MMM DD YYYY');
+    this.toDate = moment(toDate).format('MMM DD YYYY');
+
+    const onUpdate = this.props.navigation.getParam('onUpdate');
+    if (onUpdate) onUpdate();
   }
 
   renderNavBar() {
