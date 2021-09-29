@@ -14,6 +14,7 @@ import StyledButton from '../../../UI/StyledButton';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import { TextInput } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-toast-message';
 
 
 const styles = StyleSheet.create({
@@ -118,21 +119,21 @@ export class ProposalAddEdit extends PureComponent {
 
   componentDidMount() {
     this.fetchData()
-    this.addProposal()
   }
 
   async addProposal() {
     const app = await preferences.getCurrentApp();
     const voteInstance = app.instance;
+
     APIService.createVoteProposal({
       liquivoteInstance: voteInstance.uuid,
-      category: 'test1',
-      title: 'title test1',
-      content: 'content test1',
+      category: this.category,
+      title: this.title,
+      content: this.content,
     }, (success, json) => {
-      console.warn('wowoow', success, json)
-      if (success && json.result) {
-
+      if (success && Array.isArray(json)) {
+        this.showNotice(strings('proposal.saved_successfully'), 'success');
+        this.onBack();
       } else {
         alert(JSON.stringify(json));
       }
@@ -149,8 +150,27 @@ export class ProposalAddEdit extends PureComponent {
     this.props.navigation.goBack();
   }
 
+  showNotice(message, type) {
+    Toast.show({
+      type: type || 'error',
+      text1: message,
+      text2: strings('profile.notice'),
+      visibilityTime: 1000
+    });
+  }
+
   onSave() {
-    this.onBack();
+    if (!this.category) {
+      return this.showNotice(strings('proposal.missing_category'));
+    }
+    if (!this.title) {
+      return this.showNotice(strings('proposal.missing_title'));
+    }
+    if (!this.content) {
+      return this.showNotice(strings('proposal.missing_content'));
+    }
+
+    this.addProposal();
   }
 
   onCancel() {

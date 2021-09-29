@@ -375,6 +375,12 @@
 		"from": "From",
 		"to": "To"
 	},
+	"proposal": {
+		"missing_category": "Category is missing",
+		"missing_title": "Title is missing",
+		"missing_content": "Content is missing",
+		"saved_successfully": "Saved successfully"
+	},
 	"activity_view": {
 		"title": "Activity"
 	},
