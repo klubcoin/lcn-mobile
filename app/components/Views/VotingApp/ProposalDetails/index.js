@@ -109,7 +109,17 @@ export class ProposalDetails extends PureComponent {
       if (onUpdate) onUpdate();
       this.onBack();
     }
-    this.props.navigation.navigate('VoteProposalAddEdit', { proposal: this.proposal, onDelete })
+    this.props.navigation.navigate('VoteProposalAddEdit', { proposal: this.proposal, onUpdate: this.onUpdate, onDelete })
+  }
+
+  onUpdate = (proposal) => {
+    const { category, title, content } = proposal.properties;
+    this.category = category;
+    this.title = title;
+    this.content = content;
+
+    const onUpdate = this.props.navigation.getParam('onUpdate');
+    if (onUpdate) onUpdate();
   }
 
   async approveProposal() {

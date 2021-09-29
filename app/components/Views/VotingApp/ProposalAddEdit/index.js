@@ -131,11 +131,12 @@ export class ProposalAddEdit extends PureComponent {
       category: this.category,
       title: this.title,
       content: this.content,
+      uuid: this.uuid,
     }, (success, json) => {
       if (success && Array.isArray(json)) {
         this.showNotice(strings('proposal.saved_successfully'), 'success');
         const onUpdate = this.props.navigation.getParam('onUpdate');
-        if (onUpdate) onUpdate([json[0]]);
+        if (onUpdate) onUpdate(json[0]);
         this.onBack();
       } else {
         alert(JSON.stringify(json));
