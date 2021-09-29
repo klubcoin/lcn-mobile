@@ -81,7 +81,7 @@ const menuItems = () => [
     key: 'home',
     title: strings('voting.home'),
     icon: 'home',
-    screen: 'Home',
+    screen: 'WalletView',
   },
   {
     key: 'votes',
@@ -107,7 +107,7 @@ const menuSettings = {
   key: 'settings',
   title: strings('voting.settings'),
   icon: 'cog',
-  screen: 'VoteSettings',
+  screen: 'Settings',
 };
 
 export class VoteDrawer extends Component {
@@ -125,11 +125,7 @@ export class VoteDrawer extends Component {
 
     if (key == menuKey) return;
 
-    if (key == 'home') {
-      navigation.navigate('WalletView');
-    } else {
-      navigation.navigate(screen);
-    }
+    navigation.navigate(screen);
   }
 
   renderItem({ item }) {
