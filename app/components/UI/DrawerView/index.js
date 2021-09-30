@@ -429,7 +429,9 @@ class DrawerView extends PureComponent {
 			let tokenFound = false;
 
 			this.props.tokens.forEach(token => {
-				if (token && token.address && this.props.tokenBalances[token.address] && !this.props.tokenBalances[token.address]?.isZero()) {
+				if (token && token.address && this.props.tokenBalances[token.address]
+					&& this.props.tokenBalances[token.address]?.isZero
+					&& !this.props.tokenBalances[token.address]?.isZero()) {
 					tokenFound = true;
 				}
 			});
