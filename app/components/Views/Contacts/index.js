@@ -186,6 +186,7 @@ class Contacts extends PureComponent {
   onConfirm() {
     const { selectedContacts } = this.state;
     const onConfirm = this.props.navigation.getParam('onConfirm');
+    this.props.navigation.goBack();
     if (onConfirm) onConfirm(selectedContacts);
   }
 

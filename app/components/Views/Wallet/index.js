@@ -312,13 +312,13 @@ class Wallet extends PureComponent {
 		this.socketRef.emit('join', selectedAddress)
 	}
 
-	handleOffer(incoming) {
+	handleOffer = (incoming) => {
 		/*
 			Here we are exchanging config information
 			between the peers to establish communication
 		*/
 		console.log("[INFO] Handling Offer")
-		this.peerRef = Peer();
+		this.peerRef = this.Peer(incoming.caller);
 		this.peerRef.ondatachannel = (event) => {
 			this.sendChannel = event.channel;
 			this.sendChannel.onmessage = this.handleReceiveMessage;
@@ -411,6 +411,8 @@ class Wallet extends PureComponent {
 	}
 
 	handleNegotiationNeededEvent = (userID) => {
+		const { selectedAddress } = this.props;
+
 		// Offer made by the initiating peer to the receiving peer.
 		this.peerRef.createOffer().then(offer => {
 			return this.peerRef.setLocalDescription(offer);
@@ -418,7 +420,7 @@ class Wallet extends PureComponent {
 			.then(() => {
 				const payload = {
 					target: userID,
-					caller: this.socketRef.id,
+					caller: selectedAddress,
 					sdp: this.peerRef.localDescription,
 				};
 				this.socketRef.emit("offer", payload);
@@ -427,12 +429,12 @@ class Wallet extends PureComponent {
 	}
 
 	connectWebRTC = () => {
-		console.log('=========> starting webrtc')
 		this.props.navigation.navigate('Contacts', {
 			contactSelection: true,
-			onConfirm: (contact) => this.connectToUser(contact[0].address)
+			onConfirm: (contacts) => {
+				this.connectToUser(contacts[0].address);
+			}
 		})
-		console.log('=========> complete webrtc')
 	}
 
 	connectToUser(userID) {
