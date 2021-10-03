@@ -318,6 +318,7 @@ class Wallet extends PureComponent {
 			between the peers to establish communication
 		*/
 		console.log("[INFO] Handling Offer")
+		this.otherUserId = incoming.caller;
 		this.peerRef = this.Peer(incoming.caller);
 		this.peerRef.ondatachannel = (event) => {
 			this.sendChannel = event.channel;
