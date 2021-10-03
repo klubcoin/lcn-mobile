@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { TextInput, RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -100,7 +100,9 @@ class Wallet extends PureComponent {
 
 	state = {
 		refreshing: false,
-		currentConversion: null
+		currentConversion: null,
+		webrtcMessage: '',
+		webrtcConnected: false
 	};
 
 	accountOverviewRef = React.createRef();
@@ -267,13 +269,35 @@ class Wallet extends PureComponent {
 						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
 					)
 				}
-				<StyledButton
-					type={'confirm'}
-					containerStyle={{ with: 240 }}
-					onPress={this.connectWebRTC}
-				>
-					{'WebRTC'}
-				</StyledButton>
+				<View>
+					<TextInput
+						multiline={true}
+						numberOfLines={4}
+						value={this.state.webrtcMessage}
+						onChangeText={text => {
+							this.setState({ webrtcMessage: text });
+							if (this.sendChannel) {
+								this.sendChannel.send(text);
+							}
+						}}
+						style={{
+							height: 100,
+							marginVertical: 10,
+							paddingHorizontal: 10,
+							marginHorizontal: 20,
+							borderRadius: 4,
+							borderColor: this.state.webrtcConnected ? colors.blue : colors.grey400,
+							borderWidth: this.state.webrtcConnected ? 2 : StyleSheet.hairlineWidth,
+						}}
+					/>
+					<StyledButton
+						type={'confirm'}
+						containerStyle={{ marginHorizontal: 20 }}
+						onPress={this.connectWebRTC}
+					>
+						{'WebRTC'}
+					</StyledButton>
+				</View>
 				<ScrollableTabView
 					renderTabBar={this.renderTabBar}
 					// eslint-disable-next-line react/jsx-no-bind
@@ -324,6 +348,7 @@ class Wallet extends PureComponent {
 			this.sendChannel = event.channel;
 			this.sendChannel.onmessage = this.handleReceiveMessage;
 			console.log('[SUCCESS] Connection established')
+			this.setState({ webrtcConnected: true });
 		}
 
 		/*
@@ -358,11 +383,13 @@ class Wallet extends PureComponent {
 		// Handle answer by the receiving peer
 		const desc = new RTCSessionDescription(message.sdp);
 		this.peerRef.setRemoteDescription(desc).catch(e => console.log("Error handle answer", e));
+		this.setState({ webrtcConnected: true });
 	}
 
 	handleReceiveMessage = (e) => {
 		// Listener for receiving messages from the peer
 		console.log("[INFO] Message received from peer", e.data);
+		this.setState({ webrtcMessage: e.data });
 	};
 
 	handleNewICECandidateMsg = (incoming) => {
