@@ -18,7 +18,12 @@ import { strings } from '../../../../locales/i18n';
 import { DrawerActions } from 'react-navigation-drawer';
 import Modal from 'react-native-modal';
 import SecureKeychain from '../../../core/SecureKeychain';
-import { toggleNetworkModal, toggleAccountsModal, toggleReceiveModal, toggleConfirmLogoutModal } from '../../../actions/modals';
+import {
+	toggleNetworkModal,
+	toggleAccountsModal,
+	toggleReceiveModal,
+	toggleConfirmLogoutModal
+} from '../../../actions/modals';
 import { showAlert } from '../../../actions/alert';
 import { getEtherscanAddressUrl, getEtherscanBaseUrl } from '../../../util/etherscan';
 import Engine from '../../../core/Engine';
@@ -41,9 +46,9 @@ import InvalidCustomNetworkAlert from '../InvalidCustomNetworkAlert';
 import { RPC } from '../../../constants/network';
 import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorState } from '../../../util/general';
 import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
-import Colors from 'common/colors'
-import Helper from 'common/Helper'
-import Routes from '../../../common/routes'
+import Colors from 'common/colors';
+import Helper from 'common/Helper';
+import Routes from '../../../common/routes';
 import ConfirmLogout from '../ConfirmLogout';
 import ConfirmInputModal from '../ConfirmInputModal';
 import CryptoSignature from '../../../core/CryptoSignature';
@@ -429,9 +434,13 @@ class DrawerView extends PureComponent {
 			let tokenFound = false;
 
 			this.props.tokens.forEach(token => {
-				if (token && token.address && this.props.tokenBalances[token.address]
-					&& this.props.tokenBalances[token.address]?.isZero
-					&& !this.props.tokenBalances[token.address]?.isZero()) {
+				if (
+					token &&
+					token.address &&
+					this.props.tokenBalances[token.address] &&
+					this.props.tokenBalances[token.address]?.isZero &&
+					!this.props.tokenBalances[token.address]?.isZero()
+				) {
 					tokenFound = true;
 				}
 			});
@@ -472,9 +481,9 @@ class DrawerView extends PureComponent {
 
 	toggleEditWalletName = () => {
 		this.setState({ editWalletNameVisible: !this.state.editWalletNameVisible });
-	}
+	};
 
-	saveWalletName = async (name) => {
+	saveWalletName = async name => {
 		const { selectedAddress } = this.props;
 		const { PreferencesController } = Engine.context;
 
@@ -482,18 +491,21 @@ class DrawerView extends PureComponent {
 		const message = `"${name}","${address}"`;
 		const signature = await CryptoSignature.signMessage(address, message);
 
-		API.postRequest(Routes.walletUpdate, [
-			name, address, signature
-		], response => {
-			if (response.error) {
-				alert(`${response.error.message}`)
-			} else {
-				PreferencesController.setAccountLabel(selectedAddress, name);
+		API.postRequest(
+			Routes.walletUpdate,
+			[name, address, signature],
+			response => {
+				if (response.error) {
+					alert(`${response.error.message}`);
+				} else {
+					PreferencesController.setAccountLabel(selectedAddress, name);
+				}
+			},
+			error => {
+				alert(`${error.toString()}`);
 			}
-		}, error => {
-			alert(`${error.toString()}`)
-		})
-	}
+		);
+	};
 
 	toggleReceiveModal = () => {
 		this.props.toggleReceiveModal();
@@ -563,6 +575,12 @@ class DrawerView extends PureComponent {
 		this.props.navigation.navigate('TransactionsHome');
 		this.hideDrawer();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_TRANSACTION_HISTORY);
+	};
+
+	goToFilesManager = () => {
+		this.props.navigation.navigate('FilesManagerHome');
+		this.hideDrawer();
+		// this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_TRANSACTION_HISTORY);
 	};
 
 	gotoContacts = () => {
@@ -751,6 +769,13 @@ class DrawerView extends PureComponent {
 					selectedIcon: this.getAntDesignIcon('contacts'),
 					action: this.gotoContacts,
 					routeNames: ['Contacts']
+				},
+				{
+					name: strings('drawer.files_manager'),
+					icon: this.getAntDesignIcon('contacts'),
+					selectedIcon: this.getAntDesignIcon('contacts'),
+					action: this.goToFilesManager,
+					routeNames: ['FilesManager']
 				}
 			],
 			[
@@ -891,11 +916,15 @@ class DrawerView extends PureComponent {
 		} = this.props;
 
 		const { invalidCustomNetwork, showProtectWalletModal, editWalletNameVisible } = this.state;
-		let account, balance, conversion
+		let account, balance, conversion;
 		if (accounts && accounts[selectedAddress]) {
 			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
-			balance = typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00'
-			conversion = typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
+			balance =
+				typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00';
+			conversion =
+				typeof accounts[selectedAddress].conversion != 'undefined'
+					? accounts[selectedAddress].conversion
+					: null;
 		}
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
 		return (
@@ -905,20 +934,29 @@ class DrawerView extends PureComponent {
 						<View style={styles.metamaskLogo}>
 							{/*<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
 														<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-							<View style={{
-								marginTop: 10,
-								flexDirection: 'row',
-								alignItems: 'center'
-							}}>
-								<Image source={require('../../../images/logo.png')} style={{
-									width: 30,
-									height: 30
-								}} />
-								<Text style={{
-									fontSize: 20,
-									color: '#370e75',
-									fontWeight: 'bold'
-								}}>LIQUICHAIN</Text>
+							<View
+								style={{
+									marginTop: 10,
+									flexDirection: 'row',
+									alignItems: 'center'
+								}}
+							>
+								<Image
+									source={require('../../../images/logo.png')}
+									style={{
+										width: 30,
+										height: 30
+									}}
+								/>
+								<Text
+									style={{
+										fontSize: 20,
+										color: '#370e75',
+										fontWeight: 'bold'
+									}}
+								>
+									LIQUICHAIN
+								</Text>
 							</View>
 						</View>
 					</View>
@@ -939,26 +977,26 @@ class DrawerView extends PureComponent {
 								testID={'navbar-account-button'}
 							>
 								<View style={styles.accountNameWrapper}>
-									{
-										account && (
-											<Text style={styles.accountName} numberOfLines={1}>
-												{account.name}
-											</Text>
-										)
-									}
+									{account && (
+										<Text style={styles.accountName} numberOfLines={1}>
+											{account.name}
+										</Text>
+									)}
 									<Icon name="caret-down" size={24} style={styles.caretDown} />
 								</View>
-								{isMainNet(chainId) && <Text style={styles.accountBalance}>{Helper.convertToEur(balance, conversion)}</Text>}
+								{isMainNet(chainId) && (
+									<Text style={styles.accountBalance}>
+										{Helper.convertToEur(balance, conversion)}
+									</Text>
+								)}
 
-								{
-									account && (
-										<EthereumAddress
-											address={account.address}
-											style={styles.accountAddress}
-											type={'short'}
-										/>
-									)
-								}
+								{account && (
+									<EthereumAddress
+										address={account.address}
+										style={styles.accountAddress}
+										type={'short'}
+									/>
+								)}
 								{this.isCurrentAccountImported() && (
 									<View style={styles.importedWrapper}>
 										<Text numberOfLines={1} style={styles.importedText}>
@@ -1139,7 +1177,7 @@ class DrawerView extends PureComponent {
 					value={account?.name}
 					confirmLabel={strings('drawer.save')}
 					cancelLabel={strings('drawer.cancel')}
-					onConfirm={(text) => this.saveWalletName(text)}
+					onConfirm={text => this.saveWalletName(text)}
 					hideModal={this.toggleEditWalletName}
 				/>
 				{/*this.renderProtectModal()*/}

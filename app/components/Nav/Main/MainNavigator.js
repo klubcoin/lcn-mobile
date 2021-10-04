@@ -50,7 +50,7 @@ import ActivityView from '../../Views/ActivityView';
 import SwapsAmountView from '../../UI/Swaps';
 import SwapsQuotesView from '../../UI/Swaps/QuotesView';
 import PayPal from '../../UI/FiatOrders/Payments/PayPal';
-import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase'
+import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase';
 import PayQR from '../../Views/PayQRFlow/PayQR';
 import VotingApp from '../../Views/VotingApp';
 import Contacts from '../../Views/Contacts';
@@ -63,6 +63,7 @@ import VoteDelegationDetails from '../../Views/VotingApp/DelegationDetails';
 import VoteDelegationAddEdit from '../../Views/VotingApp/DelegationAddEdit';
 import Profile from '../../Views/Profile';
 import ProfileOnboard from '../../Views/ProfileOnboard';
+import FilesManager from '../../Views/FilesManager';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -111,25 +112,25 @@ export default createStackNavigator(
 							screen: VotingApp
 						},
 						VoteDetails: {
-							screen: VoteDetails,
+							screen: VoteDetails
 						},
 						VoteProposals: {
-							screen: VoteProposals,
+							screen: VoteProposals
 						},
 						VoteProposalDetails: {
 							screen: VoteProposalDetails
 						},
 						VoteProposalAddEdit: {
-							screen: VoteProposalAddEdit,
+							screen: VoteProposalAddEdit
 						},
 						VoteDelegations: {
-							screen: VoteDelegations,
+							screen: VoteDelegations
 						},
 						VoteDelegationDetails: {
 							screen: VoteDelegationDetails
 						},
 						VoteDelegationAddEdit: {
-							screen: VoteDelegationAddEdit,
+							screen: VoteDelegationAddEdit
 						}
 					}),
 					BrowserTabHome: createStackNavigator({
@@ -143,6 +144,11 @@ export default createStackNavigator(
 					TransactionsHome: createStackNavigator({
 						TransactionsView: {
 							screen: ActivityView
+						}
+					}),
+					FilesManagerHome: createStackNavigator({
+						FilesManager: {
+							screen: FilesManager
 						}
 					})
 				},
@@ -265,7 +271,7 @@ export default createStackNavigator(
 			screen: createStackNavigator({
 				PayQR: {
 					screen: PayQR
-				},
+				}
 			})
 		},
 		ApprovalView: {
