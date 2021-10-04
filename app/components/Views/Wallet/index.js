@@ -23,6 +23,7 @@ import Routes from 'common/routes';
 import StyledButton from '../../UI/StyledButton';
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc'
 import io from 'socket.io-client';
+import WebRTC from '../../../services/WebRTC';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -110,6 +111,15 @@ class Wallet extends PureComponent {
 	mounted = false;
 
 	componentDidMount = () => {
+		const { selectedAddress } = this.props;
+		this.webrtc = new WebRTC(selectedAddress);
+
+		this.webrtc.addListener('ready', (sendChannel) => {
+			this.sendChannel = sendChannel;
+			this.setState({ webrtcConnected: true });
+		});
+		this.webrtc.addListener('message', (message) => this.setState({ webrtcMessage: message }));
+
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 			AssetsDetectionController.detectAssets();
@@ -119,7 +129,7 @@ class Wallet extends PureComponent {
 			this.mounted = true;
 		});
 		this.getCurrentConversion()
-		this.initSocket();
+		//this.initSocket();
 	};
 
 	async getWalletInfo() {
@@ -460,7 +470,8 @@ class Wallet extends PureComponent {
 		this.props.navigation.navigate('Contacts', {
 			contactSelection: true,
 			onConfirm: (contacts) => {
-				this.connectToUser(contacts[0].address);
+				// this.connectToUser(contacts[0].address);
+				this.webrtc.connectTo(contacts[0].address);
 			}
 		})
 	}
