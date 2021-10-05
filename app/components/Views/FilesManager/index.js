@@ -5,16 +5,19 @@ import { strings } from '../../../../locales/i18n';
 import { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors, fontStyles } from '../../../styles/common';
+import CustomButton from '../../Base/CustomButton';
 
 const files = [
-	{ filename: 'Work flow.xd', size: 12.5 },
-	{ filename: 'Client feedback.docx', size: 29 },
-	{ filename: 'Playlist .docx', size: 15 },
-	{ filename: 'Token.docx', size: 30 }
+	{ filename: 'Work flow.xd', size: '12.5 MB' },
+	{ filename: 'Client feedback.docx', size: '29 MB' },
+	{ filename: 'Playlist.docx', size: '15 MB' },
+	{ filename: 'Token.docx', size: '30 MB' }
 ];
 
-const openSeaLogo = require('../../../images/file_ic.png'); // eslint-disable-line
-
+const fileLogo = require('../../../images/file_ic.png');
+const checkFile = () => {
+	console.log('check file');
+};
 export default class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
 
@@ -33,9 +36,9 @@ export default class FilesManager extends Component {
 				</View>
 				<View style={styles.files}>
 					{files.map(e => (
-						<TouchableHighlight onPress={() => console.log('hello')} underlayColor={colors.grey000}>
+						<TouchableHighlight onPress={checkFile} underlayColor={colors.grey000}>
 							<View style={styles.fileContainer}>
-								<Image source={openSeaLogo} style={{ width: 40, height: 40 }} />
+								<Image source={fileLogo} style={{ width: 40, height: 40 }} />
 								<View>
 									<Text style={styles.fileName}>{e.filename}</Text>
 									<Text style={styles.fileSize}>{e.size}</Text>
@@ -44,7 +47,7 @@ export default class FilesManager extends Component {
 						</TouchableHighlight>
 					))}
 				</View>
-				<Button title="Back up now" />
+				<CustomButton title="Back up now" onPress={() => console.log('hello')} style={styles.customButton} />
 			</View>
 		);
 	}
@@ -56,7 +59,6 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		height: '30%',
-		// backgroundColor: colors.primary,
 		borderRadius: 30
 	},
 	searchSection: {
@@ -92,5 +94,9 @@ const styles = StyleSheet.create({
 	},
 	fileSize: {
 		fontSize: 14
+	},
+	customButton: {
+		position: 'absolute',
+		bottom: 30
 	}
 });
