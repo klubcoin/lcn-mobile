@@ -8,7 +8,7 @@ export default function FileItem({ item, onClick }) {
 
 	const checkFile = id => {
 		setChecked(!checked);
-		// onClick(id);
+		onClick(id);
 	};
 	const [checked, setChecked] = useState(false);
 

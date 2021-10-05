@@ -8,6 +8,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import CustomButton from '../../Base/CustomButton';
 import { color } from 'react-native-reanimated';
 import FileItem from './components/FileItem';
+import LottieView from 'lottie-react-native';
 
 const files = [
 	{ id: 0, filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
@@ -19,25 +20,61 @@ const files = [
 export default class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
 
+	state = {
+		isLoading: false,
+		selectedIds: []
+	};
+
+	onBackup = () => {
+		if (this.state.selectedIds.length <= 0) return;
+		this.setState({ isLoading: true });
+	};
+
+	onFileClick = id => {
+		let selectedIds = this.state.selectedIds;
+
+		if (selectedIds.includes(id)) {
+			let filteredArray = this.state.selectedIds.filter(item => item !== id);
+			this.setState({ selectedIds: filteredArray });
+		} else {
+			selectedIds.push(id);
+			this.setState({ selectedIds: selectedIds });
+		}
+	};
+
 	render() {
+		if (this.state.isLoading) {
+			setTimeout(() => this.setState({ isLoading: false }), 2000);
+			return <LottieView loop autoPlay source={require('../../../animations/uploading-files.json')} />;
+		}
+
 		return (
 			<View style={styles.container}>
-				<View style={styles.searchSection}>
-					<Icon name="search" size={22} style={styles.icon} />
-					<TextInput
-						style={styles.textInput}
-						value={''}
-						placeholder={`${strings('contacts.search')}...`}
-						placeholderTextColor={colors.grey100}
-						onChangeText={this.handleSearch}
+				<View style={{ flex: 1 }}>
+					<View style={styles.searchSection}>
+						<Icon name="search" size={22} style={styles.icon} />
+						<TextInput
+							style={styles.textInput}
+							value={''}
+							placeholder={`${strings('contacts.search')}...`}
+							placeholderTextColor={colors.grey100}
+							onChangeText={this.handleSearch}
+						/>
+					</View>
+					<View style={styles.files}>
+						{files.map(e => (
+							<FileItem item={e} onClick={id => this.onFileClick(id)} />
+						))}
+					</View>
+					<CustomButton
+						title="Back up now"
+						onPress={this.onBackup}
+						style={[
+							styles.customButton,
+							{ backgroundColor: this.state.selectedIds.length <= 0 ? colors.grey100 : colors.primaryFox }
+						]}
 					/>
 				</View>
-				<View style={styles.files}>
-					{files.map(e => (
-						<FileItem item={e} />
-					))}
-				</View>
-				<CustomButton title="Back up now" onPress={() => console.log('hello')} style={styles.customButton} />
 			</View>
 		);
 	}
@@ -64,7 +101,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		flex: 1,
 		height: 30,
-		...fontStyles.normal
+		marginLeft: 5
 	},
 	files: {
 		padding: 15
