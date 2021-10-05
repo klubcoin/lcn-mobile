@@ -63,7 +63,7 @@ export default class WebRTC {
     this.sendChannels[address] = this.peerRef.createDataChannel('sendChannel');
 
     // listen to incoming messages from other peer
-    this.sendChannels[address].onmessage = this.handleReceiveMessage;
+    this.sendChannels[address].onmessage = (message) => this.handleReceiveMessage(message, address);
   }
 
   handleConnected = () => {
@@ -79,7 +79,7 @@ export default class WebRTC {
     this.peerRef = this.Peer(incoming.caller);
     this.peerRef.ondatachannel = (event) => {
       this.sendChannels[peerId] = event.channel;
-      this.sendChannels[peerId].onmessage = this.handleReceiveMessage;
+      this.sendChannels[peerId].onmessage = (message) => this.handleReceiveMessage(message, peerId);
       console.log('[SUCCESS] Connection established')
       if (this.onReady) this.onReady(this.sendChannels[peerId]);
     }
@@ -114,10 +114,10 @@ export default class WebRTC {
     if (this.onReady) this.onReady(this.sendChannels[message.caller]);
   }
 
-  handleReceiveMessage = (e) => {
+  handleReceiveMessage = (e, peer) => {
     // Listener for receiving messages from the peer
     console.log('[INFO] Message received from peer', e.data);
-    if (this.onMessage) this.onMessage(e.data);
+    if (this.onMessage) this.onMessage(e.data, peer);
   }
 
   handleNewICECandidateMsg = (incoming) => {
@@ -127,7 +127,7 @@ export default class WebRTC {
       .catch(err => this.onError && this.onError(err));
   }
 
-  Peer = (userID) => {
+  Peer = (peerId) => {
     const peer = new RTCPeerConnection({
       iceServers: [
         {
@@ -140,9 +140,9 @@ export default class WebRTC {
         },
       ]
     });
-    peer.peerId = userID;
+    peer.peerId = peerId;
     peer.onicecandidate = this.handleICECandidateEvent;
-    peer.onnegotiationneeded = () => this.handleNegotiationNeededEvent(userID);
+    peer.onnegotiationneeded = () => this.handleNegotiationNeededEvent(peerId);
     return peer;
   }
 
@@ -163,7 +163,7 @@ export default class WebRTC {
     }
   }
 
-  handleNegotiationNeededEvent = (userID) => {
+  handleNegotiationNeededEvent = (peerId) => {
     // Offer made by the initiating peer to the receiving peer.
     this.peerRef.createOffer()
       .then(offer => {
@@ -171,12 +171,17 @@ export default class WebRTC {
       })
       .then(() => {
         const payload = {
-          target: userID,
+          target: peerId,
           caller: this.fromUserId,
           sdp: this.peerRef.localDescription,
         };
         this.sendSignal('offer', payload);
       })
       .catch(err => this.onError && this.onError(err));
+  }
+
+  sendToPeer(peerId, message) {
+    const channel = this.sendChannels[peerId];
+    channel && channel.send(message);
   }
 }
