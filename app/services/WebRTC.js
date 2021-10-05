@@ -4,7 +4,7 @@ import Messaging, { Message, WSEvent } from './Messaging';
 
 export default class WebRTC {
   fromUserId = '';
-  otherUserId = '';
+  sendChannels = {};
 
   onReady = null;
   onMessage = null;
@@ -50,7 +50,7 @@ export default class WebRTC {
   }
 
   sendSignal = (signal, payload) => {
-    const message = Message(this.otherUserId, {
+    const message = Message(payload.target, {
       webrtc: true,
       signal,
       ...payload,
@@ -59,13 +59,11 @@ export default class WebRTC {
   }
 
   connectTo = (address) => {
-    this.otherUserId = address;
-
     this.peerRef = this.Peer(address);
-    this.sendChannel = this.peerRef.createDataChannel('sendChannel');
+    this.sendChannels[address] = this.peerRef.createDataChannel('sendChannel');
 
     // listen to incoming messages from other peer
-    this.sendChannel.onmessage = this.handleReceiveMessage;
+    this.sendChannels[address].onmessage = this.handleReceiveMessage;
   }
 
   handleConnected = () => {
@@ -73,17 +71,17 @@ export default class WebRTC {
   }
 
   handleOffer = (incoming) => {
-    this.otherUserId = incoming.caller;
+    const peerId = incoming.caller;
     /*
       Here we are exchanging config information
       between the peers to establish communication
     */
     this.peerRef = this.Peer(incoming.caller);
     this.peerRef.ondatachannel = (event) => {
-      this.sendChannel = event.channel;
-      this.sendChannel.onmessage = this.handleReceiveMessage;
+      this.sendChannels[peerId] = event.channel;
+      this.sendChannels[peerId].onmessage = this.handleReceiveMessage;
       console.log('[SUCCESS] Connection established')
-      if (this.onReady) this.onReady(this.sendChannel);
+      if (this.onReady) this.onReady(this.sendChannels[peerId]);
     }
 
     /*
@@ -113,7 +111,7 @@ export default class WebRTC {
     this.peerRef.setRemoteDescription(desc)
       .catch(err => this.onError && this.onError(err));
 
-    if (this.onReady) this.onReady(this.sendChannel);
+    if (this.onReady) this.onReady(this.sendChannels[message.caller]);
   }
 
   handleReceiveMessage = (e) => {
@@ -142,6 +140,7 @@ export default class WebRTC {
         },
       ]
     });
+    peer.peerId = userID;
     peer.onicecandidate = this.handleICECandidateEvent;
     peer.onnegotiationneeded = () => this.handleNegotiationNeededEvent(userID);
     return peer;
@@ -157,7 +156,7 @@ export default class WebRTC {
     */
     if (e.candidate) {
       const payload = {
-        target: this.otherUserId,
+        target: e.target.peerId,
         candidate: e.candidate,
       }
       this.sendSignal('ice-candidate', payload);
