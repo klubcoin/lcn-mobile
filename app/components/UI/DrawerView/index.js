@@ -578,7 +578,7 @@ class DrawerView extends PureComponent {
 	};
 
 	goToFilesManager = () => {
-		this.props.navigation.navigate('FilesManagerHome');
+		this.props.navigation.navigate('FilesManager');
 		this.hideDrawer();
 		// this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_TRANSACTION_HISTORY);
 	};
@@ -772,7 +772,7 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.files_manager'),
-					icon: this.getAntDesignIcon('contacts'),
+					icon: this.getIcon('folder'),
 					selectedIcon: this.getAntDesignIcon('contacts'),
 					action: this.goToFilesManager,
 					routeNames: ['FilesManager']

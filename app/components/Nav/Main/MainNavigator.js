@@ -100,6 +100,9 @@ export default createStackNavigator(
 						Contacts: {
 							screen: Contacts
 						},
+						FilesManager: {
+							screen: FilesManager
+						},
 						ContactForm: {
 							screen: ContactForm
 						},
@@ -145,12 +148,12 @@ export default createStackNavigator(
 						TransactionsView: {
 							screen: ActivityView
 						}
-					}),
-					FilesManagerHome: createStackNavigator({
-						FilesManager: {
-							screen: FilesManager
-						}
 					})
+					// FilesManagerHome: createStackNavigator({
+					// 	FilesManager: {
+					// 		screen: FilesManager
+					// 	}
+					// })
 				},
 				{
 					defaultNavigationOptions: () => ({

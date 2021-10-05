@@ -9,6 +9,7 @@ import CustomButton from '../../Base/CustomButton';
 import { color } from 'react-native-reanimated';
 import FileItem from './components/FileItem';
 import LottieView from 'lottie-react-native';
+import * as FilesReader from '../../../util/files-reader';
 
 const files = [
 	{ id: 0, filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
@@ -25,9 +26,8 @@ export default class FilesManager extends Component {
 		selectedIds: []
 	};
 
-	onBackup = () => {
-		if (this.state.selectedIds.length <= 0) return;
-		this.setState({ isLoading: true, selectedIds: [] });
+	onBackup = async () => {
+		await FilesReader.pickMultiple();
 	};
 
 	onFileClick = id => {
@@ -66,14 +66,7 @@ export default class FilesManager extends Component {
 							<FileItem item={e} onClick={id => this.onFileClick(id)} />
 						))}
 					</View>
-					<CustomButton
-						title="Back up now"
-						onPress={this.onBackup}
-						style={[
-							styles.customButton,
-							{ backgroundColor: this.state.selectedIds.length <= 0 ? colors.grey100 : colors.primaryFox }
-						]}
-					/>
+					<CustomButton title="Back up another file" onPress={this.onBackup} style={styles.customButton} />
 				</View>
 			</View>
 		);
