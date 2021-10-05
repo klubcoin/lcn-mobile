@@ -1,9 +1,6 @@
-import routes from '../common/routes';
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc'
-import io from 'socket.io-client';
+import Messaging, { Message, WSEvent } from './Messaging';
 
-
-const SignalServer = 'http://192.168.0.187:9000';
 
 export default class WebRTC {
   fromUserId = '';
@@ -33,15 +30,32 @@ export default class WebRTC {
   }
 
   initSocket = () => {
-    this.socketRef = io(SignalServer, {
-      reconnectionDelayMax: 10000,
-      query: { auth: routes.mainNetWork.name },
-    });
+    this.messaging = new Messaging(this.fromUserId);
+    this.messaging.on(WSEvent.ready, this.handleConnected.bind(this))
+    this.messaging.on(WSEvent.message, this.handleWebRtcMessage.bind(this))
+    this.messaging.initConnection();
+  }
 
-    this.socketRef.on('connected', this.handleConnected);
-    this.socketRef.on('offer', this.handleOffer);
-    this.socketRef.on('answer', this.handleAnswer);
-    this.socketRef.on('ice-candidate', this.handleNewICECandidateMsg);
+  handleWebRtcMessage = (message) => {
+    try {
+      const data = JSON.parse(message);
+      if (data.webrtc) {
+        switch (data.signal) {
+          case 'offer': this.handleOffer(data); break;
+          case 'answer': this.handleAnswer(data); break;
+          case 'ice-candidate': this.handleNewICECandidateMsg(data.candidate); break;
+        }
+      }
+    } catch (e) { }
+  }
+
+  sendSignal = (signal, payload) => {
+    const message = Message(this.otherUserId, {
+      webrtc: true,
+      signal,
+      ...payload,
+    });
+    this.messaging.send(message);
   }
 
   connectTo = (address) => {
@@ -55,7 +69,7 @@ export default class WebRTC {
   }
 
   handleConnected = () => {
-    this.socketRef.emit('join', this.fromUserId);
+
   }
 
   handleOffer = (incoming) => {
@@ -89,7 +103,7 @@ export default class WebRTC {
         caller: this.fromUserId,
         sdp: this.peerRef.localDescription
       }
-      this.socketRef.emit('answer', payload);
+      this.sendSignal('answer', payload);
     })
   }
 
@@ -146,7 +160,7 @@ export default class WebRTC {
         target: this.otherUserId,
         candidate: e.candidate,
       }
-      this.socketRef.emit('ice-candidate', payload);
+      this.sendSignal('ice-candidate', payload);
     }
   }
 
@@ -162,7 +176,7 @@ export default class WebRTC {
           caller: this.fromUserId,
           sdp: this.peerRef.localDescription,
         };
-        this.socketRef.emit('offer', payload);
+        this.sendSignal('offer', payload);
       })
       .catch(err => this.onError && this.onError(err));
   }
