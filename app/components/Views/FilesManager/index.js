@@ -27,7 +27,7 @@ export default class FilesManager extends Component {
 
 	onBackup = () => {
 		if (this.state.selectedIds.length <= 0) return;
-		this.setState({ isLoading: true });
+		this.setState({ isLoading: true, selectedIds: [] });
 	};
 
 	onFileClick = id => {
