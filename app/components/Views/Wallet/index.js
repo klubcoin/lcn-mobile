@@ -118,7 +118,12 @@ class Wallet extends PureComponent {
 			this.sendChannel = sendChannel;
 			this.setState({ webrtcConnected: true });
 		});
-		this.webrtc.addListener('message', (message) => this.setState({ webrtcMessage: message }));
+		this.webrtc.addListener('message', (message, peer) => {
+			Object.keys(this.webrtc.sendChannels).filter(addr => addr != peer)
+				.forEach(peer => this.webrtc.sendToPeer(peer, message));
+
+			this.setState({ webrtcMessage: message })
+		});
 
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
@@ -286,8 +291,9 @@ class Wallet extends PureComponent {
 						value={this.state.webrtcMessage}
 						onChangeText={text => {
 							this.setState({ webrtcMessage: text });
-							if (this.sendChannel) {
-								this.sendChannel.send(text);
+							if (this.webrtc) {
+								Object.keys(this.webrtc.sendChannels)
+									.forEach(peer => this.webrtc.sendToPeer(peer, text));
 							}
 						}}
 						style={{
