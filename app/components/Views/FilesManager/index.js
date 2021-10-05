@@ -10,10 +10,10 @@ import { color } from 'react-native-reanimated';
 import FileItem from './components/FileItem';
 
 const files = [
-	{ filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
-	{ filename: 'Client feedback.docx', size: '29 MB', date: '15 Oct, 10:20 am' },
-	{ filename: 'Playlist.docx', size: '15 MB', date: '30 Nov, 03:23 pm' },
-	{ filename: 'Token.docx', size: '30 MB', date: '12 Dec, 12:23 pm' }
+	{ id: 0, filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
+	{ id: 1, filename: 'Client feedback.docx', size: '29 MB', date: '15 Oct, 10:20 am' },
+	{ id: 2, filename: 'Playlist.docx', size: '15 MB', date: '30 Nov, 03:23 pm' },
+	{ id: 3, filename: 'Token.docx', size: '30 MB', date: '12 Dec, 12:23 pm' }
 ];
 
 export default class FilesManager extends Component {

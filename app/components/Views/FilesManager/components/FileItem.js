@@ -1,18 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight } from 'react-native';
 import { colors } from '../../../../styles/common';
 
-export default function FileItem({ item }) {
+export default function FileItem({ item, onClick }) {
 	const fileLogo = require('../../../../images/file_ic.png');
-	const checkFile = () => {
-		console.log('check file');
+	const checkIc = require('../../../../images/check.png');
+
+	const checkFile = id => {
+		setChecked(!checked);
+		// onClick(id);
 	};
+	const [checked, setChecked] = useState(false);
 
 	return (
-		<TouchableHighlight onPress={checkFile} underlayColor={colors.grey000}>
-			<View style={styles.fileContainer}>
-				<View style={styles.imageContainer}>
-					<Image source={fileLogo} resizeMode="cover" style={{ width: '100%', height: '100%' }} />
+		<TouchableHighlight onPress={() => checkFile(item.id)} underlayColor={colors.grey000}>
+			<View style={[styles.fileContainer, { backgroundColor: checked ? colors.primaryFox100 : null }]}>
+				<View
+					style={[styles.imageContainer, { backgroundColor: checked ? colors.primaryFox : 'rgba(0,0,0,.1)' }]}
+				>
+					<Image
+						source={checked ? checkIc : fileLogo}
+						resizeMode="cover"
+						style={{ width: '100%', height: '100%', tintColor: checked ? 'white' : null }}
+					/>
 				</View>
 				<View style={{ marginLeft: 10, width: '80%' }}>
 					<View
@@ -38,8 +48,7 @@ const styles = StyleSheet.create({
 		width: 50,
 		height: 50,
 		padding: 10,
-		borderRadius: 10,
-		backgroundColor: 'rgba(0,0,0,.1)'
+		borderRadius: 10
 	},
 	fileContainer: {
 		flexDirection: 'row',

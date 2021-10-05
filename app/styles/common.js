@@ -12,6 +12,7 @@ export const colors = {
 	fontError: '#D73A49',
 	fontWarning: '#f66a0a',
 	primaryFox: '#370e75',
+	primaryFox100: 'rgba(55, 14, 117, 0.1)',
 	black: '#24292E',
 	white: '#FFFFFF',
 	white100: '#F9FAFB',
