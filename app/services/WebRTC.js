@@ -11,6 +11,7 @@ export default class WebRTC {
 
   onReady = null;
   onMessage = null;
+  onError = null;
 
   constructor(from) {
     this.fromUserId = from;
@@ -23,6 +24,9 @@ export default class WebRTC {
         this.onReady = callback;
         break;
       case 'message':
+        this.onMessage = callback;
+        break;
+      case 'error':
         this.onMessage = callback;
         break;
     }
@@ -76,7 +80,6 @@ export default class WebRTC {
     const desc = new RTCSessionDescription(incoming.sdp);
 
     this.peerRef.setRemoteDescription(desc).then(() => {
-    }).then(() => {
       return this.peerRef.createAnswer();
     }).then(answer => {
       return this.peerRef.setLocalDescription(answer);
@@ -93,7 +96,8 @@ export default class WebRTC {
   handleAnswer = (message) => {
     // Handle answer by the receiving peer
     const desc = new RTCSessionDescription(message.sdp);
-    this.peerRef.setRemoteDescription(desc).catch(e => console.log('Error handle answer', e));
+    this.peerRef.setRemoteDescription(desc)
+      .catch(err => this.onError && this.onError(err));
 
     if (this.onReady) this.onReady(this.sendChannel);
   }
@@ -107,7 +111,8 @@ export default class WebRTC {
   handleNewICECandidateMsg = (incoming) => {
     const candidate = new RTCIceCandidate(incoming);
 
-    this.peerRef.addIceCandidate(candidate).catch(e => console.log(e));
+    this.peerRef.addIceCandidate(candidate)
+      .catch(err => this.onError && this.onError(err));
   }
 
   Peer = (userID) => {
@@ -159,6 +164,6 @@ export default class WebRTC {
         };
         this.socketRef.emit('offer', payload);
       })
-      .catch(err => console.log('Error handling negotiation needed event', err));
+      .catch(err => this.onError && this.onError(err));
   }
 }
