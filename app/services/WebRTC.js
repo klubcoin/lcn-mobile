@@ -1,4 +1,7 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc'
+import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
+import FileTransfer from './FileTransfer';
+import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 
 
@@ -9,6 +12,11 @@ export default class WebRTC {
   onReady = null;
   onMessage = null;
   onError = null;
+  events = {
+    ready: [],
+    message: [],
+    error: [],
+  }
 
   constructor(from) {
     this.fromUserId = from;
@@ -19,13 +27,16 @@ export default class WebRTC {
     switch (type) {
       case 'ready':
         this.onReady = callback;
-        break;
+        this.events.ready.push(callback);
+        return () => this.events.ready.slice(this.events.ready.indexOf(callback), 1);
       case 'message':
         this.onMessage = callback;
-        break;
+        this.events.message.push(callback);
+        return () => this.events.message.slice(this.events.message.indexOf(callback), 1);
       case 'error':
-        this.onMessage = callback;
-        break;
+        this.onError = callback;
+        this.events.error.push(callback);
+        return () => this.events.error.slice(this.events.error.indexOf(callback), 1);
     }
   }
 
@@ -81,7 +92,8 @@ export default class WebRTC {
       this.sendChannels[peerId] = event.channel;
       this.sendChannels[peerId].onmessage = (message) => this.handleReceiveMessage(message, peerId);
       console.log('[SUCCESS] Connection established')
-      if (this.onReady) this.onReady(this.sendChannels[peerId]);
+      // if (this.onReady) this.onReady(this.sendChannels[peerId]);
+      this.events.ready.map(callback => callback(this.sendChannels[peerId], peerId));
     }
 
     /*
@@ -111,13 +123,49 @@ export default class WebRTC {
     this.peerRef.setRemoteDescription(desc)
       .catch(err => this.onError && this.onError(err));
 
-    if (this.onReady) this.onReady(this.sendChannels[message.caller]);
+    const peerId = message.caller;
+    const sendChannel = this.sendChannels[peerId];
+    // if (this.onReady) this.onReady(sendChannel);
+    this.events.ready.map(callback => callback(sendChannel, peerId));
   }
 
   handleReceiveMessage = (e, peer) => {
     // Listener for receiving messages from the peer
     console.log('[INFO] Message received from peer', e.data);
-    if (this.onMessage) this.onMessage(e.data, peer);
+
+    this.handleFileTransfer(e.data, peer);
+    // if (this.onMessage) this.onMessage(e.data, peer);
+    this.events.message.map(callback => callback(e.data, peer));
+  }
+
+  handleFileTransfer = async (json, peerId) => {
+    try {
+      const data = JSON.parse(json);
+      if (data.action == StoreFile().action) {
+        FileTransfer.storeFile(data)
+          .then(message => this.sendToPeer(peerId, JSON.stringify(message)));
+      } else if (data.action == ReadFile().action && data.from != this.fromUserId) {
+        const { from, hash, name } = data;
+        const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+        if (! await RNFS.exists(folder)) await RNFS.mkdir(folder);
+
+        const files = await RNFS.readDir(folder);
+
+        const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
+        foundFiles.map(async (e) => {
+          const content = await RNFS.readFile(e.path, 'utf8');
+          const partId = e.name.split('.').reverse()[0];
+          const message = ReadFileResult(
+            from, hash, name,
+            moment(e.mtime).unix(),
+            [{ i: partId, v: content }]
+          );
+          this.sendToPeer(peerId, JSON.stringify(message));
+        })
+      } else if (data.action == ReadFileResult().action) {
+        //responded file
+      }
+    } catch (e) { }
   }
 
   handleNewICECandidateMsg = (incoming) => {
@@ -178,6 +226,10 @@ export default class WebRTC {
         this.sendSignal('offer', payload);
       })
       .catch(err => this.onError && this.onError(err));
+  }
+
+  hasChannel(address) {
+    return this.sendChannels && this.sendChannels[address];
   }
 
   sendToPeer(peerId, message) {

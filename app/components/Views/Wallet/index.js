@@ -24,6 +24,7 @@ import StyledButton from '../../UI/StyledButton';
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc'
 import io from 'socket.io-client';
 import WebRTC from '../../../services/WebRTC';
+import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -477,7 +478,10 @@ class Wallet extends PureComponent {
 			contactSelection: true,
 			onConfirm: (contacts) => {
 				// this.connectToUser(contacts[0].address);
-				this.webrtc.connectTo(contacts[0].address);
+				// this.webrtc.connectTo(contacts[0].address);
+				const { selectedAddress } = this.props;
+				const addresses = contacts.map(e => e.address);
+				FileTransferWebRTC.send('this.is.a.private.key', 'webrtc.txt', selectedAddress, addresses, this.webrtc);
 			}
 		})
 	}
