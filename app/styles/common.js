@@ -59,7 +59,12 @@ export const colors = {
 	overlay: 'rgba(0,0,0,.5)',
 	darkAlert: 'rgba(0,0,0,.75)',
 	normalAlert: 'rgba(55,55,55,.97)',
-	spinnerBackground: `rgba(185, 156, 171, 0.396)`
+	spinnerBackground: `rgba(185, 156, 171, 0.396)`,
+	wordColor: '#0e4fb4',
+	excelColor: '#237e4c',
+	pdfColor: '#b30d02',
+	pptColor: '#d04523',
+	mediaIcColor: '#28afea'
 };
 
 /**

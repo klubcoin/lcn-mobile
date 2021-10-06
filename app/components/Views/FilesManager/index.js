@@ -10,6 +10,8 @@ import { color } from 'react-native-reanimated';
 import FileItem from './components/FileItem';
 import LottieView from 'lottie-react-native';
 import * as FilesReader from '../../../util/files-reader';
+import { FileIcon, defaultStyles } from 'react-file-icon';
+import SendFileModal from './components/SendFileModal';
 
 const files = [
 	{ id: 0, filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
@@ -23,11 +25,15 @@ export default class FilesManager extends Component {
 
 	state = {
 		isLoading: false,
-		selectedIds: []
+		selectedIds: [],
+		selectedFiles: [],
+		viewSendFileModal: false
 	};
 
 	onBackup = async () => {
-		await FilesReader.pickMultiple();
+		var results = await FilesReader.pickMultiple();
+		console.log('files', results);
+		this.setState({ selectedFiles: [...results] });
 	};
 
 	onFileClick = id => {
@@ -50,6 +56,7 @@ export default class FilesManager extends Component {
 
 		return (
 			<View style={styles.container}>
+				<SendFileModal />
 				<View style={{ flex: 1 }}>
 					<View style={styles.searchSection}>
 						<Icon name="search" size={22} style={styles.icon} />
