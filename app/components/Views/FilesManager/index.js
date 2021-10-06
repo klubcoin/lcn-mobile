@@ -20,6 +20,19 @@ const files = [
 	{ id: 3, filename: 'Token.docx', size: '30 MB', date: '12 Dec, 12:23 pm' }
 ];
 
+const fakeData = [
+	{
+		name: '(suppppppeeeeeeeeeeeeeeeeeeeeer longgggggggggggg nameeeeeeeeeeeeeeeeeeeeeeeeee).word',
+		size: 210189,
+		type: 'application/msword'
+	},
+	{
+		name: 'Contract.pdf',
+		size: 20544000,
+		type: 'application/pdf'
+	}
+];
+
 export default class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
 
@@ -56,7 +69,7 @@ export default class FilesManager extends Component {
 
 		return (
 			<View style={styles.container}>
-				<SendFileModal />
+				<SendFileModal files={fakeData} />
 				<View style={{ flex: 1 }}>
 					<View style={styles.searchSection}>
 						<Icon name="search" size={22} style={styles.icon} />

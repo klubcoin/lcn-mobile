@@ -1,19 +1,17 @@
 import React from 'react';
 import { View, Modal, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../../styles/common';
-import * as FileIcons from '../../../../util/file-icons';
+import SelectedFiles from './SelectedFiles';
 
-export default function SendFileModal() {
-	const result = FileIcons.getFontAwesomeIconFromMIME('application/msword');
-	console.log(result);
-
+export default function SendFileModal({ files }) {
 	return (
 		<Modal animationType="fade" transparent={true} visible={true}>
 			<View style={styles.container}>
 				<View style={styles.content}>
 					<Text style={styles.header}>Share with contacts</Text>
 					<Text style={styles.title}>Your files</Text>
-					{FileIcons.getFontAwesomeIconFromMIME('application/pdf')}
+					{files?.length > 0 && files.map(e => <SelectedFiles file={e} />)}
+					<Text style={styles.title}>Contacts</Text>
 				</View>
 			</View>
 		</Modal>
@@ -43,6 +41,16 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 16,
 		fontWeight: '500',
-		marginTop: 10
+		marginTop: 20,
+		marginBottom: 5
+	},
+	fileContainer: {
+		paddingVertical: 5,
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	fileName: {
+		fontSize: 14,
+		fontWeight: '500'
 	}
 });
