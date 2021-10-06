@@ -20,16 +20,30 @@ const files = [
 	{ id: 3, filename: 'Token.docx', size: '30 MB', date: '12 Dec, 12:23 pm' }
 ];
 
-const fakeData = [
+const fakeContacts = [
 	{
-		name: '(suppppppeeeeeeeeeeeeeeeeeeeeer longgggggggggggg nameeeeeeeeeeeeeeeeeeeeeeeeee).word',
-		size: 210189,
-		type: 'application/msword'
+		name: 'suppppppeeeeeeeeeeeeeeeeeeeeer longgggggggggggg nameeeeeeeeeeeeeeeeeeeeeeeee',
+		address: '0xFFFabcbasbdbasdbasbdsabd'
 	},
 	{
-		name: 'Contract.pdf',
-		size: 20544000,
-		type: 'application/pdf'
+		name: 'Anonymous',
+		address: '0xFFFabcbasbdbasdbasbdsabd12312312312'
+	},
+	{
+		name: 'user test',
+		address: '0xFFFabcbasbdbasdbasbdsabd'
+	},
+	{
+		name: 'bestie',
+		address: '0xFFFabcbasbdbasdbasbdsabd'
+	},
+	{
+		name: 'random',
+		address: '0xFFFabcbasbdbasdbasbdsabd'
+	},
+	{
+		name: 'system user',
+		address: '0xFFFabcbasbdbasdbasbdsabd'
 	}
 ];
 
@@ -39,14 +53,21 @@ export default class FilesManager extends Component {
 	state = {
 		isLoading: false,
 		selectedIds: [],
-		selectedFiles: [],
-		viewSendFileModal: false
+		selectedFiles: []
 	};
 
 	onBackup = async () => {
 		var results = await FilesReader.pickMultiple();
-		console.log('files', results);
 		this.setState({ selectedFiles: [...results] });
+	};
+
+	onRemoveSelectedFiles = file => {
+		let selectedFiles = this.state.selectedFiles;
+
+		if (selectedFiles.includes(file)) {
+			let filteredArray = this.state.selectedFiles.filter(item => item !== file);
+			this.setState({ selectedFiles: filteredArray });
+		}
 	};
 
 	onFileClick = id => {
@@ -69,7 +90,13 @@ export default class FilesManager extends Component {
 
 		return (
 			<View style={styles.container}>
-				<SendFileModal files={fakeData} />
+				<SendFileModal
+					files={this.state.selectedFiles}
+					contacts={fakeContacts}
+					visible={this.state.viewSendFileModal}
+					onDeleteItem={this.onRemoveSelectedFiles}
+					onCloseModal={() => this.setState({ selectedFiles: [] })}
+				/>
 				<View style={{ flex: 1 }}>
 					<View style={styles.searchSection}>
 						<Icon name="search" size={22} style={styles.icon} />
@@ -86,7 +113,7 @@ export default class FilesManager extends Component {
 							<FileItem item={e} onClick={id => this.onFileClick(id)} />
 						))}
 					</View>
-					<CustomButton title="Back up another file" onPress={this.onBackup} style={styles.customButton} />
+					<CustomButton title="Back up other files" onPress={this.onBackup} style={styles.customButton} />
 				</View>
 			</View>
 		);

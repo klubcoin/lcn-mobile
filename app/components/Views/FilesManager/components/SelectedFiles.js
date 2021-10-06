@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Modal, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { colors } from '../../../../styles/common';
 import * as FileIcons from '../../../../util/file-icons';
 
 function formatBytes(bytes, decimals = 2) {
-	if (bytes === 0) return '0 Bytes';
+	if (bytes === 0) {
+		return '0 Bytes';
+	}
 
 	const k = 1024;
 	const dm = decimals < 0 ? 0 : decimals;
@@ -16,17 +18,20 @@ function formatBytes(bytes, decimals = 2) {
 	return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-export default function SelectedFiles({ file }) {
+export default function SelectedFiles({ file, onDeleteItem }) {
 	return (
 		<View style={styles.fileContainer}>
 			{FileIcons.getFontAwesomeIconFromMIME(file?.type)}
 			<View style={{ alignItems: 'flex-start', marginLeft: 10, flex: 10 }}>
-				<Text style={styles.fileName} numberOfLines={1}>
+				<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
 					{file?.name}
 				</Text>
 				<Text>{formatBytes(file?.size ?? 0)}</Text>
 			</View>
-			<TouchableOpacity style={{ flex: 1 }}>
+			<TouchableOpacity
+				style={{ flex: 1, alignSelf: 'flex-start', marginTop: 5, marginLeft: 5 }}
+				onPress={() => onDeleteItem(file)}
+			>
 				<Icon name="close" size={18} />
 			</TouchableOpacity>
 		</View>
