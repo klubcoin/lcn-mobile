@@ -50,6 +50,8 @@ import preferences from '../../../../store/preferences';
 import FileTransfer from '../../../../services/FileTransfer';
 import { Message } from '../../../../services/Messaging';
 import { ReadFile } from '../../../../services/FileStore';
+import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
+import { refWebRTC } from '../../../../services/WebRTC';
 
 const isIos = Device.isIos();
 
@@ -532,6 +534,7 @@ class Settings extends PureComponent {
 			return
 		}
 
+		const webrtc = refWebRTC();
 		const { selectedAddress, identities, navigation } = this.props;
 		const account = identities[selectedAddress];
 		const lookupName = `${account.name} private key`;
@@ -539,11 +542,13 @@ class Settings extends PureComponent {
 		const privateKey = await this.getPrivateKey();
 		const addresses = contacts.map(e => e.address);
 
-		FileTransfer.send(privateKey, lookupName, selectedAddress, addresses);
-		DeviceEventEmitter.once('FTSuccess', () => {
-			alert('Sent backup successfully');
-			navigation.pop();
-		})
+		FileTransferWebRTC.send(privateKey, lookupName, selectedAddress, addresses, webrtc);
+		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
+			if (stats.completed && stats.name == lookupName) {
+				alert('Sent backup successfully');
+				statsEvent.remove();
+			}
+		});
 	}
 
 	recoverPrivateKey = () => {
