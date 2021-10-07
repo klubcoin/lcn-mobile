@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TextInput, RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View, DeviceEventEmitter } from 'react-native';
+import { RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -20,11 +20,6 @@ import { showTransactionNotification, hideCurrentNotification } from '../../../a
 import ErrorBoundary from '../ErrorBoundary';
 import API from 'services/api'
 import Routes from 'common/routes';
-import StyledButton from '../../UI/StyledButton';
-import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc'
-import io from 'socket.io-client';
-import WebRTC from '../../../services/WebRTC';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -103,8 +98,6 @@ class Wallet extends PureComponent {
 	state = {
 		refreshing: false,
 		currentConversion: null,
-		webrtcMessage: '',
-		webrtcConnected: false
 	};
 
 	accountOverviewRef = React.createRef();
@@ -112,20 +105,6 @@ class Wallet extends PureComponent {
 	mounted = false;
 
 	componentDidMount = () => {
-		const { selectedAddress } = this.props;
-		this.webrtc = new WebRTC(selectedAddress);
-
-		this.webrtc.addListener('ready', (sendChannel) => {
-			this.sendChannel = sendChannel;
-			this.setState({ webrtcConnected: true });
-		});
-		this.webrtc.addListener('message', (message, peer) => {
-			this.setState({ webrtcMessage: message })
-		});
-		DeviceEventEmitter.addListener('FileTransStat', (stats) => {
-			alert('stats ' + JSON.stringify(stats))
-		});
-
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 			AssetsDetectionController.detectAssets();
@@ -135,7 +114,6 @@ class Wallet extends PureComponent {
 			this.mounted = true;
 		});
 		this.getCurrentConversion()
-		//this.initSocket();
 	};
 
 	async getWalletInfo() {
@@ -285,36 +263,6 @@ class Wallet extends PureComponent {
 						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
 					)
 				}
-				<View>
-					<TextInput
-						multiline={true}
-						numberOfLines={4}
-						value={this.state.webrtcMessage}
-						onChangeText={text => {
-							this.setState({ webrtcMessage: text });
-							if (this.webrtc) {
-								Object.keys(this.webrtc.sendChannels)
-									.forEach(peer => this.webrtc.sendToPeer(peer, text));
-							}
-						}}
-						style={{
-							height: 100,
-							marginVertical: 10,
-							paddingHorizontal: 10,
-							marginHorizontal: 20,
-							borderRadius: 4,
-							borderColor: this.state.webrtcConnected ? colors.blue : colors.grey400,
-							borderWidth: this.state.webrtcConnected ? 2 : StyleSheet.hairlineWidth,
-						}}
-					/>
-					<StyledButton
-						type={'confirm'}
-						containerStyle={{ marginHorizontal: 20 }}
-						onPress={this.connectWebRTC}
-					>
-						{'WebRTC'}
-					</StyledButton>
-				</View>
 				<ScrollableTabView
 					renderTabBar={this.renderTabBar}
 					// eslint-disable-next-line react/jsx-no-bind
@@ -329,172 +277,6 @@ class Wallet extends PureComponent {
 				</ScrollableTabView>
 			</View>
 		);
-	}
-
-	initSocket = () => {
-		// Step 1: Connect with the Signal server
-		this.socketRef = io('http://192.168.0.187:9000', {
-			reconnectionDelayMax: 10000,
-			query: { auth: 'getinvolved' },
-		});
-		; // Address of the Signal server
-
-		this.socketRef.on("connected", this.handleConnected);
-
-		this.socketRef.on("offer", this.handleOffer);
-
-		this.socketRef.on("answer", this.handleAnswer);
-
-		this.socketRef.on("ice-candidate", this.handleNewICECandidateMsg);
-	}
-
-	handleConnected = () => {
-		const { selectedAddress } = this.props;
-		this.socketRef.emit('join', selectedAddress)
-	}
-
-	handleOffer = (incoming) => {
-		/*
-			Here we are exchanging config information
-			between the peers to establish communication
-		*/
-		console.log("[INFO] Handling Offer")
-		this.otherUserId = incoming.caller;
-		this.peerRef = this.Peer(incoming.caller);
-		this.peerRef.ondatachannel = (event) => {
-			this.sendChannel = event.channel;
-			this.sendChannel.onmessage = this.handleReceiveMessage;
-			console.log('[SUCCESS] Connection established')
-			this.setState({ webrtcConnected: true });
-		}
-
-		/*
-			Session Description: It is the config information of the peer
-			SDP stands for Session Description Protocol. The exchange
-			of config information between the peers happens using this protocol
-		*/
-		const desc = new RTCSessionDescription(incoming.sdp);
-
-		/* 
-			 Remote Description : Information about the other peer
-			 Local Description: Information about you 'current peer'
-		*/
-
-		const { selectedAddress } = this.props;
-		this.peerRef.setRemoteDescription(desc).then(() => {
-		}).then(() => {
-			return this.peerRef.createAnswer();
-		}).then(answer => {
-			return this.peerRef.setLocalDescription(answer);
-		}).then(() => {
-			const payload = {
-				target: incoming.caller,
-				caller: selectedAddress,
-				sdp: this.peerRef.localDescription
-			}
-			this.socketRef.emit("answer", payload);
-		})
-	}
-
-	handleAnswer = (message) => {
-		// Handle answer by the receiving peer
-		const desc = new RTCSessionDescription(message.sdp);
-		this.peerRef.setRemoteDescription(desc).catch(e => console.log("Error handle answer", e));
-		this.setState({ webrtcConnected: true });
-	}
-
-	handleReceiveMessage = (e) => {
-		// Listener for receiving messages from the peer
-		console.log("[INFO] Message received from peer", e.data);
-		this.setState({ webrtcMessage: e.data });
-	};
-
-	handleNewICECandidateMsg = (incoming) => {
-		const candidate = new RTCIceCandidate(incoming);
-
-		this.peerRef.addIceCandidate(candidate)
-			.catch(e => console.log(e));
-	}
-
-
-	Peer = (userID) => {
-		/* 
-			 Here we are using Turn and Stun server
-		*/
-		const peer = new RTCPeerConnection({
-			iceServers: [
-				{
-					urls: "stun:stun.stunprotocol.org"
-				},
-				{
-					urls: 'turn:numb.viagenie.ca',
-					credential: 'long3232',
-					username: 'dragons3232@gmail.com'
-				},
-			]
-		});
-		peer.onicecandidate = this.handleICECandidateEvent;
-		peer.onnegotiationneeded = () => this.handleNegotiationNeededEvent(userID);
-		return peer;
-	}
-
-	handleICECandidateEvent = (e) => {
-		/*
-			ICE stands for Interactive Connectivity Establishment. Using this
-			peers exchange information over the intenet. When establishing a
-			connection between the peers, peers generally look for several 
-			ICE candidates and then decide which to choose best among possible
-			candidates
-		*/
-		if (e.candidate) {
-			const payload = {
-				target: this.otherUserId,
-				candidate: e.candidate,
-			}
-			this.socketRef.emit("ice-candidate", payload);
-		}
-	}
-
-	handleNegotiationNeededEvent = (userID) => {
-		const { selectedAddress } = this.props;
-
-		// Offer made by the initiating peer to the receiving peer.
-		this.peerRef.createOffer().then(offer => {
-			return this.peerRef.setLocalDescription(offer);
-		})
-			.then(() => {
-				const payload = {
-					target: userID,
-					caller: selectedAddress,
-					sdp: this.peerRef.localDescription,
-				};
-				this.socketRef.emit("offer", payload);
-			})
-			.catch(err => console.log("Error handling negotiation needed event", err));
-	}
-
-	connectWebRTC = () => {
-		this.props.navigation.navigate('Contacts', {
-			contactSelection: true,
-			onConfirm: (contacts) => {
-				// this.connectToUser(contacts[0].address);
-				// this.webrtc.connectTo(contacts[0].address);
-				const { selectedAddress } = this.props;
-				const addresses = contacts.map(e => e.address);
-				FileTransferWebRTC.send('this.is.a.private.key', 'webrtc.txt', selectedAddress, addresses, this.webrtc);
-			}
-		})
-	}
-
-	connectToUser(userID) {
-		this.otherUserId = userID;
-		// This will initiate the call for the receiving peer
-		console.log("[INFO] Initiated a call")
-		this.peerRef = this.Peer(userID);
-		this.sendChannel = this.peerRef.createDataChannel('sendChannel');
-
-		// listen to incoming messages from other peer
-		this.sendChannel.onmessage = this.handleReceiveMessage;
 	}
 
 	renderLoader() {
