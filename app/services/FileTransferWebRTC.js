@@ -25,7 +25,8 @@ export default class FileTransferWebRTC {
     this.addresses = addresses;
     this.webrtc = webrtc;
 
-    this._prepareQueue();
+    if (data && !data.action)
+      this._prepareQueue();
 
     this.revokeMessageEvt = webrtc.addListener('message', (data, peer) => this._onMessage(data, peer));
   }
@@ -46,6 +47,7 @@ export default class FileTransferWebRTC {
         this._nextQueue();
         this._updateSent(data);
       } else if (data.action == 'ping') {
+        alert('ping ' + peerId)
         DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
       }
     }
@@ -168,6 +170,36 @@ export default class FileTransferWebRTC {
     } else {
       this._sendQueue();
     }
+  }
+
+  _readFileStats = () => {
+    this.addresses.map(address => this._readFileOnPeer(address));
+  }
+
+  _readFileOnPeer = (address) => {
+    if (this.webrtc && this.webrtc.sendToPeer) {
+      const connectAndSend = () => {
+        alert('conn' + address)
+        this.webrtc.connectTo(address);
+        DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
+          alert('ackk')
+          this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+        });
+      }
+      if (!this.webrtc.hasChannel(address)) {
+        connectAndSend();
+      } else {
+        alert('send to', address)
+        this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+      }
+    }
+  }
+
+  static readFile(readFileAction, addresses, webrtc) {
+    const data = readFileAction;
+    const { from } = data;
+    const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
+    ft._readFileStats();
   }
 
   static send(data, lookupName, from, addresses, webrtc) {

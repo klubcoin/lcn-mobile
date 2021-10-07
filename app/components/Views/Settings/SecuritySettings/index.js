@@ -567,10 +567,9 @@ class Settings extends PureComponent {
 		const from = selectedAddress;
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 
-		contacts.map(e => {
-			const message = new Message(e.address, ReadFile(from, null, lookupName))
-			DeviceEventEmitter.emit('FileTransfer', message);
-		})
+		const webrtc = refWebRTC();
+		const command = ReadFile(from, null, lookupName);
+		FileTransferWebRTC.readFile(command, contacts.map(e => e.address), webrtc);
 	}
 
 	render = () => {
