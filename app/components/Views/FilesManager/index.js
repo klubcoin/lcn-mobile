@@ -13,7 +13,7 @@ import { FileIcon, defaultStyles } from 'react-file-icon';
 import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
 import preferences from '../../../store/preferences';
-import SelectedFiles from './components/SelectedFiles';
+import FileItem from './components/FileItem';
 import AsyncStorage from '@react-native-community/async-storage';
 import uuid from 'react-native-uuid';
 
@@ -96,7 +96,7 @@ class FilesManager extends Component {
 					<Text style={{ color: colors.black }}>You've not transferred any files yet</Text>
 				</View>
 			);
-		return this.state.transferredFiles?.map(e => e.files.map(file => <SelectedFiles file={file} date={e.date} />));
+		return this.state.transferredFiles?.map(e => e.files.map(file => <FileItem file={file} date={e.date} />));
 	};
 
 	render() {

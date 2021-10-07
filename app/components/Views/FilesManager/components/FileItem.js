@@ -1,45 +1,51 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Fontisto';
 import { colors } from '../../../../styles/common';
+import * as FileIcons from '../../../../util/file-icons';
+import { format } from 'date-fns';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
-export default function FileItem({ item, onClick }) {
-	const fileLogo = require('../../../../images/file_ic.png');
-	const checkIc = require('../../../../images/check.png');
+function formatBytes(bytes, decimals = 2) {
+	if (bytes === 0) {
+		return '0 Bytes';
+	}
 
-	const checkFile = id => {
-		setChecked(!checked);
-		onClick(id);
-	};
-	const [checked, setChecked] = useState(false);
+	const k = 1024;
+	const dm = decimals < 0 ? 0 : decimals;
+	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function formatDates(date) {
+	if (!date) return;
+	var formattedDate = format(date, 'MMMM do, yyyy');
+	return formattedDate.toString();
+}
+
+export default function FileItem({ file, onDeleteItem, date }) {
 	return (
-		<TouchableHighlight onPress={() => checkFile(item.id)} underlayColor={colors.grey000}>
-			<View style={[styles.fileContainer, { backgroundColor: checked ? colors.primaryFox100 : null }]}>
-				<View
-					style={[styles.imageContainer, { backgroundColor: checked ? colors.primaryFox : 'rgba(0,0,0,.1)' }]}
-				>
-					<Image
-						source={checked ? checkIc : fileLogo}
-						resizeMode="cover"
-						style={{ width: '100%', height: '100%', tintColor: checked ? 'white' : null }}
-					/>
-				</View>
-				<View style={{ marginLeft: 10, width: '80%' }}>
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							width: '100%',
-							alignItems: 'center'
-						}}
-					>
-						<Text style={styles.fileName}>{item.filename}</Text>
-						<Text style={styles.fileSize}>{item.size}</Text>
-					</View>
-					<Text style={styles.fileDate}>{item.date}</Text>
-				</View>
+		<View style={styles.fileContainer}>
+			{FileIcons.getFontAwesomeIconFromMIME(file?.type)}
+			<View style={{ alignItems: 'flex-start', marginLeft: 10, flex: 10 }}>
+				<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
+					{file?.name}
+				</Text>
+				{date && <Text>{formatDates(date)}</Text>}
+				<Text>{formatBytes(file?.size ?? 0)}</Text>
 			</View>
-		</TouchableHighlight>
+			{onDeleteItem && (
+				<TouchableOpacity
+					style={{ flex: 1, alignSelf: 'flex-start', marginTop: 5, marginLeft: 5 }}
+					onPress={() => onDeleteItem(file)}
+				>
+					<Icon name="close" size={18} />
+				</TouchableOpacity>
+			)}
+		</View>
 	);
 }
 
@@ -54,8 +60,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		borderRadius: 10,
-		padding: 10,
-		marginBottom: 10
+		padding: 10
 	},
 	fileName: {
 		fontSize: 18,

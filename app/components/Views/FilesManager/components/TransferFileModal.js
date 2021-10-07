@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
-import SelectedFiles from './SelectedFiles';
+import FileItem from './FileItem';
 import Device from '../../../../util/Device';
 import CustomButton from '../../../Base/CustomButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -67,7 +67,7 @@ export default function TransferFileModal({
 				<Text style={styles.header}>Share with contacts</Text>
 				<ScrollView>
 					<Text style={styles.title}>Your files</Text>
-					{files?.length > 0 && files.map(e => <SelectedFiles file={e} onDeleteItem={onDeleteItem} />)}
+					{files?.length > 0 && files.map(e => <FileItem file={e} onDeleteItem={onDeleteItem} />)}
 					<Text style={styles.title}>Contacts</Text>
 					<ScrollView horizontal>{renderContacts()}</ScrollView>
 				</ScrollView>
