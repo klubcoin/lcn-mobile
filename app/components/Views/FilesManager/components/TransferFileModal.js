@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { colors } from '../../../../styles/common';
@@ -9,17 +9,16 @@ import CustomButton from '../../../Base/CustomButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 
-export default function SendFileModal({
+export default function TransferFileModal({
 	files,
 	contacts,
 	selectedContacts,
 	onCloseModal,
 	onDeleteItem,
-	onBackup,
+	onTransfer,
 	onSelectContact
 }) {
 	const [visible, setVisible] = useState(false);
-	console.log('selected contacts', selectedContacts.length);
 
 	useEffect(() => {
 		setVisible(files.length > 0);
@@ -73,12 +72,19 @@ export default function SendFileModal({
 					<ScrollView horizontal>{renderContacts()}</ScrollView>
 				</ScrollView>
 				<CustomButton
-					title="Backup"
-					onPress={contacts?.length > 0 ? this.onBackup : null}
+					title="Transfer"
+					onPress={
+						selectedContacts?.length > 0 && files?.length > 0
+							? () => {
+									onTransfer();
+									onClose();
+							  }
+							: null
+					}
 					style={[
 						styles.customButton,
 						{
-							backgroundColor: contacts?.length > 0 ? colors.primaryFox : colors.grey100
+							backgroundColor: selectedContacts?.length > 0 ? colors.primaryFox : colors.grey100
 						}
 					]}
 				/>

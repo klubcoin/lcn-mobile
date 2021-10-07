@@ -7,19 +7,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors, fontStyles } from '../../../styles/common';
 import CustomButton from '../../Base/CustomButton';
 import { color } from 'react-native-reanimated';
-import FileItem from './components/FileItem';
 import LottieView from 'lottie-react-native';
 import * as FilesReader from '../../../util/files-reader';
 import { FileIcon, defaultStyles } from 'react-file-icon';
-import SendFileModal from './components/SendFileModal';
+import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
-
-const files = [
-	{ id: 0, filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
-	{ id: 1, filename: 'Client feedback.docx', size: '29 MB', date: '15 Oct, 10:20 am' },
-	{ id: 2, filename: 'Playlist.docx', size: '15 MB', date: '30 Nov, 03:23 pm' },
-	{ id: 3, filename: 'Token.docx', size: '30 MB', date: '12 Dec, 12:23 pm' }
-];
+import preferences from '../../../store/preferences';
+import SelectedFiles from './components/SelectedFiles';
+import AsyncStorage from '@react-native-community/async-storage';
+import uuid from 'react-native-uuid';
 
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
@@ -28,6 +24,7 @@ class FilesManager extends Component {
 		isLoading: false,
 		selectedIds: [],
 		selectedFiles: [],
+		transferredFiles: [],
 		contacts: [],
 		selectedContacts: []
 	};
@@ -41,11 +38,35 @@ class FilesManager extends Component {
 		const addresses = addressBook[network] || {};
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 		this.setState({ contacts: contacts });
+
+		this.fetchTransferredFiles();
 	}
 
-	onBackup = async () => {
+	async fetchTransferredFiles() {
+		var results = await preferences.getTransferredFiles();
+		console.log('results', this.state.contacts);
+		if (results) {
+			this.setState({ transferredFiles: results });
+		}
+	}
+
+	onCloseModal = () => {
+		this.setState({ selectedFiles: [], selectedContacts: [] });
+	};
+
+	onPickFiles = async () => {
 		var results = await FilesReader.pickMultiple();
 		this.setState({ selectedFiles: [...results] });
+	};
+
+	onTransfer = async () => {
+		const records = {
+			id: uuid.v4(),
+			date: Date.now(),
+			files: this.state.selectedFiles,
+			contacts: this.state.selectedContacts
+		};
+		preferences.saveTransferredFiles(records).then(_ => this.fetchTransferredFiles());
 	};
 
 	onRemoveSelectedFiles = file => {
@@ -68,15 +89,15 @@ class FilesManager extends Component {
 		this.setState({ selectedContacts: selectedContacts });
 	};
 
-	onFileClick = id => {
-		let selectedIds = this.state.selectedIds;
-
-		if (selectedIds.includes(id)) {
-			selectedIds = this.state.selectedIds.filter(item => item !== id);
-		} else {
-			selectedIds.push(id);
-		}
-		this.setState({ selectedIds: selectedIds });
+	renderTransferredFiles = () => {
+		console.log(this.state.transferredFiles.files);
+		if (this.state.transferredFiles?.length <= 0 || !this.state.transferredFiles)
+			return (
+				<View style={[styles.contacts, { width: '100%' }]}>
+					<Text style={{ color: colors.black }}>You've not transferred any files yet</Text>
+				</View>
+			);
+		return this.state.transferredFiles?.map(e => e.files.map(e => <SelectedFiles file={e} />));
 	};
 
 	render() {
@@ -87,15 +108,15 @@ class FilesManager extends Component {
 
 		return (
 			<View style={styles.container}>
-				<SendFileModal
+				<TransferFileModal
 					files={this.state.selectedFiles}
 					contacts={this.state.contacts}
 					selectedContacts={this.state.selectedContacts}
 					visible={this.state.viewSendFileModal}
 					onDeleteItem={e => this.onRemoveSelectedFiles(e)}
 					onSelectContact={e => this.onSelectContact(e)}
-					onCloseModal={() => this.setState({ selectedFiles: [], selectedContacts: [] })}
-					onBackup={() => console.log('on backup')}
+					onCloseModal={this.onCloseModal}
+					onTransfer={this.onTransfer}
 				/>
 				<View style={{ flex: 1 }}>
 					<View style={styles.searchSection}>
@@ -109,11 +130,10 @@ class FilesManager extends Component {
 						/>
 					</View>
 					<View style={styles.files}>
-						{files.map(e => (
-							<FileItem item={e} onClick={id => this.onFileClick(id)} />
-						))}
+						<Text style={styles.title}>Transferred files</Text>
+						{this.renderTransferredFiles()}
 					</View>
-					<CustomButton title="Back up other files" onPress={this.onBackup} style={styles.customButton} />
+					<CustomButton title="Transfer other files" onPress={this.onPickFiles} style={styles.customButton} />
 				</View>
 			</View>
 		);
@@ -158,5 +178,10 @@ const styles = StyleSheet.create({
 	customButton: {
 		position: 'absolute',
 		bottom: 30
+	},
+	title: {
+		fontSize: 16,
+		fontWeight: '500',
+		marginBottom: 5
 	}
 });

@@ -28,12 +28,14 @@ export default function SelectedFiles({ file, onDeleteItem }) {
 				</Text>
 				<Text>{formatBytes(file?.size ?? 0)}</Text>
 			</View>
-			<TouchableOpacity
-				style={{ flex: 1, alignSelf: 'flex-start', marginTop: 5, marginLeft: 5 }}
-				onPress={() => onDeleteItem(file)}
-			>
-				<Icon name="close" size={18} />
-			</TouchableOpacity>
+			{onDeleteItem && (
+				<TouchableOpacity
+					style={{ flex: 1, alignSelf: 'flex-start', marginTop: 5, marginLeft: 5 }}
+					onPress={() => onDeleteItem(file)}
+				>
+					<Icon name="close" size={18} />
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 }
