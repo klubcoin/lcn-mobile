@@ -2,7 +2,6 @@ import moment from 'moment';
 import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
-import Messaging, { Message, WSEvent } from './Messaging';
 import { ContainFiles, FilePart, PartSize, SavedFile, StoreFile } from './FileStore';
 
 export default class FileTransferWebRTC {
@@ -28,7 +27,7 @@ export default class FileTransferWebRTC {
 
     this._prepareQueue();
 
-    webrtc.addListener('message', (data, peer) => this._onMessage(data, peer));
+    this.revokeMessageEvt = webrtc.addListener('message', (data, peer) => this._onMessage(data, peer));
   }
 
   _onClose() {
@@ -146,7 +145,7 @@ export default class FileTransferWebRTC {
     const { name, sendingPart, partCount } = this;
     if (sendingPart >= partCount) {
       // File transfer completed
-      if (this.webrtcMsgEvt) this.webrtcMsgEvt.remove();
+      if (this.revokeMessageEvt) this.revokeMessageEvt();
       DeviceEventEmitter.emit('FileTransStat', { name, partCount, completed: true });
     } else {
       this._sendQueue();

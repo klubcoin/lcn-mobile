@@ -28,15 +28,15 @@ export default class WebRTC {
       case 'ready':
         this.onReady = callback;
         this.events.ready.push(callback);
-        return () => this.events.ready.slice(this.events.ready.indexOf(callback), 1);
+        return () => this.events.ready.splice(this.events.ready.indexOf(callback), 1);
       case 'message':
         this.onMessage = callback;
         this.events.message.push(callback);
-        return () => this.events.message.slice(this.events.message.indexOf(callback), 1);
+        return () => this.events.message.splice(this.events.message.indexOf(callback), 1);
       case 'error':
         this.onError = callback;
         this.events.error.push(callback);
-        return () => this.events.error.slice(this.events.error.indexOf(callback), 1);
+        return () => this.events.error.splice(this.events.error.indexOf(callback), 1);
     }
   }
 
