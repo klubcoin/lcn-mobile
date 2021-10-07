@@ -1,6 +1,6 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc'
 import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
-import FileTransfer from './FileTransfer';
+import FileTransferWebRTC from './FileTransferWebRTC';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 
@@ -143,7 +143,7 @@ export default class WebRTC {
     try {
       const data = JSON.parse(json);
       if (data.action == StoreFile().action) {
-        FileTransfer.storeFile(data)
+        FileTransferWebRTC.storeFile(data)
           .then(message => this.sendToPeer(peerId, JSON.stringify(message)));
       } else if (data.action == ReadFile().action && data.from != this.fromUserId) {
         const { from, hash, name } = data;
