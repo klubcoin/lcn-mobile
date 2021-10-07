@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight, Button } from 'react-native';
+import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight, Button, ScrollView } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { Component } from 'react';
@@ -14,8 +14,12 @@ import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
 import preferences from '../../../store/preferences';
 import FileItem from './components/FileItem';
-import AsyncStorage from '@react-native-community/async-storage';
 import uuid from 'react-native-uuid';
+import { SwipeRow } from 'react-native-swipe-list-view';
+import Device from '../../../util/Device';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const swipeOffset = Device.getDeviceWidth() / 3;
 
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
@@ -44,7 +48,6 @@ class FilesManager extends Component {
 
 	async fetchTransferredFiles() {
 		var results = await preferences.getTransferredFiles();
-		console.log('results', results);
 		if (results) {
 			this.setState({ transferredFiles: results });
 		}
@@ -89,6 +92,14 @@ class FilesManager extends Component {
 		this.setState({ selectedContacts: selectedContacts });
 	};
 
+	onRecovery = (file, swipeValue) => {
+		if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
+	};
+
+	onViewDetails = file => {
+		console.log('file', file);
+	};
+
 	renderTransferredFiles = () => {
 		if (this.state.transferredFiles?.length <= 0 || !this.state.transferredFiles)
 			return (
@@ -96,7 +107,31 @@ class FilesManager extends Component {
 					<Text style={{ color: colors.black }}>You've not transferred any files yet</Text>
 				</View>
 			);
-		return this.state.transferredFiles?.map(e => e.files.map(file => <FileItem file={file} date={e.date} />));
+
+		return (
+			<ScrollView>
+				{this.state.transferredFiles?.map(e =>
+					e.files.map(file => (
+						<SwipeRow
+							stopRightSwipe={0}
+							rightOpenValue={-swipeOffset}
+							disableRightSwipe
+							onSwipeValueChange={value => this.onRecovery(file, value)}
+							onRowPress={() => this.onViewDetails(file)}
+						>
+							<View style={styles.standaloneRowBack}>
+								<View style={{ width: swipeOffset, alignItems: 'center' }}>
+									<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
+								</View>
+							</View>
+							<View style={styles.standaloneRowFront}>
+								<FileItem file={file} date={e.date} />
+							</View>
+						</SwipeRow>
+					))
+				)}
+			</ScrollView>
+		);
 	};
 
 	render() {
@@ -182,5 +217,18 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: '500',
 		marginBottom: 5
+	},
+	standaloneRowBack: {
+		alignItems: 'center',
+		backgroundColor: colors.green600,
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		paddingVertical: 15
+	},
+	standaloneRowFront: {
+		alignItems: 'center',
+		backgroundColor: colors.white,
+		justifyContent: 'center'
 	}
 });
