@@ -44,7 +44,7 @@ class FilesManager extends Component {
 
 	async fetchTransferredFiles() {
 		var results = await preferences.getTransferredFiles();
-		console.log('results', this.state.contacts);
+		console.log('results', results);
 		if (results) {
 			this.setState({ transferredFiles: results });
 		}
@@ -90,14 +90,13 @@ class FilesManager extends Component {
 	};
 
 	renderTransferredFiles = () => {
-		console.log(this.state.transferredFiles.files);
 		if (this.state.transferredFiles?.length <= 0 || !this.state.transferredFiles)
 			return (
 				<View style={[styles.contacts, { width: '100%' }]}>
 					<Text style={{ color: colors.black }}>You've not transferred any files yet</Text>
 				</View>
 			);
-		return this.state.transferredFiles?.map(e => e.files.map(e => <SelectedFiles file={e} />));
+		return this.state.transferredFiles?.map(e => e.files.map(file => <SelectedFiles file={file} date={e.date} />));
 	};
 
 	render() {
