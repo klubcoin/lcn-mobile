@@ -20,18 +20,15 @@ export default function SendFileModal({ files, contacts, onCloseModal, onDeleteI
 	};
 
 	const renderContacts = () => {
-		console.log('contacts', contacts);
-		if (contacts?.length <= 0) return <Text style={{ color: colors.black }}>You do not have any contacts</Text>;
+		if (contacts?.length <= 0)
+			return (
+				<View style={[styles.contacts, { width: '100%' }]}>
+					<Text style={{ color: colors.black }}>You do not have any contacts</Text>
+				</View>
+			);
+
 		return contacts.map(e => (
-			<View
-				style={{
-					marginRight: 5,
-					marginTop: 5,
-					marginBottom: 50,
-					width: Device.getDeviceWidth() * 0.2,
-					alignItems: 'center'
-				}}
-			>
+			<View style={styles.contacts}>
 				<Identicon address={e.address} diameter={40} />
 				<Text numberOfLines={1} ellipsizeMode="middle">
 					{e.name}
@@ -56,7 +53,7 @@ export default function SendFileModal({ files, contacts, onCloseModal, onDeleteI
 					style={[
 						styles.customButton,
 						{
-							backgroundColor: contacts?.length > 0 ? colors.primaryFox : colors.lightOverlay
+							backgroundColor: contacts?.length > 0 ? colors.primaryFox : colors.grey100
 						}
 					]}
 				/>
@@ -104,5 +101,12 @@ const styles = StyleSheet.create({
 	customButton: {
 		maxWidth: 200,
 		bottom: 20
+	},
+	contacts: {
+		marginRight: 5,
+		marginTop: 5,
+		marginBottom: 50,
+		width: Device.getDeviceWidth() * 0.2,
+		alignItems: 'center'
 	}
 });
