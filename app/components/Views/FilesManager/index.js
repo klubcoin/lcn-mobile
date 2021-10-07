@@ -12,6 +12,7 @@ import LottieView from 'lottie-react-native';
 import * as FilesReader from '../../../util/files-reader';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import SendFileModal from './components/SendFileModal';
+import { connect } from 'react-redux';
 
 const files = [
 	{ id: 0, filename: 'Work flow.xd', size: '12.5 MB', date: '10 Sep, 11:23 pm' },
@@ -47,14 +48,20 @@ const fakeContacts = [
 	}
 ];
 
-export default class FilesManager extends Component {
+class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
 
 	state = {
 		isLoading: false,
 		selectedIds: [],
-		selectedFiles: []
+		selectedFiles: [],
+		contacts: []
 	};
+
+	componentDidMount() {
+		const { addressBook, network } = this.props;
+		console.log('props', this.props);
+	}
 
 	onBackup = async () => {
 		var results = await FilesReader.pickMultiple();
@@ -92,10 +99,11 @@ export default class FilesManager extends Component {
 			<View style={styles.container}>
 				<SendFileModal
 					files={this.state.selectedFiles}
-					contacts={fakeContacts}
+					contacts={this.state.contacts}
 					visible={this.state.viewSendFileModal}
 					onDeleteItem={this.onRemoveSelectedFiles}
 					onCloseModal={() => this.setState({ selectedFiles: [] })}
+					onBackup={() => console.log('on backup')}
 				/>
 				<View style={{ flex: 1 }}>
 					<View style={styles.searchSection}>
@@ -119,6 +127,14 @@ export default class FilesManager extends Component {
 		);
 	}
 }
+export default connect(mapStateToProps)(FilesManager);
+
+const mapStateToProps = state => ({
+	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+	network: state.engine.backgroundState.NetworkController.network,
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+	identities: state.engine.backgroundState.PreferencesController.identities
+});
 
 const styles = StyleSheet.create({
 	container: {

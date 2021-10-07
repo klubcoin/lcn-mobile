@@ -7,7 +7,7 @@ import SelectedFiles from './SelectedFiles';
 import Device from '../../../../util/Device';
 import CustomButton from '../../../Base/CustomButton';
 
-export default function SendFileModal({ files, contacts, onCloseModal, onDeleteItem }) {
+export default function SendFileModal({ files, contacts, onCloseModal, onDeleteItem, onBackup }) {
 	const [visible, setVisible] = useState(false);
 
 	useEffect(() => {
@@ -19,6 +19,27 @@ export default function SendFileModal({ files, contacts, onCloseModal, onDeleteI
 		onCloseModal();
 	};
 
+	const renderContacts = () => {
+		console.log('contacts', contacts);
+		if (contacts?.length <= 0) return <Text style={{ color: colors.black }}>You do not have any contacts</Text>;
+		return contacts.map(e => (
+			<View
+				style={{
+					marginRight: 5,
+					marginTop: 5,
+					marginBottom: 50,
+					width: Device.getDeviceWidth() * 0.2,
+					alignItems: 'center'
+				}}
+			>
+				<Identicon address={e.address} diameter={40} />
+				<Text numberOfLines={1} ellipsizeMode="middle">
+					{e.name}
+				</Text>
+			</View>
+		));
+	};
+
 	return (
 		<Modal animationType="fade" visible={visible} onBackdropPress={onClose} style={styles.container}>
 			<View style={styles.content}>
@@ -27,27 +48,18 @@ export default function SendFileModal({ files, contacts, onCloseModal, onDeleteI
 					<Text style={styles.title}>Your files</Text>
 					{files?.length > 0 && files.map(e => <SelectedFiles file={e} onDeleteItem={onDeleteItem} />)}
 					<Text style={styles.title}>Contacts</Text>
-					<ScrollView horizontal>
-						{contacts?.length > 0 &&
-							contacts.map(e => (
-								<View
-									style={{
-										marginRight: 5,
-										marginTop: 5,
-										marginBottom: 50,
-										width: Device.getDeviceWidth() * 0.2,
-										alignItems: 'center'
-									}}
-								>
-									<Identicon address={e.address} diameter={40} />
-									<Text numberOfLines={1} ellipsizeMode="middle">
-										{e.name}
-									</Text>
-								</View>
-							))}
-					</ScrollView>
+					<ScrollView horizontal>{renderContacts()}</ScrollView>
 				</ScrollView>
-				<CustomButton title="Backup" onPress={this.onBackup} style={styles.customButton} />
+				<CustomButton
+					title="Backup"
+					onPress={contacts?.length > 0 ? this.onBackup : null}
+					style={[
+						styles.customButton,
+						{
+							backgroundColor: contacts?.length > 0 ? colors.primaryFox : colors.lightOverlay
+						}
+					]}
+				/>
 			</View>
 		</Modal>
 	);
