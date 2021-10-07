@@ -41,7 +41,8 @@ export default class FileTransferWebRTC {
     } catch (e) { }
 
     if (data.action) {
-      if (data.action == ContainFiles().action) {
+      if (data.action == ContainFiles().action && peerId == this.awaitingPeer) {
+        if (this.monitorFailure) clearTimeout(this.monitorFailure);
         this._nextQueue();
         this._updateSent(data);
       } else if (data.action == 'ping') {
@@ -123,15 +124,29 @@ export default class FileTransferWebRTC {
     if (this.webrtc && this.webrtc.sendToPeer) {
       if (!this.webrtc.hasChannel(address)) {
         this.webrtc.connectTo(address);
+        this.monitorFailure = setTimeout(() => this._reportFailure(address), 4000);
         DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
           this._onProgress();
+          this.awaitingPeer = address;
           this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
         });
       } else {
         this._onProgress();
+        this.awaitingPeer = address;
         this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
+        this.monitorFailure = setTimeout(() => this._reportFailure(address), 2500);
       }
     }
+  }
+
+  _reportFailure = (address) => {
+    const { name, sendingPart, partCount } = this;
+
+    DeviceEventEmitter.emit('FileTransStat', {
+      error: true,
+      peer: address,
+      name, partCount, currentPart: sendingPart
+    });
   }
 
   _onProgress() {
