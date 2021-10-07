@@ -238,3 +238,7 @@ export default class WebRTC {
     channel && channel.send(message);
   }
 }
+
+const state = { webrtc: null };
+export const setWebRTC = (ref) => state.webrtc = ref;
+export const refWebRTC = () => state.webrtc;
