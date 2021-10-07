@@ -21,33 +21,6 @@ const files = [
 	{ id: 3, filename: 'Token.docx', size: '30 MB', date: '12 Dec, 12:23 pm' }
 ];
 
-const fakeContacts = [
-	{
-		name: 'suppppppeeeeeeeeeeeeeeeeeeeeer longgggggggggggg nameeeeeeeeeeeeeeeeeeeeeeeee',
-		address: '0xFFFabcbasbdbasdbasbdsabd'
-	},
-	{
-		name: 'Anonymous',
-		address: '0xFFFabcbasbdbasdbasbdsabd12312312312'
-	},
-	{
-		name: 'user test',
-		address: '0xFFFabcbasbdbasdbasbdsabd'
-	},
-	{
-		name: 'bestie',
-		address: '0xFFFabcbasbdbasdbasbdsabd'
-	},
-	{
-		name: 'random',
-		address: '0xFFFabcbasbdbasdbasbdsabd'
-	},
-	{
-		name: 'system user',
-		address: '0xFFFabcbasbdbasdbasbdsabd'
-	}
-];
-
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
 
@@ -55,12 +28,19 @@ class FilesManager extends Component {
 		isLoading: false,
 		selectedIds: [],
 		selectedFiles: [],
-		contacts: []
+		contacts: [],
+		selectedContacts: []
 	};
+
+	constructor(props) {
+		super(props);
+	}
 
 	componentDidMount() {
 		const { addressBook, network } = this.props;
-		console.log('props', this.props);
+		const addresses = addressBook[network] || {};
+		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
+		this.setState({ contacts: contacts });
 	}
 
 	onBackup = async () => {
@@ -72,21 +52,31 @@ class FilesManager extends Component {
 		let selectedFiles = this.state.selectedFiles;
 
 		if (selectedFiles.includes(file)) {
-			let filteredArray = this.state.selectedFiles.filter(item => item !== file);
-			this.setState({ selectedFiles: filteredArray });
+			selectedFiles = this.state.selectedFiles.filter(item => item !== file);
+			this.setState({ selectedFiles: selectedFiles });
 		}
+	};
+
+	onSelectContact = contact => {
+		let selectedContacts = this.state.selectedContacts;
+
+		if (selectedContacts.includes(contact)) {
+			selectedContacts = this.state.selectedContacts.filter(item => item !== contact);
+		} else {
+			selectedContacts.push(contact);
+		}
+		this.setState({ selectedContacts: selectedContacts });
 	};
 
 	onFileClick = id => {
 		let selectedIds = this.state.selectedIds;
 
 		if (selectedIds.includes(id)) {
-			let filteredArray = this.state.selectedIds.filter(item => item !== id);
-			this.setState({ selectedIds: filteredArray });
+			selectedIds = this.state.selectedIds.filter(item => item !== id);
 		} else {
 			selectedIds.push(id);
-			this.setState({ selectedIds: selectedIds });
 		}
+		this.setState({ selectedIds: selectedIds });
 	};
 
 	render() {
@@ -100,9 +90,11 @@ class FilesManager extends Component {
 				<SendFileModal
 					files={this.state.selectedFiles}
 					contacts={this.state.contacts}
+					selectedContacts={this.state.selectedContacts}
 					visible={this.state.viewSendFileModal}
-					onDeleteItem={this.onRemoveSelectedFiles}
-					onCloseModal={() => this.setState({ selectedFiles: [] })}
+					onDeleteItem={e => this.onRemoveSelectedFiles(e)}
+					onSelectContact={e => this.onSelectContact(e)}
+					onCloseModal={() => this.setState({ selectedFiles: [], selectedContacts: [] })}
 					onBackup={() => console.log('on backup')}
 				/>
 				<View style={{ flex: 1 }}>
@@ -127,7 +119,6 @@ class FilesManager extends Component {
 		);
 	}
 }
-export default connect(mapStateToProps)(FilesManager);
 
 const mapStateToProps = state => ({
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
@@ -135,6 +126,8 @@ const mapStateToProps = state => ({
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	identities: state.engine.backgroundState.PreferencesController.identities
 });
+
+export default connect(mapStateToProps)(FilesManager);
 
 const styles = StyleSheet.create({
 	container: {

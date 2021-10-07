@@ -6,9 +6,20 @@ import Identicon from '../../../UI/Identicon';
 import SelectedFiles from './SelectedFiles';
 import Device from '../../../../util/Device';
 import CustomButton from '../../../Base/CustomButton';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Feather';
 
-export default function SendFileModal({ files, contacts, onCloseModal, onDeleteItem, onBackup }) {
+export default function SendFileModal({
+	files,
+	contacts,
+	selectedContacts,
+	onCloseModal,
+	onDeleteItem,
+	onBackup,
+	onSelectContact
+}) {
 	const [visible, setVisible] = useState(false);
+	console.log('selected contacts', selectedContacts.length);
 
 	useEffect(() => {
 		setVisible(files.length > 0);
@@ -28,12 +39,26 @@ export default function SendFileModal({ files, contacts, onCloseModal, onDeleteI
 			);
 
 		return contacts.map(e => (
-			<View style={styles.contacts}>
-				<Identicon address={e.address} diameter={40} />
-				<Text numberOfLines={1} ellipsizeMode="middle">
-					{e.name}
-				</Text>
-			</View>
+			<TouchableOpacity onPress={() => onSelectContact(e)}>
+				<View style={[styles.contacts]}>
+					{selectedContacts.includes(e) ? (
+						<Icon name="check-circle" size={40} style={{ color: colors.green500 }} />
+					) : (
+						<Identicon address={e.address} diameter={40} />
+					)}
+
+					<Text numberOfLines={1} ellipsizeMode="middle" style={{ fontSize: 14, paddingHorizontal: 10 }}>
+						{e.name}
+					</Text>
+					<Text
+						numberOfLines={1}
+						ellipsizeMode="middle"
+						style={{ fontSize: 14, color: colors.primaryFox, fontWeight: 'bold' }}
+					>
+						{e.address}
+					</Text>
+				</View>
+			</TouchableOpacity>
 		));
 	};
 
@@ -106,7 +131,7 @@ const styles = StyleSheet.create({
 		marginRight: 5,
 		marginTop: 5,
 		marginBottom: 50,
-		width: Device.getDeviceWidth() * 0.2,
+		width: Device.getDeviceWidth() * 0.3,
 		alignItems: 'center'
 	}
 });
