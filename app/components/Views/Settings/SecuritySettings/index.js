@@ -544,8 +544,15 @@ class Settings extends PureComponent {
 
 		FileTransferWebRTC.send(privateKey, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
-			if (stats.completed && stats.name == lookupName) {
+			const { completed, name, error } = stats;
+
+			if (completed && name == lookupName) {
 				alert('Sent backup successfully');
+				statsEvent.remove();
+			} else if (error && name == lookupName) {
+				const { peer, partCount, currentPart } = stats;
+
+				alert(`Error: Failed to send ${currentPart}/${partCount} to ${peer}`);
 				statsEvent.remove();
 			}
 		});
