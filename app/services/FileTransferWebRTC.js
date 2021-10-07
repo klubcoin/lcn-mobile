@@ -37,7 +37,6 @@ export default class FileTransferWebRTC {
   }
 
   _onMessage(data, peerId) {
-    alert('got message' + peerId)
     try {
       data = JSON.parse(data);
     } catch (e) { }
@@ -46,6 +45,8 @@ export default class FileTransferWebRTC {
       if (data.action == ContainFiles().action) {
         this._nextQueue();
         this._updateSent(data);
+      } else if (data.action == 'ping') {
+        DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
       }
     }
   }
@@ -122,29 +123,32 @@ export default class FileTransferWebRTC {
 
     if (this.webrtc && this.webrtc.sendToPeer) {
       if (!this.webrtc.hasChannel(address)) {
-        const removeEvent = this.webrtc.addListener('ready', (channel, peer) => {
-          if (peer != address) return;
-          if (removeEvent) removeEvent();
-          setTimeout(() => this.webrtc.sendToPeer(address, JSON.stringify(storeFile)), 200);
-        });
         this.webrtc.connectTo(address);
+        DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
+          this._onProgress();
+          this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
+        });
       } else {
-        alert('has channel' + address)
+        this._onProgress();
         this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
       }
     }
   }
 
+  _onProgress() {
+    const { sendingPart, partCount, name } = this;
+    DeviceEventEmitter.emit('FileTransStat', { name, partCount, currentPart: sendingPart });
+  }
+
   _nextQueue() {
     this.sendingPart++;
 
-    const { sendingPart, partCount } = this;
+    const { name, sendingPart, partCount } = this;
     if (sendingPart >= partCount) {
       // File transfer completed
-      alert('complete')
       if (this.webrtcMsgEvt) this.webrtcMsgEvt.remove();
+      DeviceEventEmitter.emit('FileTransStat', { name, partCount, completed: true });
     } else {
-      alert('send queue')
       this._sendQueue();
     }
   }

@@ -92,6 +92,7 @@ export default class WebRTC {
       this.sendChannels[peerId] = event.channel;
       this.sendChannels[peerId].onmessage = (message) => this.handleReceiveMessage(message, peerId);
       console.log('[SUCCESS] Connection established')
+      event.channel.send(JSON.stringify({ action: 'ping' }));
       // if (this.onReady) this.onReady(this.sendChannels[peerId]);
       this.events.ready.map(callback => callback(this.sendChannels[peerId], peerId));
     }

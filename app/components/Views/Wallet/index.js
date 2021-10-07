@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TextInput, RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { TextInput, RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View, DeviceEventEmitter } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -120,10 +120,10 @@ class Wallet extends PureComponent {
 			this.setState({ webrtcConnected: true });
 		});
 		this.webrtc.addListener('message', (message, peer) => {
-			Object.keys(this.webrtc.sendChannels).filter(addr => addr != peer)
-				.forEach(peer => this.webrtc.sendToPeer(peer, message));
-
 			this.setState({ webrtcMessage: message })
+		});
+		DeviceEventEmitter.addListener('FileTransStat', (stats) => {
+			alert('stats ' + JSON.stringify(stats))
 		});
 
 		requestAnimationFrame(async () => {
