@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, SafeAreaView } from 'react-native';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { colors } from '../../../../styles/common';
-import FileItem from '../components/FileItem';
 import * as FileIcons from '../../../../util/file-icons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import TextSpan from '../components/TextSpan';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import * as Progress from 'react-native-progress';
-import Identicon from '../../../UI/Identicon';
+import PartItem from '../components/PartItem';
 
 const fakeUser = [
 	{
@@ -30,35 +27,43 @@ const fakeUser = [
 	{
 		address: 'asdasdasdasdasd0Xnadasdasdqw',
 		name: 'user 5'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdza',
+		name: 'user 6'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdccc',
+		name: 'user 7'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdvasd',
+		name: 'user 8'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdad',
+		name: 'user 9'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdaa',
+		name: 'user 10'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdaaads',
+		name: 'user 11'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdaazz',
+		name: 'user 12'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdaaas',
+		name: 'user 13'
+	},
+	{
+		address: 'asdasdasdasdasd0Xnadasdasdaaaavvadadasdasdasdasdasdasdasdasdasdassdaasdasd',
+		name: 'user 14asdasdasdasdasdasdasdasdasdasdasdsadasdasdsadasds'
 	}
-	// {
-	//     address: 'asdasdasdasdasd0Xnadasdasdza',
-	//     name: 'user 6',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdccc',
-	//     name: 'user 7',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdvasd',
-	//     name: 'user 8',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdad',
-	//     name: 'user 9',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdaa',
-	//     name: 'user 10',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdaaads',
-	//     name: 'user 11',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdaazz',
-	//     name: 'user 12',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdaaas',
-	//     name: 'user 13',
-	// }, {
-	//     address: 'asdasdasdasdasd0Xnadasdasdaaaavv',
-	//     name: 'user 14',
-	// },
 ];
 
 export default class FileDetails extends Component {
@@ -107,44 +112,21 @@ export default class FileDetails extends Component {
 		return (
 			<View style={styles.listContainer}>
 				<Text style={styles.title}>File details</Text>
-				<View style={styles.item}>
-					<View style={{ flex: 1 }}>
-						<Icon name="attach-file" size={29} />
-					</View>
-					<View style={{ flex: 5 }}>
-						<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-							<Text style={styles.title}>Part 1 </Text>
-							<Text style={[styles.title, { fontWeight: '300', color: colors.grey }]}> 30%</Text>
-						</View>
-						<Progress.Bar
-							progress={0.3}
-							width={null}
-							backgroundColor={colors.grey100}
-							borderWidth={0}
-							color={colors.orange}
-							style={{ height: 10 }}
-							height={10}
-						/>
-						<View style={{ flexDirection: 'row' }}>
-							{fakeUser.map(e => (
-								<Identicon address={e.address} diameter={25} customStyle={styles.user} />
-							))}
-						</View>
-					</View>
-					<View style={{ flex: 1, alignItems: 'flex-end' }}>
-						<Icon name="replay" size={29} />
-					</View>
-				</View>
+				<PartItem contacts={fakeUser} />
 			</View>
 		);
 	};
 
 	render() {
 		return (
-			<View style={styles.fileContainer}>
-				{this.renderSummary()}
-				{this.renderDetails()}
-			</View>
+			<SafeAreaView>
+				<ScrollView style={{ width: '100%' }}>
+					<View style={styles.fileContainer}>
+						{this.renderSummary()}
+						{this.renderDetails()}
+					</View>
+				</ScrollView>
+			</SafeAreaView>
 		);
 	}
 }
@@ -177,24 +159,5 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: '500',
 		marginBottom: 5
-	},
-	item: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-around',
-		backgroundColor: colors.white,
-		shadowColor: colors.grey100,
-		padding: 15,
-		borderRadius: 5,
-		shadowOffset: {
-			width: 0,
-			height: 3
-		},
-		shadowRadius: 5,
-		shadowOpacity: 1.0
-	},
-	user: {
-		marginRight: 5,
-		marginTop: 5
 	}
 });
