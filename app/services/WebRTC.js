@@ -160,9 +160,11 @@ export default class WebRTC {
         foundFiles.map(async (e) => {
           const content = await RNFS.readFile(e.path, 'utf8');
           const partId = e.name.split('.').reverse()[0];
+          const totalPart = e.name.split('.').reverse()[1];
           const message = ReadFileResult(
             from, hash, name,
             moment(e.mtime).unix(),
+            totalPart,
             [{ i: partId, v: content }]
           );
           message.sourcePeer = this.fromUserId;

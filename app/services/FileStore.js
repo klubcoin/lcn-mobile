@@ -47,13 +47,14 @@ export const ReadFile = (from, hash, name) => (
    }
 );
 
-export const ReadFileResult = (from, hash, name, createdTimestamp, parts) => (
+export const ReadFileResult = (from, hash, name, createdTimestamp, totalPart, parts) => (
    {
       action: 'read_file',
       from,
       hash,
       name,
       created: createdTimestamp,
+      totalPart,
       parts,
    }
 );
