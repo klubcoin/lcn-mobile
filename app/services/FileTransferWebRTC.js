@@ -61,6 +61,7 @@ export default class FileTransferWebRTC {
                 listener.remove();
                 this.partCollector[`${hash}:${index}`] = result;
                 if (Object.keys(this.partCollector).length == totalPart) {
+                  this.joinParts();
                 }
               }
             })
@@ -68,6 +69,32 @@ export default class FileTransferWebRTC {
         }
       }
     }
+  }
+
+  async joinParts() {
+    if (this.revokeMessageEvt) this.revokeMessageEvt();
+
+    const keys = Object.keys(this.partCollector).sort();
+    const { from, hash, name, created } = this.partCollector[keys[0]];
+
+    const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+    if (! await RNFS.exists(folder)) await RNFS.mkdir(folder);
+
+    const fileName = `${/*hash ||*/ name}`;
+    const path = `${folder}/${fileName}`;
+    await RNFS.unlink(path);
+
+    for (k in keys) {
+      const data = this.partCollector[keys[k]];
+      const { parts } = data;
+
+      const part = parts[0];
+      const content = part?.v;
+
+      await RNFS.appendFile(path, content, 'utf8');
+    };
+
+    DeviceEventEmitter.emit('FileTransFetched', { path, name, hash, created });
   }
 
   static async storeFile(data) {
