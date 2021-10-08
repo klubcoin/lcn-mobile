@@ -47,7 +47,6 @@ export default class FileTransferWebRTC {
         this._nextQueue();
         this._updateSent(data);
       } else if (data.action == 'ping') {
-        alert('ping ' + peerId)
         DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
       }
     }
@@ -179,17 +178,14 @@ export default class FileTransferWebRTC {
   _readFileOnPeer = (address) => {
     if (this.webrtc && this.webrtc.sendToPeer) {
       const connectAndSend = () => {
-        alert('conn' + address)
         this.webrtc.connectTo(address);
         DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-          alert('ackk')
           this.webrtc.sendToPeer(address, JSON.stringify(this.data));
         });
       }
       if (!this.webrtc.hasChannel(address)) {
         connectAndSend();
       } else {
-        alert('send to', address)
         this.webrtc.sendToPeer(address, JSON.stringify(this.data));
       }
     }
