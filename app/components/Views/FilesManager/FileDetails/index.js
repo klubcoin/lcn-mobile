@@ -7,71 +7,131 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import TextSpan from '../components/TextSpan';
 import PartItem from '../components/PartItem';
 
-const fakeUser = [
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdvc',
-		name: 'user 1'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdfsc',
-		name: 'user 2'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdr',
-		name: 'user 3'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasde',
-		name: 'user 4'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdqw',
-		name: 'user 5'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdza',
-		name: 'user 6'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdccc',
-		name: 'user 7'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdvasd',
-		name: 'user 8'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdad',
-		name: 'user 9'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdaa',
-		name: 'user 10'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdaaads',
-		name: 'user 11'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdaazz',
-		name: 'user 12'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdaaas',
-		name: 'user 13'
-	},
-	{
-		address: 'asdasdasdasdasd0Xnadasdasdaaaavvadadasdasdasdasdasdasdasdasdasdassdaasdasd',
-		name: 'user 14asdasdasdasdasdasdasdasdasdasdasdsadasdasdsadasds'
+const statuses = {
+	success: 'SUCCESS',
+	failed: 'FAILED',
+	process: 'PROCESSING'
+};
+
+const getStatusContent = status => {
+	switch (status) {
+		case statuses.success:
+			return {
+				string: 'Completed',
+				icon: 'done',
+				color: colors.green400
+			};
+		case statuses.failed:
+			return {
+				string: 'Failed',
+				icon: 'replay',
+				color: colors.red
+			};
+		case statuses.process:
+			return {
+				string: 'In processing',
+				icon: 'close',
+				color: colors.orange
+			};
+		default:
+			return {
+				string: 'In processing',
+				icon: 'close',
+				color: colors.orange
+			};
 	}
-];
+};
+
+export { getStatusContent };
+
+const fakeData = {
+	status: statuses.process,
+	totalContacts: 10,
+	totalSizes: '16.2 MB',
+	transferredPercent: 36,
+	parts: [
+		{
+			name: 'Part 1',
+			status: statuses.process,
+			percentages: 38,
+			contacts: [
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdvc',
+					name: 'user 1'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdfsc',
+					name: 'user 2'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdr',
+					name: 'user 3'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasde',
+					name: 'user 4'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdqw',
+					name: 'user 5'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdza',
+					name: 'user 6'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdccc',
+					name: 'user 7'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdvasd',
+					name: 'user 8'
+				}
+			]
+		},
+		{
+			name: 'Part 2',
+			status: statuses.failed,
+			percentages: 10,
+			contacts: [
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdvc',
+					name: 'user 1'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdfsc',
+					name: 'user 2'
+				}
+			]
+		},
+		{
+			name: 'Part 3',
+			status: statuses.success,
+			percentages: 100,
+			contacts: [
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdaazz',
+					name: 'user 12'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdaaas',
+					name: 'user 13'
+				},
+				{
+					address: 'asdasdasdasdasd0Xnadasdasdaaaavvadadasdasdasdasdasdasdasdasdasdassdaasdasd',
+					name: 'user 14asdasdasdasdasdasdasdasdasdasdasdsadasdasdsadasds'
+				}
+			]
+		}
+	]
+};
 
 export default class FileDetails extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('File details', navigation);
 
 	state = {
 		file: this.props.navigation.getParam('selectedFile'),
-		fill: 36
+		fill: fakeData.transferredPercent
 	};
 
 	renderSummary = () => {
@@ -88,21 +148,25 @@ export default class FileDetails extends Component {
 					width={10}
 					rotation={0}
 					fill={this.state.fill}
-					tintColor={colors.orange}
+					tintColor={getStatusContent(fakeData.status).color}
 					backgroundColor={colors.grey100}
 					style={{ marginVertical: 20 }}
 				>
 					{fill => (
 						<View style={{ alignItems: 'center' }}>
-							<Text style={styles.percent}>{`${this.state.fill} %`}</Text>
-							<Text style={styles.percent}>In progressing</Text>
+							<Text style={[styles.percent, { color: getStatusContent(fakeData.status).color }]}>{`${
+								this.state.fill
+							} %`}</Text>
+							<Text style={[styles.percent, { color: getStatusContent(fakeData.status).color }]}>
+								{getStatusContent(fakeData.status).string}
+							</Text>
 						</View>
 					)}
 				</AnimatedCircularProgress>
 				<View>
-					<TextSpan title="Total sizes" value="16.2 MB" />
-					<TextSpan title="Total parts" value="3" />
-					<TextSpan title="Total contacts" value="5" />
+					<TextSpan title="Total sizes" value={fakeData.totalSizes} />
+					<TextSpan title="Total parts" value={fakeData.parts.length} />
+					<TextSpan title="Total contacts" value={fakeData.totalContacts} />
 				</View>
 			</View>
 		);
@@ -112,7 +176,9 @@ export default class FileDetails extends Component {
 		return (
 			<View style={styles.listContainer}>
 				<Text style={styles.title}>File details</Text>
-				<PartItem contacts={fakeUser} />
+				{fakeData.parts.map(e => (
+					<PartItem part={e} />
+				))}
 			</View>
 		);
 	};
@@ -146,7 +212,6 @@ const styles = StyleSheet.create({
 	},
 	percent: {
 		fontSize: 14,
-		color: colors.orange,
 		fontWeight: '500'
 	},
 	listContainer: {

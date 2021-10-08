@@ -4,31 +4,36 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as Progress from 'react-native-progress';
 import Identicon from '../../../UI/Identicon';
 import { colors } from '../../../../styles/common';
+import { getStatusContent } from '../FileDetails';
 
-export default function PartItem({ contacts }) {
+export default function PartItem({ part }) {
 	const [viewMore, setViewMore] = useState(false);
+	const { name, status, percentages, contacts } = part;
 
 	const onViewMore = () => {
 		setViewMore(!viewMore);
 	};
 
 	return (
-		<View style={{ width: '100%' }}>
+		<View style={{ width: '100%', marginVertical: 5 }}>
 			<TouchableOpacity style={styles.container} onPress={onViewMore}>
 				<View style={{ flex: 1 }}>
 					<Icon name="attach-file" size={29} />
 				</View>
 				<View style={{ flex: 5 }}>
 					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-						<Text style={styles.title}>Part 1 </Text>
-						<Text style={[styles.title, { fontWeight: '300', color: colors.grey }]}> 30%</Text>
+						<Text style={styles.title}>{name}</Text>
+						<Text style={[styles.title, { fontWeight: '300', color: colors.grey }]}>
+							{' '}
+							{`${percentages}%`}
+						</Text>
 					</View>
 					<Progress.Bar
-						progress={0.3}
+						progress={percentages / 100}
 						width={null}
 						backgroundColor={colors.grey100}
 						borderWidth={0}
-						color={colors.orange}
+						color={getStatusContent(status).color}
 						style={{ height: 10 }}
 						height={10}
 					/>
@@ -45,7 +50,11 @@ export default function PartItem({ contacts }) {
 					</View>
 				</View>
 				<View style={{ flex: 1, alignItems: 'flex-end' }}>
-					<Icon name="replay" size={29} />
+					<Icon
+						name={getStatusContent(status).icon}
+						size={22}
+						style={{ color: getStatusContent(status).color }}
+					/>
 				</View>
 			</TouchableOpacity>
 			{viewMore && (
