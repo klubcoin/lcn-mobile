@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
+import * as RNFS from 'react-native-fs';
 import ActionModal from '../../../UI/ActionModal';
 import SecureKeychain from '../../../../core/SecureKeychain';
 import SelectComponent from '../../../UI/SelectComponent';
@@ -47,8 +48,6 @@ import HintModal from '../../../UI/HintModal';
 import { trackErrorAsAnalytics } from '../../../../util/analyticsV2';
 import SeedPhraseVideo from '../../../UI/SeedPhraseVideo';
 import preferences from '../../../../store/preferences';
-import FileTransfer from '../../../../services/FileTransfer';
-import { Message } from '../../../../services/Messaging';
 import { ReadFile } from '../../../../services/FileStore';
 import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../../services/WebRTC';
@@ -570,6 +569,10 @@ class Settings extends PureComponent {
 		const webrtc = refWebRTC();
 		const command = ReadFile(from, null, lookupName);
 		FileTransferWebRTC.readFile(command, contacts.map(e => e.address), webrtc);
+		DeviceEventEmitter.once('FileTransFetched', async ({ path }) => {
+			const content = await RNFS.readFile(path, 'utf8');
+			alert('Restored private key: ' + content);
+		});
 	}
 
 	render = () => {
