@@ -64,6 +64,7 @@ import VoteDelegationAddEdit from '../../Views/VotingApp/DelegationAddEdit';
 import Profile from '../../Views/Profile';
 import ProfileOnboard from '../../Views/ProfileOnboard';
 import FilesManager from '../../Views/FilesManager';
+import FileDetails from '../../Views/FilesManager/FileDetails';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -102,6 +103,9 @@ export default createStackNavigator(
 						},
 						FilesManager: {
 							screen: FilesManager
+						},
+						FileDetails: {
+							screen: FileDetails
 						},
 						ContactForm: {
 							screen: ContactForm
@@ -149,11 +153,6 @@ export default createStackNavigator(
 							screen: ActivityView
 						}
 					})
-					// FilesManagerHome: createStackNavigator({
-					// 	FilesManager: {
-					// 		screen: FilesManager
-					// 	}
-					// })
 				},
 				{
 					defaultNavigationOptions: () => ({

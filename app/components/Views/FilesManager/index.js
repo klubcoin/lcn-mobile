@@ -22,7 +22,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const swipeOffset = Device.getDeviceWidth() / 3;
 
 class FilesManager extends Component {
-	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Files manager', navigation);
+	static navigationOptions = ({ navigation }) =>
+		getNavigationOptionsTitle(strings('drawer.files_manager'), navigation);
 
 	state = {
 		isLoading: false,
@@ -97,7 +98,7 @@ class FilesManager extends Component {
 	};
 
 	onViewDetails = file => {
-		console.log('file', file);
+		this.props.navigation.navigate('FileDetails', { selectedFile: file });
 	};
 
 	renderTransferredFiles = () => {
