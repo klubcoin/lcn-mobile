@@ -17,8 +17,6 @@ import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
 import Messaging, { Ping, Pong, WSEvent } from '../../../services/Messaging';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
-import { StoreFile } from '../../../services/FileStore';
-import FileTransfer from '../../../services/FileTransfer';
 
 
 const styles = StyleSheet.create({

@@ -10,13 +10,14 @@ export const FilePart = (partId, data) => ({
    v: data,
 })
 
-export const StoreFile = (from, to, hash, name, createdTimestamp, parts) => ({
+export const StoreFile = (from, to, hash, name, createdTimestamp, totalPart, parts) => ({
    action: 'store_file',
    from,
    to,
    hash,
    name,
    created: createdTimestamp,
+   totalPart,
    parts
 });
 
