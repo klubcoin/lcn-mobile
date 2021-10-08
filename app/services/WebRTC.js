@@ -147,7 +147,7 @@ export default class WebRTC {
       if (data.action == StoreFile().action) {
         FileTransferWebRTC.storeFile(data)
           .then(message => this.sendToPeer(peerId, JSON.stringify(message)));
-      } else if (data.action == ReadFile().action && data.from != this.fromUserId) {
+      } else if (data.action == ReadFile().action && !data.sourcePeer) {
         const { from, hash, name } = data;
         const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
         if (! await RNFS.exists(folder)) await RNFS.mkdir(folder);
@@ -163,6 +163,7 @@ export default class WebRTC {
             moment(e.mtime).unix(),
             [{ i: partId, v: content }]
           );
+          message.sourcePeer = this.fromUserId;
           this.sendToPeer(peerId, JSON.stringify(message));
         })
       } else if (data.action == ReadFileResult().action) {
