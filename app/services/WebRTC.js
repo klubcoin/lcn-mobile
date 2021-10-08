@@ -2,6 +2,8 @@ import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react
 import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
 import FileTransferWebRTC from './FileTransferWebRTC';
 import moment from 'moment';
+import { sha256 } from 'hash.js';
+import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 
@@ -168,6 +170,13 @@ export default class WebRTC {
         })
       } else if (data.action == ReadFileResult().action) {
         //responded file
+        const { name, parts } = data;
+        const hash = sha256(name).digest('hex');
+        parts.map(e => {
+          const index = e.i;
+          FileTransferWebRTC.storeFile(data)
+            .then(() => DeviceEventEmitter.emit(`FileTransPart:${hash}:${index}`, data));
+        })
       }
     } catch (e) { }
   }
