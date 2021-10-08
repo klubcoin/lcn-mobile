@@ -8,6 +8,7 @@ export default class FileTransferWebRTC {
   _ready = false;
   sendingPart = 0;
   queue = [];
+  partCollector = {};
 
   from = null;
   data = null;
@@ -48,6 +49,23 @@ export default class FileTransferWebRTC {
         this._updateSent(data);
       } else if (data.action == 'ping') {
         DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
+      } else if (data.action == ReadFileResult().action && data.sourcePeer) {
+        const { name, totalPart, parts } = data;
+        const hash = sha256(name).digest('hex');
+
+        if (hash == this.watchHash) {
+          parts.map(e => {
+            const index = e.i;
+            const listener = DeviceEventEmitter.addListener(`FileTransPart:${hash}:${index}`, (result) => {
+              if (totalPart == result.totalPart && /^\d+$/.test(totalPart)) {
+                listener.remove();
+                this.partCollector[`${hash}:${index}`] = result;
+                if (Object.keys(this.partCollector).length == totalPart) {
+                }
+              }
+            })
+          })
+        }
       }
     }
   }
@@ -193,8 +211,9 @@ export default class FileTransferWebRTC {
 
   static readFile(readFileAction, addresses, webrtc) {
     const data = readFileAction;
-    const { from } = data;
+    const { from, name } = data;
     const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
+    ft.watchHash = sha256(name).digest('hex');
     ft._readFileStats();
   }
 
