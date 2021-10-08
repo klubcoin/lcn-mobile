@@ -2,7 +2,7 @@ import moment from 'moment';
 import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
-import { ContainFiles, FilePart, PartSize, SavedFile, StoreFile } from './FileStore';
+import { ContainFiles, FilePart, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
 
 export default class FileTransferWebRTC {
   _ready = false;
@@ -53,14 +53,14 @@ export default class FileTransferWebRTC {
   }
 
   static async storeFile(data) {
-    const { from, hash, name, created, parts } = data;
+    const { from, hash, name, created, totalPart, parts } = data;
 
     const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
     if (! await RNFS.exists(folder)) await RNFS.mkdir(folder);
 
     const part = parts[0];
     const content = part?.v;
-    const fileName = `${/*hash ||*/ name}.${part?.i}`;
+    const fileName = `${/*hash ||*/ name}.${totalPart}.${part?.i}`;
     const path = `${folder}/${fileName}`;
 
     return new Promise((resolve, reject) => {
@@ -120,7 +120,7 @@ export default class FileTransferWebRTC {
     const data = this.data.substr(start, length);
 
     const part = FilePart(index, data);
-    const storeFile = StoreFile(from, address, checksum, name, timestamp, [part]);
+    const storeFile = StoreFile(from, address, checksum, name, timestamp, partCount, [part]);
 
     if (this.webrtc && this.webrtc.sendToPeer) {
       const connectAndSend = () => {
