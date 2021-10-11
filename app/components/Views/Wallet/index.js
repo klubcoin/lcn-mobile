@@ -7,6 +7,7 @@ import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import AccountOverview from '../../UI/AccountOverview';
 import Tokens from '@UI/Tokens';
+import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { renderFromWei, weiToFiat, hexToBN } from '../../../util/number';
@@ -20,6 +21,7 @@ import { showTransactionNotification, hideCurrentNotification } from '../../../a
 import ErrorBoundary from '../ErrorBoundary';
 import API from 'services/api'
 import Routes from 'common/routes';
+import APIService from '../../../services/APIService';
 
 
 const styles = StyleSheet.create({
@@ -115,7 +117,20 @@ class Wallet extends PureComponent {
 			this.mounted = true;
 		});
 		this.getCurrentConversion()
+		this.announceOnline()
 	};
+
+	announceOnline() {
+		const { selectedAddress } = this.props;
+		const peerId = stripHexPrefix(selectedAddress);
+
+		APIService.announcePeerOnlineStatus(peerId, (success, json) => {
+			console.warn('what?', json)
+			if (success && json) {
+
+			}
+		})
+	}
 
 	async getWalletInfo() {
 		const { selectedAddress } = this.props;
