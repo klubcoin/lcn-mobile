@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
+import * as RNFS from 'react-native-fs';
 import ActionModal from '../../../UI/ActionModal';
 import SecureKeychain from '../../../../core/SecureKeychain';
 import SelectComponent from '../../../UI/SelectComponent';
@@ -47,9 +48,9 @@ import HintModal from '../../../UI/HintModal';
 import { trackErrorAsAnalytics } from '../../../../util/analyticsV2';
 import SeedPhraseVideo from '../../../UI/SeedPhraseVideo';
 import preferences from '../../../../store/preferences';
-import FileTransfer from '../../../../services/FileTransfer';
-import { Message } from '../../../../services/Messaging';
 import { ReadFile } from '../../../../services/FileStore';
+import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
+import { refWebRTC } from '../../../../services/WebRTC';
 
 const isIos = Device.isIos();
 
@@ -532,6 +533,7 @@ class Settings extends PureComponent {
 			return
 		}
 
+		const webrtc = refWebRTC();
 		const { selectedAddress, identities, navigation } = this.props;
 		const account = identities[selectedAddress];
 		const lookupName = `${account.name} private key`;
@@ -539,11 +541,20 @@ class Settings extends PureComponent {
 		const privateKey = await this.getPrivateKey();
 		const addresses = contacts.map(e => e.address);
 
-		FileTransfer.send(privateKey, lookupName, selectedAddress, addresses);
-		DeviceEventEmitter.once('FTSuccess', () => {
-			alert('Sent backup successfully');
-			navigation.pop();
-		})
+		FileTransferWebRTC.send(privateKey, lookupName, selectedAddress, addresses, webrtc);
+		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
+			const { completed, name, error } = stats;
+
+			if (completed && name == lookupName) {
+				alert('Sent backup successfully');
+				statsEvent.remove();
+			} else if (error && name == lookupName) {
+				const { peer, partCount, currentPart } = stats;
+
+				alert(`Error: Failed to send ${currentPart}/${partCount} to ${peer}`);
+				statsEvent.remove();
+			}
+		});
 	}
 
 	recoverPrivateKey = () => {
@@ -555,10 +566,13 @@ class Settings extends PureComponent {
 		const from = selectedAddress;
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 
-		contacts.map(e => {
-			const message = new Message(e.address, ReadFile(from, null, lookupName))
-			DeviceEventEmitter.emit('FileTransfer', message);
-		})
+		const webrtc = refWebRTC();
+		const command = ReadFile(from, null, lookupName);
+		FileTransferWebRTC.readFile(command, contacts.map(e => e.address), webrtc);
+		DeviceEventEmitter.once('FileTransFetched', async ({ path }) => {
+			const content = await RNFS.readFile(path, 'utf8');
+			alert('Restored private key: ' + content);
+		});
 	}
 
 	render = () => {

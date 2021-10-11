@@ -73,6 +73,7 @@ import FileTransfer from '../../../services/FileTransfer';
 import { ContainFiles, ReadFile, ReadFileResult, StoreFile } from '../../../services/FileStore';
 import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
+import WebRTC, { setWebRTC } from '../../../services/WebRTC';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -659,6 +660,9 @@ const Main = props => {
 		() => {
 			const { selectedAddress } = props;
 			props.removeNotVisibleNotifications();
+
+			const webrtc = new WebRTC(selectedAddress);
+			setWebRTC(webrtc);
 
 			const messaging = new Messaging(selectedAddress);
 			setMessaging(messaging);

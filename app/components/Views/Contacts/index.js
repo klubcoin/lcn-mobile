@@ -17,8 +17,6 @@ import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
 import Messaging, { Ping, Pong, WSEvent } from '../../../services/Messaging';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
-import { StoreFile } from '../../../services/FileStore';
-import FileTransfer from '../../../services/FileTransfer';
 
 
 const styles = StyleSheet.create({
@@ -186,6 +184,7 @@ class Contacts extends PureComponent {
   onConfirm() {
     const { selectedContacts } = this.state;
     const onConfirm = this.props.navigation.getParam('onConfirm');
+    this.props.navigation.goBack();
     if (onConfirm) onConfirm(selectedContacts);
   }
 

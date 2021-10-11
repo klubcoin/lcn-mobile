@@ -126,7 +126,7 @@ export default class FileTransfer {
     const data = this.data.substr(start, length);
 
     const part = FilePart(index, data);
-    const storeFile = StoreFile(from, address, checksum, name, timestamp, [part]);
+    const storeFile = StoreFile(from, address, checksum, name, timestamp, partCount, [part]);
     const message = Message(address, storeFile);
 
     this.messaging.send(message);
