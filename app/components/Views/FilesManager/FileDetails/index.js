@@ -30,13 +30,11 @@ const getStatusContent = status => {
 		case statuses.process:
 			return {
 				string: 'In processing',
-				icon: 'close',
 				color: colors.orange
 			};
 		default:
 			return {
 				string: 'In processing',
-				icon: 'close',
 				color: colors.orange
 			};
 	}

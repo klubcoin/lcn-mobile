@@ -1,5 +1,16 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight, Button, ScrollView, DeviceEventEmitter } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	TextInput,
+	Text,
+	Image,
+	TouchableHighlight,
+	Button,
+	ScrollView,
+	DeviceEventEmitter,
+	TouchableWithoutFeedback
+} from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { Component } from 'react';
@@ -21,7 +32,7 @@ import * as RNFS from 'react-native-fs';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 
-const swipeOffset = Device.getDeviceWidth() / 3;
+const swipeOffset = Device.getDeviceWidth() / 2;
 
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) =>
@@ -31,6 +42,7 @@ class FilesManager extends Component {
 		isLoading: false,
 		selectedIds: [],
 		selectedFiles: [],
+		progressFiles: [],
 		transferredFiles: [],
 		contacts: [],
 		selectedContacts: []
@@ -70,7 +82,7 @@ class FilesManager extends Component {
 		const date = Date.now();
 		const files = [];
 
-		for (index in selectedFiles) {
+		for (var index in selectedFiles) {
 			const file = selectedFiles[index];
 			const record = {
 				id: uuid.v4(),
@@ -85,7 +97,7 @@ class FilesManager extends Component {
 		this.startTransfer(files);
 	};
 
-	startTransfer = async (files) => {
+	startTransfer = async files => {
 		const { selectedAddress } = this.props;
 		const webrtc = refWebRTC();
 
@@ -95,7 +107,7 @@ class FilesManager extends Component {
 		const lookupName = file.file.name;
 
 		FileTransferWebRTC.send(content, lookupName, selectedAddress, addresses, webrtc);
-		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
+		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 			const { completed, name, error } = stats;
 
 			if (completed && name == lookupName) {
@@ -109,7 +121,7 @@ class FilesManager extends Component {
 				statsEvent.remove(); // remove if done
 			}
 		});
-	}
+	};
 
 	onRemoveSelectedFiles = file => {
 		let selectedFiles = this.state.selectedFiles;
@@ -132,7 +144,12 @@ class FilesManager extends Component {
 	};
 
 	onRecovery = (file, swipeValue) => {
-		if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
+		console.log('On recovery');
+		// if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
+	};
+	onDelete = (file, swipeValue) => {
+		console.log('On delete');
+		// if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
 	};
 
 	onViewDetails = file => {
@@ -156,19 +173,41 @@ class FilesManager extends Component {
 							stopRightSwipe={0}
 							rightOpenValue={-swipeOffset}
 							disableRightSwipe
-							onSwipeValueChange={value => this.onRecovery(file, value)}
 							onRowPress={() => this.onViewDetails(file)}
 						>
 							<View style={styles.standaloneRowBack}>
-								<View style={{ width: swipeOffset, alignItems: 'center' }}>
-									<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
-								</View>
+								<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
+									<View style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}>
+										<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
+									</View>
+								</TouchableWithoutFeedback>
+
+								<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
+									<View style={styles.swipeableOption}>
+										<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
+									</View>
+								</TouchableWithoutFeedback>
 							</View>
 							<View style={styles.standaloneRowFront}>
 								<FileItem file={file} date={e.date} />
 							</View>
 						</SwipeRow>
-					)
+					);
+				})}
+			</ScrollView>
+		);
+	};
+
+	renderProcessFiles = () => {
+		return (
+			<ScrollView>
+				{this.state.progressFiles?.map(e => {
+					const { file } = e;
+					return (
+						<TouchableWithoutFeedback onPress={() => this.onViewDetails(file)}>
+							<FileItem file={file} date={e.date} progressPercent={30} />
+						</TouchableWithoutFeedback>
+					);
 				})}
 			</ScrollView>
 		);
@@ -203,6 +242,12 @@ class FilesManager extends Component {
 							onChangeText={this.handleSearch}
 						/>
 					</View>
+					{this.state.progressFiles.length > 0 && (
+						<View style={styles.files}>
+							<Text style={styles.title}>In processing</Text>
+							{this.renderProcessFiles()}
+						</View>
+					)}
 					<View style={styles.files}>
 						<Text style={styles.title}>Transferred files</Text>
 						{this.renderTransferredFiles()}
@@ -263,12 +308,18 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.green600,
 		flex: 1,
 		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		paddingVertical: 15
+		justifyContent: 'flex-end'
 	},
 	standaloneRowFront: {
 		alignItems: 'center',
 		backgroundColor: colors.white,
+		justifyContent: 'center'
+	},
+	swipeableOption: {
+		width: swipeOffset / 2,
+		alignItems: 'center',
+		backgroundColor: colors.red,
+		height: '100%',
 		justifyContent: 'center'
 	}
 });

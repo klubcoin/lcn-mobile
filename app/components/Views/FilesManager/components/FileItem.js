@@ -5,6 +5,8 @@ import { colors } from '../../../../styles/common';
 import * as FileIcons from '../../../../util/file-icons';
 import { format } from 'date-fns';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { process } from 'babel-jest';
+import * as Progress from 'react-native-progress';
 
 function formatBytes(bytes, decimals = 2) {
 	if (bytes === 0) {
@@ -26,7 +28,7 @@ function formatDates(date) {
 	return formattedDate.toString();
 }
 
-export default function FileItem({ file, onDeleteItem, date }) {
+export default function FileItem({ file, onDeleteItem, date, progressPercent }) {
 	return (
 		<View style={styles.fileContainer}>
 			{FileIcons.getFontAwesomeIconFromMIME(file?.type)}
@@ -44,6 +46,17 @@ export default function FileItem({ file, onDeleteItem, date }) {
 				>
 					<Icon name="close" size={18} />
 				</TouchableOpacity>
+			)}
+			{progressPercent && progressPercent < 100 && (
+				<Progress.Bar
+					progress={progressPercent / 100}
+					width={null}
+					backgroundColor={colors.grey100}
+					borderWidth={0}
+					color={colors.orange}
+					style={{ height: 10 }}
+					height={10}
+				/>
 			)}
 		</View>
 	);
