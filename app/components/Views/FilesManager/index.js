@@ -64,13 +64,20 @@ class FilesManager extends Component {
 	};
 
 	onTransfer = async () => {
-		const records = {
-			id: uuid.v4(),
-			date: Date.now(),
-			files: this.state.selectedFiles,
-			contacts: this.state.selectedContacts
-		};
-		preferences.saveTransferredFiles(records).then(_ => this.fetchTransferredFiles());
+		const { selectedFiles } = this.state;
+		const date = Date.now();
+
+		for (index in selectedFiles) {
+			const file = selectedFiles[index];
+			const record = {
+				id: uuid.v4(),
+				date,
+				file,
+				contacts: this.state.selectedContacts
+			};
+			await preferences.saveTransferredFiles(record);
+		}
+		this.fetchTransferredFiles();
 	};
 
 	onRemoveSelectedFiles = file => {
@@ -78,7 +85,7 @@ class FilesManager extends Component {
 
 		if (selectedFiles.includes(file)) {
 			selectedFiles = this.state.selectedFiles.filter(item => item !== file);
-			this.setState({ selectedFiles: selectedFiles });
+			this.setState({ selectedFiles });
 		}
 	};
 
@@ -111,8 +118,9 @@ class FilesManager extends Component {
 
 		return (
 			<ScrollView>
-				{this.state.transferredFiles?.map(e =>
-					e.files.map(file => (
+				{this.state.transferredFiles?.map(e => {
+					const { file } = e;
+					return (
 						<SwipeRow
 							stopRightSwipe={0}
 							rightOpenValue={-swipeOffset}
@@ -129,8 +137,8 @@ class FilesManager extends Component {
 								<FileItem file={file} date={e.date} />
 							</View>
 						</SwipeRow>
-					))
-				)}
+					)
+				})}
 			</ScrollView>
 		);
 	};
