@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight, Button, ScrollView } from 'react-native';
+import { StyleSheet, View, TextInput, Text, Image, TouchableHighlight, Button, ScrollView, DeviceEventEmitter } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { Component } from 'react';
@@ -17,7 +17,9 @@ import FileItem from './components/FileItem';
 import uuid from 'react-native-uuid';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as RNFS from 'react-native-fs';
+import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import { refWebRTC } from '../../../services/WebRTC';
 
 const swipeOffset = Device.getDeviceWidth() / 3;
 
@@ -66,6 +68,7 @@ class FilesManager extends Component {
 	onTransfer = async () => {
 		const { selectedFiles } = this.state;
 		const date = Date.now();
+		const files = [];
 
 		for (index in selectedFiles) {
 			const file = selectedFiles[index];
@@ -75,10 +78,38 @@ class FilesManager extends Component {
 				file,
 				contacts: this.state.selectedContacts
 			};
+			files.push(record);
 			await preferences.saveTransferredFiles(record);
 		}
 		this.fetchTransferredFiles();
+		this.startTransfer(files);
 	};
+
+	startTransfer = async (files) => {
+		const { selectedAddress } = this.props;
+		const webrtc = refWebRTC();
+
+		const file = files[0];
+		const addresses = file.contacts.map(e => e.address);
+		const content = await RNFS.readFile(file.file.uri.replace('file://', ''), 'base64');
+		const lookupName = file.file.name;
+
+		FileTransferWebRTC.send(content, lookupName, selectedAddress, addresses, webrtc);
+		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
+			const { completed, name, error } = stats;
+
+			if (completed && name == lookupName) {
+				// TODO: check and send next file
+				statsEvent.remove(); // remove if done
+			} else if (error && name == lookupName) {
+				const { peer, partCount, currentPart } = stats;
+
+				alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
+				// TODO: check and send next file
+				statsEvent.remove(); // remove if done
+			}
+		});
+	}
 
 	onRemoveSelectedFiles = file => {
 		let selectedFiles = this.state.selectedFiles;
