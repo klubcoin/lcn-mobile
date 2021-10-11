@@ -28,11 +28,11 @@ export default class APIService {
   static apiVoteDelegations = () => APIService.routePersistenceAPI() + `LiquivoteDelegation/list`;
   static apiVoteDelegation = (uuid) => APIService.routePersistenceAPI() + `LiquivoteDelegation/${uuid}`;
 
-  static announcePeerOnlineStatus(peerId, infoHash, left, callback) {
+  static announcePeerOnlineStatus(peerId, callback) {
     const data = {
       peer_id: peerId,
-      info_hash: infoHash,
-      left,
+      info_hash: '843D620DC0F14CEA05BC72120CC2CDC8A8929B93',
+      port: 0,
     }
     WebService.sendGet(this.apiPeerAnnounce(), data, callback);
   }
