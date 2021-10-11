@@ -544,15 +544,20 @@ class Settings extends PureComponent {
 		FileTransferWebRTC.send(privateKey, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
 			const { completed, name, error } = stats;
+			if (name != lookupName) return;
 
-			if (completed && name == lookupName) {
+			if (completed) {
 				alert('Sent backup successfully');
 				statsEvent.remove();
-			} else if (error && name == lookupName) {
+				this.setState({ privateKeyBackupStats: null });
+			} else if (error) {
 				const { peer, partCount, currentPart } = stats;
 
 				alert(`Error: Failed to send ${currentPart}/${partCount} to ${peer}`);
 				statsEvent.remove();
+				this.setState({ privateKeyBackupStats: null });
+			} else {
+				this.setState({ privateKeyBackupStats: stats });
 			}
 		});
 	}
@@ -584,7 +589,8 @@ class Settings extends PureComponent {
 			cookiesModalVisible,
 			metricsOptIn,
 			loading,
-			hintText
+			hintText,
+			privateKeyBackupStats,
 		} = this.state;
 		const { accounts, identities, selectedAddress } = this.props;
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
@@ -733,6 +739,17 @@ class Settings extends PureComponent {
 						<StyledButton type="confirm" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
 							{strings('private_key.backup_private_key')}
 						</StyledButton>
+						{!!privateKeyBackupStats &&
+							<View style={{ flexDirection: 'row' }}>
+								<Text style={styles.desc}>
+									{strings('private_key.sending_backup_progress', {
+										progress: privateKeyBackupStats.currentPart + 1,
+										total: privateKeyBackupStats.partCount,
+									})}
+								</Text>
+								<ActivityIndicator />
+							</View>
+						}
 					</View>
 					<View style={styles.setting}  >
 						<Text style={styles.title}>
