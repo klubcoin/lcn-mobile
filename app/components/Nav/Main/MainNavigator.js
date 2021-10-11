@@ -65,6 +65,7 @@ import Profile from '../../Views/Profile';
 import ProfileOnboard from '../../Views/ProfileOnboard';
 import FilesManager from '../../Views/FilesManager';
 import FileDetails from '../../Views/FilesManager/FileDetails';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -114,7 +115,7 @@ export default createStackNavigator(
 							screen: Profile
 						}
 					}),
-					VotingAppHome: createStackNavigator({
+					VotingAppHome: createDrawerNavigator({
 						VotingApp: {
 							screen: VotingApp
 						},
