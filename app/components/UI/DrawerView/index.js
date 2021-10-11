@@ -1126,6 +1126,7 @@ class DrawerView extends PureComponent {
 				>
 					<AccountList
 						enableAccountsAddition
+						navigation={this.props.navigation}
 						identities={identities}
 						selectedAddress={selectedAddress}
 						keyrings={keyrings}

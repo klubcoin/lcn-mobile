@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 	},
 	footerButton: {
 		width: '100%',
-		height: 55,
+		height: 36,
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderTopWidth: StyleSheet.hairlineWidth,
@@ -155,9 +155,7 @@ class AccountList extends PureComponent {
 		this.createAccountDuringRegistration(orderedAccounts)
 	}
 
-	
-
-	createAccountDuringRegistration(orderedAccounts){
+	createAccountDuringRegistration(orderedAccounts) {
 		console.log('accounts', orderedAccounts)
 	}
 
@@ -233,10 +231,10 @@ class AccountList extends PureComponent {
 		const { keyringController, network } = this.props;
 		let vault = JSON.parse(keyringController.vault)
 		console.log("network", network)
-		if(account == null){
+		if (account == null) {
 			return
 		}
-		if(vault == null || (vault && vault.cipher == null)){
+		if (vault == null || (vault && vault.cipher == null)) {
 			return
 		}
 		const { firstname, lastname } = await preferences.getOnboardProfile();
@@ -253,7 +251,7 @@ class AccountList extends PureComponent {
 		})
 	}
 
-	getBalance = async(selectedAddress) => {
+	getBalance = async (selectedAddress) => {
 		const { accounts, identities } = this.props;
 		let params = [selectedAddress]
 		await API.postRequest(Routes.getBalance, params, response => {
@@ -354,35 +352,35 @@ class AccountList extends PureComponent {
 		const allKeyrings = keyrings && keyrings.length ? keyrings : Engine.context.KeyringController.state.keyrings;
 
 		const accountsOrdered = allKeyrings.reduce((list, keyring) => list.concat(keyring.accounts), []);
-		
-		if(accounts){
-			return accountsOrdered
-			.filter(address => !!identities[toChecksumAddress(address)])
-			.map((addr, index) => {
-				const checksummedAddress = toChecksumAddress(addr);
-				const identity = identities[checksummedAddress];
-				const { name, address } = identity;
-				const identityAddressChecksummed = toChecksumAddress(address);
-				const isSelected = identityAddressChecksummed === selectedAddress;
-				const isImported = this.isImported(allKeyrings, identityAddressChecksummed);
-				let balance = 0x0;
-				if (accounts[identityAddressChecksummed]) {
-					balance = accounts[identityAddressChecksummed] ? accounts[identityAddressChecksummed].balance : null;
-				}
 
-				const balanceError = getBalanceError ? getBalanceError(balance) : null;
-				return {
-					index,
-					name,
-					address: identityAddressChecksummed,
-					balance,
-					isSelected,
-					isImported,
-					balanceError
-				};
-			});	
+		if (accounts) {
+			return accountsOrdered
+				.filter(address => !!identities[toChecksumAddress(address)])
+				.map((addr, index) => {
+					const checksummedAddress = toChecksumAddress(addr);
+					const identity = identities[checksummedAddress];
+					const { name, address } = identity;
+					const identityAddressChecksummed = toChecksumAddress(address);
+					const isSelected = identityAddressChecksummed === selectedAddress;
+					const isImported = this.isImported(allKeyrings, identityAddressChecksummed);
+					let balance = 0x0;
+					if (accounts[identityAddressChecksummed]) {
+						balance = accounts[identityAddressChecksummed] ? accounts[identityAddressChecksummed].balance : null;
+					}
+
+					const balanceError = getBalanceError ? getBalanceError(balance) : null;
+					return {
+						index,
+						name,
+						address: identityAddressChecksummed,
+						balance,
+						isSelected,
+						isImported,
+						balanceError
+					};
+				});
 		}
-		
+
 	}
 
 	keyExtractor = item => item.address;
@@ -423,6 +421,12 @@ class AccountList extends PureComponent {
 							testID={'import-account-button'}
 						>
 							<Text style={styles.btnText}>{strings('accounts.import_account')}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={this.restoreAccountFromFriends}
+							style={styles.footerButton}
+						>
+							<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
 						</TouchableOpacity>
 					</View>
 				)}
