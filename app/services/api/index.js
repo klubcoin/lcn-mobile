@@ -88,7 +88,10 @@ const Api = {
   getRequest: (route, callback, errorCallback = null) => {
     let url = routes.mainNetWork.route + route
     const fetchOptions = {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
     }
     console.log(route)
     fetch(url, fetchOptions).then(response => response.text()).then(text => {
