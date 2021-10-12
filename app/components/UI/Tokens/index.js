@@ -254,7 +254,7 @@ class Tokens extends PureComponent {
 			secondaryBalance = !balanceFiat ? balanceFiat : balanceValue;
 		}
 
-		if (asset?.balanceError) {
+		if (!app && asset?.balanceError) {
 			mainBalance = asset.symbol;
 			secondaryBalance = strings('wallet.unable_to_load');
 		}
