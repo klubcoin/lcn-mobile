@@ -77,7 +77,7 @@ export class AddCustomApps extends PureComponent {
 
   componentDidMount() {
     const { selectedApp } = this.props;
-    this.fetchIstances(selectedApp.cetCode || 'LiquivoteInstance');
+    this.fetchIstances(selectedApp.cetCode || `${selectedApp.name}Instance`);
   }
 
   componentDidUpdate(prevProps) {
@@ -85,7 +85,7 @@ export class AddCustomApps extends PureComponent {
     if (prevProps != this.props) {
       this.selectedAsset = {};
 
-      this.fetchIstances(selectedApp.cetCode);
+      this.fetchIstances(selectedApp.cetCode || `${selectedApp.name}Instance`);
     }
   }
 
