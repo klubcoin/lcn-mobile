@@ -22,6 +22,7 @@ import ErrorBoundary from '../ErrorBoundary';
 import API from 'services/api'
 import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
+import { setOnlinePeerWallets } from '../../../actions/contacts';
 
 
 const styles = StyleSheet.create({
@@ -121,13 +122,12 @@ class Wallet extends PureComponent {
 	};
 
 	announceOnline() {
-		const { selectedAddress } = this.props;
+		const { selectedAddress, updateOnlinePeerWallets } = this.props;
 		const peerId = stripHexPrefix(selectedAddress);
 
 		APIService.announcePeerOnlineStatus(peerId, (success, json) => {
-			console.warn('what?', json)
-			if (success && json) {
-
+			if (success && json.peers) {
+				updateOnlinePeerWallets(json.peers);
 			}
 		})
 	}
@@ -344,7 +344,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	showTransactionNotification: args => dispatch(showTransactionNotification(args)),
-	hideCurrentNotification: () => dispatch(hideCurrentNotification())
+	hideCurrentNotification: () => dispatch(hideCurrentNotification()),
+	updateOnlinePeerWallets: (peers) => dispatch(setOnlinePeerWallets(peers)),
 });
 
 export default connect(
