@@ -67,12 +67,12 @@ export default class FriendMessageOverview extends PureComponent {
 		/**
 		 * Object containing current page title and url
 		 */
-		networkInfo: PropTypes.object,
+		networkInfo: PropTypes.object
 	};
 
 	state = {
 		truncateMessage: false,
-		showExpandedMessage: false,
+		showExpandedMessage: false
 	};
 
 	onCancel = () => {
@@ -118,8 +118,8 @@ export default class FriendMessageOverview extends PureComponent {
 	};
 
 	toggleExpandedMessage = () => {
-		this.setState({ showExpandedMessage: !this.state.showExpandedMessage })
-	}
+		this.setState({ showExpandedMessage: !this.state.showExpandedMessage });
+	};
 
 	render() {
 		const { visible, networkInfo, message, hideModal, confirmLabel, cancelLabel } = this.props;
@@ -162,7 +162,7 @@ export default class FriendMessageOverview extends PureComponent {
 
 		return (
 			<Modal
-				isVisible={visible}
+				isVisible={!!visible}
 				animationIn="slideInUp"
 				animationOut="slideOutDown"
 				style={styles.bottomModal}
