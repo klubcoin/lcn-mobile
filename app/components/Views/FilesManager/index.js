@@ -118,8 +118,7 @@ class FilesManager extends Component {
 		const lookupName = file.file.name;
 
 		this.updatePreference(file, statuses.process);
-
-		FileTransferWebRTC.send(content, lookupName, selectedAddress, addresses, webrtc);
+		FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 			const { completed, name, error } = stats;
 

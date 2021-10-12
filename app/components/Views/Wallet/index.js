@@ -19,10 +19,10 @@ import { getTicker } from '../../../util/transactions';
 import OnboardingWizard from '../../UI/OnboardingWizard';
 import { showTransactionNotification, hideCurrentNotification } from '../../../actions/notification';
 import ErrorBoundary from '../ErrorBoundary';
-import API from 'services/api'
+import API from 'services/api';
 import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
-
+import { setOnlinePeerWallets } from '../../../actions/contacts';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -112,53 +112,59 @@ class Wallet extends PureComponent {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 			AssetsDetectionController.detectAssets();
 			// AccountTrackerController.refresh();
-			this.getBalance()
+			this.getBalance();
 			this.getWalletInfo();
 			this.mounted = true;
 		});
-		this.getCurrentConversion()
-		this.announceOnline()
+		this.getCurrentConversion();
+		this.announceOnline();
 	};
 
 	announceOnline() {
-		const { selectedAddress } = this.props;
+		const { selectedAddress, updateOnlinePeerWallets } = this.props;
 		const peerId = stripHexPrefix(selectedAddress);
 
 		APIService.announcePeerOnlineStatus(peerId, (success, json) => {
-			console.warn('what?', json)
-			if (success && json) {
-
+			if (success && json.peers) {
+				updateOnlinePeerWallets(json.peers);
 			}
-		})
+		});
 	}
 
 	async getWalletInfo() {
 		const { selectedAddress } = this.props;
 		const { PreferencesController } = Engine.context;
 
-		API.postRequest(Routes.walletInfo, [
-			selectedAddress
-		], response => {
-			if (response.result) {
-				const name = response.result;
-				PreferencesController.setAccountLabel(selectedAddress, name);
+		API.postRequest(
+			Routes.walletInfo,
+			[selectedAddress],
+			response => {
+				if (response.result) {
+					const name = response.result;
+					PreferencesController.setAccountLabel(selectedAddress, name);
+				}
+			},
+			error => {
+				console.warn('error wallet info', error);
 			}
-		}, error => {
-			console.warn('error wallet info', error)
-		})
+		);
 	}
 
 	getCurrentConversion = () => {
-		API.getRequest(Routes.getConversions, response => {
-			if (response.data.length > 0) {
-				this.setState({
-					currentConversion: response.data[0].to
-				})
+		API.getRequest(
+			Routes.getConversions,
+			response => {
+				if (response.data.length > 0) {
+					this.setState({
+						currentConversion: response.data[0].to
+					});
+				}
+			},
+			error => {
+				console.log(error);
 			}
-		}, error => {
-			console.log(error)
-		})
-	}
+		);
+	};
 
 	onRefresh = async () => {
 		requestAnimationFrame(async () => {
@@ -183,19 +189,24 @@ class Wallet extends PureComponent {
 	getBalance = async () => {
 		const { accounts, selectedAddress, identities } = this.props;
 		// for(const account in accounts){
-		let params = [selectedAddress]
-		await API.postRequest(Routes.getBalance, params, response => {
-			// console.log(parseInt(response.result, 16))
-			const balance = response.result
-			accounts[selectedAddress] = {
-				balance: balance,
-				conversion: this.state.currentConversion
+		let params = [selectedAddress];
+		await API.postRequest(
+			Routes.getBalance,
+			params,
+			response => {
+				// console.log(parseInt(response.result, 16))
+				const balance = response.result;
+				accounts[selectedAddress] = {
+					balance: balance,
+					conversion: this.state.currentConversion
+				};
+				const { AccountTrackerController } = Engine.context;
+				AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
+			},
+			error => {
+				console.log(error.message);
 			}
-			const { AccountTrackerController } = Engine.context;
-			AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
-		}, error => {
-			console.log(error.message)
-		})
+		);
 		// }
 	};
 
@@ -248,7 +259,7 @@ class Wallet extends PureComponent {
 		let balance = 0;
 		let assets = tokens;
 		if (selectedAddress && accounts) {
-			balance = accounts[selectedAddress].balance
+			balance = accounts[selectedAddress].balance;
 			// balance = "0x00"
 			assets = [
 				{
@@ -267,18 +278,15 @@ class Wallet extends PureComponent {
 
 		console.log({
 			accounts
-		})
-
+		});
 
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 
 		return (
 			<View style={styles.wrapper}>
-				{
-					(selectedAddress && account) && (
-						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
-					)
-				}
+				{selectedAddress && account && (
+					<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
+				)}
 				<ScrollableTabView
 					renderTabBar={this.renderTabBar}
 					// eslint-disable-next-line react/jsx-no-bind
@@ -322,7 +330,7 @@ class Wallet extends PureComponent {
 					style={styles.wrapper}
 					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
 				>
-					{(this.props.selectedAddress && this.props.accounts) ? this.renderContent() : this.renderLoader()}
+					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
 				</ScrollView>
 				{this.renderOnboardingWizard()}
 			</View>
@@ -344,7 +352,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	showTransactionNotification: args => dispatch(showTransactionNotification(args)),
-	hideCurrentNotification: () => dispatch(hideCurrentNotification())
+	hideCurrentNotification: () => dispatch(hideCurrentNotification()),
+	updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers))
 });
 
 export default connect(

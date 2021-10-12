@@ -516,8 +516,8 @@ class Settings extends PureComponent {
 		this.props.navigation.navigate('Contacts', {
 			contactSelection: true,
 			onConfirm: this.sendPrivateKeyBackup
-		})
-	}
+		});
+	};
 
 	async getPrivateKey() {
 		const { selectedAddress } = this.props;
@@ -527,10 +527,10 @@ class Settings extends PureComponent {
 		return await KeyringController.exportAccount(password, selectedAddress);
 	}
 
-	sendPrivateKeyBackup = async (contacts) => {
+	sendPrivateKeyBackup = async contacts => {
 		if (contacts.length < 2) {
 			alert(strings('private_key.must_select_at_least_2_contacts'));
-			return
+			return;
 		}
 
 		const webrtc = refWebRTC();
@@ -541,8 +541,8 @@ class Settings extends PureComponent {
 		const privateKey = await this.getPrivateKey();
 		const addresses = contacts.map(e => e.address);
 
-		FileTransferWebRTC.send(privateKey, lookupName, selectedAddress, addresses, webrtc);
-		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
+		FileTransferWebRTC.sendAsParts(privateKey, lookupName, selectedAddress, addresses, webrtc);
+		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 			const { completed, name, error } = stats;
 			if (name != lookupName) return;
 
@@ -560,7 +560,7 @@ class Settings extends PureComponent {
 				this.setState({ privateKeyBackupStats: stats });
 			}
 		});
-	}
+	};
 
 	recoverPrivateKey = () => {
 		const { selectedAddress, addressBook, network, identities } = this.props;
@@ -578,7 +578,7 @@ class Settings extends PureComponent {
 			const content = await RNFS.readFile(path, 'utf8');
 			alert('Restored private key: ' + content);
 		});
-	}
+	};
 
 	render = () => {
 		const { approvedHosts, seedphraseBackedUp, browserHistory, privacyMode, thirdPartyApiMode } = this.props;
@@ -590,7 +590,7 @@ class Settings extends PureComponent {
 			metricsOptIn,
 			loading,
 			hintText,
-			privateKeyBackupStats,
+			privateKeyBackupStats
 		} = this.state;
 		const { accounts, identities, selectedAddress } = this.props;
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
@@ -730,34 +730,26 @@ class Settings extends PureComponent {
 						</StyledButton>
 					</View>
 					<View style={styles.setting}>
-						<Text style={styles.title}>
-							{strings('private_key.backup_private_key')}
-						</Text>
-						<Text style={styles.desc}>
-							{strings('private_key.backup_private_key_desc')}
-						</Text>
+						<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
+						<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
 						<StyledButton type="confirm" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
 							{strings('private_key.backup_private_key')}
 						</StyledButton>
-						{!!privateKeyBackupStats &&
+						{!!privateKeyBackupStats && (
 							<View style={{ flexDirection: 'row' }}>
 								<Text style={styles.desc}>
 									{strings('private_key.sending_backup_progress', {
 										progress: privateKeyBackupStats.currentPart + 1,
-										total: privateKeyBackupStats.partCount,
+										total: privateKeyBackupStats.partCount
 									})}
 								</Text>
 								<ActivityIndicator />
 							</View>
-						}
+						)}
 					</View>
-					<View style={styles.setting}  >
-						<Text style={styles.title}>
-							{strings('private_key.recover_private_key')}
-						</Text>
-						<Text style={styles.desc}>
-							{strings('private_key.recover_private_key_desc')}
-						</Text>
+					<View style={styles.setting}>
+						<Text style={styles.title}>{strings('private_key.recover_private_key')}</Text>
+						<Text style={styles.desc}>{strings('private_key.recover_private_key_desc')}</Text>
 						<StyledButton type="normal" onPress={this.recoverPrivateKey} containerStyle={styles.confirm}>
 							{strings('private_key.recover_private_key')}
 						</StyledButton>
@@ -900,7 +892,7 @@ const mapStateToProps = state => ({
 	passwordHasBeenSet: state.user.passwordSet,
 	seedphraseBackedUp: state.user.seedphraseBackedUp,
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
-	network: state.engine.backgroundState.NetworkController.network,
+	network: state.engine.backgroundState.NetworkController.network
 });
 
 const mapDispatchToProps = dispatch => ({
