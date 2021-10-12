@@ -5,8 +5,10 @@ import { PropTypes } from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { connect } from 'react-redux';
-import { toChecksumAddress } from 'ethereumjs-util';
+import { setOnlinePeerWallets } from '../../../actions/contacts';
+import { toChecksumAddress, stripHexPrefix } from 'ethereumjs-util';
 import Engine from '../../../core/Engine';
+import APIService from '../../../services/APIService';
 import StyledButton from '../../UI/StyledButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FriendRequestTypes, LiquichainNameCard } from './FriendRequestMessages'
@@ -114,7 +116,8 @@ class Contacts extends PureComponent {
     this.messaging.initConnection();
     this.data = this.props.navigation.getParam('data');
     this.handleFriendRequestUpdate();
-    this.pingFriends(contacts);
+    // this.pingFriends(contacts);
+    this.announceOnline();
   }
 
   componentDidUpdate = prevProps => {
@@ -129,6 +132,17 @@ class Contacts extends PureComponent {
 
   componentWillUnmount() {
     this.messaging && this.messaging.disconnect();
+  }
+
+  announceOnline() {
+    const { selectedAddress, updateOnlinePeerWallets } = this.props;
+    const peerId = stripHexPrefix(selectedAddress);
+
+    APIService.announcePeerOnlineStatus(peerId, (success, json) => {
+      if (success && json.peers) {
+        updateOnlinePeerWallets(json.peers);
+      }
+    })
   }
 
   pingFriends(contacts) {
@@ -333,9 +347,13 @@ class Contacts extends PureComponent {
   };
 
   renderContact = ({ item }) => {
+    const { onlinePeers } = this.props;
     const { selectedContacts } = this.state;
-    const { address, name, online } = item;
+    const { address, name } = item;
     const selected = !!selectedContacts.find(e => e.address == address);
+
+    const addressHex = stripHexPrefix(address);
+    const online = !!onlinePeers.find(e => e.peer_id == addressHex);
 
     return (
       <>
@@ -453,6 +471,11 @@ const mapStateToProps = state => ({
   network: state.engine.backgroundState.NetworkController.network,
   selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
   identities: state.engine.backgroundState.PreferencesController.identities,
+  onlinePeers: state.contacts.onlineWallets,
 });
 
-export default connect(mapStateToProps)(Contacts);
+const mapDispatchToProps = dispatch => ({
+  updateOnlinePeerWallets: (peers) => dispatch(setOnlinePeerWallets(peers)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
