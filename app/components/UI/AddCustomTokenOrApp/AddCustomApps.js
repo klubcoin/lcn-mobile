@@ -92,15 +92,16 @@ export class AddCustomApps extends PureComponent {
   addApp = async () => {
     const { AssetsController } = Engine.context;
     const { selectedAddress } = Engine.state.PreferencesController;
-    const { hexHash, name, symbol, decimals } = this.selectedAsset;
-    const { uuid, iconUrl } = this.selectedInstance;
+    const { name, symbol, decimals } = this.selectedAsset;
+    const { uuid, iconUrl, appWallet, ownerWallet } = this.selectedInstance;
     const { selectedApp, onAddToken } = this.props;
-    const address = addHexPrefix(hexHash);
+    const address = addHexPrefix(uuid);
     const icon = iconUrl || selectedApp.iconUrl;
     await AssetsController.addToken(address, symbol || name, decimals || 0, icon);
 
     const isVotingApp = selectedApp.name?.toLowerCase().includes('vote')
       || selectedApp.description?.toLowerCase().includes('vote');
+    const isCustomApp = !!(appWallet || ownerWallet);
 
     if (isVotingApp) {
       APIService.registerVoter(uuid, selectedAddress, async (success, json) => {
@@ -116,7 +117,17 @@ export class AddCustomApps extends PureComponent {
           if (onAddToken) onAddToken();
         }
       })
-    } else if (onAddToken) onAddToken();
+    } else {
+      if (isCustomApp) {
+        await this.prefs.saveApp({
+          address,
+          ...this.selectedAsset,
+          instance: this.selectedInstance,
+          application: selectedApp,
+        })
+      }
+      if (onAddToken) onAddToken();
+    }
   };
 
   cancelAddToken = () => {
