@@ -244,7 +244,7 @@ export default class FileTransferWebRTC {
     ft._readFileStats();
   }
 
-  static send(data, lookupName, from, addresses, webrtc) {
+  static sendAsParts(data, lookupName, from, addresses, webrtc) {
     const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
     ft.checksum = sha256(data).digest('hex');
     ft.name = lookupName;

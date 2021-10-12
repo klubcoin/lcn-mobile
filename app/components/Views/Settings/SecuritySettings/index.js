@@ -541,7 +541,7 @@ class Settings extends PureComponent {
 		const privateKey = await this.getPrivateKey();
 		const addresses = contacts.map(e => e.address);
 
-		FileTransferWebRTC.send(privateKey, lookupName, selectedAddress, addresses, webrtc);
+		FileTransferWebRTC.sendAsParts(privateKey, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
 			const { completed, name, error } = stats;
 			if (name != lookupName) return;

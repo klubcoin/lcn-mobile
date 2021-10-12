@@ -106,7 +106,7 @@ class FilesManager extends Component {
 		const content = await RNFS.readFile(file.file.uri.replace('file://', ''), 'base64');
 		const lookupName = file.file.name;
 
-		FileTransferWebRTC.send(content, lookupName, selectedAddress, addresses, webrtc);
+		FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 			const { completed, name, error } = stats;
 
