@@ -16,6 +16,7 @@ import notificationReducer from './notification';
 import infuraAvailabilityReducer from './infuraAvailability';
 import collectiblesReducer from './collectibles';
 import { combineReducers } from 'redux';
+import contactReducer from './contacts';
 
 const rootReducer = combineReducers({
 	analytics: analyticsReducer,
@@ -34,7 +35,8 @@ const rootReducer = combineReducers({
 	notification: notificationReducer,
 	swaps: swapsReducer,
 	fiatOrders,
-	infuraAvailability: infuraAvailabilityReducer
+	infuraAvailability: infuraAvailabilityReducer,
+	contacts: contactReducer,
 });
 
 export default rootReducer;
