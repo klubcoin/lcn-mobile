@@ -31,6 +31,8 @@ import Device from '../../../util/Device';
 import * as RNFS from 'react-native-fs';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
+import { statuses } from './FileDetails';
+import { process } from 'babel-jest';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
@@ -42,8 +44,10 @@ class FilesManager extends Component {
 		isLoading: false,
 		selectedIds: [],
 		selectedFiles: [],
-		progressFiles: [],
+		localFiles: [],
+		processFiles: [],
 		transferredFiles: [],
+		failedFiles: [],
 		contacts: [],
 		selectedContacts: []
 	};
@@ -58,13 +62,17 @@ class FilesManager extends Component {
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 		this.setState({ contacts: contacts });
 
-		this.fetchTransferredFiles();
+		this.fetchLocalFiles();
 	}
 
-	async fetchTransferredFiles() {
+	async fetchLocalFiles() {
+		// await preferences.deleteTransferredFiles();
 		var results = await preferences.getTransferredFiles();
+
 		if (results) {
-			this.setState({ transferredFiles: results });
+			this.setState({
+				localFiles: results
+			});
 		}
 	}
 
@@ -86,6 +94,8 @@ class FilesManager extends Component {
 			const file = selectedFiles[index];
 			const record = {
 				id: uuid.v4(),
+				status: statuses.process,
+				percent: 0,
 				date,
 				file,
 				contacts: this.state.selectedContacts
@@ -93,7 +103,7 @@ class FilesManager extends Component {
 			files.push(record);
 			await preferences.saveTransferredFiles(record);
 		}
-		this.fetchTransferredFiles();
+		this.fetchLocalFiles();
 		this.startTransfer(files);
 	};
 
@@ -102,9 +112,12 @@ class FilesManager extends Component {
 		const webrtc = refWebRTC();
 
 		const file = files[0];
+
 		const addresses = file.contacts.map(e => e.address);
 		const content = await RNFS.readFile(file.file.uri.replace('file://', ''), 'base64');
 		const lookupName = file.file.name;
+
+		this.updatePreference(file, statuses.process);
 
 		FileTransferWebRTC.send(content, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
@@ -112,15 +125,43 @@ class FilesManager extends Component {
 
 			if (completed && name == lookupName) {
 				// TODO: check and send next file
+				this.updatePreference(file, statuses.success);
 				statsEvent.remove(); // remove if done
 			} else if (error && name == lookupName) {
 				const { peer, partCount, currentPart } = stats;
+				this.updatePreference(file, statuses.failed);
 
 				alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
 				// TODO: check and send next file
 				statsEvent.remove(); // remove if done
 			}
 		});
+	};
+
+	updatePreference = async (file, status) => {
+		const { localFiles } = this.state;
+		var file = localFiles.find(e => e.id === file.id);
+		console.log('file', file);
+
+		if (!file) return;
+
+		switch (status) {
+			case statuses.process:
+				file.status = statuses.process;
+				break;
+			case statuses.success:
+				file.status = statuses.success;
+				break;
+			case statuses.failed:
+				file.status = statuses.failed;
+				break;
+			default:
+				break;
+		}
+		await preferences.saveTransferredFiles(localFiles);
+		this.fetchLocalFiles();
+		//check preference => update file status, percent with same uuid
+		// move to next file
 	};
 
 	onRemoveSelectedFiles = file => {
@@ -147,6 +188,7 @@ class FilesManager extends Component {
 		console.log('On recovery');
 		// if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
 	};
+
 	onDelete = (file, swipeValue) => {
 		console.log('On delete');
 		// if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
@@ -156,60 +198,62 @@ class FilesManager extends Component {
 		this.props.navigation.navigate('FileDetails', { selectedFile: file });
 	};
 
-	renderTransferredFiles = () => {
-		if (this.state.transferredFiles?.length <= 0 || !this.state.transferredFiles)
-			return (
-				<View style={[styles.contacts, { width: '100%' }]}>
-					<Text style={{ color: colors.black }}>You've not transferred any files yet</Text>
+	renderFileSections = status => {
+		let title;
+		if (status === statuses.process) {
+			title = 'In processing';
+		} else if (status === statuses.failed) {
+			title = 'Failed files';
+		} else if (status === statuses.success) {
+			title = 'Transferred files';
+		}
+
+		const items = this.state.localFiles?.filter(e => e.status === status);
+
+		return (
+			items.length > 0 && (
+				<View style={styles.files}>
+					<Text style={styles.title}>{title}</Text>
+					<ScrollView>
+						{items.map(e => {
+							const { file } = e;
+
+							return (
+								<SwipeRow
+									stopRightSwipe={0}
+									rightOpenValue={-swipeOffset}
+									disableRightSwipe
+									disableLeftSwipe={e.status !== statuses.success}
+									onRowPress={() => this.onViewDetails(file)}
+								>
+									<View style={styles.standaloneRowBack}>
+										<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
+											<View
+												style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}
+											>
+												<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
+											</View>
+										</TouchableWithoutFeedback>
+
+										<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
+											<View style={styles.swipeableOption}>
+												<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
+											</View>
+										</TouchableWithoutFeedback>
+									</View>
+									<View style={styles.standaloneRowFront}>
+										<FileItem
+											file={file}
+											date={e.date}
+											processPercent={e.status === statuses.process && 30}
+										/>
+									</View>
+								</SwipeRow>
+							);
+						})}
+					</ScrollView>
 				</View>
-			);
-
-		return (
-			<ScrollView>
-				{this.state.transferredFiles?.map(e => {
-					const { file } = e;
-					return (
-						<SwipeRow
-							stopRightSwipe={0}
-							rightOpenValue={-swipeOffset}
-							disableRightSwipe
-							onRowPress={() => this.onViewDetails(file)}
-						>
-							<View style={styles.standaloneRowBack}>
-								<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
-									<View style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}>
-										<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
-									</View>
-								</TouchableWithoutFeedback>
-
-								<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
-									<View style={styles.swipeableOption}>
-										<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
-									</View>
-								</TouchableWithoutFeedback>
-							</View>
-							<View style={styles.standaloneRowFront}>
-								<FileItem file={file} date={e.date} />
-							</View>
-						</SwipeRow>
-					);
-				})}
-			</ScrollView>
-		);
-	};
-
-	renderProcessFiles = () => {
-		return (
-			<ScrollView>
-				{this.state.progressFiles?.map(e => {
-					const { file } = e;
-					return (
-						<TouchableWithoutFeedback onPress={() => this.onViewDetails(file)}>
-							<FileItem file={file} date={e.date} progressPercent={30} />
-						</TouchableWithoutFeedback>
-					);
-				})}
-			</ScrollView>
+			)
 		);
 	};
 
@@ -242,16 +286,10 @@ class FilesManager extends Component {
 							onChangeText={this.handleSearch}
 						/>
 					</View>
-					{this.state.progressFiles.length > 0 && (
-						<View style={styles.files}>
-							<Text style={styles.title}>In processing</Text>
-							{this.renderProcessFiles()}
-						</View>
-					)}
-					<View style={styles.files}>
-						<Text style={styles.title}>Transferred files</Text>
-						{this.renderTransferredFiles()}
-					</View>
+					{this.renderFileSections(statuses.process)}
+					{this.renderFileSections(statuses.failed)}
+					{this.renderFileSections(statuses.success)}
+
 					<CustomButton title="Transfer other files" onPress={this.onPickFiles} style={styles.customButton} />
 				</View>
 			</View>
@@ -311,7 +349,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-end'
 	},
 	standaloneRowFront: {
-		alignItems: 'center',
 		backgroundColor: colors.white,
 		justifyContent: 'center'
 	},

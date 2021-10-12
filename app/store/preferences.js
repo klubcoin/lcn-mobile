@@ -119,8 +119,13 @@ class Preferences {
 	}
 
 	async getTransferredFiles() {
-		const apps = this.storage[kTransferredFiles] || {};
-		return Object.keys(apps).map(key => apps[key]);
+		const transferredFiles = this.storage[kTransferredFiles] || {};
+		return Object.keys(transferredFiles).map(key => transferredFiles[key]);
+	}
+
+	async deleteTransferredFiles() {
+		this.storage[kTransferredFiles] = {};
+		await this.saveStorage(kTransferredFiles);
 	}
 }
 

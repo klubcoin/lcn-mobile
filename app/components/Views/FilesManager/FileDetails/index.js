@@ -10,7 +10,8 @@ import PartItem from '../components/PartItem';
 const statuses = {
 	success: 'SUCCESS',
 	failed: 'FAILED',
-	process: 'PROCESSING'
+	process: 'PROCESSING',
+	pending: 'PENDING'
 };
 
 const getStatusContent = status => {
@@ -40,7 +41,7 @@ const getStatusContent = status => {
 	}
 };
 
-export { getStatusContent };
+export { statuses, getStatusContent };
 
 const fakeData = {
 	status: statuses.process,

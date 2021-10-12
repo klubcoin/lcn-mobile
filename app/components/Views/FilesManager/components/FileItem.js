@@ -28,28 +28,30 @@ function formatDates(date) {
 	return formattedDate.toString();
 }
 
-export default function FileItem({ file, onDeleteItem, date, progressPercent }) {
+export default function FileItem({ file, onDeleteItem, date, processPercent }) {
 	return (
-		<View style={styles.fileContainer}>
-			{FileIcons.getFontAwesomeIconFromMIME(file?.type)}
-			<View style={{ alignItems: 'flex-start', marginLeft: 10, flex: 10 }}>
-				<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
-					{file?.name}
-				</Text>
-				{date && <Text>{formatDates(date)}</Text>}
-				<Text>{formatBytes(file?.size ?? 0)}</Text>
+		<View style={{ flex: 1 }}>
+			<View style={styles.fileContainer}>
+				{FileIcons.getFontAwesomeIconFromMIME(file?.type)}
+				<View style={{ alignItems: 'flex-start', marginLeft: 10, flex: 10 }}>
+					<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
+						{file?.name}
+					</Text>
+					{date && <Text>{formatDates(date)}</Text>}
+					<Text>{formatBytes(file?.size ?? 0)}</Text>
+				</View>
+				{onDeleteItem && (
+					<TouchableOpacity
+						style={{ flex: 1, alignSelf: 'flex-start', marginTop: 5, marginLeft: 5 }}
+						onPress={() => onDeleteItem(file)}
+					>
+						<Icon name="close" size={18} />
+					</TouchableOpacity>
+				)}
 			</View>
-			{onDeleteItem && (
-				<TouchableOpacity
-					style={{ flex: 1, alignSelf: 'flex-start', marginTop: 5, marginLeft: 5 }}
-					onPress={() => onDeleteItem(file)}
-				>
-					<Icon name="close" size={18} />
-				</TouchableOpacity>
-			)}
-			{progressPercent && progressPercent < 100 && (
+			{processPercent && (
 				<Progress.Bar
-					progress={progressPercent / 100}
+					progress={processPercent / 100}
 					width={null}
 					backgroundColor={colors.grey100}
 					borderWidth={0}
