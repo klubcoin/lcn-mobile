@@ -67,7 +67,7 @@ const updatePreference = async (selectedFile, status, percent) => {
 
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) =>
-		getNavigationOptionsTitle(strings('drawer.files_manager'), navigation);
+		getNavigationOptionsTitle(strings('drawer.file_manager'), navigation);
 
 	state = {
 		isLoading: false,
