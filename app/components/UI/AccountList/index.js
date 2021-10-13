@@ -242,7 +242,7 @@ class AccountList extends PureComponent {
 		const image = await RNFS.readFile(avatar, 'base64');
 
 		const request = RestoreSecretRequest(selectedAddress, firstname, lastname, image);
-		FileTransferWebRTC.sendAsOne(JSON.stringify(request), selectedAddress, addresses, webrtc);
+		FileTransferWebRTC.sendAsOne(request, selectedAddress, addresses, webrtc);
 	}
 
 	/*
