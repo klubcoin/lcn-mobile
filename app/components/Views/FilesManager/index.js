@@ -139,8 +139,8 @@ class FilesManager extends Component {
 
 	updatePreference = async (file, status) => {
 		const { localFiles } = this.state;
+		var results = await preferences.getTransferredFiles;
 		var file = localFiles.find(e => e.id === file.id);
-		console.log('file', file);
 
 		if (!file) return;
 
@@ -213,44 +213,40 @@ class FilesManager extends Component {
 			items.length > 0 && (
 				<View style={styles.files}>
 					<Text style={styles.title}>{title}</Text>
-					<ScrollView>
-						{items.map(e => {
-							const { file } = e;
+					{items.map(e => {
+						const { file } = e;
 
-							return (
-								<SwipeRow
-									stopRightSwipe={0}
-									rightOpenValue={-swipeOffset}
-									disableRightSwipe
-									disableLeftSwipe={e.status !== statuses.success}
-									onRowPress={() => this.onViewDetails(file)}
-								>
-									<View style={styles.standaloneRowBack}>
-										<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
-											<View
-												style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}
-											>
-												<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
-											</View>
-										</TouchableWithoutFeedback>
+						return (
+							<SwipeRow
+								stopRightSwipe={0}
+								rightOpenValue={-swipeOffset}
+								disableRightSwipe
+								disableLeftSwipe={e.status !== statuses.success}
+								onRowPress={() => this.onViewDetails(file)}
+							>
+								<View style={styles.standaloneRowBack}>
+									<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
+										<View style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}>
+											<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
+										</View>
+									</TouchableWithoutFeedback>
 
-										<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
-											<View style={styles.swipeableOption}>
-												<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
-											</View>
-										</TouchableWithoutFeedback>
-									</View>
-									<View style={styles.standaloneRowFront}>
-										<FileItem
-											file={file}
-											date={e.date}
-											processPercent={e.status === statuses.process && 30}
-										/>
-									</View>
-								</SwipeRow>
-							);
-						})}
-					</ScrollView>
+									<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
+										<View style={styles.swipeableOption}>
+											<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
+										</View>
+									</TouchableWithoutFeedback>
+								</View>
+								<View style={styles.standaloneRowFront}>
+									<FileItem
+										file={file}
+										date={e.date}
+										processPercent={e.status === statuses.process && 30}
+									/>
+								</View>
+							</SwipeRow>
+						);
+					})}
 				</View>
 			)
 		);
@@ -285,10 +281,11 @@ class FilesManager extends Component {
 							onChangeText={this.handleSearch}
 						/>
 					</View>
-					{this.renderFileSections(statuses.process)}
-					{this.renderFileSections(statuses.failed)}
-					{this.renderFileSections(statuses.success)}
-
+					<ScrollView>
+						{this.renderFileSections(statuses.process)}
+						{this.renderFileSections(statuses.failed)}
+						{this.renderFileSections(statuses.success)}
+					</ScrollView>
 					<CustomButton title="Transfer other files" onPress={this.onPickFiles} style={styles.customButton} />
 				</View>
 			</View>
