@@ -8,6 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import * as base64 from 'base-64';
+import * as RNFS from 'react-native-fs';
 import { keycloakAuthSet, keycloakAuthUnset, passwordSet, passwordUnset, seedphraseNotBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
 import routes from '../../../common/routes';
@@ -311,9 +312,10 @@ class ChoosePassword extends PureComponent {
 		if (selectedAddress == null) {
 			return
 		}
-		const { firstname, lastname } = preferences.onboardProfile;
+		const { avatar, firstname, lastname } = preferences.onboardProfile;
 		const name = `${firstname} ${lastname}`;
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress);
+		const avatarb64 = await RNFS.readFile(avatar, 'base64');
+		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + avatarb64);
 
 		API.postRequest(Routes.walletCreation, [
 			name, selectedAddress, hash
