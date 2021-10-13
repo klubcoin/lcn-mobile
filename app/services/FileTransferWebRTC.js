@@ -20,13 +20,15 @@ export default class FileTransferWebRTC {
 	partCount = 0;
 	partSize = 0;
 
-	constructor(data, from, addresses, webrtc) {
+	constructor(data, from, addresses, webrtc, params) {
 		this.from = from;
 		this.data = data;
 		this.addresses = addresses;
 		this.webrtc = webrtc;
 
-		if (data && !data.action) this._prepareQueue();
+		if (data && !data.action && !(params && params.fullSend)) {
+			this._prepareQueue();
+		}
 
 		this.revokeMessageEvt = webrtc.addListener('message', (data, peer) => this._onMessage(data, peer));
 	}
@@ -220,18 +222,31 @@ export default class FileTransferWebRTC {
 
 	_readFileOnPeer = address => {
 		if (this.webrtc && this.webrtc.sendToPeer) {
-			const connectAndSend = () => {
-				this.webrtc.connectTo(address);
-				DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-					this.webrtc.sendToPeer(address, JSON.stringify(this.data));
-				});
-			};
 			if (!this.webrtc.hasChannel(address)) {
-				connectAndSend();
+				this.connectAndSend(address);
 			} else {
 				this.webrtc.sendToPeer(address, JSON.stringify(this.data));
 			}
 		}
+	};
+
+	connectAndSend = (address) => {
+		this.webrtc.connectTo(address);
+		DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
+			this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+		});
+	};
+
+	_sendAsOne = () => {
+		this.addresses.map(address => {
+			if (this.webrtc && this.webrtc.sendToPeer) {
+				if (!this.webrtc.hasChannel(address)) {
+					this.connectAndSend(address);
+				} else {
+					this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+				}
+			}
+		});
 	};
 
 	static readFile(readFileAction, addresses, webrtc) {
@@ -248,6 +263,12 @@ export default class FileTransferWebRTC {
 		ft.name = lookupName;
 		ft.timestamp = moment().unix();
 		ft._sendQueue();
+	}
+
+	static sendAsOne(data, from, addresses, webrtc) {
+		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, { fullSend: true });
+		ft.checksum = sha256(data).digest('hex');
+		ft._sendAsOne();
 	}
 
 	static sendFile(file, from, addresses) {
