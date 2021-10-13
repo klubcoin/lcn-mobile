@@ -2,10 +2,12 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
+import * as RNFS from 'react-native-fs';
 import preferences from '../../../store/preferences';
 import { strings } from '../../../../locales/i18n';
 import Engine from '../../../core/Engine';
 import routes from '../../../common/routes';
+import { refWebRTC } from '../../../services/WebRTC';
 import Identicon from '../../UI/Identicon';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import RemoteImage from '../../../components/Base/RemoteImage';
@@ -14,6 +16,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { colors } from '../../../styles/common';
 import AccountList from '../../UI/AccountList';
 import StyledButton from '../../UI/StyledButton';
+import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import { ConfirmProfileRequest } from '../../../services/Messages';
 
 const styles = StyleSheet.create({
 	container: {
@@ -96,6 +100,16 @@ class Profile extends PureComponent {
 	}
 
 	sendConfirmationRequests = async (contacts) => {
+		const webrtc = refWebRTC();
+		const { PreferencesController } = Engine.state;
+		const { selectedAddress } = PreferencesController;
+		const addresses = contacts.map(e => e.address);
+
+		const { avatar, firstname, lastname } = this.onboardProfile || {};
+		const image = await RNFS.readFile(avatar, 'base64');
+
+		const request = ConfirmProfileRequest(selectedAddress, firstname, lastname, image);
+		FileTransferWebRTC.sendAsOne(JSON.stringify(request), selectedAddress, addresses, webrtc);
 	}
 
 	onRequest() {
