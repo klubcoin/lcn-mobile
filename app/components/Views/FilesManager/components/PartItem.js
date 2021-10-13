@@ -21,22 +21,12 @@ export default function PartItem({ part }) {
 					<Icon name="attach-file" size={29} />
 				</View>
 				<View style={{ flex: 5 }}>
-					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-						<Text style={styles.title}>{name}</Text>
-						<Text style={[styles.title, { fontWeight: '300', color: colors.grey }]}>
-							{' '}
-							{`${percentages}%`}
-						</Text>
+					<View style={{ flexDirection: 'row' }}>
+						<Text style={styles.title}>{name} </Text>
+						<Text style={{ color: getStatusContent(status).color }}>{`(${
+							getStatusContent(status).string
+						})`}</Text>
 					</View>
-					<Progress.Bar
-						progress={percentages / 100}
-						width={null}
-						backgroundColor={colors.grey100}
-						borderWidth={0}
-						color={getStatusContent(status).color}
-						style={{ height: 10 }}
-						height={10}
-					/>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
 						<View style={{ flexDirection: 'row' }}>
 							{contacts.map(
@@ -46,7 +36,7 @@ export default function PartItem({ part }) {
 									)
 							)}
 						</View>
-						<Text style={{ marginLeft: 10 }}>...View more</Text>
+						{/* <Text style={{ marginLeft: 10 }}>...View more</Text> */}
 					</View>
 				</View>
 				<View style={{ flex: 1, alignItems: 'flex-end' }}>

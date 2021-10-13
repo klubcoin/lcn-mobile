@@ -45,6 +45,7 @@ const getStatusContent = status => {
 		case statuses.process:
 			return {
 				string: 'In processing',
+				icon: 'sync',
 				color: colors.orange
 			};
 		default:
