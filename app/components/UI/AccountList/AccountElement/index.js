@@ -8,6 +8,7 @@ import { getTicker } from '../../../../util/transactions';
 import { strings } from '../../../../../locales/i18n';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from 'react-redux';
+import RemoteImage from '../../../Base/RemoteImage';
 
 const EMPTY = '0x0';
 const BALANCE_KEY = 'balance';
@@ -74,6 +75,11 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: colors.grey400
+	},
+	avatar: {
+		width: 46,
+		height: 46,
+		borderRadius: 23,
 	}
 });
 
@@ -118,7 +124,7 @@ class AccountElement extends PureComponent {
 	};
 
 	render() {
-		const { disabled, updatedBalanceFromStore } = this.props;
+		const { disabled, updatedBalanceFromStore, onboardProfile } = this.props;
 		const { address, name, isSelected, isImported, balanceError } = this.props.item;
 		const { ticker } = this.props;
 		const selected = isSelected ? <Icon name="check-circle" size={30} color={colors.blue} /> : null;
@@ -129,6 +135,7 @@ class AccountElement extends PureComponent {
 				</Text>
 			</View>
 		) : null;
+		const { avatar } = onboardProfile || {};
 
 		return (
 			<View onStartShouldSetResponder={() => true}>
@@ -139,7 +146,10 @@ class AccountElement extends PureComponent {
 					onLongPress={this.onLongPress}
 					disabled={disabled}
 				>
-					<Identicon address={address} diameter={38} />
+					{!!avatar
+						? <RemoteImage source={{ uri: avatar }} style={styles.avatar} />
+						: <Identicon address={address} diameter={38} />
+					}
 					<View style={styles.accountInfo}>
 						<View style={styles.accountMain}>
 							<Text numberOfLines={1} style={[styles.accountLabel]}>
@@ -169,7 +179,8 @@ const mapStateToProps = (
 	{
 		engine: {
 			backgroundState: { PreferencesController, AccountTrackerController }
-		}
+		},
+		user: { onboardProfile }
 	},
 	{ item: { balance, address } }
 ) => {
@@ -183,7 +194,8 @@ const mapStateToProps = (
 			? selectedAccount[BALANCE_KEY]
 			: balance;
 	return {
-		updatedBalanceFromStore
+		updatedBalanceFromStore,
+		onboardProfile
 	};
 };
 
