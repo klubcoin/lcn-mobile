@@ -147,20 +147,25 @@ class FilesManager extends Component {
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 			const { completed, name, error, currentPart, partCount } = stats;
 
-			updatePreference(file, statuses.process, 0);
+			let successPercent = 0;
+
+			if (currentPart && partCount) {
+				successPercent = currentPart / partCount;
+			}
+
+			updatePreference(file, statuses.process, successPercent);
 			this.fetchLocalFiles();
 
 			if (completed && name == lookupName) {
 				// TODO: check and send next file
 				updatePreference(file, statuses.success, 1);
-
 				this.fetchLocalFiles();
+
 				statsEvent.remove(); // remove if done
 			} else if (error && name == lookupName) {
 				const { peer, partCount, currentPart } = stats;
-				let successPercent = currentPart / partCount;
-				updatePreference(file, statuses.failed, successPercent);
 
+				updatePreference(file, statuses.failed, successPercent);
 				this.fetchLocalFiles();
 
 				alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
