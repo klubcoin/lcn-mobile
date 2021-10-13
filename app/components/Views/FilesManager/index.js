@@ -36,7 +36,7 @@ import { process } from 'babel-jest';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
-const updatePreference = async (selectedFile, status) => {
+const updatePreference = async (selectedFile, status, percent) => {
 	var localFiles = await preferences.getTransferredFiles();
 	var file;
 	if (localFiles) file = localFiles.find(e => e.id === selectedFile.id);
@@ -44,6 +44,8 @@ const updatePreference = async (selectedFile, status) => {
 		file = selectedFile;
 		localFiles.push(selectedFile);
 	}
+
+	file.percent = percent;
 
 	switch (status) {
 		case statuses.process:
@@ -72,9 +74,6 @@ class FilesManager extends Component {
 		selectedIds: [],
 		selectedFiles: [],
 		localFiles: [],
-		processFiles: [],
-		transferredFiles: [],
-		failedFiles: [],
 		contacts: [],
 		selectedContacts: []
 	};
@@ -144,21 +143,24 @@ class FilesManager extends Component {
 		const content = await RNFS.readFile(file.file.uri.replace('file://', ''), 'base64');
 		const lookupName = file.file.name;
 
-		updatePreference(file, statuses.process);
-		this.fetchLocalFiles();
-
 		FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
-			const { completed, name, error } = stats;
+			const { completed, name, error, currentPart, partCount } = stats;
+
+			updatePreference(file, statuses.process, 0);
+			this.fetchLocalFiles();
 
 			if (completed && name == lookupName) {
 				// TODO: check and send next file
-				updatePreference(file, statuses.success);
+				updatePreference(file, statuses.success, 1);
+
 				this.fetchLocalFiles();
 				statsEvent.remove(); // remove if done
 			} else if (error && name == lookupName) {
 				const { peer, partCount, currentPart } = stats;
-				updatePreference(file, statuses.failed);
+				let successPercent = currentPart / partCount;
+				updatePreference(file, statuses.failed, successPercent);
+
 				this.fetchLocalFiles();
 
 				alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
@@ -243,11 +245,7 @@ class FilesManager extends Component {
 									</TouchableWithoutFeedback>
 								</View>
 								<View style={styles.standaloneRowFront}>
-									<FileItem
-										file={file}
-										date={e.date}
-										processPercent={e.status === statuses.process && 30}
-									/>
+									<FileItem file={file} date={e.date} status={e.status} processPercent={e.percent} />
 								</View>
 							</SwipeRow>
 						);

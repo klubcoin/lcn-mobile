@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { process } from 'babel-jest';
 import * as Progress from 'react-native-progress';
+import { getStatusContent } from '../FileDetails';
 
 function formatBytes(bytes, decimals = 2) {
 	if (bytes === 0) {
@@ -28,7 +29,7 @@ function formatDates(date) {
 	return formattedDate.toString();
 }
 
-export default function FileItem({ file, onDeleteItem, date, processPercent }) {
+export default function FileItem({ file, onDeleteItem, date, processPercent, status }) {
 	return (
 		<View style={{ flex: 1 }}>
 			<View style={styles.fileContainer}>
@@ -49,13 +50,13 @@ export default function FileItem({ file, onDeleteItem, date, processPercent }) {
 					</TouchableOpacity>
 				)}
 			</View>
-			{processPercent && (
+			{processPercent !== undefined && (
 				<Progress.Bar
-					progress={processPercent / 100}
+					progress={processPercent}
 					width={null}
 					backgroundColor={colors.grey100}
 					borderWidth={0}
-					color={colors.orange}
+					color={getStatusContent(status).color}
 					style={{ height: 10 }}
 					height={10}
 				/>
