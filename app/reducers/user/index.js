@@ -6,7 +6,8 @@ const initialState = {
 	passwordSet: false,
 	seedphraseBackedUp: false,
 	backUpSeedphraseVisible: false,
-	protectWalletModalVisible: false
+	protectWalletModalVisible: false,
+	onboardProfile: {},
 };
 
 const userReducer = (state = initialState, action) => {
@@ -81,6 +82,11 @@ const userReducer = (state = initialState, action) => {
 			return {
 				...state,
 				protectWalletModalVisible: false
+			};
+		case 'ONBOARD_PROFILE':
+			return {
+				...state,
+				onboardProfile: action.profile
 			};
 		default:
 			return state;
