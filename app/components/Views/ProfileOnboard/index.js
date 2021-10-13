@@ -6,6 +6,7 @@ import preferences from '../../../store/preferences';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import RemoteImage from '../../Base/RemoteImage';
 import drawables from '../../../common/drawables';
+import * as RNFS from 'react-native-fs';
 import ImagePicker from 'react-native-image-crop-picker';
 import { colors, fontStyles } from '../../../styles/common';
 import OnboardingProgress from '../../UI/OnboardingProgress';
@@ -114,8 +115,12 @@ class ProfileOnboard extends PureComponent {
       return;
     }
 
+    const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
+    if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
+    await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+
     preferences.setOnboardProfile({
-      avatar: this.avatar,
+      avatar: path,
       firstname,
       lastname,
     })
