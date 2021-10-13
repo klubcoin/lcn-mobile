@@ -234,7 +234,7 @@ class FilesManager extends Component {
 								rightOpenValue={-swipeOffset}
 								disableRightSwipe
 								disableLeftSwipe={e.status !== statuses.success}
-								onRowPress={() => this.onViewDetails(file)}
+								onRowPress={() => this.onViewDetails(e)}
 							>
 								<View style={styles.standaloneRowBack}>
 									<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>

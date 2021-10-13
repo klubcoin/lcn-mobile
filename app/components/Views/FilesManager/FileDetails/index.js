@@ -14,6 +14,20 @@ const statuses = {
 	pending: 'PENDING'
 };
 
+const formatBytes = (bytes, decimals = 2) => {
+	if (bytes === 0) {
+		return '0 Bytes';
+	}
+
+	const k = 1024;
+	const dm = decimals < 0 ? 0 : decimals;
+	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
+
 const getStatusContent = status => {
 	switch (status) {
 		case statuses.success:
@@ -41,13 +55,9 @@ const getStatusContent = status => {
 	}
 };
 
-export { statuses, getStatusContent };
+export { statuses, getStatusContent, formatBytes };
 
 const fakeData = {
-	status: statuses.process,
-	totalContacts: 10,
-	totalSizes: '16.2 MB',
-	transferredPercent: 36,
 	parts: [
 		{
 			name: 'Part 1',
@@ -129,43 +139,45 @@ export default class FileDetails extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('File details', navigation);
 
 	state = {
-		file: this.props.navigation.getParam('selectedFile'),
-		fill: fakeData.transferredPercent
+		data: this.props.navigation.getParam('selectedFile').file,
+		status: this.props.navigation.getParam('selectedFile').status,
+		contacts: this.props.navigation.getParam('selectedFile').contacts,
+		percent: this.props.navigation.getParam('selectedFile').percent
 	};
 
 	renderSummary = () => {
 		return (
 			<View style={{ alignItems: 'center' }}>
 				<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-					{FileIcons.getFontAwesomeIconFromMIME(this.state.file?.type)}
+					{FileIcons.getFontAwesomeIconFromMIME(this.state.data?.type)}
 					<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
-						{this.state.file?.name}
+						{this.state.data?.name}
 					</Text>
 				</View>
 				<AnimatedCircularProgress
 					size={150}
 					width={10}
 					rotation={0}
-					fill={this.state.fill}
-					tintColor={getStatusContent(fakeData.status).color}
+					fill={this.state.percent}
+					tintColor={getStatusContent(this.state.status).color}
 					backgroundColor={colors.grey100}
 					style={{ marginVertical: 20 }}
 				>
 					{fill => (
 						<View style={{ alignItems: 'center' }}>
-							<Text style={[styles.percent, { color: getStatusContent(fakeData.status).color }]}>{`${
-								this.state.fill
+							<Text style={[styles.percent, { color: getStatusContent(this.state.status).color }]}>{`${
+								this.state.percent
 							} %`}</Text>
-							<Text style={[styles.percent, { color: getStatusContent(fakeData.status).color }]}>
-								{getStatusContent(fakeData.status).string}
+							<Text style={[styles.percent, { color: getStatusContent(this.state.status).color }]}>
+								{getStatusContent(this.state.status).string}
 							</Text>
 						</View>
 					)}
 				</AnimatedCircularProgress>
 				<View>
-					<TextSpan title="Total sizes" value={fakeData.totalSizes} />
+					<TextSpan title="Total sizes" value={formatBytes(this.state.data.size ?? 0)} />
 					<TextSpan title="Total parts" value={fakeData.parts.length} />
-					<TextSpan title="Total contacts" value={fakeData.totalContacts} />
+					<TextSpan title="Total contacts" value={this.state.contacts.length} />
 				</View>
 			</View>
 		);
