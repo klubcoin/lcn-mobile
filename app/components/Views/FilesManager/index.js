@@ -36,6 +36,33 @@ import { process } from 'babel-jest';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
+const updatePreference = async (selectedFile, status) => {
+	var localFiles = await preferences.getTransferredFiles();
+	var file;
+	if (localFiles) file = localFiles.find(e => e.id === selectedFile.id);
+	else {
+		file = selectedFile;
+		localFiles.push(selectedFile);
+	}
+
+	switch (status) {
+		case statuses.process:
+			file.status = statuses.process;
+			break;
+		case statuses.success:
+			file.status = statuses.success;
+			break;
+		case statuses.failed:
+			file.status = statuses.failed;
+			break;
+		default:
+			break;
+	}
+	await preferences.saveTransferredFiles(localFiles);
+	//check preference => update file status, percent with same uuid
+	// move to next file
+};
+
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) =>
 		getNavigationOptionsTitle(strings('drawer.files_manager'), navigation);
@@ -117,50 +144,28 @@ class FilesManager extends Component {
 		const content = await RNFS.readFile(file.file.uri.replace('file://', ''), 'base64');
 		const lookupName = file.file.name;
 
-		this.updatePreference(file, statuses.process);
+		updatePreference(file, statuses.process);
+		this.fetchLocalFiles();
+
 		FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
 		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 			const { completed, name, error } = stats;
 
 			if (completed && name == lookupName) {
 				// TODO: check and send next file
-				this.updatePreference(file, statuses.success);
+				updatePreference(file, statuses.success);
+				this.fetchLocalFiles();
 				statsEvent.remove(); // remove if done
 			} else if (error && name == lookupName) {
 				const { peer, partCount, currentPart } = stats;
-				this.updatePreference(file, statuses.failed);
+				updatePreference(file, statuses.failed);
+				this.fetchLocalFiles();
 
 				alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
 				// TODO: check and send next file
 				statsEvent.remove(); // remove if done
 			}
 		});
-	};
-
-	updatePreference = async (file, status) => {
-		const { localFiles } = this.state;
-		var results = await preferences.getTransferredFiles;
-		var file = localFiles.find(e => e.id === file.id);
-
-		if (!file) return;
-
-		switch (status) {
-			case statuses.process:
-				file.status = statuses.process;
-				break;
-			case statuses.success:
-				file.status = statuses.success;
-				break;
-			case statuses.failed:
-				file.status = statuses.failed;
-				break;
-			default:
-				break;
-		}
-		await preferences.saveTransferredFiles(localFiles);
-		this.fetchLocalFiles();
-		//check preference => update file status, percent with same uuid
-		// move to next file
 	};
 
 	onRemoveSelectedFiles = file => {
@@ -281,7 +286,7 @@ class FilesManager extends Component {
 							onChangeText={this.handleSearch}
 						/>
 					</View>
-					<ScrollView>
+					<ScrollView style={{ marginBottom: 80 }}>
 						{this.renderFileSections(statuses.process)}
 						{this.renderFileSections(statuses.failed)}
 						{this.renderFileSections(statuses.success)}
