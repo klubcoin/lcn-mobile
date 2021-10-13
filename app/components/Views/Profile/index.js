@@ -133,6 +133,7 @@ class Profile extends PureComponent {
 					</View>
 					<View style={styles.accounts}>
 						<AccountList
+							navigation={this.props.navigation}
 							enableAccountsAddition={false}
 							enableRestoreAccount={true}
 							identities={identities}
