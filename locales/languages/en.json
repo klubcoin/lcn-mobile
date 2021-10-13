@@ -249,7 +249,7 @@
 		"profile": "Profile",
 		"transaction_history": "Transaction History",
 		"contacts": "Contacts",
-		"files_manager": "Files manager",
+		"file_manager": "File manager",
 		"request_feature": "Request a Feature",
 		"submit_feedback_message": "Choose the type of feedback to send.",
 		"submit_bug": "Bug Report",
