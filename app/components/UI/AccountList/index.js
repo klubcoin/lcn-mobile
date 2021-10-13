@@ -276,9 +276,10 @@ class AccountList extends PureComponent {
 		if (vault == null || (vault && vault.cipher == null)) {
 			return
 		}
-		const { firstname, lastname } = await preferences.getOnboardProfile();
+		const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
 		const name = `${firstname} ${lastname}`;
-		const hash = sha3JS.keccak_256(firstname + lastname + account.address);
+		const avatarb64 = await RNFS.readFile(avatar, 'base64');
+		const hash = sha3JS.keccak_256(firstname + lastname + account.address + avatarb64);
 
 		API.postRequest(Routes.walletCreation, [
 			name, account.address, hash
