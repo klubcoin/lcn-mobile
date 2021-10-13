@@ -158,16 +158,16 @@ export default class FileDetails extends Component {
 					size={150}
 					width={10}
 					rotation={0}
-					fill={this.state.percent}
+					fill={this.state.percent * 100}
 					tintColor={getStatusContent(this.state.status).color}
 					backgroundColor={colors.grey100}
 					style={{ marginVertical: 20 }}
 				>
 					{fill => (
 						<View style={{ alignItems: 'center' }}>
-							<Text style={[styles.percent, { color: getStatusContent(this.state.status).color }]}>{`${
-								this.state.percent
-							} %`}</Text>
+							<Text
+								style={[styles.percent, { color: getStatusContent(this.state.status).color }]}
+							>{`${this.state.percent * 100} %`}</Text>
 							<Text style={[styles.percent, { color: getStatusContent(this.state.status).color }]}>
 								{getStatusContent(this.state.status).string}
 							</Text>
