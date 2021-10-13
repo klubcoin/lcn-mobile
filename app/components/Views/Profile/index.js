@@ -105,6 +105,7 @@ class Profile extends PureComponent {
 					<View style={styles.accounts}>
 						<AccountList
 							enableAccountsAddition={false}
+							enableRestoreAccount={true}
 							identities={identities}
 							selectedAddress={this.selectedAddress}
 							ticker={routes.mainNetWork.ticker}

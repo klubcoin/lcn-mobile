@@ -426,7 +426,7 @@ class AccountList extends PureComponent {
 
 	render() {
 		const { orderedAccounts } = this.state;
-		const { enableAccountsAddition } = this.props;
+		const { enableAccountsAddition, enableRestoreAccount } = this.props;
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'account-list'}>
 				<View style={styles.titleWrapper}>
@@ -461,14 +461,16 @@ class AccountList extends PureComponent {
 						>
 							<Text style={styles.btnText}>{strings('accounts.import_account')}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={this.restoreAccountFromFriends}
-							style={styles.footerButton}
-						>
-							<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
-						</TouchableOpacity>
 					</View>
 				)}
+				{enableRestoreAccount &&
+					<TouchableOpacity
+						onPress={this.restoreAccountFromFriends}
+						style={styles.footerButton}
+					>
+						<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
+					</TouchableOpacity>
+				}
 			</SafeAreaView>
 		);
 	}
