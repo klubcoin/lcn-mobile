@@ -193,7 +193,11 @@ class Tokens extends PureComponent {
 		const app = this.savedApps.find(e => e.address == `${token.address}`.toLowerCase());
 		if (app) {
 			await preferences.setCurentAppId(app.address);
-			this.props.navigation.navigate('VotingApp', { app });
+			if (app.instance.name == 'LiquiShare') {
+				this.props.navigation.navigate('FilesManager', { app });
+			} else {
+				this.props.navigation.navigate('VotingApp', { app });
+			}
 		} else {
 			this.props.navigation.navigate('Asset', { ...token, transactions: this.props.transactions });
 		}
@@ -254,7 +258,7 @@ class Tokens extends PureComponent {
 			secondaryBalance = !balanceFiat ? balanceFiat : balanceValue;
 		}
 
-		if (asset?.balanceError) {
+		if (!app && asset?.balanceError) {
 			mainBalance = asset.symbol;
 			secondaryBalance = strings('wallet.unable_to_load');
 		}
