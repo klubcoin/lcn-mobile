@@ -231,17 +231,21 @@ class FilesManager extends Component {
 						return (
 							<SwipeRow
 								stopRightSwipe={0}
-								rightOpenValue={-swipeOffset}
+								rightOpenValue={e.status === statuses.success ? -swipeOffset : -swipeOffset / 2}
 								disableRightSwipe
-								disableLeftSwipe={e.status !== statuses.success}
+								disableLeftSwipe={e.status === statuses.process}
 								onRowPress={() => this.onViewDetails(e)}
 							>
 								<View style={styles.standaloneRowBack}>
-									<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
-										<View style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}>
-											<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
-										</View>
-									</TouchableWithoutFeedback>
+									{e.status === statuses.success && (
+										<TouchableWithoutFeedback onPress={value => this.onRecovery(file, value)}>
+											<View
+												style={[styles.swipeableOption, { backgroundColor: colors.green600 }]}
+											>
+												<Text style={{ color: colors.white, fontWeight: '700' }}>Recovery</Text>
+											</View>
+										</TouchableWithoutFeedback>
+									)}
 
 									<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
 										<View style={styles.swipeableOption}>
@@ -289,7 +293,7 @@ class FilesManager extends Component {
 							onChangeText={this.handleSearch}
 						/>
 					</View>
-					<ScrollView style={{ marginBottom: 80 }}>
+					<ScrollView style={{ marginBottom: 100 }}>
 						{this.renderFileSections(statuses.process)}
 						{this.renderFileSections(statuses.failed)}
 						{this.renderFileSections(statuses.success)}
@@ -347,7 +351,7 @@ const styles = StyleSheet.create({
 	},
 	standaloneRowBack: {
 		alignItems: 'center',
-		backgroundColor: colors.green600,
+		backgroundColor: colors.red,
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'flex-end'
