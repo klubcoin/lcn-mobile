@@ -61,12 +61,14 @@ class Profile extends PureComponent {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.profile'), navigation);
 
 	account = {};
+	onboardProfile = {};
 	selectedAddress = '';
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			account: observable,
+			onboardProfile: observable,
 			selectedAddress: observable
 		});
 
@@ -80,6 +82,7 @@ class Profile extends PureComponent {
 
 	async fetchUser() {
 		this.account = await preferences.getKeycloakAccount();
+		this.onboardProfile = await preferences.getOnboardProfile();
 	}
 
 	onPickImage() {
@@ -103,7 +106,8 @@ class Profile extends PureComponent {
 	}
 
 	render() {
-		const { email, name, avatar } = this.account ?? {};
+		const { email, name } = this.account ?? {};
+		const { avatar } = this.onboardProfile ?? {};
 		const { identities } = Engine.state.PreferencesController;
 
 		return (
