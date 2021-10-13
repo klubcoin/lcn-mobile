@@ -13,6 +13,7 @@ import Text from '../../../components/Base/Text';
 import ImagePicker from 'react-native-image-crop-picker';
 import { colors } from '../../../styles/common';
 import AccountList from '../../UI/AccountList';
+import StyledButton from '../../UI/StyledButton';
 
 const styles = StyleSheet.create({
 	container: {
@@ -48,6 +49,11 @@ const styles = StyleSheet.create({
 	accounts: {
 		marginTop: 30,
 		width: '100%'
+	},
+	actions: {
+		flexDirection: 'row',
+		width: 300,
+		marginTop: 20,
 	}
 });
 
@@ -86,6 +92,16 @@ class Profile extends PureComponent {
 		});
 	}
 
+	sendConfirmationRequests = async (contacts) => {
+	}
+
+	onRequest() {
+		this.props.navigation.navigate('Contacts', {
+			contactSelection: true,
+			onConfirm: this.sendConfirmationRequests
+		})
+	}
+
 	render() {
 		const { email, name, avatar } = this.account ?? {};
 		const { identities } = Engine.state.PreferencesController;
@@ -102,6 +118,15 @@ class Profile extends PureComponent {
 					</TouchableOpacity>
 					<Text style={styles.name}>{name}</Text>
 					<Text style={styles.email}>{email}</Text>
+					<View style={styles.actions}>
+						<StyledButton
+							type={'normal'}
+							onPress={this.onRequest.bind(this)}
+							containerStyle={{ flex: 1 }}
+						>
+							{strings('profile.request_profile_confirmation')}
+						</StyledButton>
+					</View>
 					<View style={styles.accounts}>
 						<AccountList
 							enableAccountsAddition={false}
