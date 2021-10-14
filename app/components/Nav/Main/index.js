@@ -76,6 +76,8 @@ import { ContainFiles, ReadFile, ReadFileResult, StoreFile } from '../../../serv
 import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
+import { ConfirmProfileRequest } from '../../../services/Messages';
+import ConfirmIdentity from '../../Views/ConfirmIdentity';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -98,6 +100,7 @@ const Main = props => {
 	const [messageEvent, setMessageEvent] = useState(null);
 	const [friendMessage, setFriendMessage] = useState(null);
 	const [acceptedNameCardVisible, showAcceptedNameCard] = useState(null);
+	const [identity2Confirm, showConfirmOtherIdentity] = useState(null);
 
 	const [connected, setConnected] = useState(true);
 	const [forceReload, setForceReload] = useState(false);
@@ -671,6 +674,7 @@ const Main = props => {
 
 			const webrtc = new WebRTC(selectedAddress);
 			setWebRTC(webrtc);
+			webrtc.addListener('message', onWebRtcMessage);
 
 			const messaging = new Messaging(selectedAddress);
 			setMessaging(messaging);
@@ -799,6 +803,31 @@ const Main = props => {
 		)
 	}
 
+	onWebRtcMessage = (data, peerId) => {
+		try {
+			data = JSON.parse(data);
+		} catch (e) { }
+
+		if (data.action) {
+			switch (data.action) {
+				case ConfirmProfileRequest().action:
+					showConfirmOtherIdentity(data);
+					break;
+			}
+		}
+	}
+
+	const renderConfirmOtherIdentity = () => {
+		return (
+			<ConfirmIdentity
+				visible={!!identity2Confirm}
+				data={identity2Confirm}
+				message={`${strings('confirm_profile.confirm_profile_message')}`}
+				hideModal={() => showConfirmOtherIdentity(null)}
+			/>
+		)
+	}
+
 	return (
 		<React.Fragment>
 			<View style={styles.flex}>
@@ -833,6 +862,7 @@ const Main = props => {
 			{renderDappTransactionModal()}
 			{renderApproveModal()}
 			{renderAcceptedFriendNameCard()}
+			{renderConfirmOtherIdentity()}
 		</React.Fragment>
 	);
 };
