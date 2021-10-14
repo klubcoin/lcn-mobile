@@ -3,6 +3,7 @@ export default {
   walletCreation: 'wallet_creation',
   walletUpdate: 'wallet_update',
   walletInfo: 'wallet_info',
+  walletReport: 'wallet_report',
   getBalance: 'eth_getBalance',
   getTransaction: 'eth_getTransactionByHash',
   mainNetWork: {

@@ -17,7 +17,10 @@ import ConfirmModal from '../../UI/ConfirmModal';
 import { refWebRTC } from '../../../services/WebRTC';
 import Engine from '../../../core/Engine';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
-import { ConfirmProfileRejected } from '../../../services/Messages';
+import { ConfirmProfileBlock, ConfirmProfileRejected } from '../../../services/Messages';
+import APIService from '../../../services/APIService';
+import CryptoSignature from '../../../core/CryptoSignature';
+import API from '../../../services/api';
 
 const styles = StyleSheet.create({
 	bottomModal: {
@@ -215,8 +218,35 @@ export class ConfirmIdentity extends PureComponent {
 		)
 	}
 
-	sendReport = () => {
+	sendBlockMessage = () => {
+		const webrtc = refWebRTC();
+		const { data } = this.props;
+		const { selectedAddress } = Engine.state.PreferencesController;
 
+		const message = ConfirmProfileBlock(selectedAddress);
+		FileTransferWebRTC.sendAsOne(message, selectedAddress, [data.from], webrtc);
+	}
+
+	sendReport = () => {
+		this.sendBlockMessage();
+
+		const { data } = this.props;
+		const signature = CryptoSignature.signMessage(data.from);
+
+		API.postRequest(
+			routes.walletReport,
+			[data.from, signature],
+			response => {
+				if (response.error) {
+					alert(`${response.error.message}`);
+				} else {
+					this.props.hideModal();
+				}
+			},
+			error => {
+				alert(`${error.toString()}`);
+			}
+		);
 	}
 
 	renderReportForm() {
@@ -235,7 +265,7 @@ export class ConfirmIdentity extends PureComponent {
 	}
 
 	confirmNotWilling = () => {
-
+		this.sendBlockMessage();
 	}
 
 	renderConfirmNotWilling = () => {

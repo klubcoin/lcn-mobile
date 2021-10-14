@@ -17,6 +17,14 @@ export const ConfirmProfileRejected = (from, firstname, lastname) => (
       lastname,
    }
 );
+
+export const ConfirmProfileBlock = (from) => (
+   {
+      action: 'confirm_profile_block',
+      from,
+   }
+);
+
 export const RestoreSecretRequest = (from, firstname, lastname, avatar) => (
    {
       action: 'restore_secret_request',
