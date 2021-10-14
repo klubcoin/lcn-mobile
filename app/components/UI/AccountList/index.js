@@ -29,6 +29,7 @@ import * as sha3JS from 'js-sha3';
 import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import { RestoreSecretRequest } from '../../../services/Messages';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -234,30 +235,14 @@ class AccountList extends PureComponent {
 
 	sendProfileToClaimIdentity = async (contacts) => {
 		const webrtc = refWebRTC();
-		const { selectedAddress, identities } = this.props;
-		const account = identities[selectedAddress];
-		const lookupName = account.name;
-
+		const { selectedAddress } = this.props;
 		const addresses = contacts.map(e => e.address);
-		const image = await RNFS.readFile(path, 'base64');
-		const profile = {
-			name: lookupName,
-			avatar: image
-		}
 
-		FileTransferWebRTC.send(JSON.stringify(profile), lookupName, selectedAddress, addresses, webrtc);
-		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', (stats) => {
-			const { completed, name, error } = stats;
-			if (name != lookupName) return;
+		const { avatar, firstname, lastname } = this.props.onboardProfile || {};
+		const image = await RNFS.readFile(avatar, 'base64');
 
-			if (completed) {
-
-				statsEvent.remove();
-			} else if (error) {
-				alert('Could not confirm identify');
-				statsEvent.remove();
-			}
-		});
+		const request = RestoreSecretRequest(selectedAddress, firstname, lastname, image);
+		FileTransferWebRTC.sendAsOne(request, selectedAddress, addresses, webrtc);
 	}
 
 	/*
@@ -276,9 +261,10 @@ class AccountList extends PureComponent {
 		if (vault == null || (vault && vault.cipher == null)) {
 			return
 		}
-		const { firstname, lastname } = await preferences.getOnboardProfile();
+		const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
 		const name = `${firstname} ${lastname}`;
-		const hash = sha3JS.keccak_256(firstname + lastname + account.address);
+		const avatarb64 = await RNFS.readFile(avatar, 'base64');
+		const hash = sha3JS.keccak_256(firstname + lastname + account.address + avatarb64);
 
 		API.postRequest(Routes.walletCreation, [
 			name, account.address, hash
@@ -426,7 +412,7 @@ class AccountList extends PureComponent {
 
 	render() {
 		const { orderedAccounts } = this.state;
-		const { enableAccountsAddition } = this.props;
+		const { enableAccountsAddition, enableRestoreAccount } = this.props;
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'account-list'}>
 				<View style={styles.titleWrapper}>
@@ -461,14 +447,16 @@ class AccountList extends PureComponent {
 						>
 							<Text style={styles.btnText}>{strings('accounts.import_account')}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={this.restoreAccountFromFriends}
-							style={styles.footerButton}
-						>
-							<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
-						</TouchableOpacity>
 					</View>
 				)}
+				{enableRestoreAccount &&
+					<TouchableOpacity
+						onPress={this.restoreAccountFromFriends}
+						style={styles.footerButton}
+					>
+						<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
+					</TouchableOpacity>
+				}
 			</SafeAreaView>
 		);
 	}
@@ -481,6 +469,7 @@ const mapStateToProps = state => ({
 	keyringController: state.engine.backgroundState.KeyringController,
 	network: state.engine.backgroundState.NetworkController.network,
 	identities: state.engine.backgroundState.PreferencesController.identities,
+	onboardProfile: state.user.onboardProfile,
 });
 
 export default connect(mapStateToProps)(AccountList);

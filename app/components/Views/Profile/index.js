@@ -2,10 +2,12 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
+import * as RNFS from 'react-native-fs';
 import preferences from '../../../store/preferences';
 import { strings } from '../../../../locales/i18n';
 import Engine from '../../../core/Engine';
 import routes from '../../../common/routes';
+import { refWebRTC } from '../../../services/WebRTC';
 import Identicon from '../../UI/Identicon';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import RemoteImage from '../../../components/Base/RemoteImage';
@@ -13,6 +15,9 @@ import Text from '../../../components/Base/Text';
 import ImagePicker from 'react-native-image-crop-picker';
 import { colors } from '../../../styles/common';
 import AccountList from '../../UI/AccountList';
+import StyledButton from '../../UI/StyledButton';
+import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import { ConfirmProfileRequest } from '../../../services/Messages';
 
 const styles = StyleSheet.create({
 	container: {
@@ -48,6 +53,11 @@ const styles = StyleSheet.create({
 	accounts: {
 		marginTop: 30,
 		width: '100%'
+	},
+	actions: {
+		flexDirection: 'row',
+		width: 300,
+		marginTop: 20,
 	}
 });
 
@@ -55,12 +65,14 @@ class Profile extends PureComponent {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.profile'), navigation);
 
 	account = {};
+	onboardProfile = {};
 	selectedAddress = '';
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			account: observable,
+			onboardProfile: observable,
 			selectedAddress: observable
 		});
 
@@ -74,6 +86,7 @@ class Profile extends PureComponent {
 
 	async fetchUser() {
 		this.account = await preferences.getKeycloakAccount();
+		this.onboardProfile = await preferences.getOnboardProfile();
 	}
 
 	onPickImage() {
@@ -86,8 +99,29 @@ class Profile extends PureComponent {
 		});
 	}
 
+	sendConfirmationRequests = async (contacts) => {
+		const webrtc = refWebRTC();
+		const { PreferencesController } = Engine.state;
+		const { selectedAddress } = PreferencesController;
+		const addresses = contacts.map(e => e.address);
+
+		const { avatar, firstname, lastname } = this.onboardProfile || {};
+		const image = await RNFS.readFile(avatar, 'base64');
+
+		const request = ConfirmProfileRequest(selectedAddress, firstname, lastname, image);
+		FileTransferWebRTC.sendAsOne(request, selectedAddress, addresses, webrtc);
+	}
+
+	onRequest() {
+		this.props.navigation.navigate('Contacts', {
+			contactSelection: true,
+			onConfirm: this.sendConfirmationRequests
+		})
+	}
+
 	render() {
-		const { email, name, avatar } = this.account ?? {};
+		const { email, name } = this.account ?? {};
+		const { avatar } = this.onboardProfile ?? {};
 		const { identities } = Engine.state.PreferencesController;
 
 		return (
@@ -102,9 +136,20 @@ class Profile extends PureComponent {
 					</TouchableOpacity>
 					<Text style={styles.name}>{name}</Text>
 					<Text style={styles.email}>{email}</Text>
+					<View style={styles.actions}>
+						<StyledButton
+							type={'normal'}
+							onPress={this.onRequest.bind(this)}
+							containerStyle={{ flex: 1 }}
+						>
+							{strings('profile.request_profile_confirmation')}
+						</StyledButton>
+					</View>
 					<View style={styles.accounts}>
 						<AccountList
+							navigation={this.props.navigation}
 							enableAccountsAddition={false}
+							enableRestoreAccount={true}
 							identities={identities}
 							selectedAddress={this.selectedAddress}
 							ticker={routes.mainNetWork.ticker}

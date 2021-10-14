@@ -40,6 +40,7 @@ import {
 	APPROVE_FUNCTION_SIGNATURE,
 	decodeApproveData
 } from '../../../util/transactions';
+import preferences from '../../../store/preferences';
 import { BN, toChecksumAddress } from 'ethereumjs-util';
 import Logger from '../../../util/Logger';
 import contractMap from '@metamask/contract-metadata';
@@ -57,6 +58,7 @@ import {
 	removeNotVisibleNotifications
 } from '../../../actions/notification';
 import { toggleDappTransactionModal, toggleApproveModal } from '../../../actions/modals';
+import { setOnboardProfile } from '../../../actions/user';
 import AccountApproval from '../../UI/AccountApproval';
 import ProtectYourWalletModal from '../../UI/ProtectYourWalletModal';
 import MainNavigator from './MainNavigator';
@@ -578,6 +580,11 @@ const Main = props => {
 		if (skipCheckbox) toggleRemindLater();
 	};
 
+	const ensureOnboardProfile = async () => {
+		const profile = await preferences.getOnboardProfile();
+		props.setOnboardProfile(profile);
+	}
+
 	useEffect(() => {
 		if (locale.current !== I18n.locale) {
 			locale.current = I18n.locale;
@@ -587,6 +594,7 @@ const Main = props => {
 		if (prevLockTime !== props.lockTime) {
 			lockManager.current && lockManager.current.updateLockTime(props.lockTime);
 		}
+		ensureOnboardProfile();
 	});
 
 	const handleWSMessage = async (messaging, json) => {
@@ -943,7 +951,8 @@ const mapDispatchToProps = dispatch => ({
 	toggleApproveModal: show => dispatch(toggleApproveModal(show)),
 	setInfuraAvailabilityBlocked: () => dispatch(setInfuraAvailabilityBlocked()),
 	setInfuraAvailabilityNotBlocked: () => dispatch(setInfuraAvailabilityNotBlocked()),
-	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications())
+	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
+	setOnboardProfile: (profile) => dispatch(setOnboardProfile(profile)),
 });
 
 export default connect(

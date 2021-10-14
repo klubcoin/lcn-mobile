@@ -70,3 +70,10 @@ export function loadingUnset() {
 		type: 'LOADING_UNSET'
 	};
 }
+
+export function setOnboardProfile(profile) {
+	return {
+		type: 'ONBOARD_PROFILE',
+		profile,
+	};
+}
