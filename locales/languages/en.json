@@ -195,6 +195,14 @@
 		"missing_name": "Name is missing",
 		"request_profile_confirmation": "Request Profile Confirmation"
 	},
+	"confirm_profile": {
+		"confirm_profile_message": "Identity Confirmation",
+		"confirm_desc": "I verified the identity of this person, checked that all the information are correct and the picture is a recognizable and recent one of that person.",
+		"refuse_try_again": "I can't verify now, try again later",
+		"refuse_not_willing": "I am not willing to verify this user",
+		"refuse_no_more_prompt": "Please confirm, this user won't be able to communicate with you anymore.",
+		"report_invalid_profile": "Report this profile as invalid"
+	},
 	"reset_password": {
 		"title": "Change password",
 		"subtitle": "This password will unlock your Liquichain wallet only on this device.",
