@@ -38,7 +38,7 @@ export default class ConfirmInputModal extends PureComponent {
 	}
 
 	render() {
-		const { visible, title, message, value, confirmLabel, cancelLabel } = this.props;
+		const { visible, title, message, value, multiline, confirmLabel, cancelLabel } = this.props;
 		return (
 			<Modal
 				isVisible={visible}
@@ -53,6 +53,7 @@ export default class ConfirmInputModal extends PureComponent {
 					title={title}
 					message={message}
 					value={value || ''}
+					multiline={multiline}
 					confirmLabel={confirmLabel}
 					cancelLabel={cancelLabel}
 					onConfirm={this.onConfirm.bind(this)}

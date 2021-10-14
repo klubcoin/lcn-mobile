@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'center',
 		marginTop: 10,
+		paddingHorizontal: 10,
 	},
 	subMessage: {
 		...fontStyles.normal,

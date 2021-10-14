@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'center',
 		marginTop: 10,
+		paddingHorizontal: 10,
 	},
 	titleWrapper: {
 		marginTop: 10
@@ -89,7 +90,7 @@ export default class ConfirmInput extends PureComponent {
 	}
 
 	render() {
-		const { title, message, placeholder, confirmLabel, cancelLabel } = this.props;
+		const { title, message, multiline, placeholder, confirmLabel, cancelLabel } = this.props;
 		const { value } = this.state;
 
 		return (
@@ -114,6 +115,7 @@ export default class ConfirmInput extends PureComponent {
 							spellCheck={false}
 							style={styles.input}
 							value={value}
+							multiline={!!multiline}
 							numberOfLines={1}
 						/>
 						<View style={styles.actionRow}>
