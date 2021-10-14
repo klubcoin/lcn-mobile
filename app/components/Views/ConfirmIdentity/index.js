@@ -12,6 +12,8 @@ import StyledButton from '../../UI/StyledButton';
 import { strings } from '../../../../locales/i18n';
 import { FlatList } from 'react-native-gesture-handler';
 import RemoteImage from '../../Base/RemoteImage';
+import ConfirmInputModal from '../../UI/ConfirmInputModal';
+import ConfirmModal from '../../UI/ConfirmModal';
 
 const styles = StyleSheet.create({
 	bottomModal: {
@@ -120,11 +122,17 @@ export class ConfirmIdentity extends PureComponent {
 	};
 
 	selectedIndex = -1;
+	showConfirmNotWilling = false;
+	showReportForm = false;
+	reportReason = '';
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			selectedIndex: observable,
+			showConfirmNotWilling: observable,
+			showReportForm: observable,
+			reportReason: observable,
 		})
 	}
 
@@ -133,19 +141,26 @@ export class ConfirmIdentity extends PureComponent {
 	};
 
 	onConfirm = () => {
-		this.props.onConfirm();
 		this.props.hideModal();
 	};
+
+	refuseTryAgain = () => {
+
+	}
 
 	handleOption = (index) => {
 		switch (index) {
 			case 0:
+				this.onConfirm();
 				break;
 			case 1:
+				this.refuseTryAgain();
 				break;
 			case 2:
+				this.showConfirmNotWilling = true;
 				break;
 			case 3:
+				this.showReportForm = true;
 				break;
 		}
 	}
@@ -188,6 +203,43 @@ export class ConfirmIdentity extends PureComponent {
 		)
 	}
 
+	sendReport = () => {
+
+	}
+
+	renderReportForm() {
+		return (
+			<ConfirmInputModal
+				visible={this.showReportForm}
+				title={strings('confirm_profile.input_reason')}
+				value={this.reportReason}
+				multiline={true}
+				confirmLabel={strings('confirm_profile.submit')}
+				cancelLabel={strings('confirm_profile.cancel')}
+				onConfirm={text => this.sendReport(text)}
+				hideModal={() => this.showReportForm = false}
+			/>
+		)
+	}
+
+	confirmNotWilling = () => {
+
+	}
+
+	renderConfirmNotWilling = () => {
+		return (
+			<ConfirmModal
+				visible={this.showConfirmNotWilling}
+				title={strings('confirm_profile.notice')}
+				message={strings('confirm_profile.refuse_no_more_prompt')}
+				confirmLabel={strings('confirm_profile.confirm')}
+				cancelLabel={strings('confirm_profile.cancel')}
+				onConfirm={() => this.confirmNotWilling()}
+				hideModal={() => this.showConfirmNotWilling = false}
+			/>
+		)
+	}
+
 	render() {
 		const { visible, hideModal } = this.props;
 
@@ -207,6 +259,8 @@ export class ConfirmIdentity extends PureComponent {
 				propagateSwipe
 			>
 				{this.renderBody()}
+				{this.renderConfirmNotWilling()}
+				{this.renderReportForm()}
 			</Modal>
 		);
 	}

@@ -201,7 +201,12 @@
 		"refuse_try_again": "I can't verify now, try again later",
 		"refuse_not_willing": "I am not willing to verify this user",
 		"refuse_no_more_prompt": "Please confirm, this user won't be able to communicate with you anymore.",
-		"report_invalid_profile": "Report this profile as invalid"
+		"report_invalid_profile": "Report this profile as invalid",
+		"notice": "Notice",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
+		"submit": "Submit",
+		"input_reason": "Input report reason"
 	},
 	"reset_password": {
 		"title": "Change password",
