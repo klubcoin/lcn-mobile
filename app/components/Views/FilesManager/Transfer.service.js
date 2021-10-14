@@ -16,7 +16,7 @@ export default class FileTransfer {
 		return FileTransfer.instance;
 	}
 
-	updatePreference = async (selectedFile, status, percent) => {
+	updatePreference = async (selectedFile, status, percent, detailPart, partCount) => {
 		var localFiles = await preferences.getTransferredFiles();
 		var file;
 		if (localFiles) file = localFiles.find(e => e.id === selectedFile.id);
@@ -26,6 +26,24 @@ export default class FileTransfer {
 		}
 
 		file.percent = percent;
+
+		if (partCount) file.partCount = partCount;
+
+		//handle detail part
+		if (detailPart) {
+			var details = file.details ?? {};
+			var key = Object.keys(detailPart);
+
+			if (key[0]) {
+				if (!details.hasOwnProperty(key[0])) {
+					file.details = Object.assign(details, detailPart);
+				} else if (details.hasOwnProperty(key[0])) {
+					var mergeArr = file.details[key[0]].concat(detailPart[key[0]]);
+					file.details[key[0]] = mergeArr;
+				}
+				file.currentPart = detailPart[key[0]];
+			}
+		}
 
 		switch (status) {
 			case statuses.process:
@@ -40,7 +58,8 @@ export default class FileTransfer {
 			default:
 				break;
 		}
-		await preferences.saveTransferredFiles(localFiles);
+
+		localFiles.forEach(e => preferences.saveTransferredFiles(e));
 	};
 
 	sendToNextFile = (selectedAddress, callback) => {
@@ -55,9 +74,7 @@ export default class FileTransfer {
 			const webrtc = refWebRTC();
 
 			const file = this.queueFiles[0];
-
 			const addresses = file.contacts.map(e => e.address);
-
 			const content = await RNFS.readFile(decodeURI(file.file.uri), 'base64');
 			const lookupName = file.file.name;
 
@@ -66,11 +83,15 @@ export default class FileTransfer {
 				const { completed, name, error, peer, currentPart, partCount } = stats;
 
 				let successPercent = 0;
+				let partDetail = {};
 				if (currentPart && partCount) {
 					successPercent = currentPart / partCount;
+					partDetail[peer] = [currentPart];
 				}
 
-				this.updatePreference(file, statuses.process, successPercent);
+				this.updatePreference(file, statuses.process, successPercent, partDetail, partCount);
+
+				callback();
 
 				if (completed && name == lookupName) {
 					this.updatePreference(file, statuses.success, 1);
@@ -85,6 +106,9 @@ export default class FileTransfer {
 				}
 			});
 		} catch (error) {
+			const file = this.queueFiles[0];
+			this.updatePreference(file, statuses.failed, 0);
+			callback();
 			this.sendToNextFile(selectedAddress, callback);
 		}
 	};

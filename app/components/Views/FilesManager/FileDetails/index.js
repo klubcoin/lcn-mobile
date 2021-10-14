@@ -143,7 +143,10 @@ export default class FileDetails extends Component {
 		data: this.props.navigation.getParam('selectedFile').file,
 		status: this.props.navigation.getParam('selectedFile').status,
 		contacts: this.props.navigation.getParam('selectedFile').contacts,
-		percent: (this.props.navigation.getParam('selectedFile').percent * 100).toFixed(1)
+		percent: (this.props.navigation.getParam('selectedFile').percent * 100).toFixed(1),
+		partCount: this.props.navigation.getParam('selectedFile').partCount,
+		details: this.props.navigation.getParam('selectedFile').details,
+		currentPart: this.props.navigation.getParam('selectedFile').currentPart
 	};
 
 	renderSummary = () => {
@@ -177,20 +180,34 @@ export default class FileDetails extends Component {
 				</AnimatedCircularProgress>
 				<View>
 					<TextSpan title="Total sizes" value={formatBytes(this.state.data.size ?? 0)} />
-					<TextSpan title="Total parts" value={fakeData.parts.length} />
+					<TextSpan title="Total parts" value={this.state.partCount} />
 					<TextSpan title="Total contacts" value={this.state.contacts.length} />
 				</View>
 			</View>
 		);
 	};
 
+	getPartStatus = index => {
+		if (
+			index < this.state.currentPart ||
+			(index == this.state.currentPart && this.state.status === statuses.success)
+		)
+			return statuses.success;
+		else if (index == this.state.currentPart && this.state.status === statuses.process) return statuses.process;
+		return statuses.failed;
+	};
+
 	renderDetails = () => {
+		let parts = [];
+		for (let i = 0; i < this.state.partCount; i++) {
+			parts.push(
+				<PartItem part={{ name: `Part ${i + 1}`, status: this.getPartStatus(i), contacts: ['asdasdasdas'] }} />
+			);
+		}
 		return (
 			<View style={styles.listContainer}>
 				<Text style={styles.title}>File details</Text>
-				{fakeData.parts.map(e => (
-					<PartItem part={e} />
-				))}
+				{parts}
 			</View>
 		);
 	};

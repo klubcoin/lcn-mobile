@@ -112,10 +112,8 @@ class FilesManager extends Component {
 				percent: 0,
 				date,
 				file,
-				contacts: selectedContacts,
-				parts: []
+				contacts: selectedContacts
 			};
-			// queueFiles.push(record);
 			this.FileTransferIns.queueFiles.push(record);
 			await preferences.saveTransferredFiles(record);
 		}
