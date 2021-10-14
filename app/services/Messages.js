@@ -1,10 +1,11 @@
-export const ConfirmProfileRequest = (from, firstname, lastname, avatar) => (
+export const ConfirmProfileRequest = (from, firstname, lastname, avatar, email) => (
    {
       action: 'confirm_profile_request',
       from,
       firstname,
       lastname,
       avatar,
+      email,
    }
 );
 

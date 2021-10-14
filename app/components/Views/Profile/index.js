@@ -105,10 +105,11 @@ class Profile extends PureComponent {
 		const { selectedAddress } = PreferencesController;
 		const addresses = contacts.map(e => e.address);
 
+		const { email } = this.account || {};
 		const { avatar, firstname, lastname } = this.onboardProfile || {};
 		const image = await RNFS.readFile(avatar, 'base64');
 
-		const request = ConfirmProfileRequest(selectedAddress, firstname, lastname, image);
+		const request = ConfirmProfileRequest(selectedAddress, firstname, lastname, image, email);
 		FileTransferWebRTC.sendAsOne(request, selectedAddress, addresses, webrtc);
 	}
 
