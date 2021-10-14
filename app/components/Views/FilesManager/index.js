@@ -70,7 +70,7 @@ class FilesManager extends Component {
 	}
 
 	async fetchLocalFiles() {
-		await preferences.deleteTransferredFiles();
+		// await preferences.deleteTransferredFiles();
 		var results = await preferences.getTransferredFiles();
 
 		if (results) {
