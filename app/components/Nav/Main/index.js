@@ -44,6 +44,7 @@ import preferences from '../../../store/preferences';
 import { BN, toChecksumAddress } from 'ethereumjs-util';
 import Logger from '../../../util/Logger';
 import contractMap from '@metamask/contract-metadata';
+import Toast from 'react-native-toast-message';
 import MessageSign from '../../UI/MessageSign';
 import Approve from '../../Views/ApproveView/Approve';
 import TransactionTypes from '../../../core/TransactionTypes';
@@ -76,7 +77,7 @@ import { ContainFiles, ReadFile, ReadFileResult, StoreFile } from '../../../serv
 import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
-import { ConfirmProfileRequest } from '../../../services/Messages';
+import { ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 
 const styles = StyleSheet.create({
@@ -803,6 +804,15 @@ const Main = props => {
 		)
 	}
 
+	showNotice = (message) => {
+		Toast.show({
+			type: 'info',
+			text1: message,
+			text2: strings('profile.notice'),
+			visibilityTime: 1000
+		});
+	}
+
 	onWebRtcMessage = (data, peerId) => {
 		try {
 			data = JSON.parse(data);
@@ -812,6 +822,14 @@ const Main = props => {
 			switch (data.action) {
 				case ConfirmProfileRequest().action:
 					showConfirmOtherIdentity(data);
+					break;
+				case ConfirmProfileRejected().action:
+					const name = `${data.firstname} ${data.lastname}`;
+					showNotice(strings('confirm_profile.peer_refuse_try_again', { name }));
+					break;
+				case ConfirmProfileBlock().action:
+					const address = data.from;
+					//TODO: add to blocked list
 					break;
 			}
 		}

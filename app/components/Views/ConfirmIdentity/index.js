@@ -14,6 +14,10 @@ import { FlatList } from 'react-native-gesture-handler';
 import RemoteImage from '../../Base/RemoteImage';
 import ConfirmInputModal from '../../UI/ConfirmInputModal';
 import ConfirmModal from '../../UI/ConfirmModal';
+import { refWebRTC } from '../../../services/WebRTC';
+import Engine from '../../../core/Engine';
+import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import { ConfirmProfileRejected } from '../../../services/Messages';
 
 const styles = StyleSheet.create({
 	bottomModal: {
@@ -134,6 +138,7 @@ export class ConfirmIdentity extends PureComponent {
 			showReportForm: observable,
 			reportReason: observable,
 		})
+		this.prefs = props.store;
 	}
 
 	onCancel = () => {
@@ -144,8 +149,15 @@ export class ConfirmIdentity extends PureComponent {
 		this.props.hideModal();
 	};
 
-	refuseTryAgain = () => {
+	refuseTryAgain = async () => {
+		const webrtc = refWebRTC();
+		const { data } = this.props;
+		const { onboardProfile } = this.prefs;
+		const { firstname, lastname } = onboardProfile;
+		const { selectedAddress } = Engine.state.PreferencesController;
 
+		const message = ConfirmProfileRejected(selectedAddress, firstname, lastname);
+		FileTransferWebRTC.sendAsOne(message, selectedAddress, [data.from], webrtc);
 	}
 
 	handleOption = (index) => {
