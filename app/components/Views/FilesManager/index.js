@@ -32,42 +32,15 @@ import * as RNFS from 'react-native-fs';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 import { statuses } from './FileDetails';
-import { process } from 'babel-jest';
+import FileTransfer from './Transfer.service';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
-
-const updatePreference = async (selectedFile, status, percent) => {
-	var localFiles = await preferences.getTransferredFiles();
-	var file;
-	if (localFiles) file = localFiles.find(e => e.id === selectedFile.id);
-	else {
-		file = selectedFile;
-		localFiles.push(selectedFile);
-	}
-
-	file.percent = percent;
-
-	switch (status) {
-		case statuses.process:
-			file.status = statuses.process;
-			break;
-		case statuses.success:
-			file.status = statuses.success;
-			break;
-		case statuses.failed:
-			file.status = statuses.failed;
-			break;
-		default:
-			break;
-	}
-	await preferences.saveTransferredFiles(localFiles);
-	//check preference => update file status, percent with same uuid
-	// move to next file
-};
 
 class FilesManager extends Component {
 	static navigationOptions = ({ navigation }) =>
 		getNavigationOptionsTitle(strings('drawer.file_manager'), navigation);
+
+	FileTransferIns;
 
 	state = {
 		isLoading: false,
@@ -80,39 +53,54 @@ class FilesManager extends Component {
 
 	constructor(props) {
 		super(props);
+		this.FileTransferIns = FileTransfer.getInstance();
 	}
 
 	componentDidMount() {
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
-		this.setState({ contacts: contacts });
+
+		this.setState(prevState => ({
+			...prevState,
+			contacts: contacts
+		}));
 
 		this.fetchLocalFiles();
 	}
 
 	async fetchLocalFiles() {
-		// await preferences.deleteTransferredFiles();
+		await preferences.deleteTransferredFiles();
 		var results = await preferences.getTransferredFiles();
 
 		if (results) {
-			this.setState({
+			this.setState(prevState => ({
+				...prevState,
 				localFiles: results
-			});
+			}));
 		}
 	}
 
 	onCloseModal = () => {
-		this.setState({ selectedFiles: [], selectedContacts: [] });
+		this.setState(prevState => ({
+			...prevState,
+			selectedFiles: [],
+			selectedContacts: []
+		}));
 	};
 
 	onPickFiles = async () => {
 		var results = await FilesReader.pickMultiple();
-		this.setState({ selectedFiles: [...results] });
+		this.setState(prevState => ({
+			...prevState,
+			selectedFiles: [...results]
+		}));
 	};
 
 	onTransfer = async () => {
-		const { selectedFiles } = this.state;
+		const { selectedFiles, selectedContacts } = this.state;
+		const { selectedAddress } = this.props;
+
 		const date = Date.now();
 		const files = [];
 
@@ -124,55 +112,15 @@ class FilesManager extends Component {
 				percent: 0,
 				date,
 				file,
-				contacts: this.state.selectedContacts
+				contacts: selectedContacts,
+				parts: []
 			};
-			files.push(record);
+			// queueFiles.push(record);
+			this.FileTransferIns.queueFiles.push(record);
 			await preferences.saveTransferredFiles(record);
 		}
 		this.fetchLocalFiles();
-		this.startTransfer(files);
-	};
-
-	startTransfer = async files => {
-		const { selectedAddress } = this.props;
-		const webrtc = refWebRTC();
-
-		const file = files[0];
-
-		const addresses = file.contacts.map(e => e.address);
-		const content = await RNFS.readFile(file.file.uri.replace('file://', ''), 'base64');
-		const lookupName = file.file.name;
-
-		FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
-		const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
-			const { completed, name, error, currentPart, partCount } = stats;
-
-			let successPercent = 0;
-
-			if (currentPart && partCount) {
-				successPercent = currentPart / partCount;
-			}
-
-			updatePreference(file, statuses.process, successPercent);
-			this.fetchLocalFiles();
-
-			if (completed && name == lookupName) {
-				// TODO: check and send next file
-				updatePreference(file, statuses.success, 1);
-				this.fetchLocalFiles();
-
-				statsEvent.remove(); // remove if done
-			} else if (error && name == lookupName) {
-				const { peer, partCount, currentPart } = stats;
-
-				updatePreference(file, statuses.failed, successPercent);
-				this.fetchLocalFiles();
-
-				alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
-				// TODO: check and send next file
-				statsEvent.remove(); // remove if done
-			}
-		});
+		this.FileTransferIns.startTransfer(selectedAddress, () => this.fetchLocalFiles());
 	};
 
 	onRemoveSelectedFiles = file => {
@@ -180,7 +128,10 @@ class FilesManager extends Component {
 
 		if (selectedFiles.includes(file)) {
 			selectedFiles = this.state.selectedFiles.filter(item => item !== file);
-			this.setState({ selectedFiles });
+			this.setState(prevState => ({
+				...prevState,
+				selectedFiles: selectedFiles
+			}));
 		}
 	};
 
@@ -192,7 +143,10 @@ class FilesManager extends Component {
 		} else {
 			selectedContacts.push(contact);
 		}
-		this.setState({ selectedContacts: selectedContacts });
+		this.setState(prevState => ({
+			...prevState,
+			selectedContacts: selectedContacts
+		}));
 	};
 
 	onRecovery = (file, swipeValue) => {

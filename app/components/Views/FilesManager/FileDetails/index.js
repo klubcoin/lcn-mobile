@@ -143,7 +143,7 @@ export default class FileDetails extends Component {
 		data: this.props.navigation.getParam('selectedFile').file,
 		status: this.props.navigation.getParam('selectedFile').status,
 		contacts: this.props.navigation.getParam('selectedFile').contacts,
-		percent: this.props.navigation.getParam('selectedFile').percent
+		percent: (this.props.navigation.getParam('selectedFile').percent * 100).toFixed(1)
 	};
 
 	renderSummary = () => {
@@ -159,16 +159,16 @@ export default class FileDetails extends Component {
 					size={150}
 					width={10}
 					rotation={0}
-					fill={this.state.percent * 100}
+					fill={this.state.percent}
 					tintColor={getStatusContent(this.state.status).color}
 					backgroundColor={colors.grey100}
 					style={{ marginVertical: 20 }}
 				>
 					{fill => (
-						<View style={{ alignItems: 'center' }}>
-							<Text
-								style={[styles.percent, { color: getStatusContent(this.state.status).color }]}
-							>{`${this.state.percent * 100} %`}</Text>
+						<View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+							<Text style={[styles.percent, { color: getStatusContent(this.state.status).color }]}>{`${
+								this.state.percent
+							} %`}</Text>
 							<Text style={[styles.percent, { color: getStatusContent(this.state.status).color }]}>
 								{getStatusContent(this.state.status).string}
 							</Text>
