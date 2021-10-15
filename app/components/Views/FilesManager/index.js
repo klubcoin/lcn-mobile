@@ -9,7 +9,8 @@ import {
 	Button,
 	ScrollView,
 	DeviceEventEmitter,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Alert
 } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
@@ -153,9 +154,22 @@ class FilesManager extends Component {
 	};
 
 	onDelete = async (file, swipeValue) => {
-		if (!file) return;
-		await preferences.deleteTransferredFile(file.id);
-		await this.fetchLocalFiles();
+		console.log('file', file);
+		Alert.alert('Delete file', `Are you sure to delete ${file.file.name} ?`, [
+			{
+				text: 'Yes',
+				onPress: async () => {
+					if (!file) return;
+					await preferences.deleteTransferredFile(file.id);
+					await this.fetchLocalFiles();
+				}
+			},
+			{
+				text: 'No',
+				onPress: () => console.log('No Pressed'),
+				style: 'cancel'
+			}
+		]);
 	};
 
 	onViewDetails = file => {
@@ -230,7 +244,6 @@ class FilesManager extends Component {
 					files={this.state.selectedFiles}
 					contacts={this.state.contacts}
 					selectedContacts={this.state.selectedContacts}
-					visible={this.state.viewSendFileModal}
 					onDeleteItem={e => this.onRemoveSelectedFiles(e)}
 					onSelectContact={e => this.onSelectContact(e)}
 					onCloseModal={this.onCloseModal}
