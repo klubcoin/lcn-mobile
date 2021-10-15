@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 import FileItem from './FileItem';
 import Device from '../../../../util/Device';
 import CustomButton from '../../../Base/CustomButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 
 export default function TransferFileModal({
@@ -76,9 +75,9 @@ export default function TransferFileModal({
 					onPress={
 						selectedContacts?.length > 0 && files?.length > 0
 							? () => {
-									onTransfer();
-									onClose();
-							  }
+								onTransfer();
+								onClose();
+							}
 							: null
 					}
 					style={[
