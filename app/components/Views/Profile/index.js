@@ -103,7 +103,10 @@ class Profile extends PureComponent {
 		const webrtc = refWebRTC();
 		const { PreferencesController } = Engine.state;
 		const { selectedAddress } = PreferencesController;
-		const addresses = contacts.map(e => e.address);
+		const { blockedIdentityReqPeers } = this.props.store;
+
+		const addresses = contacts.filter(e => !blockedIdentityReqPeers[e.address]).map(e => e.address);
+		if (addresses.length == 0) return;
 
 		const { email } = this.account || {};
 		const { avatar, firstname, lastname } = this.onboardProfile || {};
