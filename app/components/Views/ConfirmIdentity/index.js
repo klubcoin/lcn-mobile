@@ -227,15 +227,19 @@ export class ConfirmIdentity extends PureComponent {
 		FileTransferWebRTC.sendAsOne(message, selectedAddress, [data.from], webrtc);
 	}
 
-	sendReport = () => {
+	sendReport = async (reason) => {
 		this.sendBlockMessage();
 
 		const { data } = this.props;
-		const signature = CryptoSignature.signMessage(data.from);
+		const { selectedAddress } = Engine.state.PreferencesController;
+
+		const params = [data.from, reason];
+		const signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(params));
+		params.push(signature);
 
 		API.postRequest(
 			routes.walletReport,
-			[data.from, signature],
+			params,
 			response => {
 				if (response.error) {
 					alert(`${response.error.message}`);
