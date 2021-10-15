@@ -168,7 +168,7 @@ export default class FileTransferWebRTC {
 		if (this.webrtc && this.webrtc.sendToPeer) {
 			const connectAndSend = () => {
 				this.webrtc.connectTo(address);
-				this.monitorFailure = setTimeout(() => this._reportFailure(address), 4000);
+				this.monitorFailure = setTimeout(() => this._reportFailure(address), 8000);
 				DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
 					this._onProgress(address);
 					this.awaitingPeer = address;
@@ -181,7 +181,7 @@ export default class FileTransferWebRTC {
 				this._onProgress(address);
 				this.awaitingPeer = address;
 				this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
-				this.monitorFailure = setTimeout(() => connectAndSend(), 2500);
+				this.monitorFailure = setTimeout(() => connectAndSend(), 5000);
 			}
 		}
 	}

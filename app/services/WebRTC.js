@@ -136,7 +136,7 @@ export default class WebRTC {
 
   handleReceiveMessage = (e, peer) => {
     // Listener for receiving messages from the peer
-    console.log('[INFO] Message received from peer', e.data);
+    console.log('[INFO] Message received from peer', `${e.data}`.substr(0, 100));
 
     this.handleFileTransfer(e.data, peer);
     // if (this.onMessage) this.onMessage(e.data, peer);
