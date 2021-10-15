@@ -152,9 +152,10 @@ class FilesManager extends Component {
 		// if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
 	};
 
-	onDelete = (file, swipeValue) => {
-		console.log('On delete');
-		// if (Math.abs(swipeValue.value) >= swipeOffset) console.log('on recovery');
+	onDelete = async (file, swipeValue) => {
+		if (!file) return;
+		await preferences.deleteTransferredFile(file.id);
+		await this.fetchLocalFiles();
 	};
 
 	onViewDetails = file => {
@@ -182,6 +183,7 @@ class FilesManager extends Component {
 
 						return (
 							<SwipeRow
+								key={e.id}
 								stopRightSwipe={0}
 								rightOpenValue={e.status === statuses.success ? -swipeOffset : -swipeOffset / 2}
 								disableRightSwipe
@@ -199,7 +201,7 @@ class FilesManager extends Component {
 										</TouchableWithoutFeedback>
 									)}
 
-									<TouchableWithoutFeedback onPress={value => this.onDelete(file, value)}>
+									<TouchableWithoutFeedback onPress={value => this.onDelete(e, value)}>
 										<View style={styles.swipeableOption}>
 											<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
 										</View>

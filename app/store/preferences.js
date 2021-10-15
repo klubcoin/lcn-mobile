@@ -123,6 +123,11 @@ class Preferences {
 		return Object.keys(transferredFiles).map(key => transferredFiles[key]);
 	}
 
+	async deleteTransferredFile(id) {
+		delete this.storage[kTransferredFiles][id];
+		await this.saveStorage(kTransferredFiles);
+	}
+
 	async deleteTransferredFiles() {
 		this.storage[kTransferredFiles] = {};
 		await this.saveStorage(kTransferredFiles);
