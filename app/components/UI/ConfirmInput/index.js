@@ -52,6 +52,10 @@ const styles = StyleSheet.create({
 		borderRadius: 4,
 		marginTop: 10,
 		paddingHorizontal: 10,
+	},
+	error: {
+		borderColor: '#f00',
+		borderWidth: 1,
 	}
 });
 
@@ -69,12 +73,16 @@ export default class ConfirmInput extends PureComponent {
 	};
 
 	state = {
-		value: this.props.value
+		value: this.props.value,
+		typed: false,
 	};
 
 	onConfirm() {
 		const { onConfirm, hideModal } = this.props;
 		const { value } = this.state;
+		this.setState({ typed: true });
+
+		if (!value || value.length == 0) return;
 
 		hideModal && hideModal();
 		onConfirm && onConfirm(value);
@@ -86,12 +94,13 @@ export default class ConfirmInput extends PureComponent {
 	}
 
 	onChange = (text) => {
-		this.setState({ value: text })
+		this.setState({ value: text, typed: true })
 	}
 
 	render() {
 		const { title, message, multiline, placeholder, confirmLabel, cancelLabel } = this.props;
-		const { value } = this.state;
+		const { value, typed } = this.state;
+		const empty = typed && value.length == 0;
 
 		return (
 			<KeyboardAvoidingView behavior={'padding'}>
@@ -113,7 +122,7 @@ export default class ConfirmInput extends PureComponent {
 							placeholder={placeholder || '...'}
 							placeholderTextColor={colors.grey100}
 							spellCheck={false}
-							style={styles.input}
+							style={[styles.input, empty && styles.error]}
 							value={value}
 							multiline={!!multiline}
 							numberOfLines={1}
