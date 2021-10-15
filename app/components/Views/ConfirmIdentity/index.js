@@ -21,6 +21,7 @@ import { ConfirmProfileBlock, ConfirmProfileRejected } from '../../../services/M
 import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
 import preferences from '../../../store/preferences';
+import Toast from 'react-native-toast-message';
 
 const styles = StyleSheet.create({
 	bottomModal: {
@@ -144,6 +145,15 @@ export class ConfirmIdentity extends PureComponent {
 		this.prefs = props.store;
 	}
 
+	showNotice(message, type) {
+		Toast.show({
+			type: type || 'info',
+			text1: message,
+			text2: strings('profile.notice'),
+			visibilityTime: 1000
+		});
+	}
+
 	onCancel = () => {
 		this.props.hideModal();
 	};
@@ -170,6 +180,7 @@ export class ConfirmIdentity extends PureComponent {
 				break;
 			case 1:
 				this.refuseTryAgain();
+				this.props.hideModal();
 				break;
 			case 2:
 				this.showConfirmNotWilling = true;
@@ -245,6 +256,7 @@ export class ConfirmIdentity extends PureComponent {
 				if (response.error) {
 					alert(`${response.error.message}`);
 				} else {
+					this.showNotice(strings('confirm_profile.sent_report'));
 					this.props.hideModal();
 				}
 			},

@@ -207,7 +207,8 @@
 		"cancel": "Cancel",
 		"submit": "Submit",
 		"input_reason": "Input report reason",
-		"peer_refuse_try_again": "{{name}} could not verify your identity at the moment. Try again later."
+		"peer_refuse_try_again": "{{name}} could not verify your identity at the moment. Try again later.",
+		"sent_report": "Sent report"
 	},
 	"reset_password": {
 		"title": "Change password",
