@@ -813,7 +813,7 @@ const Main = props => {
 		});
 	}
 
-	onWebRtcMessage = (data, peerId) => {
+	onWebRtcMessage = async (data, peerId) => {
 		try {
 			data = JSON.parse(data);
 		} catch (e) { }
@@ -821,6 +821,7 @@ const Main = props => {
 		if (data.action) {
 			switch (data.action) {
 				case ConfirmProfileRequest().action:
+					if (await preferences.isBlockIdentityReqPeer(data.from)) return;
 					showConfirmOtherIdentity(data);
 					break;
 				case ConfirmProfileRejected().action:

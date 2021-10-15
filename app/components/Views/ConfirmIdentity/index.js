@@ -18,9 +18,9 @@ import { refWebRTC } from '../../../services/WebRTC';
 import Engine from '../../../core/Engine';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { ConfirmProfileBlock, ConfirmProfileRejected } from '../../../services/Messages';
-import APIService from '../../../services/APIService';
 import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	bottomModal: {
@@ -223,6 +223,7 @@ export class ConfirmIdentity extends PureComponent {
 		const { data } = this.props;
 		const { selectedAddress } = Engine.state.PreferencesController;
 
+		preferences.blockIdentityReqPeer(data.from);
 		const message = ConfirmProfileBlock(selectedAddress);
 		FileTransferWebRTC.sendAsOne(message, selectedAddress, [data.from], webrtc);
 	}
@@ -269,6 +270,7 @@ export class ConfirmIdentity extends PureComponent {
 	}
 
 	confirmNotWilling = () => {
+		this.props.hideModal();
 		this.sendBlockMessage();
 	}
 
