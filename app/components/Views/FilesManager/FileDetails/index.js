@@ -198,6 +198,9 @@ export default class FileDetails extends Component {
 	};
 
 	renderDetails = () => {
+		console.log('details', this.state.details);
+		console.log('partCount', this.state.partCount);
+
 		let parts = [];
 		for (let i = 0; i < this.state.partCount; i++) {
 			parts.push(

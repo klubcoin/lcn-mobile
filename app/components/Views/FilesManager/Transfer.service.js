@@ -17,16 +17,12 @@ export default class FileTransfer {
 	}
 
 	updatePreference = async (selectedFile, status, percent, detailPart, partCount) => {
+		if (!selectedFile) return;
+
 		var localFiles = await preferences.getTransferredFiles();
-		var file;
-		if (localFiles) file = localFiles.find(e => e.id === selectedFile?.id);
-		else {
-			file = selectedFile;
-			localFiles.push(selectedFile);
-		}
+		var file = localFiles.find(e => e.id === selectedFile.id);
 
-		file.percent = percent;
-
+		if (percent) file.percent = percent;
 		if (partCount) file.partCount = partCount;
 
 		//handle detail part
@@ -83,13 +79,16 @@ export default class FileTransfer {
 
 				let successPercent = 0;
 				let partDetail = {};
-				if (currentPart && partCount) {
-					successPercent = currentPart / partCount;
-					partDetail[peer] = [currentPart];
+
+				if (currentPart !== undefined && partCount !== undefined) {
+					if (!error) successPercent = currentPart / partCount;
+
+					if (error == undefined && completed == undefined) {
+						partDetail[peer] = [currentPart];
+					}
 				}
 
 				this.updatePreference(file, statuses.process, successPercent, partDetail, partCount);
-
 				callback();
 
 				if (completed && name == lookupName) {
@@ -97,7 +96,7 @@ export default class FileTransfer {
 					statsEvent.remove(); // remove if done
 					this.sendToNextFile(selectedAddress, callback);
 				} else if (error && name == lookupName) {
-					this.updatePreference(file, statuses.failed, successPercent);
+					this.updatePreference(file, statuses.failed);
 
 					alert(`Error: Failed to send ${currentPart}/${partCount} of ${lookupName} to ${peer}`);
 					statsEvent.remove();
