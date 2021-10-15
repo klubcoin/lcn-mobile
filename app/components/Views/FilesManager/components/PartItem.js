@@ -14,6 +14,8 @@ export default function PartItem({ part }) {
 		setViewMore(!viewMore);
 	};
 
+	if (!part) return;
+
 	return (
 		<View style={{ width: '100%', marginVertical: 5 }}>
 			<TouchableOpacity style={styles.container} onPress={onViewMore}>
@@ -29,12 +31,14 @@ export default function PartItem({ part }) {
 					</View>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
 						<View style={{ flexDirection: 'row' }}>
-							{contacts.map(
-								e =>
-									contacts.indexOf(e) < 5 && (
-										<Identicon address={e.address} diameter={25} customStyle={styles.user} />
-									)
-							)}
+							{contacts.length > 0 &&
+								contacts !== undefined &&
+								contacts.map(
+									e =>
+										contacts.indexOf(e) < 5 && (
+											<Identicon address={e.address} diameter={25} customStyle={styles.user} />
+										)
+								)}
 						</View>
 						{/* <Text style={{ marginLeft: 10 }}>...View more</Text> */}
 					</View>
@@ -47,26 +51,28 @@ export default function PartItem({ part }) {
 					/>
 				</View>
 			</TouchableOpacity>
-			{viewMore && (
+			{contacts.length > 0 && viewMore && (
 				<View style={[styles.container, { marginTop: 10, maxHeight: 200 }]}>
 					<ScrollView>
-						{contacts.map(e => (
-							<View style={{ flexDirection: 'row', marginVertical: 5 }}>
-								<Identicon address={e.address} diameter={25} customStyle={styles.user} />
-								<View>
-									<Text
-										style={{ fontWeight: '700', maxWidth: 100 }}
-										numberOfLines={1}
-										ellipsizeMode="middle"
-									>
-										{e.name}
-									</Text>
-									<Text style={{ maxWidth: 250 }} numberOfLines={1} ellipsizeMode="middle">
-										{e.address}
-									</Text>
+						{contacts.length > 0 &&
+							contacts !== undefined &&
+							contacts.map(e => (
+								<View style={{ flexDirection: 'row', marginVertical: 5 }}>
+									<Identicon address={e.address} diameter={25} customStyle={styles.user} />
+									<View>
+										<Text
+											style={{ fontWeight: '700', maxWidth: 100 }}
+											numberOfLines={1}
+											ellipsizeMode="middle"
+										>
+											{e.name}
+										</Text>
+										<Text style={{ maxWidth: 250 }} numberOfLines={1} ellipsizeMode="middle">
+											{e.address}
+										</Text>
+									</View>
 								</View>
-							</View>
-						))}
+							))}
 					</ScrollView>
 				</View>
 			)}

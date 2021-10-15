@@ -58,84 +58,6 @@ const getStatusContent = status => {
 
 export { statuses, getStatusContent, formatBytes };
 
-const fakeData = {
-	parts: [
-		{
-			name: 'Part 1',
-			status: statuses.process,
-			percentages: 38,
-			contacts: [
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdvc',
-					name: 'user 1'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdfsc',
-					name: 'user 2'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdr',
-					name: 'user 3'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasde',
-					name: 'user 4'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdqw',
-					name: 'user 5'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdza',
-					name: 'user 6'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdccc',
-					name: 'user 7'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdvasd',
-					name: 'user 8'
-				}
-			]
-		},
-		{
-			name: 'Part 2',
-			status: statuses.failed,
-			percentages: 10,
-			contacts: [
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdvc',
-					name: 'user 1'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdfsc',
-					name: 'user 2'
-				}
-			]
-		},
-		{
-			name: 'Part 3',
-			status: statuses.success,
-			percentages: 100,
-			contacts: [
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdaazz',
-					name: 'user 12'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdaaas',
-					name: 'user 13'
-				},
-				{
-					address: 'asdasdasdasdasd0Xnadasdasdaaaavvadadasdasdasdasdasdasdasdasdasdassdaasdasd',
-					name: 'user 14asdasdasdasdasdasdasdasdasdasdasdsadasdasdsadasds'
-				}
-			]
-		}
-	]
-};
-
 export default class FileDetails extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('File details', navigation);
 
@@ -198,15 +120,29 @@ export default class FileDetails extends Component {
 	};
 
 	renderDetails = () => {
-		console.log('details', this.state.details);
-		console.log('partCount', this.state.partCount);
-
+		const details = this.state.details;
+		const contacts = this.state.contacts;
 		let parts = [];
+
 		for (let i = 0; i < this.state.partCount; i++) {
+			var foundContact;
+			for (var k in details) {
+				if (details[k].includes(i)) {
+					foundContact = contacts.find(e => e?.address === k);
+				}
+			}
 			parts.push(
-				<PartItem part={{ name: `Part ${i + 1}`, status: this.getPartStatus(i), contacts: ['asdasdasdas'] }} />
+				<PartItem
+					part={{
+						name: `Part ${i + 1}`,
+						status: this.getPartStatus(i),
+						contacts: foundContact !== undefined ? [foundContact] : []
+					}}
+				/>
 			);
+			foundContact = undefined;
 		}
+
 		return (
 			<View style={styles.listContainer}>
 				<Text style={styles.title}>File details</Text>
