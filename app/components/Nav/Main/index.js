@@ -829,7 +829,7 @@ const Main = props => {
 					break;
 				case ConfirmProfileBlock().action:
 					const address = data.from;
-					//TODO: add to blocked list
+					preferences.blockIdentityReqPeer(address);
 					break;
 			}
 		}

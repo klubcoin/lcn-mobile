@@ -8,6 +8,7 @@ export const kAccountKeycloak = 'KeycloakAccount';
 export const kCurrentAppId = 'CurrentAppId';
 export const kOnboardProfile = 'OnboardProfile';
 export const kTransferredFiles = 'TransferredFiles';
+export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 
 const keys = [
 	kAppList,
@@ -16,12 +17,14 @@ const keys = [
 	kAccountKeycloak,
 	kCurrentAppId,
 	kOnboardProfile,
-	kTransferredFiles
+	kTransferredFiles,
+	kBlockedIdentityReqPeers,
 ];
 
 class Preferences {
 	storage = {};
 	onboardProfile = {};
+	blockedIdentityReqPeers = {}
 
 	constructor() {
 		makeAutoObservable(this);
@@ -131,6 +134,17 @@ class Preferences {
 	async deleteTransferredFiles() {
 		this.storage[kTransferredFiles] = {};
 		await this.saveStorage(kTransferredFiles);
+	}
+
+	async blockIdentityReqPeer(address) {
+		this.blockedIdentityReqPeers[address] = true;
+		this.storage[kBlockedIdentityReqPeers] = this.blockedIdentityReqPeers;
+		await this.saveStorage(kBlockedIdentityReqPeers);
+	}
+
+	async isBlockIdentityReqPeer(address) {
+		const blockPeers = this.blockedIdentityReqPeers || {};
+		return blockPeers[address];
 	}
 }
 
