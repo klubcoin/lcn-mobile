@@ -19,7 +19,7 @@ export default class FileTransfer {
 	updatePreference = async (selectedFile, status, percent, detailPart, partCount) => {
 		var localFiles = await preferences.getTransferredFiles();
 		var file;
-		if (localFiles) file = localFiles.find(e => e.id === selectedFile.id);
+		if (localFiles) file = localFiles.find(e => e.id === selectedFile?.id);
 		else {
 			file = selectedFile;
 			localFiles.push(selectedFile);
@@ -78,7 +78,6 @@ export default class FileTransfer {
 			const content = await RNFS.readFile(decodeURI(file.file.uri), 'base64');
 			const lookupName = file.file.name;
 
-			FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
 			const statsEvent = DeviceEventEmitter.addListener('FileTransStat', stats => {
 				const { completed, name, error, peer, currentPart, partCount } = stats;
 
@@ -105,6 +104,7 @@ export default class FileTransfer {
 					this.sendToNextFile(selectedAddress, callback); // remove if done
 				}
 			});
+			FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
 		} catch (error) {
 			const file = this.queueFiles[0];
 			this.updatePreference(file, statuses.failed, 0);
