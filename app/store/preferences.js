@@ -39,7 +39,20 @@ class Preferences {
 
 		const data = await AsyncStorage.getItem(key);
 		this.storage[key] = data ? JSON.parse(data) : data;
+
+		this.bindProps(key, this.storage[key]);
 		return this.storage[key];
+	}
+
+	bindProps(key, data) {
+		switch (key) {
+			case kOnboardProfile:
+				this.onboardProfile = data;
+				break;
+			case kBlockedIdentityReqPeers:
+				this.blockedIdentityReqPeers = data || {};
+				break;
+		}
 	}
 
 	async save(key, value) {
