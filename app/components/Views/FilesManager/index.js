@@ -80,8 +80,8 @@ class FilesManager extends Component {
 		if (results) {
 			this.setState(prevState => ({
 				...prevState,
-				localFiles: results.reverse(),
-				queriedFiles: results.reverse()
+				localFiles: results,
+				queriedFiles: results
 			}));
 			this.getQueriedFiles(this.state.searchQuery);
 		}
@@ -188,7 +188,7 @@ class FilesManager extends Component {
 		if (query.trim() <= 0) {
 			return this.setState(prevState => ({
 				...prevState,
-				queriedFiles: this.state.localFiles.reverse()
+				queriedFiles: this.state.localFiles
 			}));
 		}
 
@@ -214,7 +214,9 @@ class FilesManager extends Component {
 	};
 
 	renderFileSections = status => {
+		let items;
 		let title;
+
 		if (status === statuses.process) {
 			title = 'In processing';
 		} else if (status === statuses.failed) {
@@ -223,7 +225,11 @@ class FilesManager extends Component {
 			title = 'Transferred files';
 		}
 
-		const items = this.state.queriedFiles?.filter(e => e.status === status);
+		if (status === statuses.process) {
+			items = this.state.queriedFiles?.filter(e => e.status === status);
+		} else {
+			items = this.state.queriedFiles?.filter(e => e.status === status).reverse();
+		}
 
 		return (
 			items.length > 0 && (
