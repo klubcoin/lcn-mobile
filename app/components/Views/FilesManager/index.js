@@ -10,7 +10,8 @@ import {
 	ScrollView,
 	DeviceEventEmitter,
 	TouchableWithoutFeedback,
-	Alert
+	Alert,
+	KeyboardAvoidingView
 } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
@@ -49,7 +50,9 @@ class FilesManager extends Component {
 		selectedFiles: [],
 		localFiles: [],
 		contacts: [],
-		selectedContacts: []
+		selectedContacts: [],
+		searchQuery: '',
+		queriedFiles: []
 	};
 
 	constructor(props) {
@@ -77,8 +80,10 @@ class FilesManager extends Component {
 		if (results) {
 			this.setState(prevState => ({
 				...prevState,
-				localFiles: results
+				localFiles: results,
+				queriedFiles: results
 			}));
+			this.getQueriedFiles(this.state.searchQuery);
 		}
 	}
 
@@ -154,7 +159,6 @@ class FilesManager extends Component {
 	};
 
 	onDelete = async (file, swipeValue) => {
-		console.log('file', file);
 		Alert.alert('Delete file', `Are you sure to delete ${file.file.name} ?`, [
 			{
 				text: 'Yes',
@@ -176,6 +180,61 @@ class FilesManager extends Component {
 		this.props.navigation.navigate('FileDetails', { selectedFile: file });
 	};
 
+	getQueriedFiles = value => {
+		const query = value.toLowerCase();
+		const queriedFiles = this.state.queriedFiles;
+		let results = [];
+
+		if (query.trim() <= 0) {
+			return this.setState(prevState => ({
+				...prevState,
+				queriedFiles: this.state.localFiles
+			}));
+		}
+
+		for (let i of queriedFiles) {
+			if (i.file.name.toLowerCase().includes(query)) {
+				results.push(i);
+			}
+		}
+
+		this.setState(prevState => ({
+			...prevState,
+			queriedFiles: results
+		}));
+	};
+
+	handleSearch = value => {
+		// const queriedFiles = this.state.queriedFiles;
+		const query = value.toLowerCase();
+		// let results = [];
+
+		this.setState(prevState => ({
+			...prevState,
+			searchQuery: query
+		}));
+
+		this.getQueriedFiles(value);
+
+		// if (query.trim() <= 0) {
+		// 	return this.setState(prevState => ({
+		// 		...prevState,
+		// 		queriedFiles:  this.state.localFiles,
+		// 	}));
+		// }
+
+		// for (let i of queriedFiles) {
+		// 	if (i.file.name.toLowerCase().includes(query)) {
+		// 		results.push(i);
+		// 	}
+		// }
+
+		// this.setState(prevState => ({
+		// 	...prevState,
+		// 	queriedFiles: results,
+		// }));
+	};
+
 	renderFileSections = status => {
 		let title;
 		if (status === statuses.process) {
@@ -186,7 +245,7 @@ class FilesManager extends Component {
 			title = 'Transferred files';
 		}
 
-		const items = this.state.localFiles?.filter(e => e.status === status);
+		const items = this.state.queriedFiles?.filter(e => e.status === status);
 
 		return (
 			items.length > 0 && (
@@ -240,33 +299,39 @@ class FilesManager extends Component {
 
 		return (
 			<View style={styles.container}>
-				<TransferFileModal
-					files={this.state.selectedFiles}
-					contacts={this.state.contacts}
-					selectedContacts={this.state.selectedContacts}
-					onDeleteItem={e => this.onRemoveSelectedFiles(e)}
-					onSelectContact={e => this.onSelectContact(e)}
-					onCloseModal={this.onCloseModal}
-					onTransfer={this.onTransfer}
-				/>
-				<View style={{ flex: 1 }}>
-					<View style={styles.searchSection}>
-						<Icon name="search" size={22} style={styles.icon} />
-						<TextInput
-							style={styles.textInput}
-							value={''}
-							placeholder={`${strings('contacts.search')}...`}
-							placeholderTextColor={colors.grey100}
-							onChangeText={this.handleSearch}
+				<KeyboardAvoidingView style={{ flex: 1 }}>
+					<TransferFileModal
+						files={this.state.selectedFiles}
+						contacts={this.state.contacts}
+						selectedContacts={this.state.selectedContacts}
+						onDeleteItem={e => this.onRemoveSelectedFiles(e)}
+						onSelectContact={e => this.onSelectContact(e)}
+						onCloseModal={this.onCloseModal}
+						onTransfer={this.onTransfer}
+					/>
+					<View style={{ flex: 1 }}>
+						<View style={styles.searchSection}>
+							<Icon name="search" size={22} style={styles.icon} />
+							<TextInput
+								style={styles.textInput}
+								value={this.state.searchQuery}
+								placeholder={`${strings('contacts.search')}...`}
+								placeholderTextColor={colors.grey100}
+								onChangeText={this.handleSearch}
+							/>
+						</View>
+						<ScrollView style={{ marginBottom: 100 }}>
+							{this.renderFileSections(statuses.process)}
+							{this.renderFileSections(statuses.failed)}
+							{this.renderFileSections(statuses.success)}
+						</ScrollView>
+						<CustomButton
+							title="Transfer other files"
+							onPress={this.onPickFiles}
+							style={styles.customButton}
 						/>
 					</View>
-					<ScrollView style={{ marginBottom: 100 }}>
-						{this.renderFileSections(statuses.process)}
-						{this.renderFileSections(statuses.failed)}
-						{this.renderFileSections(statuses.success)}
-					</ScrollView>
-					<CustomButton title="Transfer other files" onPress={this.onPickFiles} style={styles.customButton} />
-				</View>
+				</KeyboardAvoidingView>
 			</View>
 		);
 	}
