@@ -80,8 +80,8 @@ class FilesManager extends Component {
 		if (results) {
 			this.setState(prevState => ({
 				...prevState,
-				localFiles: results,
-				queriedFiles: results
+				localFiles: results.reverse(),
+				queriedFiles: results.reverse()
 			}));
 			this.getQueriedFiles(this.state.searchQuery);
 		}
@@ -182,17 +182,17 @@ class FilesManager extends Component {
 
 	getQueriedFiles = value => {
 		const query = value.toLowerCase();
-		const queriedFiles = this.state.queriedFiles;
+		const dataSrc = this.state.localFiles;
 		let results = [];
 
 		if (query.trim() <= 0) {
 			return this.setState(prevState => ({
 				...prevState,
-				queriedFiles: this.state.localFiles
+				queriedFiles: this.state.localFiles.reverse()
 			}));
 		}
 
-		for (let i of queriedFiles) {
+		for (let i of dataSrc) {
 			if (i.file.name.toLowerCase().includes(query)) {
 				results.push(i);
 			}
@@ -205,34 +205,12 @@ class FilesManager extends Component {
 	};
 
 	handleSearch = value => {
-		// const queriedFiles = this.state.queriedFiles;
-		const query = value.toLowerCase();
-		// let results = [];
-
 		this.setState(prevState => ({
 			...prevState,
-			searchQuery: query
+			searchQuery: value
 		}));
 
 		this.getQueriedFiles(value);
-
-		// if (query.trim() <= 0) {
-		// 	return this.setState(prevState => ({
-		// 		...prevState,
-		// 		queriedFiles:  this.state.localFiles,
-		// 	}));
-		// }
-
-		// for (let i of queriedFiles) {
-		// 	if (i.file.name.toLowerCase().includes(query)) {
-		// 		results.push(i);
-		// 	}
-		// }
-
-		// this.setState(prevState => ({
-		// 	...prevState,
-		// 	queriedFiles: results,
-		// }));
 	};
 
 	renderFileSections = status => {
