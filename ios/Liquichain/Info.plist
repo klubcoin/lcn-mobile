@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Use your FaceId to login</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -54,6 +52,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Application requires camera access to scan QR code address</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use your FaceId to login</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>NSPhotoLibraryUsageDescription</key>
