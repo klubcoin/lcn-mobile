@@ -55,7 +55,7 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Use your FaceId to login</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Application requires access to photo to upload your avatar</string>
 	<key>UIAppFonts</key>
