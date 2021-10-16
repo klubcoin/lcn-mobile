@@ -577,6 +577,11 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_TRANSACTION_HISTORY);
 	};
 
+	gotoNotifications = () => {
+		this.props.navigation.navigate('Notifications');
+		this.hideDrawer();
+	};
+
 	gotoContacts = () => {
 		this.props.navigation.navigate('Contacts');
 		this.hideDrawer();
@@ -763,6 +768,13 @@ class DrawerView extends PureComponent {
 					selectedIcon: this.getAntDesignIcon('contacts'),
 					action: this.gotoContacts,
 					routeNames: ['Contacts']
+				},
+				{
+					name: strings('drawer.notifications'),
+					icon: this.getFeatherIcon('bell'),
+					selectedIcon: this.getFeatherIcon('bell'),
+					action: this.gotoNotifications,
+					routeNames: ['Notifications']
 				},
 			],
 			[

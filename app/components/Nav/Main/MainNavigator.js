@@ -66,6 +66,7 @@ import ProfileOnboard from '../../Views/ProfileOnboard';
 import FilesManager from '../../Views/FilesManager';
 import FileDetails from '../../Views/FilesManager/FileDetails';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import Notifications from '../../Views/Notifications';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -101,6 +102,9 @@ export default createStackNavigator(
 						},
 						Contacts: {
 							screen: Contacts
+						},
+						Notifications: {
+							screen: Notifications
 						},
 						FilesManager: {
 							screen: FilesManager
