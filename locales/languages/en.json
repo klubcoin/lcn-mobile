@@ -264,6 +264,7 @@
 		"wallet": "Wallet",
 		"profile": "Profile",
 		"transaction_history": "Transaction History",
+		"notifications": "Notifications",
 		"contacts": "Contacts",
 		"file_manager": "File manager",
 		"request_feature": "Request a Feature",
@@ -1304,6 +1305,12 @@
 		"back_to_safety": "Back to safety"
 	},
 	"notifications": {
+		"confirm_delete": "Confirm delete",
+		"delete": "Delete",
+		"cancel": "Cancel",
+		"are_you_sure": "Are you sure?",
+		"could_not_confirm_try_again": "Could not confirm identify. Please try again later.",
+		"requested_profile_confirmation": "Sent you a request to confirm his identity",
 		"pending_title": "Transaction submitted",
 		"pending_deposit_title": "Deposit in progress!",
 		"pending_withdrawal_title": "Withdrawal in progress!",
