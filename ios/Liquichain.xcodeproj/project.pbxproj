@@ -630,6 +630,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 75C9U59DUL;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Liquichain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
