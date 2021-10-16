@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { makeAutoObservable } from 'mobx';
+import moment from 'moment';
+import uuid from 'react-native-uuid';
 
 export const kAppList = 'AppList';
 export const kSecureHashKeycloak = 'KeycloakHash';
@@ -9,6 +11,7 @@ export const kCurrentAppId = 'CurrentAppId';
 export const kOnboardProfile = 'OnboardProfile';
 export const kTransferredFiles = 'TransferredFiles';
 export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
+export const kNotifications = 'Notifications';
 
 const keys = [
 	kAppList,
@@ -19,12 +22,14 @@ const keys = [
 	kOnboardProfile,
 	kTransferredFiles,
 	kBlockedIdentityReqPeers,
+	kNotifications,
 ];
 
 class Preferences {
 	storage = {};
 	onboardProfile = {};
-	blockedIdentityReqPeers = {}
+	blockedIdentityReqPeers = {};
+	notifications = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -51,6 +56,9 @@ class Preferences {
 				break;
 			case kBlockedIdentityReqPeers:
 				this.blockedIdentityReqPeers = data || {};
+				break;
+			case kNotifications:
+				this.notifications = data || [];
 				break;
 		}
 	}
@@ -158,6 +166,18 @@ class Preferences {
 	async isBlockIdentityReqPeer(address) {
 		const blockPeers = this.blockedIdentityReqPeers || {};
 		return blockPeers[address];
+	}
+
+	async addNotification(data) {
+		data.id = uuid.v4();
+		data.time = moment().unix();
+		this.notifications.push(data);
+		await this.saveNotifications(this.notifications);
+	}
+
+	async saveNotifications(notifications) {
+		this.notifications = notifications || [];
+		await this.save(kNotifications, this.notifications);
 	}
 }
 
