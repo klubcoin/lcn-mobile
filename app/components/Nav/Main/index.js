@@ -822,11 +822,13 @@ const Main = props => {
 			switch (data.action) {
 				case ConfirmProfileRequest().action:
 					if (await preferences.isBlockIdentityReqPeer(data.from)) return;
+					preferences.addNotification(data);
 					showConfirmOtherIdentity(data);
 					break;
 				case ConfirmProfileRejected().action:
 					const name = `${data.firstname} ${data.lastname}`;
 					showNotice(strings('confirm_profile.peer_refuse_try_again', { name }));
+					preferences.addNotification(data);
 					break;
 				case ConfirmProfileBlock().action:
 					const address = data.from;
