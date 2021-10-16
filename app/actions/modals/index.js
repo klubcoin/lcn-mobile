@@ -44,3 +44,10 @@ export function toggleApproveModal(show) {
 		show
 	};
 }
+
+export function showConfirmOtherIdentityPrompt(data) {
+	return {
+		type: 'SHOW_CONFIRM_OTHER_IDENTITY',
+		data
+	};
+}

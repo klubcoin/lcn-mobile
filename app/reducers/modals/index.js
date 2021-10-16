@@ -6,7 +6,8 @@ const initialState = {
 	confirmLogoutModalVisible: false,
 	receiveAsset: undefined,
 	dappTransactionModalVisible: false,
-	approveModalVisible: false
+	approveModalVisible: false,
+	otherIdentityToConfirm: null,
 };
 
 const modalsReducer = (state = initialState, action) => {
@@ -49,6 +50,11 @@ const modalsReducer = (state = initialState, action) => {
 				...state,
 				approveModalVisible: !state.approveModalVisible
 			};
+		case 'SHOW_CONFIRM_OTHER_IDENTITY':
+			return {
+				...state,
+				otherIdentityToConfirm: action.data
+			}
 		default:
 			return state;
 	}
