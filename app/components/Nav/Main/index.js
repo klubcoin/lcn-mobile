@@ -58,7 +58,7 @@ import {
 	removeNotificationById,
 	removeNotVisibleNotifications
 } from '../../../actions/notification';
-import { toggleDappTransactionModal, toggleApproveModal } from '../../../actions/modals';
+import { toggleDappTransactionModal, toggleApproveModal, showConfirmOtherIdentityPrompt } from '../../../actions/modals';
 import { setOnboardProfile } from '../../../actions/user';
 import AccountApproval from '../../UI/AccountApproval';
 import ProtectYourWalletModal from '../../UI/ProtectYourWalletModal';
@@ -839,12 +839,16 @@ const Main = props => {
 	}
 
 	const renderConfirmOtherIdentity = () => {
+		const profile = identity2Confirm || props.otherIdentityToConfirm;
 		return (
 			<ConfirmIdentity
-				visible={!!identity2Confirm}
-				data={identity2Confirm}
+				visible={!!profile}
+				data={profile}
 				message={`${strings('confirm_profile.confirm_profile_message')}`}
-				hideModal={() => showConfirmOtherIdentity(null)}
+				hideModal={() => {
+					showConfirmOtherIdentity(null);
+					props.showConfirmOtherIdentity(null);
+				}}
 			/>
 		)
 	}
@@ -989,6 +993,7 @@ const mapStateToProps = state => ({
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
 	network: state.engine.backgroundState.NetworkController.network,
 	identities: state.engine.backgroundState.PreferencesController.identities,
+	otherIdentityToConfirm: state.modals.otherIdentityToConfirm,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1004,6 +1009,7 @@ const mapDispatchToProps = dispatch => ({
 	setInfuraAvailabilityNotBlocked: () => dispatch(setInfuraAvailabilityNotBlocked()),
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
 	setOnboardProfile: (profile) => dispatch(setOnboardProfile(profile)),
+	showConfirmOtherIdentity: (data) => dispatch(showConfirmOtherIdentityPrompt(data)),
 });
 
 export default connect(

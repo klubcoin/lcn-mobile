@@ -11,6 +11,7 @@ import { ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services
 import Text from '../../Base/Text';
 import StyledButton from '../../UI/StyledButton';
 import preferences from '../../../store/preferences';
+import { store as redux } from '../../../store';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -125,7 +126,10 @@ class Notifications extends PureComponent {
 	openItem = (item) => {
 		const { store } = this.props;
 		if (!item.read && item.action == ConfirmProfileRequest().action) {
-
+			redux.dispatch({
+				type: 'SHOW_CONFIRM_OTHER_IDENTITY',
+				data: item,
+			})
 		}
 		item.read = true;
 		store.saveNotifications(this.notifications);
