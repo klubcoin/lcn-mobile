@@ -182,7 +182,7 @@ export default class FileTransferWebRTC {
 				DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
 					this._onProgress(address);
 					this.awaitingPeer = address;
-					this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
+					this.webrtc.sendToPeer(address, storeFile);
 				});
 			};
 			if (!this.webrtc.hasChannel(address)) {
@@ -190,7 +190,7 @@ export default class FileTransferWebRTC {
 			} else {
 				this._onProgress(address);
 				this.awaitingPeer = address;
-				this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
+				this.webrtc.sendToPeer(address, storeFile);
 				this.monitorFailure = setTimeout(() => connectAndSend(), 5000);
 			}
 		}
@@ -235,7 +235,7 @@ export default class FileTransferWebRTC {
 			if (!this.webrtc.hasChannel(address)) {
 				this.connectAndSend(address);
 			} else {
-				this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+				this.webrtc.sendToPeer(address, this.data);
 			}
 		}
 	};
@@ -243,7 +243,7 @@ export default class FileTransferWebRTC {
 	connectAndSend = (address) => {
 		this.webrtc.connectTo(address);
 		DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-			this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+			this.webrtc.sendToPeer(address, this.data);
 		});
 	};
 
@@ -255,7 +255,7 @@ export default class FileTransferWebRTC {
 					this.connectAndSend(address);
 				} else {
 					this.monitors[address] = setTimeout(() => this.connectAndSend(address), 5000);
-					this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+					this.webrtc.sendToPeer(address, this.data);
 				}
 			}
 		});
