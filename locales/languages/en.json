@@ -303,7 +303,9 @@
 		"accept": "Accept",
 		"reject": "Reject",
 		"invalid_signature": "Invalid signature",
-		"confirm": "Confirm"
+		"confirm": "Confirm",
+		"scan_qr_connect": "Scan QR to connect",
+		"share_namecard": "Share namecard"
 	},
 	"send": {
 		"title": "Send",
