@@ -90,6 +90,8 @@ class Profile extends PureComponent {
 	}
 
 	onPickImage() {
+		return; //TODO: editable is not available now
+		/*
 		ImagePicker.openCamera({
 			width: 300,
 			height: 300,
@@ -97,6 +99,7 @@ class Profile extends PureComponent {
 		}).then(image => {
 			this.account.avatar = image.path;
 		});
+		*/
 	}
 
 	sendConfirmationRequests = async contacts => {
@@ -106,7 +109,9 @@ class Profile extends PureComponent {
 		const { blockedIdentityReqPeers } = this.props.store;
 
 		const addresses = contacts.filter(e => !blockedIdentityReqPeers[e.address]).map(e => e.address);
-		if (addresses.length == 0) return;
+		if (addresses.length == 0) {
+			return;
+		}
 
 		const { email } = this.account || {};
 		const { avatar, firstname, lastname } = this.onboardProfile || {};
