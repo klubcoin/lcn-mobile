@@ -13,7 +13,7 @@ export default function StorageChart() {
 	};
 
 	return (
-		<View style={{ flex: 1, alignItems: 'center' }}>
+		<View style={{ alignItems: 'center' }}>
 			<View>
 				<AnimatedCircularProgress
 					size={deviceWidth / 2}

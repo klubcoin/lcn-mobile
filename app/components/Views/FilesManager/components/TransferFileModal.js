@@ -38,7 +38,7 @@ export default function TransferFileModal({
 
 		return contacts.map(e => (
 			<TouchableOpacity onPress={() => onSelectContact(e)}>
-				<View style={[styles.contacts]}>
+				<View style={styles.contacts}>
 					{selectedContacts.includes(e) ? (
 						<Icon name="check-circle" size={40} style={{ color: colors.green500 }} />
 					) : (
