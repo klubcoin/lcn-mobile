@@ -3,6 +3,7 @@ import { FlatList, SafeAreaView, StyleSheet, View, TouchableOpacity } from 'reac
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import moment from 'moment';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import { colors } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
@@ -12,6 +13,7 @@ import Text from '../../Base/Text';
 import StyledButton from '../../UI/StyledButton';
 import preferences from '../../../store/preferences';
 import { store as redux } from '../../../store';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -19,8 +21,9 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	item: {
-		marginTop: 20,
-		paddingHorizontal: 20
+		paddingTop: 20,
+		paddingHorizontal: 20,
+		backgroundColor: colors.white
 	},
 	head: {
 		flexDirection: 'row'
@@ -51,6 +54,15 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		backgroundColor: colors.green600
 	},
+	actionIndicator: {
+		width: 22,
+		height: 22,
+		marginLeft: 5,
+		borderRadius: 12,
+		backgroundColor: colors.green300,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
 	selectedBar: {
 		position: 'absolute',
 		width: 5,
@@ -60,6 +72,14 @@ const styles = StyleSheet.create({
 	},
 	actions: {
 		flexDirection: 'row'
+	},
+	swdelete: {
+		backgroundColor: colors.red,
+		width: 65,
+		height: '100%',
+		alignItems: 'center',
+		justifyContent: 'center',
+		alignSelf: 'flex-end'
 	},
 	delete: {
 		flex: 1,
@@ -97,8 +117,8 @@ class Notifications extends PureComponent {
 		this.notifications = notifications;
 	}
 
-	deleteNotification = async () => {
-		const items = this.notifications.filter(e => this.selectedIds.includes(e.id));
+	deleteNotification = async item => {
+		const items = item ? [item.item] : this.notifications.filter(e => this.selectedIds.includes(e.id));
 		items.map(e => this.notifications.splice(this.notifications.indexOf(e), 1));
 		this.cancelSelection();
 		preferences.saveNotifications(this.notifications);
@@ -155,11 +175,12 @@ class Notifications extends PureComponent {
 		const { title, content, time } = this.parseItem(item);
 		const { read } = item;
 		const selected = this.selectedIds.includes(item.id);
+		const action = !read && item.action == ConfirmProfileRequest().action;
 
 		return (
 			<TouchableOpacity
 				activeOpacity={0.8}
-				onLongPress={() => this.selectItem(item)}
+				// onLongPress={() => this.selectItem(item)}
 				onPress={() => (this.selectMode ? this.selectItem(item) : this.openItem(item))}
 			>
 				<View style={styles.item}>
@@ -167,11 +188,24 @@ class Notifications extends PureComponent {
 						<Text style={styles.title}>{title}</Text>
 						{!read && <View style={styles.unread} />}
 						<Text style={styles.time}>{time}</Text>
+						{action && (
+							<View style={styles.actionIndicator}>
+								<Icon name={'arrow-right'} size={20} color={colors.white} />
+							</View>
+						)}
 					</View>
 					<Text style={styles.desc}>{content}</Text>
 					<View style={styles.line} />
 				</View>
 				{selected && <View style={styles.selectedBar} />}
+			</TouchableOpacity>
+		);
+	};
+
+	renderSwipeDelete = data => {
+		return (
+			<TouchableOpacity style={styles.swdelete} onPress={() => this.deleteNotification(data)}>
+				<Icon name={'delete-outline'} size={32} color={colors.white} />
 			</TouchableOpacity>
 		);
 	};
@@ -182,12 +216,15 @@ class Notifications extends PureComponent {
 
 		return (
 			<SafeAreaView style={styles.wrapper}>
-				<FlatList
+				<SwipeListView
 					key={this.refresh}
-					data={notifications}
 					keyExtractor={item => `${JSON.stringify(item)}`}
-					renderItem={data => this.renderItem(data)}
-					style={styles.optionList}
+					data={notifications}
+					renderItem={(data, rowMap) => this.renderItem(data)}
+					renderHiddenItem={(data, rowMap) => this.renderSwipeDelete(data)}
+					disableRightSwipe
+					leftOpenValue={0}
+					rightOpenValue={-65}
 				/>
 
 				{this.selectMode && (
