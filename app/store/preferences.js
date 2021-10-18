@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { makeAutoObservable } from 'mobx';
+import moment from 'moment';
+import uuid from 'react-native-uuid';
 
 export const kAppList = 'AppList';
 export const kSecureHashKeycloak = 'KeycloakHash';
@@ -8,6 +10,8 @@ export const kAccountKeycloak = 'KeycloakAccount';
 export const kCurrentAppId = 'CurrentAppId';
 export const kOnboardProfile = 'OnboardProfile';
 export const kTransferredFiles = 'TransferredFiles';
+export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
+export const kNotifications = 'Notifications';
 
 const keys = [
 	kAppList,
@@ -16,12 +20,16 @@ const keys = [
 	kAccountKeycloak,
 	kCurrentAppId,
 	kOnboardProfile,
-	kTransferredFiles
+	kTransferredFiles,
+	kBlockedIdentityReqPeers,
+	kNotifications
 ];
 
 class Preferences {
 	storage = {};
 	onboardProfile = {};
+	blockedIdentityReqPeers = {};
+	notifications = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -36,7 +44,23 @@ class Preferences {
 
 		const data = await AsyncStorage.getItem(key);
 		this.storage[key] = data ? JSON.parse(data) : data;
+
+		this.bindProps(key, this.storage[key]);
 		return this.storage[key];
+	}
+
+	bindProps(key, data) {
+		switch (key) {
+			case kOnboardProfile:
+				this.onboardProfile = data;
+				break;
+			case kBlockedIdentityReqPeers:
+				this.blockedIdentityReqPeers = data || {};
+				break;
+			case kNotifications:
+				this.notifications = data || [];
+				break;
+		}
 	}
 
 	async save(key, value) {
@@ -131,6 +155,29 @@ class Preferences {
 	async deleteTransferredFiles() {
 		this.storage[kTransferredFiles] = {};
 		await this.saveStorage(kTransferredFiles);
+	}
+
+	async blockIdentityReqPeer(address) {
+		this.blockedIdentityReqPeers[address] = true;
+		this.storage[kBlockedIdentityReqPeers] = this.blockedIdentityReqPeers;
+		await this.saveStorage(kBlockedIdentityReqPeers);
+	}
+
+	async isBlockIdentityReqPeer(address) {
+		const blockPeers = this.blockedIdentityReqPeers || {};
+		return blockPeers[address];
+	}
+
+	async addNotification(data) {
+		data.id = uuid.v4();
+		data.time = moment().unix();
+		this.notifications.push(data);
+		await this.saveNotifications(this.notifications);
+	}
+
+	async saveNotifications(notifications) {
+		this.notifications = notifications || [];
+		await this.save(kNotifications, this.notifications);
 	}
 }
 

@@ -3,12 +3,15 @@ import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import { ContainFiles, FilePart, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
+import { AckWebRTC } from './Messages';
 
 export default class FileTransferWebRTC {
 	_ready = false;
 	sendingPart = 0;
 	queue = [];
 	partCollector = {};
+
+	monitors = {}; // timeout monitors
 
 	from = null;
 	data = null;
@@ -68,6 +71,13 @@ export default class FileTransferWebRTC {
 						});
 					});
 				}
+			} else if (data.action == AckWebRTC().action && data.hash == this.checksum) {
+				if (this.monitors[peerId]) {
+					clearTimeout(this.monitors[peerId]);
+					this.monitors[peerId] = null;
+				}
+			} else if (data.checksum) {
+				this.webrtc.sendToPeer(peerId, AckWebRTC(data.checksum));
 			}
 		}
 	}
@@ -172,7 +182,7 @@ export default class FileTransferWebRTC {
 				DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
 					this._onProgress(address);
 					this.awaitingPeer = address;
-					this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
+					this.webrtc.sendToPeer(address, storeFile);
 				});
 			};
 			if (!this.webrtc.hasChannel(address)) {
@@ -180,7 +190,7 @@ export default class FileTransferWebRTC {
 			} else {
 				this._onProgress(address);
 				this.awaitingPeer = address;
-				this.webrtc.sendToPeer(address, JSON.stringify(storeFile));
+				this.webrtc.sendToPeer(address, storeFile);
 				this.monitorFailure = setTimeout(() => connectAndSend(), 5000);
 			}
 		}
@@ -225,25 +235,27 @@ export default class FileTransferWebRTC {
 			if (!this.webrtc.hasChannel(address)) {
 				this.connectAndSend(address);
 			} else {
-				this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+				this.webrtc.sendToPeer(address, this.data);
 			}
 		}
 	};
 
-	connectAndSend = (address) => {
+	connectAndSend = address => {
 		this.webrtc.connectTo(address);
 		DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-			this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+			this.webrtc.sendToPeer(address, this.data);
 		});
 	};
 
 	_sendAsOne = () => {
+		this.data.checksum = this.checksum;
 		this.addresses.map(address => {
 			if (this.webrtc && this.webrtc.sendToPeer) {
 				if (!this.webrtc.hasChannel(address)) {
 					this.connectAndSend(address);
 				} else {
-					this.webrtc.sendToPeer(address, JSON.stringify(this.data));
+					this.monitors[address] = setTimeout(() => this.connectAndSend(address), 5000);
+					this.webrtc.sendToPeer(address, this.data);
 				}
 			}
 		});

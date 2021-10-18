@@ -53,6 +53,7 @@ import ConfirmLogout from '../ConfirmLogout';
 import ConfirmInputModal from '../ConfirmInputModal';
 import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -204,6 +205,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: colors.grey400,
 		...fontStyles.normal
+	},
+	unread: {
+		color: colors.red,
+		fontSize: 28,
+		position: 'absolute',
+		left: 36
 	},
 	menuItemWarningText: {
 		color: colors.red,
@@ -577,6 +584,11 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_TRANSACTION_HISTORY);
 	};
 
+	gotoNotifications = () => {
+		this.props.navigation.navigate('Notifications');
+		this.hideDrawer();
+	};
+
 	gotoContacts = () => {
 		this.props.navigation.navigate('Contacts');
 		this.hideDrawer();
@@ -764,6 +776,14 @@ class DrawerView extends PureComponent {
 					action: this.gotoContacts,
 					routeNames: ['Contacts']
 				},
+				{
+					name: strings('drawer.notifications'),
+					icon: this.getFeatherIcon('bell'),
+					selectedIcon: this.getFeatherIcon('bell'),
+					action: this.gotoNotifications,
+					key: 'notifications',
+					routeNames: ['Notifications']
+				}
 			],
 			[
 				{
@@ -902,6 +922,7 @@ class DrawerView extends PureComponent {
 			seedphraseBackedUp
 		} = this.props;
 
+		const unreadNotif = preferences?.notifications.filter(e => !e.read).length > 0;
 		const { invalidCustomNetwork, showProtectWalletModal, editWalletNameVisible } = this.state;
 		let account, balance, conversion;
 		if (accounts && accounts[selectedAddress]) {
@@ -1056,6 +1077,9 @@ class DrawerView extends PureComponent {
 															? item.selectedIcon
 															: item.icon
 														: null}
+													{item.key == 'notifications' && unreadNotif && (
+														<Text style={styles.unread}>*</Text>
+													)}
 													<Text
 														style={[
 															styles.menuItemName,

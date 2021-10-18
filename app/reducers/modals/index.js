@@ -6,7 +6,8 @@ const initialState = {
 	confirmLogoutModalVisible: false,
 	receiveAsset: undefined,
 	dappTransactionModalVisible: false,
-	approveModalVisible: false
+	approveModalVisible: false,
+	otherIdentityToConfirm: null
 };
 
 const modalsReducer = (state = initialState, action) => {
@@ -26,7 +27,7 @@ const modalsReducer = (state = initialState, action) => {
 		case 'TOGGLE_CONFIRM_LOGOUT_MODAL': {
 			return {
 				...state,
-				confirmLogoutModalVisible: !state.confirmLogoutModalVisible,
+				confirmLogoutModalVisible: !state.confirmLogoutModalVisible
 			};
 		}
 		case 'TOGGLE_ACCOUNT_MODAL':
@@ -48,6 +49,11 @@ const modalsReducer = (state = initialState, action) => {
 			return {
 				...state,
 				approveModalVisible: !state.approveModalVisible
+			};
+		case 'SHOW_CONFIRM_OTHER_IDENTITY':
+			return {
+				...state,
+				otherIdentityToConfirm: action.data
 			};
 		default:
 			return state;

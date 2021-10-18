@@ -58,7 +58,11 @@ import {
 	removeNotificationById,
 	removeNotVisibleNotifications
 } from '../../../actions/notification';
-import { toggleDappTransactionModal, toggleApproveModal } from '../../../actions/modals';
+import {
+	toggleDappTransactionModal,
+	toggleApproveModal,
+	showConfirmOtherIdentityPrompt
+} from '../../../actions/modals';
 import { setOnboardProfile } from '../../../actions/user';
 import AccountApproval from '../../UI/AccountApproval';
 import ProtectYourWalletModal from '../../UI/ProtectYourWalletModal';
@@ -79,6 +83,7 @@ import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOve
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
 import { ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
+import * as base64 from 'base-64';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -345,7 +350,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-						swapsUtils.getSwapsContractAddress(props.chainId)))
+							swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -587,7 +592,7 @@ const Main = props => {
 	const ensureOnboardProfile = async () => {
 		const profile = await preferences.getOnboardProfile();
 		props.setOnboardProfile(profile);
-	}
+	};
 
 	useEffect(() => {
 		if (locale.current !== I18n.locale) {
@@ -610,35 +615,33 @@ const Main = props => {
 			} else if (data.action == 'ping') {
 				messaging.send(Pong(selectedAddress, data.from));
 			} else if (data.action == StoreFile().action) {
-				FileTransfer.storeFile(data)
-					.then(message => messaging.send(message));
+				FileTransfer.storeFile(data).then(message => messaging.send(message));
 			} else if (data.action == ContainFiles().action) {
 				DeviceEventEmitter.emit('FTSuccess', data);
 			} else if (data.action == ReadFile().action && data.from != selectedAddress) {
 				const { from, hash, name } = data;
 				const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
-				if (! await RNFS.exists(folder)) await RNFS.mkdir(folder);
+				if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 				const files = await RNFS.readDir(folder);
 
 				const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
-				foundFiles.map(async (e) => {
+				foundFiles.map(async e => {
 					const content = await RNFS.readFile(e.path, 'utf8');
 					const partId = e.name.split('.').reverse()[0];
-					const message = new Message(from, ReadFileResult(
-						from, hash, name,
-						moment(e.mtime).unix(),
-						[{ i: partId, v: content }]
-					))
+					const message = new Message(
+						from,
+						ReadFileResult(from, hash, name, moment(e.mtime).unix(), [{ i: partId, v: content }])
+					);
 					messaging.send(message);
-				})
+				});
 			} else if (data.action == ReadFileResult().action) {
 				//responded file
 			}
-		} catch (e) { }
-	}
+		} catch (e) {}
+	};
 
-	const handleFriendRequestUpdate = (message) => {
+	const handleFriendRequestUpdate = message => {
 		if (!message) return;
 		if (!message.data) {
 			message = JSON.parse(base64.decode(message));
@@ -655,18 +658,18 @@ const Main = props => {
 				revokeFriend(data);
 			}
 		}
-	}
+	};
 
-	const handleAcceptedNameCard = (data) => {
+	const handleAcceptedNameCard = data => {
 		showAcceptedNameCard(data.from);
-	}
+	};
 
-	const revokeFriend = (data) => {
+	const revokeFriend = data => {
 		const { from } = data;
 		const { message } = JSON.parse(data.data);
 		const { name } = message;
 		alert(`${name} (${from}) revoked friend`);
-	}
+	};
 	// Remove all notifications that aren't visible
 	useEffect(
 		() => {
@@ -680,14 +683,14 @@ const Main = props => {
 			const messaging = new Messaging(selectedAddress);
 			setMessaging(messaging);
 			messaging.initConnection();
-			messaging.on(WSEvent.message, (data) => handleWSMessage(messaging, data));
+			messaging.on(WSEvent.message, data => handleWSMessage(messaging, data));
 
-			const evt = DeviceEventEmitter.addListener('FileTransfer', (data) => messaging.send(data));
+			const evt = DeviceEventEmitter.addListener('FileTransfer', data => messaging.send(data));
 			setMessageEvent(evt);
 			return () => {
 				messaging && messaging.disconnect();
 				messageEvent && messageEvent.remove();
-			}
+			};
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
@@ -782,11 +785,11 @@ const Main = props => {
 
 			AddressBookController.set(address, name, network);
 		}
-	}
+	};
 
 	const toggleAcceptContactModal = () => {
 		showAcceptedNameCard(null);
-	}
+	};
 
 	const renderAcceptedFriendNameCard = () => {
 		return (
@@ -801,50 +804,57 @@ const Main = props => {
 				onConfirm={onAddContact}
 				hideModal={toggleAcceptContactModal}
 			/>
-		)
-	}
+		);
+	};
 
-	showNotice = (message) => {
+	const showNotice = message => {
 		Toast.show({
 			type: 'info',
 			text1: message,
 			text2: strings('profile.notice'),
 			visibilityTime: 1000
 		});
-	}
+	};
 
-	onWebRtcMessage = (data, peerId) => {
+	const onWebRtcMessage = async (data, peerId) => {
 		try {
 			data = JSON.parse(data);
-		} catch (e) { }
+		} catch (e) {}
 
 		if (data.action) {
 			switch (data.action) {
 				case ConfirmProfileRequest().action:
+					if (await preferences.isBlockIdentityReqPeer(data.from)) return;
+					preferences.addNotification(data);
 					showConfirmOtherIdentity(data);
 					break;
 				case ConfirmProfileRejected().action:
 					const name = `${data.firstname} ${data.lastname}`;
 					showNotice(strings('confirm_profile.peer_refuse_try_again', { name }));
+					preferences.addNotification(data);
 					break;
 				case ConfirmProfileBlock().action:
 					const address = data.from;
-					//TODO: add to blocked list
+					preferences.blockIdentityReqPeer(address);
 					break;
 			}
 		}
-	}
+	};
 
 	const renderConfirmOtherIdentity = () => {
+		const profile = identity2Confirm || props.otherIdentityToConfirm;
 		return (
 			<ConfirmIdentity
-				visible={!!identity2Confirm}
-				data={identity2Confirm}
+				visible={!!profile}
+				data={profile}
 				message={`${strings('confirm_profile.confirm_profile_message')}`}
-				hideModal={() => showConfirmOtherIdentity(null)}
+				hideModal={() => {
+					showConfirmOtherIdentity(null);
+					props.showConfirmOtherIdentity(null);
+				}}
 			/>
-		)
-	}
+		);
+	};
 
 	return (
 		<React.Fragment>
@@ -986,6 +996,7 @@ const mapStateToProps = state => ({
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
 	network: state.engine.backgroundState.NetworkController.network,
 	identities: state.engine.backgroundState.PreferencesController.identities,
+	otherIdentityToConfirm: state.modals.otherIdentityToConfirm
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1000,7 +1011,8 @@ const mapDispatchToProps = dispatch => ({
 	setInfuraAvailabilityBlocked: () => dispatch(setInfuraAvailabilityBlocked()),
 	setInfuraAvailabilityNotBlocked: () => dispatch(setInfuraAvailabilityNotBlocked()),
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
-	setOnboardProfile: (profile) => dispatch(setOnboardProfile(profile)),
+	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
+	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data))
 });
 
 export default connect(

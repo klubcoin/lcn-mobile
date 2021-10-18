@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
 	actions: {
 		flexDirection: 'row',
 		width: 300,
-		marginTop: 20,
+		marginTop: 20
 	}
 });
 
@@ -99,11 +99,14 @@ class Profile extends PureComponent {
 		});
 	}
 
-	sendConfirmationRequests = async (contacts) => {
+	sendConfirmationRequests = async contacts => {
 		const webrtc = refWebRTC();
 		const { PreferencesController } = Engine.state;
 		const { selectedAddress } = PreferencesController;
-		const addresses = contacts.map(e => e.address);
+		const { blockedIdentityReqPeers } = this.props.store;
+
+		const addresses = contacts.filter(e => !blockedIdentityReqPeers[e.address]).map(e => e.address);
+		if (addresses.length == 0) return;
 
 		const { email } = this.account || {};
 		const { avatar, firstname, lastname } = this.onboardProfile || {};
@@ -111,13 +114,13 @@ class Profile extends PureComponent {
 
 		const request = ConfirmProfileRequest(selectedAddress, firstname, lastname, image, email);
 		FileTransferWebRTC.sendAsOne(request, selectedAddress, addresses, webrtc);
-	}
+	};
 
 	onRequest() {
 		this.props.navigation.navigate('Contacts', {
 			contactSelection: true,
 			onConfirm: this.sendConfirmationRequests
-		})
+		});
 	}
 
 	render() {
@@ -138,11 +141,7 @@ class Profile extends PureComponent {
 					<Text style={styles.name}>{name}</Text>
 					<Text style={styles.email}>{email}</Text>
 					<View style={styles.actions}>
-						<StyledButton
-							type={'normal'}
-							onPress={this.onRequest.bind(this)}
-							containerStyle={{ flex: 1 }}
-						>
+						<StyledButton type={'normal'} onPress={this.onRequest.bind(this)} containerStyle={{ flex: 1 }}>
 							{strings('profile.request_profile_confirmation')}
 						</StyledButton>
 					</View>

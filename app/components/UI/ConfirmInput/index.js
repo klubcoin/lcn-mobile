@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, TextInput, View, } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import Text from '../../Base/Text';
 import ModalDragger from '../../Base/ModalDragger';
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 	actionRow: {
 		flexDirection: 'row',
 		marginTop: 30,
-		marginBottom: 30,
+		marginBottom: 30
 	},
 	actionButton: {
 		flex: 1,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'center',
 		marginTop: 10,
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
 	},
 	titleWrapper: {
 		marginTop: 10
@@ -51,7 +51,11 @@ const styles = StyleSheet.create({
 		borderWidth: StyleSheet.hairlineWidth,
 		borderRadius: 4,
 		marginTop: 10,
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
+	},
+	error: {
+		borderColor: '#f00',
+		borderWidth: 1
 	}
 });
 
@@ -65,16 +69,20 @@ export default class ConfirmInput extends PureComponent {
 		confirmLabel: PropTypes.string,
 		cancelLabel: PropTypes.string,
 		onConfirm: PropTypes.func,
-		hideModal: PropTypes.func,
+		hideModal: PropTypes.func
 	};
 
 	state = {
-		value: this.props.value
+		value: this.props.value,
+		typed: false
 	};
 
 	onConfirm() {
 		const { onConfirm, hideModal } = this.props;
 		const { value } = this.state;
+		this.setState({ typed: true });
+
+		if (!value || value.length == 0) return;
 
 		hideModal && hideModal();
 		onConfirm && onConfirm(value);
@@ -85,13 +93,14 @@ export default class ConfirmInput extends PureComponent {
 		hideModal && hideModal();
 	}
 
-	onChange = (text) => {
-		this.setState({ value: text })
-	}
+	onChange = text => {
+		this.setState({ value: text, typed: true });
+	};
 
 	render() {
 		const { title, message, multiline, placeholder, confirmLabel, cancelLabel } = this.props;
-		const { value } = this.state;
+		const { value, typed } = this.state;
+		const empty = typed && value.length == 0;
 
 		return (
 			<KeyboardAvoidingView behavior={'padding'}>
@@ -99,21 +108,17 @@ export default class ConfirmInput extends PureComponent {
 					<ModalDragger />
 					<View style={styles.titleWrapper}>
 						<Text style={styles.title}>{title}</Text>
-						{!!message &&
-							<Text style={styles.message} >
-								{message}
-							</Text>
-						}
+						{!!message && <Text style={styles.message}>{message}</Text>}
 					</View>
 					<View style={styles.body}>
 						<TextInput
-							autoCapitalize='sentences'
+							autoCapitalize="sentences"
 							autoCorrect={false}
 							onChangeText={this.onChange}
 							placeholder={placeholder || '...'}
 							placeholderTextColor={colors.grey100}
 							spellCheck={false}
-							style={styles.input}
+							style={[styles.input, empty && styles.error]}
 							value={value}
 							multiline={!!multiline}
 							numberOfLines={1}

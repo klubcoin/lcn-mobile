@@ -20,6 +20,9 @@ import AddressElement from '../SendFlow/AddressElement';
 import Messaging, { Ping, Pong, WSEvent } from '../../../services/Messaging';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
 import Logger from '../../../util/Logger';
+import Modal from 'react-native-modal';
+import QRCode from 'react-native-qrcode-svg';
+import Text from '../../Base/Text';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -62,6 +65,27 @@ const styles = StyleSheet.create({
 		height: '100%',
 		left: 0,
 		backgroundColor: colors.blue
+	},
+	bottomModal: {
+		flex: 1,
+		justifyContent: 'flex-end',
+		margin: 0
+	},
+	scanQR: {
+		backgroundColor: colors.white,
+		paddingHorizontal: 20,
+		paddingTop: 30,
+		paddingBottom: 40,
+		alignItems: 'center'
+	},
+	qrTitle: {
+		marginBottom: 10,
+		fontSize: 16,
+		color: colors.black
+	},
+	shareQR: {
+		width: 300,
+		marginTop: 20
 	}
 });
 
@@ -246,10 +270,21 @@ class Contacts extends PureComponent {
 		const rawSig = await CryptoSignature.signMessage(selectedAddress, data.data);
 		const base64Content = base64.encode(JSON.stringify({ data, signature: rawSig }));
 
+		this.setState({ showLinkQR: `liquichain://namecard?q=${base64Content}` });
+	};
+
+	hideQR = () => {
+		this.setState({ showLinkQR: null });
+	};
+
+	shareQR = () => {
+		const { selectedAddress } = this.props;
+		const { showLinkQR } = this.state;
+
 		setTimeout(() => {
 			Share.open({
 				title: `${strings('contacts.friend_request')} - ${selectedAddress}`,
-				url: `liquichain://namecard?q=${base64Content}`
+				url: `${showLinkQR}`
 			}).catch(err => {
 				Logger.log('Error while trying to share friend request', err);
 			});
@@ -388,7 +423,8 @@ class Contacts extends PureComponent {
 			friendRequestVisible,
 			acceptedNameCardVisible,
 			confirmDeleteVisible,
-			searchQuery
+			searchQuery,
+			showLinkQR
 		} = this.state;
 
 		return (
@@ -463,6 +499,26 @@ class Contacts extends PureComponent {
 					onConfirm={this.onAddContact.bind(this)}
 					hideModal={this.toggleAcceptContactModal}
 				/>
+
+				<Modal
+					isVisible={!!showLinkQR}
+					style={styles.bottomModal}
+					onBackdropPress={this.hideQR}
+					onBackButtonPress={this.hideQR}
+					onSwipeComplete={this.hideQR}
+					swipeDirection={'down'}
+					propagateSwipe
+				>
+					<View style={styles.scanQR}>
+						<Text bold style={styles.qrTitle}>
+							{strings('contacts.scan_qr_connect')}
+						</Text>
+						{showLinkQR && <QRCode value={showLinkQR} size={280} />}
+						<StyledButton type={'normal'} containerStyle={styles.shareQR} onPress={this.shareQR}>
+							{strings('contacts.share_namecard')}
+						</StyledButton>
+					</View>
+				</Modal>
 			</SafeAreaView>
 		);
 	}

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { colors, fontStyles } from '../../../styles/common';
@@ -18,9 +18,14 @@ import { refWebRTC } from '../../../services/WebRTC';
 import Engine from '../../../core/Engine';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { ConfirmProfileBlock, ConfirmProfileRejected } from '../../../services/Messages';
-import APIService from '../../../services/APIService';
 import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
+import preferences from '../../../store/preferences';
+import Toast from 'react-native-toast-message';
+import * as sha3JS from 'js-sha3';
+import TransactionTypes from '../../../core/TransactionTypes';
+import { WalletDevice } from '@metamask/controllers';
+import { BNToHex } from '@metamask/controllers/dist/util';
 
 const styles = StyleSheet.create({
 	bottomModal: {
@@ -51,7 +56,7 @@ const styles = StyleSheet.create({
 		borderRadius: 60,
 		borderWidth: 2,
 		padding: 2,
-		borderColor: colors.blue,
+		borderColor: colors.blue
 	},
 	avatar: {
 		width: 60,
@@ -73,22 +78,22 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	optionList: {
-		marginTop: 30,
+		marginTop: 30
 	},
 	option: {
 		marginBottom: 20,
-		paddingHorizontal: 30,
+		paddingHorizontal: 30
 	},
 	desc: {
 		...fontStyles.normal,
 		textAlign: 'center'
-	},
+	}
 });
 
 const networkInfo = {
 	url: routes.mainNetWork.accountUrl,
-	icon: 'logo.png',
-}
+	icon: 'logo.png'
+};
 
 const options = () => [
 	strings('confirm_profile.confirm_desc'),
@@ -125,7 +130,7 @@ export class ConfirmIdentity extends PureComponent {
 		/**
 		 * User profile data
 		 */
-		data: PropTypes.object,
+		data: PropTypes.object
 	};
 
 	selectedIndex = -1;
@@ -139,17 +144,65 @@ export class ConfirmIdentity extends PureComponent {
 			selectedIndex: observable,
 			showConfirmNotWilling: observable,
 			showReportForm: observable,
-			reportReason: observable,
-		})
+			reportReason: observable
+		});
 		this.prefs = props.store;
+	}
+
+	showNotice(message, type) {
+		Toast.show({
+			type: type || 'info',
+			text1: message,
+			text2: strings('profile.notice'),
+			visibilityTime: 1000
+		});
 	}
 
 	onCancel = () => {
 		this.props.hideModal();
 	};
 
-	onConfirm = () => {
-		this.props.hideModal();
+	prepareTransactionToSend = () => {
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { data } = this.props;
+		const { from, firstname, lastname, avatar } = data;
+		const hash = sha3JS.keccak_256(firstname + lastname + from + avatar);
+
+		return {
+			data: hash,
+			from: selectedAddress,
+			gas: BNToHex(0),
+			gasPrice: BNToHex(0),
+			to: data.from,
+			value: BNToHex(0)
+		};
+	};
+
+	onConfirm = async () => {
+		const { TransactionController } = Engine.context;
+
+		try {
+			const transaction = this.prepareTransactionToSend();
+
+			const { result, transactionMeta } = await TransactionController.addTransaction(
+				transaction,
+				TransactionTypes.MMM,
+				WalletDevice.MM_MOBILE
+			);
+			await TransactionController.approveTransaction(transactionMeta.id);
+			await new Promise(resolve => resolve(result));
+
+			if (transactionMeta.error) {
+				throw transactionMeta.error;
+			}
+
+			//TODO: resetTransaction();
+			this.props.hideModal();
+		} catch (error) {
+			Alert.alert(strings('transactions.transaction_error'), error && error.message, [
+				{ text: strings('navigation.ok') }
+			]);
+		}
 	};
 
 	refuseTryAgain = async () => {
@@ -161,15 +214,16 @@ export class ConfirmIdentity extends PureComponent {
 
 		const message = ConfirmProfileRejected(selectedAddress, firstname, lastname);
 		FileTransferWebRTC.sendAsOne(message, selectedAddress, [data.from], webrtc);
-	}
+	};
 
-	handleOption = (index) => {
+	handleOption = index => {
 		switch (index) {
 			case 0:
 				this.onConfirm();
 				break;
 			case 1:
 				this.refuseTryAgain();
+				this.props.hideModal();
 				break;
 			case 2:
 				this.showConfirmNotWilling = true;
@@ -178,7 +232,7 @@ export class ConfirmIdentity extends PureComponent {
 				this.showReportForm = true;
 				break;
 		}
-	}
+	};
 
 	renderItem = ({ item, index }) => {
 		return (
@@ -187,8 +241,8 @@ export class ConfirmIdentity extends PureComponent {
 					<Text style={styles.desc}>{item}</Text>
 				</StyledButton>
 			</View>
-		)
-	}
+		);
+	};
 
 	renderBody() {
 		const { message, data } = this.props;
@@ -215,7 +269,7 @@ export class ConfirmIdentity extends PureComponent {
 					style={styles.optionList}
 				/>
 			</View>
-		)
+		);
 	}
 
 	sendBlockMessage = () => {
@@ -223,23 +277,29 @@ export class ConfirmIdentity extends PureComponent {
 		const { data } = this.props;
 		const { selectedAddress } = Engine.state.PreferencesController;
 
+		preferences.blockIdentityReqPeer(data.from);
 		const message = ConfirmProfileBlock(selectedAddress);
 		FileTransferWebRTC.sendAsOne(message, selectedAddress, [data.from], webrtc);
-	}
+	};
 
-	sendReport = () => {
+	sendReport = async reason => {
 		this.sendBlockMessage();
 
 		const { data } = this.props;
-		const signature = CryptoSignature.signMessage(data.from);
+		const { selectedAddress } = Engine.state.PreferencesController;
+
+		const params = [data.from, reason];
+		const signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(params));
+		params.push(signature);
 
 		API.postRequest(
 			routes.walletReport,
-			[data.from, signature],
+			params,
 			response => {
 				if (response.error) {
 					alert(`${response.error.message}`);
 				} else {
+					this.showNotice(strings('confirm_profile.sent_report'));
 					this.props.hideModal();
 				}
 			},
@@ -247,7 +307,7 @@ export class ConfirmIdentity extends PureComponent {
 				alert(`${error.toString()}`);
 			}
 		);
-	}
+	};
 
 	renderReportForm() {
 		return (
@@ -259,14 +319,15 @@ export class ConfirmIdentity extends PureComponent {
 				confirmLabel={strings('confirm_profile.submit')}
 				cancelLabel={strings('confirm_profile.cancel')}
 				onConfirm={text => this.sendReport(text)}
-				hideModal={() => this.showReportForm = false}
+				hideModal={() => (this.showReportForm = false)}
 			/>
-		)
+		);
 	}
 
 	confirmNotWilling = () => {
+		this.props.hideModal();
 		this.sendBlockMessage();
-	}
+	};
 
 	renderConfirmNotWilling = () => {
 		return (
@@ -277,10 +338,10 @@ export class ConfirmIdentity extends PureComponent {
 				confirmLabel={strings('confirm_profile.confirm')}
 				cancelLabel={strings('confirm_profile.cancel')}
 				onConfirm={() => this.confirmNotWilling()}
-				hideModal={() => this.showConfirmNotWilling = false}
+				hideModal={() => (this.showConfirmNotWilling = false)}
 			/>
-		)
-	}
+		);
+	};
 
 	render() {
 		const { visible, hideModal } = this.props;
