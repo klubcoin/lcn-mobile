@@ -22,7 +22,6 @@ import CustomButton from '../../Base/CustomButton';
 import { color } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import * as FilesReader from '../../../util/files-reader';
-import { FileIcon, defaultStyles } from 'react-file-icon';
 import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
 import preferences from '../../../store/preferences';
