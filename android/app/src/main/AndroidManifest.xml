@@ -19,6 +19,7 @@
     android:hardwareAccelerated="true"
     android:usesCleartextTraffic="${isDebug}"
     android:networkSecurityConfig="@xml/react_native_config"
+      android:requestLegacyExternalStorage="true"
   >
     <activity
       android:launchMode="singleTask"
