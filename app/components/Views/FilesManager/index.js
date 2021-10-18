@@ -352,7 +352,8 @@ const styles = StyleSheet.create({
 	textInput: {
 		flex: 1,
 		height: 30,
-		marginLeft: 5
+		marginLeft: 5,
+		paddingVertical: 0
 	},
 	files: {
 		padding: 15
