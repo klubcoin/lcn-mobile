@@ -66,6 +66,7 @@ import ProfileOnboard from '../../Views/ProfileOnboard';
 import FilesManager from '../../Views/FilesManager';
 import FileDetails from '../../Views/FilesManager/FileDetails';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import StorageStatistic from '../../Views/FilesManager/StorageStatistic';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -107,6 +108,9 @@ export default createStackNavigator(
 						},
 						FileDetails: {
 							screen: FileDetails
+						},
+						StorageStatistic: {
+							screen: StorageStatistic
 						},
 						ContactForm: {
 							screen: ContactForm

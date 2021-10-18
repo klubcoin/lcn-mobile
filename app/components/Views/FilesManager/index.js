@@ -13,7 +13,7 @@ import {
 	Alert,
 	KeyboardAvoidingView
 } from 'react-native';
-import { getNavigationOptionsTitle } from '../../UI/Navbar';
+import { getFileManagerNavbar, getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -39,11 +39,9 @@ import FileTransfer from './Transfer.service';
 const swipeOffset = Device.getDeviceWidth() / 2;
 
 class FilesManager extends Component {
-	static navigationOptions = ({ navigation }) =>
-		getNavigationOptionsTitle(strings('drawer.file_manager'), navigation);
+	static navigationOptions = ({ navigation }) => getFileManagerNavbar('File manager', navigation);
 
 	FileTransferIns;
-
 	state = {
 		isLoading: false,
 		selectedIds: [],
@@ -86,6 +84,10 @@ class FilesManager extends Component {
 			this.getQueriedFiles(this.state.searchQuery);
 		}
 	}
+
+	onViewStatistic = file => {
+		this.props.navigation.navigate('StorageStatistic');
+	};
 
 	onCloseModal = () => {
 		this.setState(prevState => ({
@@ -177,7 +179,7 @@ class FilesManager extends Component {
 	};
 
 	onViewDetails = file => {
-		this.props.navigation.navigate('FileDetails', { selectedFile: file });
+		this.props.navigation.navigate('StorageStatistic', { selectedFile: file });
 	};
 
 	getQueriedFiles = value => {
@@ -382,5 +384,8 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.red,
 		height: '100%',
 		justifyContent: 'center'
+	},
+	icon: {
+		color: colors.primaryFox
 	}
 });

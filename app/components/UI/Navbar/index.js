@@ -22,7 +22,6 @@ import { getHost } from '../../../util/browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from 'common/colors';
 
-
 const { HOMEPAGE_URL } = AppConstants;
 
 const trackEvent = event => {
@@ -169,11 +168,7 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 		headerTitle: <NavbarTitle title={title} disableNetwork={disableNetwork} />,
 		headerLeft: (
 			<TouchableOpacity onPress={onPress} style={styles.backButton}>
-				<Icon
-					name={'bars'}
-					size={16}
-					style={styles.backIcon}
-				/>
+				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerRight: <AccountRightButton />
@@ -390,9 +385,7 @@ export function getSendFlowTitle(title, navigation, screenProps) {
 		navigation.dismiss();
 	};
 	const leftAction = () => navigation.pop();
-	const canGoBack = title !== 'send.send_to'
-		&& title !== 'payQR.order_summary'
-		&& !screenProps.isPaymentRequest;
+	const canGoBack = title !== 'send.send_to' && title !== 'payQR.order_summary' && !screenProps.isPaymentRequest;
 
 	const titleToRender = title;
 
@@ -455,11 +448,7 @@ export function getBrowserViewNavbarOptions(navigation) {
 	return {
 		headerLeft: (
 			<TouchableOpacity onPress={onPress} style={styles.hamburgerButton} testID={'hamburger-menu-button-browser'}>
-				<Icon
-					name={'bars'}
-					size={16}
-					style={styles.backIcon}
-				/>
+				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerTitle: (
@@ -513,11 +502,15 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={{
-					fontWeight: 'bold',
-					fontSize: 16,
-					color: '#370e75'
-				}}>LIQUICHAIN</Text>
+				<Text
+					style={{
+						fontWeight: 'bold',
+						fontSize: 16,
+						color: '#370e75'
+					}}
+				>
+					LIQUICHAIN
+				</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -537,11 +530,15 @@ export function getTransparentOnboardingNavbarOptions() {
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={{
-					fontWeight: 'bold',
-					fontSize: 16,
-					color: '#370e75'
-				}}>LIQUICHAIN</Text>
+				<Text
+					style={{
+						fontWeight: 'bold',
+						fontSize: 16,
+						color: '#370e75'
+					}}
+				>
+					LIQUICHAIN
+				</Text>
 			</View>
 		),
 		headerLeft: <View />,
@@ -560,11 +557,15 @@ export function getTransparentBackOnboardingNavbarOptions() {
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={{
-					fontWeight: 'bold',
-					fontSize: 16,
-					color: '#370e75'
-				}}>LIQUICHAIN</Text>
+				<Text
+					style={{
+						fontWeight: 'bold',
+						fontSize: 16,
+						color: '#370e75'
+					}}
+				>
+					LIQUICHAIN
+				</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -594,11 +595,15 @@ export function getOptinMetricsNavbarOptions() {
 				</View>
 				<View style={styles.metamaskNameWrapper}>
 					{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-					<Text style={{
-						fontWeight: 'bold',
-						fontSize: 16,
-						color: '#370e75'
-					}}>LIQUICHAIN</Text>
+					<Text
+						style={{
+							fontWeight: 'bold',
+							fontSize: 16,
+							color: '#370e75'
+						}}
+					>
+						LIQUICHAIN
+					</Text>
 				</View>
 			</View>
 		)
@@ -721,11 +726,7 @@ export function getWalletNavbarOptions(title, navigation) {
 		headerTitle: <NavbarTitle title={title} />,
 		headerLeft: (
 			<TouchableOpacity onPress={openDrawer} style={styles.backButton} testID={'hamburger-menu-button-wallet'}>
-				<Icon
-					name={'bars'}
-					size={16}
-					style={styles.backIcon}
-				/>
+				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerRight: (
@@ -960,6 +961,37 @@ export function getSwapsQuotesNavbar(navigation) {
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
 				<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+			</TouchableOpacity>
+		)
+	};
+}
+
+export function getFileManagerNavbar(title, navigation) {
+	function navigationPop() {
+		navigation.pop();
+	}
+
+	function toStorageStatistic() {
+		navigation.navigate('StorageStatistic');
+	}
+
+	return {
+		title,
+		headerTitleStyle: {
+			fontSize: 20,
+			color: colors.fontPrimary,
+			...fontStyles.normal
+		},
+		headerTintColor: colors.blue,
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'title-back-arrow-button'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		),
+		headerRight: (
+			// eslint-disable-next-line react/jsx-no-bind
+			<TouchableOpacity onPress={toStorageStatistic} style={styles.closeButton}>
+				<AntIcon name="database" size={22} style={{ color: colors.primaryFox }} />
 			</TouchableOpacity>
 		)
 	};

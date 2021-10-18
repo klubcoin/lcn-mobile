@@ -75,9 +75,9 @@ export default function TransferFileModal({
 					onPress={
 						selectedContacts?.length > 0 && files?.length > 0
 							? () => {
-								onTransfer();
-								onClose();
-							}
+									onTransfer();
+									onClose();
+							  }
 							: null
 					}
 					style={[
@@ -94,7 +94,7 @@ export default function TransferFileModal({
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 0, // This is the important style you need to set
+		margin: 0,
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: colors.greytransparent100
