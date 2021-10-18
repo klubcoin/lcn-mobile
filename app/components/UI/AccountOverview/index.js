@@ -1,6 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, TextInput, StyleSheet, Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
+import {
+	ScrollView,
+	TextInput,
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	InteractionManager,
+	Alert
+} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { swapsUtils } from '@metamask/swaps-controller';
 import { connect } from 'react-redux';
@@ -8,7 +17,7 @@ import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import AppConstants from '../../../core/AppConstants';
 import { strings } from '../../../../locales/i18n';
-import APIService from '../../../services/APIService'
+import APIService from '../../../services/APIService';
 
 import { swapsLivenessSelector } from '../../../reducers/swaps';
 import { showAlert } from '../../../actions/alert';
@@ -30,7 +39,8 @@ import EthereumAddress from '../EthereumAddress';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
-import Helper from 'common/Helper'
+import Helper from 'common/Helper';
+import RemoteImage from '../../Base/RemoteImage';
 
 const styles = StyleSheet.create({
 	scrollView: {
@@ -84,6 +94,11 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		padding: 2,
 		borderColor: colors.blue
+	},
+	avatar: {
+		width: 46,
+		height: 46,
+		borderRadius: 23
 	},
 	onboardingWizardLabel: {
 		borderWidth: 2,
@@ -251,19 +266,17 @@ class AccountOverview extends PureComponent {
 		navigation.navigate('SendFlowView');
 	};
 
-	fetchOrder = (orderId) => {
+	fetchOrder = orderId => {
 		const { navigation } = this.props;
 		APIService.getOrderInfo(orderId, (success, response) => {
 			if (success && response.orderNumber) {
 				navigation.navigate('PayQR', { orderId, order: response });
 			} else {
-				Alert.alert(
-					strings('qr_scanner.error'),
-					strings('asset_overview.could_not_fetch_order_info'), [
+				Alert.alert(strings('qr_scanner.error'), strings('asset_overview.could_not_fetch_order_info'), [
 					{ text: strings('navigation.ok') }
 				]);
 			}
-		})
+		});
 	};
 
 	onPayQR = () => {
@@ -273,9 +286,7 @@ class AccountOverview extends PureComponent {
 				if (data.orderId) {
 					this.fetchOrder(data.orderId);
 				} else {
-					Alert.alert(
-						strings('qr_scanner.error'),
-						strings('qr_scanner.invalid_qr_code_title'), [
+					Alert.alert(strings('qr_scanner.error'), strings('qr_scanner.invalid_qr_code_title'), [
 						{ text: strings('navigation.ok') }
 					]);
 				}
@@ -301,11 +312,13 @@ class AccountOverview extends PureComponent {
 			currentCurrency,
 			onboardingWizard,
 			chainId,
-			swapsIsLive
+			swapsIsLive,
+			onboardProfile
 		} = this.props;
 
 		if (!address) return null;
 		const { accountLabelEditable, accountLabel } = this.state;
+		const { avatar } = onboardProfile || {};
 
 		return (
 			<View style={baseStyles.flexGrow} ref={this.scrollViewContainer} collapsable={false}>
@@ -323,7 +336,11 @@ class AccountOverview extends PureComponent {
 							onPress={this.toggleAccountsModal}
 							testID={'wallet-account-identicon'}
 						>
-							<Identicon address={address} diameter={38} noFadeIn={onboardingWizard} />
+							{!!avatar ? (
+								<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+							) : (
+								<Identicon address={address} diameter={38} noFadeIn={onboardingWizard} />
+							)}
 						</TouchableOpacity>
 						<View ref={this.editableLabelRef} style={styles.data} collapsable={false}>
 							{accountLabelEditable ? (
@@ -365,7 +382,9 @@ class AccountOverview extends PureComponent {
 								</TouchableOpacity>
 							)}
 						</View>
-						{isMainNet(chainId) && <Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>}
+						{isMainNet(chainId) && (
+							<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
+						)}
 						<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
 							<EthereumAddress address={address} style={styles.address} type={'short'} />
 						</TouchableOpacity>
@@ -416,7 +435,8 @@ const mapStateToProps = state => ({
 	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
 	chainId: state.engine.backgroundState.NetworkController.provider.chainId,
 	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
-	swapsIsLive: swapsLivenessSelector(state)
+	swapsIsLive: swapsLivenessSelector(state),
+	onboardProfile: state.user.onboardProfile
 });
 
 const mapDispatchToProps = dispatch => ({
