@@ -93,7 +93,7 @@ export default class FileTransferWebRTC {
 
 		const fileName = `${/*hash ||*/ name}`;
 		const path = `${folder}/${fileName}`;
-		await RNFS.unlink(path);
+		if (await RNFS.exists(path)) await RNFS.unlink(path);
 
 		for (var k in keys) {
 			const data = this.partCollector[keys[k]];
