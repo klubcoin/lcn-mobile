@@ -133,7 +133,7 @@ class Profile extends PureComponent {
 				<View style={styles.body}>
 					<TouchableOpacity activeOpacity={0.5} style={styles.avatarView} onPress={() => this.onPickImage()}>
 						{avatar ? (
-							<RemoteImage source={{ uri: avatar }} style={styles.avatar} />
+							<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
 						) : (
 							<Identicon diameter={96} address={this.selectedAddress} />
 						)}
