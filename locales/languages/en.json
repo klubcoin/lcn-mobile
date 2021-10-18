@@ -1311,7 +1311,7 @@
 		"delete": "Delete",
 		"cancel": "Cancel",
 		"are_you_sure": "Are you sure?",
-		"could_not_confirm_try_again": "Could not confirm identify. Please try again later.",
+		"could_not_confirm_try_again": "Could not confirm identify now. Please wait.",
 		"requested_profile_confirmation": "Sent you a request to confirm his identity",
 		"pending_title": "Transaction submitted",
 		"pending_deposit_title": "Deposit in progress!",
