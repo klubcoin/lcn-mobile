@@ -54,6 +54,7 @@ import ConfirmInputModal from '../ConfirmInputModal';
 import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
 import preferences from '../../../store/preferences';
+import RemoteImage from '../../Base/RemoteImage';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -103,6 +104,11 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		padding: 2,
 		borderColor: colors.blue
+	},
+	avatar: {
+		width: 48,
+		height: 48,
+		borderRadius: 24
 	},
 	accountNameWrapper: {
 		flexDirection: 'row',
@@ -919,9 +925,11 @@ class DrawerView extends PureComponent {
 			currentCurrency,
 			chainId,
 			ticker,
-			seedphraseBackedUp
+			seedphraseBackedUp,
+			onboardProfile
 		} = this.props;
 
+		const { avatar } = onboardProfile || {};
 		const unreadNotif = preferences?.notifications.filter(e => !e.read).length > 0;
 		const { invalidCustomNetwork, showProtectWalletModal, editWalletNameVisible } = this.state;
 		let account, balance, conversion;
@@ -976,7 +984,11 @@ class DrawerView extends PureComponent {
 								testID={'navbar-account-identicon'}
 							>
 								<View style={styles.identiconBorder}>
-									<Identicon diameter={48} address={selectedAddress} />
+									{!!avatar ? (
+										<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+									) : (
+										<Identicon diameter={48} address={selectedAddress} />
+									)}
 								</View>
 							</TouchableOpacity>
 							<TouchableOpacity
@@ -1218,7 +1230,8 @@ const mapStateToProps = state => ({
 	tokens: state.engine.backgroundState.AssetsController.tokens,
 	tokenBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
 	collectibles: state.engine.backgroundState.AssetsController.collectibles,
-	seedphraseBackedUp: state.user.seedphraseBackedUp
+	seedphraseBackedUp: state.user.seedphraseBackedUp,
+	onboardProfile: state.user.onboardProfile
 });
 
 const mapDispatchToProps = dispatch => ({

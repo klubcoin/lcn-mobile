@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
 	avatar: {
 		width: 46,
 		height: 46,
-		borderRadius: 23,
+		borderRadius: 23
 	}
 });
 
@@ -146,10 +146,11 @@ class AccountElement extends PureComponent {
 					onLongPress={this.onLongPress}
 					disabled={disabled}
 				>
-					{!!avatar
-						? <RemoteImage source={{ uri: avatar }} style={styles.avatar} />
-						: <Identicon address={address} diameter={38} />
-					}
+					{!!avatar ? (
+						<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+					) : (
+						<Identicon address={address} diameter={38} />
+					)}
 					<View style={styles.accountInfo}>
 						<View style={styles.accountMain}>
 							<Text numberOfLines={1} style={[styles.accountLabel]}>
