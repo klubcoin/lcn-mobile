@@ -281,8 +281,18 @@ export default class WebRTC {
 	}
 
 	sendToPeer(peerId, message) {
+		const json = JSON.stringify(message);
 		const channel = this.sendChannels[peerId];
-		channel && channel.send(JSON.stringify(message));
+		const publicKey = this.peerPublicKeys[peerId];
+
+		const payload = publicKey ? CryptoSignature.encryptMessage(json, publicKey) : json;
+		const signature = CryptoSignature.signMessage(this.fromUserId, payload);
+		const data = {
+			payload,
+			signature,
+			encrypted: !!publicKey,
+		}
+		channel && channel.send(JSON.stringify(data));
 	}
 }
 
