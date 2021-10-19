@@ -167,6 +167,11 @@ export default class WebRTC {
 	handleWSMessage = async (json, peerId) => {
 		try {
 			let data = JSON.parse(json);
+			if (peerId != this.parseSignature(data)) return;
+
+			if (data.encrypted) {
+				data = this.decryptPayload(data);
+			}
 
 			if (data.action == 'ping') {
 				this.peerPublicKeys[peerId] = data.publicKey;
@@ -175,6 +180,19 @@ export default class WebRTC {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			}
 		} catch (e) { }
+	}
+
+	parseSignature(data) {
+		if (!data || !data.payload || !data.signature) return;
+
+		const { payload, signature } = data;
+		return CryptoSignature.recoverMessageSignature(payload, signature);
+	}
+
+	decryptPayload(data) {
+		if (!data || !data.payload) return data;
+
+		return CryptoSignature.decryptMessage(data.payload, this.privateKey);
 	}
 
 	handleFileTransfer = async (json, peerId) => {
