@@ -364,6 +364,7 @@ class ChoosePassword extends PureComponent {
 			} else {
 				await SecureKeychain.resetGenericPassword();
 			}
+			preferences.setKeycloakHash(password);
 			await AsyncStorage.setItem(EXISTING_USER, TRUE);
 			await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
 			this.sendAccount()
