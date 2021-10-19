@@ -1,6 +1,7 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
 import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
 import FileTransferWebRTC from './FileTransferWebRTC';
+import CryptoSignature from '../core/CryptoSignature';
 import moment from 'moment';
 import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
@@ -11,6 +12,7 @@ export default class WebRTC {
 	fromUserId = '';
 	sendChannels = {};
 	peerRefs = {};
+	peerPublicKeys = {};
 
 	onReady = null;
 	onMessage = null;
@@ -24,6 +26,18 @@ export default class WebRTC {
 	constructor(from) {
 		this.fromUserId = from;
 		this.initSocket();
+	}
+
+	async setKeyPairHandler(callback) {
+		if (callback) {
+			const { privateKey, publicKey } = await callback(this.fromUserId);
+			this.setKeyPair(privateKey, publicKey);
+		}
+	}
+
+	setKeyPair(privateKey, publicKey) {
+		this.privateKey = privateKey;
+		this.publicKey = publicKey;
 	}
 
 	addListener = (type, callback) => {

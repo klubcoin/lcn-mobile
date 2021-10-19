@@ -81,6 +81,7 @@ import { ContainFiles, ReadFile, ReadFileResult, StoreFile } from '../../../serv
 import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
+import CryptoSignature from '../../../core/CryptoSignature';
 import { ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
@@ -670,6 +671,17 @@ const Main = props => {
 		const { name } = message;
 		alert(`${name} (${from}) revoked friend`);
 	};
+
+	const bindPrivateKey = async (address) => {
+		const { KeyringController } = Engine.context;
+
+		const password = await preferences.getKeycloakHash();
+		const privateKey = await KeyringController.exportAccount(password, address);
+		const publicKey = await CryptoSignature.getEncryptionPublicKey(privateKey);
+
+		return { privateKey, publicKey };
+	}
+
 	// Remove all notifications that aren't visible
 	useEffect(
 		() => {
@@ -678,6 +690,7 @@ const Main = props => {
 
 			const webrtc = new WebRTC(selectedAddress);
 			setWebRTC(webrtc);
+			webrtc.setKeyPairHandler(bindPrivateKey);
 			webrtc.addListener('message', onWebRtcMessage);
 
 			const messaging = new Messaging(selectedAddress);
