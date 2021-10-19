@@ -113,7 +113,7 @@ export default class WebRTC {
 			this.sendChannels[peerId] = event.channel;
 			this.sendChannels[peerId].onmessage = message => this.handleReceiveMessage(message, peerId);
 			console.log('[SUCCESS] Connection established');
-			event.channel.send(JSON.stringify({ action: 'ping' }));
+			this.sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
 			// if (this.onReady) this.onReady(this.sendChannels[peerId]);
 			this.events.ready.map(callback => callback(this.sendChannels[peerId], peerId));
 		};
@@ -158,10 +158,24 @@ export default class WebRTC {
 		// Listener for receiving messages from the peer
 		console.log('[INFO] Message received from peer', `${e.data}`.substr(0, 100));
 
+		this.handleWSMessage(e.data, peer);
 		this.handleFileTransfer(e.data, peer);
 		// if (this.onMessage) this.onMessage(e.data, peer);
 		this.events.message.map(callback => callback(e.data, peer));
 	};
+
+	handleWSMessage = async (json, peerId) => {
+		try {
+			let data = JSON.parse(json);
+
+			if (data.action == 'ping') {
+				this.peerPublicKeys[peerId] = data.publicKey;
+				this.sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
+			} else if (data.action == 'pong') {
+				this.peerPublicKeys[peerId] = data.publicKey;
+			}
+		} catch (e) { }
+	}
 
 	handleFileTransfer = async (json, peerId) => {
 		try {
