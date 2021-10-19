@@ -12,6 +12,7 @@ export const kOnboardProfile = 'OnboardProfile';
 export const kTransferredFiles = 'TransferredFiles';
 export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 export const kNotifications = 'Notifications';
+export const kPublicKeys = 'PublicKeys';
 
 const keys = [
 	kAppList,
@@ -22,7 +23,8 @@ const keys = [
 	kOnboardProfile,
 	kTransferredFiles,
 	kBlockedIdentityReqPeers,
-	kNotifications
+	kNotifications,
+	kPublicKeys
 ];
 
 class Preferences {
@@ -30,6 +32,7 @@ class Preferences {
 	onboardProfile = {};
 	blockedIdentityReqPeers = {};
 	notifications = {};
+	publickKeys = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -59,6 +62,9 @@ class Preferences {
 				break;
 			case kNotifications:
 				this.notifications = data || [];
+				break;
+			case kPublicKeys:
+				this.publickKeys = data || {};
 				break;
 		}
 	}
@@ -178,6 +184,15 @@ class Preferences {
 	async saveNotifications(notifications) {
 		this.notifications = notifications || [];
 		await this.save(kNotifications, this.notifications);
+	}
+
+	async addPublicKey(address, publicKey) {
+		this.publickKeys[address] = publicKey;
+		await this.save(kPublicKeys, this.publickKeys);
+	}
+
+	async publicKeyForAddress(address) {
+		return this.publickKeys[address];
 	}
 }
 
