@@ -50,4 +50,16 @@ export default class CryptoSignature {
 		const params = { data, sig: signature };
 		return sigUtil.recoverTypedSignature(params, version);
 	}
+
+	static getEncryptionPublicKey(privKey) {
+		return sigUtil.getEncryptionPublicKey(privKey);
+	}
+
+	static encryptMessage(data, publicKey) {
+		return sigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305');
+	}
+
+	static decryptMessage(data, privKey) {
+		return sigUtil.decrypt(data, privKey);
+	}
 }
