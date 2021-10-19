@@ -356,7 +356,7 @@ export default createStackNavigator(
 					ChoosePassword: {
 						screen: ChoosePassword
 					},
-					ProfleOnboard: {
+					ProfileOnboard: {
 						screen: ProfileOnboard
 					},
 					AccountBackupStep1: {

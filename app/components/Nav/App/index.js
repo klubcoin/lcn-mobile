@@ -50,7 +50,7 @@ const OnboardingNav = createStackNavigator(
 		ChoosePassword: {
 			screen: ChoosePassword
 		},
-		ProfleOnboard: {
+		ProfileOnboard: {
 			screen: ProfileOnboard
 		},
 		AccountBackupStep1: {
@@ -191,7 +191,7 @@ class App extends PureComponent {
 		}
 
 		this.handleInitialDeepLink();
-		this.deeplinkListener = Linking.addEventListener('url', this.handleDeepLink.bind(this))
+		this.deeplinkListener = Linking.addEventListener('url', this.handleDeepLink.bind(this));
 	};
 
 	async handleInitialDeepLink() {

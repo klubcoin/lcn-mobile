@@ -500,7 +500,7 @@ class Onboarding extends PureComponent {
 
 	onPressCreate = () => {
 		const action = () => {
-			this.props.navigation.navigate('ProfleOnboard', {
+			this.props.navigation.navigate('ProfileOnboard', {
 				[PREVIOUS_SCREEN]: ONBOARDING
 			});
 			this.track(ANALYTICS_EVENT_OPTS.ONBOARDING_SELECTED_CREATE_NEW_PASSWORD);
