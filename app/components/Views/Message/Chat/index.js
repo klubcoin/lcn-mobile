@@ -30,7 +30,7 @@ class Chat extends Component {
 	};
 
 	componentDidMount() {
-		const selectedContact = this.state.contact ? this.state.contact[0] : {};
+		const selectedContact = this.state.contact ? this.state.contact : {};
 		this.setState(prevState => ({
 			...prevState,
 			contact: selectedContact

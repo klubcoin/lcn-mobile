@@ -10,55 +10,82 @@ import SearchBar from '../../Base/SearchBar';
 
 const messages = [
 	{
-		to: '0xFFasbcasdasd123131231231900aaa',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900aaa',
+			name: 'tester 2'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '9:15am'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa1',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900aadsaszzaa',
+			name: 'tester 3'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '11:00am'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa2',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900a3123',
+			name: 'tester 4'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '1:23pm'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa3',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900aacb',
+			name: 'tester 5'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '2:11pm'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa4',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900a12jas',
+			name: 'tester 6'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '3:00pm'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa5',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900asdasd',
+			name: 'tester 7'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '6:32pm'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa6',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900a1231231',
+			name: 'tester 8'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '7:22pm'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa7',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900aaa7',
+			name: 'tester 9'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '8:00pm'
 	},
 	{
-		to: '0xFFasbcasdasd123131231231900aaa8',
+		contact: {
+			address: '0xFFasbcasdasd123131231231900aaa8',
+			name: 'tester 10'
+		},
 		lastMessage:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 		time: '11:59pm'
@@ -73,12 +100,12 @@ export default class Message extends Component {
 	};
 
 	gotoChatRoom = recipient => {
-		this.props.navigation.navigate('Chat', { to: recipient });
+		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
 
 	sendPrivateKeyBackup = async contact => {
 		this.props.navigation.navigate('Chat', {
-			selectedContact: contact
+			selectedContact: contact[0]
 		});
 	};
 
