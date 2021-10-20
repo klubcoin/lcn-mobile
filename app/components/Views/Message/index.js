@@ -71,8 +71,8 @@ export default class Message extends Component {
 		console.log(value);
 	};
 
-	gotoChatRoom = () => {
-		this.props.navigation.navigate('Chat');
+	gotoChatRoom = recipient => {
+		this.props.navigation.navigate('Chat', { to: recipient });
 	};
 
 	render() {

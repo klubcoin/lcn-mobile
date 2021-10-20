@@ -5,7 +5,7 @@ import Identicon from '../../../UI/Identicon';
 
 export default function MessageItem({ message, onItemPress }) {
 	return (
-		<TouchableOpacity style={styles.container} onPress={onItemPress}>
+		<TouchableOpacity style={styles.container} onPress={() => onItemPress(message.to)}>
 			<Identicon address={message.to} diameter={35} />
 			<View style={{ flex: 10, marginHorizontal: 8 }}>
 				<Text style={styles.address} numberOfLines={1} ellipsizeMode="middle">
