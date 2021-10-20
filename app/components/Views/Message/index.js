@@ -6,6 +6,7 @@ import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import Identicon from '../../UI/Identicon';
 import MessageItem from './components/MessageItem';
+import NewMessageModal from './components/NewMessageModal';
 
 const messages = [
 	{
@@ -75,9 +76,17 @@ export default class Message extends Component {
 		this.props.navigation.navigate('Chat', { to: recipient });
 	};
 
+	state = {
+		viewNewMessageModal: false
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
+				<NewMessageModal
+					visible={this.state.viewNewMessageModal}
+					onClose={() => this.setState({ viewNewMessageModal: false })}
+				/>
 				<View style={styles.searchSection}>
 					<Icon name="search" size={22} style={styles.icon} />
 					<TextInput
@@ -93,7 +102,10 @@ export default class Message extends Component {
 						<MessageItem message={e} onItemPress={this.gotoChatRoom} />
 					))}
 				</ScrollView>
-				<TouchableOpacity style={styles.floatingButton}>
+				<TouchableOpacity
+					style={styles.floatingButton}
+					onPress={() => this.setState({ viewNewMessageModal: true })}
+				>
 					<Icon name="plus" style={{ color: colors.white }} size={20} />
 				</TouchableOpacity>
 			</View>
