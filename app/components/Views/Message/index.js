@@ -6,7 +6,6 @@ import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import Identicon from '../../UI/Identicon';
 import MessageItem from './components/MessageItem';
-import NewMessageModal from './components/NewMessageModal';
 import SearchBar from '../../Base/SearchBar';
 
 const messages = [
@@ -77,17 +76,22 @@ export default class Message extends Component {
 		this.props.navigation.navigate('Chat', { to: recipient });
 	};
 
-	state = {
-		viewNewMessageModal: false
+	sendPrivateKeyBackup = async contact => {
+		this.props.navigation.navigate('Chat', {
+			selectedContact: contact
+		});
+	};
+
+	selectContact = () => {
+		this.props.navigation.navigate('Contacts', {
+			contactSelection: true,
+			onConfirm: this.sendPrivateKeyBackup
+		});
 	};
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<NewMessageModal
-					visible={this.state.viewNewMessageModal}
-					onClose={() => this.setState({ viewNewMessageModal: false })}
-				/>
 				<SearchBar placeholder={`${strings('file.search_files')}...`} value={''} onChange={this.handleSearch} />
 
 				<ScrollView>
@@ -95,10 +99,7 @@ export default class Message extends Component {
 						<MessageItem message={e} onItemPress={this.gotoChatRoom} />
 					))}
 				</ScrollView>
-				<TouchableOpacity
-					style={styles.floatingButton}
-					onPress={() => this.setState({ viewNewMessageModal: true })}
-				>
+				<TouchableOpacity style={styles.floatingButton} onPress={this.selectContact}>
 					<Icon name="plus" style={{ color: colors.white }} size={20} />
 				</TouchableOpacity>
 			</View>

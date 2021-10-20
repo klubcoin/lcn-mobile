@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../styles/common';
 
-export default function SearchBar({ value, onChange, placeholder }) {
+export default function SearchBar({ value, onChange, placeholder, containerStyle }) {
 	return (
-		<View style={styles.searchSection}>
+		<View style={[styles.searchSection, containerStyle]}>
 			<Icon name="search" size={22} style={styles.icon} />
 			<TextInput
 				style={styles.textInput}

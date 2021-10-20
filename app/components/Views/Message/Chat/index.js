@@ -13,7 +13,7 @@ class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
 
 	state = {
-		to: this.props.navigation.getParam('to'),
+		contact: this.props.navigation.getParam('selectedContact'),
 		from: {},
 		messages: [
 			{
@@ -30,7 +30,11 @@ class Chat extends Component {
 	};
 
 	componentDidMount() {
-		console.log('account1', this.props.identities);
+		const selectedContact = this.state.contact ? this.state.contact[0] : {};
+		this.setState(prevState => ({
+			...prevState,
+			contact: selectedContact
+		}));
 	}
 
 	renderAvatar = address => {
@@ -50,10 +54,10 @@ class Chat extends Component {
 					</TouchableOpacity>
 					<View style={{ alignItems: 'center', flex: 10 }}>
 						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-							User
+							{this.state.contact?.name}
 						</Text>
 						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.address}>
-							{this.state.to}
+							{this.state.contact?.address}
 						</Text>
 					</View>
 					<View style={{ flex: 1 }} />
