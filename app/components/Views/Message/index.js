@@ -7,6 +7,7 @@ import { colors } from '../../../styles/common';
 import Identicon from '../../UI/Identicon';
 import MessageItem from './components/MessageItem';
 import NewMessageModal from './components/NewMessageModal';
+import SearchBar from '../../Base/SearchBar';
 
 const messages = [
 	{
@@ -87,16 +88,8 @@ export default class Message extends Component {
 					visible={this.state.viewNewMessageModal}
 					onClose={() => this.setState({ viewNewMessageModal: false })}
 				/>
-				<View style={styles.searchSection}>
-					<Icon name="search" size={22} style={styles.icon} />
-					<TextInput
-						style={styles.textInput}
-						value={''}
-						placeholder={`${strings('file.search_files')}...`}
-						placeholderTextColor={colors.grey100}
-						onChangeText={this.handleSearch}
-					/>
-				</View>
+				<SearchBar placeholder={`${strings('file.search_files')}...`} value={''} onChange={this.handleSearch} />
+
 				<ScrollView>
 					{messages.map(e => (
 						<MessageItem message={e} onItemPress={this.gotoChatRoom} />
@@ -115,7 +108,8 @@ export default class Message extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		paddingHorizontal: 16
 	},
 	searchSection: {
 		marginHorizontal: 20,

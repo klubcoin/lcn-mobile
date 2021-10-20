@@ -27,7 +27,7 @@ export default function MessageItem({ message, onItemPress }) {
 
 const styles = StyleSheet.create({
 	container: {
-		padding: 16,
+		paddingVertical: 16,
 		flexDirection: 'row'
 	},
 	address: {

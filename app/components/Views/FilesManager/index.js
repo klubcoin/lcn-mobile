@@ -34,6 +34,7 @@ import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 import { statuses } from './FileDetails';
 import FileTransfer from './Transfer.service';
+import SearchBar from '../../Base/SearchBar';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
@@ -294,17 +295,12 @@ class FilesManager extends Component {
 						onCloseModal={this.onCloseModal}
 						onTransfer={this.onTransfer}
 					/>
-					<View style={{ flex: 1 }}>
-						<View style={styles.searchSection}>
-							<Icon name="search" size={22} style={styles.icon} />
-							<TextInput
-								style={styles.textInput}
-								value={this.state.searchQuery}
-								placeholder={`${strings('file.search_files')}...`}
-								placeholderTextColor={colors.grey100}
-								onChangeText={this.handleSearch}
-							/>
-						</View>
+					<View style={{ flex: 1, paddingHorizontal: 16 }}>
+						<SearchBar
+							placeholder={`${strings('file.search_files')}...`}
+							value={this.state.searchQuery}
+							onChange={this.handleSearch}
+						/>
 						<ScrollView style={{ marginBottom: 100 }}>
 							{this.renderFileSections(statuses.process)}
 							{this.renderFileSections(statuses.failed)}
@@ -356,7 +352,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 0
 	},
 	files: {
-		padding: 15
+		paddingVertical: 16
 	},
 	customButton: {
 		position: 'absolute',

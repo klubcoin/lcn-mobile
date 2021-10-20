@@ -4,6 +4,7 @@ import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { strings } from '../../../../../locales/i18n';
+import SearchBar from '../../../Base/SearchBar';
 
 const deviceHeight = Device.getDeviceHeight();
 
@@ -24,16 +25,7 @@ export default function NewMessageModal({ visible, onClose }) {
 						</View>
 						<View style={{ flex: 1 }} />
 					</View>
-					<View style={styles.searchSection}>
-						<Icon name="search" size={22} style={styles.icon} />
-						<TextInput
-							style={styles.textInput}
-							value={''}
-							placeholder={`${strings('file.search_files')}...`}
-							placeholderTextColor={colors.grey100}
-							onChangeText={this.handleSearch}
-						/>
-					</View>
+					<SearchBar placeholder={`${strings('file.search_files')}...`} value={''} onChange={handleSearch} />
 				</View>
 			</View>
 		</Modal>
