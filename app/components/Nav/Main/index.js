@@ -830,10 +830,6 @@ const Main = props => {
 	};
 
 	const onWebRtcMessage = async (data, peerId) => {
-		try {
-			data = JSON.parse(data);
-		} catch (e) {}
-
 		if (data.action) {
 			switch (data.action) {
 				case ConfirmProfileRequest().action:
