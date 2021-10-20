@@ -101,7 +101,7 @@ export class AddCustomApps extends PureComponent {
 
     const isVotingApp = selectedApp.name?.toLowerCase().includes('vote')
       || selectedApp.description?.toLowerCase().includes('vote');
-    const isCustomApp = !!(appWallet || ownerWallet);
+    const isCustomApp = !!(appWallet || ownerWallet || selectedApp.hexCode);
 
     if (isVotingApp) {
       APIService.registerVoter(uuid, selectedAddress, async (success, json) => {
@@ -145,6 +145,8 @@ export class AddCustomApps extends PureComponent {
     } else if (item.ownerWallet) {
       this.selectedAsset = item;
       this.getContractAddress(item.ownerWallet);
+    } else {
+      this.selectedAsset = item;
     }
   }
 

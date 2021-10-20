@@ -60,11 +60,11 @@ export default class WebRTC {
 	initSocket = () => {
 		this.messaging = new Messaging(this.fromUserId);
 		this.messaging.on(WSEvent.ready, this.handleConnected.bind(this));
-		this.messaging.on(WSEvent.message, this.handleWebRtcMessage.bind(this));
+		this.messaging.on(WSEvent.message, this.handleWebRtcSignal.bind(this));
 		this.messaging.initConnection();
 	};
 
-	handleWebRtcMessage = message => {
+	handleWebRtcSignal = message => {
 		try {
 			const data = JSON.parse(message);
 			if (data.webrtc) {
@@ -105,9 +105,9 @@ export default class WebRTC {
 	handleOffer = incoming => {
 		const peerId = incoming.caller;
 		/*
-      Here we are exchanging config information
-      between the peers to establish communication
-    */
+			Here we are exchanging config information
+			between the peers to establish communication
+		*/
 		this.peerRefs[peerId] = this.Peer(incoming.caller);
 		this.peerRefs[peerId].ondatachannel = event => {
 			this.sendChannels[peerId] = event.channel;
@@ -119,10 +119,10 @@ export default class WebRTC {
 		};
 
 		/*
-      Session Description: It is the config information of the peer
-      SDP stands for Session Description Protocol. The exchange
-      of config information between the peers happens using this protocol
-    */
+			Session Description: It is the config information of the peer
+			SDP stands for Session Description Protocol. The exchange
+			of config information between the peers happens using this protocol
+		*/
 		const desc = new RTCSessionDescription(incoming.sdp);
 
 		this.peerRefs[peerId]
@@ -158,19 +158,18 @@ export default class WebRTC {
 		// Listener for receiving messages from the peer
 		console.log('[INFO] Message received from peer', `${e.data}`.substr(0, 100));
 
-		this.handleWSMessage(e.data, peer);
-		this.handleFileTransfer(e.data, peer);
-		// if (this.onMessage) this.onMessage(e.data, peer);
-		this.events.message.map(callback => callback(e.data, peer));
+		this.handleWebRtcMessage(e.data, peer);
 	};
 
-	handleWSMessage = async (json, peerId) => {
+	handleWebRtcMessage = async (json, peerId) => {
 		try {
 			let data = JSON.parse(json);
-			if (peerId != this.parseSignature(data)) return;
+			if (`${peerId}`.toLowerCase() != this.parseSignature(data)) return;
 
 			if (data.encrypted) {
 				data = this.decryptPayload(data);
+			} else {
+				data = JSON.parse(data.payload);
 			}
 
 			if (data.action == 'ping') {
@@ -179,6 +178,9 @@ export default class WebRTC {
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			}
+
+			this.handleFileTransfer(data, peerId);
+			this.events.message.map(callback => callback(data, peerId));
 		} catch (e) { }
 	}
 
@@ -190,46 +192,48 @@ export default class WebRTC {
 	}
 
 	decryptPayload(data) {
-		if (!data || !data.payload) return data;
+		if (!data || !data.payload || !data.encrypted) return data;
 
-		return CryptoSignature.decryptMessage(data.payload, this.privateKey);
+		const json = CryptoSignature.decryptMessage(data.payload, this.privateKey);
+		try {
+			return JSON.parse(json);
+		} catch (e) {
+			return json;
+		}
 	}
 
-	handleFileTransfer = async (json, peerId) => {
-		try {
-			const data = JSON.parse(json);
-			if (data.action == StoreFile().action) {
-				FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
-			} else if (data.action == ReadFile().action && !data.sourcePeer) {
-				const { from, hash, name } = data;
-				const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
-				if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
+	handleFileTransfer = async (data, peerId) => {
+		if (data.action == StoreFile().action) {
+			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
+		} else if (data.action == ReadFile().action && !data.sourcePeer) {
+			const { from, hash, name } = data;
+			const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+			if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
-				const files = await RNFS.readDir(folder);
+			const files = await RNFS.readDir(folder);
 
-				const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
-				foundFiles.map(async e => {
-					const content = await RNFS.readFile(e.path, 'utf8');
-					const partId = e.name.split('.').reverse()[0];
-					const totalPart = e.name.split('.').reverse()[1];
-					const message = ReadFileResult(from, hash, name, moment(e.mtime).unix(), totalPart, [
-						{ i: partId, v: content }
-					]);
-					message.sourcePeer = this.fromUserId;
-					this.sendToPeer(peerId, message);
-				});
-			} else if (data.action == ReadFileResult().action) {
-				//responded file
-				const { name, parts } = data;
-				const hash = sha256(name).digest('hex');
-				parts.map(e => {
-					const index = e.i;
-					FileTransferWebRTC.storeFile(data).then(() =>
-						DeviceEventEmitter.emit(`FileTransPart:${hash}:${index}`, data)
-					);
-				});
-			}
-		} catch (e) {}
+			const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
+			foundFiles.map(async e => {
+				const content = await RNFS.readFile(e.path, 'utf8');
+				const partId = e.name.split('.').reverse()[0];
+				const totalPart = e.name.split('.').reverse()[1];
+				const message = ReadFileResult(from, hash, name, moment(e.mtime).unix(), totalPart, [
+					{ i: partId, v: content }
+				]);
+				message.sourcePeer = this.fromUserId;
+				this.sendToPeer(peerId, message);
+			});
+		} else if (data.action == ReadFileResult().action) {
+			//responded file
+			const { name, parts } = data;
+			const hash = sha256(name).digest('hex');
+			parts.map(e => {
+				const index = e.i;
+				FileTransferWebRTC.storeFile(data).then(() =>
+					DeviceEventEmitter.emit(`FileTransPart:${hash}:${index}`, data)
+				);
+			});
+		}
 	};
 
 	handleNewICECandidateMsg = incoming => {
@@ -260,12 +264,12 @@ export default class WebRTC {
 
 	handleICECandidateEvent = e => {
 		/*
-      ICE stands for Interactive Connectivity Establishment. Using this
-      peers exchange information over the intenet. When establishing a
-      connection between the peers, peers generally look for several 
-      ICE candidates and then decide which to choose best among possible
-      candidates
-    */
+			ICE stands for Interactive Connectivity Establishment. Using this
+			peers exchange information over the intenet. When establishing a
+			connection between the peers, peers generally look for several 
+			ICE candidates and then decide which to choose best among possible
+			candidates
+		*/
 		if (e.candidate) {
 			const payload = {
 				target: e.target.peerId,

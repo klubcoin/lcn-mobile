@@ -42,10 +42,6 @@ export default class FileTransferWebRTC {
 	}
 
 	_onMessage(data, peerId) {
-		try {
-			data = JSON.parse(data);
-		} catch (e) {}
-
 		if (data.action) {
 			if (data.action == ContainFiles().action && peerId == this.awaitingPeer) {
 				if (this.monitorFailure) clearTimeout(this.monitorFailure);
