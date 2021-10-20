@@ -105,9 +105,9 @@ export default class WebRTC {
 	handleOffer = incoming => {
 		const peerId = incoming.caller;
 		/*
-      Here we are exchanging config information
-      between the peers to establish communication
-    */
+			Here we are exchanging config information
+			between the peers to establish communication
+		*/
 		this.peerRefs[peerId] = this.Peer(incoming.caller);
 		this.peerRefs[peerId].ondatachannel = event => {
 			this.sendChannels[peerId] = event.channel;
@@ -119,10 +119,10 @@ export default class WebRTC {
 		};
 
 		/*
-      Session Description: It is the config information of the peer
-      SDP stands for Session Description Protocol. The exchange
-      of config information between the peers happens using this protocol
-    */
+			Session Description: It is the config information of the peer
+			SDP stands for Session Description Protocol. The exchange
+			of config information between the peers happens using this protocol
+		*/
 		const desc = new RTCSessionDescription(incoming.sdp);
 
 		this.peerRefs[peerId]
@@ -167,10 +167,12 @@ export default class WebRTC {
 	handleWSMessage = async (json, peerId) => {
 		try {
 			let data = JSON.parse(json);
-			if (peerId != this.parseSignature(data)) return;
+			if (`${peerId}`.toLowerCase() != this.parseSignature(data)) return;
 
 			if (data.encrypted) {
 				data = this.decryptPayload(data);
+			} else {
+				data = JSON.parse(data.payload);
 			}
 
 			if (data.action == 'ping') {
@@ -190,9 +192,14 @@ export default class WebRTC {
 	}
 
 	decryptPayload(data) {
-		if (!data || !data.payload) return data;
+		if (!data || !data.payload || !data.encrypted) return data;
 
-		return CryptoSignature.decryptMessage(data.payload, this.privateKey);
+		const json = CryptoSignature.decryptMessage(data.payload, this.privateKey);
+		try {
+			return JSON.parse(json);
+		} catch (e) {
+			return json;
+		}
 	}
 
 	handleFileTransfer = async (json, peerId) => {
@@ -260,12 +267,12 @@ export default class WebRTC {
 
 	handleICECandidateEvent = e => {
 		/*
-      ICE stands for Interactive Connectivity Establishment. Using this
-      peers exchange information over the intenet. When establishing a
-      connection between the peers, peers generally look for several 
-      ICE candidates and then decide which to choose best among possible
-      candidates
-    */
+			ICE stands for Interactive Connectivity Establishment. Using this
+			peers exchange information over the intenet. When establishing a
+			connection between the peers, peers generally look for several 
+			ICE candidates and then decide which to choose best among possible
+			candidates
+		*/
 		if (e.candidate) {
 			const payload = {
 				target: e.target.peerId,
