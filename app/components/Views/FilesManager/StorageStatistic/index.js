@@ -32,7 +32,7 @@ class StorageStatistic extends Component {
 		return (
 			<View style={styles.container}>
 				<StorageChart />
-				<Text style={styles.title}>Contacts</Text>
+				<Text style={styles.title}>View storage of other recipients</Text>
 				{this.state.contacts.map(e => (
 					<TouchableOpacity onPress={() => console.log(e)}>
 						<View style={styles.contacts}>

@@ -4,6 +4,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import PlanModal from './PlanModal';
 
 const deviceWidth = Device.getDeviceWidth();
 
@@ -15,11 +16,12 @@ export default function StorageChart() {
 	return (
 		<View style={{ alignItems: 'center' }}>
 			<View>
+				<PlanModal />
 				<AnimatedCircularProgress
 					size={deviceWidth / 2}
 					width={10}
 					fill={30}
-					tintColor={colors.primaryFox}
+					tintColor={colors.green500}
 					backgroundColor={colors.grey100}
 					style={{
 						marginVertical: 20,
