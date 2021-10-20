@@ -178,7 +178,7 @@ class FilesManager extends Component {
 	};
 
 	onViewDetails = file => {
-		this.props.navigation.navigate('StorageStatistic', { selectedFile: file });
+		this.props.navigation.navigate('FileDetails', { selectedFile: file });
 	};
 
 	getQueriedFiles = value => {
