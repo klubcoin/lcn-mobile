@@ -71,6 +71,10 @@ export default class Message extends Component {
 		console.log(value);
 	};
 
+	gotoChatRoom = () => {
+		this.props.navigation.navigate('Chat');
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -86,7 +90,7 @@ export default class Message extends Component {
 				</View>
 				<ScrollView>
 					{messages.map(e => (
-						<MessageItem message={e} />
+						<MessageItem message={e} onItemPress={this.gotoChatRoom} />
 					))}
 				</ScrollView>
 				<TouchableOpacity style={styles.floatingButton}>
