@@ -595,11 +595,6 @@ class DrawerView extends PureComponent {
 		this.hideDrawer();
 	};
 
-	gotoMessage = () => {
-		this.props.navigation.navigate('Message');
-		this.hideDrawer();
-	};
-
 	gotoContacts = () => {
 		this.props.navigation.navigate('Contacts');
 		this.hideDrawer();
@@ -794,14 +789,6 @@ class DrawerView extends PureComponent {
 					action: this.gotoNotifications,
 					key: 'notifications',
 					routeNames: ['Notifications']
-				},
-				{
-					name: 'Messages',
-					icon: this.getMaterialIcon('message-text-outline'),
-					selectedIcon: this.getMaterialIcon('message-text-outline'),
-					action: this.gotoMessage,
-					key: 'Message',
-					routeNames: ['Message']
 				}
 			],
 			[
