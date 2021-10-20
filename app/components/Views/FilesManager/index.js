@@ -38,7 +38,7 @@ import FileTransfer from './Transfer.service';
 const swipeOffset = Device.getDeviceWidth() / 2;
 
 class FilesManager extends Component {
-	static navigationOptions = ({ navigation }) => getFileManagerNavbar(strings('file.manger'), navigation);
+	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('file.manger'), navigation);
 
 	FileTransferIns;
 	state = {
