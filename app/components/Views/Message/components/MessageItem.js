@@ -6,20 +6,24 @@ import Identicon from '../../../UI/Identicon';
 export default function MessageItem({ message, onItemPress }) {
 	return (
 		<TouchableOpacity style={styles.container} onPress={() => onItemPress(message.contact)}>
-			<Identicon address={message.contact.address} diameter={35} />
-			<View style={{ flex: 10, marginHorizontal: 8 }}>
-				<Text style={styles.address} numberOfLines={1} ellipsizeMode="middle">
+			<View style={[styles.hasMessage, { backgroundColor: !message.isRead && 'dodgerblue' }]} />
+			<Identicon address={message.contact.address} diameter={40} />
+			<View style={{ flex: 3, marginHorizontal: 8 }}>
+				<Text
+					style={[styles.address, !message.isRead && styles.unreadStyle]}
+					numberOfLines={1}
+					ellipsizeMode="middle"
+				>
 					{message.contact.name}
 				</Text>
 				<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-					<Text style={styles.message} numberOfLines={1}>
+					<Text style={[styles.message, !message.isRead && styles.unreadStyle]} numberOfLines={2}>
 						{message.lastMessage}
 					</Text>
-					<Text style={styles.time}>{message.time}</Text>
 				</View>
 			</View>
-			<View style={{ flex: 1, marginHorizontal: 8 }}>
-				<View style={styles.hasMessage} />
+			<View style={{ flex: 1, marginHorizontal: 8, alignItems: 'flex-end' }}>
+				<Text style={styles.time}>{message.time}</Text>
 			</View>
 		</TouchableOpacity>
 	);
@@ -28,7 +32,8 @@ export default function MessageItem({ message, onItemPress }) {
 const styles = StyleSheet.create({
 	container: {
 		paddingVertical: 16,
-		flexDirection: 'row'
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	address: {
 		fontSize: 16,
@@ -37,7 +42,6 @@ const styles = StyleSheet.create({
 	},
 	message: {
 		textAlign: 'justify',
-		flex: 3,
 		color: colors.grey400,
 		fontWeight: '300',
 		fontSize: 14
@@ -50,12 +54,14 @@ const styles = StyleSheet.create({
 		fontSize: 14
 	},
 	hasMessage: {
-		position: 'absolute',
-		top: 8,
-		right: 0,
 		width: 10,
 		height: 10,
 		borderRadius: 10,
-		backgroundColor: colors.primaryFox
+		alignSelf: 'center',
+		marginRight: 10
+	},
+	unreadStyle: {
+		fontWeight: '600',
+		color: colors.black
 	}
 });
