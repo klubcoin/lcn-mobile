@@ -112,6 +112,12 @@ const styles = StyleSheet.create({
 	}
 });
 
+
+const TokenRoutes = {
+	Liquichat: 'Message',
+	LiquiShare: 'FilesManager',
+}
+
 /**
  * View that renders a list of ERC-20 Tokens
  */
@@ -193,8 +199,8 @@ class Tokens extends PureComponent {
 		const app = this.savedApps.find(e => e.address == `${token.address}`.toLowerCase());
 		if (app) {
 			await preferences.setCurentAppId(app.address);
-			if (app.instance.name == 'LiquiShare') {
-				this.props.navigation.navigate('FilesManager', { app });
+			if (TokenRoutes[app.instance.name]) {
+				this.props.navigation.navigate(TokenRoutes[app.instance.name], { app });
 			} else {
 				this.props.navigation.navigate('VotingApp', { app });
 			}
