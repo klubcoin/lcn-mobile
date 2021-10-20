@@ -395,6 +395,26 @@
 		"from": "From",
 		"to": "To"
 	},
+	"file": {
+		"manger": "File manager",
+		"transfer_other_files": "Transfer other files",
+		"failed_files": "Failed files",
+		"transferred_files": "Transferred files",
+		"in_processing": "In processing",
+		"share_with_contacts": "Share with contacts",
+		"your_files": "Your files",
+		"contacts": "Contacts",
+		"transfer": "Transfer",
+		"search_files": "Search your files",
+		"no_contacts": "You do not have any contacts",
+		"completed": "Completed",
+		"failed": "Failed",
+		"details": "File details",
+		"total_sizes": "Total sizes",
+		"total_parts": "Total parts",
+		"total_contacts": "Total contacts",
+		"part": "Part"
+	},
 	"proposal": {
 		"missing_category": "Category is missing",
 		"missing_title": "Title is missing",
