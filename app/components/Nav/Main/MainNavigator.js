@@ -68,6 +68,7 @@ import FileDetails from '../../Views/FilesManager/FileDetails';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import StorageStatistic from '../../Views/FilesManager/StorageStatistic';
 import Notifications from '../../Views/Notifications';
+import Message from '../../Views/Chat';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -115,6 +116,9 @@ export default createStackNavigator(
 						},
 						StorageStatistic: {
 							screen: StorageStatistic
+						},
+						Message: {
+							screen: Message
 						},
 						ContactForm: {
 							screen: ContactForm
