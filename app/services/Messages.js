@@ -1,3 +1,5 @@
+import { sha256 } from 'hash.js';
+
 export const ConfirmProfileRequest = (from, firstname, lastname, avatar, email) => ({
 	action: 'confirm_profile_request',
 	from,
@@ -30,4 +32,13 @@ export const RestoreSecretRequest = (from, firstname, lastname, avatar) => ({
 export const AckWebRTC = checksum => ({
 	action: 'ack',
 	hash: checksum
+});
+
+export const Chat = (message, from, to) => ({
+	action: 'chat',
+	message,
+	from,
+	to,
+	checksum: sha256(message).digest('hex'),
+	createdAt: new Date().getTime()
 });
