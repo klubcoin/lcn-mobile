@@ -7,6 +7,7 @@ import FileItem from './FileItem';
 import Device from '../../../../util/Device';
 import CustomButton from '../../../Base/CustomButton';
 import Icon from 'react-native-vector-icons/Feather';
+import { strings } from '../../../../../locales/i18n';
 
 export default function TransferFileModal({
 	files,
@@ -32,7 +33,7 @@ export default function TransferFileModal({
 		if (contacts?.length <= 0)
 			return (
 				<View style={[styles.contacts, { width: '100%' }]}>
-					<Text style={{ color: colors.black }}>You do not have any contacts</Text>
+					<Text style={{ color: colors.black }}>{strings('file.no_contacts')}</Text>
 				</View>
 			);
 
@@ -63,15 +64,15 @@ export default function TransferFileModal({
 	return (
 		<Modal animationType="fade" visible={visible} onBackdropPress={onClose} style={styles.container}>
 			<View style={styles.content}>
-				<Text style={styles.header}>Share with contacts</Text>
+				<Text style={styles.header}>{strings('file.share_with_contacts')}</Text>
 				<ScrollView>
-					<Text style={styles.title}>Your files</Text>
+					<Text style={styles.title}>{strings('file.your_files')}</Text>
 					{files?.length > 0 && files.map(e => <FileItem file={e} onDeleteItem={onDeleteItem} />)}
-					<Text style={styles.title}>Contacts</Text>
+					<Text style={styles.title}>{strings('file.contacts')}</Text>
 					<ScrollView horizontal>{renderContacts()}</ScrollView>
 				</ScrollView>
 				<CustomButton
-					title="Transfer"
+					title={strings('file.transfer')}
 					onPress={
 						selectedContacts?.length > 0 && files?.length > 0
 							? () => {

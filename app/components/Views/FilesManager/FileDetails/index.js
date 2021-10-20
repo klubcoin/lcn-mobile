@@ -6,6 +6,7 @@ import * as FileIcons from '../../../../util/file-icons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import TextSpan from '../components/TextSpan';
 import PartItem from '../components/PartItem';
+import { strings } from '../../../../../locales/i18n';
 
 const statuses = {
 	success: 'SUCCESS',
@@ -32,25 +33,26 @@ const getStatusContent = status => {
 	switch (status) {
 		case statuses.success:
 			return {
-				string: 'Completed',
+				string: strings('file.completed'),
 				icon: 'done',
 				color: colors.green400
 			};
 		case statuses.failed:
 			return {
-				string: 'Failed',
+				string: strings('file.failed'),
 				icon: 'replay',
 				color: colors.red
 			};
 		case statuses.process:
 			return {
-				string: 'In processing',
+				string: strings('file.in_processing'),
 				icon: 'sync',
 				color: colors.orange
 			};
 		default:
 			return {
-				string: 'In processing',
+				string: strings('file.in_processing'),
+				icon: 'sync',
 				color: colors.orange
 			};
 	}
@@ -59,7 +61,7 @@ const getStatusContent = status => {
 export { statuses, getStatusContent, formatBytes };
 
 export default class FileDetails extends Component {
-	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('File details', navigation);
+	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('file.details'), navigation);
 
 	state = {
 		data: this.props.navigation.getParam('selectedFile').file,
@@ -101,9 +103,9 @@ export default class FileDetails extends Component {
 					)}
 				</AnimatedCircularProgress>
 				<View>
-					<TextSpan title="Total sizes" value={formatBytes(this.state.data.size ?? 0)} />
-					<TextSpan title="Total parts" value={this.state.partCount} />
-					<TextSpan title="Total contacts" value={this.state.contacts.length} />
+					<TextSpan title={strings('file.total_sizes')} value={formatBytes(this.state.data.size ?? 0)} />
+					<TextSpan title={strings('file.total_parts')} value={this.state.partCount} />
+					<TextSpan title={strings('file.total_contacts')} value={this.state.contacts.length} />
 				</View>
 			</View>
 		);
@@ -134,7 +136,7 @@ export default class FileDetails extends Component {
 			parts.push(
 				<PartItem
 					part={{
-						name: `Part ${i + 1}`,
+						name: `${strings('file.part')} ${i + 1}`,
 						status: this.getPartStatus(i),
 						contacts: foundContact !== undefined ? [foundContact] : []
 					}}
@@ -145,7 +147,7 @@ export default class FileDetails extends Component {
 
 		return (
 			<View style={styles.listContainer}>
-				<Text style={styles.title}>File details</Text>
+				<Text style={styles.title}>{strings('file.details')}</Text>
 				{parts}
 			</View>
 		);

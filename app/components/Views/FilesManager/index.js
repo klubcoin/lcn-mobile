@@ -38,7 +38,7 @@ import FileTransfer from './Transfer.service';
 const swipeOffset = Device.getDeviceWidth() / 2;
 
 class FilesManager extends Component {
-	static navigationOptions = ({ navigation }) => getFileManagerNavbar('File manager', navigation);
+	static navigationOptions = ({ navigation }) => getFileManagerNavbar(strings('file.manger'), navigation);
 
 	FileTransferIns;
 	state = {
@@ -219,11 +219,11 @@ class FilesManager extends Component {
 		let title;
 
 		if (status === statuses.process) {
-			title = 'In processing';
+			title = strings('file.in_processing');
 		} else if (status === statuses.failed) {
-			title = 'Failed files';
+			title = strings('file.failed_files');
 		} else if (status === statuses.success) {
-			title = 'Transferred files';
+			title = strings('file.transferred_files');
 		}
 
 		if (status === statuses.process) {
@@ -300,7 +300,7 @@ class FilesManager extends Component {
 							<TextInput
 								style={styles.textInput}
 								value={this.state.searchQuery}
-								placeholder={`${strings('contacts.search')}...`}
+								placeholder={`${strings('file.search_files')}...`}
 								placeholderTextColor={colors.grey100}
 								onChangeText={this.handleSearch}
 							/>
@@ -311,7 +311,7 @@ class FilesManager extends Component {
 							{this.renderFileSections(statuses.success)}
 						</ScrollView>
 						<CustomButton
-							title="Transfer other files"
+							title={strings('file.transfer_other_files')}
 							onPress={this.onPickFiles}
 							style={styles.customButton}
 						/>
