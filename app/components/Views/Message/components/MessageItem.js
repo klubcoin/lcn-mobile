@@ -1,27 +1,27 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 
-export default function MessageItem() {
+export default function MessageItem({ message }) {
 	return (
-		<View style={styles.container}>
-			<Identicon address={'selectedAddress'} diameter={35} />
+		<TouchableOpacity style={styles.container}>
+			<Identicon address={message.to} diameter={35} />
 			<View style={{ flex: 10, marginHorizontal: 8 }}>
-				<Text style={styles.address}>0xFFasdasd....128a</Text>
+				<Text style={styles.address} numberOfLines={1} ellipsizeMode="middle">
+					{message.to}
+				</Text>
 				<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
 					<Text style={styles.message} numberOfLines={1}>
-						Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-						the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley
-						of type and scrambled it to make a type specimen book.
+						{message.lastMessage}
 					</Text>
-					<Text style={styles.time}>11:15pm</Text>
+					<Text style={styles.time}>{message.time}</Text>
 				</View>
 			</View>
 			<View style={{ flex: 1, marginHorizontal: 8 }}>
 				<View style={styles.hasMessage} />
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
 
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
 	},
 	address: {
 		fontSize: 16,
-		fontWeight: '400'
+		fontWeight: '400',
+		maxWidth: 200
 	},
 	message: {
 		textAlign: 'justify',
