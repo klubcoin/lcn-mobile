@@ -68,7 +68,7 @@ import FileDetails from '../../Views/FilesManager/FileDetails';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import StorageStatistic from '../../Views/FilesManager/StorageStatistic';
 import Notifications from '../../Views/Notifications';
-import Message from '../../Views/Chat';
+import Message from '../../Views/Message';
 
 const styles = StyleSheet.create({
 	headerLogo: {
