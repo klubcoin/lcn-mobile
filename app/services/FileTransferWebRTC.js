@@ -36,11 +36,6 @@ export default class FileTransferWebRTC {
 		this.revokeMessageEvt = webrtc.addListener('message', (data, peer) => this._onMessage(data, peer));
 	}
 
-	_onClose() {
-		console.log('FS lost connection');
-		this._ready = false;
-	}
-
 	_onMessage(data, peerId) {
 		if (data.action) {
 			if (data.action == ContainFiles().action && peerId == this.awaitingPeer) {
