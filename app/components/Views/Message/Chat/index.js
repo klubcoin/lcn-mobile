@@ -32,7 +32,7 @@ class Chat extends Component {
 		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
 		this.messaging.addListener('message', (data, peerId) => {
 			console.log('got chat', peerId, data);
-			data.message[0].user['_id'] = peerId;
+			data.message.user['_id'] = peerId;
 
 			this.addNewMessage(data.message, true);
 		});
@@ -55,7 +55,7 @@ class Chat extends Component {
 
 	onSend = message => {
 		this.addNewMessage(message);
-		this.messaging.send(message);
+		this.messaging.send(message[0]);
 	};
 
 	addNewMessage = async (message, incoming) => {
