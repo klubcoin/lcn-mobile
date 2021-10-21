@@ -38,16 +38,10 @@ export default class Message extends Component {
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
 
-	sendPrivateKeyBackup = async contact => {
-		this.props.navigation.navigate('Chat', {
-			selectedContact: contact[0]
-		});
-	};
-
 	selectContact = () => {
 		this.props.navigation.navigate('Contacts', {
 			contactSelection: true,
-			onConfirm: this.sendPrivateKeyBackup
+			onConfirm: contacts => this.gotoChatRoom(contacts[0])
 		});
 	};
 
