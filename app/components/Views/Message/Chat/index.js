@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
-import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { GiftedChat } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
@@ -58,6 +57,8 @@ class Chat extends Component {
 
 		if (!data) return;
 
+		data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
 		this.setState(prevState => ({
 			...prevState,
 			messages: data
@@ -76,9 +77,11 @@ class Chat extends Component {
 	addNewMessage = async (message, incoming) => {
 		var messages = this.state.messages.concat(message);
 
+		messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
 		this.setState(prevState => ({
 			...prevState,
-			messages: messages
+			messages
 		}));
 
 		if (!incoming) preferences.saveChatMessages(this.state.contact.address, messages);
@@ -112,7 +115,6 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
-		this.state.messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		return (
 			<>
