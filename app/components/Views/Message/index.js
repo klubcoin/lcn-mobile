@@ -128,7 +128,7 @@ export default class Message extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<SearchBar placeholder={`${strings('file.search_files')}...`} value={''} onChange={this.handleSearch} />
+				<SearchBar placeholder={'Search messages...'} value={''} onChange={this.handleSearch} />
 
 				<ScrollView>
 					{messages.map(e => (
