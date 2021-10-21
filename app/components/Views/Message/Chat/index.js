@@ -45,6 +45,11 @@ class Chat extends Component {
 		this.props.navigation.goBack();
 	};
 
+	onSend = message => {
+		this.addNewMessage(message);
+		this.messaging.send(message);
+	};
+
 	addNewMessage = async message => {
 		var messages = [...message, ...this.state.messages];
 
@@ -56,11 +61,6 @@ class Chat extends Component {
 		var record = {};
 		record[this.state.contact.address] = messages;
 		await preferences.saveChatMessages(record);
-	};
-
-	onSend = message => {
-		this.addNewMessage(message);
-		this.messaging.send(message);
 	};
 
 	renderAvatar = address => {

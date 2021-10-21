@@ -25,7 +25,8 @@ const keys = [
 	kTransferredFiles,
 	kBlockedIdentityReqPeers,
 	kNotifications,
-	kPublicKeys
+	kPublicKeys,
+	kChatMessages
 ];
 
 class Preferences {
@@ -33,7 +34,7 @@ class Preferences {
 	onboardProfile = {};
 	blockedIdentityReqPeers = {};
 	notifications = {};
-	publickKeys = {};
+	publicKeys = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -65,7 +66,7 @@ class Preferences {
 				this.notifications = data || [];
 				break;
 			case kPublicKeys:
-				this.publickKeys = data || {};
+				this.publicKeys = data || {};
 				break;
 		}
 	}
@@ -188,19 +189,20 @@ class Preferences {
 	}
 
 	async addPublicKey(address, publicKey) {
-		this.publickKeys[address] = publicKey;
-		await this.save(kPublicKeys, this.publickKeys);
+		this.publicKeys[address] = publicKey;
+		await this.save(kPublicKeys, this.publicKeys);
 	}
 
 	async publicKeyForAddress(address) {
-		return this.publickKeys[address];
+		return this.publicKeys[address];
 	}
 
 	async saveChatMessages(messages) {
 		if (!this.storage[kChatMessages]) {
 			this.storage[kChatMessages] = {};
 		}
-		this.storage[kChatMessages][messages.id] = messages;
+		const recipientAddress = Object.keys(messages)[0];
+		this.storage[kChatMessages][recipientAddress] = messages;
 		await this.saveStorage(kChatMessages);
 	}
 

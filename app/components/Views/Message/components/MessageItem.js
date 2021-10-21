@@ -14,7 +14,7 @@ class MessageItem extends Component {
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 		const user = addresses[recipientAddress];
 		const lastMessage = message[recipientAddress][message[recipientAddress].length - 1];
-		const formattedDate = format(lastMessage.createdAt, 'H:mma');
+		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
 
 		return (
 			<TouchableOpacity style={styles.container} onPress={() => onItemPress(user)}>
