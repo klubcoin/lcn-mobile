@@ -8,6 +8,8 @@ import { makeObservable, observable } from 'mobx';
 import { connect } from 'react-redux';
 import { colors } from '../../../../styles/common';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { refWebRTC } from '../../../../services/WebRTC';
+import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -29,20 +31,36 @@ class Chat extends Component {
 		]
 	};
 
+	messaging;
+
 	componentDidMount() {
 		const selectedContact = this.state.contact ? this.state.contact : {};
 		this.setState(prevState => ({
 			...prevState,
 			contact: selectedContact
 		}));
+		this.initConnection();
 	}
 
-	renderAvatar = address => {
-		return <Identicon address={address} diameter={35} />;
+	initConnection = () => {
+		const { selectedAddress } = this.props;
+		const to = this.state.contact;
+		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
+		this.messaging.addListener('message', (data, peerId) => {
+			console.log('got chat', peerId, data);
+		});
 	};
 
 	onBack = () => {
 		this.props.navigation.goBack();
+	};
+
+	onSend = message => {
+		this.messaging.send(message);
+	};
+
+	renderAvatar = address => {
+		return <Identicon address={address} diameter={35} />;
 	};
 
 	renderNavBar() {
@@ -73,7 +91,7 @@ class Chat extends Component {
 				<View style={{ flex: 1 }}>
 					<GiftedChat
 						messages={this.state.messages}
-						onSend={messages => console.log(messages)}
+						onSend={this.onSend}
 						user={{
 							_id: 1
 						}}
