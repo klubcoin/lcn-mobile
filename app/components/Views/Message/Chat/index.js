@@ -23,8 +23,18 @@ class Chat extends Component {
 	componentDidMount() {
 		const selectedContact = this.state.contact;
 		preferences.setActiveChatPeerId(selectedContact.address);
+		this.bindContactForAddress();
 		this.initConnection();
 		this.fetchMessages(selectedContact.address);
+	}
+
+	bindContactForAddress() {
+		const { addressBook, network } = this.props;
+		const addresses = addressBook[network] || {};
+
+		const selectedContact = this.state.contact;
+		const user = addresses[selectedContact.address];
+		selectedContact.name = user.name;
 	}
 
 	componentWillUnmount() {
@@ -155,7 +165,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
 	identities: state.engine.backgroundState.PreferencesController.identities,
-	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+	network: state.engine.backgroundState.NetworkController.network
 });
 
 export default connect(mapStateToProps)(Chat);

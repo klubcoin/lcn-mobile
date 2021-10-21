@@ -10,7 +10,6 @@ class MessageItem extends Component {
 		const { recipientAddr, message, onItemPress, addressBook, network } = this.props;
 
 		const addresses = addressBook[network] || {};
-		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 		const user = addresses[recipientAddr];
 		const lastMessage = message[message.length - 1];
 		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
