@@ -211,7 +211,7 @@ class Preferences {
 	async getChatMessages(address) {
 		const chatMessages = this.storage[kChatMessages] || {};
 		if (address) return chatMessages[address] || [];
-		return Object.keys(chatMessages).map(key => chatMessages[key]);
+		return chatMessages;
 	}
 
 	async deleteChatMessage(address) {

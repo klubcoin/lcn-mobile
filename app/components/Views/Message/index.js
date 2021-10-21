@@ -22,8 +22,8 @@ export default class Message extends Component {
 	}
 
 	fetchHistoryMessages = async () => {
-		// await preferences.deleteChatMessages();
 		const records = await preferences.getChatMessages();
+
 		this.setState(prevState => ({
 			...prevState,
 			messages: records
@@ -51,8 +51,12 @@ export default class Message extends Component {
 				<SearchBar placeholder={'Search messages...'} value={''} onChange={this.handleSearch} />
 
 				<ScrollView>
-					{this.state.messages.map(e => (
-						<MessageItem message={e} onItemPress={this.gotoChatRoom} />
+					{Object.keys(this.state.messages).map(e => (
+						<MessageItem
+							message={this.state.messages[e]}
+							recipientAddr={e}
+							onItemPress={this.gotoChatRoom}
+						/>
 					))}
 				</ScrollView>
 				<TouchableOpacity style={styles.floatingButton} onPress={this.selectContact}>

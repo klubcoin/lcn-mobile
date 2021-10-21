@@ -101,7 +101,7 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
-		this.state.messages.sort((a, b) => b.createdAt - a.createdAt);
+		this.state.messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		return (
 			<>

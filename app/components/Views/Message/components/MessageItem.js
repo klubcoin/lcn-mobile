@@ -7,19 +7,18 @@ import { format } from 'date-fns';
 
 class MessageItem extends Component {
 	render() {
-		const { message, onItemPress, addressBook, network } = this.props;
+		const { recipientAddr, message, onItemPress, addressBook, network } = this.props;
 
-		const recipientAddress = Object.keys(message)[0];
 		const addresses = addressBook[network] || {};
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
-		const user = addresses[recipientAddress];
-		const lastMessage = message[recipientAddress][message[recipientAddress].length - 1];
+		const user = addresses[recipientAddr];
+		const lastMessage = message[message.length - 1];
 		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
 
 		return (
 			<TouchableOpacity style={styles.container} onPress={() => onItemPress(user)}>
 				<View style={[styles.hasMessage, { backgroundColor: !message.isRead && 'dodgerblue' }]} />
-				<Identicon address={recipientAddress} diameter={40} />
+				<Identicon address={recipientAddr} diameter={40} />
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
 					<Text
 						style={[styles.address, !message.isRead && styles.unreadStyle]}
