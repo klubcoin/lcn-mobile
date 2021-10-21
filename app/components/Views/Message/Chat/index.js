@@ -79,6 +79,7 @@ class Chat extends Component {
 	};
 
 	renderNavBar() {
+		const { contact } = this.state;
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
@@ -87,10 +88,10 @@ class Chat extends Component {
 					</TouchableOpacity>
 					<View style={{ alignItems: 'center', flex: 10 }}>
 						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-							{this.state.contact?.name}
+							{contact?.name}
 						</Text>
 						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.address}>
-							{this.state.contact?.address}
+							{contact?.address}
 						</Text>
 					</View>
 					<View style={{ flex: 1 }} />

@@ -55,7 +55,7 @@ export default class Message extends Component {
 						<MessageItem
 							message={this.state.messages[e]}
 							recipientAddr={e}
-							onItemPress={this.gotoChatRoom}
+							onItemPress={() => this.gotoChatRoom({ address: e })}
 						/>
 					))}
 				</ScrollView>
