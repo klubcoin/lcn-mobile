@@ -20,9 +20,9 @@ export default class Message extends Component {
 		this.fetchHistoryMessages();
 	}
 
-	// componentDidUpdate() {
-	// 	this.fetchHistoryMessages();
-	// }
+	componentDidUpdate() {
+		this.fetchHistoryMessages();
+	}
 
 	fetchHistoryMessages = async () => {
 		await preferences.deleteChatMessage();
