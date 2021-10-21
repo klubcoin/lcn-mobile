@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
+import { Typing } from '../../../../services/Messages';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -48,7 +49,7 @@ class Chat extends Component {
 		this.messaging.addListener('message', (data, peerId) => {
 			console.log('got chat', peerId, data);
 			const { action } = data.message;
-			if (action && action == 'typing') {
+			if (action && action == Typing().action) {
 				this.setTyping();
 			} else {
 				data.message.user['_id'] = peerId;
@@ -88,7 +89,7 @@ class Chat extends Component {
 		if (this.sentTyping || !this.initialized) return;
 		this.sentTyping = true;
 
-		if (this.messaging) this.messaging.send({ action: 'typing' });
+		if (this.messaging) this.messaging.send(Typing());
 
 		setTimeout(() => (this.sentTyping = false), 2000);
 	};

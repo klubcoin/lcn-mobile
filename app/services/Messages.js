@@ -42,3 +42,7 @@ export const Chat = (message, from, to) => ({
 	checksum: sha256(message).digest('hex'),
 	createdAt: new Date().getTime()
 });
+
+export const Typing = () => ({
+	action: 'typing'
+});

@@ -82,7 +82,13 @@ import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
 import CryptoSignature from '../../../core/CryptoSignature';
-import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
+import {
+	Chat,
+	ConfirmProfileBlock,
+	ConfirmProfileRejected,
+	ConfirmProfileRequest,
+	Typing
+} from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
 
@@ -852,7 +858,7 @@ const Main = props => {
 					const activeChatPeerId = `${preferences.activeChatPeerId}`.toLowerCase();
 
 					const { action } = message;
-					if (action && action == 'typing') break;
+					if (action && action == Typing().action) break;
 
 					if (senderId != activeChatPeerId) {
 						const { addressBook, network } = props;
