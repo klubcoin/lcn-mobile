@@ -330,6 +330,10 @@ class Contacts extends PureComponent {
 	onSelectContact = contact => {
 		const { selectedContacts } = this.state;
 
+		if (this.contactSelection === 1) {
+			selectedContacts.splice(0, selectedContacts.length);
+		}
+
 		if (selectedContacts.find(e => e.address == contact.address)) {
 			selectedContacts.splice(selectedContacts.indexOf(contact), 1);
 		} else {

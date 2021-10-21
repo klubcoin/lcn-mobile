@@ -40,7 +40,7 @@ export default class Message extends Component {
 
 	selectContact = () => {
 		this.props.navigation.navigate('Contacts', {
-			contactSelection: true,
+			contactSelection: 1,
 			onConfirm: contacts => this.gotoChatRoom(contacts[0])
 		});
 	};
