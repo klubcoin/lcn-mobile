@@ -7,7 +7,7 @@ import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
-import { Chat, Typing } from './Messages';
+import { Chat } from './Messages';
 import preferences from '../store/preferences';
 
 export default class WebRTC {
@@ -210,7 +210,7 @@ export default class WebRTC {
 			const messages = await preferences.getChatMessages(peerId);
 
 			const { action } = data.message;
-			if (action && action == Typing().action) return;
+			if (action) return;
 
 			messages.push(data.message);
 			preferences.saveChatMessages(peerId, messages);

@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { Typing } from '../../../../services/Messages';
+import { ChatProfile, Typing } from '../../../../services/Messages';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -57,6 +57,7 @@ class Chat extends Component {
 				this.addNewMessage(data.message, true);
 			}
 		});
+		this.messaging.send(ChatProfile(selectedAddress));
 		setTimeout(() => (this.initialized = true), 1000);
 	};
 
