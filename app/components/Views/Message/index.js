@@ -18,6 +18,7 @@ export default class Message extends Component {
 
 	componentDidMount() {
 		this.fetchHistoryMessages();
+		preferences.setActiveChatPeerId(null);
 	}
 
 	fetchHistoryMessages = async () => {

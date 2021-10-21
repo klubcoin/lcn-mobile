@@ -22,8 +22,13 @@ class Chat extends Component {
 
 	componentDidMount() {
 		const selectedContact = this.state.contact;
+		preferences.setActiveChatPeerId(selectedContact.address);
 		this.initConnection();
 		this.fetchMessages(selectedContact.address);
+	}
+
+	componentWillUnmount() {
+		preferences.setActiveChatPeerId(null);
 	}
 
 	initConnection = () => {

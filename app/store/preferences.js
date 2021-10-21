@@ -36,6 +36,9 @@ class Preferences {
 	notifications = {};
 	publicKeys = {};
 
+	// session variables
+	activeChatPeerId = null;
+
 	constructor() {
 		makeAutoObservable(this);
 	}
@@ -225,6 +228,10 @@ class Preferences {
 	async deleteChatMessages() {
 		this.storage[kChatMessages] = {};
 		await this.saveStorage(kChatMessages);
+	}
+
+	setActiveChatPeerId(address) {
+		this.activeChatPeerId = address;
 	}
 }
 
