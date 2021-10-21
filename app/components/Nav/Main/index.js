@@ -82,7 +82,7 @@ import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
 import CryptoSignature from '../../../core/CryptoSignature';
-import { ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
+import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
 
@@ -672,7 +672,7 @@ const Main = props => {
 		alert(`${name} (${from}) revoked friend`);
 	};
 
-	const bindPrivateKey = async (address) => {
+	const bindPrivateKey = async address => {
 		const { KeyringController } = Engine.context;
 
 		const password = await preferences.getKeycloakHash();
@@ -680,7 +680,7 @@ const Main = props => {
 		const publicKey = await CryptoSignature.getEncryptionPublicKey(privateKey);
 
 		return { privateKey, publicKey };
-	}
+	};
 
 	// Remove all notifications that aren't visible
 	useEffect(
@@ -820,11 +820,11 @@ const Main = props => {
 		);
 	};
 
-	const showNotice = message => {
+	const showNotice = (message, title) => {
 		Toast.show({
 			type: 'info',
 			text1: message,
-			text2: strings('profile.notice'),
+			text2: title || strings('profile.notice'),
 			visibilityTime: 1000
 		});
 	};
@@ -845,6 +845,19 @@ const Main = props => {
 				case ConfirmProfileBlock().action:
 					const address = data.from;
 					preferences.blockIdentityReqPeer(address);
+					break;
+				case Chat().action:
+					const { from, message } = data;
+					const senderId = `${from}`.toLowerCase();
+					const activeChatPeerId = `${preferences.activeChatPeerId}`.toLowerCase();
+
+					if (senderId != activeChatPeerId) {
+						const { addressBook, network } = props;
+						const addresses = addressBook[network] || {};
+						const sender = addresses[from];
+
+						showNotice(sender.name, message.text);
+					}
 					break;
 			}
 		}
