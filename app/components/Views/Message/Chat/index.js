@@ -9,6 +9,7 @@ import { colors } from '../../../../styles/common';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
+import { strings } from '../../../../../locales/i18n';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -46,10 +47,16 @@ class Chat extends Component {
 		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
 		this.messaging.addListener('message', (data, peerId) => {
 			console.log('got chat', peerId, data);
-			data.message.user['_id'] = peerId;
+			const { action } = data.message;
+			if (action && action == 'typing') {
+				this.setTyping();
+			} else {
+				data.message.user['_id'] = peerId;
 
-			this.addNewMessage(data.message, true);
+				this.addNewMessage(data.message, true);
+			}
 		});
+		setTimeout(() => (this.initialized = true), 1000);
 	};
 
 	fetchMessages = async to => {
@@ -68,6 +75,22 @@ class Chat extends Component {
 
 	onBack = () => {
 		this.props.navigation.goBack();
+	};
+
+	setTyping = () => {
+		this.setState({ typing: true });
+		if (this.typingTimeout) clearTimeout(this.typingTimeout);
+
+		this.typingTimeout = setTimeout(() => this.setState({ typing: false }), 3000);
+	};
+
+	sendTyping = () => {
+		if (this.sentTyping || !this.initialized) return;
+		this.sentTyping = true;
+
+		if (this.messaging) this.messaging.send({ action: 'typing' });
+
+		setTimeout(() => (this.sentTyping = false), 2000);
 	};
 
 	onSend = message => {
@@ -115,6 +138,16 @@ class Chat extends Component {
 		);
 	}
 
+	renderTypingFooter = () => {
+		const { typing, contact } = this.state;
+
+		return (
+			!!typing && (
+				<Text style={styles.typing}>{strings('chat.user_is_typing', { name: contact.name || '' })}</Text>
+			)
+		);
+	};
+
 	render() {
 		const { selectedAddress } = this.props;
 
@@ -130,6 +163,8 @@ class Chat extends Component {
 						}}
 						renderAvatar={() => this.renderAvatar(this.state.contact.address)}
 						bottomOffset={Platform.OS === 'ios' && 35}
+						onInputTextChanged={this.sendTyping}
+						renderFooter={this.renderTypingFooter}
 					/>
 				</View>
 			</>
@@ -163,6 +198,13 @@ const styles = StyleSheet.create({
 		fontWeight: '300',
 		color: colors.grey,
 		maxWidth: 180
+	},
+	typing: {
+		fontStyle: 'italic',
+		marginVertical: 3,
+		marginLeft: 5,
+		fontSize: 12,
+		opacity: 0.5
 	}
 });
 

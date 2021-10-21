@@ -208,6 +208,10 @@ export default class WebRTC {
 	handleChatMessage = async (data, peerId) => {
 		if (data.action == Chat().action) {
 			const messages = await preferences.getChatMessages(peerId);
+
+			const { action } = data.message;
+			if (action && action == 'typing') return;
+
 			messages.push(data.message);
 			preferences.saveChatMessages(peerId, messages);
 		}

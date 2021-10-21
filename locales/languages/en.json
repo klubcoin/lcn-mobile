@@ -1735,5 +1735,8 @@
 	"media_player": {
 		"loading": "Loading...",
 		"not_found": "Media not found"
+	},
+	"chat": {
+		"user_is_typing": "{{name}} is typing..."
 	}
 }

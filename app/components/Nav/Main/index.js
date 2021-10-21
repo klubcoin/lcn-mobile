@@ -851,6 +851,9 @@ const Main = props => {
 					const senderId = `${from}`.toLowerCase();
 					const activeChatPeerId = `${preferences.activeChatPeerId}`.toLowerCase();
 
+					const { action } = message;
+					if (action && action == 'typing') break;
+
 					if (senderId != activeChatPeerId) {
 						const { addressBook, network } = props;
 						const addresses = addressBook[network] || {};
