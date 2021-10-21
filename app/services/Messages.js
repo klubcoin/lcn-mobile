@@ -46,3 +46,8 @@ export const Chat = (message, from, to) => ({
 export const Typing = () => ({
 	action: 'typing'
 });
+
+export const ChatProfile = profile => ({
+	action: 'chat_profile',
+	profile
+});

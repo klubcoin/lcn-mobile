@@ -57,7 +57,7 @@ class Chat extends Component {
 				this.addNewMessage(data.message, true);
 			}
 		});
-		this.messaging.send(ChatProfile(selectedAddress));
+		this.messaging.send(ChatProfile());
 		setTimeout(() => (this.initialized = true), 1000);
 	};
 

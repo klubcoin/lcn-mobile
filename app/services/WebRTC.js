@@ -7,7 +7,7 @@ import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
-import { Chat } from './Messages';
+import { Chat, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
 
 export default class WebRTC {
@@ -207,13 +207,24 @@ export default class WebRTC {
 
 	handleChatMessage = async (data, peerId) => {
 		if (data.action == Chat().action) {
-			const messages = await preferences.getChatMessages(peerId);
-
 			const { action } = data.message;
-			if (action) return;
-
-			messages.push(data.message);
-			preferences.saveChatMessages(peerId, messages);
+			if (action) {
+				if (action == ChatProfile().action) {
+					const { profile } = data.message;
+					if (!profile) {
+						const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
+						const name = `${firstname} ${lastname}`;
+						const avatarb64 = await RNFS.readFile(avatar, 'base64');
+						this.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));
+					}
+				}
+			} else {
+				const messages = await preferences.getChatMessages(peerId);
+				messages.push(data.message);
+				preferences.saveChatMessages(peerId, messages);
+			}
+		} else if (data.action == ChatProfile().action) {
+			await preferences.setPeerProfile(peerId, data.profile);
 		}
 	};
 

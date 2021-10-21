@@ -14,6 +14,7 @@ export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 export const kNotifications = 'Notifications';
 export const kPublicKeys = 'PublicKeys';
 export const kChatMessages = 'ChatMessages';
+export const kPeerProfiles = 'PeerProfiles';
 
 const keys = [
 	kAppList,
@@ -26,7 +27,8 @@ const keys = [
 	kBlockedIdentityReqPeers,
 	kNotifications,
 	kPublicKeys,
-	kChatMessages
+	kChatMessages,
+	kPeerProfiles
 ];
 
 class Preferences {
@@ -35,6 +37,7 @@ class Preferences {
 	blockedIdentityReqPeers = {};
 	notifications = {};
 	publicKeys = {};
+	peerProfiles = {};
 
 	// session variables
 	activeChatPeerId = null;
@@ -70,6 +73,9 @@ class Preferences {
 				break;
 			case kPublicKeys:
 				this.publicKeys = data || {};
+				break;
+			case kPeerProfiles:
+				this.peerProfiles = data || {};
 				break;
 		}
 	}
@@ -198,6 +204,15 @@ class Preferences {
 
 	async publicKeyForAddress(address) {
 		return this.publicKeys[address];
+	}
+
+	async setPeerProfile(address, profile) {
+		this.peerProfiles[address] = profile;
+		await this.save(kPeerProfiles, this.peerProfiles);
+	}
+
+	async peerProfile(address) {
+		return this.peerProfiles[address];
 	}
 
 	async saveChatMessages(address, messages) {
