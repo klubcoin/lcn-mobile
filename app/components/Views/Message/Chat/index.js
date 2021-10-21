@@ -50,7 +50,7 @@ class Chat extends Component {
 			console.log('got chat', peerId, data);
 			const { action } = data.message;
 			if (action && action == Typing().action) {
-				this.setTyping();
+				if (`${peerId}`.toLowerCase() == `${to.address}`.toLowerCase()) this.setTyping();
 			} else {
 				data.message.user['_id'] = peerId;
 
