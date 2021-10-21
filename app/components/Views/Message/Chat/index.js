@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { GiftedChat } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
@@ -13,25 +13,12 @@ import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
+	messaging;
 
 	state = {
 		contact: this.props.navigation.getParam('selectedContact'),
-		from: {},
-		messages: [
-			{
-				_id: 1,
-				text: 'Hello developer',
-				createdAt: new Date(),
-				user: {
-					_id: this.props.navigation.getParam('to'),
-					name: 'React Native',
-					avatar: 'https://placeimg.com/140/140/any'
-				}
-			}
-		]
+		messages: []
 	};
-
-	messaging;
 
 	componentDidMount() {
 		const selectedContact = this.state.contact ? this.state.contact : {};
@@ -48,6 +35,9 @@ class Chat extends Component {
 		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
 		this.messaging.addListener('message', (data, peerId) => {
 			console.log('got chat', peerId, data);
+			data.message[0].user['_id'] = peerId;
+
+			this.addNewMessage(data.message);
 		});
 	};
 
@@ -55,7 +45,18 @@ class Chat extends Component {
 		this.props.navigation.goBack();
 	};
 
+	addNewMessage = message => {
+		var record = {};
+		var messages = [...message, ...this.state.messages];
+
+		this.setState(prevState => ({
+			...prevState,
+			messages: messages
+		}));
+	};
+
 	onSend = message => {
+		this.addNewMessage(message);
 		this.messaging.send(message);
 	};
 
@@ -85,6 +86,8 @@ class Chat extends Component {
 	}
 
 	render() {
+		const { selectedAddress } = this.props;
+
 		return (
 			<>
 				{this.renderNavBar()}
@@ -93,9 +96,10 @@ class Chat extends Component {
 						messages={this.state.messages}
 						onSend={this.onSend}
 						user={{
-							_id: 1
+							_id: selectedAddress
 						}}
-						renderAvatar={() => this.renderAvatar(this.state.messages[0].user._id)}
+						renderAvatar={() => this.renderAvatar(this.state.contact.address)}
+						bottomOffset={Platform.OS === 'ios' && 35}
 					/>
 				</View>
 			</>
