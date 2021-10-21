@@ -56,6 +56,7 @@ class Chat extends Component {
 		const data = await preferences.getChatMessages(to);
 
 		if (!data) return;
+		data?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
@@ -76,6 +77,7 @@ class Chat extends Component {
 
 	addNewMessage = async (message, incoming) => {
 		var messages = this.state.messages.concat(message);
+		messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
