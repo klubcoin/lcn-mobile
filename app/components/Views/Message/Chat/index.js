@@ -74,7 +74,7 @@ class Chat extends Component {
 	};
 
 	addNewMessage = async (message, incoming) => {
-		var messages = [...this.state.messages, ...message];
+		var messages = this.state.messages.concat(message);
 
 		this.setState(prevState => ({
 			...prevState,
