@@ -44,13 +44,13 @@ class Chat extends Component {
 	};
 
 	fetchMessages = async to => {
-		const data = await preferences.getChatByAddress(to);
+		const data = await preferences.getChatMessages(to);
 
 		if (!data) return;
 
 		this.setState(prevState => ({
 			...prevState,
-			messages: data[to]
+			messages: data
 		}));
 	};
 

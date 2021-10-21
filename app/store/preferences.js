@@ -214,12 +214,6 @@ class Preferences {
 		return Object.keys(chatMessages).map(key => chatMessages[key]);
 	}
 
-	async getChatByAddress(address) {
-		const chatMessages = this.storage[kChatMessages] || {};
-		var foundKey = Object.keys(chatMessages).find(key => address === key);
-		return chatMessages[foundKey];
-	}
-
 	async deleteChatMessage(address) {
 		delete this.storage[kChatMessages][address];
 		await this.saveStorage(kChatMessages);
