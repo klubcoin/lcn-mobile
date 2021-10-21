@@ -37,7 +37,7 @@ class Chat extends Component {
 			console.log('got chat', peerId, data);
 			data.message[0].user['_id'] = peerId;
 
-			this.addNewMessage(data.message);
+			this.addNewMessage(data.message, true);
 		});
 	};
 
@@ -50,7 +50,7 @@ class Chat extends Component {
 		this.messaging.send(message);
 	};
 
-	addNewMessage = async message => {
+	addNewMessage = async (message, incoming) => {
 		var messages = [...message, ...this.state.messages];
 
 		this.setState(prevState => ({
@@ -58,9 +58,7 @@ class Chat extends Component {
 			messages: messages
 		}));
 
-		var record = {};
-		record[this.state.contact.address] = messages;
-		await preferences.saveChatMessages(record);
+		if (!incoming) preferences.saveChatMessages(this.state.contact.address, messages);
 	};
 
 	renderAvatar = address => {

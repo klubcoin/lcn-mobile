@@ -197,22 +197,22 @@ class Preferences {
 		return this.publicKeys[address];
 	}
 
-	async saveChatMessages(messages) {
+	async saveChatMessages(address, messages) {
 		if (!this.storage[kChatMessages]) {
 			this.storage[kChatMessages] = {};
 		}
-		const recipientAddress = Object.keys(messages)[0];
-		this.storage[kChatMessages][recipientAddress] = messages;
+		this.storage[kChatMessages][address] = messages;
 		await this.saveStorage(kChatMessages);
 	}
 
-	async getChatMessages() {
+	async getChatMessages(address) {
 		const chatMessages = this.storage[kChatMessages] || {};
+		if (address) return chatMessages[address] || [];
 		return Object.keys(chatMessages).map(key => chatMessages[key]);
 	}
 
-	async deleteChatMessage(id) {
-		delete this.storage[kChatMessages][id];
+	async deleteChatMessage(address) {
+		delete this.storage[kChatMessages][address];
 		await this.saveStorage(kChatMessages);
 	}
 
