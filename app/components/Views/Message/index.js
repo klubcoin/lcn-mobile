@@ -7,122 +7,27 @@ import { colors } from '../../../styles/common';
 import Identicon from '../../UI/Identicon';
 import MessageItem from './components/MessageItem';
 import SearchBar from '../../Base/SearchBar';
-
-const messages = [
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aaa',
-			name: 'tester 2'
-		},
-		isRead: false,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '9:15am'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aadsaszzaa',
-			name: 'tester 3'
-		},
-		isRead: false,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '11:00am'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900a3123',
-			name: 'tester 4'
-		},
-		isRead: false,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '1:23pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aacb',
-			name: 'tester 5'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '2:11pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900a12jas',
-			name: 'tester 6'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '3:00pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900asdasd',
-			name: 'tester 7'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '6:32pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900a1231231',
-			name: 'tester 8'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '7:22pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aaa7',
-			name: 'tester 9'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '8:00pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aaa8',
-			name: 'tester 10'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '11:59pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aaa8',
-			name: 'tester 10'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '11:59pm'
-	},
-	{
-		contact: {
-			address: '0xFFasbcasdasd123131231231900aaa8',
-			name: 'tester 10'
-		},
-		isRead: true,
-		lastMessage:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-		time: '11:59pm'
-	}
-];
+import preferences from '../../../store/preferences';
 
 export default class Message extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Messages', navigation);
+
+	state = {
+		messages: []
+	};
+
+	componentDidMount() {
+		this.fetchHistoryMessages();
+	}
+
+	fetchHistoryMessages = async () => {
+		// await preferences.deleteChatMessage();
+		const records = await preferences.getChatMessages();
+		this.setState(prevState => ({
+			...prevState,
+			messages: records
+		}));
+	};
 
 	handleSearch = value => {
 		console.log(value);
@@ -151,7 +56,7 @@ export default class Message extends Component {
 				<SearchBar placeholder={'Search messages...'} value={''} onChange={this.handleSearch} />
 
 				<ScrollView>
-					{messages.map(e => (
+					{this.state.messages.map(e => (
 						<MessageItem message={e} onItemPress={this.gotoChatRoom} />
 					))}
 				</ScrollView>

@@ -21,7 +21,7 @@ class Chat extends Component {
 	};
 
 	componentDidMount() {
-		const selectedContact = this.state.contact ? this.state.contact : {};
+		const selectedContact = this.state.contact;
 		this.setState(prevState => ({
 			...prevState,
 			contact: selectedContact
@@ -45,14 +45,17 @@ class Chat extends Component {
 		this.props.navigation.goBack();
 	};
 
-	addNewMessage = message => {
-		var record = {};
+	addNewMessage = async message => {
 		var messages = [...message, ...this.state.messages];
 
 		this.setState(prevState => ({
 			...prevState,
 			messages: messages
 		}));
+
+		var record = {};
+		record[this.state.contact.address] = messages;
+		await preferences.saveChatMessages(record);
 	};
 
 	onSend = message => {

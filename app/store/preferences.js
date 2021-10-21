@@ -13,6 +13,7 @@ export const kTransferredFiles = 'TransferredFiles';
 export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 export const kNotifications = 'Notifications';
 export const kPublicKeys = 'PublicKeys';
+export const kChatMessages = 'ChatMessages';
 
 const keys = [
 	kAppList,
@@ -193,6 +194,29 @@ class Preferences {
 
 	async publicKeyForAddress(address) {
 		return this.publickKeys[address];
+	}
+
+	async saveChatMessages(messages) {
+		if (!this.storage[kChatMessages]) {
+			this.storage[kChatMessages] = {};
+		}
+		this.storage[kChatMessages][messages.id] = messages;
+		await this.saveStorage(kChatMessages);
+	}
+
+	async getChatMessages() {
+		const chatMessages = this.storage[kChatMessages] || {};
+		return Object.keys(chatMessages).map(key => chatMessages[key]);
+	}
+
+	async deleteChatMessage(id) {
+		delete this.storage[kChatMessages][id];
+		await this.saveStorage(kChatMessages);
+	}
+
+	async deleteChatMessages() {
+		this.storage[kChatMessages] = {};
+		await this.saveStorage(kChatMessages);
 	}
 }
 
