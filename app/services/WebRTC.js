@@ -7,6 +7,8 @@ import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
+import { Chat } from './Messages';
+import preferences from '../store/preferences';
 
 export default class WebRTC {
 	fromUserId = '';
@@ -179,10 +181,11 @@ export default class WebRTC {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			}
 
+			this.handleChatMessage(data, peerId);
 			this.handleFileTransfer(data, peerId);
 			this.events.message.map(callback => callback(data, peerId));
-		} catch (e) { }
-	}
+		} catch (e) {}
+	};
 
 	parseSignature(data) {
 		if (!data || !data.payload || !data.signature) return;
@@ -201,6 +204,14 @@ export default class WebRTC {
 			return json;
 		}
 	}
+
+	handleChatMessage = async (data, peerId) => {
+		if (data.action == Chat().action) {
+			const messages = await preferences.getChatMessages(peerId);
+			messages.push(data.message);
+			preferences.saveChatMessages(peerId, messages);
+		}
+	};
 
 	handleFileTransfer = async (data, peerId) => {
 		if (data.action == StoreFile().action) {
@@ -312,8 +323,8 @@ export default class WebRTC {
 		const data = {
 			payload,
 			signature,
-			encrypted: !!publicKey,
-		}
+			encrypted: !!publicKey
+		};
 		channel && channel.send(JSON.stringify(data));
 	}
 }
