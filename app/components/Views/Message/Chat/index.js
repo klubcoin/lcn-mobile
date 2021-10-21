@@ -22,11 +22,8 @@ class Chat extends Component {
 
 	componentDidMount() {
 		const selectedContact = this.state.contact;
-		this.setState(prevState => ({
-			...prevState,
-			contact: selectedContact
-		}));
 		this.initConnection();
+		this.fetchMessages(selectedContact.address);
 	}
 
 	initConnection = () => {
@@ -41,6 +38,17 @@ class Chat extends Component {
 		});
 	};
 
+	fetchMessages = async to => {
+		const data = await preferences.getChatByAddress(to);
+
+		if (!data) return;
+
+		this.setState(prevState => ({
+			...prevState,
+			messages: data[to]
+		}));
+	};
+
 	onBack = () => {
 		this.props.navigation.goBack();
 	};
@@ -51,7 +59,7 @@ class Chat extends Component {
 	};
 
 	addNewMessage = async message => {
-		var messages = [...message, ...this.state.messages];
+		var messages = [...this.state.messages, ...message];
 
 		this.setState(prevState => ({
 			...prevState,
@@ -90,6 +98,7 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
+		this.state.messages.sort((a, b) => b.createdAt - a.createdAt);
 
 		return (
 			<>
