@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { strings } from '../../../../locales/i18n';
@@ -22,6 +22,7 @@ class Message extends Component {
 	componentDidMount() {
 		this.fetchHistoryMessages();
 		preferences.setActiveChatPeerId(null);
+		this.filterUsers();
 	}
 
 	fetchHistoryMessages = async () => {
@@ -41,8 +42,8 @@ class Message extends Component {
 		this.setState({ searchQuery: value });
 	};
 
-	filterContacts = contacts =>
-		contacts.filter(e => {
+	filterUsers = () =>
+		this.state.users.filter(e => {
 			const { searchQuery } = this.state;
 			const query = searchQuery.toLocaleLowerCase();
 			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
@@ -59,21 +60,30 @@ class Message extends Component {
 		});
 	};
 
+	renderMessage = ({ item }) => {
+		return (
+			<MessageItem
+				key={item.address}
+				recipient={item}
+				onItemPress={() => this.gotoChatRoom({ address: item.address })}
+			/>
+		);
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
 				<NavigationEvents onWillFocus={this.fetchHistoryMessages} />
-				<SearchBar placeholder={'Search messages...'} value={''} onChange={this.handleSearch} />
-
-				<ScrollView>
-					{this.state.users?.map(e => (
-						<MessageItem
-							key={e.address}
-							recipient={e}
-							onItemPress={() => this.gotoChatRoom({ address: e.address })}
-						/>
-					))}
-				</ScrollView>
+				<SearchBar
+					placeholder={'Search messages...'}
+					value={this.state.searchQuery}
+					onChange={this.handleSearch}
+				/>
+				<FlatList
+					data={this.filterUsers()}
+					keyExtractor={item => `${item.name}${item.address}`}
+					renderItem={data => this.renderMessage(data)}
+				/>
 				<TouchableOpacity style={styles.floatingButton} onPress={this.selectContact}>
 					<Icon name="plus" style={{ color: colors.white }} size={20} />
 				</TouchableOpacity>
