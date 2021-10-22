@@ -32,7 +32,7 @@ class MessageItem extends Component {
 						</Text>
 					</View>
 				</View>
-				<View style={{ flex: 1, marginHorizontal: 8, alignItems: 'flex-end' }}>
+				<View style={{ flex: 2, marginHorizontal: 8, alignItems: 'flex-end' }}>
 					<Text style={styles.time}>{formattedDate}</Text>
 				</View>
 			</TouchableOpacity>
