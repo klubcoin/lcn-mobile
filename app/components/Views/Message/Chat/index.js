@@ -263,19 +263,25 @@ const styles = StyleSheet.create({
 	}
 });
 
+const menuKeys = {
+	sendCoin: 'sendCoin',
+	requestPayment: 'requestPayment',
+	sendFile: 'sendFile'
+};
+
 const menuOptions = [
 	{
-		key: 'sendCoin',
+		key: menuKeys.sendCoin,
 		value: strings('chat.send_transaction'),
 		icon: <Icon name={'send'} size={24} style={styles.menuIcon} />
 	},
 	{
-		key: 'requestPayment',
+		key: menuKeys.requestPayment,
 		value: strings('chat.request_payment'),
 		icon: <Icon name={'dollar'} size={24} style={styles.menuIcon} />
 	},
 	{
-		key: 'sendFile',
+		key: menuKeys.sendFile,
 		value: strings('chat.send_file'),
 		icon: <Icon name={'file'} size={24} style={styles.menuIcon} />
 	}
