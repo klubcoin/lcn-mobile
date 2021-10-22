@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Image } from 'react-native';
-import { Actions, GiftedChat } from 'react-native-gifted-chat';
+import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
 import { makeObservable, observable } from 'mobx';
@@ -14,6 +14,7 @@ import { ChatProfile, RequestPayment, Typing } from '../../../../services/Messag
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';
+import QRCode from 'react-native-qrcode-svg';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -216,6 +217,52 @@ class Chat extends Component {
 		);
 	};
 
+	renderPaymentRequest = message => {
+		const { selectedAddress } = this.props;
+		const { user, payload } = message;
+		const { link, amount, symbol } = payload;
+
+		const owner = user._id == selectedAddress;
+		const textColor = owner ? colors.white : colors.black;
+
+		return (
+			<View style={{ padding: 10 }}>
+				<Text style={{ color: textColor }}>Payment Request</Text>
+				<Text style={{ color: textColor, fontWeight: '600' }}>
+					Amount: {amount} {symbol}
+				</Text>
+				{!owner && (
+					<TouchableOpacity>
+						<Text style={{ color: colors.blue, fontStyle: 'italic', marginVertical: 5 }}>{link}</Text>
+						<QRCode value={link} />
+					</TouchableOpacity>
+				)}
+			</View>
+		);
+	};
+
+	renderCustomView = message => {
+		const { payload } = message;
+		switch (payload.action) {
+			case RequestPayment().action:
+				return this.renderPaymentRequest(message);
+			default:
+				return null;
+		}
+	};
+
+	renderMessage = messageProps => {
+		const { currentMessage } = messageProps;
+		const isCustom = currentMessage.payload;
+
+		return (
+			<Message
+				{...messageProps}
+				renderCustomView={isCustom ? () => this.renderCustomView(currentMessage) : null}
+			/>
+		);
+	};
+
 	render() {
 		const { selectedAddress } = this.props;
 		const { visibleMenu } = this.state;
@@ -234,6 +281,7 @@ class Chat extends Component {
 						bottomOffset={Platform.OS === 'ios' && 35}
 						onInputTextChanged={this.sendTyping}
 						renderFooter={this.renderTypingFooter}
+						renderMessage={this.renderMessage}
 						renderActions={() => <Actions onPressActionButton={this.onMoreButtonTap} />}
 					/>
 					{visibleMenu && this.renderMenu()}
