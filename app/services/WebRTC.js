@@ -181,8 +181,8 @@ export default class WebRTC {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			}
 
-			this.handleChatMessage(data, peerId);
-			this.handleFileTransfer(data, peerId);
+			await this.handleChatMessage(data, peerId);
+			await this.handleFileTransfer(data, peerId);
 			this.events.message.map(callback => callback(data, peerId));
 		} catch (e) {}
 	};

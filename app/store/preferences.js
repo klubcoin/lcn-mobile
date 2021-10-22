@@ -212,7 +212,8 @@ class Preferences {
 	}
 
 	async peerProfile(address) {
-		return this.peerProfiles[address];
+		const peerProfiles = this.storage[kPeerProfiles] || {};
+		return peerProfiles[address];
 	}
 
 	async saveChatMessages(address, messages) {

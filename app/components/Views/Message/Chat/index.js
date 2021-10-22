@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Image } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
@@ -27,6 +27,7 @@ class Chat extends Component {
 		this.bindContactForAddress();
 		this.initConnection();
 		this.fetchMessages(selectedContact.address);
+		this.fetchProfile();
 	}
 
 	bindContactForAddress() {
@@ -74,6 +75,14 @@ class Chat extends Component {
 		}));
 	};
 
+	fetchProfile = async () => {
+		const selectedContact = this.state.contact;
+		const profile = await preferences.peerProfile(selectedContact.address);
+		if (profile) {
+			selectedContact.avatar = profile.avatar;
+		}
+	};
+
 	onBack = () => {
 		this.props.navigation.goBack();
 	};
@@ -112,8 +121,19 @@ class Chat extends Component {
 		if (!incoming) preferences.saveChatMessages(this.state.contact.address, messages);
 	};
 
-	renderAvatar = address => {
-		return <Identicon address={address} diameter={35} />;
+	renderAvatar = () => {
+		const selectedAddress = this.state.contact;
+		if (selectedAddress.avatar)
+			return (
+				<Image
+					source={{ uri: `data:image/jpeg;base64,${selectedAddress.avatar}` }}
+					style={styles.proImg}
+					resizeMode="contain"
+					resizeMethod="scale"
+				/>
+			);
+
+		return <Identicon address={selectedAddress.address} diameter={35} />;
 	};
 
 	renderNavBar() {
@@ -161,7 +181,7 @@ class Chat extends Component {
 						user={{
 							_id: selectedAddress
 						}}
-						renderAvatar={() => this.renderAvatar(this.state.contact.address)}
+						renderAvatar={this.renderAvatar}
 						bottomOffset={Platform.OS === 'ios' && 35}
 						onInputTextChanged={this.sendTyping}
 						renderFooter={this.renderTypingFooter}
@@ -205,6 +225,11 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		fontSize: 12,
 		opacity: 0.5
+	},
+	proImg: {
+		width: 35,
+		height: 35,
+		borderRadius: 100
 	}
 });
 
