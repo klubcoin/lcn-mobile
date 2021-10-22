@@ -1394,7 +1394,8 @@
 		"qr_code": "QR Code",
 		"send_link": "Send Link",
 		"request_qr_code": "Payment Request QR Code",
-		"balance": "Balance"
+		"balance": "Balance",
+		"send": "Send"
 	},
 	"receive_request": {
 		"title": "Receive",

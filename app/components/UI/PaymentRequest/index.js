@@ -537,6 +537,8 @@ class PaymentRequest extends PureComponent {
 	onNext = () => {
 		const { selectedAddress, navigation, chainId } = this.props;
 		const { cryptoAmount, selectedAsset } = this.state;
+		const onRequest = navigation && navigation.getParam('onRequest', false);
+
 		try {
 			let eth_link;
 			if (selectedAsset.isETH) {
@@ -549,14 +551,19 @@ class PaymentRequest extends PureComponent {
 
 			// Convert to universal link / app link
 			const link = generateUniversalLinkRequest(eth_link);
+			const request = {
+				link,
+				qrLink: eth_link,
+				amount: cryptoAmount,
+				symbol: selectedAsset.symbol
+			};
 
-			navigation &&
-				navigation.replace('PaymentRequestSuccess', {
-					link,
-					qrLink: eth_link,
-					amount: cryptoAmount,
-					symbol: selectedAsset.symbol
-				});
+			if (onRequest) {
+				onRequest(request);
+				navigation.pop();
+			} else {
+				navigation && navigation.replace('PaymentRequestSuccess', request);
+			}
 		} catch (e) {
 			this.setState({ showError: true });
 		}
@@ -566,7 +573,7 @@ class PaymentRequest extends PureComponent {
 	 * Renders a view that allows user to set payment request amount
 	 */
 	renderEnterAmount = () => {
-		const { conversionRate, contractExchangeRates, currentCurrency } = this.props;
+		const { conversionRate, contractExchangeRates, currentCurrency, navigation } = this.props;
 		const {
 			amount,
 			secondaryAmount,
@@ -576,6 +583,7 @@ class PaymentRequest extends PureComponent {
 			selectedAsset,
 			internalPrimaryCurrency
 		} = this.state;
+		const onRequest = navigation && navigation.getParam('onRequest', false);
 		const currencySymbol = currencySymbols[currentCurrency];
 		const exchangeRate = selectedAsset && selectedAsset.address && contractExchangeRates[selectedAsset.address];
 		let switchable = true;
@@ -667,7 +675,7 @@ class PaymentRequest extends PureComponent {
 							containerStyle={[styles.button]}
 							disabled={!cryptoAmount || cryptoAmount === '0'}
 						>
-							{strings('payment_request.next')}
+							{!!onRequest ? strings('payment_request.send') : strings('payment_request.next')}
 						</StyledButton>
 					</View>
 				</KeyboardAvoidingView>

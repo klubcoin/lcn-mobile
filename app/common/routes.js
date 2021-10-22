@@ -12,6 +12,7 @@ export default {
     chainId: '76',
     symbol: null,
     ticker: 'LCN',
+    coin: 'Licoin',
     route: 'https://account.liquichain.io/meveo/rest/',
     hostDomain: 'liquichain.io',
     blockExploreUrl: 'https://liquichain.io',

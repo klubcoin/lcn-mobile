@@ -12,6 +12,7 @@ import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
 import { ChatProfile, Typing } from '../../../../services/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
+import routes from '../../../../common/routes';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -163,8 +164,23 @@ class Chat extends Component {
 		);
 	}
 
+	sendPaymentRequest = (request) => {
+	}
+
 	onSelectMenuItem = item => {
 		this.setState({ visibleMenu: false });
+		switch (item.key) {
+			case menuKeys.requestPayment:
+				this.props.navigation.navigate('PaymentRequestView', {
+					onRequest: this.sendPaymentRequest,
+					receiveAsset: {
+						isETH: true,
+						name: routes.mainNetWork.coin,
+						symbol: routes.mainNetWork.ticker,
+					}
+				});
+				break;
+		}
 	};
 
 	renderMenu = () => {
