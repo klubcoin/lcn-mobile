@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { makeObservable, observable } from 'mobx';
 import preferences from '../../../../store/preferences';
 
-class MessageItem extends Component {
+export default class MessageItem extends Component {
 	user = {};
 	lastMessage = {};
 	formattedDate = '';
@@ -30,18 +30,11 @@ class MessageItem extends Component {
 	}
 
 	initData = async () => {
-		const { recipientAddr, message, onItemPress, addressBook, network } = this.props;
-		message?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-		const addresses = addressBook[network] || {};
-
-		this.user = addresses[recipientAddr];
-		this.lastMessage = message[0];
-		this.formattedDate = format(new Date(this.lastMessage.createdAt), 'H:mma');
-
-		const profile = await preferences.peerProfile(recipientAddr);
-		if (profile) {
-			this.user.avatar = profile.avatar;
-		}
+		const { recipient } = this.props;
+		const lastMessage = recipient.lastMessage;
+		this.user = recipient;
+		this.lastMessage = lastMessage;
+		this.formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
 	};
 
 	renderAvatar = () => {
@@ -62,7 +55,7 @@ class MessageItem extends Component {
 		const { onItemPress } = this.props;
 
 		return (
-			<TouchableOpacity style={styles.container} onPress={() => onItemPress(this.user)}>
+			<TouchableOpacity style={styles.container} onPress={onItemPress}>
 				<View style={[styles.hasMessage, { backgroundColor: 'dodgerblue' }]} />
 				{this.renderAvatar()}
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
@@ -82,13 +75,6 @@ class MessageItem extends Component {
 		);
 	}
 }
-
-const mapStateToProps = state => ({
-	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
-	network: state.engine.backgroundState.NetworkController.network
-});
-
-export default connect(mapStateToProps)(MessageItem);
 
 const styles = StyleSheet.create({
 	container: {

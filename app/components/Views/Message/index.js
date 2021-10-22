@@ -8,12 +8,15 @@ import Identicon from '../../UI/Identicon';
 import MessageItem from './components/MessageItem';
 import SearchBar from '../../Base/SearchBar';
 import preferences from '../../../store/preferences';
+import { connect } from 'react-redux';
+import { NavigationEvents } from 'react-navigation';
 
-export default class Message extends Component {
+class Message extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Messages', navigation);
 
 	state = {
-		messages: []
+		searchQuery: '',
+		users: []
 	};
 
 	componentDidMount() {
@@ -23,16 +26,27 @@ export default class Message extends Component {
 
 	fetchHistoryMessages = async () => {
 		const records = await preferences.getChatMessages();
+		const { addressBook, network } = this.props;
+		const addresses = addressBook[network] || {};
+		const users = Object.keys(records).map(e => addresses[e]);
 
+		users.forEach(e => (e.lastMessage = records[e.address][0]));
 		this.setState(prevState => ({
 			...prevState,
-			messages: records
+			users: users
 		}));
 	};
 
 	handleSearch = value => {
-		console.log(value);
+		this.setState({ searchQuery: value });
 	};
+
+	filterContacts = contacts =>
+		contacts.filter(e => {
+			const { searchQuery } = this.state;
+			const query = searchQuery.toLocaleLowerCase();
+			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
+		});
 
 	gotoChatRoom = recipient => {
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
@@ -48,15 +62,15 @@ export default class Message extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
+				<NavigationEvents onWillFocus={this.fetchHistoryMessages} />
 				<SearchBar placeholder={'Search messages...'} value={''} onChange={this.handleSearch} />
 
 				<ScrollView>
-					{Object.keys(this.state.messages).map(e => (
+					{this.state.users?.map(e => (
 						<MessageItem
-							key={e}
-							message={this.state.messages[e]}
-							recipientAddr={e}
-							onItemPress={() => this.gotoChatRoom({ address: e })}
+							key={e.address}
+							recipient={e}
+							onItemPress={() => this.gotoChatRoom({ address: e.address })}
 						/>
 					))}
 				</ScrollView>
@@ -67,6 +81,13 @@ export default class Message extends Component {
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+	network: state.engine.backgroundState.NetworkController.network
+});
+
+export default connect(mapStateToProps)(Message);
 
 const styles = StyleSheet.create({
 	container: {
