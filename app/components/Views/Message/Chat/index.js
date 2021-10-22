@@ -105,7 +105,8 @@ class Chat extends Component {
 
 		this.setState(prevState => ({
 			...prevState,
-			messages
+			messages,
+			typing: false
 		}));
 
 		if (!incoming) preferences.saveChatMessages(this.state.contact.address, messages);
@@ -141,9 +142,9 @@ class Chat extends Component {
 		const { typing, contact } = this.state;
 
 		return (
-			!!typing && (
-				<Text style={styles.typing}>{strings('chat.user_is_typing', { name: contact.name || '' })}</Text>
-			)
+			<Text style={styles.typing}>
+				{!typing ? ' ' : strings('chat.user_is_typing', { name: contact.name || '' })}
+			</Text>
 		);
 	};
 
