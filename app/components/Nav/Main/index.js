@@ -691,7 +691,7 @@ const Main = props => {
 			const webrtc = new WebRTC(selectedAddress);
 			setWebRTC(webrtc);
 			webrtc.setKeyPairHandler(bindPrivateKey);
-			webrtc.addListener('message', onWebRtcMessage);
+			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
 
 			const messaging = new Messaging(selectedAddress);
 			setMessaging(messaging);
@@ -701,6 +701,7 @@ const Main = props => {
 			const evt = DeviceEventEmitter.addListener('FileTransfer', data => messaging.send(data));
 			setMessageEvent(evt);
 			return () => {
+				revokeWebRTC();
 				messaging && messaging.disconnect();
 				messageEvent && messageEvent.remove();
 			};
