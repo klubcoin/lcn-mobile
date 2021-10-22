@@ -7,7 +7,8 @@ import {
 	TouchableOpacity,
 	View,
 	FlatList,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Alert
 } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -73,17 +74,28 @@ class Message extends Component {
 		});
 	};
 
+	onDelete = async user => {
+		Alert.alert('Delete message', `Are you sure to delete message with ${user.name} ?`, [
+			{
+				text: 'Yes',
+				onPress: async () => {
+					await preferences.deleteChatMessage(user.address);
+					await this.fetchHistoryMessages();
+				}
+			},
+			{
+				text: 'No',
+				onPress: () => console.log('No Pressed'),
+				style: 'cancel'
+			}
+		]);
+	};
+
 	renderMessage = ({ item }) => {
 		return (
-			<SwipeRow
-				key={item.address}
-				stopRightSwipe={0}
-				rightOpenValue={-swipeOffset}
-				disableRightSwipe
-				onRowPress={() => this.gotoChatRoom({ address: item.address })}
-			>
+			<SwipeRow key={item.address} stopRightSwipe={0} rightOpenValue={-swipeOffset} disableRightSwipe>
 				<View style={styles.standaloneRowBack}>
-					<TouchableWithoutFeedback onPress={value => console.log(value)}>
+					<TouchableWithoutFeedback onPress={value => this.onDelete(item)}>
 						<View style={styles.swipeableOption}>
 							<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
 						</View>
