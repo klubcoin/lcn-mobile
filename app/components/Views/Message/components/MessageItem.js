@@ -8,10 +8,12 @@ import { format } from 'date-fns';
 class MessageItem extends Component {
 	render() {
 		const { recipientAddr, message, onItemPress, addressBook, network } = this.props;
+		message?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		const addresses = addressBook[network] || {};
 		const user = addresses[recipientAddr];
-		const lastMessage = message[message.length - 1];
+		const lastMessage = message[0];
+
 		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
 
 		return (
