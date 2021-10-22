@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native';
+import {
+	ScrollView,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+	FlatList,
+	TouchableWithoutFeedback
+} from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { strings } from '../../../../locales/i18n';
@@ -10,6 +19,10 @@ import SearchBar from '../../Base/SearchBar';
 import preferences from '../../../store/preferences';
 import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
+import { SwipeRow } from 'react-native-swipe-list-view';
+import Device from '../../../util/Device';
+
+const swipeOffset = Device.getDeviceWidth() / 4;
 
 class Message extends Component {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle('Messages', navigation);
@@ -62,11 +75,24 @@ class Message extends Component {
 
 	renderMessage = ({ item }) => {
 		return (
-			<MessageItem
+			<SwipeRow
 				key={item.address}
-				recipient={item}
-				onItemPress={() => this.gotoChatRoom({ address: item.address })}
-			/>
+				stopRightSwipe={0}
+				rightOpenValue={-swipeOffset}
+				disableRightSwipe
+				onRowPress={() => this.gotoChatRoom({ address: item.address })}
+			>
+				<View style={styles.standaloneRowBack}>
+					<TouchableWithoutFeedback onPress={value => console.log(value)}>
+						<View style={styles.swipeableOption}>
+							<Text style={{ color: colors.white, fontWeight: '700' }}>Delete</Text>
+						</View>
+					</TouchableWithoutFeedback>
+				</View>
+				<View style={styles.standaloneRowFront}>
+					<MessageItem recipient={item} onItemPress={() => this.gotoChatRoom({ address: item.address })} />
+				</View>
+			</SwipeRow>
 		);
 	};
 
@@ -130,5 +156,23 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		bottom: 30,
 		right: 30
+	},
+	standaloneRowBack: {
+		alignItems: 'center',
+		backgroundColor: colors.red,
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'flex-end'
+	},
+	standaloneRowFront: {
+		backgroundColor: colors.white,
+		justifyContent: 'center'
+	},
+	swipeableOption: {
+		width: swipeOffset,
+		alignItems: 'center',
+		backgroundColor: colors.red,
+		height: '100%',
+		justifyContent: 'center'
 	}
 });
