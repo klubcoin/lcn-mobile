@@ -15,6 +15,8 @@ import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';
 import QRCode from 'react-native-qrcode-svg';
+import DeeplinkManager from '../../../../core/DeeplinkManager';
+import AppConstants from '../../../../core/AppConstants';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -217,6 +219,10 @@ class Chat extends Component {
 		);
 	};
 
+	handlePayment = ({ link }) => {
+		DeeplinkManager.parse(link, { origin: AppConstants.DEEPLINKS.ORIGIN_DEEPLINK });
+	};
+
 	renderPaymentRequest = message => {
 		const { selectedAddress } = this.props;
 		const { user, payload } = message;
@@ -232,7 +238,7 @@ class Chat extends Component {
 					Amount: {amount} {symbol}
 				</Text>
 				{!owner && (
-					<TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.6} onPress={() => this.handlePayment(payload)}>
 						<Text style={{ color: colors.blue, fontStyle: 'italic', marginVertical: 5 }}>{link}</Text>
 						<QRCode value={link} />
 					</TouchableOpacity>
