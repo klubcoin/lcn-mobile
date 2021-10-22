@@ -1,41 +1,82 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 import { connect } from 'react-redux';
 import { format } from 'date-fns';
+import { makeObservable, observable } from 'mobx';
+import preferences from '../../../../store/preferences';
 
 class MessageItem extends Component {
-	render() {
+	user = {};
+	lastMessage = {};
+	formattedDate = '';
+
+	constructor(props) {
+		super(props);
+		makeObservable(this, {
+			user: observable,
+			lastMessage: observable,
+			formattedDate: observable
+		});
+	}
+
+	componentDidMount() {
+		this.initData();
+	}
+
+	componentDidUpdate() {
+		this.initData();
+	}
+
+	initData = async () => {
 		const { recipientAddr, message, onItemPress, addressBook, network } = this.props;
 		message?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
 		const addresses = addressBook[network] || {};
-		const user = addresses[recipientAddr];
-		const lastMessage = message[0];
 
-		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
+		this.user = addresses[recipientAddr];
+		this.lastMessage = message[0];
+		this.formattedDate = format(new Date(this.lastMessage.createdAt), 'H:mma');
+
+		const profile = await preferences.peerProfile(recipientAddr);
+		if (profile) {
+			this.user.avatar = profile.avatar;
+		}
+	};
+
+	renderAvatar = () => {
+		if (this.user.avatar)
+			return (
+				<Image
+					source={{ uri: `data:image/jpeg;base64,${this.user.avatar}` }}
+					style={styles.proImg}
+					resizeMode="contain"
+					resizeMethod="scale"
+				/>
+			);
+
+		return <Identicon address={this.user.address} diameter={35} />;
+	};
+
+	render() {
+		const { onItemPress } = this.props;
 
 		return (
-			<TouchableOpacity style={styles.container} onPress={() => onItemPress(user)}>
-				<View style={[styles.hasMessage, { backgroundColor: !message.isRead && 'dodgerblue' }]} />
-				<Identicon address={recipientAddr} diameter={40} />
+			<TouchableOpacity style={styles.container} onPress={() => onItemPress(this.user)}>
+				<View style={[styles.hasMessage, { backgroundColor: 'dodgerblue' }]} />
+				{this.renderAvatar()}
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
-					<Text
-						style={[styles.address, !message.isRead && styles.unreadStyle]}
-						numberOfLines={1}
-						ellipsizeMode="middle"
-					>
-						{user?.name}
+					<Text style={[styles.address, styles.unreadStyle]} numberOfLines={1} ellipsizeMode="middle">
+						{this.user?.name}
 					</Text>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-						<Text style={[styles.message, !message.isRead && styles.unreadStyle]} numberOfLines={2}>
-							{lastMessage.text}
+						<Text style={[styles.message, styles.unreadStyle]} numberOfLines={2}>
+							{this.lastMessage.text}
 						</Text>
 					</View>
 				</View>
 				<View style={{ flex: 2, marginHorizontal: 8, alignItems: 'flex-end' }}>
-					<Text style={styles.time}>{formattedDate}</Text>
+					<Text style={styles.time}>{this.formattedDate}</Text>
 				</View>
 			</TouchableOpacity>
 		);
@@ -83,5 +124,10 @@ const styles = StyleSheet.create({
 	unreadStyle: {
 		fontWeight: '600',
 		color: colors.black
+	},
+	proImg: {
+		width: 35,
+		height: 35,
+		borderRadius: 100
 	}
 });

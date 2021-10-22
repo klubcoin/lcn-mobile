@@ -53,6 +53,7 @@ export default class Message extends Component {
 				<ScrollView>
 					{Object.keys(this.state.messages).map(e => (
 						<MessageItem
+							key={e}
 							message={this.state.messages[e]}
 							recipientAddr={e}
 							onItemPress={() => this.gotoChatRoom({ address: e })}
