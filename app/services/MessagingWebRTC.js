@@ -23,7 +23,7 @@ export default class MessagingWebRTC {
 		switch (type) {
 			case 'message':
 				this.evtMessage = callback;
-				break;
+				return { remove: () => (this.evtMessage = null) };
 		}
 	}
 

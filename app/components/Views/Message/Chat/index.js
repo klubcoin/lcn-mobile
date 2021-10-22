@@ -39,6 +39,7 @@ class Chat extends Component {
 	}
 
 	componentWillUnmount() {
+		if (this.listener) this.listener.remove();
 		preferences.setActiveChatPeerId(null);
 	}
 
@@ -46,7 +47,7 @@ class Chat extends Component {
 		const { selectedAddress } = this.props;
 		const to = this.state.contact;
 		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
-		this.messaging.addListener('message', (data, peerId) => {
+		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			console.log('got chat', peerId, data);
 			const { action } = data.message;
 			if (action && action == Typing().action) {
