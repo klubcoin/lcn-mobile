@@ -51,3 +51,8 @@ export const ChatProfile = profile => ({
 	action: 'chat_profile',
 	profile
 });
+
+export const RequestPayment = request => ({
+	action: 'payment_request',
+	...request
+});

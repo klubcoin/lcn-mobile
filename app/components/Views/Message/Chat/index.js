@@ -10,9 +10,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { ChatProfile, Typing } from '../../../../services/Messages';
+import { ChatProfile, RequestPayment, Typing } from '../../../../services/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
+import uuid from 'react-native-uuid';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -164,8 +165,18 @@ class Chat extends Component {
 		);
 	}
 
-	sendPaymentRequest = (request) => {
-	}
+	sendPaymentRequest = request => {
+		const { selectedAddress } = this.props;
+		const message = {
+			_id: uuid.v4(),
+			createdAt: new Date(),
+			text: '',
+			payload: RequestPayment(request),
+			user: { _id: selectedAddress }
+		};
+		this.addNewMessage([message]);
+		this.messaging.send(message);
+	};
 
 	onSelectMenuItem = item => {
 		this.setState({ visibleMenu: false });
@@ -176,7 +187,7 @@ class Chat extends Component {
 					receiveAsset: {
 						isETH: true,
 						name: routes.mainNetWork.coin,
-						symbol: routes.mainNetWork.ticker,
+						symbol: routes.mainNetWork.ticker
 					}
 				});
 				break;
