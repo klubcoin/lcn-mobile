@@ -6,7 +6,7 @@ import preferences from '../../../../store/preferences';
 import { makeObservable, observable } from 'mobx';
 import { connect } from 'react-redux';
 import { colors } from '../../../../styles/common';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
@@ -142,7 +142,7 @@ class Chat extends Component {
 			<SafeAreaView>
 				<View style={styles.navBar}>
 					<TouchableOpacity onPress={this.onBack} style={styles.navButton}>
-						<Icon name={'arrow-back'} size={22} style={styles.backIcon} />
+						<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 					</TouchableOpacity>
 					<View style={{ alignItems: 'center', flex: 10 }}>
 						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
