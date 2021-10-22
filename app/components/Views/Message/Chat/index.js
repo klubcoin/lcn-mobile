@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Image } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { Actions, GiftedChat } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
 import { makeObservable, observable } from 'mobx';
@@ -11,6 +11,7 @@ import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
 import { ChatProfile, Typing } from '../../../../services/Messages';
+import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -136,6 +137,10 @@ class Chat extends Component {
 		return <Identicon address={selectedAddress.address} diameter={35} />;
 	};
 
+	onMoreButtonTap = () => {
+		this.setState({ visibleMenu: true });
+	};
+
 	renderNavBar() {
 		const { contact } = this.state;
 		return (
@@ -158,6 +163,22 @@ class Chat extends Component {
 		);
 	}
 
+	onSelectMenuItem = item => {
+		this.setState({ visibleMenu: false });
+	};
+
+	renderMenu = () => {
+		return (
+			<ModalSelector
+				visible={true}
+				hideKey={true}
+				options={menuOptions}
+				onSelect={item => this.onSelectMenuItem(item)}
+				onClose={() => this.setState({ visibleMenu: false })}
+			/>
+		);
+	};
+
 	renderTypingFooter = () => {
 		const { typing, contact } = this.state;
 
@@ -170,6 +191,7 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
+		const { visibleMenu } = this.state;
 
 		return (
 			<>
@@ -185,7 +207,9 @@ class Chat extends Component {
 						bottomOffset={Platform.OS === 'ios' && 35}
 						onInputTextChanged={this.sendTyping}
 						renderFooter={this.renderTypingFooter}
+						renderActions={() => <Actions onPressActionButton={this.onMoreButtonTap} />}
 					/>
+					{visibleMenu && this.renderMenu()}
 				</View>
 			</>
 		);
@@ -230,8 +254,32 @@ const styles = StyleSheet.create({
 		width: 35,
 		height: 35,
 		borderRadius: 100
+	},
+	menuIcon: {
+		width: 28,
+		height: 28,
+		marginRight: 8,
+		color: colors.blue
 	}
 });
+
+const menuOptions = [
+	{
+		key: 'sendCoin',
+		value: strings('chat.send_transaction'),
+		icon: <Icon name={'send'} size={24} style={styles.menuIcon} />
+	},
+	{
+		key: 'requestPayment',
+		value: strings('chat.request_payment'),
+		icon: <Icon name={'dollar'} size={24} style={styles.menuIcon} />
+	},
+	{
+		key: 'sendFile',
+		value: strings('chat.send_file'),
+		icon: <Icon name={'file'} size={24} style={styles.menuIcon} />
+	}
+];
 
 const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
