@@ -37,6 +37,7 @@ import Text from '../../../Base/Text';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { collectConfusables, hasZeroWidthPoints } from '../../../../util/validators';
 import Helper from 'common/Helper';
+import Routes from '../../../../common/routes';
 
 const { hexToBN } = util;
 const styles = StyleSheet.create({
@@ -253,7 +254,9 @@ class SendFlow extends PureComponent {
 		navigation.setParams({ providerType });
 		const networkAddressBook = addressBook[network] || {};
 		const ens = await doENSReverseLookup(selectedAddress, network);
-		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${Routes.mainNetWork.ticker}`;
+		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${
+			Routes.mainNetWork.ticker
+		}`;
 
 		setTimeout(() => {
 			this.setState({
