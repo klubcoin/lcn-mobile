@@ -17,8 +17,7 @@ import uuid from 'react-native-uuid';
 import QRCode from 'react-native-qrcode-svg';
 import DeeplinkManager from '../../../../core/DeeplinkManager';
 import AppConstants from '../../../../core/AppConstants';
-import { setSelectedAsset, setRecipient } from '../../../../actions/transaction';
-import { getEther } from '../../../../util/transactions';
+import { setRecipient } from '../../../../actions/transaction';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -187,7 +186,7 @@ class Chat extends Component {
 		this.setState({ visibleMenu: false });
 		switch (item.key) {
 			case menuKeys.sendCoin:
-				const { selectedAddress, setRecipient, setSelectedAsset } = this.props;
+				const { selectedAddress, setRecipient } = this.props;
 				const selectedContact = this.state.contact;
 				const { firstname, lastname } = (await preferences.onboardProfile) || {};
 
@@ -195,7 +194,6 @@ class Chat extends Component {
 				const toSelectedAddressName = selectedContact.name;
 				const fromAccountName = `${firstname} ${lastname}`;
 
-				setSelectedAsset(getEther(routes.mainNetWork.ticker));
 				setRecipient(
 					selectedAddress,
 					selectedContact.address,
@@ -402,8 +400,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setRecipient: (from, to, ensRecipient, transactionToName, transactionFromName) =>
-		dispatch(setRecipient(from, to, ensRecipient, transactionToName, transactionFromName)),
-	setSelectedAsset: selectedAsset => dispatch(setSelectedAsset(selectedAsset))
+		dispatch(setRecipient(from, to, ensRecipient, transactionToName, transactionFromName))
 });
 
 export default connect(
