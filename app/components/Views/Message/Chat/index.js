@@ -254,17 +254,19 @@ class Chat extends Component {
 		const textColor = owner ? colors.white : colors.black;
 
 		return (
-			<View style={{ padding: 10 }}>
-				<Text style={{ color: textColor }}>Payment Request</Text>
-				<Text style={{ color: textColor, fontWeight: '600' }}>
-					Amount: {amount} {symbol}
-				</Text>
-				{!owner && (
-					<TouchableOpacity activeOpacity={0.6} onPress={() => this.handlePayment(payload)}>
-						<Text style={{ color: colors.blue, fontStyle: 'italic', marginVertical: 5 }}>{link}</Text>
-						<QRCode value={link} />
-					</TouchableOpacity>
-				)}
+			<View style={{ flexDirection: 'row', padding: 10 }}>
+				{owner ? <Icon name={'dollar'} size={24} style={{ color: colors.white }} /> : <QRCode value={link} />}
+				<View style={{ maxWidth: 200, marginLeft: 10 }}>
+					<Text style={{ color: textColor }}>Payment Request</Text>
+					<Text style={{ color: textColor, fontWeight: '600' }}>
+						Amount: {amount} {symbol}
+					</Text>
+					{!owner && (
+						<TouchableOpacity activeOpacity={0.6} onPress={() => this.handlePayment(payload)}>
+							<Text style={{ color: colors.blue, fontStyle: 'italic', marginVertical: 5 }}>{link}</Text>
+						</TouchableOpacity>
+					)}
+				</View>
 			</View>
 		);
 	};
