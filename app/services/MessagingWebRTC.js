@@ -9,7 +9,6 @@ export default class MessagingWebRTC {
 	from = null;
 	toPeer = null;
 	data = null;
-	checksum = null;
 
 	constructor(from, to, webrtc) {
 		this.from = from;
@@ -31,10 +30,10 @@ export default class MessagingWebRTC {
 		if (data.action) {
 			if (data.action == 'ping') {
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
-			} else if (data.action == AckWebRTC().action && data.hash == this.checksum) {
-				if (this.monitors[peerId]) {
-					clearTimeout(this.monitors[peerId]);
-					this.monitors[peerId] = null;
+			} else if (data.action == AckWebRTC().action && data.hash) {
+				if (this.monitors[data.hash]) {
+					clearTimeout(this.monitors[data.hash]);
+					this.monitors[data.hash] = null;
 				}
 			}
 
@@ -54,13 +53,13 @@ export default class MessagingWebRTC {
 	send(data) {
 		const address = this.toPeer;
 		this.data = Chat(data, this.from, this.toPeer);
-		this.checksum = this.data.checksum;
+		const hash = this.data.checksum;
 
 		if (this.webrtc && this.webrtc.sendToPeer) {
 			if (!this.webrtc.hasChannel(address)) {
 				this.connectAndSend(address);
 			} else {
-				this.monitors[address] = setTimeout(() => this.connectAndSend(address), 5000);
+				this.monitors[hash] = setTimeout(() => this.connectAndSend(address), 5000);
 				this.webrtc.sendToPeer(address, this.data);
 			}
 		}
