@@ -1,4 +1,4 @@
-import { sha256 } from 'hash.js';
+import { sha256 } from '../core/CryptoSignature';
 import uuid from 'react-native-uuid';
 
 export const ConfirmProfileRequest = (from, firstname, lastname, avatar, email) => ({
@@ -40,7 +40,7 @@ export const Chat = (message, from, to) => ({
 	message,
 	from,
 	to,
-	checksum: sha256(message + uuid.v4()).digest('hex'),
+	checksum: sha256(message + uuid.v4()),
 	createdAt: new Date().getTime()
 });
 

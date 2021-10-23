@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { sha256 } from 'hash.js';
+import { sha256 } from '../core/CryptoSignature';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 import { ContainFiles, FilePart, PartSize, SavedFile, StoreFile } from './FileStore';
@@ -145,7 +145,7 @@ export default class FileTransfer {
 
   static send(data, lookupName, from, addresses) {
     const ft = new FileTransfer(data, from, addresses);
-    ft.checksum = sha256(data).digest('hex');
+    ft.checksum = sha256(data);
     ft.name = lookupName;
     ft.timestamp = moment().unix();
   }

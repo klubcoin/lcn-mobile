@@ -62,4 +62,10 @@ export default class CryptoSignature {
 	static decryptMessage(data, privKey) {
 		return sigUtil.decrypt(data, privKey);
 	}
+
+	static sha256(data) {
+		return ethUtil.bufferToHex(ethUtil.sha256(data));
+	}
 }
+
+export const { sha256 } = CryptoSignature;

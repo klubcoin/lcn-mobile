@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { sha256 } from 'hash.js';
+import { sha256 } from '../core/CryptoSignature';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import { ContainFiles, FilePart, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
@@ -46,7 +46,7 @@ export default class FileTransferWebRTC {
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			} else if (data.action == ReadFileResult().action && data.sourcePeer) {
 				const { name, totalPart, parts } = data;
-				const hash = sha256(name).digest('hex');
+				const hash = sha256(name);
 
 				if (hash == this.watchHash) {
 					parts.map(e => {
@@ -254,13 +254,13 @@ export default class FileTransferWebRTC {
 		const data = readFileAction;
 		const { from, name } = data;
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
-		ft.watchHash = sha256(name).digest('hex');
+		ft.watchHash = sha256(name);
 		ft._readFileStats();
 	}
 
 	static sendAsParts(data, lookupName, from, addresses, webrtc) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
-		ft.checksum = sha256(data).digest('hex');
+		ft.checksum = sha256(data);
 		ft.name = lookupName;
 		ft.timestamp = moment().unix();
 		ft._sendQueue();
@@ -268,7 +268,7 @@ export default class FileTransferWebRTC {
 
 	static sendAsOne(data, from, addresses, webrtc) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, { fullSend: true });
-		ft.checksum = sha256(data).digest('hex');
+		ft.checksum = sha256(data);
 		ft._sendAsOne();
 	}
 
