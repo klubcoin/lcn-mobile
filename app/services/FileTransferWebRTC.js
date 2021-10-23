@@ -67,8 +67,6 @@ export default class FileTransferWebRTC {
 					clearTimeout(this.monitors[peerId]);
 					this.monitors[peerId] = null;
 				}
-			} else if (data.checksum) {
-				this.webrtc.sendToPeer(peerId, AckWebRTC(data.checksum));
 			}
 		}
 	}

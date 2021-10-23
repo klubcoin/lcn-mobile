@@ -36,8 +36,6 @@ export default class MessagingWebRTC {
 					clearTimeout(this.monitors[peerId]);
 					this.monitors[peerId] = null;
 				}
-			} else if (data.checksum) {
-				this.webrtc.sendToPeer(peerId, AckWebRTC(data.checksum));
 			}
 
 			if (data.action == Chat().action) {

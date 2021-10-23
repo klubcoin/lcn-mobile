@@ -7,7 +7,7 @@ import { sha256 } from 'hash.js';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
-import { Chat, ChatProfile } from './Messages';
+import { AckWebRTC, Chat, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
 
 export default class WebRTC {
@@ -158,7 +158,7 @@ export default class WebRTC {
 
 	handleReceiveMessage = (e, peer) => {
 		// Listener for receiving messages from the peer
-		console.log('[INFO] Message received from peer', `${e.data}`.substr(0, 100));
+		console.log('[INFO] Message received from peer', peer, `${e.data}`.substr(0, 100));
 
 		this.handleWebRtcMessage(e.data, peer);
 	};
@@ -179,6 +179,8 @@ export default class WebRTC {
 				this.sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
+			} else if (data.checksum) {
+				this.sendToPeer(peerId, AckWebRTC(data.checksum));
 			}
 
 			await this.handleChatMessage(data, peerId);
