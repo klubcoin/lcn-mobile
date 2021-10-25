@@ -796,13 +796,10 @@ class Amount extends PureComponent {
 	};
 
 	handleSelectedAssetBalance = () => {
-		console.log({
-			test: currentBalance
-		})
-		const { accounts, selectedAddress, contractBalances } = this.props;
+		const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
 		if(accounts && accounts[selectedAddress]){
 			this.setState({
-				currentBalance: `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${symbol}`
+				currentBalance: `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${selectedAsset.symbol}`
 			});	
 		}
 	};
