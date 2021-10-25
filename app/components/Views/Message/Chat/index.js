@@ -139,7 +139,7 @@ class Chat extends Component {
 			typing: false
 		}));
 
-		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { ...messages });
+		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { messages });
 	};
 
 	renderAvatar = () => {
@@ -163,8 +163,6 @@ class Chat extends Component {
 
 	renderNavBar() {
 		const { contact } = this.state;
-		const user = this.state.messages;
-
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>

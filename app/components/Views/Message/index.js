@@ -45,7 +45,7 @@ class Message extends Component {
 		const addresses = addressBook[network] || {};
 		const users = Object.keys(records).map(e => addresses[e]);
 
-		users.forEach(e => (e.lastMessage = records[e.address].messages[0]));
+		users.forEach(e => (e.lastMessage = records[e.address]?.messages[0]));
 		this.setState(prevState => ({
 			...prevState,
 			users: users
