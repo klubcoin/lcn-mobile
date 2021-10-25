@@ -225,9 +225,15 @@ class Preferences {
 	}
 
 	async getChatMessages(address) {
-		const chatMessages = this.storage[kChatMessages] || {};
-		if (address) return chatMessages[address] || [];
+		const chatMessages = this.storage[kChatMessages];
+		if (address) return chatMessages[address];
 		return chatMessages;
+	}
+
+	async setMessageIsRead(address) {
+		const chatMessages = this.storage[kChatMessages] || {};
+		const data = chatMessages;
+		console.log('data123', data);
 	}
 
 	async deleteChatMessage(address) {

@@ -64,7 +64,7 @@ export default class MessageItem extends Component {
 					</Text>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
 						<Text style={[styles.message, styles.unreadStyle]} numberOfLines={2}>
-							{this.lastMessage.text}
+							{this.lastMessage?.text}
 						</Text>
 					</View>
 				</View>

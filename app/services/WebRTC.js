@@ -220,9 +220,9 @@ export default class WebRTC {
 					}
 				}
 			} else {
-				const messages = await preferences.getChatMessages(peerId);
-				messages.push(data.message);
-				preferences.saveChatMessages(peerId, messages);
+				const conversation = (await preferences.getChatMessages(peerId)) || { messages: [], isRead: false };
+				conversation.messages.push(data.message);
+				preferences.saveChatMessages(peerId, conversation);
 			}
 		} else if (data.action == ChatProfile().action) {
 			await preferences.setPeerProfile(peerId, data.profile);

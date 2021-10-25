@@ -88,11 +88,11 @@ class Chat extends Component {
 		const data = await preferences.getChatMessages(to);
 
 		if (!data) return;
-		data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+		data.messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		this.setState(prevState => ({
 			...prevState,
-			messages: data
+			messages: data.messages
 		}));
 	};
 
@@ -139,7 +139,7 @@ class Chat extends Component {
 			typing: false
 		}));
 
-		if (!incoming) preferences.saveChatMessages(this.state.contact.address, messages);
+		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { ...messages });
 	};
 
 	renderAvatar = () => {
@@ -163,6 +163,7 @@ class Chat extends Component {
 
 	renderNavBar() {
 		const { contact } = this.state;
+		const user = this.state.messages;
 
 		return (
 			<SafeAreaView>
@@ -314,14 +315,14 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
-		const { visibleMenu } = this.state;
+		const { visibleMenu, messages } = this.state;
 
 		return (
 			<>
 				{this.renderNavBar()}
 				<View style={{ flex: 1 }}>
 					<GiftedChat
-						messages={this.state.messages}
+						messages={messages}
 						onSend={this.onSend}
 						user={{
 							_id: selectedAddress
@@ -330,7 +331,7 @@ class Chat extends Component {
 						bottomOffset={Platform.OS === 'ios' && 35}
 						onInputTextChanged={this.sendTyping}
 						renderFooter={this.renderTypingFooter}
-						renderMessage={this.renderMessage}
+						// renderMessage={this.renderMessage}
 						renderActions={() => <Actions onPressActionButton={this.onMoreButtonTap} />}
 					/>
 					{visibleMenu && this.renderMenu()}
