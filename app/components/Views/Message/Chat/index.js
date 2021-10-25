@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Image, DeviceEventEmitter } from 'react-native';
 import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
@@ -40,6 +40,8 @@ class Chat extends Component {
 		this.initConnection();
 		this.fetchConversation();
 		this.fetchProfile();
+
+		this.transactionListener = DeviceEventEmitter.addListener(`SubmitTransaction`, this.fetchConversation);
 	}
 
 	bindContactForAddress() {
@@ -53,6 +55,7 @@ class Chat extends Component {
 
 	componentWillUnmount() {
 		if (this.listener) this.listener.remove();
+		if (this.transactionListener) this.transactionListener.remove();
 		preferences.setActiveChatPeerId(null);
 	}
 

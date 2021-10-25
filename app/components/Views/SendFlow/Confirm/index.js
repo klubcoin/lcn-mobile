@@ -8,7 +8,8 @@ import {
 	Alert,
 	ScrollView,
 	TouchableOpacity,
-	ActivityIndicator
+	ActivityIndicator,
+	DeviceEventEmitter
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
@@ -750,6 +751,7 @@ class Confirm extends PureComponent {
 			}
 
 			InteractionManager.runAfterInteractions(() => {
+				DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
 				NotificationManager.watchSubmittedTransaction({
 					...transactionMeta,
 					assetType
