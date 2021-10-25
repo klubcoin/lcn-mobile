@@ -184,7 +184,7 @@ class Transactions extends PureComponent {
 		}
 	}
 
-	map3rdPartyTransaction = (e) => {
+	static map3rdPartyTransaction = (e) => {
 		const { mainNetWork } = Routes;
 		const { NetworkController } = Engine.context;
 		const network = NetworkController.state.network;
@@ -227,7 +227,7 @@ class Transactions extends PureComponent {
 						const transaction = transactions.find(t => t.transactionHash == e.hash);
 						if (transaction) return transaction;
 
-						return this.map3rdPartyTransaction(e);
+						return Transactions.map3rdPartyTransaction(e);
 					});
 					resolve(response);
 				} else {
@@ -463,3 +463,5 @@ export default connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(Transactions);
+
+export const { map3rdPartyTransaction } = Transactions;
