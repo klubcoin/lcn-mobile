@@ -25,7 +25,8 @@ class Chat extends Component {
 
 	state = {
 		contact: this.props.navigation.getParam('selectedContact'),
-		messages: []
+		messages: [],
+		isOnline: false
 	};
 
 	componentDidMount() {
@@ -56,13 +57,25 @@ class Chat extends Component {
 		const to = this.state.contact;
 		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
-			console.log('got chat', peerId, data);
 			const { action } = data.message;
+
 			if (action && action == Typing().action) {
 				if (`${peerId}`.toLowerCase() == `${to.address}`.toLowerCase()) this.setTyping();
-			} else {
-				data.message.user['_id'] = peerId;
 
+				if (!this.state.isOnline)
+					this.setState(prevState => ({
+						...prevState,
+						isOnline: true
+					}));
+			} else {
+				if (action == ChatProfile().action) {
+					this.setState(prevState => ({
+						...prevState,
+						isOnline: true
+					}));
+				}
+
+				data.message.user['_id'] = peerId;
 				this.addNewMessage(data.message, true);
 			}
 		});
@@ -149,6 +162,7 @@ class Chat extends Component {
 
 	renderNavBar() {
 		const { contact } = this.state;
+
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
@@ -156,9 +170,14 @@ class Chat extends Component {
 						<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 					</TouchableOpacity>
 					<View style={{ alignItems: 'center', flex: 10 }}>
-						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-							{contact?.name}
-						</Text>
+						<View style={{ flexDirection: 'row' }}>
+							<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
+								{contact?.name}
+							</Text>
+							<View
+								style={[styles.isOnline, !this.state.isOnline && { backgroundColor: colors.grey300 }]}
+							/>
+						</View>
 						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.address}>
 							{contact?.address}
 						</Text>
@@ -363,6 +382,14 @@ const styles = StyleSheet.create({
 		height: 28,
 		marginRight: 8,
 		color: colors.blue
+	},
+	isOnline: {
+		width: 10,
+		height: 10,
+		borderRadius: 10,
+		alignSelf: 'center',
+		marginLeft: 10,
+		backgroundColor: colors.green400
 	}
 });
 
