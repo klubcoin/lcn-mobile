@@ -289,8 +289,38 @@ class Chat extends Component {
 		);
 	};
 
+
+	renderTransaction = (message) => {
+		const {
+			selectedAddress,
+			conversionRate,
+			currentCurrency,
+			primaryCurrency
+		} = this.props;
+		const { ticker, chainId } = routes.mainNetWork;
+		const { user, payload } = message;
+
+		const sender = user._id == selectedAddress.toLowerCase();
+		const data = {
+			tx: payload,
+			selectedAddress,
+			ticker,
+			chainId,
+			conversionRate,
+			currentCurrency,
+			primaryCurrency,
+		};
+
+		return (
+			<ChatTransaction data={data} incoming={!sender} />
+		)
+	}
+
 	renderCustomView = message => {
 		const { payload } = message;
+		if (message.transaction) {
+			return this.renderTransaction(message);
+		}
 		switch (payload.action) {
 			case RequestPayment().action:
 				return this.renderPaymentRequest(message);
@@ -322,14 +352,12 @@ class Chat extends Component {
 					<GiftedChat
 						messages={messages}
 						onSend={this.onSend}
-						user={{
-							_id: selectedAddress
-						}}
+						user={{ _id: selectedAddress.toLowerCase() }}
 						renderAvatar={this.renderAvatar}
 						bottomOffset={Platform.OS === 'ios' && 35}
 						onInputTextChanged={this.sendTyping}
 						renderFooter={this.renderTypingFooter}
-						// renderMessage={this.renderMessage}
+						renderMessage={this.renderMessage}
 						renderActions={() => <Actions onPressActionButton={this.onMoreButtonTap} />}
 					/>
 					{visibleMenu && this.renderMenu()}
@@ -423,7 +451,11 @@ const mapStateToProps = state => ({
 	identities: state.engine.backgroundState.PreferencesController.identities,
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
-	network: state.engine.backgroundState.NetworkController.network
+	network: state.engine.backgroundState.NetworkController.network,
+	transactions: state.engine.backgroundState.TransactionController.transactions,
+	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
+	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
+	primaryCurrency: state.settings.primaryCurrency,
 });
 
 const mapDispatchToProps = dispatch => ({
