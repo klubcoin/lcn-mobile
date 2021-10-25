@@ -6,6 +6,7 @@ import preferences from '../../../../store/preferences';
 import { makeObservable, observable } from 'mobx';
 import { connect } from 'react-redux';
 import { colors } from '../../../../styles/common';
+import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
@@ -19,6 +20,8 @@ import DeeplinkManager from '../../../../core/DeeplinkManager';
 import AppConstants from '../../../../core/AppConstants';
 import { setRecipient, setSelectedAsset } from '../../../../actions/transaction';
 import { getEther } from '../../../../util/transactions';
+import { map3rdPartyTransaction } from '../../../UI/Transactions';
+import ChatTransaction from '../components/ChatTransaction';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -35,7 +38,7 @@ class Chat extends Component {
 		preferences.setActiveChatPeerId(selectedContact.address);
 		this.bindContactForAddress();
 		this.initConnection();
-		this.fetchMessages(selectedContact.address);
+		this.fetchConversation();
 		this.fetchProfile();
 	}
 
@@ -84,16 +87,65 @@ class Chat extends Component {
 		setTimeout(() => (this.initialized = true), 1000);
 	};
 
-	fetchMessages = async to => {
-		const data = await preferences.getChatMessages(to);
+	fetchConversation = async () => {
+		Promise.all([
+			this.fetchTransactionHistory(),
+			this.fetchMessages(),
+		])
+			.then(values => {
+				const data = [...values[0], ...values[1]];
 
-		if (!data) return;
+				data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+				this.setState(prevState => ({
+					...prevState,
+					messages: data
+				}));
+			})
+			.catch(error => console.log(error));
+	}
+
+	fetchTransactionHistory = async () => {
+		const { selectedAddress, transactions } = this.props;
+		const selectedContact = this.state.contact;
+		const address = selectedContact.address.toLowerCase();
+
+		return new Promise((resolve) =>
+			APIService.getTransactionHistory(selectedAddress, (success, response) => {
+				if (success && response) {
+					const trans = response.result.map(e =>
+						transactions.find(t => t.transactionHash == e.hash) || map3rdPartyTransaction(e)
+					);
+
+					const filteredTransactions = trans.filter(e => {
+						const { transaction } = e;
+						return parseInt(transaction.value, 16) > 0 && (transaction.from == address || transaction.to == address);
+					})
+					const data = filteredTransactions.map(e => ({
+						_id: e.id,
+						createdAt: new Date(e.time),
+						text: '',
+						payload: e,
+						transaction: e.transaction,
+						user: {
+							_id: e.transaction.from,
+						}
+					}));
+					return resolve(data);
+				} else {
+					resolve([]);
+				}
+			}))
+	}
+
+	fetchMessages = async () => {
+		const selectedContact = this.state.contact;
+
+		const data = await preferences.getChatMessages(selectedContact.address);
+		if (!data) return Promise.resolve([]);
+
 		data.messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-		this.setState(prevState => ({
-			...prevState,
-			messages: data.messages
-		}));
+		return Promise.resolve(data.messages);
 	};
 
 	fetchProfile = async () => {
