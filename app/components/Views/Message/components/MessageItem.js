@@ -2,57 +2,31 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
-import { connect } from 'react-redux';
 import { format } from 'date-fns';
-import { makeObservable, observable } from 'mobx';
 import preferences from '../../../../store/preferences';
 
 export default class MessageItem extends Component {
-	user = {};
-	lastMessage = {};
-	formattedDate = '';
-
-	constructor(props) {
-		super(props);
-		makeObservable(this, {
-			user: observable,
-			lastMessage: observable,
-			formattedDate: observable
-		});
-	}
-
-	componentDidMount() {
-		this.initData();
-	}
-
-	componentDidUpdate() {
-		this.initData();
-	}
-
-	initData = async () => {
-		const { recipient } = this.props;
-		const lastMessage = recipient.lastMessage;
-		this.user = recipient;
-		this.lastMessage = lastMessage;
-		this.formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
-	};
-
 	renderAvatar = () => {
-		if (this.user.avatar)
+		const { recipient } = this.props;
+
+		if (recipient.avatar)
 			return (
 				<Image
-					source={{ uri: `data:image/jpeg;base64,${this.user.avatar}` }}
+					source={{ uri: `data:image/jpeg;base64,${recipient.avatar}` }}
 					style={styles.proImg}
 					resizeMode="contain"
 					resizeMethod="scale"
 				/>
 			);
 
-		return <Identicon address={this.user.address} diameter={35} />;
+		return <Identicon address={recipient.address} diameter={35} />;
 	};
 
 	render() {
 		const { onItemPress } = this.props;
+		const { recipient } = this.props;
+		const lastMessage = recipient.lastMessage;
+		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
 
 		return (
 			<TouchableOpacity style={styles.container} onPress={onItemPress}>
@@ -60,16 +34,16 @@ export default class MessageItem extends Component {
 				{this.renderAvatar()}
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
 					<Text style={[styles.address, styles.unreadStyle]} numberOfLines={1} ellipsizeMode="middle">
-						{this.user?.name}
+						{recipient?.name}
 					</Text>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
 						<Text style={[styles.message, styles.unreadStyle]} numberOfLines={2}>
-							{this.lastMessage?.text}
+							{lastMessage?.text}
 						</Text>
 					</View>
 				</View>
 				<View style={{ flex: 2, marginHorizontal: 8, alignItems: 'flex-end' }}>
-					<Text style={styles.time}>{this.formattedDate}</Text>
+					<Text style={styles.time}>{formattedDate}</Text>
 				</View>
 			</TouchableOpacity>
 		);

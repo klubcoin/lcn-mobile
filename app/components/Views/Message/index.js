@@ -22,6 +22,9 @@ import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
+import MessagingWebRTC from '../../../services/MessagingWebRTC';
+import { refWebRTC } from '../../../services/WebRTC';
+import { Chat } from '../../../services/Messages';
 
 const swipeOffset = Device.getDeviceWidth() / 4;
 
@@ -34,21 +37,41 @@ class Message extends Component {
 	};
 
 	componentDidMount() {
-		this.fetchHistoryMessages();
+		this.initConnection();
 		preferences.setActiveChatPeerId(null);
 		this.filterUsers();
 	}
 
+	componentWillUnmount() {
+		if (this.listener) this.listener.remove();
+	}
+
+	initConnection = () => {
+		this.messaging = new MessagingWebRTC(null, null, refWebRTC());
+		this.listener = this.messaging.addListener('message', (data, peerId) => {
+			const { _id } = data.message;
+			console.log('got data', data);
+			if (_id) {
+				this.fetchHistoryMessages();
+			}
+		});
+	};
+
 	fetchHistoryMessages = async () => {
+		// await preferences.deleteChatMessages();
 		const records = await preferences.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
 		const users = Object.keys(records).map(e => addresses[e]);
 
-		users.forEach(e => (e.lastMessage = records[e.address]?.messages[0]));
+		users.forEach(e => {
+			e.lastMessage = records[e.address].messages[0];
+			console.log('e.lastMessage', e.lastMessage);
+		});
+
 		this.setState(prevState => ({
 			...prevState,
-			users: users
+			users
 		}));
 	};
 
@@ -75,11 +98,12 @@ class Message extends Component {
 	};
 
 	onDelete = async user => {
-		Alert.alert('Delete message', `Are you sure to delete message with ${user.name} ?`, [
+		Alert.alert('Delete message', `Are you sure to delete messages with ${user.name} ?`, [
 			{
 				text: 'Yes',
 				onPress: async () => {
 					await preferences.deleteChatMessage(user.address);
+					console.log('deleted');
 					await this.fetchHistoryMessages();
 				}
 			},

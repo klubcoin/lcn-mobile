@@ -73,10 +73,12 @@ class Chat extends Component {
 		const to = this.state.contact;
 		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
+			if (`${peerId}`.toLowerCase() != `${to.address}`.toLowerCase()) return;
+
 			const { action } = data.message;
 
 			if (action && action == Typing().action) {
-				if (`${peerId}`.toLowerCase() == `${to.address}`.toLowerCase()) this.setTyping();
+				this.setTyping();
 
 				if (!this.state.isOnline)
 					this.setState(prevState => ({
