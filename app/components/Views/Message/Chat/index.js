@@ -231,18 +231,24 @@ class Chat extends Component {
 					<TouchableOpacity onPress={this.onBack} style={styles.navButton}>
 						<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 					</TouchableOpacity>
-					<View style={{ alignItems: 'center', flex: 10 }}>
-						<View style={{ flexDirection: 'row' }}>
-							<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-								{contact?.name}
+					<View style={{ alignItems: 'center', flex: 10, flexDirection: 'row', justifyContent: 'center' }}>
+						<View style={{ paddingHorizontal: 10 }}>{this.renderAvatar()}</View>
+						<View style={{ flex: 1 }}>
+							<View style={{ flexDirection: 'row' }}>
+								<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
+									{contact?.name}
+								</Text>
+								<View
+									style={[
+										styles.isOnline,
+										!this.state.isOnline && { backgroundColor: colors.grey300 }
+									]}
+								/>
+							</View>
+							<Text numberOfLines={1} ellipsizeMode="middle" style={styles.address}>
+								{contact?.address}
 							</Text>
-							<View
-								style={[styles.isOnline, !this.state.isOnline && { backgroundColor: colors.grey300 }]}
-							/>
 						</View>
-						<Text numberOfLines={1} ellipsizeMode="middle" style={styles.address}>
-							{contact?.address}
-						</Text>
 					</View>
 					<View style={{ flex: 1 }} />
 				</View>
