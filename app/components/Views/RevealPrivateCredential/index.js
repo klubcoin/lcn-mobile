@@ -238,6 +238,7 @@ class RevealPrivateCredential extends PureComponent {
 
 	tryUnlock = (hash) => {
 		const { password } = this.state;
+		hash = typeof hash === 'string' ? hash : '';
 		this.tryUnlockWithPassword(hash || password);
 	};
 
