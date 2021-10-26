@@ -14,6 +14,7 @@ import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
 import { makeObservable, observable } from 'mobx';
 import { connect } from 'react-redux';
+import * as FilesReader from '../../../../util/files-reader';
 import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -303,6 +304,13 @@ class Chat extends Component {
 		this.messaging.send(message);
 	};
 
+	onPickFile = async () => {
+		const results = await FilesReader.pickSingle();
+		if (results && results.length != 0) {
+			this.sendFile(results[0]);
+		}
+	}
+
 	onSelectMenuItem = async item => {
 		this.setState({ visibleMenu: false });
 		switch (item.key) {
@@ -335,6 +343,9 @@ class Chat extends Component {
 						symbol: routes.mainNetWork.ticker
 					}
 				});
+				break;
+			case menuKeys.sendFile:
+				setTimeout(this.onPickFile, 500);
 				break;
 		}
 	};
