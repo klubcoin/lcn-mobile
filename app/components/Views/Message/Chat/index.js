@@ -163,6 +163,7 @@ class Chat extends Component {
 			const senderAddr = e.user._id.toLowerCase();
 			if (e.payload) {
 				if (e.transaction) {
+					if (e.payload.action == TransactionSync().action) return false;
 					const { transaction: { from, to } } = e;
 					return from == peerAddr || to == peerAddr;
 				} else {
@@ -281,6 +282,7 @@ class Chat extends Component {
 			createdAt: new Date(),
 			text: '',
 			payload: TransactionSync(transaction),
+			transaction: transaction.transaction,
 			user: { _id: selectedAddress.toLowerCase() }
 		};
 		this.messaging.send(message);
