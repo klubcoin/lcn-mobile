@@ -230,10 +230,13 @@ class Preferences {
 		return chatMessages;
 	}
 
-	async setMessageIsRead(address) {
+	async setConversationIsRead(address, isRead) {
 		const chatMessages = this.storage[kChatMessages] || {};
-		const data = chatMessages;
-		console.log('data123', data);
+		if (!address) return;
+
+		const conversation = chatMessages[address];
+		conversation.isRead = isRead || true;
+		await this.saveStorage(kChatMessages);
 	}
 
 	async deleteChatMessage(address) {
