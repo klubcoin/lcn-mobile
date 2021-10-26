@@ -221,7 +221,8 @@ export default class WebRTC {
 				}
 			} else {
 				const conversation = (await preferences.getChatMessages(peerId)) || { messages: [], isRead: false };
-				conversation.messages.push(data.message);
+
+				conversation.messages.unshift(data.message);
 				preferences.saveChatMessages(peerId, conversation);
 			}
 		} else if (data.action == ChatProfile().action) {

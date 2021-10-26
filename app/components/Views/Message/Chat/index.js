@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Image, DeviceEventEmitter } from 'react-native';
+import {
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+	Platform,
+	Image,
+	DeviceEventEmitter
+} from 'react-native';
 import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
@@ -91,38 +100,37 @@ class Chat extends Component {
 	};
 
 	fetchConversation = async () => {
-		Promise.all([
-			this.fetchTransactionHistory(),
-			this.fetchMessages(),
-		])
+		Promise.all([this.fetchTransactionHistory(), this.fetchMessages()])
 			.then(values => {
 				const data = [...values[0], ...values[1]];
 
-				data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 				this.setState(prevState => ({
 					...prevState,
 					messages: data
 				}));
 			})
 			.catch(error => console.log(error));
-	}
+	};
 
 	fetchTransactionHistory = async () => {
 		const { selectedAddress, transactions } = this.props;
 		const selectedContact = this.state.contact;
 		const address = selectedContact.address.toLowerCase();
 
-		return new Promise((resolve) =>
+		return new Promise(resolve =>
 			APIService.getTransactionHistory(selectedAddress, (success, response) => {
 				if (success && response) {
-					const trans = response.result.map(e =>
-						transactions.find(t => t.transactionHash == e.hash) || map3rdPartyTransaction(e)
+					const trans = response.result.map(
+						e => transactions.find(t => t.transactionHash == e.hash) || map3rdPartyTransaction(e)
 					);
 
 					const filteredTransactions = trans.filter(e => {
 						const { transaction } = e;
-						return parseInt(transaction.value, 16) > 0 && (transaction.from == address || transaction.to == address);
-					})
+						return (
+							parseInt(transaction.value, 16) > 0 &&
+							(transaction.from == address || transaction.to == address)
+						);
+					});
 					const data = filteredTransactions.map(e => ({
 						_id: e.id,
 						createdAt: new Date(e.time),
@@ -130,23 +138,22 @@ class Chat extends Component {
 						payload: e,
 						transaction: e.transaction,
 						user: {
-							_id: e.transaction.from,
+							_id: e.transaction.from
 						}
 					}));
 					return resolve(data);
 				} else {
 					resolve([]);
 				}
-			}))
-	}
+			})
+		);
+	};
 
 	fetchMessages = async () => {
 		const selectedContact = this.state.contact;
 
 		const data = await preferences.getChatMessages(selectedContact.address);
 		if (!data) return Promise.resolve([]);
-
-		data.messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 		return Promise.resolve(data.messages);
 	};
@@ -185,16 +192,16 @@ class Chat extends Component {
 	};
 
 	addNewMessage = async (message, incoming) => {
-		var messages = this.state.messages.concat(message);
-		messages?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+		const { messages } = this.state;
+		var newMessages = GiftedChat.append(messages, message);
 
 		this.setState(prevState => ({
 			...prevState,
-			messages,
+			messages: newMessages,
 			typing: false
 		}));
 
-		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { messages });
+		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { messages: newMessages });
 	};
 
 	renderAvatar = () => {
@@ -344,14 +351,8 @@ class Chat extends Component {
 		);
 	};
 
-
-	renderTransaction = (message) => {
-		const {
-			selectedAddress,
-			conversionRate,
-			currentCurrency,
-			primaryCurrency
-		} = this.props;
+	renderTransaction = message => {
+		const { selectedAddress, conversionRate, currentCurrency, primaryCurrency } = this.props;
 		const { ticker, chainId } = routes.mainNetWork;
 		const { user, payload } = message;
 
@@ -363,13 +364,11 @@ class Chat extends Component {
 			chainId,
 			conversionRate,
 			currentCurrency,
-			primaryCurrency,
+			primaryCurrency
 		};
 
-		return (
-			<ChatTransaction data={data} incoming={!sender} />
-		)
-	}
+		return <ChatTransaction data={data} incoming={!sender} />;
+	};
 
 	renderCustomView = message => {
 		const { payload } = message;
@@ -510,7 +509,7 @@ const mapStateToProps = state => ({
 	transactions: state.engine.backgroundState.TransactionController.transactions,
 	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
 	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
-	primaryCurrency: state.settings.primaryCurrency,
+	primaryCurrency: state.settings.primaryCurrency
 });
 
 const mapDispatchToProps = dispatch => ({
