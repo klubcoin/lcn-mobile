@@ -58,3 +58,8 @@ export const RequestPayment = (to, request) => ({
 	to: `${to}`.toLowerCase(),
 	...request
 });
+
+export const TransactionSync = (transaction) => ({
+	action: 'transaction_sync',
+	...transaction
+});

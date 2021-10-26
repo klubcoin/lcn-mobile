@@ -20,7 +20,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { ChatProfile, RequestPayment, Typing } from '../../../../services/Messages';
+import { ChatProfile, RequestPayment, TransactionSync, Typing } from '../../../../services/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';
@@ -50,7 +50,7 @@ class Chat extends Component {
 		this.fetchConversation();
 		this.fetchProfile();
 
-		this.transactionListener = DeviceEventEmitter.addListener(`SubmitTransaction`, this.fetchConversation);
+		this.transactionListener = DeviceEventEmitter.addListener(`SubmitTransaction`, this.sendTransactionSync);
 	}
 
 	bindContactForAddress() {
@@ -274,6 +274,19 @@ class Chat extends Component {
 		);
 	}
 
+	sendTransactionSync = (transaction) => {
+		const { selectedAddress } = this.props;
+		const message = {
+			_id: uuid.v4(),
+			createdAt: new Date(),
+			text: '',
+			payload: TransactionSync(transaction),
+			user: { _id: selectedAddress.toLowerCase() }
+		};
+		this.messaging.send(message);
+		this.fetchConversation();
+	}
+
 	sendPaymentRequest = request => {
 		const selectedContact = this.state.contact;
 		const { selectedAddress } = this.props;
@@ -403,6 +416,8 @@ class Chat extends Component {
 		switch (payload.action) {
 			case RequestPayment().action:
 				return this.renderPaymentRequest(message);
+			case TransactionSync().action:
+				return this.renderTransaction(message);
 			default:
 				return null;
 		}
