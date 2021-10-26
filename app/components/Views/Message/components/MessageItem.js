@@ -22,22 +22,39 @@ export default class MessageItem extends Component {
 		return <Identicon address={recipient.address} diameter={35} />;
 	};
 
-	render() {
-		const { onItemPress } = this.props;
+	convertLastMessage() {
 		const { recipient } = this.props;
 		const lastMessage = recipient.lastMessage;
+		const { payload } = lastMessage;
+
+		if (payload && payload.action == 'payment_request') {
+			return {
+				...lastMessage,
+				text: `New request payment at ${payload.link}`
+			};
+		}
+		return lastMessage;
+	}
+
+	render() {
+		const { recipient, isRead, onItemPress } = this.props;
+		const lastMessage = this.convertLastMessage();
 		const formattedDate = format(new Date(lastMessage.createdAt), 'H:mma');
 
 		return (
 			<TouchableOpacity style={styles.container} onPress={onItemPress}>
-				<View style={[styles.hasMessage, { backgroundColor: 'dodgerblue' }]} />
+				<View style={[styles.hasMessage, !isRead && { backgroundColor: 'dodgerblue' }]} />
 				{this.renderAvatar()}
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
-					<Text style={[styles.address, styles.unreadStyle]} numberOfLines={1} ellipsizeMode="middle">
+					<Text
+						style={[styles.address, !isRead && styles.unreadStyle]}
+						numberOfLines={1}
+						ellipsizeMode="middle"
+					>
 						{recipient?.name}
 					</Text>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-						<Text style={[styles.message, styles.unreadStyle]} numberOfLines={2}>
+						<Text style={[styles.message, !isRead && styles.unreadStyle]} numberOfLines={2}>
 							{lastMessage?.text}
 						</Text>
 					</View>
@@ -62,7 +79,7 @@ const styles = StyleSheet.create({
 		maxWidth: 200
 	},
 	message: {
-		textAlign: 'justify',
+		textAlign: 'left',
 		color: colors.grey400,
 		fontWeight: '300',
 		fontSize: 14
