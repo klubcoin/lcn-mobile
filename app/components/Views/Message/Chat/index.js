@@ -274,12 +274,13 @@ class Chat extends Component {
 	}
 
 	sendPaymentRequest = request => {
+		const selectedContact = this.state.contact;
 		const { selectedAddress } = this.props;
 		const message = {
 			_id: uuid.v4(),
 			createdAt: new Date(),
 			text: '',
-			payload: RequestPayment(request),
+			payload: RequestPayment(selectedContact.address, request),
 			user: { _id: selectedAddress.toLowerCase() }
 		};
 		this.addNewMessage([message]);

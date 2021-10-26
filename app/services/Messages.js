@@ -53,7 +53,8 @@ export const ChatProfile = profile => ({
 	profile
 });
 
-export const RequestPayment = request => ({
+export const RequestPayment = (to, request) => ({
 	action: 'payment_request',
+	to,
 	...request
 });
