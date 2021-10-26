@@ -14,6 +14,7 @@ import Identicon from '../../../UI/Identicon';
 import preferences from '../../../../store/preferences';
 import { makeObservable, observable } from 'mobx';
 import { connect } from 'react-redux';
+import * as RNFS from 'react-native-fs';
 import * as FilesReader from '../../../../util/files-reader';
 import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
@@ -21,7 +22,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../../../../services/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { ChatProfile, RequestPayment, TransactionSync, Typing } from '../../../../services/Messages';
+import { ChatFile, ChatProfile, RequestPayment, TransactionSync, Typing } from '../../../../services/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';
@@ -32,6 +33,8 @@ import { setRecipient, setSelectedAsset } from '../../../../actions/transaction'
 import { getEther } from '../../../../util/transactions';
 import { map3rdPartyTransaction } from '../../../UI/Transactions';
 import ChatTransaction from '../components/ChatTransaction';
+import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
+import { StoreFile } from '../../../../services/FileStore';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -309,6 +312,40 @@ class Chat extends Component {
 		if (results && results.length != 0) {
 			this.sendFile(results[0]);
 		}
+	}
+
+	sendFile = async (file) => {
+		const { uri, name } = file;
+		const path = decodeURIComponent(uri);
+		const data = await RNFS.readFile(path, 'base64');
+		this.addFile(file);
+
+		const webrtc = refWebRTC();
+		const { selectedAddress } = this.props;
+		const selectedContact = this.state.contact;
+		const peerAddr = selectedContact.address;
+
+		FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc);
+	}
+
+	addFile = async (file) => {
+		const selectedContact = this.state.contact;
+		const peerAddr = selectedContact.address;
+
+		this.sendPayloadMessage(ChatFile(peerAddr, file));
+	}
+
+	sendPayloadMessage = async (payload) => {
+		const { selectedAddress } = this.props;
+		const message = {
+			_id: uuid.v4(),
+			createdAt: new Date(),
+			text: '',
+			payload,
+			user: { _id: selectedAddress.toLowerCase() }
+		};
+		this.addNewMessage([message]);
+		this.messaging.send(message);
 	}
 
 	onSelectMenuItem = async item => {

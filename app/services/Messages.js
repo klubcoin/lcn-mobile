@@ -63,3 +63,9 @@ export const TransactionSync = (transaction) => ({
 	action: 'transaction_sync',
 	...transaction
 });
+
+export const ChatFile = (to, fileInfo) => ({
+	action: 'chat_file',
+	to: `${to}`.toLowerCase(),
+	...fileInfo,
+})
