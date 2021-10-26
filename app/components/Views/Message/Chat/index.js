@@ -153,11 +153,25 @@ class Chat extends Component {
 
 	fetchMessages = async () => {
 		const selectedContact = this.state.contact;
+		const { selectedAddress } = this.props;
+		const address = selectedAddress.toLowerCase();
 
 		const data = await preferences.getChatMessages(selectedContact.address);
 		if (!data) return Promise.resolve([]);
-
-		return Promise.resolve(data.messages);
+		const messages = data.messages.filter(e => {
+			if (e.payload) {
+				if (e.transaction) {
+					const { transaction: { from, to } } = e;
+					return from == selectedContact.address || to == selectedContact.address;
+				} else {
+					const { payload: { from, to } } = e;
+					return from == selectedContact.address || to == selectedContact.address;
+				}
+			} else {
+				return e.user._id == address || e.user._id == selectedContact.address;
+			}
+		})
+		return Promise.resolve(messages);
 	};
 
 	fetchProfile = async () => {
