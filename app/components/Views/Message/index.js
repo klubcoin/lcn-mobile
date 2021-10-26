@@ -33,13 +33,13 @@ class Message extends Component {
 
 	state = {
 		searchQuery: '',
-		users: []
+		conversations: []
 	};
 
 	componentDidMount() {
 		this.initConnection();
 		preferences.setActiveChatPeerId(null);
-		this.filterUsers();
+		this.filterConversations();
 	}
 
 	componentWillUnmount() {
@@ -50,7 +50,6 @@ class Message extends Component {
 		this.messaging = new MessagingWebRTC(null, null, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			const { _id } = data.message;
-			console.log('got data', data);
 			if (_id) {
 				this.fetchHistoryMessages();
 			}
@@ -66,12 +65,11 @@ class Message extends Component {
 
 		users.forEach(e => {
 			e.lastMessage = records[e.address].messages[0];
-			console.log('e.lastMessage', e.lastMessage);
 		});
 
 		this.setState(prevState => ({
 			...prevState,
-			users
+			conversations: users
 		}));
 	};
 
@@ -79,14 +77,15 @@ class Message extends Component {
 		this.setState({ searchQuery: value });
 	};
 
-	filterUsers = () =>
-		this.state.users.filter(e => {
+	filterConversations = () =>
+		this.state.conversations.filter(e => {
 			const { searchQuery } = this.state;
 			const query = searchQuery.toLocaleLowerCase();
 			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
 		});
 
 	gotoChatRoom = recipient => {
+		preferences.setConversationIsRead(recipient.address);
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
 
@@ -103,7 +102,6 @@ class Message extends Component {
 				text: 'Yes',
 				onPress: async () => {
 					await preferences.deleteChatMessage(user.address);
-					console.log('deleted');
 					await this.fetchHistoryMessages();
 				}
 			},
@@ -142,7 +140,7 @@ class Message extends Component {
 					onChange={this.handleSearch}
 				/>
 				<FlatList
-					data={this.filterUsers()}
+					data={this.filterConversations()}
 					keyExtractor={item => `${item.name}${item.address}`}
 					renderItem={data => this.renderMessage(data)}
 				/>
