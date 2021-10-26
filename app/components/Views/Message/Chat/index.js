@@ -168,7 +168,8 @@ class Chat extends Component {
 					return from == selectedContact.address || to == selectedContact.address;
 				}
 			} else {
-				return e.user._id == address || e.user._id == selectedContact.address;
+				const senderAddr = e.user._id.toLowerCase();
+				return senderAddr == address || senderAddr == selectedContact.address.toLowerCase();
 			}
 		})
 		return Promise.resolve(messages);
