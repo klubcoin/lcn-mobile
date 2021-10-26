@@ -207,18 +207,18 @@ class Chat extends Component {
 	};
 
 	renderAvatar = () => {
-		const selectedAddress = this.state.contact;
-		if (selectedAddress.avatar)
+		const selectedContact = this.state.contact;
+		if (selectedContact.avatar)
 			return (
 				<Image
-					source={{ uri: `data:image/jpeg;base64,${selectedAddress.avatar}` }}
+					source={{ uri: `data:image/jpeg;base64,${selectedContact.avatar}` }}
 					style={styles.proImg}
 					resizeMode="contain"
 					resizeMethod="scale"
 				/>
 			);
 
-		return <Identicon address={selectedAddress.address} diameter={35} />;
+		return <Identicon address={selectedContact.address} diameter={35} />;
 	};
 
 	onMoreButtonTap = () => {
@@ -265,7 +265,7 @@ class Chat extends Component {
 			createdAt: new Date(),
 			text: '',
 			payload: RequestPayment(request),
-			user: { _id: selectedAddress }
+			user: { _id: selectedAddress.toLowerCase() }
 		};
 		this.addNewMessage([message]);
 		this.messaging.send(message);
@@ -338,7 +338,7 @@ class Chat extends Component {
 		const { user, payload } = message;
 		const { link, amount, symbol } = payload;
 
-		const owner = user._id == selectedAddress;
+		const owner = user._id == selectedAddress.toLowerCase();
 		const textColor = owner ? colors.white : colors.black;
 
 		return (
