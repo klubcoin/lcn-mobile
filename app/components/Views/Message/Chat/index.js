@@ -155,21 +155,22 @@ class Chat extends Component {
 		const selectedContact = this.state.contact;
 		const { selectedAddress } = this.props;
 		const address = selectedAddress.toLowerCase();
+		const peerAddr = selectedContact.address.toLowerCase();
 
 		const data = await preferences.getChatMessages(selectedContact.address);
 		if (!data) return Promise.resolve([]);
 		const messages = data.messages.filter(e => {
+			const senderAddr = e.user._id.toLowerCase();
 			if (e.payload) {
 				if (e.transaction) {
 					const { transaction: { from, to } } = e;
-					return from == selectedContact.address || to == selectedContact.address;
+					return from == peerAddr || to == peerAddr;
 				} else {
 					const { payload: { from, to } } = e;
-					return from == selectedContact.address || to == selectedContact.address;
+					return from == peerAddr || to == peerAddr || senderAddr == peerAddr;
 				}
 			} else {
-				const senderAddr = e.user._id.toLowerCase();
-				return senderAddr == address || senderAddr == selectedContact.address.toLowerCase();
+				return senderAddr == address || senderAddr == peerAddr;
 			}
 		})
 		return Promise.resolve(messages);
