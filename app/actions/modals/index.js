@@ -50,3 +50,10 @@ export function showConfirmOtherIdentityPrompt(data) {
 		data
 	};
 }
+
+export function toggleFriendRequestQR(visible) {
+	return {
+		type: 'TOGGLE_FRIEND_REQUEST_QR_MODAL',
+		visible
+	};
+}

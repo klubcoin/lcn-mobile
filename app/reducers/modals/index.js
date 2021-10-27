@@ -7,7 +7,8 @@ const initialState = {
 	receiveAsset: undefined,
 	dappTransactionModalVisible: false,
 	approveModalVisible: false,
-	otherIdentityToConfirm: null
+	otherIdentityToConfirm: null,
+	friendRequestQRVisible: false,
 };
 
 const modalsReducer = (state = initialState, action) => {
@@ -54,6 +55,11 @@ const modalsReducer = (state = initialState, action) => {
 			return {
 				...state,
 				otherIdentityToConfirm: action.data
+			};
+		case 'TOGGLE_FRIEND_REQUEST_QR_MODAL':
+			return {
+				...state,
+				friendRequestQRVisible: action.visible
 			};
 		default:
 			return state;
