@@ -27,11 +27,23 @@ export default class MessageItem extends Component {
 		const lastMessage = recipient.lastMessage;
 		const { payload } = lastMessage;
 
-		if (payload && payload.action == 'payment_request') {
-			return {
-				...lastMessage,
-				text: `New request payment at ${payload.link}`
-			};
+		console.log('lastMessage123123', lastMessage);
+
+		if (payload) {
+			switch (payload.action) {
+				case 'payment_request':
+					return {
+						...lastMessage,
+						text: `New request payment at ${payload.link}`
+					};
+				case 'transaction_sync':
+					return {
+						...lastMessage,
+						text: `Received a transaction`
+					};
+				default:
+					break;
+			}
 		}
 		return lastMessage;
 	}
