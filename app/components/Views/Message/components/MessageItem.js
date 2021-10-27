@@ -4,6 +4,8 @@ import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 import { format } from 'date-fns';
 import preferences from '../../../../store/preferences';
+import { TransactionSync, RequestPayment } from '../../../../services/Messages';
+import PaymentRequest from '../../../UI/PaymentRequest';
 
 export default class MessageItem extends Component {
 	renderAvatar = () => {
@@ -29,12 +31,12 @@ export default class MessageItem extends Component {
 
 		if (payload) {
 			switch (payload.action) {
-				case 'payment_request':
+				case RequestPayment().action:
 					return {
 						...lastMessage,
 						text: `New request payment at ${payload.link}`
 					};
-				case 'transaction_sync':
+				case TransactionSync().action:
 					return {
 						...lastMessage,
 						text: `Received a transaction`
