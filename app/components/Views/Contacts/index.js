@@ -6,6 +6,7 @@ import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { connect } from 'react-redux';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
+import { toggleFriendRequestQR } from '../../../actions/modals';
 import { toChecksumAddress, stripHexPrefix } from 'ethereumjs-util';
 import Engine from '../../../core/Engine';
 import APIService from '../../../services/APIService';
@@ -263,13 +264,14 @@ class Contacts extends PureComponent {
 	};
 
 	createFriendRequest = async () => {
-		const { selectedAddress, identities } = this.props;
+		const { selectedAddress, identities, toggleFriendRequestQR } = this.props;
 		const account = identities[selectedAddress];
 
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Request);
 		const rawSig = await CryptoSignature.signMessage(selectedAddress, data.data);
 		const base64Content = base64.encode(JSON.stringify({ data, signature: rawSig }));
 
+		toggleFriendRequestQR(true);
 		this.setState({ showLinkQR: `liquichain://namecard?q=${base64Content}` });
 	};
 
@@ -430,6 +432,7 @@ class Contacts extends PureComponent {
 			searchQuery,
 			showLinkQR
 		} = this.state;
+		const { friendRequestQRVisible } = this.props;
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'contacts-screen'}>
@@ -505,7 +508,7 @@ class Contacts extends PureComponent {
 				/>
 
 				<Modal
-					isVisible={!!showLinkQR}
+					isVisible={!!showLinkQR && friendRequestQRVisible}
 					style={styles.bottomModal}
 					onBackdropPress={this.hideQR}
 					onBackButtonPress={this.hideQR}
@@ -533,11 +536,13 @@ const mapStateToProps = state => ({
 	network: state.engine.backgroundState.NetworkController.network,
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	identities: state.engine.backgroundState.PreferencesController.identities,
-	onlinePeers: state.contacts.onlineWallets
+	onlinePeers: state.contacts.onlineWallets,
+	friendRequestQRVisible: state.modals.friendRequestQRVisible,
 });
 
 const mapDispatchToProps = dispatch => ({
-	updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers))
+	updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers)),
+	toggleFriendRequestQR: visible => dispatch(toggleFriendRequestQR(visible))
 });
 
 export default connect(

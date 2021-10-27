@@ -61,7 +61,8 @@ import {
 import {
 	toggleDappTransactionModal,
 	toggleApproveModal,
-	showConfirmOtherIdentityPrompt
+	showConfirmOtherIdentityPrompt,
+	toggleFriendRequestQR
 } from '../../../actions/modals';
 import { setOnboardProfile } from '../../../actions/user';
 import AccountApproval from '../../UI/AccountApproval';
@@ -351,7 +352,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-							swapsUtils.getSwapsContractAddress(props.chainId)))
+						swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -662,7 +663,8 @@ const Main = props => {
 	};
 
 	const handleAcceptedNameCard = data => {
-		showAcceptedNameCard(data.from);
+		props.toggleFriendRequestQR(false);
+		setTimeout(() => showAcceptedNameCard(data.from), 500);
 	};
 
 	const revokeFriend = data => {
@@ -808,7 +810,7 @@ const Main = props => {
 	const renderAcceptedFriendNameCard = () => {
 		return (
 			<FriendMessageOverview
-				visible={acceptedNameCardVisible}
+				visible={!!acceptedNameCardVisible}
 				data={friendMessage?.data}
 				networkInfo={friendMessage?.data.meta}
 				title={strings('contacts.friend_request_accepted')}
@@ -1038,7 +1040,8 @@ const mapDispatchToProps = dispatch => ({
 	setInfuraAvailabilityNotBlocked: () => dispatch(setInfuraAvailabilityNotBlocked()),
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
 	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
-	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data))
+	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data)),
+	toggleFriendRequestQR: (visible) => dispatch(toggleFriendRequestQR(visible)),
 });
 
 export default connect(
