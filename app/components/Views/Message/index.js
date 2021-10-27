@@ -202,12 +202,15 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: colors.red,
 		flex: 1,
+		height: 70,
 		flexDirection: 'row',
 		justifyContent: 'flex-end'
 	},
 	standaloneRowFront: {
 		backgroundColor: colors.white,
-		justifyContent: 'center'
+		justifyContent: 'center',
+		flex: 1,
+		height: 70
 	},
 	swipeableOption: {
 		width: swipeOffset,
