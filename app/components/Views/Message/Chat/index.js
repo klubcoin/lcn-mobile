@@ -168,16 +168,20 @@ class Chat extends Component {
 			if (e.payload) {
 				if (e.transaction) {
 					if (e.payload.action == TransactionSync().action) return false;
-					const { transaction: { from, to } } = e;
+					const {
+						transaction: { from, to }
+					} = e;
 					return from == peerAddr || to == peerAddr;
 				} else {
-					const { payload: { from, to } } = e;
+					const {
+						payload: { from, to }
+					} = e;
 					return from == peerAddr || to == peerAddr || senderAddr == peerAddr;
 				}
 			} else {
 				return senderAddr == address || senderAddr == peerAddr;
 			}
-		})
+		});
 		return Promise.resolve(messages);
 	};
 
@@ -211,6 +215,7 @@ class Chat extends Component {
 
 	onSend = message => {
 		this.addNewMessage(message);
+		preferences.setConversationIsRead(this.state.contact.address, true);
 		this.messaging.send(message[0]);
 	};
 
@@ -279,7 +284,7 @@ class Chat extends Component {
 		);
 	}
 
-	sendTransactionSync = (transaction) => {
+	sendTransactionSync = transaction => {
 		const { selectedAddress } = this.props;
 		const message = {
 			_id: uuid.v4(),
@@ -291,7 +296,7 @@ class Chat extends Component {
 		};
 		this.messaging.send(message);
 		this.fetchConversation();
-	}
+	};
 
 	sendPaymentRequest = request => {
 		const selectedContact = this.state.contact;
@@ -312,9 +317,9 @@ class Chat extends Component {
 		if (results && results.length != 0) {
 			this.sendFile(results[0]);
 		}
-	}
+	};
 
-	sendFile = async (file) => {
+	sendFile = async file => {
 		const { uri, name } = file;
 		const path = decodeURIComponent(uri);
 		const data = await RNFS.readFile(path, 'base64');
@@ -326,16 +331,16 @@ class Chat extends Component {
 		const peerAddr = selectedContact.address;
 
 		FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc);
-	}
+	};
 
-	addFile = async (file) => {
+	addFile = async file => {
 		const selectedContact = this.state.contact;
 		const peerAddr = selectedContact.address;
 
 		this.sendPayloadMessage(ChatFile(peerAddr, file));
-	}
+	};
 
-	sendPayloadMessage = async (payload) => {
+	sendPayloadMessage = async payload => {
 		const { selectedAddress } = this.props;
 		const message = {
 			_id: uuid.v4(),
@@ -346,7 +351,7 @@ class Chat extends Component {
 		};
 		this.addNewMessage([message]);
 		this.messaging.send(message);
-	}
+	};
 
 	onSelectMenuItem = async item => {
 		this.setState({ visibleMenu: false });

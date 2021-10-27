@@ -50,7 +50,9 @@ class Message extends Component {
 		this.messaging = new MessagingWebRTC(null, null, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			const { _id } = data.message;
+
 			if (_id) {
+				preferences.setConversationIsRead(data.from, false);
 				this.fetchHistoryMessages();
 			}
 		});
@@ -65,6 +67,7 @@ class Message extends Component {
 
 		users.forEach(e => {
 			e.lastMessage = records[e.address].messages[0];
+			e.isRead = records[e.address].isRead;
 		});
 
 		this.setState(prevState => ({
@@ -85,7 +88,7 @@ class Message extends Component {
 		});
 
 	gotoChatRoom = recipient => {
-		preferences.setConversationIsRead(recipient.address);
+		preferences.setConversationIsRead(recipient.address, true);
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
 
@@ -124,7 +127,11 @@ class Message extends Component {
 					</TouchableWithoutFeedback>
 				</View>
 				<View style={styles.standaloneRowFront}>
-					<MessageItem recipient={item} onItemPress={() => this.gotoChatRoom({ address: item.address })} />
+					<MessageItem
+						recipient={item}
+						onItemPress={() => this.gotoChatRoom({ address: item.address })}
+						isRead={item.isRead}
+					/>
 				</View>
 			</SwipeRow>
 		);

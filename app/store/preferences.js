@@ -233,9 +233,18 @@ class Preferences {
 	async setConversationIsRead(address, isRead) {
 		const chatMessages = this.storage[kChatMessages] || {};
 		if (!address) return;
+		let foundConversation;
+		const keys = Object.keys(chatMessages);
 
-		const conversation = chatMessages[address];
-		conversation.isRead = isRead || true;
+		keys.forEach(e => {
+			if (e.toLocaleLowerCase() == address.toLocaleLowerCase()) {
+				foundConversation = chatMessages[e];
+				if (!foundConversation) return;
+				foundConversation.isRead = isRead;
+				this.storage[kChatMessages][e] = foundConversation;
+				this.saveStorage(kChatMessages);
+			}
+		});
 		await this.saveStorage(kChatMessages);
 	}
 
