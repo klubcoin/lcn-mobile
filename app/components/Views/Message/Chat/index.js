@@ -230,6 +230,9 @@ class Chat extends Component {
 		}));
 
 		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { messages: newMessages });
+		else {
+			preferences.setConversationIsRead(this.state.contact.address, true);
+		}
 	};
 
 	renderAvatar = () => {
