@@ -59,7 +59,6 @@ class Message extends Component {
 	};
 
 	fetchHistoryMessages = async () => {
-		// await preferences.deleteChatMessages();
 		const records = await preferences.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
@@ -80,12 +79,16 @@ class Message extends Component {
 		this.setState({ searchQuery: value });
 	};
 
-	filterConversations = () =>
-		this.state.conversations.filter(e => {
+	filterConversations = () => {
+		const { conversations } = this.state;
+		conversations.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+
+		return conversations.filter(e => {
 			const { searchQuery } = this.state;
 			const query = searchQuery.toLocaleLowerCase();
 			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
 		});
+	};
 
 	gotoChatRoom = recipient => {
 		preferences.setConversationIsRead(recipient.address, true);
