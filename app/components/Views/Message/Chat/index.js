@@ -35,6 +35,8 @@ import { map3rdPartyTransaction } from '../../../UI/Transactions';
 import ChatTransaction from '../components/ChatTransaction';
 import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
 import { StoreFile } from '../../../../services/FileStore';
+import { sha256 } from '../../../../core/CryptoSignature';
+import FileMessage from '../components/FileMessage';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -476,10 +478,22 @@ class Chat extends Component {
 				return this.renderPaymentRequest(message);
 			case TransactionSync().action:
 				return this.renderTransaction(message);
+			case ChatFile().action:
+				return this.renderMedia(message);
 			default:
 				return null;
 		}
 	};
+
+	renderMedia = (message) => {
+		const { uri, name, type } = message.payload;
+		const path = decodeURIComponent(uri).replace('file://', '');
+
+		if (type.indexOf('image') == 0) {
+			message.image = `file://${path}`;
+			return <Message key={sha256(path)}	{...message} />
+		}
+	}
 
 	renderMessage = messageProps => {
 		const { currentMessage } = messageProps;
