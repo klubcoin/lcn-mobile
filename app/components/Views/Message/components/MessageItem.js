@@ -27,8 +27,6 @@ export default class MessageItem extends Component {
 		const lastMessage = recipient.lastMessage;
 		const { payload } = lastMessage;
 
-		console.log('lastMessage123123', lastMessage);
-
 		if (payload) {
 			switch (payload.action) {
 				case 'payment_request':
