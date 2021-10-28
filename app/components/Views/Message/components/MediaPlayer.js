@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
-import { decorate, makeObservable, observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import moment from 'moment'
 import TrackPlayer from 'react-native-track-player';
 import { colors } from '../../../../styles/common';
 import drawables from '../../../../common/drawables';
 
-let mediaQueueTime = false;
+let mediaQueueTime = 0;
 export default class MediaPlayer extends Component {
 
     listeners = {};
@@ -39,7 +39,7 @@ export default class MediaPlayer extends Component {
         mediaQueueTime = milliseconds
 
         const { source } = this.props;
-        await TrackPlayer.remove('liquichain')
+        await TrackPlayer.remove(0);
         // Adds a track to the queue
         await TrackPlayer.add({
             id: 'liquichain',
@@ -95,10 +95,10 @@ export default class MediaPlayer extends Component {
 
         return (
             <View style={[styles.controls, invisible]}>
-                <Button style={styles.button} onPress={() => this.onPlayPause()}>
+                <TouchableOpacity style={styles.button} onPress={() => this.onPlayPause()}>
                     <Image style={styles.control} source={{ uri: this.paused ? drawables.btnPlay : drawables.btnPause }} />
-                </Button>
-                <TouchableOpacity style={styles.button} onPress={() => this.onReplay()}>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, styles.rightBtn]} onPress={() => this.onReplay()}>
                     <Image style={styles.control} source={{ uri: drawables.btnReplay }} />
                 </TouchableOpacity>
             </View>
@@ -119,6 +119,9 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         elevation: 0,
         backgroundColor: colors.white,
+    },
+    rightBtn: {
+        marginLeft: 8
     },
     control: {
         width: 32,
