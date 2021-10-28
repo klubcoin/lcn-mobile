@@ -16,9 +16,27 @@ import EntryScriptWeb3 from '../../../core/EntryScriptWeb3';
 import Logger from '../../../util/Logger';
 import ErrorBoundary from '../ErrorBoundary';
 import { Provider as ProviderMobX } from 'mobx-react'
+import TrackPlayer from 'react-native-track-player';
 import preferences from '../../../../app/store/preferences'
 
 preferences.load();
+
+TrackPlayer.setupPlayer().then(async () => {
+  TrackPlayer.updateOptions({
+    stopWithApp: true,
+    capabilities: [
+      TrackPlayer.CAPABILITY_PLAY,
+      TrackPlayer.CAPABILITY_PAUSE,
+      TrackPlayer.CAPABILITY_STOP,
+    ],
+    compactCapabilities: [
+      TrackPlayer.CAPABILITY_PLAY,
+      TrackPlayer.CAPABILITY_PAUSE,
+      TrackPlayer.CAPABILITY_STOP,
+    ],
+  });
+});
+
 /**
  * Top level of the component hierarchy
  * App component is wrapped by the provider from react-redux
