@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { ViewPropTypes, Text } from 'react-native';
 import Button from 'react-native-button';
-import getStyles from './styledButtonStyles';
-
+import getStyles from './styles/index';
+import { styles } from './styles/branch';
 /**
  * UI component that renders a styled button
  * for iOS devices
@@ -75,6 +75,7 @@ export default class StyledButton extends PureComponent {
 		} = this.props;
 		const { fontStyle, containerStyle } = getStyles(type);
 
+		//TODO: check what app is
 		return (
 			<Button
 				testID={testID}
@@ -83,8 +84,8 @@ export default class StyledButton extends PureComponent {
 				disabledContainerStyle={disabled ? disabledContainerStyle : null}
 				onPress={onPress}
 				onPressOut={onPressOut}
-				style={[...fontStyle, style]}
-				containerStyle={[...containerStyle, this.props.containerStyle]}
+				style={[...fontStyle, styles[`${type}Text`], style]}
+				containerStyle={[...containerStyle, styles[type], this.props.containerStyle]}
 			>
 				{children}
 			</Button>

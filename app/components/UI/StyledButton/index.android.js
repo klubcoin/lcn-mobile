@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Text, TouchableNativeFeedback, View, ViewPropTypes } from 'react-native';
 import coalesceNonElementChildren from 'react-native-button/coalesceNonElementChildren';
-import getStyles from './styledButtonStyles';
+import getStyles from './styles/index';
+import { styles } from './styles/branch';
 
 /**
  * UI component that wraps StyledButton
@@ -70,8 +71,13 @@ export default class StyledButton extends PureComponent {
 	};
 
 	renderGroupedChildren = fontStyle => {
-		const { disabled } = this.props;
-		const style = [...fontStyle, this.props.style, disabled ? this.props.styleDisabled : null];
+		const { disabled, type } = this.props;
+		const style = [
+			...fontStyle,
+			styles[`${type}Text`],
+			this.props.style,
+			disabled ? this.props.styleDisabled : null
+		];
 
 		const childGroupStyle = [this.props.childGroupStyle];
 
@@ -97,6 +103,7 @@ export default class StyledButton extends PureComponent {
 		const touchableProps = {};
 		const containerStyles = [
 			...containerStyle,
+			styles[type],
 			this.props.disabled ? this.props.disabledContainerStyle : null,
 			this.props.containerStyle
 		];
