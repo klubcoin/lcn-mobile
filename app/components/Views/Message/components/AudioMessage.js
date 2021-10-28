@@ -1,28 +1,16 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { StyleSheet, View } from 'react-native';
 import Text from '../../../Base/Text';
 import { colors } from '../../../../styles/common';
 import MediaPlayer from './MediaPlayer';
-import { Message } from 'react-native-gifted-chat';
 
-const AudioMessage = ({ name, path, incoming, ...props }) => {
+const AudioMessage = ({ name, path, incoming }) => {
   const sender = !incoming;
-
-  const renderAudio = () => {
-    alert('nae' + name)
-    return (
-      <View style={styles.media}>
-        <Text style={styles.name}>{name}</Text>
-        <MediaPlayer source={path} visible={!!path} />
-      </View>
-    )
-  }
 
   return (
     <View style={styles.root}>
+      <Text style={[styles.name, sender && styles.textWhite]}>{name}</Text>
       <View style={styles.media}>
-        <Text style={styles.name}>{name}</Text>
         <MediaPlayer source={path} visible={!!path} />
       </View>
     </View>
@@ -31,20 +19,16 @@ const AudioMessage = ({ name, path, incoming, ...props }) => {
 
 const styles = StyleSheet.create({
   root: {
-    height: 50,
+    width: 240,
     flexDirection: 'row',
     padding: 10
   },
+  name: {
+    flex: 1,
+    fontWeight: '600',
+  },
   media: {
-    height: 50,
-    backgroundColor: 'red'
-  },
-  icon: {
-    color: colors.white
-  },
-  bubble: {
-    maxWidth: 200,
-    marginLeft: 10
+    width: 80,
   },
   textWhite: {
     color: colors.white,
