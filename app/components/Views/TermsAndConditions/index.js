@@ -4,18 +4,8 @@ import PropTypes from 'prop-types';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import AppConstants from '../../../core/AppConstants';
-
-const styles = StyleSheet.create({
-	text: {
-		...fontStyles.normal,
-		color: colors.grey500,
-		textAlign: 'center',
-		fontSize: 10
-	},
-	link: {
-		textDecorationLine: 'underline'
-	}
-});
+import { styles } from './styles';
+import { branchStyles } from './styles/branch';
 
 /**
  * View that is displayed in the flow to agree terms and conditions
@@ -39,9 +29,9 @@ export default class TermsAndConditions extends PureComponent {
 	render() {
 		return (
 			<TouchableOpacity onPress={this.press}>
-				<Text style={styles.text}>
+				<Text style={[styles.text, branchStyles.text]}>
 					{strings('terms_and_conditions.description')}
-					<Text style={styles.link}>{strings('terms_and_conditions.terms')}</Text>.
+					<Text style={[styles.link, branchStyles.link]}>{strings('terms_and_conditions.terms')}</Text>.
 				</Text>
 			</TouchableOpacity>
 		);

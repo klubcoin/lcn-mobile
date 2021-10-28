@@ -10,10 +10,10 @@ const branchStyles = StyleSheet.create({
 });
 
 const branchImgs = {
-	a: require('../../../../images/welcome-bg1.jpg'),
-	b: require('../../../../images/welcome-bg2.jpg'),
-	c: require('../../../../images/welcome-bg3.jpg'),
-	d: require('../../../../images/welcome-bg4.jpg'),
+	a: require('../../../../images/klubcoin_filigram_logo.png'),
+	b: require('../../../../images/klubcoin_filigram_logo.png'),
+	c: require('../../../../images/klubcoin_filigram_logo.png'),
+	d: require('../../../../images/klubcoin_filigram_logo.png'),
 	carousel: require('../../../../images/klubcoin_filigram_logo.png')
 };
 

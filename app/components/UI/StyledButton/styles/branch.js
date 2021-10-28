@@ -13,7 +13,15 @@ const styles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	blue: {
-		backgroundColor: colors.blue
+		backgroundColor: colors.grey,
+		borderWidth: 2,
+		borderColor: colors.white,
+		shadowColor: colors.white,
+		shadowOpacity: 0.7,
+		shadowRadius: 12,
+		shadowOffset: {
+			height: 1
+		}
 	},
 	blueText: {
 		color: colors.white

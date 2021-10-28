@@ -9,7 +9,11 @@ import { styles, images } from './styles/index';
 const OnboardingScreenWithBg = props => (
 	//TODO: check what app is
 	<View style={styles.flex}>
-		<ImageBackground source={branchImgs[props.screen]} style={[styles.wrapper, branchStyles.wrapper]}>
+		<ImageBackground
+			source={branchImgs[props.screen]}
+			style={[styles.wrapper, branchStyles.wrapper]}
+			resizeMode={'cover'}
+		>
 			{props.children}
 		</ImageBackground>
 	</View>
