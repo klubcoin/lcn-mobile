@@ -490,12 +490,16 @@ class Chat extends Component {
 		const { uri, name, type } = message.payload;
 		const path = decodeURIComponent(uri).replace('file://', '');
 
-		if (type.indexOf('image') == 0) {
+		delete message.image;
+
+		if (type && type.indexOf('image') == 0) {
 			message.image = `file://${path}`;
 			return <Message key={sha256(path)}	{...message} />
-		} else if (type.indexOf('audio') == 0) {
+		} else if (type && type.indexOf('audio') == 0) {
 			return <AudioMessage key={sha256(path)}	{...message} {...message.payload} path={path} />
 		}
+
+		return <FileMessage key={sha256(path)}	{...message.payload} />
 	}
 
 	renderMessage = messageProps => {
