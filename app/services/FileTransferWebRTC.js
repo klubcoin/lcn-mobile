@@ -23,6 +23,9 @@ export default class FileTransferWebRTC {
 	partCount = 0;
 	partSize = 0;
 
+	evtComplete = null;
+	evtError = null;
+
 	constructor(data, from, addresses, webrtc, params) {
 		this.from = from;
 		this.data = data;
@@ -69,6 +72,14 @@ export default class FileTransferWebRTC {
 				}
 			}
 		}
+	}
+
+	setOnComplete(callback) {
+		this.evtComplete = callback;
+	}
+
+	setOnError(callback) {
+		this.evtError = callback;
 	}
 
 	async joinParts() {
@@ -187,14 +198,16 @@ export default class FileTransferWebRTC {
 
 	_reportFailure = address => {
 		const { name, sendingPart, partCount } = this;
-
-		DeviceEventEmitter.emit('FileTransStat', {
+		const info = {
 			error: true,
 			peer: address,
 			name,
 			partCount,
 			currentPart: sendingPart
-		});
+		}
+
+		if (this.evtError) this.evtError(info);
+		DeviceEventEmitter.emit('FileTransStat', info);
 	};
 
 	_onProgress(address) {
@@ -210,9 +223,15 @@ export default class FileTransferWebRTC {
 			// File transfer completed
 			if (this.revokeMessageEvt) this.revokeMessageEvt();
 			DeviceEventEmitter.emit('FileTransStat', { name, partCount, completed: true });
+			this._onComplete();
 		} else {
 			this._sendQueue();
 		}
+	}
+
+	_onComplete = () => {
+		const { partCount, from, addresses, checksum, name, timestamp } = this;
+		if (this.evtComplete) this.evtComplete({ partCount, name, timestamp, checksum });
 	}
 
 	_readFileStats = () => {
@@ -256,20 +275,23 @@ export default class FileTransferWebRTC {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
 		ft.watchHash = sha256(name);
 		ft._readFileStats();
+		return ft;
 	}
 
-	static sendAsParts(data, lookupName, from, addresses, webrtc) {
-		const ft = new FileTransferWebRTC(data, from, addresses, webrtc);
+	static sendAsParts(data, lookupName, from, addresses, webrtc, params) {
+		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, params);
 		ft.checksum = sha256(data);
 		ft.name = lookupName;
 		ft.timestamp = moment().unix();
 		ft._sendQueue();
+		return ft;
 	}
 
 	static sendAsOne(data, from, addresses, webrtc) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, { fullSend: true });
 		ft.checksum = sha256(data);
 		ft._sendAsOne();
+		return ft;
 	}
 
 	static sendFile(file, from, addresses) {
