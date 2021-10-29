@@ -337,7 +337,8 @@ class Chat extends Component {
 		const selectedContact = this.state.contact;
 		const peerAddr = selectedContact.address;
 
-		FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc);
+		const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc, { direct: true });
+		ft.setOnError(() => alert(`Error: Failed to send to ${selectedContact.name}`));
 	};
 
 	addFile = async file => {

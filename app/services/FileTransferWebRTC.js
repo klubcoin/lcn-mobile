@@ -2,7 +2,7 @@ import moment from 'moment';
 import { sha256 } from '../core/CryptoSignature';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
-import { ContainFiles, FilePart, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
+import { ContainFiles, FilePart, JoinFile, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
 import { AckWebRTC } from './Messages';
 
 export default class FileTransferWebRTC {
@@ -16,6 +16,7 @@ export default class FileTransferWebRTC {
 	from = null;
 	data = null;
 	addresses = [];
+	directToPeer; // send file to one peer
 
 	name = '';
 	timestamp = 0;
@@ -31,6 +32,7 @@ export default class FileTransferWebRTC {
 		this.data = data;
 		this.addresses = addresses;
 		this.webrtc = webrtc;
+		this.directToPeer = params?.direct;
 
 		if (data && !data.action && !(params && params.fullSend)) {
 			this._prepareQueue();
@@ -232,6 +234,12 @@ export default class FileTransferWebRTC {
 	_onComplete = () => {
 		const { partCount, from, addresses, checksum, name, timestamp } = this;
 		if (this.evtComplete) this.evtComplete({ partCount, name, timestamp, checksum });
+
+		if (this.directToPeer) {
+			const address = addresses[0];
+			const action = JoinFile(from, address, checksum, name, partCount);
+			this.webrtc.sendToPeer(address, action);
+		}
 	}
 
 	_readFileStats = () => {
