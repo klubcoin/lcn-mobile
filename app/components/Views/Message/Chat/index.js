@@ -487,8 +487,12 @@ class Chat extends Component {
 	};
 
 	renderMedia = (message) => {
+		const { selectedAddress } = this.props;
 		const { uri, name, type } = message.payload;
 		const path = decodeURIComponent(uri).replace('file://', '');
+
+		const { user } = message;
+		const incoming = user?._id.toLowerCase() != selectedAddress.toLowerCase();
 
 		delete message.image;
 
@@ -496,10 +500,10 @@ class Chat extends Component {
 			message.image = `file://${path}`;
 			return <Message key={sha256(path)}	{...message} />
 		} else if (type && type.indexOf('audio') == 0) {
-			return <AudioMessage key={sha256(path)}	{...message} {...message.payload} path={path} />
+			return <AudioMessage key={sha256(path)}	{...message.payload} path={path} incoming={incoming} />
 		}
 
-		return <FileMessage key={sha256(path)}	{...message.payload} />
+		return <FileMessage key={sha256(path)} {...message.payload} incoming={incoming} />
 	}
 
 	renderMessage = messageProps => {
