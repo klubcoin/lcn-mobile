@@ -3,11 +3,15 @@ import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
 import FileTransferWebRTC from './FileTransferWebRTC';
 import CryptoSignature, { sha256 } from '../core/CryptoSignature';
 import moment from 'moment';
+import io from 'socket.io-client';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 import { AckWebRTC, Chat, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
+
+const useSocketIO = true;
+const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
 
 export default class WebRTC {
 	fromUserId = '';
@@ -59,6 +63,13 @@ export default class WebRTC {
 	};
 
 	initSocket = () => {
+		if (useSocketIO && SignalServer) {
+			this.socketRef = io(SignalServer);
+
+			this.socketRef.on(WSEvent.connected, this.handleConnected.bind(this));
+			this.socketRef.on(WSEvent.message, this.handleWebRtcSignal.bind(this));
+		}
+
 		this.messaging = new Messaging(this.fromUserId);
 		this.messaging.on(WSEvent.ready, this.handleConnected.bind(this));
 		this.messaging.on(WSEvent.message, this.handleWebRtcSignal.bind(this));
@@ -90,7 +101,12 @@ export default class WebRTC {
 			signal,
 			...payload
 		});
-		this.messaging.send(message);
+
+		if (useSocketIO) {
+			this.socketRef.emit(WSEvent.message, message);
+		} else {
+			this.messaging.send(message);
+		}
 	};
 
 	connectTo = address => {
@@ -101,7 +117,9 @@ export default class WebRTC {
 		this.sendChannels[address].onmessage = message => this.handleReceiveMessage(message, address);
 	};
 
-	handleConnected = () => {};
+	handleConnected = () => {
+		useSocketIO && this.socketRef.emit('join', this.fromUserId);
+	};
 
 	handleOffer = incoming => {
 		const peerId = incoming.caller;

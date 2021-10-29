@@ -18,6 +18,7 @@ export const Pong = (from, to) => Message(to, { from, action: 'pong' });
 export const Online = (from, to) => Message(to, { from, action: 'online' });
 
 export const WSEvent = {
+  connected: 'connected',
   ready: 'ready',
   message: 'message',
   error: 'error',
