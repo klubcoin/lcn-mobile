@@ -76,9 +76,7 @@ import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import BigNumber from 'bignumber.js';
 import { setInfuraAvailabilityBlocked, setInfuraAvailabilityNotBlocked } from '../../../actions/infuraAvailability';
-import Messaging, { Message, Pong, WSEvent } from '../../../services/Messaging';
-import FileTransfer from '../../../services/FileTransfer';
-import { ContainFiles, ReadFile, ReadFileResult, StoreFile } from '../../../services/FileStore';
+import Messaging, { Pong, WSEvent } from '../../../services/Messaging';
 import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
@@ -105,7 +103,6 @@ const styles = StyleSheet.create({
 });
 const Main = props => {
 	const [messaging, setMessaging] = useState(null);
-	const [messageEvent, setMessageEvent] = useState(null);
 	const [friendMessage, setFriendMessage] = useState(null);
 	const [acceptedNameCardVisible, showAcceptedNameCard] = useState(null);
 	const [identity2Confirm, showConfirmOtherIdentity] = useState(null);
@@ -616,29 +613,6 @@ const Main = props => {
 				handleFriendRequestUpdate(data);
 			} else if (data.action == 'ping') {
 				messaging.send(Pong(selectedAddress, data.from));
-			} else if (data.action == StoreFile().action) {
-				FileTransfer.storeFile(data).then(message => messaging.send(message));
-			} else if (data.action == ContainFiles().action) {
-				DeviceEventEmitter.emit('FTSuccess', data);
-			} else if (data.action == ReadFile().action && data.from != selectedAddress) {
-				const { from, hash, name } = data;
-				const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
-				if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
-
-				const files = await RNFS.readDir(folder);
-
-				const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
-				foundFiles.map(async e => {
-					const content = await RNFS.readFile(e.path, 'utf8');
-					const partId = e.name.split('.').reverse()[0];
-					const message = new Message(
-						from,
-						ReadFileResult(from, hash, name, moment(e.mtime).unix(), [{ i: partId, v: content }])
-					);
-					messaging.send(message);
-				});
-			} else if (data.action == ReadFileResult().action) {
-				//responded file
 			}
 		} catch (e) {}
 	};
@@ -700,12 +674,9 @@ const Main = props => {
 			messaging.initConnection();
 			messaging.on(WSEvent.message, data => handleWSMessage(messaging, data));
 
-			const evt = DeviceEventEmitter.addListener('FileTransfer', data => messaging.send(data));
-			setMessageEvent(evt);
 			return () => {
 				revokeWebRTC();
 				messaging && messaging.disconnect();
-				messageEvent && messageEvent.remove();
 			};
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
