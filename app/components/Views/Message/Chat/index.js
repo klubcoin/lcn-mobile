@@ -112,6 +112,7 @@ class Chat extends Component {
 		Promise.all([this.fetchTransactionHistory(), this.fetchMessages()])
 			.then(values => {
 				const data = [...values[0], ...values[1]];
+				data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
 				this.setState(prevState => ({
 					...prevState,
