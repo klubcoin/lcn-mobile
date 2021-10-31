@@ -7,7 +7,7 @@ import io from 'socket.io-client';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
-import { AckWebRTC, Chat, ChatProfile } from './Messages';
+import { AckWebRTC, Chat, ChatFile, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
 
 const useSocketIO = true;
@@ -252,7 +252,7 @@ export default class WebRTC {
 		if (data.action == StoreFile().action) {
 			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
 		} else if (data.action == JoinFile().action) {
-			FileTransferWebRTC.joinFile(data).then(message => this.sendToPeer(peerId, message));
+			FileTransferWebRTC.joinFile(data).then(path => DeviceEventEmitter.emit('FileTransReceived', { data, path }));
 		} else if (data.action == ReadFile().action && !data.sourcePeer) {
 			const { from, hash, name } = data;
 			const folder = `${RNFS.DocumentDirectoryPath}/${from}`;

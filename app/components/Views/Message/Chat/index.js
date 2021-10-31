@@ -58,6 +58,7 @@ class Chat extends Component {
 		this.fetchProfile();
 
 		this.transactionListener = DeviceEventEmitter.addListener(`SubmitTransaction`, this.sendTransactionSync);
+		this.fileReceivedEvt = DeviceEventEmitter.addListener('FileTransReceived', this.onFileReceived);
 	}
 
 	bindContactForAddress() {
@@ -71,6 +72,7 @@ class Chat extends Component {
 
 	componentWillUnmount() {
 		if (this.listener) this.listener.remove();
+		if (this.fileReceivedEvt) this.fileReceivedEvt.remove();
 		if (this.transactionListener) this.transactionListener.remove();
 		preferences.setActiveChatPeerId(null);
 	}
@@ -347,6 +349,32 @@ class Chat extends Component {
 
 		this.sendPayloadMessage(ChatFile(peerAddr, file));
 	};
+
+	onFileReceived = async ({ data, path }) => {
+		const peerId = data.from;
+		const conversation = await preferences.getChatMessages(peerId);
+		const { messages } = conversation || { messages: [] };
+
+		const message = messages.find(e => {
+			const { payload } = e;
+			if (payload && payload.action == ChatFile().action) {
+				return payload.name == data.name;
+			}
+		});
+
+		if (message) {
+			message.payload.uri = `file://${path}`;
+
+			// update new path for message in conversation
+			const { messages, contact } = this.state;
+			const m = messages.find(e => e._id == message._id);
+			messages.splice(messages.indexOf(m), 1);
+			messages.unshift(message);
+			this.setState({ messages });
+
+			preferences.saveChatMessages(contact.address, { messages });
+		}
+	}
 
 	sendPayloadMessage = async payload => {
 		const { selectedAddress } = this.props;
