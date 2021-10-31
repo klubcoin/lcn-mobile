@@ -252,7 +252,23 @@ export default class WebRTC {
 		if (data.action == StoreFile().action) {
 			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
 		} else if (data.action == JoinFile().action) {
-			FileTransferWebRTC.joinFile(data).then(path => DeviceEventEmitter.emit('FileTransReceived', { data, path }));
+			FileTransferWebRTC.joinFile(data).then(async path => {
+				const conversation = await preferences.getChatMessages(peerId);
+				const { messages } = conversation || { messages: [] };
+
+				const message = messages.find(e => {
+					const { payload } = e;
+					if (payload && payload.action == ChatFile().action) {
+						return payload.name == data.name;
+					}
+				});
+
+				if (message) {
+					message.payload.uri = `file://${path}`;
+					preferences.saveChatMessages(peerId, { messages });
+					DeviceEventEmitter.emit('FileTransReceived', { data, path });
+				}
+			});
 		} else if (data.action == ReadFile().action && !data.sourcePeer) {
 			const { from, hash, name } = data;
 			const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
