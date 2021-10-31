@@ -11,7 +11,7 @@ let mediaQueueTime = 0;
 export default class MediaPlayer extends Component {
 
     listeners = {};
-    paused = false; // autoplay at start
+    paused = true; // paused at start
 
     constructor(props) {
         super(props);
