@@ -84,6 +84,41 @@ export default class FileTransferWebRTC {
 		this.evtError = callback;
 	}
 
+	static async joinFile(data) {
+		const { from, hash, name, totalPart } = data;
+
+		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
+
+		const fileName = `${/*hash ||*/ name}`;
+		const path = `${folder}/${fileName}`;
+
+		if (await RNFS.exists(path)) await RNFS.unlink(path);
+
+		const files = await RNFS.readDir(folder);
+		const foundFiles = files.filter(e =>
+			e.name.indexOf(`${hash}.${totalPart}`) === 0
+			|| e.name.indexOf(`${name}.${totalPart}`) === 0
+		).sort((a, b) => {
+			const aIndex = a.path.split('.').reverse()[0];
+			const bIndex = b.path.split('.').reverse()[0];
+			return aIndex - bIndex;
+		});
+
+		// join part files into single file
+		for (const index in foundFiles) {
+			const file = foundFiles[index];
+			const content = await RNFS.readFile(file.path, 'utf8');
+			await RNFS.appendFile(path, content, 'utf8');
+		}
+
+		// decode base64 utf8 string to binary
+		const content = await RNFS.readFile(path, 'utf8');
+		await RNFS.writeFile(path, content, 'base64');
+
+		return path;
+	}
+
 	async joinParts() {
 		if (this.revokeMessageEvt) this.revokeMessageEvt();
 
