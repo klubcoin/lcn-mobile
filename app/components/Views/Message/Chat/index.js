@@ -561,7 +561,7 @@ class Chat extends Component {
 						onSend={this.onSend}
 						user={{ _id: selectedAddress.toLowerCase() }}
 						renderAvatar={this.renderAvatar}
-						bottomOffset={Platform.OS === 'ios' && 35}
+						bottomOffset={0}
 						onInputTextChanged={this.sendTyping}
 						renderFooter={this.renderTypingFooter}
 						renderMessage={this.renderMessage}
