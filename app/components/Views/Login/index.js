@@ -48,143 +48,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { tlc, toLowerCaseCompare } from '../../../util/general';
 import LoginWithKeycloak from '../LoginWithKeycloak';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 const isTextDelete = text => tlc(text) === 'delete';
 const deviceHeight = Device.getDeviceHeight();
 const breakPoint = deviceHeight < 700;
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	wrapper: {
-		flex: 1,
-		paddingHorizontal: 32
-	},
-	foxWrapper: {
-		justifyContent: 'center',
-		alignSelf: 'center',
-		width: Device.isIos() ? 130 : 100,
-		height: Device.isIos() ? 130 : 100,
-		marginTop: 100
-	},
-	image: {
-		alignSelf: 'center',
-		width: Device.isIos() ? 130 : 100,
-		height: Device.isIos() ? 130 : 100
-	},
-	title: {
-		fontSize: Device.isAndroid() ? 30 : 35,
-		marginTop: 20,
-		marginBottom: 20,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'center',
-		...fontStyles.bold
-	},
-	field: {
-		flex: 1,
-		marginBottom: Device.isAndroid() ? 0 : 10,
-		flexDirection: 'column'
-	},
-	label: {
-		color: colors.black,
-		fontSize: 16,
-		marginBottom: 12,
-		...fontStyles.normal
-	},
-	ctaWrapper: {
-		marginTop: 20
-	},
-	footer: {
-		marginVertical: 40
-	},
-	errorMsg: {
-		color: colors.red,
-		...fontStyles.normal,
-		lineHeight: 20
-	},
-	goBack: {
-		marginVertical: 14,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	biometrics: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginTop: 20,
-		marginBottom: 30
-	},
-	biometryLabel: {
-		flex: 1,
-		fontSize: 16,
-		color: colors.black,
-		...fontStyles.normal
-	},
-	biometrySwitch: {
-		flex: 0
-	},
-	input: {
-		...fontStyles.normal,
-		fontSize: 16,
-		paddingTop: 2
-	},
-	cant: {
-		width: 280,
-		alignSelf: 'center',
-		justifyContent: 'center',
-		textAlign: 'center',
-		...fontStyles.normal,
-		fontSize: 16,
-		lineHeight: 24,
-		color: colors.black
-	},
-	areYouSure: {
-		width: '100%',
-		padding: breakPoint ? 16 : 24,
-		justifyContent: 'center',
-		alignSelf: 'center'
-	},
-	heading: {
-		marginHorizontal: 6,
-		color: colors.black,
-		...fontStyles.bold,
-		fontSize: 20,
-		textAlign: 'center',
-		lineHeight: breakPoint ? 24 : 26
-	},
-	red: {
-		marginHorizontal: 24,
-		color: colors.red
-	},
-	warningText: {
-		...fontStyles.normal,
-		textAlign: 'center',
-		fontSize: 14,
-		lineHeight: breakPoint ? 18 : 22,
-		color: colors.black,
-		marginTop: 20
-	},
-	warningIcon: {
-		alignSelf: 'center',
-		color: colors.red,
-		marginVertical: 10
-	},
-	bold: {
-		...fontStyles.bold
-	},
-	delete: {
-		marginBottom: 20
-	},
-	deleteWarningMsg: {
-		...fontStyles.normal,
-		fontSize: 16,
-		lineHeight: 20,
-		marginTop: 10,
-		color: colors.red
-	}
-});
 
 const PASSCODE_NOT_SET_ERROR = strings('login.passcode_not_set_error');
 const WRONG_PASSWORD_ERROR = strings('login.wrong_password_error');
@@ -287,7 +157,7 @@ class Login extends PureComponent {
 		this.handleLogin(password);
 	};
 
-	handleLogin = async (password) => {
+	handleLogin = async password => {
 		try {
 			this.setState({ loading: true, error: null });
 			const { KeyringController } = Engine.context;
@@ -404,13 +274,13 @@ class Login extends PureComponent {
 		if (this.state.biometryType && !this.state.biometryPreviouslyDisabled) {
 			return (
 				<View style={styles.biometrics}>
-					<Text style={styles.biometryLabel}>
+					<Text style={[styles.biometryLabel, brandStyles.biometryLabel]}>
 						{strings(`biometrics.enable_${this.state.biometryType.toLowerCase()}`)}
 					</Text>
 					<Switch
 						onValueChange={biometryChoice => this.updateBiometryChoice(biometryChoice)} // eslint-disable-line react/jsx-no-bind
 						value={this.state.biometryChoice}
-						style={styles.biometrySwitch}
+						style={[styles.biometrySwitch, brandStyles.biometrySwitch]}
 						trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
 						ios_backgroundColor={colors.grey300}
 					/>
@@ -420,7 +290,9 @@ class Login extends PureComponent {
 
 		return (
 			<View style={styles.biometrics}>
-				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
+				<Text style={[styles.biometryLabel, brandStyles.biometryLabel]}>
+					{strings(`choose_password.remember_me`)}
+				</Text>
 				<Switch
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
@@ -458,7 +330,7 @@ class Login extends PureComponent {
 		return true;
 	};
 
-	onKeycloakResult = async (error) => {
+	onKeycloakResult = async error => {
 		if (!error) {
 			const hash = await preferences.getKeycloakHash();
 			this.handleLogin(hash);
@@ -505,7 +377,7 @@ class Login extends PureComponent {
 					<View style={styles.areYouSure}>
 						<Text style={[styles.heading, styles.delete]}>{strings('login.type_delete')}</Text>
 						<OutlinedTextField
-							style={styles.input}
+							style={[styles.input, brandStyles.input]}
 							autoFocus
 							returnKeyType={'done'}
 							onChangeText={this.checkDelete}
@@ -522,85 +394,93 @@ class Login extends PureComponent {
 				</TouchableWithoutFeedback>
 			</WarningExistingUserModal>
 
-			<SafeAreaView style={styles.mainWrapper}>
-				<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
-					<View testID={'login'}>
-						<View style={styles.foxWrapper}>
-							<Image
-								source={require('../../../images/fox.png')}
-								style={styles.image}
-								resizeMethod={'auto'}
-							/>
+			<OnboardingScreenWithBg screen={'a'}>
+				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+					<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
+						<View testID={'login'}>
+							<View style={styles.foxWrapper}>
+								<Image
+									source={require('../../../images/klubcoin_vertical_logo.png')}
+									style={[styles.image, brandStyles.image]}
+									resizeMethod={'auto'}
+								/>
+							</View>
+							<Text style={[styles.title, brandStyles.title]}>{strings('login.title')}</Text>
+							{this.props.keycloakAuth ? (
+								<LoginWithKeycloak
+									type={'sign'}
+									label={strings('login.login_liquichain_with_keycloak')}
+									onSuccess={this.onKeycloakResult}
+									onError={this.onKeycloakResult}
+								/>
+							) : (
+								<>
+									<View style={styles.field}>
+										<Text style={[styles.label, brandStyles.label]}>
+											{strings('login.password')}
+										</Text>
+										<OutlinedTextField
+											style={[styles.input, brandStyles.input]}
+											inputContainerStyle={[styles.inputContainer, brandStyles.inputContainer]}
+											placeholder={'Password'}
+											placeholderTextColor={'white'}
+											testID={'login-password-input'}
+											returnKeyType={'done'}
+											autoCapitalize="none"
+											secureTextEntry
+											ref={this.fieldRef}
+											onChangeText={this.setPassword}
+											value={this.state.password}
+											baseColor={colors.transparent}
+											tintColor={colors.transparent}
+											onSubmitEditing={this.onLogin}
+											renderRightAccessory={() => (
+												<BiometryButton
+													onPress={this.tryBiometric}
+													hidden={
+														!(
+															this.state.biometryChoice &&
+															this.state.biometryType &&
+															this.state.hasCredentials
+														)
+													}
+													type={this.state.biometryType}
+												/>
+											)}
+										/>
+									</View>
+
+									{this.renderSwitch()}
+
+									{!!this.state.error && (
+										<Text style={styles.errorMsg} testID={'invalid-password-error'}>
+											{this.state.error}
+										</Text>
+									)}
+
+									<View style={styles.ctaWrapper} testID={'log-in-button'}>
+										<StyledButton type={'confirm'} onPress={this.onLogin}>
+											{this.state.loading ? (
+												<ActivityIndicator size="small" color="white" />
+											) : (
+												strings('login.login_button')
+											)}
+										</StyledButton>
+									</View>
+								</>
+							)}
+
+							<View style={styles.footer}>
+								<Text style={[styles.cant, brandStyles.cant]}>{strings('login.go_back')}</Text>
+								<Button style={[styles.goBack, brandStyles.goBack]} onPress={this.toggleWarningModal}>
+									{strings('login.reset_wallet')}
+								</Button>
+							</View>
 						</View>
-						<Text style={styles.title}>{strings('login.title')}</Text>
-						{this.props.keycloakAuth ?
-							<LoginWithKeycloak
-								type={'sign'}
-								label={strings('login.login_liquichain_with_keycloak')}
-								onSuccess={this.onKeycloakResult}
-								onError={this.onKeycloakResult}
-							/> : <>
-								<View style={styles.field}>
-									<Text style={styles.label}>{strings('login.password')}</Text>
-									<OutlinedTextField
-										style={styles.input}
-										placeholder={'Password'}
-										testID={'login-password-input'}
-										returnKeyType={'done'}
-										autoCapitalize="none"
-										secureTextEntry
-										ref={this.fieldRef}
-										onChangeText={this.setPassword}
-										value={this.state.password}
-										baseColor={colors.grey500}
-										tintColor={colors.blue}
-										onSubmitEditing={this.onLogin}
-										renderRightAccessory={() => (
-											<BiometryButton
-												onPress={this.tryBiometric}
-												hidden={
-													!(
-														this.state.biometryChoice &&
-														this.state.biometryType &&
-														this.state.hasCredentials
-													)
-												}
-												type={this.state.biometryType}
-											/>
-										)}
-									/>
-								</View>
-
-								{this.renderSwitch()}
-
-								{!!this.state.error && (
-									<Text style={styles.errorMsg} testID={'invalid-password-error'}>
-										{this.state.error}
-									</Text>
-								)}
-
-								<View style={styles.ctaWrapper} testID={'log-in-button'}>
-									<StyledButton type={'confirm'} onPress={this.onLogin}>
-										{this.state.loading ? (
-											<ActivityIndicator size="small" color="white" />
-										) : (
-											strings('login.login_button')
-										)}
-									</StyledButton>
-								</View>
-							</>
-						}
-
-						<View style={styles.footer}>
-							<Text style={styles.cant}>{strings('login.go_back')}</Text>
-							<Button style={styles.goBack} onPress={this.toggleWarningModal}>
-								{strings('login.reset_wallet')}
-							</Button>
-						</View>
-					</View>
-				</KeyboardAwareScrollView>
-				<FadeOutOverlay />
-			</SafeAreaView>
+					</KeyboardAwareScrollView>
+					<FadeOutOverlay />
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		</ErrorBoundary>
 	);
 }
@@ -613,7 +493,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setOnboardingWizardStep: step => dispatch(setOnboardingWizardStep(step)),
-	keycloakAuthUnset: () => dispatch(keycloakAuthUnset()),
+	keycloakAuthUnset: () => dispatch(keycloakAuthUnset())
 });
 
 export default connect(
