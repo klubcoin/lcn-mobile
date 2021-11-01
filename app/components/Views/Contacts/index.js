@@ -18,12 +18,12 @@ import base64 from 'base-64';
 import Share from 'react-native-share';
 import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
-import Messaging, { Ping, Pong, WSEvent } from '../../../services/Messaging';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
 import Logger from '../../../util/Logger';
 import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import Text from '../../Base/Text';
+import { refWebRTC } from '../../../services/WebRTC';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -124,12 +124,7 @@ class Contacts extends PureComponent {
 
 	constructor(props) {
 		super(props);
-		const { selectedAddress } = props;
 		this.contactSelection = props.navigation.getParam('contactSelection');
-		this.messaging = new Messaging(selectedAddress);
-		this.messaging.on(WSEvent.message, data => {
-			this.handleWSMessage(data);
-		});
 	}
 
 	componentDidMount() {
@@ -138,10 +133,8 @@ class Contacts extends PureComponent {
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 		this.setState({ contacts });
 
-		this.messaging.initConnection();
 		this.data = this.props.navigation.getParam('data');
 		this.handleFriendRequestUpdate();
-		// this.pingFriends(contacts);
 		this.announceOnline();
 	}
 
@@ -155,10 +148,6 @@ class Contacts extends PureComponent {
 		}
 	};
 
-	componentWillUnmount() {
-		this.messaging && this.messaging.disconnect();
-	}
-
 	announceOnline() {
 		const { selectedAddress, updateOnlinePeerWallets } = this.props;
 		const peerId = stripHexPrefix(selectedAddress);
@@ -167,14 +156,6 @@ class Contacts extends PureComponent {
 			if (success && json.peers) {
 				updateOnlinePeerWallets(json.peers);
 			}
-		});
-	}
-
-	pingFriends(contacts) {
-		const { selectedAddress } = this.props;
-		contacts.map(e => {
-			e.online = false;
-			this.messaging.send(Ping(selectedAddress, e.address));
 		});
 	}
 
@@ -200,24 +181,6 @@ class Contacts extends PureComponent {
 			return sender == data.from.toLocaleLowerCase();
 		}
 		return false;
-	}
-
-	async handleWSMessage(json) {
-		const { selectedAddress } = this.props;
-		const { contacts } = this.state;
-		try {
-			const data = JSON.parse(json);
-			if (data.action == 'ping') {
-				this.messaging.send(Pong(selectedAddress, data.from));
-			} else if (data.action == 'pong') {
-				const from = data.from.toLocaleLowerCase();
-				const contact = contacts.find(e => e.address.toLocaleLowerCase() == from);
-				if (contact) {
-					contact.online = true;
-					this.setState({ contacts: [...contacts] });
-				}
-			}
-		} catch (e) {}
 	}
 
 	onConfirm() {
@@ -326,7 +289,7 @@ class Contacts extends PureComponent {
 		const account = identities[selectedAddress];
 		const to = this.data.data.from;
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Accept);
-		this.messaging.message(to, { data });
+		refWebRTC().sendSafe(to, { data });
 	};
 
 	onSelectContact = contact => {
@@ -383,7 +346,7 @@ class Contacts extends PureComponent {
 		const { selectedAddress, identities } = this.props;
 		const account = identities[selectedAddress];
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Revoke);
-		this.messaging.message(address, { data });
+		refWebRTC().sendSafe(address, { data });
 	};
 
 	renderContact = ({ item }) => {
