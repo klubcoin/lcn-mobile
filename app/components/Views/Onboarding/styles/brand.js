@@ -1,14 +1,18 @@
 import { StyleSheet } from 'react-native';
 import Device from '../../../../util/Device';
-import { colors, fontStyles } from '../../../../styles/branch';
+import { colors, fontStyles } from '../../../../styles/brand';
 
-const branchStyles = StyleSheet.create({
+const brandStyles = StyleSheet.create({
 	text: {
 		color: colors.fontPrimary
 	},
 	createWrapper: {
 		justifyContent: 'center'
+	},
+	image: {
+		alignSelf: 'center',
+		width: 200
 	}
 });
 
-export { branchStyles };
+export { brandStyles };

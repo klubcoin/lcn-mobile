@@ -52,7 +52,7 @@ import {
 	TRUE
 } from '../../../constants/storage';
 import { styles } from './styles';
-import { branchStyles } from './styles/branch';
+import { brandStyles } from './styles/brand';
 
 const PUB_KEY = process.env.MM_PUBNUB_PUB_KEY;
 
@@ -479,13 +479,18 @@ class Onboarding extends PureComponent {
 	renderContent() {
 		return (
 			<View style={styles.ctas}>
-				<Text style={[styles.title, branchStyles.text]} testID={'onboarding-screen-title'}>
+				<Image
+					source={require('../../../images/klubcoin_text.png')}
+					style={[styles.image, brandStyles.image]}
+					resizeMode={'contain'}
+				/>
+				<Text style={[styles.title, brandStyles.text]} testID={'onboarding-screen-title'}>
 					{strings('onboarding.title')}
 				</Text>
 				<View style={styles.importWrapper}>
-					<Text style={[styles.buttonDescription, branchStyles.text]}>{strings('onboarding.import')}</Text>
+					<Text style={[styles.buttonDescription, brandStyles.text]}>{strings('onboarding.import')}</Text>
 				</View>
-				<View style={[styles.createWrapper, branchStyles.createWrapper]}>
+				<View style={[styles.createWrapper, brandStyles.createWrapper]}>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							type={'normal'}
