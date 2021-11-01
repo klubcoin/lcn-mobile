@@ -605,18 +605,6 @@ const Main = props => {
 		ensureOnboardProfile();
 	});
 
-	const handleWSMessage = async (messaging, json) => {
-		const { selectedAddress } = props;
-		try {
-			const data = JSON.parse(json);
-			if (data.data && data.data.from) {
-				handleFriendRequestUpdate(data);
-			} else if (data.action == 'ping') {
-				messaging.send(Pong(selectedAddress, data.from));
-			}
-		} catch (e) {}
-	};
-
 	const handleFriendRequestUpdate = message => {
 		if (!message) return;
 		if (!message.data) {
@@ -672,7 +660,6 @@ const Main = props => {
 			const messaging = new Messaging(selectedAddress);
 			setMessaging(messaging);
 			messaging.initConnection();
-			messaging.on(WSEvent.message, data => handleWSMessage(messaging, data));
 
 			return () => {
 				revokeWebRTC();
@@ -837,6 +824,8 @@ const Main = props => {
 					}
 					break;
 			}
+		} else if (data.data) {
+			handleFriendRequestUpdate(data);
 		}
 	};
 
