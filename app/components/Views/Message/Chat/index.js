@@ -511,10 +511,10 @@ class Chat extends Component {
 			message.image = `file://${path}`;
 			return <ImageMessage key={sha256(path)}	{...message} loading={isLoading} />
 		} else if (type && type.indexOf('audio') == 0) {
-			return <AudioMessage key={sha256(path)}	{...message.payload} path={path} incoming={incoming} />
+			return <AudioMessage key={sha256(path)}	{...message.payload} path={path} incoming={incoming} loading={isLoading} />
 		}
 
-		return <FileMessage key={sha256(path)} {...message.payload} incoming={incoming} />
+		return <FileMessage key={sha256(path)} {...message.payload} incoming={incoming} loading={isLoading} />
 	}
 
 	renderMessage = messageProps => {

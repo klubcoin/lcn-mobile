@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Text from '../../../Base/Text';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../../styles/common';
 import Share from 'react-native-share';
 
-const FileMessage = ({ name, path, uri, incoming }) => {
+const FileMessage = ({ name, path, uri, incoming, loading }) => {
   const sender = !incoming;
 
   const onShare = () => {
@@ -20,6 +20,7 @@ const FileMessage = ({ name, path, uri, incoming }) => {
       <TouchableOpacity style={styles.body} onPress={onShare}>
         <Icon name={'file'} size={24} style={[styles.icon, incoming && styles.highlight]} />
         <Text style={[styles.name, sender && styles.textWhite]}>{name}</Text>
+        {loading && <ActivityIndicator />}
       </TouchableOpacity>
     </View>
   )
