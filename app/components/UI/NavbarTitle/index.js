@@ -7,38 +7,8 @@ import Networks from '../../../util/networks';
 import { toggleNetworkModal } from '../../../actions/modals';
 import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		alignItems: 'center',
-		flex: 1
-	},
-	network: {
-		flexDirection: 'row'
-	},
-	networkName: {
-		fontSize: 11,
-		color: colors.grey400,
-		...fontStyles.normal
-	},
-	networkIcon: {
-		width: 5,
-		height: 5,
-		borderRadius: 100,
-		marginRight: 5,
-		marginTop: Device.isIos() ? 4 : 5
-	},
-	title: {
-		fontSize: 18,
-		...fontStyles.normal,
-		color: colors.black
-	},
-	otherNetworkIcon: {
-		backgroundColor: colors.transparent,
-		borderColor: colors.grey100,
-		borderWidth: 1
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * UI PureComponent that renders inside the navbar
@@ -109,13 +79,13 @@ class NavbarTitle extends PureComponent {
 				testID={'open-networks-button'}
 			>
 				{title ? (
-					<Text numberOfLines={1} style={styles.title}>
+					<Text numberOfLines={1} style={[styles.title, brandStyles.title]}>
 						{realTitle}
 					</Text>
 				) : null}
 				<View style={styles.network}>
 					<View style={[styles.networkIcon, color ? { backgroundColor: color } : styles.otherNetworkIcon]} />
-					<Text style={styles.networkName} testID={'navbar-title-network'}>
+					<Text style={[styles.networkName, brandStyles.networkName]} testID={'navbar-title-network'}>
 						{name}
 					</Text>
 				</View>

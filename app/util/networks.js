@@ -1,4 +1,4 @@
-import { colors } from '../styles/common';
+import { colors } from '../styles/brand';
 import URL from 'url-parse';
 import AppConstants from '../core/AppConstants';
 import { MAINNET, ROPSTEN, KOVAN, RINKEBY, GOERLI, RPC } from '../../app/constants/network';
@@ -14,12 +14,12 @@ import Engine from '../core/Engine';
  */
 const NetworkList = {
 	[MAINNET]: {
-		name: 'Liquichain Main Network',
+		name: 'Klubcoin Main Network',
 		shortName: 'Ethereum',
 		networkId: 1,
 		chainId: 1,
 		hexChainId: '0x1',
-		color: '#370e75',
+		color: colors.blue,
 		networkType: 'mainnet'
 	},
 	[ROPSTEN]: {

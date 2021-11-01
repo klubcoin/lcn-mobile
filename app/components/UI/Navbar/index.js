@@ -586,18 +586,22 @@ export function getWalletNavbarOptions(title, navigation) {
 		headerTitle: <NavbarTitle title={title} />,
 		headerLeft: (
 			<TouchableOpacity onPress={openDrawer} style={styles.backButton} testID={'hamburger-menu-button-wallet'}>
-				<Icon name={'bars'} size={16} style={styles.backIcon} />
+				<Icon name={'bars'} size={16} style={[styles.backIcon, brandStyles.backIcon]} />
 			</TouchableOpacity>
 		),
-		headerRight: (
-			<TouchableOpacity
-				style={styles.infoButton}
-				// eslint-disable-next-line
-				onPress={openQRScanner}
-			>
-				<AntIcon name="scan1" size={28} style={styles.infoIcon} />
-			</TouchableOpacity>
-		)
+		// headerRight: (
+		// 	<TouchableOpacity
+		// 		style={styles.infoButton}
+		// 		// eslint-disable-next-line
+		// 		onPress={openQRScanner}
+		// 	>
+		// 		<AntIcon name="scan1" size={28} style={styles.infoIcon} />
+		// 	</TouchableOpacity>
+		// ),
+		headerStyle: {
+			backgroundColor: colors.grey,
+			marginTop: Device.isAndroid() ? 10 : 27
+		}
 	};
 }
 

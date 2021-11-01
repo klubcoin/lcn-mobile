@@ -3,11 +3,13 @@ import { colors, fontStyles } from '../../../../styles/brand';
 import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
-	header: {
-		color: colors.fontPrimary
+	title: {
+		fontSize: 20,
+		...fontStyles.bold,
+		color: colors.white
 	},
-	backIcon: {
-		color: colors.blue
+	networkName: {
+		...fontStyles.bold
 	}
 });
 
