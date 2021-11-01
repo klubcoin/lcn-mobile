@@ -309,16 +309,7 @@ class Chat extends Component {
 
 	sendPaymentRequest = request => {
 		const selectedContact = this.state.contact;
-		const { selectedAddress } = this.props;
-		const message = {
-			_id: uuid.v4(),
-			createdAt: new Date(),
-			text: '',
-			payload: RequestPayment(selectedContact.address, request),
-			user: { _id: selectedAddress.toLowerCase() }
-		};
-		this.addNewMessage([message]);
-		this.messaging.send(message);
+		this.sendPayloadMessage(RequestPayment(selectedContact.address, request));
 	};
 
 	onPickFile = async () => {
@@ -376,7 +367,7 @@ class Chat extends Component {
 		}
 	}
 
-	sendPayloadMessage = async payload => {
+	sendPayloadMessage = async (payload, append = true) => {
 		const { selectedAddress } = this.props;
 		const message = {
 			_id: uuid.v4(),
@@ -385,7 +376,7 @@ class Chat extends Component {
 			payload,
 			user: { _id: selectedAddress.toLowerCase() }
 		};
-		this.addNewMessage([message]);
+		if (append) this.addNewMessage([message]);
 		this.messaging.send(message);
 	};
 
