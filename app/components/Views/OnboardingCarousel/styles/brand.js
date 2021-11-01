@@ -1,13 +1,13 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import Device from '../../../../util/Device';
-import { colors, fontStyles, baseStyles } from '../../../../styles/branch';
+import { colors, fontStyles, baseStyles } from '../../../../styles/brand';
 
 const IMAGE_1_RATIO = 285 / 203;
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
 const IMG_PADDING = Device.isIphoneX() ? 100 : Device.isIphone5S() ? 180 : 220;
 
-const branchStyles = StyleSheet.create({
+const brandStyles = StyleSheet.create({
 	textColor: {
 		color: colors.fontPrimary
 	},
@@ -32,6 +32,6 @@ const branchStyles = StyleSheet.create({
 });
 
 const onboarding_carousel = require('../../../../images/klubcoin_lighten.png'); // eslint-disable-line
-const branchImgs = [onboarding_carousel, onboarding_carousel, onboarding_carousel];
+const brandImgs = [onboarding_carousel, onboarding_carousel, onboarding_carousel];
 
-export { branchStyles, branchImgs };
+export { brandStyles, brandImgs };

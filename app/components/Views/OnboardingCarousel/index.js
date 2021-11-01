@@ -10,7 +10,7 @@ import { getTransparentOnboardingNavbarOptions } from '../../UI/Navbar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import Device from '../../../util/Device';
 import { styles, carousel_images } from './styles/index';
-import { branchStyles, branchImgs } from './styles/branch';
+import { brandStyles, brandImgs } from './styles/brand';
 
 /**
  * View that is displayed to first time (new) users
@@ -58,22 +58,22 @@ export default class OnboardingCarousel extends PureComponent {
 										<View key={key} style={baseStyles.flexGrow}>
 											<View style={styles.tab}>
 												<Text
-													style={[styles.title, branchStyles.textColor]}
+													style={[styles.title, brandStyles.textColor]}
 													testID={`carousel-screen-${value}`}
 												>
 													{strings(`onboarding_carousel.title${key}`)}
 												</Text>
-												<Text style={[styles.subtitle, branchStyles.textColor]}>
+												<Text style={[styles.subtitle, brandStyles.textColor]}>
 													{strings(`onboarding_carousel.subtitle${key}`)}
 												</Text>
 											</View>
 											<View style={styles.carouselImageWrapper}>
 												<Image
-													source={branchImgs[index]}
+													source={brandImgs[index]}
 													style={[
 														styles.carouselImage,
 														styles[imgStyleKey],
-														branchStyles[imgStyleKey]
+														brandStyles[imgStyleKey]
 													]}
 													resizeMethod={'auto'}
 													testID={`carousel-${value}-image`}
@@ -90,7 +90,7 @@ export default class OnboardingCarousel extends PureComponent {
 										key={i}
 										style={[
 											styles.circle,
-											branchStyles.circle,
+											brandStyles.circle,
 											currentTab === i ? styles.solidCircle : {}
 										]}
 									/>

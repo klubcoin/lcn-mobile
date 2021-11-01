@@ -1,7 +1,7 @@
-import { colors, fontStyles } from '../../../../styles/branch';
+import { colors, fontStyles } from '../../../../styles/brand';
 import { StyleSheet } from 'react-native';
 
-const branchStyles = StyleSheet.create({
+const brandStyles = StyleSheet.create({
 	text: {
 		color: colors.fontPrimary
 	},
@@ -11,4 +11,4 @@ const branchStyles = StyleSheet.create({
 	}
 });
 
-export { branchStyles };
+export { brandStyles };
