@@ -32,6 +32,7 @@ export const colors = {
 	red: '#D73A49',
 	red000: '#fcf2f3',
 	blue: '#00b9fe',
+	borderBlue: '#35a7d1',
 	blue000: '#370e75',
 	blue200: '#370e75',
 	blue500: '#370e75',
