@@ -18,6 +18,7 @@ export default class WebRTC {
 	sendChannels = {};
 	peerRefs = {};
 	peerPublicKeys = {};
+	monitors = {};
 
 	onReady = null;
 	onMessage = null;
@@ -194,10 +195,16 @@ export default class WebRTC {
 			if (data.action == 'ping') {
 				this.peerPublicKeys[peerId] = data.publicKey;
 				this.sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
+				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			} else if (data.checksum) {
 				this.sendToPeer(peerId, AckWebRTC(data.checksum));
+			} else if (data.action == AckWebRTC().action && data.hash) {
+				if (this.monitors[peerId]) {
+					clearTimeout(this.monitors[peerId]);
+					this.monitors[peerId] = null;
+				}
 			}
 
 			await this.handleChatMessage(data, peerId);
@@ -380,6 +387,22 @@ export default class WebRTC {
 			encrypted: !!publicKey
 		};
 		channel && channel.send(JSON.stringify(data));
+	}
+
+	connectAndSend = async (address, data) => {
+		this.connectTo(address);
+		DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
+			this.sendToPeer(address, data);
+		});
+	};
+
+	sendSafe = async (address, data) => {
+		if (!this.hasChannel(address)) {
+			this.connectAndSend(address, data);
+		} else {
+			this.monitors[address] = setTimeout(() => this.connectAndSend(address, data), 5000);
+			this.sendToPeer(address, data);
+		}
 	}
 }
 
