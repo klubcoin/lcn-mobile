@@ -22,7 +22,7 @@ import { getHost } from '../../../util/browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from 'common/colors';
 import { styles } from './styles/index';
-import { branchStyles } from './styles/branch';
+import { brandStyles } from './styles/brand';
 
 const { HOMEPAGE_URL } = AppConstants;
 
@@ -384,7 +384,6 @@ export function getModalNavbarOptions(title) {
  */
 export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	const headerLeftHide = headerLeft || navigation.getParam('headerLeft');
-	//TODO: check what app is
 	return {
 		headerStyle: {
 			shadowColor: colors.transparent,
@@ -395,7 +394,7 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={[styles.header, branchStyles.header]}>LIQUICHAIN</Text>
+				<Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -410,14 +409,12 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
  * @returns {Object} - Corresponding navbar options containing headerTitle
  */
 export function getTransparentOnboardingNavbarOptions() {
-	//TODO: check what app is
-
 	return {
 		headerTransparent: true,
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={[styles.header, branchStyles.header]}>LIQUICHAIN</Text>
+				{/* <Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text> */}
 			</View>
 		),
 		headerLeft: <View />,
@@ -431,13 +428,12 @@ export function getTransparentOnboardingNavbarOptions() {
  * @returns {Object} - Corresponding navbar options containing headerTitle and a back button
  */
 export function getTransparentBackOnboardingNavbarOptions() {
-	//TODO: check what app is
 	return {
 		headerTransparent: true,
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={[styles.header, branchStyles.header]}>LIQUICHAIN</Text>
+				{/* <Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text> */}
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -452,8 +448,6 @@ export function getTransparentBackOnboardingNavbarOptions() {
  * @returns {Object} - Corresponding navbar options containing headerLeft
  */
 export function getOptinMetricsNavbarOptions() {
-	//TODO: check what app is
-
 	return {
 		headerStyle: {
 			shadowColor: colors.transparent,
@@ -469,7 +463,7 @@ export function getOptinMetricsNavbarOptions() {
 				</View>
 				<View style={styles.metamaskNameWrapper}>
 					{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-					<Text style={[styles.header, branchStyles.header]}>LIQUICHAIN</Text>
+					<Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text>
 				</View>
 			</View>
 		)

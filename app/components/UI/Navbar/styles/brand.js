@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/branch';
+import { colors, fontStyles } from '../../../../styles/brand';
 import Device from '../../../../util/Device';
 
-const branchStyles = StyleSheet.create({
+const brandStyles = StyleSheet.create({
 	header: {
 		color: colors.fontPrimary
 	}
 });
 
-export { branchStyles };
+export { brandStyles };
