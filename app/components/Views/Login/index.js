@@ -377,7 +377,7 @@ class Login extends PureComponent {
 					<View style={styles.areYouSure}>
 						<Text style={[styles.heading, styles.delete]}>{strings('login.type_delete')}</Text>
 						<OutlinedTextField
-							style={[styles.input, brandStyles.input]}
+							style={[styles.input]}
 							autoFocus
 							returnKeyType={'done'}
 							onChangeText={this.checkDelete}

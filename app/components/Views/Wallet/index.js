@@ -1,10 +1,18 @@
 import React, { PureComponent } from 'react';
-import { RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View } from 'react-native';
+import {
+	RefreshControl,
+	ScrollView,
+	InteractionManager,
+	ActivityIndicator,
+	StyleSheet,
+	View,
+	ImageBackground
+} from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors, fontStyles, baseStyles } from '../../../styles/brand';
 import AccountOverview from '../../UI/AccountOverview';
 import Tokens from '@UI/Tokens';
 import { stripHexPrefix } from 'ethereumjs-util';
@@ -24,31 +32,9 @@ import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import preferences from '../../../store/preferences';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	tabUnderlineStyle: {
-		height: 2,
-		backgroundColor: colors.blue
-	},
-	tabStyle: {
-		paddingBottom: 0
-	},
-	textStyle: {
-		fontSize: 12,
-		letterSpacing: 0.5,
-		...fontStyles.bold
-	},
-	loader: {
-		backgroundColor: colors.white,
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	}
-});
+import Device from '../../../util/Device';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * Main view for the wallet
@@ -219,12 +205,12 @@ class Wallet extends PureComponent {
 	renderTabBar() {
 		return (
 			<DefaultTabBar
-				underlineStyle={styles.tabUnderlineStyle}
+				underlineStyle={[styles.tabUnderlineStyle, brandStyles.tabUnderlineStyle]}
 				activeTextColor={colors.blue}
 				inactiveTextColor={colors.fontTertiary}
-				backgroundColor={colors.white}
+				backgroundColor={colors.transparent}
 				tabStyle={styles.tabStyle}
-				textStyle={styles.textStyle}
+				textStyle={[styles.textStyle, brandStyles.textStyle]}
 			/>
 		);
 	}
@@ -264,14 +250,14 @@ class Wallet extends PureComponent {
 			balance = accounts[selectedAddress].balance;
 			// balance = "0x00"
 			assets = [
-				{
-					name: 'Liquichain',
-					symbol: getTicker(ticker),
-					isETH: true,
-					balance,
-					balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
-					logo: '../images/logo.png'
-				},
+				// {
+				// 	name: 'Liquichain',
+				// 	symbol: getTicker(ticker),
+				// 	isETH: true,
+				// 	balance,
+				// 	balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
+				// 	logo: '../images/logo.png'
+				// },
 				...tokens
 			];
 		} else {
@@ -285,22 +271,28 @@ class Wallet extends PureComponent {
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 
 		return (
-			<View style={styles.wrapper}>
-				{selectedAddress && account && (
-					<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
-				)}
-				<ScrollableTabView
-					renderTabBar={this.renderTabBar}
-					// eslint-disable-next-line react/jsx-no-bind
-					onChangeTab={obj => this.onChangeTab(obj)}
+			<View style={[styles.wrapper, brandStyles.wrapper]}>
+				<ImageBackground
+					source={require('../../../images/klubcoin_filigram_logo.png')}
+					style={[styles.imgBackground, brandStyles.imgBackground]}
+					resizeMode={'cover'}
 				>
-					<Tokens navigation={navigation} tabLabel={'LCN Tokens/Apps'} tokens={assets} />
-					{/*<CollectibleContracts
-						navigation={navigation}
-						tabLabel={strings('wallet.collectibles')}
-						collectibles={collectibles}
-					/>*/}
-				</ScrollableTabView>
+					{selectedAddress && account && (
+						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
+					)}
+					<ScrollableTabView
+						renderTabBar={this.renderTabBar}
+						// eslint-disable-next-line react/jsx-no-bind
+						onChangeTab={obj => this.onChangeTab(obj)}
+					>
+						<Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
+						<CollectibleContracts
+							navigation={navigation}
+							tabLabel={strings('wallet.collectibles')}
+							collectibles={collectibles}
+						/>
+					</ScrollableTabView>
+				</ImageBackground>
 			</View>
 		);
 	}
