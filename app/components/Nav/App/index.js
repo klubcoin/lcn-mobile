@@ -31,6 +31,7 @@ import AppConstants from '../../../core/AppConstants';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
+import Login1 from '../../Views/Login1';
 
 /**
  * Stack navigator responsible for the onboarding process
@@ -162,6 +163,7 @@ HomeNav.router.getStateForAction = (action, state) => {
  */
 const AppNavigator = createSwitchNavigator(
 	{
+		Login1,
 		Entry,
 		HomeNav,
 		OnboardingRootNav,
@@ -170,7 +172,7 @@ const AppNavigator = createSwitchNavigator(
 		LockScreen
 	},
 	{
-		initialRouteName: 'Entry'
+		initialRouteName: 'Login1'
 	}
 );
 
