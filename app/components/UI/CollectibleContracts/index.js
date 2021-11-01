@@ -13,53 +13,8 @@ import { favoritesCollectiblesObjectSelector } from '../../../reducers/collectib
 import Text from '../../Base/Text';
 import AppConstants from '../../../core/AppConstants';
 import { toLowerCaseCompare } from '../../../util/general';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1,
-		minHeight: 500,
-		marginTop: 16
-	},
-	emptyView: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginTop: 40
-	},
-	add: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	addText: {
-		fontSize: 15,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	footer: {
-		flex: 1,
-		paddingBottom: 30
-	},
-	emptyContainer: {
-		flex: 1,
-		marginBottom: 42,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	emptyImageContainer: {
-		width: 76,
-		height: 76,
-		marginBottom: 12
-	},
-	emptyTitleText: {
-		fontSize: 24,
-		color: colors.grey200
-	},
-	emptyText: {
-		color: colors.grey200,
-		marginBottom: 8
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * View that renders a list of CollectibleContract
@@ -165,7 +120,7 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 	);
 
 	return (
-		<View style={styles.wrapper} testID={'collectible-contracts'}>
+		<View style={[styles.wrapper, brandStyles.wrapper]} testID={'collectible-contracts'}>
 			{collectibles.length ? renderList() : renderEmpty()}
 			{renderFooter()}
 			{collectible && contractName && (
