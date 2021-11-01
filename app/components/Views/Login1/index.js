@@ -65,7 +65,7 @@ const CLEAN_VAULT_ERROR = strings('login.clean_vault_error');
 /**
  * View where returning users can authenticate
  */
-class Login extends PureComponent {
+class Login1 extends PureComponent {
 	static propTypes = {
 		/**
 		 * The navigator object
@@ -499,4 +499,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Login);
+)(Login1);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Login from '.';
+import Login1 from '.';
 import configureMockStore from 'redux-mock-store';
 import { ROPSTEN } from '../../../constants/network';
 
@@ -30,7 +30,7 @@ describe('Login', () => {
 			}
 		};
 
-		const wrapper = shallow(<Login />, {
+		const wrapper = shallow(<Login1 />, {
 			context: { store: mockStore(initialState) }
 		});
 		expect(wrapper).toMatchSnapshot();
