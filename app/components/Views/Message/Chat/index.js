@@ -38,6 +38,7 @@ import { StoreFile } from '../../../../services/FileStore';
 import { sha256 } from '../../../../core/CryptoSignature';
 import AudioMessage from '../components/AudioMessage';
 import FileMessage from '../components/FileMessage';
+import ImageMessage from '../components/ImageMessage';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -342,6 +343,7 @@ class Chat extends Component {
 
 		if (message) {
 			message.payload.uri = `file://${path}`;
+			message.payload.loading = false;
 
 			// update new path for message in conversation
 			const { messages, contact } = this.state;
@@ -496,17 +498,18 @@ class Chat extends Component {
 
 	renderMedia = (message) => {
 		const { selectedAddress } = this.props;
-		const { uri, name, type } = message.payload;
+		const { uri, name, type, loading } = message.payload;
 		const path = decodeURIComponent(uri).replace('file://', '');
 
 		const { user } = message;
 		const incoming = user?._id.toLowerCase() != selectedAddress.toLowerCase();
+		const isLoading = loading && incoming;
 
 		delete message.image;
 
 		if (type && type.indexOf('image') == 0) {
 			message.image = `file://${path}`;
-			return <Message key={sha256(path)}	{...message} />
+			return <ImageMessage key={sha256(path)}	{...message} loading={isLoading} />
 		} else if (type && type.indexOf('audio') == 0) {
 			return <AudioMessage key={sha256(path)}	{...message.payload} path={path} incoming={incoming} />
 		}
@@ -521,6 +524,7 @@ class Chat extends Component {
 		return (
 			<Message
 				{...messageProps}
+				renderMessageImage={() => null}
 				renderCustomView={isCustom ? () => this.renderCustomView(currentMessage) : null}
 			/>
 		);

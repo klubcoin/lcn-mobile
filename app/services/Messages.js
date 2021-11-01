@@ -67,5 +67,6 @@ export const TransactionSync = (transaction) => ({
 export const ChatFile = (to, fileInfo) => ({
 	action: 'chat_file',
 	to: `${to}`.toLowerCase(),
+	loading: true,
 	...fileInfo,
 })

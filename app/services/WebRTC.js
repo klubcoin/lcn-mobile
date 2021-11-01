@@ -10,7 +10,7 @@ import Messaging, { Message, WSEvent } from './Messaging';
 import { AckWebRTC, Chat, ChatFile, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
 
-const useSocketIO = true;
+const useSocketIO = false;
 const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
 
 export default class WebRTC {
@@ -265,6 +265,7 @@ export default class WebRTC {
 
 				if (message) {
 					message.payload.uri = `file://${path}`;
+					message.payload.loading = false;
 					preferences.saveChatMessages(peerId, { messages });
 					DeviceEventEmitter.emit('FileTransReceived', { data, path });
 				}
