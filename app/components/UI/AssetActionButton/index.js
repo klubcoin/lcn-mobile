@@ -3,74 +3,29 @@ import PropTypes from 'prop-types';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import FoundationIcon from 'react-native-vector-icons/Foundation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colors } from '../../../styles/common';
+import { colors } from '../../../styles/brand';
 import Device from '../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';
 import Colors from 'common/colors';
-
-const styles = StyleSheet.create({
-	button: {
-		flexShrink: 1,
-		marginHorizontal: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		minWidth: 60
-	},
-	disabledButton: {
-		opacity: 0.5
-	},
-	buttonIconWrapper: {
-		width: 36,
-		height: 36,
-		borderRadius: 18,
-		paddingTop: Device.isAndroid() ? 2 : 4,
-		paddingLeft: 1,
-		justifyContent: 'center',
-		alignContent: 'center',
-		backgroundColor: colors.blue
-	},
-	buttonIcon: {
-		justifyContent: 'center',
-		alignContent: 'center',
-		textAlign: 'center',
-		color: colors.white
-	},
-	buttonText: {
-		marginTop: 8,
-		color: colors.blue,
-		fontSize: 14
-	},
-	receive: {
-		right: Device.isIos() ? 1 : 0,
-		bottom: 1,
-		transform: [{ rotate: '90deg' }]
-	},
-	swapsIcon: {
-		right: Device.isAndroid() ? 1 : 0,
-		bottom: Device.isAndroid() ? 1 : 0
-	},
-	buyIcon: {
-		right: Device.isAndroid() ? 0.5 : 0,
-		bottom: Device.isAndroid() ? 1 : 2
-	}
-});
-
-
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 function getIcon(type) {
 	switch (type) {
 		case 'send': {
-			return <Icon name={'send'} size={12} style={styles.buttonIcon} />;
+			return <Icon name={'share-square-o'} size={25} style={styles.buttonIcon} />;
 		}
 		case 'receive': {
 			return (
-				<Icon
-					name={'dollar'}
-					size={12}
+				<FontAwesome5Icon
+					name={'hand-holding-usd'}
+					size={25}
 					color={colors.white}
-					style={[styles.buttonIcon, styles.receive]}
+					style={[styles.buttonIcon]}
 				/>
 			);
 		}
@@ -84,7 +39,40 @@ function getIcon(type) {
 			return <MaterialCommunityIcon name="repeat" size={22} style={[styles.buttonIcon, styles.swapsIcon]} />;
 		}
 		case 'buy': {
-			return <Icon name="credit-card" size={12} style={[styles.buttonIcon, styles.buyIcon]} />;
+			return <Ionicon name="wallet-outline" size={25} style={[styles.buttonIcon, styles.buyIcon]} />;
+		}
+		default: {
+			return null;
+		}
+	}
+}
+
+function getLabelIcon(type) {
+	switch (type) {
+		case 'send': {
+			return <FeatherIcon name={'arrow-up'} size={20} style={styles.buttonIcon} />;
+		}
+		case 'receive': {
+			return (
+				<FeatherIcon
+					name={'arrow-down'}
+					size={20}
+					color={colors.white}
+					style={[styles.buttonIcon, brandStyles.receive]}
+				/>
+			);
+		}
+		case 'add': {
+			return <Ionicon name="ios-add" size={30} style={styles.buttonIcon} />;
+		}
+		case 'information': {
+			return <Ionicon name="md-information" size={30} style={styles.buttonIcon} />;
+		}
+		case 'swap': {
+			return <MaterialCommunityIcon name="repeat" size={22} style={[styles.buttonIcon, styles.swapsIcon]} />;
+		}
+		case 'buy': {
+			return <FoundationIcon name="dollar" size={22} style={[styles.buttonIcon, styles.buyIcon]} />;
 		}
 		default: {
 			return null;
@@ -99,10 +87,15 @@ function AssetActionButton({ onPress, icon, label, disabled }) {
 			style={[styles.button, disabled && styles.disabledButton]}
 			disabled={disabled}
 		>
-			<View style={styles.buttonIconWrapper}>{icon && (typeof icon === 'string' ? getIcon(icon) : icon)}</View>
-			<Text centered style={styles.buttonText} numberOfLines={1}>
-				{label}
-			</Text>
+			<View style={[styles.buttonIconWrapper, brandStyles.shadowStyle, brandStyles.buttonIconWrapper]}>
+				{icon && (typeof icon === 'string' ? getIcon(icon) : icon)}
+			</View>
+			<View style={[brandStyles.shadowStyle, brandStyles.textWrapperStyle]}>
+				{getLabelIcon(icon)}
+				<Text centered style={[styles.buttonText, brandStyles.buttonText]} numberOfLines={1}>
+					{label}
+				</Text>
+			</View>
 		</TouchableOpacity>
 	);
 }
