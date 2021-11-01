@@ -172,12 +172,8 @@ class Chat extends Component {
 		const messages = data.messages.filter(e => {
 			const senderAddr = e.user._id.toLowerCase();
 			if (e.payload) {
-				if (e.transaction) {
-					if (e.payload.action == TransactionSync().action) return false;
-					const {
-						transaction: { from, to }
-					} = e;
-					return from == peerAddr || to == peerAddr;
+				if (e.transaction || e.payload.action == TransactionSync().action) {
+					return false;
 				} else {
 					const {
 						payload: { from, to }
@@ -294,16 +290,7 @@ class Chat extends Component {
 	}
 
 	sendTransactionSync = transaction => {
-		const { selectedAddress } = this.props;
-		const message = {
-			_id: uuid.v4(),
-			createdAt: new Date(),
-			text: '',
-			payload: TransactionSync(transaction),
-			transaction: transaction.transaction,
-			user: { _id: selectedAddress.toLowerCase() }
-		};
-		this.messaging.send(message);
+		this.sendPayloadMessage(TransactionSync(transaction), false);
 		this.fetchConversation();
 	};
 
@@ -492,7 +479,7 @@ class Chat extends Component {
 
 	renderCustomView = message => {
 		const { payload } = message;
-		if (message.transaction) {
+		if (message.transaction || payload.action == TransactionSync().action) {
 			return this.renderTransaction(message);
 		}
 		switch (payload.action) {
