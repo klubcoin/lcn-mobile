@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 import { StyleSheet, ImageBackground, View } from 'react-native';
 import { colors } from '../../../styles';
 import Device from '../../../util/Device';
-import { branchStyles, branchImgs } from './styles/branch';
+import { brandStyles, brandImgs } from './styles/brand';
 import { styles, images } from './styles/index';
 
 const OnboardingScreenWithBg = props => (
-	//TODO: check what app is
 	<View style={styles.flex}>
 		<ImageBackground
-			source={branchImgs[props.screen]}
-			style={[styles.wrapper, branchStyles.wrapper]}
+			source={brandImgs[props.screen]}
+			style={[styles.wrapper, brandStyles.wrapper]}
 			resizeMode={'cover'}
 		>
 			{props.children}

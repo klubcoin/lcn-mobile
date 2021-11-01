@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../../styles/branch';
+import { colors } from '../../../../styles/brand';
 import Device from '../../../../util/Device';
 
-const branchStyles = StyleSheet.create({
+const brandStyles = StyleSheet.create({
 	wrapper: {
 		borderColor: colors.black,
 		backgroundColor: colors.black
 	}
 });
 
-const branchImgs = {
+const brandImgs = {
 	a: require('../../../../images/klubcoin_filigram_logo.png'),
 	b: require('../../../../images/klubcoin_filigram_logo.png'),
 	c: require('../../../../images/klubcoin_filigram_logo.png'),
@@ -17,4 +17,4 @@ const branchImgs = {
 	carousel: require('../../../../images/klubcoin_filigram_logo.png')
 };
 
-export { branchStyles, branchImgs };
+export { brandStyles, brandImgs };
