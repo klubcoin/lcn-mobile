@@ -18,105 +18,16 @@ import StyledButton from '../StyledButton';
 import { allowedToBuy } from '../FiatOrders';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { isMainNet } from '../../../util/networks';
-import Helper from 'common/Helper'
+import Helper from 'common/Helper';
 import Routes from '../../../common/routes';
-import preferences, { kAppList } from '../../../store/preferences'
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1,
-		minHeight: 500
-	},
-	emptyView: {
-		backgroundColor: colors.white,
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginTop: 50
-	},
-	tokensHome: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginTop: 35,
-		marginHorizontal: 50
-	},
-	tokensHomeText: {
-		...fontStyles.normal,
-		marginBottom: 15,
-		marginHorizontal: 15,
-		fontSize: 18,
-		color: colors.fontPrimary,
-		textAlign: 'center'
-	},
-	tokensHomeButton: {
-		width: '100%'
-	},
-	text: {
-		fontSize: 20,
-		color: colors.fontTertiary,
-		...fontStyles.normal
-	},
-	add: {
-		margin: 20,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	addText: {
-		fontSize: 15,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	footer: {
-		flex: 1,
-		paddingBottom: 30
-	},
-	row: {
-		flex: 1,
-		flexDirection: 'row',
-	},
-	name: {
-		fontSize: 16,
-		color: colors.fontPrimary,
-		...fontStyles.normal,
-	},
-	desc: {
-		fontSize: 12,
-		color: colors.fontSecondary,
-		...fontStyles.normal,
-	},
-	balances: {
-		flex: 1,
-		justifyContent: 'center'
-	},
-	balance: {
-		fontSize: 16,
-		color: colors.fontPrimary,
-		...fontStyles.normal,
-		textTransform: 'uppercase'
-	},
-	balanceFiat: {
-		fontSize: 12,
-		color: colors.fontSecondary,
-		...fontStyles.normal,
-		textTransform: 'uppercase'
-	},
-	balanceFiatTokenError: {
-		textTransform: 'capitalize'
-	},
-	ethLogo: {
-		width: 50,
-		height: 50,
-		overflow: 'hidden',
-		marginRight: 20
-	}
-});
-
+import preferences, { kAppList } from '../../../store/preferences';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 const TokenRoutes = {
 	Liquichat: 'Message',
-	LiquiShare: 'FilesManager',
-}
+	LiquiShare: 'FilesManager'
+};
 
 /**
  * View that renders a list of ERC-20 Tokens
@@ -190,7 +101,7 @@ class Tokens extends PureComponent {
 	}
 
 	renderEmpty = () => (
-		<View style={styles.emptyView}>
+		<View style={[styles.emptyView, brandStyles.emptyView]}>
 			<Text style={styles.text}>{strings('wallet.no_tokens')}</Text>
 		</View>
 	);
@@ -235,17 +146,18 @@ class Tokens extends PureComponent {
 		let balance =
 			asset.balance ||
 			(itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], asset.decimals) : 0);
-		const balanceFiat = isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
-			? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
-			: null;
+		const balanceFiat =
+			isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
+				? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
+				: null;
 
-		let account = null
+		let account = null;
 		if (selectedAddress && typeof accounts[selectedAddress] != 'undefined') {
-			account = accounts[selectedAddress]
-			balance = accounts[selectedAddress].balance
+			account = accounts[selectedAddress];
+			balance = accounts[selectedAddress].balance;
 		}
 
-		balance = Helper.demosToLiquichain(balance || 0)
+		balance = Helper.demosToLiquichain(balance || 0);
 
 		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 		const app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
@@ -343,10 +255,10 @@ class Tokens extends PureComponent {
 		const { tokens, hideZeroBalanceTokens, tokenBalances } = this.props;
 		const tokensToDisplay = hideZeroBalanceTokens
 			? tokens.filter(token => {
-				const { address, isETH } = token;
-				return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
-				// eslint-disable-next-line no-mixed-spaces-and-tabs
-			})
+					const { address, isETH } = token;
+					return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
+			  })
 			: tokens;
 
 		return (
@@ -385,7 +297,7 @@ class Tokens extends PureComponent {
 	render = () => {
 		const { tokens } = this.props;
 		return (
-			<View style={styles.wrapper} testID={'tokens'}>
+			<View style={[styles.wrapper, brandStyles.wrapper]} testID={'tokens'}>
 				{tokens && tokens.length ? this.renderList() : this.renderEmpty()}
 				<ActionSheet
 					ref={this.createActionSheetRef}
