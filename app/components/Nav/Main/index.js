@@ -90,7 +90,8 @@ import * as base64 from 'base-64';
 const styles = StyleSheet.create({
 	flex: {
 		flex: 1,
-		marginTop: Device.isIphone12() ? 20 : 0
+		backgroundColor: colors.grey,
+		paddingTop: Device.isIos() ? 20 : 0
 	},
 	loader: {
 		backgroundColor: colors.white,
@@ -352,7 +353,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-						swapsUtils.getSwapsContractAddress(props.chainId)))
+							swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -1041,7 +1042,7 @@ const mapDispatchToProps = dispatch => ({
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
 	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
 	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data)),
-	toggleFriendRequestQR: (visible) => dispatch(toggleFriendRequestQR(visible)),
+	toggleFriendRequestQR: visible => dispatch(toggleFriendRequestQR(visible))
 });
 
 export default connect(

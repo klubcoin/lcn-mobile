@@ -599,8 +599,7 @@ export function getWalletNavbarOptions(title, navigation) {
 		// 	</TouchableOpacity>
 		// ),
 		headerStyle: {
-			backgroundColor: colors.grey,
-			marginTop: Device.isAndroid() ? 10 : 27
+			backgroundColor: colors.grey
 		}
 	};
 }
