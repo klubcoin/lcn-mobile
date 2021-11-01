@@ -62,7 +62,7 @@ class Message extends Component {
 		const records = await preferences.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
-		const users = Object.keys(records).map(e => addresses[e]);
+		const users = Object.keys(records).map(e => addresses[e]).filter(e => !!e);
 
 		users.forEach(e => {
 			e.lastMessage = records[e.address].messages[0];
