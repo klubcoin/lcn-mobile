@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../styles/common';
-import Device from '../../../util/Device';
+import { colors, fontStyles } from '../../../../styles/common';
+import Device from '../../../../util/Device';
 
 const deviceHeight = Device.getDeviceHeight();
 const breakPoint = deviceHeight < 700;
@@ -8,7 +8,7 @@ const breakPoint = deviceHeight < 700;
 const styles = StyleSheet.create({
 	mainWrapper: {
 		flex: 1,
-		backgroundColor: colors.black
+		backgroundColor: colors.white
 	},
 	wrapper: {
 		flex: 1,
@@ -23,18 +23,17 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		alignSelf: 'center',
-		width: Device.isIos() ? 200 : 100,
-		height: Device.isIos() ? 200 : 100
+		width: Device.isIos() ? 130 : 100,
+		height: Device.isIos() ? 130 : 100
 	},
 	title: {
 		fontSize: Device.isAndroid() ? 30 : 35,
 		marginTop: 20,
 		marginBottom: 20,
-		color: colors.white,
+		color: colors.fontPrimary,
 		justifyContent: 'center',
 		textAlign: 'center',
-		...fontStyles.bold,
-		marginVertical: 35
+		...fontStyles.bold
 	},
 	field: {
 		flex: 1,
@@ -42,10 +41,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'column'
 	},
 	label: {
-		color: colors.white,
+		color: colors.black,
 		fontSize: 16,
 		marginBottom: 12,
-		...fontStyles.bold
+		...fontStyles.normal
 	},
 	ctaWrapper: {
 		marginTop: 20
@@ -60,8 +59,8 @@ const styles = StyleSheet.create({
 	},
 	goBack: {
 		marginVertical: 14,
-		color: colors.white,
-		...fontStyles.bold
+		color: colors.blue,
+		...fontStyles.normal
 	},
 	biometrics: {
 		flexDirection: 'row',
@@ -72,34 +71,18 @@ const styles = StyleSheet.create({
 	biometryLabel: {
 		flex: 1,
 		fontSize: 16,
-		color: colors.white,
-		...fontStyles.bold
+		color: colors.black,
+		...fontStyles.normal
 	},
 	biometrySwitch: {
-		flex: 0,
-		color: colors.white
+		flex: 0
 	},
 	input: {
 		...fontStyles.normal,
 		fontSize: 16,
-		paddingTop: 2,
-		color: colors.white
+		paddingTop: 2
 	},
-	inputContainer: {
-		color: colors.white,
-		borderWidth: 2,
-		paddingTop: 10,
-		paddingLeft: 15,
-		borderRadius: 50,
-		borderColor: colors.white,
-		backgroundColor: colors.grey,
-		shadowColor: colors.white,
-		shadowOpacity: 0.7,
-		shadowRadius: 12,
-		shadowOffset: {
-			height: 1
-		}
-	},
+	inputContainer: {},
 	cant: {
 		width: 280,
 		alignSelf: 'center',
@@ -108,7 +91,7 @@ const styles = StyleSheet.create({
 		...fontStyles.normal,
 		fontSize: 16,
 		lineHeight: 24,
-		color: colors.white
+		color: colors.black
 	},
 	areYouSure: {
 		width: '100%',
@@ -155,7 +138,7 @@ const styles = StyleSheet.create({
 		color: colors.red
 	},
 	placeholder: {
-		color: colors.white
+		color: colors.black
 	}
 });
 
