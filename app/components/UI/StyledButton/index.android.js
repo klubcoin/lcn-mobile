@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Text, TouchableNativeFeedback, View, ViewPropTypes } from 'react-native';
 import coalesceNonElementChildren from 'react-native-button/coalesceNonElementChildren';
 import getStyles from './styles/index';
-import { styles } from './styles/branch';
+import { styles } from './styles/brand';
 
 /**
  * UI component that wraps StyledButton

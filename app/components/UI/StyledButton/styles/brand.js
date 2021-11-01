@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/branch';
+import { colors, fontStyles } from '../../../../styles/brand';
 
 const styles = StyleSheet.create({
 	container: {
@@ -36,20 +36,34 @@ const styles = StyleSheet.create({
 		color: colors.blue
 	},
 	confirm: {
-		backgroundColor: colors.blue,
-		minHeight: 50
+		backgroundColor: colors.grey,
+		borderWidth: 2,
+		borderColor: colors.blue,
+		shadowColor: colors.blue,
+		shadowOpacity: 0.7,
+		shadowRadius: 12,
+		shadowOffset: {
+			height: 1
+		}
 	},
 	confirmText: {
-		color: colors.white
+		color: colors.blue
 	},
 	roundedNormal: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.grey,
 		borderWidth: 1,
 		borderColor: colors.blue,
-		padding: 8
+		padding: 8,
+		shadowColor: colors.blue,
+		shadowOpacity: 0.7,
+		shadowRadius: 12,
+		shadowOffset: {
+			height: 1
+		}
 	},
 	roundedNormalText: {
-		color: colors.blue
+		color: colors.white,
+		...fontStyles.bold
 	},
 	normal: {
 		backgroundColor: colors.grey,
