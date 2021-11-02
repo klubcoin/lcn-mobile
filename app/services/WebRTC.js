@@ -28,6 +28,7 @@ export default class WebRTC {
 		message: [],
 		error: []
 	};
+	onceListeners = [];
 
 	constructor(from) {
 		this.fromUserId = from;
@@ -44,6 +45,10 @@ export default class WebRTC {
 	setKeyPair(privateKey, publicKey) {
 		this.privateKey = privateKey;
 		this.publicKey = publicKey;
+	}
+
+	once = (filter, callback) => {
+		this.onceListeners.push({ filter, callback });
 	}
 
 	addListener = (type, callback) => {
@@ -210,8 +215,23 @@ export default class WebRTC {
 			await this.handleChatMessage(data, peerId);
 			await this.handleFileTransfer(data, peerId);
 			this.events.message.map(callback => callback(data, peerId));
+			this.signalOnce(data, peerId);
 		} catch (e) {}
 	};
+
+	signalOnce = (data, peerId) => {
+		const removeOnces = [];
+		this.onceListeners.map(listener => {
+			const { filter, callback } = listener;
+
+			if (filter == data.action || filter == peerId
+				|| filter == `${data.action}:${peerId}`) {
+				callback(data, peerId);
+				removeOnces.push(listener);
+			}
+		})
+		removeOnces.map(e => this.onceListeners.splice(this.onceListeners.indexOf(e), 1));
+	}
 
 	parseSignature(data) {
 		if (!data || !data.payload || !data.signature) return;
