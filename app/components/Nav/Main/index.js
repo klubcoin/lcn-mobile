@@ -77,7 +77,7 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import BigNumber from 'bignumber.js';
 import { setInfuraAvailabilityBlocked, setInfuraAvailabilityNotBlocked } from '../../../actions/infuraAvailability';
 import Messaging, { Pong, WSEvent } from '../../../services/Messaging';
-import { FriendRequestTypes } from '../../Views/Contacts/FriendRequestMessages';
+import { FriendRequestTypes, LiquichainNameCard } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { setWebRTC } from '../../../services/WebRTC';
 import CryptoSignature from '../../../core/CryptoSignature';
@@ -606,19 +606,12 @@ const Main = props => {
 	});
 
 	const handleFriendRequestUpdate = message => {
-		if (!message) return;
-		if (!message.data) {
-			message = JSON.parse(base64.decode(message));
-		}
-
 		setFriendMessage(message);
-		const { data } = message || {};
-
-		if (data && data.data) {
-			const payload = JSON.parse(data.data);
-			if (payload.message?.type == FriendRequestTypes.Accept) {
+		const { data } = message;
+		if (data) {
+			if (data.type == FriendRequestTypes.Accept) {
 				handleAcceptedNameCard(data);
-			} else if (payload.message?.type == FriendRequestTypes.Revoke) {
+			} else if (data.type == FriendRequestTypes.Revoke) {
 				revokeFriend(data);
 			}
 		}
@@ -630,9 +623,7 @@ const Main = props => {
 	};
 
 	const revokeFriend = data => {
-		const { from } = data;
-		const { message } = JSON.parse(data.data);
-		const { name } = message;
+		const { from, name } = data;
 		alert(`${name} (${from}) revoked friend`);
 	};
 
@@ -747,12 +738,11 @@ const Main = props => {
 		const { AddressBookController } = Engine.context;
 
 		const addresses = addressBook[network] || {};
-		const { data } = friendMessage || {};
+		const data = friendMessage;
 
 		if (data && data.data) {
-			const payload = JSON.parse(data.data);
-			const { message } = payload;
-			const name = message.name || '';
+			const payload = data.data;
+			const name = payload.name || '';
 			const address = toChecksumAddress(data.from);
 
 			if (addresses[address]) return;
@@ -770,7 +760,7 @@ const Main = props => {
 			<FriendMessageOverview
 				visible={!!acceptedNameCardVisible}
 				data={friendMessage?.data}
-				networkInfo={friendMessage?.data.meta}
+				networkInfo={friendMessage?.meta}
 				title={strings('contacts.friend_request_accepted')}
 				message={`${strings('contacts.add_this_contact')}?`}
 				confirmLabel={strings('contacts.accept')}
@@ -823,9 +813,10 @@ const Main = props => {
 						showNotice(sender.name, message.text);
 					}
 					break;
+				case LiquichainNameCard().action:
+					handleFriendRequestUpdate(data);
+					break;
 			}
-		} else if (data.data) {
-			handleFriendRequestUpdate(data);
 		}
 	};
 
