@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, StyleSheet, View, InteractionManager, Image } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors, fontStyles } from '../../../styles/brand';
 import { strings } from '../../../../locales/i18n';
 import CollectibleContractElement from '../CollectibleContractElement';
 import Analytics from '../../../core/Analytics';
@@ -44,7 +44,7 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 		<View style={styles.footer} key={'collectible-contracts-footer'}>
 			<TouchableOpacity style={styles.add} onPress={goToAddCollectible} testID={'add-collectible-button'}>
 				<Icon name="plus" size={16} color={colors.blue} />
-				<Text style={styles.addText}>{strings('wallet.add_collectibles')}</Text>
+				<Text style={[styles.addText, brandStyles.addText]}>{strings('wallet.add_collectibles')}</Text>
 			</TouchableOpacity>
 		</View>
 	);
