@@ -26,6 +26,9 @@ const brandStyles = StyleSheet.create({
 	},
 	identiconBorder: {
 		borderColor: colors.blue
+	},
+	colorBlue: {
+		tintColor: colors.blue
 	}
 });
 

@@ -489,7 +489,7 @@ class DrawerView extends PureComponent {
 	}
 
 	getImageIcon(name) {
-		return <Image source={ICON_IMAGES[name]} style={styles.menuItemIconImage} />;
+		return <Image source={ICON_IMAGES[name]} style={[styles.menuItemIconImage, brandStyles.colorBlue]} />;
 	}
 
 	getSelectedIcon(name, size) {
