@@ -412,7 +412,7 @@ class DrawerView extends PureComponent {
 		} = this.props;
 		const url = getEtherscanAddressUrl(network.provider.type, selectedAddress);
 		const etherscan_url = getEtherscanBaseUrl(network.provider.type).replace('https://', '');
-		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, 'Liquichain');
+		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, 'Klubcoin');
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_VIEW_ETHERSCAN);
 	};
 
