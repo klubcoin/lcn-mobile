@@ -176,8 +176,8 @@ class Contacts extends PureComponent {
 	}
 
 	validateSignature(data, signature) {
-		if (data && data.from && data.data) {
-			const sender = CryptoSignature.recoverMessageSignature(data.data, signature);
+		if (data && data.from && data.name) {
+			const sender = CryptoSignature.recoverMessageSignature(JSON.stringify(data), signature);
 			return sender == data.from.toLocaleLowerCase();
 		}
 		return false;
@@ -197,14 +197,9 @@ class Contacts extends PureComponent {
 			this.data = JSON.parse(base64.decode(this.data));
 		}
 
-		const json = this.data;
-
-		// verify message signature
-		const { data, signature } = json || {};
-
-		if (data && data.data) {
-			const payload = JSON.parse(data.data);
-			if (payload.message?.type == FriendRequestTypes.Request) {
+		const { data, signature } = this.data || {};
+		if (data && signature) {
+			if (data.type == FriendRequestTypes.Request) {
 				if (!this.validateSignature(data, signature)) {
 					alert(strings('contacts.invalid_signature'));
 					return;
@@ -231,8 +226,8 @@ class Contacts extends PureComponent {
 		const account = identities[selectedAddress];
 
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Request);
-		const rawSig = await CryptoSignature.signMessage(selectedAddress, data.data);
-		const base64Content = base64.encode(JSON.stringify({ data, signature: rawSig }));
+		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
+		const base64Content = base64.encode(JSON.stringify(data));
 
 		toggleFriendRequestQR(true);
 		this.setState({ showLinkQR: `liquichain://namecard?q=${base64Content}` });
@@ -449,7 +444,7 @@ class Contacts extends PureComponent {
 				<FriendMessageOverview
 					visible={friendRequestVisible}
 					data={this.data?.data}
-					networkInfo={this.data?.data.meta}
+					networkInfo={this.data?.meta}
 					title={strings('contacts.friend_request')}
 					message={`${strings('contacts.accept_friend_request')}?`}
 					confirmLabel={strings('contacts.accept')}
@@ -461,7 +456,7 @@ class Contacts extends PureComponent {
 				<FriendMessageOverview
 					visible={acceptedNameCardVisible}
 					data={this.data?.data}
-					networkInfo={this.data?.data.meta}
+					networkInfo={this.data?.meta}
 					title={strings('contacts.friend_request_accepted')}
 					message={`${strings('contacts.add_this_contact')}?`}
 					confirmLabel={strings('contacts.accept')}
