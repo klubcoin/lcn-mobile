@@ -77,9 +77,9 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import BigNumber from 'bignumber.js';
 import { setInfuraAvailabilityBlocked, setInfuraAvailabilityNotBlocked } from '../../../actions/infuraAvailability';
 import Messaging, { Pong, WSEvent } from '../../../services/Messaging';
-import { FriendRequestTypes, LiquichainNameCard } from '../../Views/Contacts/FriendRequestMessages';
+import { FriendRequestTypes, LiquichainNameCard, WalletProfile } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
-import WebRTC, { setWebRTC } from '../../../services/WebRTC';
+import WebRTC, { refWebRTC, setWebRTC } from '../../../services/WebRTC';
 import CryptoSignature from '../../../core/CryptoSignature';
 import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
@@ -610,11 +610,31 @@ const Main = props => {
 		const { data } = message;
 		if (data) {
 			if (data.type == FriendRequestTypes.Accept) {
+				getPeerInfo(message);
 				handleAcceptedNameCard(data);
 			} else if (data.type == FriendRequestTypes.Revoke) {
 				revokeFriend(data);
 			}
 		}
+	};
+
+	const getPeerInfo = async (message) => {
+		const address = message.from;
+		const profile = await preferences.peerProfile(address);
+
+		if (profile && profile.name) {
+			Object.assign(message.data, profile);
+			setFriendMessage(message);
+			return;
+		}
+		// request if not yet exists
+		const webrtc = refWebRTC();
+		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
+			if (!data.profile) return true;
+			Object.assign(message.data, data.profile);
+			setFriendMessage(message);
+		})
+		webrtc.sendSafe(address, WalletProfile());
 	};
 
 	const handleAcceptedNameCard = data => {

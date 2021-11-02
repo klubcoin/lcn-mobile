@@ -236,8 +236,8 @@ export default class WebRTC {
 
 			if (filter == data.action || filter == peerId
 				|| filter == `${data.action}:${peerId}`) {
-				callback(data, peerId);
-				removeOnces.push(listener);
+				const skipped = callback(data, peerId);
+				if (!skipped) removeOnces.push(listener);
 			}
 		})
 		removeOnces.map(e => this.onceListeners.splice(this.onceListeners.indexOf(e), 1));
