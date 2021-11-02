@@ -27,57 +27,8 @@ import AddressQRCode from '../../Views/AddressQRCode';
 import EthereumAddress from '../EthereumAddress';
 import GlobalAlert from '../GlobalAlert';
 import StyledButton from '../StyledButton';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10
-	},
-	body: {
-		alignItems: 'center',
-		paddingHorizontal: 15
-	},
-	qrWrapper: {
-		margin: 15
-	},
-	addressWrapper: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		margin: 15,
-		padding: 9,
-		paddingHorizontal: 15,
-		backgroundColor: colors.grey000,
-		borderRadius: 30
-	},
-	copyButton: {
-		backgroundColor: colors.grey050,
-		color: colors.fontPrimary,
-		borderRadius: 12,
-		overflow: 'hidden',
-		paddingVertical: 3,
-		paddingHorizontal: 6,
-		marginHorizontal: 6
-	},
-	actionRow: {
-		flexDirection: 'row',
-		marginBottom: 15
-	},
-	actionButton: {
-		flex: 1,
-		marginHorizontal: 8
-	},
-	title: {
-		...fontStyles.normal,
-		color: colors.fontPrimary,
-		fontSize: 18,
-		flexDirection: 'row',
-		alignSelf: 'center'
-	},
-	titleWrapper: {
-		marginTop: 10
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * PureComponent that renders receive options
@@ -207,7 +158,7 @@ class ReceiveRequest extends PureComponent {
 
 	render() {
 		return (
-			<SafeAreaView style={styles.wrapper}>
+			<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]}>
 				<ModalDragger />
 				<View style={styles.titleWrapper}>
 					<Text style={styles.title} testID={'receive-request-screen'}>
@@ -248,7 +199,7 @@ class ReceiveRequest extends PureComponent {
 						)}
 					</ModalHandler>
 
-					<Text>{strings('receive_request.scan_address')}</Text>
+					<Text style={{ color: colors.white }}>{strings('receive_request.scan_address')}</Text>
 
 					<TouchableOpacity
 						style={styles.addressWrapper}
@@ -258,7 +209,7 @@ class ReceiveRequest extends PureComponent {
 						<Text>
 							<EthereumAddress address={this.props.selectedAddress} type={'short'} />
 						</Text>
-						<Text style={styles.copyButton} small>
+						<Text style={[styles.copyButton, brandStyles.copyButton]} small>
 							{strings('receive_request.copy')}
 						</Text>
 						<TouchableOpacity onPress={this.onShare}>
