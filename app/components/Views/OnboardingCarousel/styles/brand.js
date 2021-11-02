@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import Device from '../../../../util/Device';
-import { colors, fontStyles, baseStyles } from '../../../../styles/brand';
+import { colors, fontStyles, baseStyles } from '../../../../styles/common';
 
 const IMAGE_1_RATIO = 285 / 203;
 const DEVICE_WIDTH = Dimensions.get('window').width;

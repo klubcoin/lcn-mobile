@@ -1,4 +1,4 @@
-import { colors, fontStyles } from '../../../../styles/brand';
+import { colors, fontStyles } from '../../../../styles/common';
 import { StyleSheet } from 'react-native';
 
 const brandStyles = StyleSheet.create({

@@ -6,7 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colors } from '../../../styles/brand';
+import { colors } from '../../../styles/common';
 import Device from '../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';

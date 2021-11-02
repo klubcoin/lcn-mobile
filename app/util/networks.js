@@ -1,4 +1,4 @@
-import { colors } from '../styles/brand';
+import { colors } from '../styles/common';
 import URL from 'url-parse';
 import AppConstants from '../core/AppConstants';
 import { MAINNET, ROPSTEN, KOVAN, RINKEBY, GOERLI, RPC } from '../../app/constants/network';

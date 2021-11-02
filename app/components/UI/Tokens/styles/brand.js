@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../../styles/brand';
+import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({

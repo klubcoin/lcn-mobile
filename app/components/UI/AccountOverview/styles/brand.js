@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/brand';
+import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
@@ -39,9 +39,6 @@ const brandStyles = StyleSheet.create({
 	amountFiat: {
 		fontSize: 16,
 		color: colors.fontPrimary
-	},
-	identiconBorder: {
-		borderColor: colors.blue
 	},
 	avatar: {
 		width: 46,

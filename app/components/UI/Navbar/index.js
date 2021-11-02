@@ -284,20 +284,24 @@ export function getSendFlowTitle(title, navigation, screenProps) {
 
 	return {
 		headerTitle: <NavbarTitle title={titleToRender} disableNetwork />,
-		headerRight: (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={rightAction} style={styles.closeButton} testID={'send-cancel-button'}>
-				<Text style={styles.closeButtonText}>{strings('transaction.cancel')}</Text>
-			</TouchableOpacity>
-		),
+		// headerRight: (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton} testID={'send-cancel-button'}>
+		// 		<Text style={[styles.closeButtonText, brandStyles.closeButtonText]}>{strings('transaction.cancel')}</Text>
+		// 	</TouchableOpacity>
+		// ),
 		headerLeft: canGoBack ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={leftAction} style={styles.closeButton}>
-				<Text style={styles.closeButtonText}>{strings('transaction.back')}</Text>
+				<AntIcon name={'arrowleft'} size={22} style={{ color: colors.white }} />
+				{/* <Text style={[styles.closeButtonText, brandStyles.closeButtonText]}>{strings('transaction.back')}</Text> */}
 			</TouchableOpacity>
 		) : (
 			<View />
-		)
+		),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/brand';
+import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
@@ -8,6 +8,9 @@ const brandStyles = StyleSheet.create({
 	},
 	backIcon: {
 		color: colors.blue
+	},
+	closeButtonText: {
+		color: colors.white
 	}
 });
 
