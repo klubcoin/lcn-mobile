@@ -86,22 +86,18 @@ export const baseStyles = {
 export const fontStyles = {
 	normal: {
 		fontFamily: 'EuclidCircularB-Regular',
-		fontWeight: '400',
-		color: colors.white
+		fontWeight: '400'
 	},
 	light: {
 		fontFamily: 'EuclidCircularB-Regular',
-		fontWeight: '300',
-		color: colors.white
+		fontWeight: '300'
 	},
 	thin: {
 		fontFamily: 'EuclidCircularB-Regular',
-		fontWeight: '100',
-		color: colors.white
+		fontWeight: '100'
 	},
 	bold: {
 		fontFamily: 'EuclidCircularB-Bold',
-		fontWeight: '600',
-		color: colors.white
+		fontWeight: '600'
 	}
 };

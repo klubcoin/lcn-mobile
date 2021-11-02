@@ -11,6 +11,9 @@ const brandStyles = StyleSheet.create({
 	},
 	closeButtonText: {
 		color: colors.white
+	},
+	centeredTitle: {
+		...fontStyles.bold
 	}
 });
 

@@ -712,14 +712,25 @@ export function getPurchaseMethodNavbar(navigation) {
 	const rightAction = navigation.dismiss;
 
 	return {
-		headerTitle: <Text style={styles.centeredTitle}>{strings('fiat_on_ramp.purchase_method')}</Text>,
-		headerLeft: <View />,
-		headerRight: (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
-				<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+		headerTitle: (
+			<Text style={[styles.centeredTitle, brandStyles.centeredTitle]}>
+				{strings('fiat_on_ramp.purchase_method')}
+			</Text>
+		),
+		headerLeft: (
+			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} color={colors.white} />
 			</TouchableOpacity>
-		)
+		),
+		// headerRight: (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
+		// 		<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+		// 	</TouchableOpacity>
+		// ),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
