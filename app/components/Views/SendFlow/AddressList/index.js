@@ -12,47 +12,8 @@ import {
 	TRANSFER_FUNCTION_SIGNATURE,
 	TRANSFER_FROM_FUNCTION_SIGNATURE
 } from '../../../../util/transactions';
-
-const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	messageText: {
-		...fontStyles.normal,
-		color: colors.blue,
-		fontSize: 16,
-		textAlign: 'center'
-	},
-	messageLeft: {
-		textAlign: 'left'
-	},
-	myAccountsWrapper: {
-		flexGrow: 1
-	},
-	myAccountsTouchable: {
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey050,
-		padding: 16
-	},
-	labelElementWrapper: {
-		backgroundColor: colors.grey000,
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey050,
-		padding: 8
-	},
-	labelElementInitialText: {
-		textTransform: 'uppercase'
-	},
-	labelElementText: {
-		...fontStyles.normal,
-		fontSize: 12,
-		marginHorizontal: 8,
-		color: colors.grey600
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 const LabelElement = label => (
 	<View key={label} style={styles.labelElementWrapper}>
@@ -276,7 +237,7 @@ class AddressList extends PureComponent {
 		const { processedRecentsList, contactElements } = this.state;
 		const { onlyRenderAddressBook } = this.props;
 		return (
-			<View style={styles.root}>
+			<View style={[styles.root, brandStyles.root]}>
 				<ScrollView style={styles.myAccountsWrapper}>
 					{!onlyRenderAddressBook && this.renderMyAccounts()}
 					{!onlyRenderAddressBook && processedRecentsList}

@@ -9,6 +9,9 @@ const brandStyles = StyleSheet.create({
 	},
 	textInput: {
 		color: colors.white
+	},
+	textColor: {
+		color: colors.white
 	}
 });
 

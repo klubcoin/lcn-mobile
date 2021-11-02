@@ -525,7 +525,7 @@ class SendFlow extends PureComponent {
 		return (
 			<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'send-screen'}>
 				<OnboardingScreenWithBg screen={'a'}>
-					<View style={styles.inputWrapper}>
+					<View style={[styles.inputWrapper, brandStyles.inputWrapper]}>
 						<AddressFrom
 							onPressIcon={this.toggleFromAccountModal}
 							fromAccountAddress={fromSelectedAddress}

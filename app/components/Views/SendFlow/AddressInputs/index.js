@@ -219,8 +219,8 @@ export const AddressFrom = props => {
 					<Identicon address={fromAccountAddress} diameter={30} />
 				</View>
 				<View style={[baseStyles.flexGrow, styles.address]}>
-					<Text style={styles.textAddress}>{fromAccountName}</Text>
-					<Text style={styles.textBalance}>{`${strings(
+					<Text style={[styles.textAddress, brandStyles.textColor]}>{fromAccountName}</Text>
+					<Text style={[styles.textBalance, brandStyles.textColor]}>{`${strings(
 						'transactions.address_from_balance'
 					)} ${fromAccountBalance}`}</Text>
 				</View>
