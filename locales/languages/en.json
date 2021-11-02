@@ -288,7 +288,8 @@
 		"public_address": "Public Address",
 		"wallet_account_name": "Wallet account name",
 		"save": "Save",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"partners": "Partners"
 	},
 	"contacts": {
 		"search": "Search",

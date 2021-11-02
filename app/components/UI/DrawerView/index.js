@@ -8,6 +8,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import { colors, fontStyles } from '../../../styles/common';
 import { hasBlockExplorer, findBlockExplorerForRpc, getBlockExplorerName, isMainNet } from '../../../util/networks';
 import Identicon from '../Identicon';
@@ -62,7 +65,9 @@ const metamask_name = require('../../../images/metamask-name.png'); // eslint-di
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
 const ICON_IMAGES = {
 	wallet: require('../../../images/wallet-icon.png'),
-	'selected-wallet': require('../../../images/selected-wallet-icon.png')
+	partners: require('../../../images/ic_partners.png'),
+	'selected-wallet': require('../../../images/selected-wallet-icon.png'),
+	'selected-partners': require('../../../images/ic_partners.png')
 };
 
 /**
@@ -418,7 +423,7 @@ class DrawerView extends PureComponent {
 
 	submitFeedback = () => {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_SEND_FEEDBACK);
-		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Liquichain Support');
+		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Klubcoin Support');
 	};
 
 	showHelp = () => {
@@ -489,7 +494,13 @@ class DrawerView extends PureComponent {
 	}
 
 	getImageIcon(name) {
-		return <Image source={ICON_IMAGES[name]} style={[styles.menuItemIconImage, brandStyles.colorBlue]} />;
+		return (
+			<Image
+				source={ICON_IMAGES[name]}
+				style={[styles.menuItemIconImage, brandStyles.colorBlue]}
+				resizeMode={'contain'}
+			/>
+		);
 	}
 
 	getSelectedIcon(name, size) {
@@ -502,6 +513,18 @@ class DrawerView extends PureComponent {
 
 	getSelectedMaterialIcon(name, size) {
 		return <MaterialIcon name={name} size={size || 24} color={colors.blue} />;
+	}
+
+	getFontAwesomeIcon(name, size) {
+		return <FontAwesomeIcon name={name} size={size || 24} color={colors.blue} />;
+	}
+
+	getFontAwesome5Icon(name, size) {
+		return <FontAwesome5Icon name={name} size={size || 24} color={colors.blue} />;
+	}
+
+	getIonIcon(name, size) {
+		return <IonIcon name={name} size={size || 24} color={colors.blue} />;
 	}
 
 	getSelectedImageIcon(name) {
@@ -536,13 +559,13 @@ class DrawerView extends PureComponent {
 					action: this.showWallet,
 					routeNames: ['WalletView', 'Asset', 'AddAsset', 'Collectible']
 				},
-				{
-					name: strings('drawer.profile'),
-					icon: this.getMaterialIcon('account-circle'),
-					selectedIcon: this.getMaterialIcon('account-circle'),
-					action: this.goToProfile,
-					routeNames: ['Profile']
-				},
+				// {
+				// 	name: strings('drawer.profile'),
+				// 	icon: this.getMaterialIcon('account-circle'),
+				// 	selectedIcon: this.getMaterialIcon('account-circle'),
+				// 	action: this.goToProfile,
+				// 	routeNames: ['Profile']
+				// },
 				{
 					name: strings('drawer.transaction_history'),
 					icon: this.getIcon('list'),
@@ -551,23 +574,23 @@ class DrawerView extends PureComponent {
 					routeNames: ['TransactionsView']
 				}
 			],
-			[
-				{
-					name: strings('drawer.contacts'),
-					icon: this.getAntDesignIcon('contacts'),
-					selectedIcon: this.getAntDesignIcon('contacts'),
-					action: this.gotoContacts,
-					routeNames: ['Contacts']
-				},
-				{
-					name: strings('drawer.notifications'),
-					icon: this.getFeatherIcon('bell'),
-					selectedIcon: this.getFeatherIcon('bell'),
-					action: this.gotoNotifications,
-					key: 'notifications',
-					routeNames: ['Notifications']
-				}
-			],
+			// [
+			// 	{
+			// 		name: strings('drawer.contacts'),
+			// 		icon: this.getAntDesignIcon('contacts'),
+			// 		selectedIcon: this.getAntDesignIcon('contacts'),
+			// 		action: this.gotoContacts,
+			// 		routeNames: ['Contacts']
+			// 	},
+			// 	{
+			// 		name: strings('drawer.notifications'),
+			// 		icon: this.getFeatherIcon('bell'),
+			// 		selectedIcon: this.getFeatherIcon('bell'),
+			// 		action: this.gotoNotifications,
+			// 		key: 'notifications',
+			// 		routeNames: ['Notifications']
+			// 	}
+			// ],
 			[
 				{
 					name: strings('drawer.share_address'),
@@ -580,6 +603,11 @@ class DrawerView extends PureComponent {
 						strings('drawer.view_in_liquichain'),
 					icon: this.getIcon('eye'),
 					action: this.viewInEtherscan
+				},
+				{
+					name: strings('drawer.partners'),
+					icon: this.getImageIcon('partners'),
+					action: this.viewInEtherscan
 				}
 			],
 			[
@@ -591,14 +619,14 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.help'),
-					icon: this.getIcon('help'),
+					icon: this.getFontAwesome5Icon('info'),
 					action: this.showHelp
 				},
-				// {
-				// 	name: strings('drawer.request_feature'),
-				// 	icon: this.getFeatherIcon('message-square'),
-				// 	action: this.submitFeedback
-				// },
+				{
+					name: strings('drawer.request_feature'),
+					icon: this.getIonIcon('chatbox'),
+					action: this.submitFeedback
+				},
 				{
 					name: strings('drawer.logout'),
 					icon: this.getIcon('sign-out'),
