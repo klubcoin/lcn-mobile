@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		lineHeight: 17,
 		marginBottom: 5,
-		color: colors.fontPrimary,
+		color: colors.grey,
 		...fontStyles.normal
 	},
 	accountAddress: {

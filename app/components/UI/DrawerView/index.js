@@ -422,7 +422,7 @@ class DrawerView extends PureComponent {
 	};
 
 	showHelp = () => {
-		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Liquichain Support');
+		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, strings('drawer.metamask_support'));
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
