@@ -9,6 +9,7 @@ import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 import { AckWebRTC, Chat, ChatFile, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
+import { WalletProfile } from '../components/Views/Contacts/FriendRequestMessages';
 
 const useSocketIO = false;
 const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
@@ -209,6 +210,15 @@ export default class WebRTC {
 				if (this.monitors[peerId]) {
 					clearTimeout(this.monitors[peerId]);
 					this.monitors[peerId] = null;
+				}
+			} else if (data.action == WalletProfile().action) {
+				if (data.profile) {
+					await preferences.setPeerProfile(peerId, data.profile);
+				} else {
+					const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
+					const name = `${firstname} ${lastname}`;
+					const avatarb64 = await RNFS.readFile(avatar, 'base64');
+					this.sendToPeer(peerId, WalletProfile({ address: peerId, name, avatar: avatarb64 }));
 				}
 			}
 

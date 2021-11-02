@@ -23,3 +23,8 @@ export const LiquichainNameCard = (selectedAddress, name, type) => ({
   },
   signature: '', // signature of json of data above
 });
+
+export const WalletProfile = (profile) => ({
+  action: 'wallet_profile',
+  profile,
+})
