@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { getWebviewNavbar } from '../../UI/Navbar';
-import Share from 'react-native-share'; // eslint-disable-line  import/default
+import Share from 'react-native-share';
 import Logger from '../../../util/Logger';
 import { baseStyles } from '../../../styles/common';
 
 export default class SimpleWebview extends PureComponent {
-	static navigationOptions = ({ navigation }) => getWebviewNavbar(navigation);
+	static navigationOptions = ({ navigation }) => getWebviewNavbar(navigation, 'Close');
 
 	static propTypes = {
 		/**

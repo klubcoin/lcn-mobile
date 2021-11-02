@@ -650,7 +650,7 @@ export function getNetworkNavbarOptions(title, translate, navigation) {
  *
  * @returns {Object} - Corresponding navbar options containing headerTitle and headerTitle
  */
-export function getWebviewNavbar(navigation) {
+export function getWebviewNavbar(navigation, backButtonText) {
 	const title = navigation.getParam('title', '');
 	const share = navigation.getParam('dispatch', () => {
 		'';
@@ -665,7 +665,7 @@ export function getWebviewNavbar(navigation) {
 		) : (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+				<Text style={styles.closeButtonText}>{backButtonText}</Text>
 			</TouchableOpacity>
 		),
 		headerRight: Device.isAndroid() ? (
