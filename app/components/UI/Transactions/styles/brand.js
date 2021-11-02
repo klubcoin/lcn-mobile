@@ -5,6 +5,10 @@ import Device from '../../../../util/Device';
 const brandStyles = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.transparent
+	},
+	emptyContainer: {
+		backgroundColor: colors.transparent,
+		height: Device.getDeviceHeight()
 	}
 });
 

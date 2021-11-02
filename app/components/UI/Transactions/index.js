@@ -266,18 +266,24 @@ class Transactions extends PureComponent {
 	};
 
 	renderLoader = () => (
-		<View style={styles.emptyContainer}>
-			<ActivityIndicator style={styles.loader} size="small" />
-		</View>
+		<OnboardingScreenWithBg screen="a">
+			<View style={[styles.emptyContainer, brandStyles.emptyContainer]}>
+				<ActivityIndicator style={styles.loader} size="small" />
+			</View>
+		</OnboardingScreenWithBg>
 	);
 
 	renderEmpty = () => (
-		<ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}>
-			{this.props.header ? this.props.header : null}
-			<View style={styles.emptyContainer}>
-				<Text style={styles.text}>{strings('wallet.no_transactions')}</Text>
-			</View>
-		</ScrollView>
+		<OnboardingScreenWithBg screen="a">
+			<ScrollView
+				refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+			>
+				{this.props.header ? this.props.header : null}
+				<View style={[styles.emptyContainer, brandStyles.emptyContainer]}>
+					<Text style={styles.text}>{strings('wallet.no_transactions')}</Text>
+				</View>
+			</ScrollView>
+		</OnboardingScreenWithBg>
 	);
 
 	getItemLayout = (data, index) => ({
