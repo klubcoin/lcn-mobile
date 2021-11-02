@@ -1,37 +1,76 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
 import Modal from 'react-native-modal';
-import SignatureRequest from '../../../../UI/SignatureRequest';
-import ExpandedMessage from '../../../../UI/SignatureRequest/ExpandedMessage';
+import TransactionHeader from '../../../../UI/TransactionHeader';
+import RemoteImage from '../../../../Base/RemoteImage';
+import EthereumAddress from '../../../../UI/EthereumAddress';
+import StyledButton from '../../../../UI/StyledButton';
 
 const styles = StyleSheet.create({
 	bottomModal: {
 		justifyContent: 'flex-end',
 		margin: 0
 	},
-	messageText: {
-		color: colors.black,
-		...fontStyles.normal,
-		fontFamily: Device.isIos() ? 'Courier' : 'Roboto'
+	root: {
+		backgroundColor: colors.white,
+		paddingTop: 24,
+		minHeight: '90%',
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
+		paddingBottom: Device.isIphoneX() ? 20 : 0
+	},
+	heading: {
+		alignItems: 'center',
+		marginVertical: 24
 	},
 	message: {
-		marginLeft: 10
+		...fontStyles.bold,
+		fontSize: 20,
+		textAlign: 'center'
 	},
-	truncatedMessageWrapper: {
-		marginBottom: 4,
-		overflow: 'hidden'
+	profile: {
+		flex: 1,
+		alignItems: 'center',
 	},
-	iosHeight: {
-		height: 70
+	avatarView: {
+		borderRadius: 60,
+		borderWidth: 2,
+		padding: 2,
+		borderColor: colors.blue
 	},
-	androidHeight: {
-		height: 97
+	avatar: {
+		width: 60,
+		height: 60,
+		borderRadius: 30,
+		overflow: 'hidden',
+		alignSelf: 'center'
 	},
-	msgKey: {
-		fontWeight: 'bold'
+	name: {
+		marginTop: 10,
+		fontSize: 20,
+		fontWeight: '600',
+		color: colors.black,
+		textAlign: 'center'
+	},
+	email: {
+		fontSize: 16,
+		fontWeight: '600',
+		textAlign: 'center'
+	},
+	buttons: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginVertical: 20,
+	},
+	accept: {
+		width: 160
+	},
+	reject: {
+		marginLeft: 20,
+		width: 160
 	}
 });
 
@@ -71,8 +110,7 @@ export default class FriendMessageOverview extends PureComponent {
 	};
 
 	state = {
-		truncateMessage: false,
-		showExpandedMessage: false
+		toggleFullAddress: false,
 	};
 
 	onCancel = () => {
@@ -84,81 +122,71 @@ export default class FriendMessageOverview extends PureComponent {
 		this.props.hideModal();
 	};
 
-	shouldTruncateMessage = e => {
-		if (
-			(Device.isIos() && e.nativeEvent.layout.height > 70) ||
-			(Device.isAndroid() && e.nativeEvent.layout.height > 100)
-		) {
-			this.setState({ truncateMessage: true });
-			return;
-		}
-		this.setState({ truncateMessage: false });
-	};
+	toggleAddress = () => {
+		this.setState({ toggleFullAddress: !this.state.toggleFullAddress });
+	}
 
-	renderTypedMessageV3 = obj =>
-		Object.keys(obj).map(key => (
-			<View style={styles.message} key={key}>
-				{obj[key] && typeof obj[key] === 'object' ? (
-					<View>
-						<Text style={[styles.messageText, styles.msgKey]}>{key}:</Text>
-						<View>{this.renderTypedMessageV3(obj[key])}</View>
-					</View>
-				) : (
-					<Text style={styles.messageText}>
-						<Text style={styles.msgKey}>{key}:</Text> {`${obj[key]}`}
-					</Text>
-				)}
-			</View>
-		));
+	renderBody() {
+		const { message, networkInfo } = this.props;
 
-	renderTypedMessage = () => {
+		return (
+			<View style={styles.root}>
+				<TransactionHeader currentPageInformation={networkInfo} />
+				<View style={styles.heading}>
+					<Text style={styles.message}>{message}</Text>
+				</View>
+				{this.renderProfile()}
+				{this.renderActions()}
+			</View >
+		);
+	}
+
+	renderProfile() {
 		const { data } = this.props;
-		if (!data) return;
-		return this.renderTypedMessageV3(data);
-	};
+		const { address, avatar, name, email } = data || {};
 
-	toggleExpandedMessage = () => {
-		this.setState({ showExpandedMessage: !this.state.showExpandedMessage });
-	};
+		const { toggleFullAddress } = this.state;
+		const addressType = toggleFullAddress ? 'full' : 'short';
+
+		return (
+			<View style={styles.profile}>
+				<View style={styles.avatarView}>
+					<RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${avatar}` }} />
+				</View>
+				<Text style={styles.name}>{name}</Text>
+				<TouchableOpacity activeOpacity={0.6} onPress={this.toggleAddress}>
+					<EthereumAddress key={addressType} style={styles.address} address={address} type={addressType} />
+				</TouchableOpacity>
+				<Text style={styles.email}>{email}</Text>
+			</View>
+		)
+	}
+
+	renderActions() {
+		const { confirmLabel, cancelLabel } = this.props;
+
+		return (
+			<View style={styles.buttons}>
+				<StyledButton
+					type={'confirm'}
+					containerStyle={styles.accept}
+					onPress={this.onConfirm.bind(this)}
+				>
+					{confirmLabel}
+				</StyledButton>
+				<StyledButton
+					type={'normal'}
+					containerStyle={styles.reject}
+					onPress={this.onCancel.bind(this)}
+				>
+					{cancelLabel}
+				</StyledButton>
+			</View>
+		)
+	}
 
 	render() {
-		const { visible, networkInfo, message, hideModal, confirmLabel, cancelLabel } = this.props;
-		const { truncateMessage, showExpandedMessage } = this.state;
-		const messageWrapperStyles = [];
-
-		if (truncateMessage) {
-			messageWrapperStyles.push(styles.truncatedMessageWrapper);
-			if (Device.isIos()) {
-				messageWrapperStyles.push(styles.iosHeight);
-			} else {
-				messageWrapperStyles.push(styles.androidHeight);
-			}
-		}
-
-		const rootView = showExpandedMessage ? (
-			<ExpandedMessage
-				currentPageInformation={networkInfo}
-				renderMessage={this.renderTypedMessage}
-				toggleExpandedMessage={this.toggleExpandedMessage}
-			/>
-		) : (
-			<SignatureRequest
-				navigation={this.props.navigation}
-				message={message}
-				confirmLabel={confirmLabel}
-				cancelLabel={cancelLabel}
-				onCancel={this.onCancel}
-				onConfirm={this.onConfirm}
-				toggleExpandedMessage={this.toggleExpandedMessage}
-				currentPageInformation={networkInfo}
-				truncateMessage={truncateMessage}
-				type="typedSign"
-			>
-				<View style={messageWrapperStyles} onLayout={truncateMessage ? null : this.shouldTruncateMessage}>
-					{this.renderTypedMessage()}
-				</View>
-			</SignatureRequest>
-		);
+		const { visible, hideModal } = this.props;
 
 		return (
 			<Modal
@@ -170,12 +198,12 @@ export default class FriendMessageOverview extends PureComponent {
 				animationInTiming={600}
 				animationOutTiming={600}
 				onBackdropPress={hideModal}
-				onBackButtonPress={showExpandedMessage ? this.toggleExpandedMessage : hideModal}
+				onBackButtonPress={hideModal}
 				onSwipeComplete={hideModal}
 				swipeDirection={'down'}
 				propagateSwipe
 			>
-				{rootView}
+				{this.renderBody()}
 			</Modal>
 		);
 	}
