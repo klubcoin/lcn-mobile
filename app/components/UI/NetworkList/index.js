@@ -12,7 +12,7 @@ import { MAINNET, RPC } from '../../../constants/network';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.grey,
 		borderRadius: 10,
 		minHeight: 450
 	},
@@ -271,8 +271,7 @@ export class NetworkList extends PureComponent {
 			</View>
 			<ScrollView style={styles.networksWrapper} testID={'other-networks-scroll'}>
 				{this.renderMainnet()}
-				{
-					/*
+				{/*
 						<View style={styles.otherNetworksHeader}>
 							<Text style={styles.otherNetworksText} testID={'other-network-name'}>
 								{strings('networks.other_networks')}
@@ -281,9 +280,7 @@ export class NetworkList extends PureComponent {
 						{this.renderOtherNetworks()}
 						{this.renderRpcNetworks()}	
 					
-					*/
-				}
-				
+					*/}
 			</ScrollView>
 			<View style={styles.footer}>
 				<TouchableOpacity style={styles.footerButton} onPress={this.closeModal}>

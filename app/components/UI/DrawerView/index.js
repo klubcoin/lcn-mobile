@@ -776,7 +776,7 @@ class DrawerView extends PureComponent {
 							>
 								<View style={styles.accountNameWrapper}>
 									{account && (
-										<Text style={[styles.accountName, brandStyles.accountName]} numberOfLines={1}>
+										<Text style={styles.accountName} numberOfLines={1}>
 											{account.name}
 										</Text>
 									)}

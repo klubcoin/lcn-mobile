@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		lineHeight: 24,
 		marginBottom: 5,
-		color: colors.grey,
-		...fontStyles.bold
+		...fontStyles.bold,
+		color: colors.grey
 	},
 	caretDown: {
 		textAlign: 'right',

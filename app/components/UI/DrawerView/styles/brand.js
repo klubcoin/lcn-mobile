@@ -7,15 +7,14 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.black
 	},
 	accountName: {
-		color: colors.grey,
-		...fontStyles.bold
+		color: colors.grey
 	},
 	caretDown: {
 		color: colors.black
 	},
 	accountAddress: {
-		color: colors.grey,
-		...fontStyles.bold
+		...fontStyles.bold,
+		color: colors.grey
 	},
 	buttonText: {
 		color: colors.white,
