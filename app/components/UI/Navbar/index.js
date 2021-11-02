@@ -499,6 +499,7 @@ export function getClosableNavigationOptions(title, backButtonText, navigation) 
 		title,
 		headerTitleStyle: {
 			fontSize: 20,
+			color: colors.fontPrimary,
 			...fontStyles.normal
 		},
 		headerLeft: Device.isIos() ? (
@@ -509,7 +510,10 @@ export function getClosableNavigationOptions(title, backButtonText, navigation) 
 			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
-		)
+		),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
@@ -674,7 +678,10 @@ export function getWebviewNavbar(navigation) {
 			<TouchableOpacity onPress={() => share()} style={styles.backButton}>
 				<EvilIcons name="share-apple" size={32} style={[styles.backIcon, styles.shareIconIOS]} />
 			</TouchableOpacity>
-		)
+		),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
@@ -698,13 +705,20 @@ export function getPayPalNavbar(navigation) {
 
 	return {
 		headerTitle: <Text style={styles.centeredTitle}>PayPal Checkout</Text>,
-		headerLeft: <View />,
-		headerRight: (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
-				<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+		headerLeft: (
+			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} color={colors.white} />
 			</TouchableOpacity>
-		)
+		),
+		// headerRight: (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
+		// 		<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+		// 	</TouchableOpacity>
+		// ),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
