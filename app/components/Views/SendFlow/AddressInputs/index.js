@@ -38,7 +38,7 @@ const AddressName = ({ toAddressName, confusableCollection = [] }) => {
 		);
 	}
 	return (
-		<Text style={styles.textAddress} numberOfLines={1}>
+		<Text style={[styles.textAddress, brandStyles.textColor]} numberOfLines={1}>
 			{toAddressName}
 		</Text>
 	);
@@ -120,7 +120,11 @@ export const AddressTo = props => {
 								)}
 								<View style={styles.addressWrapper}>
 									<Text
-										style={toAddressName ? styles.textBalance : styles.textAddress}
+										style={
+											toAddressName
+												? [styles.textBalance, brandStyles.textColor]
+												: [styles.textAddress, brandStyles.textColor]
+										}
 										numberOfLines={1}
 									>
 										{renderShortAddress(toSelectedAddress)}

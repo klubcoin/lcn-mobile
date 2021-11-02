@@ -6,34 +6,8 @@ import { fontStyles, colors } from '../../../../styles/common';
 import PropTypes from 'prop-types';
 import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { connect } from 'react-redux';
-
-const styles = StyleSheet.create({
-	addressElementWrapper: {
-		padding: 16,
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey050
-	},
-	addressElementInformation: {
-		flex: 1,
-		flexDirection: 'column'
-	},
-	addressIdenticon: {
-		paddingRight: 16
-	},
-	addressTextNickname: {
-		...fontStyles.normal,
-		flex: 1,
-		color: colors.black,
-		fontSize: 14
-	},
-	addressTextAddress: {
-		...fontStyles.normal,
-		fontSize: 12,
-		color: colors.grey500
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 class AddressElement extends PureComponent {
 	static propTypes = {
@@ -89,11 +63,11 @@ class AddressElement extends PureComponent {
 					<Identicon address={address} diameter={28} />
 				</View>
 				<View style={styles.addressElementInformation}>
-					<Text style={styles.addressTextNickname} numberOfLines={1}>
+					<Text style={[styles.addressTextNickname, brandStyles.addressTextNickname]} numberOfLines={1}>
 						{primaryLabel}
 					</Text>
 					{!!secondaryLabel && (
-						<Text style={styles.addressTextAddress} numberOfLines={1}>
+						<Text style={[styles.addressTextAddress, brandStyles.addressTextNickname]} numberOfLines={1}>
 							{secondaryLabel}
 						</Text>
 					)}
