@@ -12,7 +12,7 @@ import Engine from '../../../core/Engine';
 import APIService from '../../../services/APIService';
 import StyledButton from '../../UI/StyledButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { FriendRequestTypes, LiquichainNameCard } from './FriendRequestMessages';
+import { FriendRequestTypes, LiquichainNameCard, WalletProfile } from './FriendRequestMessages';
 import CryptoSignature from '../../../core/CryptoSignature';
 import base64 from 'base-64';
 import Share from 'react-native-share';
@@ -204,10 +204,20 @@ class Contacts extends PureComponent {
 					alert(strings('contacts.invalid_signature'));
 					return;
 				}
+				this.getPeerInfo(data.from);
 				this.approveFriendRequest(data);
 			}
 		}
 	}
+
+	getPeerInfo = (address) => {
+		const webrtc = refWebRTC();
+		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
+			Object.assign(this.data.data, data.profile);
+			this.setState({ data: data.profile });
+		})
+		webrtc.sendSafe(address, WalletProfile());
+	};
 
 	toggleConfirmDeleteModal = () => {
 		this.setState({ confirmDeleteVisible: !this.state.confirmDeleteVisible });
