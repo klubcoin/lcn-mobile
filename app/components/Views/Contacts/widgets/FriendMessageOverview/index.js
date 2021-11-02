@@ -114,7 +114,7 @@ export default class FriendMessageOverview extends PureComponent {
 	renderTypedMessage = () => {
 		const { data } = this.props;
 		if (!data) return;
-		return this.renderTypedMessageV3(JSON.parse(data.data));
+		return this.renderTypedMessageV3(data);
 	};
 
 	toggleExpandedMessage = () => {

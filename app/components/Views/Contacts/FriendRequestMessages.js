@@ -7,36 +7,19 @@ export const FriendRequestTypes = ({
 });
 
 export const LiquichainNameCard = (selectedAddress, name, type) => ({
+  action: 'Namecard',
   from: selectedAddress,
   meta: {
     title: routes.mainNetWork.name,
+    chainId: routes.mainNetWork.chainId,
     url: routes.mainNetWork.blockExploreUrl,
     icon: 'logo.png',
   },
-  data: JSON.stringify({
-    /*
-    domain: {
-      chainId: routes.mainNetWork.chainId,
-      name: routes.mainNetWork.name,
-    },
-    types: {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'chainId', type: 'string' },
-      ],
-      LiquichainNameCard: [
-        { name: 'type', type: 'string' },
-        { name: 'from', type: 'string' },
-        { name: 'content', type: 'string' },
-      ]
-    },
-    primaryType: 'LiquichainNameCard',
-    */
-    message: {
-      type: type || 'Name Card', // type or action for name card
-      from: selectedAddress,
-      name,
-      content: `${selectedAddress} - ${routes.mainNetWork.name}`,
-    },
-  }),
+  data: {
+    type: type || 'Name Card', // type or action for name card
+    from: selectedAddress,
+    name,
+    content: `${selectedAddress} - ${routes.mainNetWork.name}`,
+  },
+  signature: '', // signature of json of data above
 });
