@@ -1458,7 +1458,7 @@
 		"depositing_to": "Depositing to:"
 	},
 	"fiat_on_ramp": {
-		"buy_eth": "Buy LCN",
+		"buy_eth": "Buy KlubCoin",
 		"purchased_currency": "Purchased {{currency}}",
 		"network_not_supported": "Current network not supported",
 		"switch_network": "Please switch to Mainnet",
