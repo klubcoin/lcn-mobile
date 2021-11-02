@@ -254,13 +254,11 @@ class Contacts extends PureComponent {
 	onAddContact = () => {
 		const { network } = this.props;
 		const { AddressBookController } = Engine.context;
-		const json = this.data;
+		const data = this.data;
 
-		const { data } = json || {};
 		if (data && data.data) {
-			const payload = JSON.parse(data.data);
-			const { message } = payload;
-			const name = message.name || '';
+			const payload = data.data;
+			const name = payload.name || '';
 			const address = toChecksumAddress(data.from);
 
 			if (this.state.contacts.find(e => e.address == address)) return;
@@ -284,7 +282,8 @@ class Contacts extends PureComponent {
 		const account = identities[selectedAddress];
 		const to = this.data.data.from;
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Accept);
-		refWebRTC().sendSafe(to, { data });
+		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
+		refWebRTC().sendSafe(to, data);
 	};
 
 	onSelectContact = contact => {
@@ -341,7 +340,8 @@ class Contacts extends PureComponent {
 		const { selectedAddress, identities } = this.props;
 		const account = identities[selectedAddress];
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Revoke);
-		refWebRTC().sendSafe(address, { data });
+		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
+		refWebRTC().sendSafe(address, data);
 	};
 
 	renderContact = ({ item }) => {
