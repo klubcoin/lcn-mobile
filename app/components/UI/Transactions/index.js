@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { makeObservable, observable } from 'mobx'
+import { makeObservable, observable } from 'mobx';
 import {
 	ScrollView,
 	ActivityIndicator,
@@ -24,32 +24,12 @@ import { renderFromWei } from '../../../util/number';
 import Device from '../../../util/Device';
 import TransactionActionModal from '../TransactionActionModal';
 import { validateTransactionActionBalance } from '../../../util/transactions';
-import APIService from 'services/APIService'
-import Routes from 'common/routes'
+import APIService from 'services/APIService';
+import Routes from 'common/routes';
 import moment from 'moment';
-
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	emptyContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: colors.white,
-		minHeight: Dimensions.get('window').height / 2
-	},
-	loader: {
-		alignSelf: 'center'
-	},
-	text: {
-		fontSize: 20,
-		color: colors.fontTertiary,
-		...fontStyles.normal
-	}
-});
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 const ROW_HEIGHT = (Device.isIos() ? 95 : 100) + StyleSheet.hairlineWidth;
 
@@ -154,14 +134,14 @@ class Transactions extends PureComponent {
 		super(props);
 		makeObservable(this, {
 			uses3rdPartyAPI: observable,
-			transactions: observable,
-		})
+			transactions: observable
+		});
 	}
 
 	componentDidMount() {
-		this.mounted = true
+		this.mounted = true;
 		this.props.onRefSet && this.props.onRefSet(this.flatList);
-		this.retrieveTransactions()
+		this.retrieveTransactions();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -184,12 +164,12 @@ class Transactions extends PureComponent {
 		}
 	}
 
-	static map3rdPartyTransaction = (e) => {
+	static map3rdPartyTransaction = e => {
 		const { mainNetWork } = Routes;
 		const { NetworkController } = Engine.context;
 		const network = NetworkController.state.network;
 
-		return ({
+		return {
 			id: e.hash,
 			networkID: network,
 			chainId: mainNetWork.chainId,
@@ -202,12 +182,12 @@ class Transactions extends PureComponent {
 				gasPrice: e.gasPrice,
 				nonce: e.nonce,
 				to: e.to,
-				value: e.value,
+				value: e.value
 			},
 			deviceConfirmedOn: WalletDevice.MM_MOBILE,
 			rawTransaction: '',
-			transactionHash: e.hash,
-		});
+			transactionHash: e.hash
+		};
 	};
 
 	async retrieveTransactions() {
@@ -221,7 +201,7 @@ class Transactions extends PureComponent {
 
 		await new Promise((resolve, reject) => {
 			APIService.getTransactionHistory(selectedAddress, (success, response) => {
-				this.setState({ ready: true, loading: false })
+				this.setState({ ready: true, loading: false });
 				if (success && response) {
 					this.transactions = response.result.map(e => {
 						const transaction = transactions.find(t => t.transactionHash == e.hash);
@@ -381,62 +361,66 @@ class Transactions extends PureComponent {
 		}
 		const { submittedTransactions, confirmedTransactions, header } = this.props;
 		const { cancelConfirmDisabled, speedUpConfirmDisabled } = this.state;
-		const transactions =
-			this.uses3rdPartyAPI ? this.transactions :
-				submittedTransactions && submittedTransactions.length
-					? submittedTransactions.concat(confirmedTransactions)
-					: this.props.transactions;
+		const transactions = this.uses3rdPartyAPI
+			? this.transactions
+			: submittedTransactions && submittedTransactions.length
+			? submittedTransactions.concat(confirmedTransactions)
+			: this.props.transactions;
 
 		return (
-			<View style={styles.wrapper} testID={'transactions-screen'}>
-				<FlatList
-					ref={this.flatList}
-					getItemLayout={this.getItemLayout}
-					data={transactions}
-					extraData={this.state}
-					keyExtractor={this.keyExtractor}
-					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
-					renderItem={this.renderItem}
-					initialNumToRender={10}
-					maxToRenderPerBatch={2}
-					onEndReachedThreshold={0.5}
-					ListHeaderComponent={header}
-					style={baseStyles.flexGrow}
-					scrollIndicatorInsets={{ right: 1 }}
-				/>
+			<OnboardingScreenWithBg screen="a">
+				<View style={[styles.wrapper, brandStyles.wrapper]} testID={'transactions-screen'}>
+					<FlatList
+						ref={this.flatList}
+						getItemLayout={this.getItemLayout}
+						data={transactions}
+						extraData={this.state}
+						keyExtractor={this.keyExtractor}
+						refreshControl={
+							<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+						}
+						renderItem={this.renderItem}
+						initialNumToRender={10}
+						maxToRenderPerBatch={2}
+						onEndReachedThreshold={0.5}
+						ListHeaderComponent={header}
+						style={baseStyles.flexGrow}
+						scrollIndicatorInsets={{ right: 1 }}
+					/>
 
-				<TransactionActionModal
-					isVisible={this.state.cancelIsOpen}
-					confirmDisabled={cancelConfirmDisabled}
-					onCancelPress={this.onCancelCompleted}
-					onConfirmPress={this.cancelTransaction}
-					confirmText={strings('transaction.lets_try')}
-					confirmButtonMode={'confirm'}
-					cancelText={strings('transaction.nevermind')}
-					feeText={`${renderFromWei(Math.floor(this.existingGasPriceDecimal * CANCEL_RATE))} ${strings(
-						'unit.eth'
-					)}`}
-					titleText={strings('transaction.cancel_tx_title')}
-					gasTitleText={strings('transaction.gas_cancel_fee')}
-					descriptionText={strings('transaction.cancel_tx_message')}
-				/>
+					<TransactionActionModal
+						isVisible={this.state.cancelIsOpen}
+						confirmDisabled={cancelConfirmDisabled}
+						onCancelPress={this.onCancelCompleted}
+						onConfirmPress={this.cancelTransaction}
+						confirmText={strings('transaction.lets_try')}
+						confirmButtonMode={'confirm'}
+						cancelText={strings('transaction.nevermind')}
+						feeText={`${renderFromWei(Math.floor(this.existingGasPriceDecimal * CANCEL_RATE))} ${strings(
+							'unit.eth'
+						)}`}
+						titleText={strings('transaction.cancel_tx_title')}
+						gasTitleText={strings('transaction.gas_cancel_fee')}
+						descriptionText={strings('transaction.cancel_tx_message')}
+					/>
 
-				<TransactionActionModal
-					isVisible={this.state.speedUpIsOpen}
-					confirmDisabled={speedUpConfirmDisabled}
-					onCancelPress={this.onSpeedUpCompleted}
-					onConfirmPress={this.speedUpTransaction}
-					confirmText={strings('transaction.lets_try')}
-					confirmButtonMode={'confirm'}
-					cancelText={strings('transaction.nevermind')}
-					feeText={`${renderFromWei(Math.floor(this.existingGasPriceDecimal * SPEED_UP_RATE))} ${strings(
-						'unit.eth'
-					)}`}
-					titleText={strings('transaction.speedup_tx_title')}
-					gasTitleText={strings('transaction.gas_speedup_fee')}
-					descriptionText={strings('transaction.speedup_tx_message')}
-				/>
-			</View>
+					<TransactionActionModal
+						isVisible={this.state.speedUpIsOpen}
+						confirmDisabled={speedUpConfirmDisabled}
+						onCancelPress={this.onSpeedUpCompleted}
+						onConfirmPress={this.speedUpTransaction}
+						confirmText={strings('transaction.lets_try')}
+						confirmButtonMode={'confirm'}
+						cancelText={strings('transaction.nevermind')}
+						feeText={`${renderFromWei(Math.floor(this.existingGasPriceDecimal * SPEED_UP_RATE))} ${strings(
+							'unit.eth'
+						)}`}
+						titleText={strings('transaction.speedup_tx_title')}
+						gasTitleText={strings('transaction.gas_speedup_fee')}
+						descriptionText={strings('transaction.speedup_tx_message')}
+					/>
+				</View>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

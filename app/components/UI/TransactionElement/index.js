@@ -17,54 +17,9 @@ import StatusText from '../../Base/StatusText';
 import DetailsModal from '../../Base/DetailsModal';
 import { isMainNet } from '../../../util/networks';
 import { WalletDevice } from '@metamask/controllers/';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
-const styles = StyleSheet.create({
-	row: {
-		backgroundColor: colors.white,
-		flex: 1,
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100
-	},
-	actionContainerStyle: {
-		height: 25,
-		width: 70,
-		padding: 0
-	},
-	speedupActionContainerStyle: {
-		marginRight: 10
-	},
-	actionStyle: {
-		fontSize: 10,
-		padding: 0,
-		paddingHorizontal: 10
-	},
-	icon: {
-		width: 28,
-		height: 28
-	},
-	summaryWrapper: {
-		padding: 15
-	},
-	fromDeviceText: {
-		color: colors.fontSecondary,
-		fontSize: 14,
-		marginBottom: 10,
-		...fontStyles.normal
-	},
-	importText: {
-		color: colors.fontSecondary,
-		fontSize: 14,
-		...fontStyles.bold,
-		alignContent: 'center'
-	},
-	importRowBody: {
-		alignItems: 'center',
-		backgroundColor: colors.grey000,
-		paddingTop: 10
-	}
-});
-
-/* eslint-disable import/no-commonjs */
 const transactionIconApprove = require('../../../images/transaction-icons/approve.png');
 const transactionIconInteraction = require('../../../images/transaction-icons/interaction.png');
 const transactionIconSent = require('../../../images/transaction-icons/send.png');
@@ -74,7 +29,6 @@ const transactionIconApproveFailed = require('../../../images/transaction-icons/
 const transactionIconInteractionFailed = require('../../../images/transaction-icons/interaction-failed.png');
 const transactionIconSentFailed = require('../../../images/transaction-icons/send-failed.png');
 const transactionIconReceivedFailed = require('../../../images/transaction-icons/receive-failed.png');
-/* eslint-enable import/no-commonjs */
 
 /**
  * View that renders a transaction item part of transactions list
@@ -320,9 +274,9 @@ class TransactionElement extends PureComponent {
 		return (
 			<>
 				<TouchableHighlight
-					style={styles.row}
+					style={[styles.row, brandStyles.row]}
 					onPress={this.onPressItem}
-					underlayColor={colors.grey000}
+					underlayColor={colors.grey}
 					activeOpacity={1}
 				>
 					{this.renderTxElement(transactionElement)}

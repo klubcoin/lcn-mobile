@@ -64,7 +64,10 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
-		headerRight: <AccountRightButton />
+		headerRight: <AccountRightButton />,
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
@@ -252,7 +255,10 @@ export function getTransactionOptionsTitle(_title, navigation) {
 				</TouchableOpacity>
 			) : (
 				<View />
-			)
+			),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
@@ -260,7 +266,10 @@ export function getApproveNavbar(title) {
 	return {
 		headerTitle: <NavbarTitle title={title} disableNetwork />,
 		headerLeft: <View />,
-		headerRight: <View />
+		headerRight: <View />,
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
