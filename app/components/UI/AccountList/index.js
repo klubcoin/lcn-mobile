@@ -23,60 +23,15 @@ import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import AccountElement from './AccountElement';
 import { connect } from 'react-redux';
-import API from 'services/api'
-import Routes from 'common/routes'
+import API from 'services/api';
+import Routes from 'common/routes';
 import * as sha3JS from 'js-sha3';
 import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { RestoreSecretRequest } from '../../../services/Messages';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10,
-		minHeight: 450
-	},
-	titleWrapper: {
-		width: '100%',
-		height: 33,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100
-	},
-	dragger: {
-		width: 48,
-		height: 5,
-		borderRadius: 4,
-		backgroundColor: colors.grey400,
-		opacity: Device.isAndroid() ? 0.6 : 0.5
-	},
-	accountsWrapper: {
-		flex: 1
-	},
-	footer: {
-		height: Device.isIphoneX() ? 140 : 110,
-		paddingBottom: Device.isIphoneX() ? 30 : 0,
-		justifyContent: 'center',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	btnText: {
-		fontSize: 14,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	footerButton: {
-		width: '100%',
-		height: 36,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderTopWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * View that contains the list of all the available accounts
@@ -123,9 +78,7 @@ class AccountList extends PureComponent {
 		/**
 		 * Indicates whether third party API mode is enabled
 		 */
-		thirdPartyApiMode: PropTypes.bool,
-
-		identities: PropTypes.object,
+		thirdPartyApiMode: PropTypes.bool
 	};
 
 	state = {
@@ -157,11 +110,11 @@ class AccountList extends PureComponent {
 			}
 		});
 		this.mounted && this.setState({ orderedAccounts });
-		this.createAccountDuringRegistration(orderedAccounts)
+		this.createAccountDuringRegistration(orderedAccounts);
 	}
 
 	createAccountDuringRegistration(orderedAccounts) {
-		console.log('accounts', orderedAccounts)
+		console.log('accounts', orderedAccounts);
 	}
 
 	componentWillUnmount = () => {
@@ -230,10 +183,10 @@ class AccountList extends PureComponent {
 		this.props.navigation.navigate('Contacts', {
 			contactSelection: true,
 			onConfirm: this.sendProfileToClaimIdentity
-		})
-	}
+		});
+	};
 
-	sendProfileToClaimIdentity = async (contacts) => {
+	sendProfileToClaimIdentity = async contacts => {
 		const webrtc = refWebRTC();
 		const { selectedAddress } = this.props;
 		const addresses = contacts.map(e => e.address);
@@ -243,7 +196,7 @@ class AccountList extends PureComponent {
 
 		const request = RestoreSecretRequest(selectedAddress, firstname, lastname, image);
 		FileTransferWebRTC.sendAsOne(request, selectedAddress, addresses, webrtc);
-	}
+	};
 
 	/*
 
@@ -253,44 +206,52 @@ class AccountList extends PureComponent {
 	*/
 	async sendAccount(account) {
 		const { keyringController, network } = this.props;
-		let vault = JSON.parse(keyringController.vault)
-		console.log("network", network)
+		let vault = JSON.parse(keyringController.vault);
+		console.log('network', network);
 		if (account == null) {
-			return
+			return;
 		}
 		if (vault == null || (vault && vault.cipher == null)) {
-			return
+			return;
 		}
 		const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
 		const name = `${firstname} ${lastname}`;
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const hash = sha3JS.keccak_256(firstname + lastname + account.address + avatarb64);
 
-		API.postRequest(Routes.walletCreation, [
-			name, account.address, hash
-		], response => {
-			console.log('account creation', response)
-			this.getBalance(account.address)
-		}, error => {
-			console.log('error account', error)
-		})
+		API.postRequest(
+			Routes.walletCreation,
+			[name, account.address, hash],
+			response => {
+				console.log('account creation', response);
+				this.getBalance(account.address);
+			},
+			error => {
+				console.log('error account', error);
+			}
+		);
 	}
 
-	getBalance = async (selectedAddress) => {
+	getBalance = async selectedAddress => {
 		const { accounts, identities } = this.props;
-		let params = [selectedAddress]
-		await API.postRequest(Routes.getBalance, params, response => {
-			// console.log(response)
-			const balance = response.result ? response.result : 0x00
-			accounts[selectedAddress] = {
-				balance: balance
+		let params = [selectedAddress];
+		await API.postRequest(
+			Routes.getBalance,
+			params,
+			response => {
+				// console.log(response)
+				const balance = response.result ? response.result : 0x00;
+				accounts[selectedAddress] = {
+					balance: balance
+				};
+				const { AccountTrackerController } = Engine.context;
+				AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
+			},
+			error => {
+				console.log(error.message);
 			}
-			const { AccountTrackerController } = Engine.context;
-			AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
-		}, error => {
-			console.log(error.message)
-		})
-	}
+		);
+	};
 
 	addAccount = async () => {
 		if (this.state.loading) return;
@@ -310,7 +271,7 @@ class AccountList extends PureComponent {
 				}, 500);
 				const orderedAccounts = this.getAccounts();
 				this.mounted && this.setState({ orderedAccounts });
-				this.sendAccount(orderedAccounts[orderedAccounts.length - 1])
+				this.sendAccount(orderedAccounts[orderedAccounts.length - 1]);
 			} catch (e) {
 				// Restore to the previous index in case anything goes wrong
 				Logger.error(e, 'error while trying to add a new account'); // eslint-disable-line
@@ -390,7 +351,9 @@ class AccountList extends PureComponent {
 					const isImported = this.isImported(allKeyrings, identityAddressChecksummed);
 					let balance = 0x0;
 					if (accounts[identityAddressChecksummed]) {
-						balance = accounts[identityAddressChecksummed] ? accounts[identityAddressChecksummed].balance : null;
+						balance = accounts[identityAddressChecksummed]
+							? accounts[identityAddressChecksummed].balance
+							: null;
 					}
 
 					const balanceError = getBalanceError ? getBalanceError(balance) : null;
@@ -405,7 +368,6 @@ class AccountList extends PureComponent {
 					};
 				});
 		}
-
 	}
 
 	keyExtractor = item => item.address;
@@ -414,7 +376,7 @@ class AccountList extends PureComponent {
 		const { orderedAccounts } = this.state;
 		const { enableAccountsAddition, enableRestoreAccount } = this.props;
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'account-list'}>
+			<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'account-list'}>
 				<View style={styles.titleWrapper}>
 					<View style={styles.dragger} testID={'account-list-dragger'} />
 				</View>
@@ -449,14 +411,11 @@ class AccountList extends PureComponent {
 						</TouchableOpacity>
 					</View>
 				)}
-				{enableRestoreAccount &&
-					<TouchableOpacity
-						onPress={this.restoreAccountFromFriends}
-						style={styles.footerButton}
-					>
+				{enableRestoreAccount && (
+					<TouchableOpacity onPress={this.restoreAccountFromFriends} style={styles.footerButton}>
 						<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
 					</TouchableOpacity>
-				}
+				)}
 			</SafeAreaView>
 		);
 	}
@@ -469,7 +428,7 @@ const mapStateToProps = state => ({
 	keyringController: state.engine.backgroundState.KeyringController,
 	network: state.engine.backgroundState.NetworkController.network,
 	identities: state.engine.backgroundState.PreferencesController.identities,
-	onboardProfile: state.user.onboardProfile,
+	onboardProfile: state.user.onboardProfile
 });
 
 export default connect(mapStateToProps)(AccountList);
