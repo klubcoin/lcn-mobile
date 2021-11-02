@@ -606,13 +606,13 @@ const Main = props => {
 	});
 
 	const handleFriendRequestUpdate = message => {
-		setFriendMessage(message);
 		const { data } = message;
 		if (data) {
 			if (data.type == FriendRequestTypes.Accept) {
 				getPeerInfo(message);
 				handleAcceptedNameCard(data);
 			} else if (data.type == FriendRequestTypes.Revoke) {
+				setFriendMessage(message);
 				revokeFriend(data);
 			}
 		}
