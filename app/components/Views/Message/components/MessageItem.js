@@ -55,7 +55,7 @@ export default class MessageItem extends Component {
 
 		return (
 			<TouchableOpacity style={styles.container} onPress={onItemPress}>
-				<View style={[styles.hasMessage, !isRead && { backgroundColor: 'dodgerblue' }]} />
+				<View style={[styles.hasMessage, !isRead && { backgroundColor: colors.blue }]} />
 				{this.renderAvatar()}
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
 					<Text
@@ -89,18 +89,19 @@ const styles = StyleSheet.create({
 	address: {
 		fontSize: 16,
 		fontWeight: '400',
-		maxWidth: 200
+		maxWidth: 200,
+		color: colors.fontPrimary
 	},
 	message: {
 		textAlign: 'left',
-		color: colors.grey400,
+		color: colors.grey300,
 		fontWeight: '300',
 		fontSize: 14
 	},
 	time: {
 		flex: 1,
 		marginLeft: 10,
-		color: colors.grey400,
+		color: colors.grey300,
 		fontWeight: '300',
 		fontSize: 14
 	},
