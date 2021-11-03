@@ -6,6 +6,8 @@ import { fontStyles, colors } from '../../../../styles/common';
 import PropTypes from 'prop-types';
 import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { connect } from 'react-redux';
+import preferences from '../../../../store/preferences';
+import RemoteImage from '../../../Base/RemoteImage';
 
 const styles = StyleSheet.create({
 	addressElementWrapper: {
@@ -18,6 +20,11 @@ const styles = StyleSheet.create({
 	addressElementInformation: {
 		flex: 1,
 		flexDirection: 'column'
+	},
+	avatar: {
+		width: 28,
+		height: 28,
+		borderRadius: 14,
 	},
 	addressIdenticon: {
 		paddingRight: 16
@@ -61,7 +68,8 @@ class AddressElement extends PureComponent {
 
 	state = {
 		name: this.props.name,
-		address: this.props.address
+		address: this.props.address,
+		profile: {},
 	};
 
 	componentDidMount = async () => {
@@ -71,11 +79,17 @@ class AddressElement extends PureComponent {
 			const ensName = await doENSReverseLookup(address, network);
 			this.setState({ name: ensName });
 		}
+		this.fetchProfile(address);
 	};
+
+	fetchProfile = async (address) => {
+		const profile = await preferences.peerProfile(address);
+		if (profile) this.setState({ profile });
+	}
 
 	render = () => {
 		const { onAccountPress, onAccountLongPress } = this.props;
-		const { name, address } = this.state;
+		const { name, address, profile: { avatar } } = this.state;
 		const primaryLabel = name && name[0] !== ' ' ? name : renderShortAddress(address);
 		const secondaryLabel = name && name[0] !== ' ' && renderShortAddress(address);
 		return (
@@ -86,7 +100,10 @@ class AddressElement extends PureComponent {
 				style={styles.addressElementWrapper}
 			>
 				<View style={styles.addressIdenticon}>
-					<Identicon address={address} diameter={28} />
+					{avatar && avatar.length != 0
+						? <RemoteImage source={{ uri: `data:image/*;base64,${avatar}` }} style={styles.avatar} />
+						: <Identicon address={address} diameter={28} />
+					}
 				</View>
 				<View style={styles.addressElementInformation}>
 					<Text style={styles.addressTextNickname} numberOfLines={1}>
