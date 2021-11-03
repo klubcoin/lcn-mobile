@@ -656,7 +656,6 @@ export function getWebviewNavbar(navigation, backButtonText) {
 	const share = navigation.getParam('dispatch', () => {
 		'';
 	});
-	console.log('Hello12323');
 	return {
 		headerTitle: <Text style={styles.centeredTitle}>{title}</Text>,
 		headerLeft: Device.isAndroid() ? (
@@ -683,7 +682,7 @@ export function getWebviewNavbar(navigation, backButtonText) {
 		),
 		headerStyle: {
 			backgroundColor: colors.grey,
-			marginTop: Device.isIos() ? 20 : 0
+			marginTop: Device.isIos() ? 5 : 0
 		}
 	};
 }
