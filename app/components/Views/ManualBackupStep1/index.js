@@ -33,186 +33,9 @@ import {
 	CONFIRM_PASSWORD,
 	WRONG_PASSWORD_ERROR
 } from '../../../constants/onboarding';
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	wrapper: {
-		flex: 1,
-		paddingHorizontal: 32
-	},
-	onBoardingWrapper: {
-		paddingHorizontal: 20
-	},
-	loader: {
-		backgroundColor: colors.white,
-		flex: 1,
-		minHeight: 300,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	action: {
-		fontSize: 18,
-		marginVertical: 16,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'center',
-		...fontStyles.bold
-	},
-	infoWrapper: {
-		marginBottom: 16,
-		justifyContent: 'center'
-	},
-	info: {
-		fontSize: 14,
-		color: colors.fontPrimary,
-		textAlign: 'center',
-		...fontStyles.normal,
-		paddingHorizontal: 6
-	},
-	seedPhraseConcealer: {
-		position: 'absolute',
-		width: '100%',
-		height: '100%',
-		backgroundColor: colors.grey700,
-		opacity: 0.7,
-		alignItems: 'center',
-		borderRadius: 8,
-		paddingHorizontal: 24,
-		paddingVertical: 45
-	},
-	touchableOpacity: {
-		position: 'absolute',
-		width: '100%',
-		height: '100%',
-		borderRadius: 8
-	},
-	blurView: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		bottom: 0,
-		right: 0,
-		borderRadius: 8
-	},
-	icon: {
-		width: 24,
-		height: 24,
-		color: colors.white,
-		textAlign: 'center',
-		marginBottom: 32
-	},
-	reveal: {
-		fontSize: Device.isMediumDevice() ? 13 : 16,
-		...fontStyles.bold,
-		color: colors.white,
-		lineHeight: 22,
-		marginBottom: 8,
-		textAlign: 'center'
-	},
-	watching: {
-		fontSize: Device.isMediumDevice() ? 10 : 12,
-		color: colors.white,
-		lineHeight: 17,
-		marginBottom: 32,
-		textAlign: 'center'
-	},
-	viewButtonContainer: {
-		width: 155,
-		padding: 12
-	},
-	seedPhraseWrapper: {
-		backgroundColor: colors.white,
-		borderRadius: 8,
-		flexDirection: 'row',
-		borderColor: colors.grey100,
-		borderWidth: 1,
-		marginBottom: 64,
-		minHeight: 275
-	},
-	wordColumn: {
-		flex: 1,
-		alignItems: 'center',
-		paddingHorizontal: Device.isMediumDevice() ? 18 : 24,
-		paddingVertical: 18,
-		justifyContent: 'space-between'
-	},
-	wordWrapper: {
-		flexDirection: 'row'
-	},
-	word: {
-		paddingHorizontal: 8,
-		paddingVertical: 6,
-		fontSize: 14,
-		color: colors.fontPrimary,
-		backgroundColor: colors.white,
-		borderColor: colors.blue,
-		borderWidth: 1,
-		borderRadius: 13,
-		textAlign: 'center',
-		textAlignVertical: 'center',
-		lineHeight: 14,
-		flex: 1
-	},
-	confirmPasswordWrapper: {
-		flex: 1,
-		padding: 30,
-		paddingTop: 0
-	},
-	passwordRequiredContent: {
-		marginBottom: 20
-	},
-	content: {
-		alignItems: 'flex-start'
-	},
-	title: {
-		fontSize: 32,
-		marginTop: 20,
-		marginBottom: 10,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	text: {
-		marginBottom: 10,
-		marginTop: 20,
-		justifyContent: 'center'
-	},
-	label: {
-		fontSize: 16,
-		lineHeight: 23,
-		color: colors.fontPrimary,
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	buttonWrapper: {
-		flex: 1,
-		width: '100%',
-		marginTop: 20,
-		justifyContent: 'flex-end'
-	},
-	input: {
-		borderWidth: 2,
-		borderRadius: 5,
-		width: '100%',
-		borderColor: colors.grey000,
-		padding: 10,
-		height: 40
-	},
-	warningMessageText: {
-		paddingVertical: 10,
-		color: colors.red,
-		...fontStyles.normal
-	},
-	keyboardAvoidingView: {
-		flex: 1,
-		flexDirection: 'row',
-		alignSelf: 'center'
-	}
-});
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * View that's shown during the second step of
@@ -293,12 +116,12 @@ export class ManualBackupStep1 extends PureComponent {
 		}
 	};
 
-	tryUnlock = (hash) => {
+	tryUnlock = hash => {
 		const { password } = this.state;
 		this.tryUnlockWithPassword(hash || password);
 	};
 
-	onKeycloakResult = async (error) => {
+	onKeycloakResult = async error => {
 		if (!error) {
 			const hash = await preferences.getKeycloakHash();
 			this.tryUnlock(hash);
@@ -306,7 +129,7 @@ export class ManualBackupStep1 extends PureComponent {
 	};
 
 	renderLoader = () => (
-		<View style={styles.loader}>
+		<View style={[styles.loader, brandStyles.loader]}>
 			<ActivityIndicator size="small" />
 		</View>
 	);
@@ -346,16 +169,17 @@ export class ManualBackupStep1 extends PureComponent {
 							<View style={styles.text}>
 								<Text style={styles.label}>{strings('manual_backup_step_1.before_continiuing')}</Text>
 							</View>
-							{keycloakAuth ?
+							{keycloakAuth ? (
 								<LoginWithKeycloak
 									type={'sign'}
 									label={strings('manual_backup_step_1.confirm_password')}
 									onSuccess={this.onKeycloakResult}
 									onError={this.onKeycloakResult}
-								/> :
+								/>
+							) : (
 								<>
 									<TextInput
-										style={styles.input}
+										style={[styles.input, brandStyles.textColor]}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
 										onChangeText={this.onPasswordChange}
@@ -377,7 +201,7 @@ export class ManualBackupStep1 extends PureComponent {
 										</StyledButton>
 									</View>
 								</>
-							}
+							)}
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
@@ -403,18 +227,18 @@ export class ManualBackupStep1 extends PureComponent {
 					<View style={styles.infoWrapper}>
 						<Text style={styles.info}>{strings('manual_backup_step_1.info')}</Text>
 					</View>
-					<View style={styles.seedPhraseWrapper}>
+					<View style={[styles.seedPhraseWrapper, brandStyles.seedPhraseWrapper]}>
 						<View style={styles.wordColumn}>
 							{this.words.slice(0, half).map((word, i) => (
 								<View key={`word_${i}`} style={styles.wordWrapper}>
-									<Text style={styles.word}>{`${i + 1}. ${word}`}</Text>
+									<Text style={[styles.word, brandStyles.word]}>{`${i + 1}. ${word}`}</Text>
 								</View>
 							))}
 						</View>
 						<View style={styles.wordColumn}>
 							{this.words.slice(-half).map((word, i) => (
 								<View key={`word_${i}`} style={styles.wordWrapper}>
-									<Text style={styles.word}>{`${i + (half + 1)}. ${word}`}</Text>
+									<Text style={[styles.word, brandStyles.word]}>{`${i + (half + 1)}. ${word}`}</Text>
 								</View>
 							))}
 						</View>
@@ -429,20 +253,20 @@ export class ManualBackupStep1 extends PureComponent {
 		const { ready, currentStep, view } = this.state;
 		if (!ready) return this.renderLoader();
 		return (
-			<SafeAreaView style={styles.mainWrapper}>
-				<View style={styles.onBoardingWrapper}>
-					<OnboardingProgress currentStep={currentStep} steps={this.steps} />
-				</View>
-				{view === SEED_PHRASE ? this.renderSeedphraseView() : this.renderConfirmPassword()}
-			</SafeAreaView>
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+					<View style={styles.onBoardingWrapper}>
+						<OnboardingProgress currentStep={currentStep} steps={this.steps} />
+					</View>
+					{view === SEED_PHRASE ? this.renderSeedphraseView() : this.renderConfirmPassword()}
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
 
 const mapStateToProps = state => ({
-	keycloakAuth: state.user.keycloakAuth,
+	keycloakAuth: state.user.keycloakAuth
 });
 
-export default connect(
-	mapStateToProps,
-)(ManualBackupStep1);
+export default connect(mapStateToProps)(ManualBackupStep1);
