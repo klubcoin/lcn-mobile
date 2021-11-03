@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { colors } from '../../../styles/common';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Colors from 'common/colors'
+import Colors from 'common/colors';
 const styles = StyleSheet.create({
 	itemWrapper: {
 		flex: 1,
@@ -65,7 +65,7 @@ export default class AssetElement extends PureComponent {
 			>
 				{children}
 				<View styles={styles.arrow}>
-					<Icon name="chevron-right" size={20} color={Colors.primary} style={styles.arrowIcon} />
+					<Icon name="chevron-right" size={20} color={colors.blue} style={styles.arrowIcon} />
 				</View>
 			</TouchableOpacity>
 		);

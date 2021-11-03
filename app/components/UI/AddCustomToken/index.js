@@ -8,28 +8,8 @@ import { isValidAddress } from 'ethereumjs-util';
 import ActionView from '../ActionView';
 import { isSmartContractAddress } from '../../../util/transactions';
 import AnalyticsV2 from '../../../util/analyticsV2';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	rowWrapper: {
-		padding: 20
-	},
-	textInput: {
-		borderWidth: 1,
-		borderRadius: 4,
-		borderColor: colors.grey100,
-		padding: 16,
-		...fontStyles.normal
-	},
-	warningText: {
-		marginTop: 15,
-		color: colors.red,
-		...fontStyles.normal
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * Copmonent that provides ability to add custom tokens.
@@ -190,7 +170,7 @@ export default class AddCustomToken extends PureComponent {
 	render = () => {
 		const { address, symbol, decimals } = this.state;
 		return (
-			<View style={styles.wrapper} testID={'add-custom-token-screen'}>
+			<View style={[styles.wrapper, brandStyles.wrapper]} testID={'add-custom-token-screen'}>
 				<ActionView
 					cancelTestID={'add-custom-asset-cancel-button'}
 					confirmTestID={'add-custom-asset-confirm-button'}
@@ -203,9 +183,11 @@ export default class AddCustomToken extends PureComponent {
 				>
 					<View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('token.token_address')}</Text>
+							<Text style={[fontStyles.normal, brandStyles.textColor]}>
+								{strings('token.token_address')}
+							</Text>
 							<TextInput
-								style={styles.textInput}
+								style={[styles.textInput, brandStyles.textColor]}
 								placeholder={'0x...'}
 								placeholderTextColor={colors.grey100}
 								value={this.state.address}
@@ -220,9 +202,11 @@ export default class AddCustomToken extends PureComponent {
 							</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('token.token_symbol')}</Text>
+							<Text style={[fontStyles.normal, brandStyles.textColor]}>
+								{strings('token.token_symbol')}
+							</Text>
 							<TextInput
-								style={styles.textInput}
+								style={[styles.textInput, brandStyles.textColor]}
 								placeholder={'GNO'}
 								placeholderTextColor={colors.grey100}
 								value={this.state.symbol}
@@ -236,9 +220,11 @@ export default class AddCustomToken extends PureComponent {
 							<Text style={styles.warningText}>{this.state.warningSymbol}</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('token.token_precision')}</Text>
+							<Text style={[fontStyles.normal, brandStyles.textColor]}>
+								{strings('token.token_precision')}
+							</Text>
 							<TextInput
-								style={styles.textInput}
+								style={[styles.textInput, brandStyles.textColor]}
 								value={this.state.decimals}
 								keyboardType="numeric"
 								maxLength={2}

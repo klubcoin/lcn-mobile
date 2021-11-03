@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey100
 	},
 	textInput: {
-		...fontStyles.normal
+		...fontStyles.normal,
+		color: colors.white
 	},
 	icon: {
 		padding: 16
@@ -78,12 +79,12 @@ export default class AssetSearch extends PureComponent {
 
 		return (
 			<View style={styles.searchSection} testID={'add-searched-token-screen'}>
-				<Icon name="search" size={22} style={styles.icon} />
+				<Icon name="search" size={22} style={styles.icon} color={colors.white} />
 				<TextInput
 					style={[styles.textInput, { width: inputWidth }]}
 					value={searchQuery}
 					placeholder={strings('token.search_tokens_placeholder')}
-					placeholderTextColor={colors.grey100}
+					placeholderTextColor={colors.grey300}
 					onChangeText={this.handleSearch}
 					testID={'input-search-asset'}
 				/>

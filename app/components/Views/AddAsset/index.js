@@ -50,7 +50,7 @@ class AddAsset extends PureComponent {
 				underlineStyle={styles.tabUnderlineStyle}
 				activeTextColor={colors.blue}
 				inactiveTextColor={colors.fontTertiary}
-				backgroundColor={colors.white}
+				backgroundColor={colors.transparent}
 				tabStyle={styles.tabStyle}
 				textStyle={styles.textStyle}
 			/>

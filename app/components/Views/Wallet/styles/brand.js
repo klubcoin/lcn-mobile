@@ -7,7 +7,7 @@ const breakPoint = deviceHeight < 700;
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.transparent
+		backgroundColor: colors.black
 	},
 	tabUnderlineStyle: {
 		height: 4,

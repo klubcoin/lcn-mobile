@@ -5,7 +5,7 @@ import Device from '../../../../util/Device';
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
-		backgroundColor: colors.white
+		backgroundColor: colors.black
 	},
 	tabUnderlineStyle: {
 		height: 2,
