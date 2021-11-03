@@ -427,7 +427,7 @@ export default class WebRTC {
 	};
 
 	sendSafe = async (address, data) => {
-		data.checksum = sha256(JSON.stringify(data));
+		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
 		} else {
