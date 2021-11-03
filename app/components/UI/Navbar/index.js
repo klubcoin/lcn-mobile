@@ -642,7 +642,10 @@ export function getNetworkNavbarOptions(title, translate, navigation) {
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
-		headerRight: <View />
+		headerRight: <View />,
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 

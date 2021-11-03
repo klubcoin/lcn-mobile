@@ -11,28 +11,8 @@ import Device from '../../../util/Device';
 import { connect } from 'react-redux';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { toLowerCaseCompare } from '../../../util/general';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	rowWrapper: {
-		padding: 20
-	},
-	textInput: {
-		borderWidth: 1,
-		borderRadius: 4,
-		borderColor: colors.grey100,
-		padding: 16,
-		...fontStyles.normal
-	},
-	warningText: {
-		marginTop: 15,
-		color: colors.red,
-		...fontStyles.normal
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * PureComponent that provides ability to add custom collectibles.
@@ -179,7 +159,7 @@ class AddCustomCollectible extends PureComponent {
 		const { address, tokenId } = this.state;
 
 		return (
-			<View style={styles.wrapper} testID={'add-custom-token-screen'}>
+			<View style={[styles.wrapper, brandStyles.wrapper]} testID={'add-custom-token-screen'}>
 				<ActionView
 					cancelTestID={'add-custom-asset-cancel-button'}
 					confirmTestID={'add-custom-asset-confirm-button'}
@@ -191,11 +171,14 @@ class AddCustomCollectible extends PureComponent {
 				>
 					<View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('collectible.collectible_address')}</Text>
+							<Text style={[fontStyles.normal, brandStyles.textColor]}>
+								{strings('collectible.collectible_address')}
+							</Text>
 							<TextInput
 								style={[
 									styles.textInput,
-									this.state.inputWidth ? { width: this.state.inputWidth } : {}
+									this.state.inputWidth ? { width: this.state.inputWidth } : {},
+									brandStyles.textColor
 								]}
 								placeholder={'0x...'}
 								placeholderTextColor={colors.grey100}
@@ -210,11 +193,14 @@ class AddCustomCollectible extends PureComponent {
 							</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('collectible.collectible_token_id')}</Text>
+							<Text style={[fontStyles.normal, brandStyles.textColor]}>
+								{strings('collectible.collectible_token_id')}
+							</Text>
 							<TextInput
 								style={[
 									styles.textInput,
-									this.state.inputWidth ? { width: this.state.inputWidth } : {}
+									this.state.inputWidth ? { width: this.state.inputWidth } : {},
+									brandStyles.textColor
 								]}
 								value={this.state.tokenId}
 								keyboardType="numeric"
