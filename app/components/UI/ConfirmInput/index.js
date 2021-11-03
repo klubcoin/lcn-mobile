@@ -6,58 +6,8 @@ import Text from '../../Base/Text';
 import ModalDragger from '../../Base/ModalDragger';
 import StyledButton from '../StyledButton';
 import { strings } from '../../../../locales/i18n';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10
-	},
-	body: {
-		alignItems: 'center',
-		paddingHorizontal: 15
-	},
-	actionRow: {
-		flexDirection: 'row',
-		marginTop: 30,
-		marginBottom: 30
-	},
-	actionButton: {
-		flex: 1,
-		marginHorizontal: 8
-	},
-	title: {
-		...fontStyles.normal,
-		color: colors.fontPrimary,
-		fontSize: 18,
-		flexDirection: 'row',
-		alignSelf: 'center'
-	},
-	message: {
-		...fontStyles.normal,
-		color: colors.fontPrimary,
-		fontSize: 16,
-		flexDirection: 'row',
-		alignSelf: 'center',
-		marginTop: 10,
-		paddingHorizontal: 10
-	},
-	titleWrapper: {
-		marginTop: 10
-	},
-	input: {
-		width: '100%',
-		height: 40,
-		borderWidth: StyleSheet.hairlineWidth,
-		borderRadius: 4,
-		marginTop: 10,
-		paddingHorizontal: 10
-	},
-	error: {
-		borderColor: '#f00',
-		borderWidth: 1
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 /**
  * PureComponent that renders confirm actions
@@ -104,7 +54,7 @@ export default class ConfirmInput extends PureComponent {
 
 		return (
 			<KeyboardAvoidingView behavior={'padding'}>
-				<SafeAreaView style={styles.wrapper}>
+				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]}>
 					<ModalDragger />
 					<View style={styles.titleWrapper}>
 						<Text style={styles.title}>{title}</Text>
@@ -118,7 +68,7 @@ export default class ConfirmInput extends PureComponent {
 							placeholder={placeholder || '...'}
 							placeholderTextColor={colors.grey100}
 							spellCheck={false}
-							style={[styles.input, empty && styles.error]}
+							style={[styles.input, empty && styles.error, brandStyles.input]}
 							value={value}
 							multiline={!!multiline}
 							numberOfLines={1}
