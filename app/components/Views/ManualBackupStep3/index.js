@@ -16,53 +16,9 @@ import Confetti from '../../UI/Confetti';
 import HintModal from '../../UI/HintModal';
 import { getTransparentOnboardingNavbarOptions } from '../../UI/Navbar';
 import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../constants/storage';
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		marginTop: 40,
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	wrapper: {
-		flex: 1,
-		paddingHorizontal: 50
-	},
-	onBoardingWrapper: {
-		paddingHorizontal: 20
-	},
-	congratulations: {
-		fontSize: Device.isMediumDevice() ? 28 : 32,
-		marginBottom: 12,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'center',
-		...fontStyles.bold
-	},
-	baseText: {
-		fontSize: 16,
-		color: colors.fontPrimary,
-		textAlign: 'center',
-		...fontStyles.normal
-	},
-	successText: {
-		marginBottom: 32
-	},
-	hintText: {
-		marginBottom: 26,
-		color: colors.blue
-	},
-	learnText: {
-		color: colors.blue
-	},
-	recoverText: {
-		marginBottom: 26
-	},
-	emoji: {
-		textAlign: 'center',
-		fontSize: 65,
-		marginBottom: 16
-	}
-});
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 const hardwareBackPress = () => ({});
 const HARDWARE_BACK_PRESS = 'hardwareBackPress';
@@ -171,44 +127,48 @@ class ManualBackupStep3 extends PureComponent {
 
 	render() {
 		return (
-			<SafeAreaView style={styles.mainWrapper}>
-				<Confetti />
-				{this.steps ? (
-					<View style={styles.onBoardingWrapper}>
-						<OnboardingProgress currentStep={this.state.currentStep} steps={this.steps} />
-					</View>
-				) : null}
-				<ActionView
-					confirmTestID={'manual-backup-step-3-done-button'}
-					confirmText={strings('manual_backup_step_3.done')}
-					onConfirmPress={this.done}
-					showCancelButton={false}
-					confirmButtonMode={'confirm'}
-				>
-					<View style={styles.wrapper} testID={'import-congrats-screen'}>
-						<Emoji name="tada" style={styles.emoji} />
-						<Text style={styles.congratulations}>{strings('manual_backup_step_3.congratulations')}</Text>
-						<Text style={[styles.baseText, styles.successText]}>
-							{strings('manual_backup_step_3.success')}
-						</Text>
-						<TouchableOpacity onPress={this.toggleHint}>
-							<Text style={[styles.baseText, styles.hintText]}>
-								{strings('manual_backup_step_3.hint')}
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+					<Confetti />
+					{this.steps ? (
+						<View style={styles.onBoardingWrapper}>
+							<OnboardingProgress currentStep={this.state.currentStep} steps={this.steps} />
+						</View>
+					) : null}
+					<ActionView
+						confirmTestID={'manual-backup-step-3-done-button'}
+						confirmText={strings('manual_backup_step_3.done')}
+						onConfirmPress={this.done}
+						showCancelButton={false}
+						confirmButtonMode={'confirm'}
+					>
+						<View style={styles.wrapper} testID={'import-congrats-screen'}>
+							<Emoji name="tada" style={styles.emoji} />
+							<Text style={styles.congratulations}>
+								{strings('manual_backup_step_3.congratulations')}
 							</Text>
-						</TouchableOpacity>
-						<Text style={[styles.baseText, styles.recoverText]}>
-							{strings('manual_backup_step_3.recover')}
-						</Text>
-						<TouchableOpacity onPress={this.learnMore}>
-							<Text style={[styles.baseText, styles.learnText]}>
-								{strings('manual_backup_step_3.learn')}
+							<Text style={[styles.baseText, styles.successText]}>
+								{strings('manual_backup_step_3.success')}
 							</Text>
-						</TouchableOpacity>
-					</View>
-				</ActionView>
-				{Device.isAndroid() && <AndroidBackHandler customBackPress={this.props.navigation.pop} />}
-				{this.renderHint()}
-			</SafeAreaView>
+							<TouchableOpacity onPress={this.toggleHint}>
+								<Text style={[styles.baseText, styles.hintText]}>
+									{strings('manual_backup_step_3.hint')}
+								</Text>
+							</TouchableOpacity>
+							<Text style={[styles.baseText, styles.recoverText]}>
+								{strings('manual_backup_step_3.recover')}
+							</Text>
+							<TouchableOpacity onPress={this.learnMore}>
+								<Text style={[styles.baseText, styles.learnText]}>
+									{strings('manual_backup_step_3.learn')}
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</ActionView>
+					{Device.isAndroid() && <AndroidBackHandler customBackPress={this.props.navigation.pop} />}
+					{this.renderHint()}
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
