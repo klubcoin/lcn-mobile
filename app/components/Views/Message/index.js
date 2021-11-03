@@ -75,14 +75,13 @@ class Message extends Component {
 	};
 
 	filterConversations = () => {
-		const { conversations } = this.state;
-		conversations.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+		const { conversations, searchQuery } = this.state;
+		const query = searchQuery.toLocaleLowerCase();
 
 		return conversations.filter(e => {
-			const { searchQuery } = this.state;
-			const query = searchQuery.toLocaleLowerCase();
 			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
-		});
+		})
+			.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
 	};
 
 	gotoChatRoom = recipient => {
