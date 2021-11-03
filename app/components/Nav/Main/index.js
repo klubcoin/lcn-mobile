@@ -623,7 +623,7 @@ const Main = props => {
 		const profile = await preferences.peerProfile(address);
 
 		if (profile && profile.name) {
-			Object.assign(message.data, profile);
+			Object.assign(message.data, profile, { address });
 			setFriendMessage(message);
 			return;
 		}
@@ -631,7 +631,7 @@ const Main = props => {
 		const webrtc = refWebRTC();
 		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
 			if (!data.profile) return true;
-			Object.assign(message.data, data.profile);
+			Object.assign(message.data, data.profile, { address });
 			setFriendMessage(message);
 		})
 		webrtc.sendSafe(address, WalletProfile());
