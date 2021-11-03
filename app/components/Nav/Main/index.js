@@ -84,6 +84,7 @@ import CryptoSignature from '../../../core/CryptoSignature';
 import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
+import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -665,7 +666,9 @@ const Main = props => {
 
 			const webrtc = new WebRTC(selectedAddress);
 			setWebRTC(webrtc);
-			webrtc.setKeyPairHandler(bindPrivateKey);
+			const encryptor = new EncryptionWebRTC(selectedAddress);
+			webrtc.addEncryptor(encryptor);
+			encryptor.setKeyPairHandler(bindPrivateKey);
 			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
 
 			const messaging = new Messaging(selectedAddress);

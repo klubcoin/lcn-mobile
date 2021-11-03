@@ -10,6 +10,7 @@ import Messaging, { Message, WSEvent } from './Messaging';
 import { AckWebRTC, Chat, ChatFile, ChatProfile } from './Messages';
 import preferences from '../store/preferences';
 import { WalletProfile } from '../components/Views/Contacts/FriendRequestMessages';
+import assert from 'assert';
 
 const useSocketIO = false;
 const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
@@ -20,6 +21,7 @@ export default class WebRTC {
 	peerRefs = {};
 	peerPublicKeys = {};
 	monitors = {};
+	encryptor = null;
 
 	onReady = null;
 	onMessage = null;
@@ -36,16 +38,8 @@ export default class WebRTC {
 		this.initSocket();
 	}
 
-	async setKeyPairHandler(callback) {
-		if (callback) {
-			const { privateKey, publicKey } = await callback(this.fromUserId);
-			this.setKeyPair(privateKey, publicKey);
-		}
-	}
-
-	setKeyPair(privateKey, publicKey) {
-		this.privateKey = privateKey;
-		this.publicKey = publicKey;
+	addEncryptor = (encryptionLayer) => {
+		this.encryptor = encryptionLayer;
 	}
 
 	once = (filter, callback) => {
@@ -253,7 +247,8 @@ export default class WebRTC {
 	decryptPayload(data) {
 		if (!data || !data.payload || !data.encrypted) return data;
 
-		const json = CryptoSignature.decryptMessage(data.payload, this.privateKey);
+		assert(this.encryptor, 'Missing encryption layer');
+		const json = this.encryptor.decrypt(data);
 		try {
 			return JSON.parse(json);
 		} catch (e) {
@@ -409,7 +404,8 @@ export default class WebRTC {
 		const channel = this.sendChannels[peerId];
 		const publicKey = this.peerPublicKeys[peerId];
 
-		const payload = publicKey ? CryptoSignature.encryptMessage(json, publicKey) : json;
+		assert(this.encryptor, 'Missing encryption layer');
+		const payload = this.encryptor.encrypt(json, publicKey);
 		const signature = await CryptoSignature.signMessage(this.fromUserId, payload);
 		const data = {
 			payload,
