@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {
-	ScrollView,
 	StyleSheet,
 	Text,
-	TextInput,
 	TouchableOpacity,
 	View,
 	FlatList,
@@ -12,9 +10,7 @@ import {
 } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
-import Identicon from '../../UI/Identicon';
 import MessageItem from './components/MessageItem';
 import SearchBar from '../../Base/SearchBar';
 import preferences from '../../../store/preferences';
@@ -39,7 +35,7 @@ class Message extends Component {
 	componentDidMount() {
 		this.initConnection();
 		preferences.setActiveChatPeerId(null);
-		this.filterConversations();
+		this.fetchHistoryMessages();
 	}
 
 	componentWillUnmount() {
@@ -49,9 +45,7 @@ class Message extends Component {
 	initConnection = () => {
 		this.messaging = new MessagingWebRTC(null, null, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
-			const { _id } = data.message;
-
-			if (_id) {
+			if (data.action == Chat().action && data.message._id) {
 				preferences.setConversationIsRead(data.from, false);
 				this.fetchHistoryMessages();
 			}
@@ -65,6 +59,7 @@ class Message extends Component {
 		const users = Object.keys(records).map(e => addresses[e]).filter(e => !!e);
 
 		users.forEach(e => {
+			if (!records[e.address]) return;
 			e.lastMessage = records[e.address].messages[0];
 			e.isRead = records[e.address].isRead;
 		});
