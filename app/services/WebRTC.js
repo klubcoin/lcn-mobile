@@ -218,7 +218,7 @@ export default class WebRTC {
 					const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
 					const name = `${firstname} ${lastname}`;
 					const avatarb64 = await RNFS.readFile(avatar, 'base64');
-					this.sendToPeer(peerId, WalletProfile({ address: peerId, name, avatar: avatarb64 }));
+					this.sendToPeer(peerId, WalletProfile({ address: this.fromUserId, name, avatar: avatarb64 }));
 				}
 			}
 
