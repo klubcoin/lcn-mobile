@@ -32,7 +32,7 @@ import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
 import Login1 from '../../Views/Login1';
-
+import { colors } from '../../../styles/common';
 /**
  * Stack navigator responsible for the onboarding process
  * Create Wallet, Import from Seed and Sync
@@ -136,7 +136,7 @@ const HomeNav = createDrawerNavigator(
 	{
 		contentComponent: DrawerView,
 		drawerWidth: 315,
-		overlayColor: 'rgba(0, 127, 174, 0.6)'
+		overlayColor: colors.overlayColor
 	}
 );
 

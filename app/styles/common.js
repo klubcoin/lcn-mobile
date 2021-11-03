@@ -65,7 +65,8 @@ export const colors = {
 	excelColor: '#237e4c',
 	pdfColor: '#b30d02',
 	pptColor: '#d04523',
-	mediaIcColor: '#28afea'
+	mediaIcColor: '#28afea',
+	overlayColor: 'rgba(0, 127, 174, 0.7)'
 };
 
 /**

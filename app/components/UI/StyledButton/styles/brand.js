@@ -117,10 +117,10 @@ const styles = StyleSheet.create({
 	neutral: {
 		backgroundColor: colors.white,
 		borderWidth: 1,
-		borderColor: colors.grey500
+		borderColor: colors.black
 	},
 	neutralText: {
-		color: colors.grey500
+		color: colors.black
 	},
 	sign: {
 		backgroundColor: colors.blue,
