@@ -57,11 +57,13 @@ class Message extends Component {
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
 		const users = Object.keys(records).map(e => addresses[e]).filter(e => !!e);
+		const profiles = preferences.peerProfiles;
 
 		users.forEach(e => {
 			if (!records[e.address]) return;
 			e.lastMessage = records[e.address].messages[0];
 			e.isRead = records[e.address].isRead;
+			if (profiles[e.address]) Object.assign(e, profiles[e.address]);
 		});
 
 		this.setState(prevState => ({
