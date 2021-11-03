@@ -8,6 +8,9 @@ const brandStyles = StyleSheet.create({
 	},
 	colorText: {
 		color: colors.white
+	},
+	subTextColor: {
+		color: colors.grey300
 	}
 });
 

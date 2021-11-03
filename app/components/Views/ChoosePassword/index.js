@@ -540,7 +540,9 @@ class ChoosePassword extends PureComponent {
 													autoCapitalize="none"
 												/>
 												{(password !== '' && (
-													<Text style={[styles.passwordStrengthLabel, brandStyles.colorText]}>
+													<Text
+														style={[styles.passwordStrengthLabel, brandStyles.subTextColor]}
+													>
 														{strings('choose_password.password_strength')}
 														<Text style={styles[`strength_${passwordStrengthWord}`]}>
 															{' '}
@@ -549,7 +551,11 @@ class ChoosePassword extends PureComponent {
 															)}
 														</Text>
 													</Text>
-												)) || <Text style={styles.passwordStrengthLabel} />}
+												)) || (
+													<Text
+														style={[styles.passwordStrengthLabel, brandStyles.subTextColor]}
+													/>
+												)}
 											</View>
 											<View style={styles.field}>
 												<Text style={[styles.hintLabel, brandStyles.colorText]}>
@@ -573,7 +579,7 @@ class ChoosePassword extends PureComponent {
 														<Icon name="check" size={16} color={colors.green300} />
 													) : null}
 												</View>
-												<Text style={[styles.passwordStrengthLabel, brandStyles.colorText]}>
+												<Text style={[styles.passwordStrengthLabel, brandStyles.subTextColor]}>
 													{strings('choose_password.must_be_at_least', {
 														number: MIN_PASSWORD_LENGTH
 													})}
