@@ -7,8 +7,7 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent
 	},
 	emptyContainer: {
-		backgroundColor: colors.transparent,
-		height: Device.getDeviceHeight()
+		backgroundColor: colors.transparent
 	}
 });
 
