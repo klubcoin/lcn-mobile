@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
-import StyledButton from '../StyledButton'; // eslint-disable-line  import/no-unresolved
+import StyledButton from '../StyledButton';
 import AssetIcon from '../AssetIcon';
-import { fontStyles } from '../../../styles/common';
+import { colors, fontStyles } from '../../../styles/common';
 import Text from '../../Base/Text';
 
 const styles = StyleSheet.create({
@@ -21,10 +21,12 @@ const styles = StyleSheet.create({
 		alignItems: 'flex-start'
 	},
 	text: {
-		padding: 16
+		padding: 16,
+		color: colors.white
 	},
 	normalText: {
-		...fontStyles.normal
+		...fontStyles.normal,
+		color: colors.white
 	}
 });
 
