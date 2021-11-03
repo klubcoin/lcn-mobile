@@ -226,6 +226,7 @@ class Contacts extends PureComponent {
 
 	toggleFriendRequestModal = () => {
 		this.setState({ friendRequestVisible: !this.state.friendRequestVisible });
+		this.props.navigation.goBack();
 	};
 
 	toggleAcceptContactModal = () => {
@@ -295,6 +296,7 @@ class Contacts extends PureComponent {
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Accept);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		refWebRTC().sendSafe(to, data);
+		this.props.navigation.goBack();
 	};
 
 	onSelectContact = contact => {
