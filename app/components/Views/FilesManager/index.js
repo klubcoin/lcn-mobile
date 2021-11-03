@@ -35,6 +35,9 @@ import { refWebRTC } from '../../../services/WebRTC';
 import { statuses } from './FileDetails';
 import FileTransfer from './Transfer.service';
 import SearchBar from '../../Base/SearchBar';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
@@ -236,7 +239,7 @@ class FilesManager extends Component {
 		return (
 			items.length > 0 && (
 				<View style={styles.files}>
-					<Text style={styles.title}>{title}</Text>
+					<Text style={[styles.title, brandStyles.textColor]}>{title}</Text>
 					{items.map(e => {
 						const { file } = e;
 
@@ -266,7 +269,7 @@ class FilesManager extends Component {
 										</View>
 									</TouchableWithoutFeedback>
 								</View>
-								<View style={styles.standaloneRowFront}>
+								<View style={[styles.standaloneRowFront, brandStyles.standaloneRowFront]}>
 									<FileItem file={file} date={e.date} status={e.status} processPercent={e.percent} />
 								</View>
 							</SwipeRow>
@@ -284,36 +287,38 @@ class FilesManager extends Component {
 		}
 
 		return (
-			<View style={styles.container}>
-				<KeyboardAvoidingView style={{ flex: 1 }}>
-					<TransferFileModal
-						files={this.state.selectedFiles}
-						contacts={this.state.contacts}
-						selectedContacts={this.state.selectedContacts}
-						onDeleteItem={e => this.onRemoveSelectedFiles(e)}
-						onSelectContact={e => this.onSelectContact(e)}
-						onCloseModal={this.onCloseModal}
-						onTransfer={this.onTransfer}
-					/>
-					<View style={{ flex: 1, paddingHorizontal: 16 }}>
-						<SearchBar
-							placeholder={`${strings('file.search_files')}...`}
-							value={this.state.searchQuery}
-							onChange={this.handleSearch}
+			<OnboardingScreenWithBg screen="a">
+				<View style={[styles.container, brandStyles.container]}>
+					<KeyboardAvoidingView style={{ flex: 1 }}>
+						<TransferFileModal
+							files={this.state.selectedFiles}
+							contacts={this.state.contacts}
+							selectedContacts={this.state.selectedContacts}
+							onDeleteItem={e => this.onRemoveSelectedFiles(e)}
+							onSelectContact={e => this.onSelectContact(e)}
+							onCloseModal={this.onCloseModal}
+							onTransfer={this.onTransfer}
 						/>
-						<ScrollView style={{ marginBottom: 100 }}>
-							{this.renderFileSections(statuses.process)}
-							{this.renderFileSections(statuses.failed)}
-							{this.renderFileSections(statuses.success)}
-						</ScrollView>
-						<CustomButton
-							title={strings('file.transfer_other_files')}
-							onPress={this.onPickFiles}
-							style={styles.customButton}
-						/>
-					</View>
-				</KeyboardAvoidingView>
-			</View>
+						<View style={{ flex: 1, paddingHorizontal: 16 }}>
+							<SearchBar
+								placeholder={`${strings('file.search_files')}...`}
+								value={this.state.searchQuery}
+								onChange={this.handleSearch}
+							/>
+							<ScrollView style={{ marginBottom: 100 }}>
+								{this.renderFileSections(statuses.process)}
+								{this.renderFileSections(statuses.failed)}
+								{this.renderFileSections(statuses.success)}
+							</ScrollView>
+							<CustomButton
+								title={strings('file.transfer_other_files')}
+								onPress={this.onPickFiles}
+								style={styles.customButton}
+							/>
+						</View>
+					</KeyboardAvoidingView>
+				</View>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
@@ -326,62 +331,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(FilesManager);
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1
-	},
-	header: {
-		height: '30%',
-		borderRadius: 30
-	},
-	searchSection: {
-		marginHorizontal: 20,
-		marginVertical: 10,
-		padding: 10,
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderWidth: 1,
-		borderRadius: 8,
-		borderColor: colors.grey100
-	},
-	textInput: {
-		flex: 1,
-		height: 30,
-		marginLeft: 5,
-		paddingVertical: 0
-	},
-	files: {
-		paddingVertical: 16
-	},
-	customButton: {
-		position: 'absolute',
-		bottom: 30
-	},
-	title: {
-		fontSize: 16,
-		fontWeight: '500',
-		marginBottom: 5
-	},
-	standaloneRowBack: {
-		alignItems: 'center',
-		backgroundColor: colors.red,
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'flex-end'
-	},
-	standaloneRowFront: {
-		backgroundColor: colors.white,
-		justifyContent: 'center'
-	},
-	swipeableOption: {
-		width: swipeOffset / 2,
-		alignItems: 'center',
-		backgroundColor: colors.red,
-		height: '100%',
-		justifyContent: 'center'
-	},
-	icon: {
-		color: colors.primaryFox
-	}
-});

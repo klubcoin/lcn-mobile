@@ -24,8 +24,8 @@ export default function FileItem({ file, onDeleteItem, date, processPercent, sta
 					<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
 						{file?.name}
 					</Text>
-					{date && <Text>{formatDates(date)}</Text>}
-					<Text>{formatBytes(file?.size ?? 0)}</Text>
+					{date && <Text style={styles.fileDate}>{formatDates(date)}</Text>}
+					<Text style={styles.fileSize}>{formatBytes(file?.size ?? 0)}</Text>
 				</View>
 				{onDeleteItem && (
 					<TouchableOpacity
@@ -66,14 +66,15 @@ const styles = StyleSheet.create({
 	},
 	fileName: {
 		fontSize: 18,
-		fontWeight: '600'
+		fontWeight: '600',
+		color: colors.fontPrimary
 	},
 	fileDate: {
 		fontSize: 14,
-		color: colors.grey450
+		color: colors.grey300
 	},
 	fileSize: {
 		fontSize: 14,
-		fontWeight: '600'
+		color: colors.fontPrimary
 	}
 });
