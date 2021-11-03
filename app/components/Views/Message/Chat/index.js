@@ -68,7 +68,7 @@ class Chat extends Component {
 
 		const selectedContact = this.state.contact;
 		const user = addresses[selectedContact.address];
-		selectedContact.name = user.name;
+		selectedContact.name = user?.name || selectedContact.name;
 	}
 
 	componentWillUnmount() {
