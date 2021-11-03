@@ -163,7 +163,6 @@ HomeNav.router.getStateForAction = (action, state) => {
  */
 const AppNavigator = createSwitchNavigator(
 	{
-		Login1,
 		Entry,
 		HomeNav,
 		OnboardingRootNav,
@@ -172,7 +171,7 @@ const AppNavigator = createSwitchNavigator(
 		LockScreen
 	},
 	{
-		initialRouteName: 'Login1'
+		initialRouteName: 'Entry'
 	}
 );
 
