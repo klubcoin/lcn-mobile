@@ -15,17 +15,17 @@ function formatDates(date) {
 	return formattedDate.toString();
 }
 
-export default function FileItem({ file, onDeleteItem, date, processPercent, status }) {
+export default function FileItem({ file, onDeleteItem, date, processPercent, status, textStyle }) {
 	return (
 		<View style={{ flex: 1 }}>
 			<View style={styles.fileContainer}>
 				{FileIcons.getFontAwesomeIconFromMIME(file?.type)}
 				<View style={{ alignItems: 'flex-start', marginLeft: 10, flex: 10 }}>
-					<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
+					<Text style={[styles.fileName, textStyle]} numberOfLines={1} ellipsizeMode="middle">
 						{file?.name}
 					</Text>
-					{date && <Text style={styles.fileDate}>{formatDates(date)}</Text>}
-					<Text style={styles.fileSize}>{formatBytes(file?.size ?? 0)}</Text>
+					{date && <Text style={[styles.fileDate, textStyle]}>{formatDates(date)}</Text>}
+					<Text style={[styles.fileSize, textStyle]}>{formatBytes(file?.size ?? 0)}</Text>
 				</View>
 				{onDeleteItem && (
 					<TouchableOpacity

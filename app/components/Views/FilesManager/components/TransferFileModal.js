@@ -67,7 +67,10 @@ export default function TransferFileModal({
 				<Text style={styles.header}>{strings('file.share_with_contacts')}</Text>
 				<ScrollView>
 					<Text style={styles.title}>{strings('file.your_files')}</Text>
-					{files?.length > 0 && files.map(e => <FileItem file={e} onDeleteItem={onDeleteItem} />)}
+					{files?.length > 0 &&
+						files.map(e => (
+							<FileItem file={e} onDeleteItem={onDeleteItem} textStyle={{ color: colors.black }} />
+						))}
 					<Text style={styles.title}>{strings('file.contacts')}</Text>
 					<ScrollView horizontal>{renderContacts()}</ScrollView>
 				</ScrollView>
@@ -84,7 +87,7 @@ export default function TransferFileModal({
 					style={[
 						styles.customButton,
 						{
-							backgroundColor: selectedContacts?.length > 0 ? colors.primaryFox : colors.grey100
+							backgroundColor: selectedContacts?.length > 0 ? colors.blue : colors.grey100
 						}
 					]}
 				/>
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
 		margin: 0,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: colors.greytransparent100
+		backgroundColor: colors.overlayColor
 	},
 	content: {
 		backgroundColor: colors.white,
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
 	header: {
 		fontWeight: 'bold',
 		fontSize: 18,
-		color: colors.primaryFox,
+		color: colors.blue,
 		alignSelf: 'center'
 	},
 	title: {
