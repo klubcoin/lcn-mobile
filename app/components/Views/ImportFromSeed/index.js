@@ -42,133 +42,9 @@ import {
 import Logger from '../../../util/Logger';
 import { getPasswordStrengthWord, passwordRequirementsMet, MIN_PASSWORD_LENGTH } from '../../../util/password';
 import importAdditionalAccounts from '../../../util/importAdditionalAccounts';
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	wrapper: {
-		flex: 1,
-		paddingHorizontal: 32
-	},
-	title: {
-		fontSize: Device.isAndroid() ? 20 : 25,
-		marginTop: 20,
-		marginBottom: 20,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'center',
-		...fontStyles.bold
-	},
-	field: {
-		marginVertical: 5,
-		position: 'relative'
-	},
-	fieldRow: {
-		flexDirection: 'row',
-		alignItems: 'flex-end'
-	},
-	fieldCol: {
-		width: '70%'
-	},
-	fieldColRight: {
-		flexDirection: 'row-reverse',
-		width: '30%'
-	},
-	label: {
-		color: colors.black,
-		fontSize: 16,
-		marginBottom: 12,
-		...fontStyles.normal
-	},
-	ctaWrapper: {
-		marginTop: 20
-	},
-	errorMsg: {
-		color: colors.red,
-		textAlign: 'center',
-		...fontStyles.normal
-	},
-	seedPhrase: {
-		marginBottom: 10,
-		paddingTop: 20,
-		paddingBottom: 20,
-		paddingHorizontal: 20,
-		fontSize: 20,
-		borderRadius: 10,
-		minHeight: 110,
-		height: 'auto',
-		borderWidth: 1,
-		borderColor: colors.grey500,
-		backgroundColor: colors.white,
-		...fontStyles.normal
-	},
-	padding: {
-		paddingRight: 46
-	},
-	biometrics: {
-		alignItems: 'flex-start',
-		marginTop: 10
-	},
-	biometryLabel: {
-		flex: 1,
-		fontSize: 16,
-		color: colors.black,
-		...fontStyles.normal
-	},
-	biometrySwitch: {
-		marginTop: 10,
-		flex: 0
-	},
-	termsAndConditions: {
-		paddingVertical: 10
-	},
-	passwordStrengthLabel: {
-		height: 20,
-		fontSize: 15,
-		color: colors.black,
-		...fontStyles.normal
-	},
-	// eslint-disable-next-line react-native/no-unused-styles
-	strength_weak: {
-		color: colors.red
-	},
-	// eslint-disable-next-line react-native/no-unused-styles
-	strength_good: {
-		color: colors.blue
-	},
-	// eslint-disable-next-line react-native/no-unused-styles
-	strength_strong: {
-		color: colors.green300
-	},
-	showMatchingPasswords: {
-		position: 'absolute',
-		top: 52,
-		right: 17,
-		alignSelf: 'flex-end'
-	},
-	qrCode: {
-		marginRight: 10,
-		borderWidth: 1,
-		borderRadius: 6,
-		borderColor: colors.grey100,
-		paddingVertical: 4,
-		paddingHorizontal: 6,
-		marginTop: -50,
-		marginBottom: 30,
-		alignSelf: 'flex-end'
-	},
-	inputFocused: {
-		borderColor: colors.blue,
-		borderWidth: 2
-	},
-	input: {
-		...fontStyles.normal,
-		fontSize: 16,
-		paddingTop: 2
-	}
-});
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { styles } from './styles/index';
+import { brandStyles } from './styles/brand';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -368,7 +244,9 @@ class ImportFromSeed extends PureComponent {
 
 		return (
 			<View style={styles.biometrics}>
-				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
+				<Text style={[styles.biometryLabel, brandStyles.colorText]}>
+					{strings(`choose_password.remember_me`)}
+				</Text>
 				<Switch
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
@@ -427,163 +305,179 @@ class ImportFromSeed extends PureComponent {
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 
 		return (
-			<SafeAreaView style={styles.mainWrapper}>
-				<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
-					<View testID={'import-from-seed-screen'}>
-						<Text style={styles.title}>{strings('import_from_seed.title')}</Text>
-						<View style={styles.fieldRow}>
-							<View style={styles.fieldCol}>
-								<Text style={styles.label}>{strings('choose_password.seed_phrase')}</Text>
-							</View>
-							<View style={[styles.fieldCol, styles.fieldColRight]}>
-								<TouchableOpacity onPress={this.toggleHideSeedPhraseInput}>
-									<Text style={styles.label}>
-										{strings(`choose_password.${hideSeedPhraseInput ? 'show' : 'hide'}`)}
-									</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-						{hideSeedPhraseInput ? (
-							<OutlinedTextField
-								style={styles.input}
-								containerStyle={inputWidth}
-								inputContainerStyle={styles.padding}
-								placeholder={strings('import_from_seed.seed_phrase_placeholder')}
-								testID="input-seed-phrase"
-								returnKeyType="next"
-								autoCapitalize="none"
-								secureTextEntry={hideSeedPhraseInput}
-								onChangeText={this.onSeedWordsChange}
-								value={seed}
-								baseColor={colors.grey500}
-								tintColor={colors.blue}
-								onSubmitEditing={this.jumpToPassword}
-							/>
-						) : (
-							<TextInput
-								value={seed}
-								numberOfLines={3}
-								style={[styles.seedPhrase, inputWidth, seedphraseInputFocused && styles.inputFocused]}
-								secureTextEntry
-								multiline={!hideSeedPhraseInput}
-								placeholder={strings('import_from_seed.seed_phrase_placeholder')}
-								placeholderTextColor={colors.grey200}
-								onChangeText={this.onSeedWordsChange}
-								testID="input-seed-phrase"
-								blurOnSubmit
-								onSubmitEditing={this.jumpToPassword}
-								returnKeyType="next"
-								keyboardType={
-									(!hideSeedPhraseInput && Device.isAndroid() && 'visible-password') || 'default'
-								}
-								autoCapitalize="none"
-								autoCorrect={false}
-								onFocus={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
-								onBlur={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
-							/>
-						)}
-						<TouchableOpacity style={styles.qrCode} onPress={this.onQrCodePress}>
-							<Icon name="qrcode" size={20} color={colors.fontSecondary} />
-						</TouchableOpacity>
-						<View style={styles.field}>
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+					<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
+						<View testID={'import-from-seed-screen'}>
+							<Text style={styles.title}>{strings('import_from_seed.title')}</Text>
 							<View style={styles.fieldRow}>
 								<View style={styles.fieldCol}>
-									<Text style={styles.label}>{strings('import_from_seed.new_password')}</Text>
+									<Text style={[styles.label, brandStyles.colorText]}>
+										{strings('choose_password.seed_phrase')}
+									</Text>
 								</View>
 								<View style={[styles.fieldCol, styles.fieldColRight]}>
-									<TouchableOpacity onPress={this.toggleShowHide}>
-										<Text style={styles.label}>
-											{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
+									<TouchableOpacity onPress={this.toggleHideSeedPhraseInput}>
+										<Text style={[styles.label, brandStyles.colorText]}>
+											{strings(`choose_password.${hideSeedPhraseInput ? 'show' : 'hide'}`)}
 										</Text>
 									</TouchableOpacity>
 								</View>
 							</View>
-							<OutlinedTextField
-								style={styles.input}
-								containerStyle={inputWidth}
-								ref={this.passwordInput}
-								placeholder={strings('import_from_seed.new_password')}
-								testID={'input-password-field'}
-								returnKeyType={'next'}
-								autoCapitalize="none"
-								secureTextEntry={secureTextEntry}
-								onChangeText={this.onPasswordChange}
-								value={password}
-								baseColor={colors.grey500}
-								tintColor={colors.blue}
-								onSubmitEditing={this.jumpToConfirmPassword}
-							/>
+							{hideSeedPhraseInput ? (
+								<OutlinedTextField
+									style={[styles.input, brandStyles.colorText]}
+									containerStyle={inputWidth}
+									inputContainerStyle={styles.padding}
+									placeholder={strings('import_from_seed.seed_phrase_placeholder')}
+									testID="input-seed-phrase"
+									returnKeyType="next"
+									autoCapitalize="none"
+									secureTextEntry={hideSeedPhraseInput}
+									onChangeText={this.onSeedWordsChange}
+									value={seed}
+									baseColor={colors.white}
+									tintColor={colors.blue}
+									placeholderTextColor={colors.grey300}
+									onSubmitEditing={this.jumpToPassword}
+								/>
+							) : (
+								<TextInput
+									value={seed}
+									numberOfLines={3}
+									style={[
+										styles.seedPhrase,
+										inputWidth,
+										seedphraseInputFocused && styles.inputFocused,
+										brandStyles.colorText
+									]}
+									secureTextEntry
+									multiline={!hideSeedPhraseInput}
+									placeholder={strings('import_from_seed.seed_phrase_placeholder')}
+									placeholderTextColor={colors.grey200}
+									onChangeText={this.onSeedWordsChange}
+									testID="input-seed-phrase"
+									blurOnSubmit
+									onSubmitEditing={this.jumpToPassword}
+									returnKeyType="next"
+									keyboardType={
+										(!hideSeedPhraseInput && Device.isAndroid() && 'visible-password') || 'default'
+									}
+									autoCapitalize="none"
+									autoCorrect={false}
+									onFocus={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
+									onBlur={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
+								/>
+							)}
+							<TouchableOpacity style={styles.qrCode} onPress={this.onQrCodePress}>
+								<Icon name="qrcode" size={20} color={colors.fontSecondary} />
+							</TouchableOpacity>
+							<View style={styles.field}>
+								<View style={styles.fieldRow}>
+									<View style={styles.fieldCol}>
+										<Text style={[styles.label, brandStyles.colorText]}>
+											{strings('import_from_seed.new_password')}
+										</Text>
+									</View>
+									<View style={[styles.fieldCol, styles.fieldColRight]}>
+										<TouchableOpacity onPress={this.toggleShowHide}>
+											<Text style={[styles.label, brandStyles.colorText]}>
+												{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
+											</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+								<OutlinedTextField
+									style={[styles.input, brandStyles.colorText]}
+									containerStyle={inputWidth}
+									ref={this.passwordInput}
+									placeholder={strings('import_from_seed.new_password')}
+									testID={'input-password-field'}
+									returnKeyType={'next'}
+									autoCapitalize="none"
+									secureTextEntry={secureTextEntry}
+									onChangeText={this.onPasswordChange}
+									value={password}
+									baseColor={colors.white}
+									tintColor={colors.blue}
+									placeholderTextColor={colors.grey300}
+									onSubmitEditing={this.jumpToConfirmPassword}
+								/>
 
-							{(password !== '' && (
-								<Text style={styles.passwordStrengthLabel}>
-									{strings('choose_password.password_strength')}
-									<Text style={styles[`strength_${passwordStrengthWord}`]}>
-										{' '}
-										{strings(`choose_password.strength_${passwordStrengthWord}`)}
+								{(password !== '' && (
+									<Text style={[styles.passwordStrengthLabel, brandStyles.colorText]}>
+										{strings('choose_password.password_strength')}
+										<Text style={styles[`strength_${passwordStrengthWord}`]}>
+											{' '}
+											{strings(`choose_password.strength_${passwordStrengthWord}`)}
+										</Text>
 									</Text>
-								</Text>
-							)) || <Text style={styles.passwordStrengthLabel} />}
-						</View>
-
-						<View style={styles.field}>
-							<Text style={styles.label}>{strings('import_from_seed.confirm_password')}</Text>
-							<OutlinedTextField
-								style={styles.input}
-								containerStyle={inputWidth}
-								ref={this.confirmPasswordInput}
-								testID={'input-password-field-confirm'}
-								onChangeText={this.onPasswordConfirmChange}
-								returnKeyType={'next'}
-								autoCapitalize="none"
-								secureTextEntry={secureTextEntry}
-								placeholder={strings('import_from_seed.confirm_password')}
-								value={confirmPassword}
-								baseColor={colors.grey500}
-								tintColor={colors.blue}
-								onSubmitEditing={this.onPressImport}
-							/>
-
-							<View style={styles.showMatchingPasswords}>
-								{password !== '' && password === confirmPassword ? (
-									<Icon name="check" size={12} color={colors.green300} />
-								) : null}
+								)) || <Text style={styles.passwordStrengthLabel} />}
 							</View>
-							<Text style={styles.passwordStrengthLabel}>
-								{strings('choose_password.must_be_at_least', { number: MIN_PASSWORD_LENGTH })}
-							</Text>
+
+							<View style={styles.field}>
+								<Text style={[styles.label, brandStyles.colorText]}>
+									{strings('import_from_seed.confirm_password')}
+								</Text>
+								<OutlinedTextField
+									style={[styles.input, brandStyles.colorText]}
+									containerStyle={inputWidth}
+									ref={this.confirmPasswordInput}
+									testID={'input-password-field-confirm'}
+									onChangeText={this.onPasswordConfirmChange}
+									returnKeyType={'next'}
+									autoCapitalize="none"
+									secureTextEntry={secureTextEntry}
+									placeholder={strings('import_from_seed.confirm_password')}
+									value={confirmPassword}
+									baseColor={colors.white}
+									tintColor={colors.blue}
+									placeholderTextColor={colors.grey300}
+									onSubmitEditing={this.onPressImport}
+								/>
+
+								<View style={styles.showMatchingPasswords}>
+									{password !== '' && password === confirmPassword ? (
+										<Icon name="check" size={12} color={colors.green300} />
+									) : null}
+								</View>
+								<Text style={[styles.passwordStrengthLabel, brandStyles.colorText]}>
+									{strings('choose_password.must_be_at_least', { number: MIN_PASSWORD_LENGTH })}
+								</Text>
+							</View>
+
+							{this.renderSwitch()}
+
+							{!!error && (
+								<Text style={styles.errorMsg} testID={'invalid-seed-phrase'}>
+									{error}
+								</Text>
+							)}
+
+							<View style={styles.ctaWrapper}>
+								<StyledButton
+									type={'confirm'}
+									onPress={this.onPressImport}
+									testID={'submit'}
+									disabled={!(password !== '' && password === confirmPassword)}
+								>
+									{loading ? (
+										<ActivityIndicator size="small" color="white" />
+									) : (
+										strings('import_from_seed.import_button')
+									)}
+								</StyledButton>
+							</View>
 						</View>
-
-						{this.renderSwitch()}
-
-						{!!error && (
-							<Text style={styles.errorMsg} testID={'invalid-seed-phrase'}>
-								{error}
-							</Text>
-						)}
-
-						<View style={styles.ctaWrapper}>
-							<StyledButton
-								type={'blue'}
-								onPress={this.onPressImport}
-								testID={'submit'}
-								disabled={!(password !== '' && password === confirmPassword)}
-							>
-								{loading ? (
-									<ActivityIndicator size="small" color="white" />
-								) : (
-									strings('import_from_seed.import_button')
-								)}
-							</StyledButton>
-						</View>
+					</KeyboardAwareScrollView>
+					<View style={styles.termsAndConditions}>
+						<TermsAndConditions
+							navigation={this.props.navigation}
+							action={strings('import_from_seed.import_button')}
+						/>
 					</View>
-				</KeyboardAwareScrollView>
-				<View style={styles.termsAndConditions}>
-					<TermsAndConditions
-						navigation={this.props.navigation}
-						action={strings('import_from_seed.import_button')}
-					/>
-				</View>
-			</SafeAreaView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }

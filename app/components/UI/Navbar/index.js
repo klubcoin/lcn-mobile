@@ -404,13 +404,14 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		headerStyle: {
 			shadowColor: colors.transparent,
 			elevation: 0,
-			backgroundColor: colors.white,
+			backgroundColor: colors.grey,
+			marginTop: Device.isIos() ? 20 : 0,
 			borderBottomWidth: 0
 		},
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text>
+				<Text style={[styles.header, brandStyles.header]}>KLUBCOIN</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -655,6 +656,7 @@ export function getWebviewNavbar(navigation, backButtonText) {
 	const share = navigation.getParam('dispatch', () => {
 		'';
 	});
+	console.log('Hello12323');
 	return {
 		headerTitle: <Text style={styles.centeredTitle}>{title}</Text>,
 		headerLeft: Device.isAndroid() ? (
@@ -680,7 +682,8 @@ export function getWebviewNavbar(navigation, backButtonText) {
 			</TouchableOpacity>
 		),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.grey,
+			marginTop: Device.isIos() ? 20 : 0
 		}
 	};
 }
