@@ -17,9 +17,8 @@ const brandStyles = StyleSheet.create({
 		fontSize: 14
 	},
 	imgBackground: {
-		width: Device.getDeviceWidth(),
-		height: Device.getDeviceHeight(),
-		backgroundColor: colors.black
+		backgroundColor: colors.black,
+		flex: 1
 	}
 });
 
