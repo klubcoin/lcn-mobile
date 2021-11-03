@@ -8,6 +8,9 @@ const brandStyles = StyleSheet.create({
 	},
 	card: {
 		backgroundColor: colors.grey
+	},
+	modalTextColor: {
+		color: colors.black
 	}
 });
 

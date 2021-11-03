@@ -116,7 +116,7 @@ const AccountBackupStep1B = props => {
 					<View style={styles.secureModalContainer}>
 						<View style={styles.secureModalTitleContainer}>
 							<View style={styles.auxCenterView} />
-							<Text style={styles.whySecureTitle}>
+							<Text style={[styles.whySecureTitle, brandStyles.modalTextColor]}>
 								{strings('account_backup_step_1B.why_secure_title')}
 							</Text>
 							<TouchableOpacity
@@ -134,7 +134,7 @@ const AccountBackupStep1B = props => {
 								resizeMethod={'auto'}
 								testID={'carousel-one-image'}
 							/>
-							<Text style={styles.whySecureText}>
+							<Text style={[styles.whySecureText, brandStyles.modalTextColor]}>
 								{strings('account_backup_step_1B.why_secure_1')}
 								<Text style={styles.bold}>{strings('account_backup_step_1B.why_secure_2')}</Text>
 							</Text>
