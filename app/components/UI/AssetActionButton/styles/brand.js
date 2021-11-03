@@ -4,7 +4,7 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	button: {
-		marginBottom: 10
+		marginHorizontal: 5
 	},
 	buttonIconWrapper: {
 		width: 50,

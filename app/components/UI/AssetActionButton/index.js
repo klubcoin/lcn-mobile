@@ -84,7 +84,7 @@ function AssetActionButton({ onPress, icon, label, disabled }) {
 	return (
 		<TouchableOpacity
 			onPress={onPress}
-			style={[styles.button, disabled && styles.disabledButton]}
+			style={[styles.button, disabled && styles.disabledButton, brandStyles.button]}
 			disabled={disabled}
 		>
 			<View style={[styles.buttonIconWrapper, brandStyles.shadowStyle, brandStyles.buttonIconWrapper]}>
