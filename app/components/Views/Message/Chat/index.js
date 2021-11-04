@@ -75,6 +75,7 @@ class Chat extends Component {
 		if (this.listener) this.listener.remove();
 		if (this.fileReceivedEvt) this.fileReceivedEvt.remove();
 		if (this.transactionListener) this.transactionListener.remove();
+		this.messaging.removeListeners();
 		preferences.setActiveChatPeerId(null);
 	}
 
@@ -107,6 +108,7 @@ class Chat extends Component {
 				this.addNewMessage(data.message, true);
 			}
 		});
+		this.messaging.setOnError(this.onSendError);
 		this.messaging.send(ChatProfile());
 		setTimeout(() => (this.initialized = true), 1000);
 	};
@@ -321,7 +323,7 @@ class Chat extends Component {
 		const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc, { direct: true });
 		ft.setOnError(() => {
 			alert(`Error: Failed to send to ${selectedContact.name}`);
-			this.onFileError(message);
+			this.onSendError(message);
 		});
 	};
 
@@ -337,7 +339,7 @@ class Chat extends Component {
 		return await this.sendPayloadMessage(ChatFile(peerAddr, file));
 	};
 
-	onFileError = async (message) => {
+	onSendError = async (message) => {
 		const selectedContact = this.state.contact;
 		const peerId = selectedContact.address;
 		const conversation = await preferences.getChatMessages(peerId);
