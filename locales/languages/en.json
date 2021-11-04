@@ -1750,6 +1750,8 @@
 		"image": "an image",
 		"audio": "an audio file",
 		"video": "a video file",
-		"file": "a file"
+		"file": "a file",
+		"failed_to_send": "Failed to send",
+		"retry": "Retry"
 	}
 }

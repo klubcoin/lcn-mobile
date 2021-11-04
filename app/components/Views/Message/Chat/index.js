@@ -311,7 +311,7 @@ class Chat extends Component {
 		const { uri, name } = file;
 		const path = decodeURIComponent(uri);
 		const data = await RNFS.readFile(path, 'base64');
-		this.addFile(file);
+		const message = await this.addFile(file);
 
 		const webrtc = refWebRTC();
 		const { selectedAddress } = this.props;
@@ -319,15 +319,35 @@ class Chat extends Component {
 		const peerAddr = selectedContact.address;
 
 		const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc, { direct: true });
-		ft.setOnError(() => alert(`Error: Failed to send to ${selectedContact.name}`));
+		ft.setOnError(() => {
+			alert(`Error: Failed to send to ${selectedContact.name}`);
+			this.onFileError(message);
+		});
 	};
 
 	addFile = async file => {
 		const selectedContact = this.state.contact;
 		const peerAddr = selectedContact.address;
 
-		this.sendPayloadMessage(ChatFile(peerAddr, file));
+		return await this.sendPayloadMessage(ChatFile(peerAddr, file));
 	};
+
+	onFileError = async (message) => {
+		const selectedContact = this.state.contact;
+		const peerId = selectedContact.address;
+		const conversation = await preferences.getChatMessages(peerId);
+		const { messages } = conversation || { messages: [] };
+
+		if (message.payload) {
+			message.payload.failed = true;
+
+			const m = messages.find(e => e._id == message._id);
+			Object.assign(m, message);
+			this.setState({ messages });
+
+			preferences.saveChatMessages(peerId, { messages });
+		}
+	}
 
 	onFileReceived = async ({ data, path }) => {
 		const peerId = data.from;
@@ -359,6 +379,8 @@ class Chat extends Component {
 		};
 		if (append) this.addNewMessage([message]);
 		this.messaging.send(message);
+
+		return message;
 	};
 
 	onSelectMenuItem = async item => {
@@ -517,10 +539,34 @@ class Chat extends Component {
 			<Message
 				{...messageProps}
 				renderMessageImage={() => null}
-				renderCustomView={isCustom ? () => this.renderCustomView(currentMessage) : null}
+				renderCustomView={isCustom ? () => this.renderBubble(currentMessage) : null}
 			/>
 		);
 	};
+
+	onRetry = async (message) => {
+	}
+
+	renderBubble = (message) => {
+		const failed = message.payload && message.payload.failed == true;
+		return (
+			<>
+				{this.renderCustomView(message)}
+				{failed && this.renderRetry(message)}
+			</>
+		)
+	}
+
+	renderRetry = (message) => {
+		return (
+			<View style={styles.failure}>
+				<Text style={styles.failedText}>{strings('chat.failed_to_send')}.</Text>
+				<TouchableOpacity activeOpacity={0.6} onPress={() => this.onRetry(message)}>
+					<Text style={styles.retry}> {strings('chat.retry')}</Text>
+				</TouchableOpacity>
+			</View>
+		)
+	}
 
 	render() {
 		const { selectedAddress } = this.props;
@@ -600,6 +646,19 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		marginLeft: 10,
 		backgroundColor: colors.green400
+	},
+	failure: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginBottom: 5
+	},
+	failedText: {
+		color: colors.red,
+	},
+	retry: {
+		color: colors.red,
+		fontStyle: 'italic',
+		fontWeight: '600'
 	}
 });
 
