@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 import { format } from 'date-fns';
-import { TransactionSync, RequestPayment } from '../../../../services/Messages';
+import { TransactionSync, RequestPayment, ChatFile } from '../../../../services/Messages';
 import { strings } from '../../../../../locales/i18n';
 
 export default class MessageItem extends Component {
@@ -35,13 +35,29 @@ export default class MessageItem extends Component {
 						...lastMessage,
 						text: strings('chat.payment_request')
 					};
-				case TransactionSync().action:
+				case TransactionSync().action: {
 					const incoming = payload.transaction && payload.transaction.from
 						&& payload.transaction.from.toLowerCase() == recipient.address.toLowerCase();
 					return {
 						...lastMessage,
 						text: incoming ? strings('chat.received_transaction') : strings('chat.sent_transaction')
 					};
+				}
+				case ChatFile().action: {
+					const { type } = payload;
+					const mimeType = type.indexOf('image') == 0 ? strings('chat.image')
+						: type.indexOf('audio') == 0 ? strings('chat.audio')
+							: type.indexOf('video') == 0 ? strings('chat.video') : strings('chat.file');
+
+					const incoming = lastMessage.user && lastMessage.user._id
+						&& lastMessage.user._id.toLowerCase() == recipient.address.toLowerCase();
+					const action = incoming ? strings('chat.received') : strings('chat.sent');
+
+					return {
+						...lastMessage,
+						text: `${action} ${mimeType}`
+					};
+				}
 				default:
 					break;
 			}

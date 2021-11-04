@@ -1744,6 +1744,12 @@
 		"send_file": "Send file",
 		"sent_transaction": "Sent transaction",
 		"received_transaction": "Received transaction",
-		"payment_request": "Payment request"
+		"payment_request": "Payment request",
+		"sent": "Sent",
+		"received": "Received",
+		"image": "an image",
+		"audio": "an audio file",
+		"video": "a video file",
+		"file": "a file"
 	}
 }
