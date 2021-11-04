@@ -1,9 +1,8 @@
 import { DeviceEventEmitter } from 'react-native';
-import { AckWebRTC, Chat } from './Messages';
+import { Chat } from './Messages';
 
 export default class MessagingWebRTC {
 	webrtc = null;
-	monitors = {}; // timeout monitors
 	evtMessage = null;
 
 	from = null;
@@ -30,11 +29,6 @@ export default class MessagingWebRTC {
 		if (data.action) {
 			if (data.action == 'ping') {
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
-			} else if (data.action == AckWebRTC().action && data.hash) {
-				if (this.monitors[data.hash]) {
-					clearTimeout(this.monitors[data.hash]);
-					this.monitors[data.hash] = null;
-				}
 			}
 
 			if (data.action == Chat().action) {
@@ -43,25 +37,13 @@ export default class MessagingWebRTC {
 		}
 	};
 
-	connectAndSend = address => {
-		this.webrtc.connectTo(address);
-		DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-			this.webrtc.sendToPeer(address, this.data);
-		});
-	};
 
 	send(data) {
 		const address = this.toPeer;
 		this.data = Chat(data, this.from, this.toPeer);
-		const hash = this.data.checksum;
 
 		if (this.webrtc && this.webrtc.sendToPeer) {
-			if (!this.webrtc.hasChannel(address)) {
-				this.connectAndSend(address);
-			} else {
-				this.monitors[hash] = setTimeout(() => this.connectAndSend(address), 5000);
-				this.webrtc.sendToPeer(address, this.data);
-			}
+			this.webrtc.sendToPeer(address, this.data);
 		}
 	}
 }
