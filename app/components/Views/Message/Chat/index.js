@@ -307,11 +307,11 @@ class Chat extends Component {
 		}
 	};
 
-	sendFile = async file => {
+	sendFile = async (file, msg = null) => {
 		const { uri, name } = file;
 		const path = decodeURIComponent(uri);
 		const data = await RNFS.readFile(path, 'base64');
-		const message = await this.addFile(file);
+		const message = msg ? this.sendMessage(msg) : await this.addFile(file);
 
 		const webrtc = refWebRTC();
 		const { selectedAddress } = this.props;
@@ -324,6 +324,11 @@ class Chat extends Component {
 			this.onFileError(message);
 		});
 	};
+
+	sendMessage = (message) => {
+		this.messaging.send(message);
+		return message;
+	}
 
 	addFile = async file => {
 		const selectedContact = this.state.contact;
@@ -545,6 +550,24 @@ class Chat extends Component {
 	};
 
 	onRetry = async (message) => {
+		const { messages } = this.state;
+		message.payload.failed = false;
+
+		this.setState({ messages });
+		this.retrySending(message);
+	}
+
+	retrySending = async (message) => {
+		const { payload } = message || {};
+		switch (payload.action) {
+			case RequestPayment().action:
+				break;
+			case TransactionSync().action:
+				break;
+			case ChatFile().action:
+				this.sendFile(payload, message);
+				break;
+		}
 	}
 
 	renderBubble = (message) => {
