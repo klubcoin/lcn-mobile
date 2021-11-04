@@ -15,6 +15,7 @@ export default class MessagingWebRTC {
 		this.webrtc = webrtc;
 
 		this.revokeMessageEvt = webrtc.addListener('message', this._onMessage);
+		this.revokeErrorEvt = webrtc.addListener('error', this._onError);
 	}
 
 	addListener(type, callback) {
@@ -23,6 +24,11 @@ export default class MessagingWebRTC {
 				this.evtMessage = callback;
 				return { remove: () => (this.evtMessage = null) };
 		}
+	}
+
+	removeListeners() {
+		if (this.revokeMessageEvt) this.revokeMessageEvt();
+		if (this.revokeErrorEvt) this.revokeErrorEvt();
 	}
 
 	_onMessage = (data, peerId) => {
@@ -37,6 +43,15 @@ export default class MessagingWebRTC {
 		}
 	};
 
+	setOnError(callback) {
+		this.onError = callback;
+	}
+
+	_onError = (data, peerId) => {
+		if (data?.action == Chat().action && data?.message?._id) {
+			if (this.onError) this.onError(data.message, peerId);
+		}
+	}
 
 	send(data) {
 		const address = this.toPeer;
