@@ -344,15 +344,7 @@ class Chat extends Component {
 		if (message) {
 			message.payload.uri = `file://${path}`;
 			message.payload.loading = false;
-
-			// update new path for message in conversation
-			const { messages, contact } = this.state;
-			const m = messages.find(e => e._id == message._id);
-			messages.splice(messages.indexOf(m), 1);
-			messages.unshift(message);
 			this.setState({ messages });
-
-			preferences.saveChatMessages(contact.address, { messages });
 		}
 	}
 
