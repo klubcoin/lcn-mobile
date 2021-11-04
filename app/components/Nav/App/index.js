@@ -33,6 +33,8 @@ import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
 import Login1 from '../../Views/Login1';
 import { colors } from '../../../styles/common';
+import Partners from '../../Views/Partners';
+import PartnerDetails from '../../Views/Partners/PartnerDetails';
 /**
  * Stack navigator responsible for the onboarding process
  * Create Wallet, Import from Seed and Sync
@@ -116,6 +118,15 @@ const OnboardingRootNav = createStackNavigator(
 			navigationOptions: {
 				header: null
 			}
+		},
+		Onboarding: {
+			screen: Onboarding
+		},
+		Partners: {
+			screen: Partners
+		},
+		PartnerDetails: {
+			screen: PartnerDetails
 		}
 	},
 	{

@@ -420,6 +420,11 @@ class Onboarding extends PureComponent {
 		}
 	};
 
+	onViewPartners = () => {
+		const { navigation } = this.props;
+		navigation.navigate('Partners');
+	};
+
 	safeSync = () => {
 		if (!PUB_KEY) {
 			// Dev message
@@ -514,7 +519,7 @@ class Onboarding extends PureComponent {
 						<StyledButton
 							style={styles.button}
 							type={'normal'}
-							onPress={this.onPressSync}
+							onPress={this.onViewPartners}
 							testID={'onboarding-import-button'}
 						>
 							View Partners
