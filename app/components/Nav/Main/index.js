@@ -635,7 +635,7 @@ const Main = props => {
 			Object.assign(message.data, data.profile, { address });
 			setFriendMessage(message);
 		})
-		webrtc.sendSafe(address, WalletProfile());
+		webrtc.sendToPeer(address, WalletProfile());
 	};
 
 	const handleAcceptedNameCard = data => {

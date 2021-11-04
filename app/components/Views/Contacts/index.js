@@ -217,7 +217,7 @@ class Contacts extends PureComponent {
 			Object.assign(this.data.data, data.profile);
 			this.setState({ data: data.profile });
 		})
-		webrtc.sendSafe(address, WalletProfile());
+		webrtc.sendToPeer(address, WalletProfile());
 	};
 
 	toggleConfirmDeleteModal = () => {
@@ -295,7 +295,7 @@ class Contacts extends PureComponent {
 		const to = this.data.data.from;
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Accept);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
-		refWebRTC().sendSafe(to, data);
+		refWebRTC().sendToPeer(to, data);
 		this.props.navigation.goBack();
 	};
 
@@ -354,7 +354,7 @@ class Contacts extends PureComponent {
 		const account = identities[selectedAddress];
 		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Revoke);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
-		refWebRTC().sendSafe(address, data);
+		refWebRTC().sendToPeer(address, data);
 	};
 
 	renderContact = ({ item }) => {
