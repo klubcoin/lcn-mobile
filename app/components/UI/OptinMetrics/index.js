@@ -25,6 +25,7 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { clearOnboardingEvents } from '../../../actions/onboarding';
 import { ONBOARDING_WIZARD, METRICS_OPT_IN, DENIED, AGREED } from '../../../constants/storage';
 import AppConstants from '../../../core/AppConstants';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	root: {
@@ -236,9 +237,15 @@ class OptinMetrics extends PureComponent {
 			<SafeAreaView style={styles.root} testID={'metaMetrics-OptIn'}>
 				<ScrollView style={styles.root}>
 					<View style={styles.wrapper}>
-						<Text style={styles.title}>{strings('privacy_policy.description_title')}</Text>
-						<Text style={styles.content}>{strings('privacy_policy.description_content_1')}</Text>
-						<Text style={styles.content}>{strings('privacy_policy.description_content_2')}</Text>
+						<Text style={styles.title}>
+							{strings('privacy_policy.description_title', { appName: displayName })}
+						</Text>
+						<Text style={styles.content}>
+							{strings('privacy_policy.description_content_1', { appName: displayName })}
+						</Text>
+						<Text style={styles.content}>
+							{strings('privacy_policy.description_content_2', { appName: displayName })}
+						</Text>
 						{this.actionsList.map((action, i) => this.renderAction(action, i))}
 						{this.renderPrivacyPolicy()}
 					</View>

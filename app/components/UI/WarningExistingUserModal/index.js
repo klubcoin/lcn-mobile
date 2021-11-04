@@ -4,6 +4,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { strings } from '../../../../locales/i18n';
 import { fontStyles, colors } from '../../../styles/common';
 import ActionModal from '../ActionModal';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	warningModalView: {
@@ -37,7 +38,7 @@ const Default = () => (
 			{strings('onboarding.warning_text_3')}
 		</Text>
 		<Text />
-		<Text style={styles.warningModalText}>{strings('onboarding.warning_text_4')}</Text>
+		<Text style={styles.warningModalText}>{strings('onboarding.warning_text_4', { appName: displayName })}</Text>
 	</View>
 );
 

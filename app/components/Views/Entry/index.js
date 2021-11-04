@@ -23,6 +23,7 @@ import {
 } from '../../../constants/storage';
 import { getVersion } from 'react-native-device-info';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { displayName } from '../../../../app.json';
 
 /**
  * Entry Screen that decides which screen to show
@@ -208,7 +209,7 @@ const Entry = props => {
 							color: colors.fontPrimary
 						}}
 					>
-						LIQUICHAIN
+						{displayName.toUpperCase()}
 					</Text>
 				</Animated.View>
 			</View>

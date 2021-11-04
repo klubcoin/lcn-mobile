@@ -53,6 +53,7 @@ import {
 } from '../../../constants/storage';
 import { styles } from './styles';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 const PUB_KEY = process.env.MM_PUBNUB_PUB_KEY;
 
@@ -281,7 +282,10 @@ class Onboarding extends PureComponent {
 				this.setState({ biometryType, biometryChoice: true });
 				Alert.alert(
 					strings('sync_with_extension.allow_biometrics_title', { biometrics: biometryType }),
-					strings('sync_with_extension.allow_biometrics_desc', { biometrics: biometryType }),
+					strings('sync_with_extension.allow_biometrics_desc', {
+						biometrics: biometryType,
+						appName: displayName
+					}),
 					[
 						{
 							text: strings('sync_with_extension.warning_cancel_button'),
@@ -512,7 +516,7 @@ class Onboarding extends PureComponent {
 							onPress={this.onPressSync}
 							testID={'onboarding-import-button'}
 						>
-							{strings('import_wallet.sync_from_browser_extension_button')}
+							{strings('import_wallet.sync_from_browser_extension_button', { appName: displayName })}
 						</StyledButton>
 					</View>
 					<View style={styles.buttonWrapper}>
@@ -611,7 +615,9 @@ class Onboarding extends PureComponent {
 					confirmButtonMode="confirm"
 				>
 					<View style={styles.modalWrapper}>
-						<Text style={styles.scanTitle}>{strings('onboarding.scan_title')}</Text>
+						<Text style={styles.scanTitle}>
+							{strings('onboarding.scan_title', { appName: displayName })}
+						</Text>
 						<View style={styles.column}>
 							<FlatList
 								data={ONBOARDING_SCAN_STEPS}

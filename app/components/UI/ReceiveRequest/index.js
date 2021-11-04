@@ -29,6 +29,7 @@ import GlobalAlert from '../GlobalAlert';
 import StyledButton from '../StyledButton';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 /**
  * PureComponent that renders receive options
@@ -223,7 +224,7 @@ class ReceiveRequest extends PureComponent {
 					<View style={styles.actionRow}>
 						{allowedToBuy(this.props.network) && (
 							<StyledButton type={'blue'} containerStyle={styles.actionButton} onPress={this.onBuy}>
-								{strings('fiat_on_ramp.buy_eth')}
+								{strings('fiat_on_ramp.buy_eth', { appName: displayName })}
 							</StyledButton>
 						)}
 						<StyledButton

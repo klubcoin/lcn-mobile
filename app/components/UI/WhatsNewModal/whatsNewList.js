@@ -1,4 +1,5 @@
 import { strings } from '../../../../locales/i18n';
+import { displayName } from '../../../../app.json';
 
 export const whatsNew = [
 	{
@@ -9,7 +10,7 @@ export const whatsNew = [
 		features: [
 			{
 				title: strings('whats_new.feature_security_settings_title'),
-				text: strings('whats_new.feature_security_settings_text'),
+				text: strings('whats_new.feature_security_settings_text', { appName: displayName }),
 				buttonText: strings('whats_new.feature_security_settings_button'),
 				buttonPress: props => props.navigation.navigate('SecuritySettings'),
 				image: require('../../../images/whats-new-security.png')

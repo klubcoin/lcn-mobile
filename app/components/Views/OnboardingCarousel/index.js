@@ -11,6 +11,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import Device from '../../../util/Device';
 import { styles, carousel_images } from './styles/index';
 import { brandStyles, brandImgs } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 /**
  * View that is displayed to first time (new) users
@@ -61,10 +62,14 @@ export default class OnboardingCarousel extends PureComponent {
 													style={[styles.title, brandStyles.textColor]}
 													testID={`carousel-screen-${value}`}
 												>
-													{strings(`onboarding_carousel.title${key}`)}
+													{strings(`onboarding_carousel.title${key}`, {
+														appName: displayName
+													})}
 												</Text>
 												<Text style={[styles.subtitle, brandStyles.textColor]}>
-													{strings(`onboarding_carousel.subtitle${key}`)}
+													{strings(`onboarding_carousel.subtitle${key}`, {
+														appName: displayName
+													})}
 												</Text>
 											</View>
 											<View style={styles.carouselImageWrapper}>

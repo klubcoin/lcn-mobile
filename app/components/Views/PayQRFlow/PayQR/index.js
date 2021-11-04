@@ -3,15 +3,7 @@ import { colors, fontStyles } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
 import PropTypes from 'prop-types';
 import { makeObservable, observable } from 'mobx';
-import {
-	StyleSheet,
-	View,
-	SafeAreaView,
-	InteractionManager,
-	ScrollView,
-	ActivityIndicator,
-	Alert
-} from 'react-native';
+import { StyleSheet, View, SafeAreaView, InteractionManager, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { AddressFrom } from '../../SendFlow/AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
@@ -33,6 +25,7 @@ import OrderSummary from '../../../UI/OrderSummary';
 import StyledButton from '../../../UI/StyledButton';
 import APIService from '../../../../services/APIService';
 import NotificationManager from '../../../../core/NotificationManager';
+import { displayName } from '../../../../../app.json';
 
 const { hexToBN } = util;
 const styles = StyleSheet.create({
@@ -45,7 +38,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: colors.grey050,
 		paddingHorizontal: 8,
-		paddingBottom: 10,
+		paddingBottom: 10
 	},
 	bottomModal: {
 		justifyContent: 'flex-end',
@@ -54,7 +47,7 @@ const styles = StyleSheet.create({
 	buttonNextWrapper: {
 		flexDirection: 'row',
 		alignItems: 'flex-end',
-		marginBottom: 20,
+		marginBottom: 20
 	},
 	buttonNext: {
 		flex: 1,
@@ -68,7 +61,7 @@ const styles = StyleSheet.create({
 	buyEth: {
 		color: colors.black,
 		textDecorationLine: 'underline'
-	},
+	}
 });
 
 /**
@@ -125,14 +118,14 @@ class PayQR extends PureComponent {
 		fromAccountModalVisible: false,
 		fromSelectedAddress: this.props.selectedAddress,
 		fromAccountName: this.props.identities[this.props.selectedAddress].name,
-		fromAccountBalance: undefined,
+		fromAccountBalance: undefined
 	};
 
 	constructor(props) {
-		super(props)
+		super(props);
 		makeObservable(this, {
-			processing: observable,
-		})
+			processing: observable
+		});
 	}
 
 	componentDidMount = async () => {
@@ -146,7 +139,7 @@ class PayQR extends PureComponent {
 		this.setState({
 			fromAccountName: ens || fromAccountName,
 			fromAccountBalance,
-			balanceIsZero: hexToBN(accounts[selectedAddress].balance).isZero(),
+			balanceIsZero: hexToBN(accounts[selectedAddress].balance).isZero()
 		});
 	};
 
@@ -218,13 +211,9 @@ class PayQR extends PureComponent {
 				navigation && navigation.dismiss();
 			} else {
 				const { error } = response;
-				Alert.alert(
-					strings('wallet.error'), error,
-					[
-						{ text: strings('navigation.ok') }
-					]);
+				Alert.alert(strings('wallet.error'), error, [{ text: strings('navigation.ok') }]);
 			}
-		})
+		});
 	}
 
 	goToBuy = () => {
@@ -241,7 +230,7 @@ class PayQR extends PureComponent {
 
 		return (
 			<Text bold style={styles.buyEth} onPress={this.goToBuy}>
-				{strings('fiat_on_ramp.buy_eth')}
+				{strings('fiat_on_ramp.buy_eth', { appName: displayName })}
 			</Text>
 		);
 	};
@@ -250,12 +239,7 @@ class PayQR extends PureComponent {
 		const { ticker, navigation } = this.props;
 		const order = navigation.getParam('order');
 
-		const {
-			fromSelectedAddress,
-			fromAccountName,
-			fromAccountBalance,
-			balanceIsZero,
-		} = this.state;
+		const { fromSelectedAddress, fromAccountName, fromAccountBalance, balanceIsZero } = this.state;
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'send-screen'}>

@@ -19,6 +19,7 @@ import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../c
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { displayName } from '../../../../app.json';
 
 const hardwareBackPress = () => ({});
 const HARDWARE_BACK_PRESS = 'hardwareBackPress';
@@ -69,7 +70,7 @@ class ManualBackupStep3 extends PureComponent {
 	learnMore = () =>
 		this.props.navigation.navigate('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 
 	isHintSeedPhrase = hintText => {
@@ -156,7 +157,7 @@ class ManualBackupStep3 extends PureComponent {
 								</Text>
 							</TouchableOpacity>
 							<Text style={[styles.baseText, styles.recoverText]}>
-								{strings('manual_backup_step_3.recover')}
+								{strings('manual_backup_step_3.recover', { appName: displayName })}
 							</Text>
 							<TouchableOpacity onPress={this.learnMore}>
 								<Text style={[styles.baseText, styles.learnText]}>

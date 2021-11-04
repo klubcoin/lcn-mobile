@@ -49,6 +49,7 @@ import LoginWithKeycloak from '../LoginWithKeycloak';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -389,7 +390,7 @@ class ChoosePassword extends PureComponent {
 	learnMore = () => {
 		this.props.navigation.push('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};
 
@@ -489,7 +490,9 @@ class ChoosePassword extends PureComponent {
 								resetScrollToCoords={{ x: 0, y: 0 }}
 							>
 								<LoginWithKeycloak
-									label={strings('choose_password.setup_liquichain_account')}
+									label={strings('choose_password.setup_liquichain_account', {
+										appName: displayName
+									})}
 									onSuccess={this.onKeycloakResult}
 									onError={this.onKeycloakResult}
 								/>
@@ -514,7 +517,7 @@ class ChoosePassword extends PureComponent {
 												<Text style={styles.title}>{strings('choose_password.title')}</Text>
 												<View style={styles.text}>
 													<Text style={styles.subtitle}>
-														{strings('choose_password.subtitle')}
+														{strings('choose_password.subtitle', { appName: displayName })}
 													</Text>
 												</View>
 											</View>
@@ -600,7 +603,7 @@ class ChoosePassword extends PureComponent {
 													onPress={this.setSelection}
 													testID={'i-understand-text'}
 												>
-													{strings('choose_password.i_understand')}{' '}
+													{strings('choose_password.i_understand', { appName: displayName })}{' '}
 													<Text onPress={this.learnMore} style={styles.learnMore}>
 														{strings('choose_password.learn_more')}
 													</Text>

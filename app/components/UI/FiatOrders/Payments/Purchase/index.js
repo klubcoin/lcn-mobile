@@ -9,6 +9,7 @@ import OnboardingScreenWithBg from '../../../OnboardingScreenWithBg';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
 import StyledButton from '../../../StyledButton';
+import { displayName } from '../../../../../../app.json';
 
 function Purchase({ selectedAddress, ...props }) {
 	const onBuy = () => {
@@ -39,7 +40,7 @@ function Purchase({ selectedAddress, ...props }) {
 						<Text style={styles.fee}>Fees vary based from paypal.</Text>
 						<View style={{ marginBottom: 5 }}>
 							<StyledButton type={'normal'} onPress={onBuy}>
-								Buy Klubcoin with PayPal
+								Buy {displayName} with PayPal
 							</StyledButton>
 						</View>
 					</View>

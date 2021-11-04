@@ -1,3 +1,5 @@
+import { displayName } from '../../app.json';
+
 export default {
 	jsonRPC: 'jsonrpc',
 	walletCreation: 'wallet_creation',
@@ -7,7 +9,7 @@ export default {
 	getBalance: 'eth_getBalance',
 	getTransaction: 'eth_getTransactionByHash',
 	mainNetWork: {
-		name: 'Klubcoin Main Network',
+		name: `${displayName} Main Network`,
 		url: 'https://account.liquichain.io/meveo/rest/jsonrpc',
 		chainId: '76',
 		symbol: null,

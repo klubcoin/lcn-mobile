@@ -11,15 +11,15 @@ import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { setShowCustomNonce, setShowHexData } from '../../../../actions/settings';
 import { strings } from '../../../../../locales/i18n';
 import { getApplicationName, getVersion, getBuildNumber } from 'react-native-device-info';
-import Share from 'react-native-share'; // eslint-disable-line  import/default
+import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
-// eslint-disable-next-line import/no-nodejs-modules
 import { Buffer } from 'buffer';
 import Logger from '../../../../util/Logger';
 import ipfsGateways from '../../../../util/ipfs-gateways.json';
 import SelectComponent from '../../../UI/SelectComponent';
 import { timeoutFetch } from '../../../../util/general';
 import Device from '../../../../util/Device';
+import { displayName } from '../../../../../app.json';
 
 const HASH_TO_TEST = 'Qmaisz6NMhDB51cCvNWa1GMS7LU1pAxdF4Ld6Ft9kZEP2a';
 const HASH_STRING = 'Hello from IPFS Gateway Checker';
@@ -305,7 +305,9 @@ class AdvancedSettings extends PureComponent {
 						</View>
 						<View style={styles.setting}>
 							<Text style={styles.title}>{strings('app_settings.state_logs')}</Text>
-							<Text style={styles.desc}>{strings('app_settings.state_logs_desc')}</Text>
+							<Text style={styles.desc}>
+								{strings('app_settings.state_logs_desc', { appName: displayName })}
+							</Text>
 							<StyledButton
 								type="info"
 								onPress={this.downloadStateLogs}

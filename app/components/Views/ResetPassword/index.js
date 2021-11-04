@@ -14,7 +14,6 @@ import {
 	Image,
 	InteractionManager
 } from 'react-native';
-// eslint-disable-next-line import/no-unresolved
 import CheckBox from '@react-native-community/checkbox';
 import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -41,6 +40,7 @@ import { EXISTING_USER, TRUE, BIOMETRY_CHOICE_DISABLED } from '../../../constant
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import NotificationManager from '../../../core/NotificationManager';
 import { syncPrefs } from '../../../util/sync';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -549,12 +549,12 @@ class ResetPassword extends PureComponent {
 		}
 	};
 
-	tryUnlock = (hash) => {
+	tryUnlock = hash => {
 		const { password } = this.state;
 		this.tryUnlockWithPassword(hash || password);
 	};
 
-	onKeycloakResult = async (error) => {
+	onKeycloakResult = async error => {
 		if (!error) {
 			const hash = await preferences.getKeycloakHash();
 			this.tryUnlock(hash);
@@ -574,7 +574,7 @@ class ResetPassword extends PureComponent {
 	learnMore = () => {
 		this.props.navigation.push('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};
 
@@ -600,13 +600,14 @@ class ResetPassword extends PureComponent {
 									{strings('manual_backup_step_1.before_continiuing')}
 								</Text>
 							</View>
-							{keycloakAuth ?
+							{keycloakAuth ? (
 								<LoginWithKeycloak
 									type={'sign'}
 									label={strings('manual_backup_step_1.confirm_password')}
 									onSuccess={this.onKeycloakResult}
 									onError={this.onKeycloakResult}
-								/> :
+								/>
+							) : (
 								<>
 									<TextInput
 										style={styles.confirm_input}
@@ -631,7 +632,7 @@ class ResetPassword extends PureComponent {
 										</StyledButton>
 									</View>
 								</>
-							}
+							)}
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
@@ -687,7 +688,9 @@ class ResetPassword extends PureComponent {
 								<View style={styles.content}>
 									<Text style={styles.title}>{strings('reset_password.title')}</Text>
 									<View style={styles.text}>
-										<Text style={styles.subtitle}>{strings('reset_password.subtitle')}</Text>
+										<Text style={styles.subtitle}>
+											{strings('reset_password.subtitle', { appName: displayName })}
+										</Text>
 									</View>
 								</View>
 								<View style={styles.field}>
@@ -751,7 +754,7 @@ class ResetPassword extends PureComponent {
 										testID={'password-understand-box'}
 									/>
 									<Text style={styles.label} onPress={this.setSelection} testID={'i-understand-text'}>
-										{strings('reset_password.i_understand')}{' '}
+										{strings('reset_password.i_understand', { appName: displayName })}{' '}
 										<Text onPress={this.learnMore} style={styles.learnMore}>
 											{strings('reset_password.learn_more')}
 										</Text>

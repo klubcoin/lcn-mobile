@@ -41,6 +41,7 @@ import Routes from '../../../../common/routes';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../../app.json';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -490,7 +491,7 @@ class SendFlow extends PureComponent {
 			<>
 				{'\n'}
 				<Text bold style={styles.buyEth} onPress={this.goToBuy}>
-					{strings('fiat_on_ramp.buy_eth')}
+					{strings('fiat_on_ramp.buy_eth', { appName: displayName })}
 				</Text>
 			</>
 		);

@@ -51,6 +51,7 @@ import LoginWithKeycloak from '../LoginWithKeycloak';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 const isTextDelete = text => tlc(text) === 'delete';
 const deviceHeight = Device.getDeviceHeight();
@@ -60,7 +61,7 @@ const PASSCODE_NOT_SET_ERROR = strings('login.passcode_not_set_error');
 const WRONG_PASSWORD_ERROR = strings('login.wrong_password_error');
 const WRONG_PASSWORD_ERROR_ANDROID = strings('login.wrong_password_error_android');
 const VAULT_ERROR = strings('login.vault_error');
-const CLEAN_VAULT_ERROR = strings('login.clean_vault_error');
+const CLEAN_VAULT_ERROR = strings('login.clean_vault_error', { appName: displayName });
 
 /**
  * View where returning users can authenticate
@@ -359,7 +360,7 @@ class Login1 extends PureComponent {
 					<Text style={[styles.warningText, styles.noMarginBottom]}>
 						<Text>{strings('login.you_can_only')}</Text>
 						<Text style={styles.bold}>{strings('login.recovery_phrase')}</Text>
-						<Text>{strings('login.metamask_does_not')}</Text>
+						<Text>{strings('login.metamask_does_not', { appName: displayName })}</Text>
 					</Text>
 				</View>
 			</WarningExistingUserModal>
@@ -409,7 +410,7 @@ class Login1 extends PureComponent {
 							{this.props.keycloakAuth ? (
 								<LoginWithKeycloak
 									type={'sign'}
-									label={strings('login.login_liquichain_with_keycloak')}
+									label={strings('login.login_liquichain_with_keycloak', { appName: displayName })}
 									onSuccess={this.onKeycloakResult}
 									onError={this.onKeycloakResult}
 								/>

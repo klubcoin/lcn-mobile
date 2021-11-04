@@ -7,7 +7,7 @@ import setOnboardingWizardStep from '../../../../actions/wizard';
 import { strings } from '../../../../../locales/i18n';
 import onboardingStyles from './../styles';
 import { fontStyles, colors } from '../../../../styles/common';
-
+import { displayName } from '../../../../../app.json';
 const styles = StyleSheet.create({
 	main: {
 		flex: 1
@@ -92,7 +92,9 @@ class Step4 extends PureComponent {
 				<Text style={fontStyles.bold}>{strings('onboarding_wizard.step4.content1')} </Text>
 				{strings('onboarding_wizard.step4.content2')}
 			</Text>
-			<Text style={onboardingStyles.content}>{strings('onboarding_wizard.step4.content3')}</Text>
+			<Text style={onboardingStyles.content}>
+				{strings('onboarding_wizard.step4.content3', { appName: displayName })}
+			</Text>
 		</View>
 	);
 

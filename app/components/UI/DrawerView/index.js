@@ -60,6 +60,7 @@ import preferences from '../../../store/preferences';
 import RemoteImage from '../../Base/RemoteImage';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -423,17 +424,20 @@ class DrawerView extends PureComponent {
 		} = this.props;
 		const url = getEtherscanAddressUrl(network.provider.type, selectedAddress);
 		const etherscan_url = getEtherscanBaseUrl(network.provider.type).replace('https://', '');
-		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, 'Klubcoin');
+		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, displayName);
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_VIEW_ETHERSCAN);
 	};
 
 	submitFeedback = () => {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_SEND_FEEDBACK);
-		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Klubcoin Support');
+		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, `${displayName} Support`);
 	};
 
 	showHelp = () => {
-		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, strings('drawer.metamask_support'));
+		this.goToBrowserUrl(
+			Routes.mainNetWork.helpSupportUrl,
+			strings('drawer.metamask_support', { appName: displayName })
+		);
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
@@ -606,7 +610,7 @@ class DrawerView extends PureComponent {
 				{
 					name:
 						(blockExplorer && `${strings('drawer.view_in')} ${blockExplorerName}`) ||
-						strings('drawer.view_in_liquichain'),
+						strings('drawer.view_in_liquichain', { appName: displayName }),
 					icon: this.getIcon('eye'),
 					action: this.viewInEtherscan
 				},

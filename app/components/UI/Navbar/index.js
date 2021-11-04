@@ -23,6 +23,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from 'common/colors';
 import { styles } from './styles/index';
 import { brandStyles } from './styles/brand';
+import { displayName } from '../../../../app.json';
 
 const { HOMEPAGE_URL } = AppConstants;
 
@@ -411,7 +412,7 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={[styles.header, brandStyles.header]}>KLUBCOIN</Text>
+				<Text style={[styles.header, brandStyles.header]}>{displayName.toUpperCase()}</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -480,7 +481,7 @@ export function getOptinMetricsNavbarOptions() {
 				</View>
 				<View style={styles.metamaskNameWrapper}>
 					{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-					<Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text>
+					<Text style={[styles.header, brandStyles.header]}>{displayName.toUpperCase()}</Text>
 				</View>
 			</View>
 		)

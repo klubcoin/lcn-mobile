@@ -15,6 +15,7 @@ import StyledButton from '../../UI/StyledButton';
 import Device from '../../../util/Device';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { isMainnetByChainId } from '../../../util/networks';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	root: {
@@ -676,7 +677,7 @@ class CustomGas extends PureComponent {
 							})
 						)}
 				</View>
-				<Text style={styles.message}>{strings('custom_gas.cost_explanation')}</Text>
+				<Text style={styles.message}>{strings('custom_gas.cost_explanation', { appName: displayName })}</Text>
 			</Animated.View>
 		);
 	};

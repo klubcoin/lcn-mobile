@@ -15,6 +15,7 @@ import WarningMessage from '../../Views/SendFlow/WarningMessage';
 import Device from '../../../util/Device';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	root: {
@@ -185,7 +186,7 @@ class SignatureRequest extends PureComponent {
 		this.props.onCancel();
 		this.props.navigation.push('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};
 

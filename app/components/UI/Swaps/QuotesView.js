@@ -54,6 +54,7 @@ import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { decodeApproveData, getTicker } from '../../../util/transactions';
 import { toLowerCaseCompare } from '../../../util/general';
 import { swapsTokensSelector } from '../../../reducers/swaps';
+import { displayName } from '../../../../app.json';
 
 const POLLING_INTERVAL = AppConstants.SWAPS.POLLING_INTERVAL;
 const EDIT_MODE_GAS = 'EDIT_MODE_GAS';
@@ -1289,7 +1290,10 @@ function SwapsQuotesView({
 							<View style={styles.quotesRow}>
 								<TouchableOpacity style={styles.quotesRow} onPress={toggleFeeModal}>
 									<Text small>
-										{`${strings('swaps.quotes_include_fee', { fee: selectedQuote.fee })} `}
+										{`${strings('swaps.quotes_include_fee', {
+											fee: selectedQuote.fee,
+											appName: displayName
+										})} `}
 										<FAIcon name="info-circle" style={styles.infoIcon} />
 									</Text>
 								</TouchableOpacity>
@@ -1332,13 +1336,14 @@ function SwapsQuotesView({
 			<InfoModal
 				isVisible={isFeeModalVisible}
 				toggleModal={toggleFeeModal}
-				title={strings('swaps.metamask_swap_fee')}
+				title={strings('swaps.metamask_swap_fee', { appName: displayName })}
 				body={
 					<Text style={styles.text}>
 						{strings('swaps.fee_text.get_the')} <Text bold>{strings('swaps.fee_text.best_price')}</Text>{' '}
 						{strings('swaps.fee_text.from_the')} <Text bold>{strings('swaps.fee_text.top_liquidity')}</Text>{' '}
-						{strings('swaps.fee_text.fee_is_applied', {
-							fee: selectedQuote && selectedQuote?.fee ? `${selectedQuote.fee}%` : '0.875%'
+						{strings('_is_applied', {
+							fee: selectedQuote && selectedQuote?.fee ? `${selectedQuote.fee}%` : '0.875%',
+							appName: displayName
 						})}
 					</Text>
 				}

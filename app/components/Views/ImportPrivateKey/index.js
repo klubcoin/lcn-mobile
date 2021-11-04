@@ -21,6 +21,7 @@ import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
 import { importAccountFromPrivateKey } from '../../../util/address';
 import PreventScreenshot from '../../../core/PreventScreenshot';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -169,7 +170,7 @@ export default class ImportPrivateKey extends PureComponent {
 	learnMore = () =>
 		this.props.navigation.navigate('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 
 	onInputChange = value => {
@@ -211,7 +212,9 @@ export default class ImportPrivateKey extends PureComponent {
 							<Icon name="download" style={styles.icon} />
 							<Text style={styles.title}>{strings('import_private_key.title')}</Text>
 							<View style={styles.dataRow}>
-								<Text style={styles.label}>{strings('import_private_key.description_one')}</Text>
+								<Text style={styles.label}>
+									{strings('import_private_key.description_one', { appName: displayName })}
+								</Text>
 							</View>
 							<View style={styles.dataRow}>
 								<Text style={styles.label} onPress={this.learnMore}>

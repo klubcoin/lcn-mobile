@@ -51,6 +51,7 @@ import preferences from '../../../../store/preferences';
 import { ReadFile } from '../../../../services/FileStore';
 import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../../services/WebRTC';
+import { displayName } from '../../../../../app.json';
 
 const isIos = Device.isIos();
 
@@ -665,7 +666,9 @@ class Settings extends PureComponent {
 					</View>
 					<View style={styles.setting} testID={'change-password-section'}>
 						<Text style={styles.title}>{strings('password_reset.password_title')}</Text>
-						<Text style={styles.desc}>{strings('password_reset.password_desc')}</Text>
+						<Text style={styles.desc}>
+							{strings('password_reset.password_desc', { appName: displayName })}
+						</Text>
 						<StyledButton type="normal" onPress={this.resetPassword} containerStyle={styles.confirm}>
 							{strings('password_reset.change_password')}
 						</StyledButton>
@@ -804,7 +807,7 @@ class Settings extends PureComponent {
 					</View>
 					<View style={styles.setting} testID={'metametrics-section'}>
 						<Text style={styles.title}>{strings('app_settings.metametrics_title')}</Text>
-						<Text style={styles.desc}>{strings('app_settings.metametrics_description')}</Text>
+						<Text style={styles.desc}>{strings('ription')}</Text>
 						<View style={styles.switchElement}>
 							<Switch
 								value={metricsOptIn}
@@ -817,7 +820,9 @@ class Settings extends PureComponent {
 					</View>
 					<View style={styles.setting} testID={'third-party-section'}>
 						<Text style={styles.title}>{strings('app_settings.third_party_title')}</Text>
-						<Text style={styles.desc}>{strings('app_settings.third_party_description')}</Text>
+						<Text style={styles.desc}>
+							{strings('app_settings.third_party_description', { appName: displayName })}
+						</Text>
 						<View style={styles.switchElement}>
 							<Switch
 								value={thirdPartyApiMode}
