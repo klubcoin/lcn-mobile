@@ -71,6 +71,7 @@ import Notifications from '../../Views/Notifications';
 import Message from '../../Views/Message';
 import Chat from '../../Views/Message/Chat';
 import Partners from '../../Views/Partners';
+import PartnerDetails from '../../Views/Partners/PartnerDetails';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -133,6 +134,9 @@ export default createStackNavigator(
 						},
 						Partners: {
 							screen: Partners
+						},
+						PartnerDetails: {
+							screen: PartnerDetails
 						}
 					}),
 					VotingAppHome: createDrawerNavigator({
