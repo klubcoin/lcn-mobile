@@ -291,8 +291,8 @@ class Chat extends Component {
 	}
 
 	sendTransactionSync = transaction => {
-		this.sendPayloadMessage(TransactionSync(transaction), false);
-		this.fetchConversation();
+		this.sendPayloadMessage(TransactionSync(transaction));
+		// this.fetchConversation();
 	};
 
 	sendPaymentRequest = request => {
