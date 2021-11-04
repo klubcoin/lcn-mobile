@@ -563,8 +563,8 @@ class Chat extends Component {
 		const { payload } = message || {};
 		switch (payload.action) {
 			case RequestPayment().action:
-				break;
 			case TransactionSync().action:
+				this.sendMessage(message);
 				break;
 			case ChatFile().action:
 				this.sendFile(payload, message);
