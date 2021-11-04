@@ -22,6 +22,7 @@ import {
 	LAST_APP_VERSION
 } from '../../../constants/storage';
 import { getVersion } from 'react-native-device-info';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 /**
  * Entry Screen that decides which screen to show
@@ -34,7 +35,7 @@ const LOGO_PADDING = 25;
 const styles = StyleSheet.create({
 	main: {
 		flex: 1,
-		backgroundColor: colors.white
+		backgroundColor: colors.transparent
 	},
 	metamaskName: {
 		marginTop: 10,
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	},
 	logoWrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.transparent,
 		paddingTop: 50,
 		marginTop: Dimensions.get('window').height / 2 - LOGO_SIZE / 2 - LOGO_PADDING,
 		height: LOGO_SIZE + LOGO_PADDING * 2
@@ -69,34 +70,37 @@ const Entry = props => {
 	const [fingerScanned, setFingerScanned] = useState(false);
 	const opacity = useRef(new Animated.Value(1)).current;
 
-	const onAnimationFinished = useCallback((viewToGo) => {
-		if (viewToGo && (viewToGo !== 'WalletView' || viewToGo !== 'Onboarding')) {
-			props.navigation.navigate(viewToGo);
-		} else if (viewToGo === 'Onboarding') {
-			props.navigation.navigate('OnboardingRootNav');
-		} else {
-			const { selectedAddress } = props;
-			if (selectedAddress) {
-				props.navigation.navigate('HomeNav');
-			} else {
+	const onAnimationFinished = useCallback(
+		viewToGo => {
+			if (viewToGo && (viewToGo !== 'WalletView' || viewToGo !== 'Onboarding')) {
+				props.navigation.navigate(viewToGo);
+			} else if (viewToGo === 'Onboarding') {
 				props.navigation.navigate('OnboardingRootNav');
+			} else {
+				const { selectedAddress } = props;
+				if (selectedAddress) {
+					props.navigation.navigate('HomeNav');
+				} else {
+					props.navigation.navigate('OnboardingRootNav');
+				}
 			}
-		}
-	}, [opacity, viewToGo, props.navigation]);
+		},
+		[props]
+	);
 
 	const animateAndGoTo = useCallback(
 		viewToGo => {
 			setViewToGo(viewToGo);
 			Animated.timing(opacity, {
 				toValue: 0,
-				duration: 300,
+				duration: 1000,
 				useNativeDriver: true,
 				isInteraction: false
 			}).start(() => {
 				onAnimationFinished(viewToGo);
 			});
 		},
-		[onAnimationFinished]
+		[onAnimationFinished, opacity]
 	);
 
 	const unlockKeychain = useCallback(async () => {
@@ -137,7 +141,7 @@ const Entry = props => {
 			Logger.log("Keychain couldn't be accessed", error);
 			animateAndGoTo('Login');
 		}
-	}, [animateAndGoTo, props]);
+	}, [animateAndGoTo, props, fingerScanned]);
 
 	useEffect(() => {
 		async function startApp() {
@@ -179,33 +183,36 @@ const Entry = props => {
 	}, []);
 
 	return (
-		<View style={styles.main}>
-			<Animated.View
-				style={{
-					...styles.logoWrapper,
-					opacity,
-					alignItems: 'center',
-					justifyContent: 'center'
-				}}
-			>
-				<Image
-					source={require('../../../images/logo.png')}
+		<OnboardingScreenWithBg screen="a">
+			<View style={styles.main}>
+				<Animated.View
 					style={{
-						width: 100,
-						height: 100
-					}}
-				/>
-				<Text
-					style={{
-						fontSize: 14,
-						fontWeight: 'bold',
-						textAlign: 'center'
+						...styles.logoWrapper,
+						opacity,
+						alignItems: 'center',
+						justifyContent: 'center'
 					}}
 				>
-					LIQUICHAIN
-				</Text>
-			</Animated.View>
-		</View>
+					<Image
+						source={require('../../../images/klubcoin_lighten.png')}
+						style={{
+							width: 150,
+							height: 150
+						}}
+					/>
+					<Text
+						style={{
+							fontSize: 14,
+							fontWeight: 'bold',
+							textAlign: 'center',
+							color: colors.fontPrimary
+						}}
+					>
+						LIQUICHAIN
+					</Text>
+				</Animated.View>
+			</View>
+		</OnboardingScreenWithBg>
 	);
 };
 
