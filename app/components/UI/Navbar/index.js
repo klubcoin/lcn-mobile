@@ -470,9 +470,10 @@ export function getOptinMetricsNavbarOptions() {
 		headerStyle: {
 			shadowColor: colors.transparent,
 			elevation: 0,
-			backgroundColor: colors.white,
+			backgroundColor: colors.grey,
 			borderBottomWidth: 0,
-			height: 100
+			height: 100,
+			marginTop: 20
 		},
 		headerLeft: (
 			<View style={styles.optinHeaderLeft}>
