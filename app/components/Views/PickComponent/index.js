@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	optionText: {
-		...fontStyles.normal
+		...fontStyles.normal,
+		color: colors.white
 	},
 	selectedCircle: {
 		width: 12,
