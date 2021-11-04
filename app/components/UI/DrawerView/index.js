@@ -383,6 +383,12 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_CONTACTS);
 	};
 
+	gotoPartners = () => {
+		this.props.navigation.navigate('Partners');
+		this.hideDrawer();
+		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_PARTNERS);
+	};
+
 	showSettings = async () => {
 		this.props.navigation.navigate('SettingsView');
 		this.hideDrawer();
@@ -607,7 +613,7 @@ class DrawerView extends PureComponent {
 				{
 					name: strings('drawer.partners'),
 					icon: this.getImageIcon('partners'),
-					action: this.viewInEtherscan
+					action: this.gotoPartners
 				}
 			],
 			[
