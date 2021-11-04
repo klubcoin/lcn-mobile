@@ -8,12 +8,13 @@ import { strings } from '../../../../locales/i18n';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { connect } from 'react-redux';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.transparent,
 		flex: 1,
-		paddingLeft: 18,
+		paddingHorizontal: 9,
 		zIndex: 99999999999999
 	}
 });
@@ -75,24 +76,25 @@ class Settings extends PureComponent {
 	render = () => {
 		const { seedphraseBackedUp } = this.props;
 		return (
-			<ScrollView style={styles.wrapper}>
-				<SettingsDrawer
-					description={strings('app_settings.general_desc')}
-					onPress={this.onPressGeneral}
-					title={strings('app_settings.general_title')}
-				/>
-				<SettingsDrawer
-					description={strings('app_settings.security_desc')}
-					onPress={this.onPressSecurity}
-					title={strings('app_settings.security_title')}
-					warning={!seedphraseBackedUp}
-				/>
-				<SettingsDrawer
-					description={strings('app_settings.advanced_desc')}
-					onPress={this.onPressAdvanced}
-					title={strings('app_settings.advanced_title')}
-				/>
-				{/*<SettingsDrawer
+			<OnboardingScreenWithBg screen="a">
+				<ScrollView style={styles.wrapper}>
+					<SettingsDrawer
+						description={strings('app_settings.general_desc')}
+						onPress={this.onPressGeneral}
+						title={strings('app_settings.general_title')}
+					/>
+					<SettingsDrawer
+						description={strings('app_settings.security_desc')}
+						onPress={this.onPressSecurity}
+						title={strings('app_settings.security_title')}
+						warning={!seedphraseBackedUp}
+					/>
+					<SettingsDrawer
+						description={strings('app_settings.advanced_desc')}
+						onPress={this.onPressAdvanced}
+						title={strings('app_settings.advanced_title')}
+					/>
+					{/*<SettingsDrawer
 					description={strings('app_settings.contacts_desc')}
 					onPress={this.onPressContacts}
 					title={strings('app_settings.contacts_title')}
@@ -109,7 +111,8 @@ class Settings extends PureComponent {
 				/>
 				<SettingsDrawer title={strings('app_settings.info_title')} onPress={this.onPressInfo} />
 				*/}
-			</ScrollView>
+				</ScrollView>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

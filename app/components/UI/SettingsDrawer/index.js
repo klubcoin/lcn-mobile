@@ -8,7 +8,7 @@ import { strings } from '../../../../locales/i18n';
 
 const styles = StyleSheet.create({
 	root: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.transparent,
 		borderBottomColor: colors.grey000,
 		borderBottomWidth: 1,
 		flexDirection: 'row',
@@ -19,14 +19,14 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	title: {
-		...fontStyles.normal,
+		...fontStyles.bold,
 		color: colors.fontPrimary,
 		fontSize: 20,
 		marginBottom: 8
 	},
 	description: {
 		...fontStyles.normal,
-		color: colors.grey500,
+		color: colors.grey300,
 		fontSize: 14,
 		lineHeight: 20,
 		paddingRight: 8
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 	},
 	icon: {
 		bottom: 8,
-		color: colors.grey400,
+		color: colors.white,
 		left: 4,
 		position: 'relative'
 	},
