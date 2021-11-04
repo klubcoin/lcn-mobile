@@ -399,7 +399,7 @@ export default class WebRTC {
 		return this.sendChannels && this.sendChannels[address];
 	}
 
-	async sendToPeer(peerId, message) {
+	async _sendToPeer(peerId, message) {
 		const json = JSON.stringify(message);
 		const channel = this.sendChannels[peerId];
 		const publicKey = this.peerPublicKeys[peerId];
@@ -415,20 +415,26 @@ export default class WebRTC {
 		channel && channel.send(JSON.stringify(data));
 	}
 
+	_handleTimeout = (peerId, data) => {
+		this.events.error.map(callback => callback && callback(data, peerId));
+	}
+
 	connectAndSend = async (address, data) => {
 		this.connectTo(address);
+		const timeout = setTimeout(() => this._handleTimeout(address, data), 5000);
 		DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-			this.sendToPeer(address, data);
+			this._sendToPeer(address, data);
+			clearTimeout(timeout);
 		});
 	};
 
-	sendSafe = async (address, data) => {
+	sendToPeer = async (address, data) => {
 		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
 		} else {
 			this.monitors[address] = setTimeout(() => this.connectAndSend(address, data), 5000);
-			this.sendToPeer(address, data);
+			this._sendToPeer(address, data);
 		}
 	}
 }
