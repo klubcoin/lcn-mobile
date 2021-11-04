@@ -575,7 +575,7 @@ class Onboarding extends PureComponent {
 							{loading && (
 								<View style={styles.foxWrapper}>
 									<Image
-										source={require('../../../images/fox.png')}
+										source={require('../../../images/klubcoin_lighten.png')}
 										style={styles.image}
 										resizeMethod={'auto'}
 									/>

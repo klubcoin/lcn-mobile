@@ -163,7 +163,7 @@ class CreateWallet extends PureComponent {
 						<View style={styles.wrapper}>
 							<View style={styles.foxWrapper}>
 								<Image
-									source={require('../../../images/fox.png')}
+									source={require('../../../images/klubcoin_lighten.png')}
 									style={styles.image}
 									resizeMethod={'auto'}
 								/>

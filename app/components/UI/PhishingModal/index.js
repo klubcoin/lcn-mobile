@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const foxImage = require('../../../images/fox.png');
+const foxImage = require('../../../images/klubcoin_lighten.png');
 
 export default class PhishingModal extends PureComponent {
 	static propTypes = {

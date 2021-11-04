@@ -40,7 +40,7 @@ const trackEventWithParameters = (event, params) => {
 };
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
-const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
+const metamask_fox = require('../../../images/klubcoin_lighten.png'); // eslint-disable-line
 /**
  * Function that returns the navigation options
  * This is used by views that will show our custom navbar

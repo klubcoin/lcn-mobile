@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const foxImage = require('../../../../images/fox.png');
+const foxImage = require('../../../../images/klubcoin_lighten.png');
 
 /**
  * View that contains app information
