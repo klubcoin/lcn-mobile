@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 import { format } from 'date-fns';
-import preferences from '../../../../store/preferences';
 import { TransactionSync, RequestPayment } from '../../../../services/Messages';
-import PaymentRequest from '../../../UI/PaymentRequest';
+import { strings } from '../../../../../locales/i18n';
 
 export default class MessageItem extends Component {
 	renderAvatar = () => {
@@ -34,12 +33,14 @@ export default class MessageItem extends Component {
 				case RequestPayment().action:
 					return {
 						...lastMessage,
-						text: `New request payment at ${payload.link}`
+						text: strings('chat.payment_request')
 					};
 				case TransactionSync().action:
+					const incoming = payload.transaction && payload.transaction.from
+						&& payload.transaction.from.toLowerCase() == recipient.address.toLowerCase();
 					return {
 						...lastMessage,
-						text: `Received a transaction`
+						text: incoming ? strings('chat.received_transaction') : strings('chat.sent_transaction')
 					};
 				default:
 					break;

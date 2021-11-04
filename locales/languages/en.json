@@ -1743,6 +1743,7 @@
 		"request_payment": "Request payment",
 		"send_file": "Send file",
 		"sent_transaction": "Sent transaction",
-		"received_transaction": "Received transaction"
+		"received_transaction": "Received transaction",
+		"payment_request": "Payment request"
 	}
 }
