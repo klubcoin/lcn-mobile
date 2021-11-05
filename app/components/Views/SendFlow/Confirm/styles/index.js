@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
 		right: 20
 	},
 	hexDataText: {
-		textAlign: 'justify'
+		textAlign: 'justify',
+		color: colors.black
 	},
 	bottomModal: {
 		justifyContent: 'flex-end',

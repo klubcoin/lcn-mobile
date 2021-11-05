@@ -722,6 +722,7 @@ class Confirm extends PureComponent {
 	renderHexDataModal = () => {
 		const { hexDataModalVisible } = this.state;
 		const { data } = this.props.transactionState.transaction;
+
 		return (
 			<Modal
 				isVisible={hexDataModalVisible}
