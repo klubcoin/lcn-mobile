@@ -6,8 +6,7 @@ import Title from '../../components/Title';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import OnboardingScreenWithBg from '../../../OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import StyledButton from '../../../StyledButton';
 import { displayName } from '../../../../../../app.json';
 
@@ -22,7 +21,7 @@ function Purchase({ selectedAddress, ...props }) {
 			<Title />
 			<SafeAreaView style={styles.wrapper}>
 				<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-					<View style={[styles.card, brandStyles.card]}>
+					<View style={styles.card}>
 						<View
 							style={{
 								flexDirection: 'row',
@@ -34,7 +33,7 @@ function Purchase({ selectedAddress, ...props }) {
 								style={styles.paypalIc}
 								resizeMode={'contain'}
 							/>
-							<Text style={[styles.paypal, brandStyles.paypal]}>PayPal</Text>
+							<Text style={styles.paypal}>PayPal</Text>
 						</View>
 						<Text style={styles.creditCard}>With Credit/Debit Card</Text>
 						<Text style={styles.fee}>Fees vary based from paypal.</Text>
