@@ -13,8 +13,7 @@ import { strings } from '../../../../locales/i18n';
 import AddCustomCollectible from '../../UI/AddCustomCollectible';
 import { getNetworkNavbarOptions } from '../../UI/Navbar';
 import { NetworksChainId } from '@metamask/controllers';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 /**
  * PureComponent that provides ability to add assets.
@@ -69,7 +68,7 @@ class AddAsset extends PureComponent {
 		} = this.props;
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={`add-${assetType}-screen`}>
+				<SafeAreaView style={styles.wrapper} testID={`add-${assetType}-screen`}>
 					{assetType === 'token' ? (
 						chainId == Routes.mainNetWork.chainId ? (
 							<AddCustomTokenOrApp navigation={navigation} tabLabel={strings('add_asset.custom_token')} />
