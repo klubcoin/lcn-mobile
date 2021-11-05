@@ -25,8 +25,7 @@ import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import Text from '../../Base/Text';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const EDIT = 'edit';
 
@@ -374,7 +373,7 @@ class Contacts extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'contacts-screen'}>
+				<SafeAreaView style={styles.wrapper} testID={'contacts-screen'}>
 					<View style={styles.searchSection}>
 						<Icon name="search" size={22} style={styles.icon} color={colors.white} />
 						<TextInput
@@ -455,7 +454,7 @@ class Contacts extends PureComponent {
 						swipeDirection={'down'}
 						propagateSwipe
 					>
-						<View style={[styles.scanQR, brandStyles.scanQR]}>
+						<View style={styles.scanQR}>
 							<Text bold style={styles.qrTitle}>
 								{strings('contacts.scan_qr_connect')}
 							</Text>
