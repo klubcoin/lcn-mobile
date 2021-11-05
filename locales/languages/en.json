@@ -1753,5 +1753,8 @@
 		"file": "a file",
 		"failed_to_send": "Failed to send",
 		"retry": "Retry"
+	},
+	"market": {
+		"title": "Market",
 	}
 }
