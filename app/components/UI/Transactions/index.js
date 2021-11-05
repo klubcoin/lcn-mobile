@@ -400,7 +400,7 @@ class Transactions extends PureComponent {
 						onCancelPress={this.onCancelCompleted}
 						onConfirmPress={this.cancelTransaction}
 						confirmText={strings('transaction.lets_try')}
-						confirmButtonMode={'confirm'}
+						confirmButtonMode={'info'}
 						cancelText={strings('transaction.nevermind')}
 						feeText={`${renderFromWei(Math.floor(this.existingGasPriceDecimal * CANCEL_RATE))} ${strings(
 							'unit.eth'
@@ -416,7 +416,7 @@ class Transactions extends PureComponent {
 						onCancelPress={this.onSpeedUpCompleted}
 						onConfirmPress={this.speedUpTransaction}
 						confirmText={strings('transaction.lets_try')}
-						confirmButtonMode={'confirm'}
+						confirmButtonMode={'info'}
 						cancelText={strings('transaction.nevermind')}
 						feeText={`${renderFromWei(Math.floor(this.existingGasPriceDecimal * SPEED_UP_RATE))} ${strings(
 							'unit.eth'

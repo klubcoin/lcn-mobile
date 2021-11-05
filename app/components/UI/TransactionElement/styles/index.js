@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 		padding: 15
 	},
 	fromDeviceText: {
-		color: colors.fontSecondary,
+		color: colors.grey300,
 		fontSize: 14,
 		marginBottom: 10,
 		...fontStyles.normal
