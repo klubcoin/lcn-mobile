@@ -17,8 +17,7 @@ import StatusText from '../../Base/StatusText';
 import DetailsModal from '../../Base/DetailsModal';
 import { isMainNet } from '../../../util/networks';
 import { WalletDevice } from '@metamask/controllers/';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const transactionIconApprove = require('../../../images/transaction-icons/approve.png');
 const transactionIconInteraction = require('../../../images/transaction-icons/interaction.png');
@@ -274,7 +273,7 @@ class TransactionElement extends PureComponent {
 		return (
 			<>
 				<TouchableHighlight
-					style={[styles.row, brandStyles.row]}
+					style={styles.row}
 					onPress={this.onPressItem}
 					underlayColor={colors.grey}
 					activeOpacity={1}
