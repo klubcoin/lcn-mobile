@@ -2,6 +2,8 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import scaling from '../../../../util/scaling';
+import { assignNestedObj } from '../../../../util/object';
+import brandStyles from './brand';
 
 const IMAGE_1_RATIO = 162.8 / 138;
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -174,4 +176,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export { styles };
+export default assignNestedObj(styles, brandStyles);

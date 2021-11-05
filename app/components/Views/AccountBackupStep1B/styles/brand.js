@@ -9,9 +9,12 @@ const brandStyles = StyleSheet.create({
 	card: {
 		backgroundColor: colors.grey
 	},
-	modalTextColor: {
+	whySecureTitle: {
+		color: colors.black
+	},
+	whySecureText: {
 		color: colors.black
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

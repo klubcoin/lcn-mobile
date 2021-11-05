@@ -14,8 +14,7 @@ import SeedphraseModal from '../../UI/SeedphraseModal';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 
 const explain_backup_seedphrase = require('../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
@@ -50,10 +49,10 @@ const AccountBackupStep1B = props => {
 
 	return (
 		<OnboardingScreenWithBg screen="a">
-			<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+			<SafeAreaView style={styles.mainWrapper}>
 				<ScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
-					style={[styles.mainWrapper, brandStyles.mainWrapper]}
+					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
 				>
 					<View style={styles.wrapper} testID={'protect-your-account-screen'}>
@@ -76,7 +75,7 @@ const AccountBackupStep1B = props => {
 								</Text>
 							</TouchableOpacity>
 						</View>
-						<View style={[styles.card, brandStyles.card]}>
+						<View style={styles.card}>
 							<Text style={styles.manualTitle}>{strings('account_backup_step_1B.manual_title')}</Text>
 							<Text style={styles.paragraph}>{strings('account_backup_step_1B.manual_subtitle')}</Text>
 							<Text style={styles.barsTitle}>{strings('account_backup_step_1B.manual_security')}</Text>
@@ -117,7 +116,7 @@ const AccountBackupStep1B = props => {
 					<View style={styles.secureModalContainer}>
 						<View style={styles.secureModalTitleContainer}>
 							<View style={styles.auxCenterView} />
-							<Text style={[styles.whySecureTitle, brandStyles.modalTextColor]}>
+							<Text style={styles.whySecureTitle}>
 								{strings('account_backup_step_1B.why_secure_title')}
 							</Text>
 							<TouchableOpacity
@@ -135,7 +134,7 @@ const AccountBackupStep1B = props => {
 								resizeMethod={'auto'}
 								testID={'carousel-one-image'}
 							/>
-							<Text style={[styles.whySecureText, brandStyles.modalTextColor]}>
+							<Text style={styles.whySecureText}>
 								{strings('account_backup_step_1B.why_secure_1')}
 								<Text style={styles.bold}>{strings('account_backup_step_1B.why_secure_2')}</Text>
 							</Text>
