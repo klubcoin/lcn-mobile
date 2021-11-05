@@ -8,6 +8,10 @@ const brandStyles = StyleSheet.create({
 	},
 	colorText: {
 		color: colors.white
+	},
+	seedPhrase: {
+		backgroundColor: colors.grey,
+		borderColor: colors.white
 	}
 });
 

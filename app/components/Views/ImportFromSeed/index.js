@@ -349,7 +349,8 @@ class ImportFromSeed extends PureComponent {
 										styles.seedPhrase,
 										inputWidth,
 										seedphraseInputFocused && styles.inputFocused,
-										brandStyles.colorText
+										brandStyles.colorText,
+										brandStyles.seedPhrase
 									]}
 									secureTextEntry
 									multiline={!hideSeedPhraseInput}
