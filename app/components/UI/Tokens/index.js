@@ -21,8 +21,7 @@ import { isMainNet } from '../../../util/networks';
 import Helper from 'common/Helper';
 import Routes from '../../../common/routes';
 import preferences, { kAppList } from '../../../store/preferences';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const TokenRoutes = {
 	Liquichat: 'Message',
@@ -101,7 +100,7 @@ class Tokens extends PureComponent {
 	}
 
 	renderEmpty = () => (
-		<View style={[styles.emptyView, brandStyles.emptyView]}>
+		<View style={styles.emptyView}>
 			<Text style={styles.text}>{strings('wallet.no_tokens')}</Text>
 		</View>
 	);
@@ -297,7 +296,7 @@ class Tokens extends PureComponent {
 	render = () => {
 		const { tokens } = this.props;
 		return (
-			<View style={[styles.wrapper, brandStyles.wrapper]} testID={'tokens'}>
+			<View style={styles.wrapper} testID={'tokens'}>
 				{tokens && tokens.length ? this.renderList() : this.renderEmpty()}
 				<ActionSheet
 					ref={this.createActionSheetRef}
