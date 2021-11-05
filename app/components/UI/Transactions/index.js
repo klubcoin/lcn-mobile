@@ -28,8 +28,7 @@ import APIService from 'services/APIService';
 import Routes from 'common/routes';
 import moment from 'moment';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const ROW_HEIGHT = (Device.isIos() ? 95 : 100) + StyleSheet.hairlineWidth;
 
@@ -267,7 +266,7 @@ class Transactions extends PureComponent {
 
 	renderLoader = () => (
 		<OnboardingScreenWithBg screen="a">
-			<View style={[styles.emptyContainer, brandStyles.emptyContainer]}>
+			<View style={styles.emptyContainer}>
 				<ActivityIndicator style={styles.loader} size="small" />
 			</View>
 		</OnboardingScreenWithBg>
@@ -279,7 +278,7 @@ class Transactions extends PureComponent {
 				refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
 			>
 				{this.props.header ? this.props.header : null}
-				<View style={[styles.emptyContainer, brandStyles.emptyContainer]}>
+				<View style={styles.emptyContainer}>
 					<Text style={styles.text}>{strings('wallet.no_transactions')}</Text>
 				</View>
 			</ScrollView>
@@ -375,7 +374,7 @@ class Transactions extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<View style={[styles.wrapper, brandStyles.wrapper]} testID={'transactions-screen'}>
+				<View style={styles.wrapper} testID={'transactions-screen'}>
 					<FlatList
 						ref={this.flatList}
 						getItemLayout={this.getItemLayout}
