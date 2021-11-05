@@ -6,8 +6,7 @@ import { strings } from '../../../../locales/i18n';
 import CheckBox from '@react-native-community/checkbox';
 import PropTypes from 'prop-types';
 import { colors, fontStyles } from '../../../styles/common';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const warning_skip_backup = require('../../../images/warning.png'); // eslint-disable-line
 
@@ -38,7 +37,7 @@ const SkipAccountSecurityModal = ({ modalVisible, onConfirm, onCancel, onPress, 
 				resizeMethod={'auto'}
 				testID={'skip_backup_warning'}
 			/>
-			<Text style={[styles.skipTitle, brandStyles.skipTitle]}>{strings('account_backup_step_1.skip_title')}</Text>
+			<Text style={styles.skipTitle}>{strings('account_backup_step_1.skip_title')}</Text>
 			<View style={styles.skipModalActionButtons}>
 				<CheckBox
 					style={styles.skipModalCheckbox}
