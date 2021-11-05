@@ -18,4 +18,4 @@ const brandImgs = {
 	carousel: require('../../../../images/klubcoin_filigram_logo.png')
 };
 
-export { brandStyles, brandImgs };
+export default brandStyles;

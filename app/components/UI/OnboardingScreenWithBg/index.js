@@ -3,16 +3,11 @@ import PropTypes from 'prop-types';
 import { StyleSheet, ImageBackground, View } from 'react-native';
 import { colors } from '../../../styles';
 import Device from '../../../util/Device';
-import { brandStyles, brandImgs } from './styles/brand';
 import { styles, images } from './styles/index';
 
 const OnboardingScreenWithBg = props => (
 	<View style={styles.flex}>
-		<ImageBackground
-			source={brandImgs[props.screen]}
-			style={[styles.wrapper, brandStyles.wrapper]}
-			resizeMode={'cover'}
-		>
+		<ImageBackground source={images[props.screen]} style={styles.wrapper} resizeMode={'cover'}>
 			{props.children}
 		</ImageBackground>
 	</View>

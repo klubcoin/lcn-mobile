@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import brandStyles from './brand';
+import { assignNestedObj } from '../../../../util/object';
 
-const styles = StyleSheet.create({
+const index = StyleSheet.create({
 	flex: {
 		flex: 1,
 		backgroundColor: colors.white
@@ -24,11 +26,18 @@ const styles = StyleSheet.create({
 });
 
 const images = {
-	a: require('../../../../images/welcome-bg1.jpg'),
-	b: require('../../../../images/welcome-bg2.jpg'),
-	c: require('../../../../images/welcome-bg3.jpg'),
-	d: require('../../../../images/welcome-bg4.jpg'),
-	carousel: null
+	// a: require('../../../../images/welcome-bg1.jpg'),
+	// b: require('../../../../images/welcome-bg2.jpg'),
+	// c: require('../../../../images/welcome-bg3.jpg'),
+	// d: require('../../../../images/welcome-bg4.jpg'),
+	// carousel: null
+	a: require('../../../../images/klubcoin_filigram_logo.png'),
+	b: require('../../../../images/klubcoin_filigram_logo.png'),
+	c: require('../../../../images/klubcoin_filigram_logo.png'),
+	d: require('../../../../images/klubcoin_filigram_logo.png'),
+	carousel: require('../../../../images/klubcoin_filigram_logo.png')
 };
+
+const styles = assignNestedObj(index, brandStyles);
 
 export { styles, images };
