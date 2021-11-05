@@ -9,9 +9,9 @@ const brandStyles = StyleSheet.create({
 	standaloneRowFront: {
 		backgroundColor: colors.black
 	},
-	textColor: {
+	title: {
 		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

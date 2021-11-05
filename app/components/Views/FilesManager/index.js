@@ -36,8 +36,7 @@ import { statuses } from './FileDetails';
 import FileTransfer from './Transfer.service';
 import SearchBar from '../../Base/SearchBar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
@@ -239,7 +238,7 @@ class FilesManager extends Component {
 		return (
 			items.length > 0 && (
 				<View style={styles.files}>
-					<Text style={[styles.title, brandStyles.textColor]}>{title}</Text>
+					<Text style={styles.title}>{title}</Text>
 					{items.map(e => {
 						const { file } = e;
 
@@ -269,7 +268,7 @@ class FilesManager extends Component {
 										</View>
 									</TouchableWithoutFeedback>
 								</View>
-								<View style={[styles.standaloneRowFront, brandStyles.standaloneRowFront]}>
+								<View style={styles.standaloneRowFront}>
 									<FileItem file={file} date={e.date} status={e.status} processPercent={e.percent} />
 								</View>
 							</SwipeRow>
@@ -288,7 +287,7 @@ class FilesManager extends Component {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<View style={[styles.container, brandStyles.container]}>
+				<View style={styles.container}>
 					<KeyboardAvoidingView style={{ flex: 1 }}>
 						<TransferFileModal
 							files={this.state.selectedFiles}

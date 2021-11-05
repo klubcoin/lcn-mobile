@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import { assignNestedObj } from '../../../../util/object';
+import brandStyles from './brand';
 
 const swipeOffset = Device.getDeviceWidth() / 2;
 
@@ -63,4 +65,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export { styles };
+export default assignNestedObj(styles, brandStyles);
