@@ -6,9 +6,9 @@ const brandStyles = StyleSheet.create({
 	fileContainer: {
 		backgroundColor: colors.transparent
 	},
-	textColor: {
+	fileName: {
 		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

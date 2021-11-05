@@ -7,8 +7,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import TextSpan from '../components/TextSpan';
 import PartItem from '../components/PartItem';
 import { strings } from '../../../../../locales/i18n';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
 const statuses = {
@@ -81,7 +80,7 @@ export default class FileDetails extends Component {
 			<View style={{ alignItems: 'center' }}>
 				<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 					{FileIcons.getFontAwesomeIconFromMIME(this.state.data?.type)}
-					<Text style={[styles.fileName, brandStyles.textColor]} numberOfLines={1} ellipsizeMode="middle">
+					<Text style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
 						{this.state.data?.name}
 					</Text>
 				</View>
