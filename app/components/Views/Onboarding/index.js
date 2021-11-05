@@ -526,7 +526,7 @@ class Onboarding extends PureComponent {
 							onPress={this.onViewPartners}
 							testID={'onboarding-import-button'}
 						>
-							View Partners
+							{strings('onboarding.view_partners')}
 						</StyledButton>
 					</View>
 					<View style={styles.buttonWrapper}>
@@ -536,7 +536,7 @@ class Onboarding extends PureComponent {
 							onPress={this.onPressCreate}
 							testID={'create-wallet-button'}
 						>
-							{strings('onboarding.start_exploring_now')}
+							{strings('onboarding.start_exploring_now').toUpperCase()}
 						</StyledButton>
 					</View>
 				</View>
