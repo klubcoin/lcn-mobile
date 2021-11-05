@@ -10,8 +10,7 @@ import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 	const [nonce, onChangeText] = React.useState(nonceValue);
@@ -45,7 +44,7 @@ const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 			propagateSwipe
 		>
 			<KeyboardAwareScrollView contentContainerStyle={styles.keyboardAwareWrapper}>
-				<SafeAreaView style={[styles.modal, brandStyles.modal]}>
+				<SafeAreaView style={styles.modal}>
 					<ModalDragger />
 					<View style={styles.modalContainer}>
 						<Text bold centered style={styles.title}>
@@ -70,7 +69,7 @@ const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 								onSubmitEditing={saveAndClose}
 							/>
 						</View>
-						<Text centered style={[styles.currentSuggested, brandStyles.currentSuggested]}>
+						<Text centered style={styles.currentSuggested}>
 							{strings('transaction.current_suggested_nonce')}{' '}
 							<Text bold style={{ color: colors.grey300 }}>
 								{proposedNonce}
