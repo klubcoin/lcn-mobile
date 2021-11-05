@@ -16,8 +16,7 @@ import Device from '../../../util/Device';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { isMainnetByChainId } from '../../../util/networks';
 import { displayName } from '../../../../app.json';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * PureComponent that renders a selector to choose either fast, average or slow gas fee
@@ -576,7 +575,7 @@ class CustomGas extends PureComponent {
 		}
 
 		return (
-			<View style={[styles.root, brandStyles.root]} onLayout={saveCustomGasHeight}>
+			<View style={styles.root} onLayout={saveCustomGasHeight}>
 				<View onLayout={this.saveHeaderHeight}>
 					<View style={styles.customGasHeader}>
 						<TouchableOpacity onPress={review}>

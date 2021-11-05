@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import brandStyles from './brand';
+import { assignNestedObj } from '../../../../util/object';
 
 const styles = StyleSheet.create({
 	root: {
@@ -205,4 +207,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export { styles };
+export default assignNestedObj(styles, brandStyles);
