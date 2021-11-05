@@ -14,14 +14,6 @@ const brandStyles = StyleSheet.create({
 		borderColor: colors.borderBlue,
 		borderWidth: 3
 	},
-	shadowStyle: {
-		shadowColor: colors.blue,
-		shadowOpacity: 0.7,
-		shadowRadius: 10,
-		shadowOffset: {
-			height: 1
-		}
-	},
 	textWrapperStyle: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -32,7 +24,13 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.grey,
 		borderColor: colors.blue,
 		borderWidth: 2,
-		borderRadius: 80
+		borderRadius: 80,
+		shadowColor: colors.blue,
+		shadowOpacity: 0.7,
+		shadowRadius: 10,
+		shadowOffset: {
+			height: 1
+		}
 	},
 	buttonIcon: {
 		color: colors.white,
@@ -48,4 +46,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

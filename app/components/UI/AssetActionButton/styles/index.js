@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import { assignNestedObj } from '../../../../util/object';
+import brandStyles from './brand';
 
 const styles = StyleSheet.create({
 	button: {
@@ -46,7 +48,8 @@ const styles = StyleSheet.create({
 	buyIcon: {
 		right: Device.isAndroid() ? 0.5 : 0,
 		bottom: Device.isAndroid() ? 1 : 2
-	}
+	},
+	textWrapperStyle: {}
 });
 
-export { styles };
+export default assignNestedObj(styles, brandStyles);

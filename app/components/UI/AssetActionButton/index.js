@@ -11,8 +11,7 @@ import Device from '../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';
 import Colors from 'common/colors';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 function getIcon(type) {
 	switch (type) {
@@ -53,14 +52,7 @@ function getLabelIcon(type) {
 			return <FeatherIcon name={'arrow-up'} size={20} style={styles.buttonIcon} />;
 		}
 		case 'receive': {
-			return (
-				<FeatherIcon
-					name={'arrow-down'}
-					size={20}
-					color={colors.white}
-					style={[styles.buttonIcon, brandStyles.receive]}
-				/>
-			);
+			return <FeatherIcon name={'arrow-down'} size={20} color={colors.white} style={styles.buttonIcon} />;
 		}
 		case 'add': {
 			return <Ionicon name="ios-add" size={30} style={styles.buttonIcon} />;
@@ -84,15 +76,13 @@ function AssetActionButton({ onPress, icon, label, disabled }) {
 	return (
 		<TouchableOpacity
 			onPress={onPress}
-			style={[styles.button, disabled && styles.disabledButton, brandStyles.button]}
+			style={[styles.button, disabled && styles.disabledButton]}
 			disabled={disabled}
 		>
-			<View style={[styles.buttonIconWrapper, brandStyles.shadowStyle, brandStyles.buttonIconWrapper]}>
-				{icon && (typeof icon === 'string' ? getIcon(icon) : icon)}
-			</View>
-			<View style={[brandStyles.shadowStyle, brandStyles.textWrapperStyle]}>
+			<View style={styles.buttonIconWrapper}>{icon && (typeof icon === 'string' ? getIcon(icon) : icon)}</View>
+			<View style={styles.textWrapperStyle}>
 				{getLabelIcon(icon)}
-				<Text centered style={[styles.buttonText, brandStyles.buttonText]} numberOfLines={1}>
+				<Text centered style={styles.buttonText} numberOfLines={1}>
 					{label}
 				</Text>
 			</View>
