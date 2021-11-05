@@ -12,4 +12,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

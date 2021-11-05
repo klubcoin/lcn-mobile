@@ -6,8 +6,7 @@ import Text from '../../Base/Text';
 import ModalDragger from '../../Base/ModalDragger';
 import StyledButton from '../StyledButton';
 import { strings } from '../../../../locales/i18n';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * PureComponent that renders confirm actions
@@ -54,7 +53,7 @@ export default class ConfirmInput extends PureComponent {
 
 		return (
 			<KeyboardAvoidingView behavior={'padding'}>
-				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]}>
+				<SafeAreaView style={styles.wrapper}>
 					<ModalDragger />
 					<View style={styles.titleWrapper}>
 						<Text style={styles.title}>{title}</Text>
@@ -68,7 +67,7 @@ export default class ConfirmInput extends PureComponent {
 							placeholder={placeholder || '...'}
 							placeholderTextColor={colors.grey100}
 							spellCheck={false}
-							style={[styles.input, empty && styles.error, brandStyles.input]}
+							style={[styles.input, empty && styles.error]}
 							value={value}
 							multiline={!!multiline}
 							numberOfLines={1}
