@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
-import { brandStyles } from './brand';
+import brandStyles from './brand';
 import { assignNestedObj } from '../../../../util/object';
 
-const styles = {
+const styles = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.white,
 		borderTopLeftRadius: 10,
@@ -49,6 +49,6 @@ const styles = {
 		borderTopWidth: StyleSheet.hairlineWidth,
 		borderColor: colors.grey100
 	}
-};
+});
 
 export default assignNestedObj(styles, brandStyles);

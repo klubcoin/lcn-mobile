@@ -7,15 +7,10 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent
 	},
 	label: {
-		fontSize: 24,
-		textAlign: 'center',
 		color: colors.fontPrimary,
 		...fontStyles.bold
 	},
 	addressWrapper: {
-		borderRadius: 40,
-		marginTop: 20,
-		marginBottom: 20,
 		backgroundColor: colors.grey,
 		paddingVertical: 10,
 		paddingHorizontal: 50,
@@ -29,23 +24,14 @@ const brandStyles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	amountFiat: {
-		paddingTop: 5,
 		fontSize: 16,
-		color: colors.fontPrimary,
-		...fontStyles.normal
+		color: colors.fontPrimary
 	},
 	actions: {
 		width: '100%',
-		justifyContent: 'space-around',
-		alignItems: 'flex-start',
-		flex: 1,
-		flexDirection: 'row'
+		justifyContent: 'space-around'
 	},
 	identiconBorder: {
-		borderRadius: 80,
-		borderWidth: 2,
-		padding: 2,
-		borderColor: colors.blue,
 		shadowColor: colors.blue,
 		shadowOpacity: 0.7,
 		shadowRadius: 10,
@@ -55,4 +41,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

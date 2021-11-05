@@ -41,7 +41,7 @@ import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import Helper from 'common/Helper';
 import RemoteImage from '../../Base/RemoteImage';
-import { styles } from './styles/index';
+import styles from './styles/index';
 
 /**
  * View that's part of the <Wallet /> component

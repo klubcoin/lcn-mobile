@@ -1,7 +1,7 @@
 export function assignNestedObj(target, source) {
-	const result = Object.assign({}, target);
-	Object.keys(result).map(k => {
-		Object.assign(result[k], source[k] || {});
+	const result = {};
+	Object.keys(target).map(k => {
+		result[k] = Object.assign({}, target[k], source[k] || {});
 	});
 	return result;
 }
