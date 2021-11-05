@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
 		paddingLeft: 0
 	},
 	menuItemIconImage: {
-		width: 22,
-		height: 22
+		width: 24,
+		height: 24
 	},
 	bottomModal: {
 		justifyContent: 'flex-end',

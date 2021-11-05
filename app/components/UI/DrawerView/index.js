@@ -488,7 +488,11 @@ class DrawerView extends PureComponent {
 	};
 
 	getIcon(name, size, color = null) {
-		return <Icon name={name} size={size || 24} color={color ? color : colors.blue} />;
+		return (
+			<View style={{ width: 24, height: 24, alignItems: 'center' }}>
+				<Icon name={name} size={size || 24} color={color ? color : colors.blue} />
+			</View>
+		);
 	}
 
 	getFeatherIcon(name, size) {
@@ -629,12 +633,12 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.help'),
-					icon: this.getFontAwesome5Icon('info'),
+					icon: this.getIcon('info'),
 					action: this.showHelp
 				},
 				{
 					name: strings('drawer.request_feature'),
-					icon: this.getIonIcon('chatbox'),
+					icon: this.getFontAwesome5Icon('comment-alt'),
 					action: this.submitFeedback
 				},
 				{
