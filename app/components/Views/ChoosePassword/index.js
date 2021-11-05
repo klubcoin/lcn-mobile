@@ -47,8 +47,7 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import LoginWithKeycloak from '../LoginWithKeycloak';
 
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
@@ -346,7 +345,7 @@ class ChoosePassword extends PureComponent {
 			<View style={styles.biometrics}>
 				{biometryType ? (
 					<>
-						<Text style={[styles.biometryLabel, brandStyles.colorText]}>
+						<Text style={styles.biometryLabel}>
 							{strings(`biometrics.enable_${biometryType.toLowerCase()}`)}
 						</Text>
 						<View>
@@ -361,9 +360,7 @@ class ChoosePassword extends PureComponent {
 					</>
 				) : (
 					<>
-						<Text style={[styles.biometryLabel, brandStyles.colorText]}>
-							{strings(`choose_password.remember_me`)}
-						</Text>
+						<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
 						<Switch
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 							value={rememberMe}
@@ -461,7 +458,7 @@ class ChoosePassword extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+				<SafeAreaView style={styles.mainWrapper}>
 					{loading ? (
 						<View style={styles.loadingWrapper}>
 							<View style={styles.foxWrapper}>
@@ -498,9 +495,7 @@ class ChoosePassword extends PureComponent {
 								/>
 								{!usePasswordAuth && (
 									<>
-										<Text style={[styles.or, brandStyles.colorText]}>
-											{strings('choose_password.or')}
-										</Text>
+										<Text style={styles.or}>{strings('choose_password.or')}</Text>
 										<StyledButton
 											style={styles.button}
 											type={'normal'}
@@ -522,17 +517,14 @@ class ChoosePassword extends PureComponent {
 												</View>
 											</View>
 											<View style={styles.field}>
-												<Text style={[styles.hintLabel, brandStyles.colorText]}>
+												<Text style={styles.hintLabel}>
 													{strings('choose_password.password')}
 												</Text>
-												<Text
-													onPress={this.toggleShowHide}
-													style={[styles.hintLabel, styles.showPassword]}
-												>
+												<Text onPress={this.toggleShowHide} style={styles.hintLabel}>
 													{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
 												</Text>
 												<TextInput
-													style={[styles.input, inputWidth, brandStyles.colorText]}
+													style={[styles.input, inputWidth]}
 													value={password}
 													onChangeText={this.onPasswordChange}
 													secureTextEntry={secureTextEntry}
@@ -543,9 +535,7 @@ class ChoosePassword extends PureComponent {
 													autoCapitalize="none"
 												/>
 												{(password !== '' && (
-													<Text
-														style={[styles.passwordStrengthLabel, brandStyles.subTextColor]}
-													>
+													<Text style={styles.passwordStrengthLabel}>
 														{strings('choose_password.password_strength')}
 														<Text style={styles[`strength_${passwordStrengthWord}`]}>
 															{' '}
@@ -554,19 +544,15 @@ class ChoosePassword extends PureComponent {
 															)}
 														</Text>
 													</Text>
-												)) || (
-													<Text
-														style={[styles.passwordStrengthLabel, brandStyles.subTextColor]}
-													/>
-												)}
+												)) || <Text style={styles.passwordStrengthLabel} />}
 											</View>
 											<View style={styles.field}>
-												<Text style={[styles.hintLabel, brandStyles.colorText]}>
+												<Text style={styles.hintLabel}>
 													{strings('choose_password.confirm_password')}
 												</Text>
 												<TextInput
 													ref={this.confirmPasswordInput}
-													style={[styles.input, inputWidth, brandStyles.colorText]}
+													style={[styles.input, inputWidth]}
 													value={confirmPassword}
 													onChangeText={this.setConfirmPassword}
 													secureTextEntry={secureTextEntry}
@@ -582,7 +568,7 @@ class ChoosePassword extends PureComponent {
 														<Icon name="check" size={16} color={colors.green300} />
 													) : null}
 												</View>
-												<Text style={[styles.passwordStrengthLabel, brandStyles.subTextColor]}>
+												<Text style={styles.passwordStrengthLabel}>
 													{strings('choose_password.must_be_at_least', {
 														number: MIN_PASSWORD_LENGTH
 													})}
@@ -599,7 +585,7 @@ class ChoosePassword extends PureComponent {
 													testID={'password-understand-box'}
 												/>
 												<Text
-													style={[styles.label, brandStyles.colorText]}
+													style={styles.label}
 													onPress={this.setSelection}
 													testID={'i-understand-text'}
 												>
