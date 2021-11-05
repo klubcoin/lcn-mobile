@@ -1756,5 +1756,10 @@
 	},
 	"market": {
 		"title": "Market",
+		"reviews": "Reviews",
+		"write_review": "Write review",
+		"additional_info": "Additional information",
+		"provided_by": "Provided by",
+		"developer": "Developer"
 	}
 }
