@@ -753,7 +753,9 @@ class Settings extends PureComponent {
 							<Text style={[styles.title, brandStyles.title]}>
 								{strings('app_settings.metametrics_title')}
 							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>{strings('ription')}</Text>
+							<Text style={[styles.desc, brandStyles.desc]}>
+								{strings('app_settings.metametrics_description', { appName: displayName })}
+							</Text>
 							<View style={styles.switchElement}>
 								<Switch
 									value={metricsOptIn}
