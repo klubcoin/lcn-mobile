@@ -42,7 +42,6 @@ import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import Helper from 'common/Helper';
 import RemoteImage from '../../Base/RemoteImage';
 import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
 
 /**
  * View that's part of the <Wallet /> component
@@ -254,13 +253,13 @@ class AccountOverview extends PureComponent {
 				<ScrollView
 					bounces={false}
 					keyboardShouldPersistTaps={'never'}
-					style={[styles.scrollView, brandStyles.scrollView]}
+					style={styles.scrollView}
 					contentContainerStyle={styles.wrapper}
 					testID={'account-overview'}
 				>
 					<View style={styles.info} ref={this.mainView}>
 						<TouchableOpacity
-							style={[styles.identiconBorder, brandStyles.shadowStyle]}
+							style={styles.identiconBorder}
 							disabled={onboardingWizard}
 							onPress={this.toggleAccountsModal}
 							testID={'wallet-account-identicon'}
@@ -298,7 +297,6 @@ class AccountOverview extends PureComponent {
 									<Text
 										style={[
 											styles.label,
-											brandStyles.label,
 											styles.onboardingWizardLabel,
 											onboardingWizard
 												? { borderColor: colors.blue }
@@ -313,22 +311,13 @@ class AccountOverview extends PureComponent {
 							)}
 						</View>
 						{isMainNet(chainId) && (
-							<Text style={[styles.amountFiat, brandStyles.amountFiat]}>
-								{Helper.convertToEur(balance, conversion)}
-							</Text>
+							<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
 						)}
-						<TouchableOpacity
-							style={[styles.addressWrapper, brandStyles.addressWrapper]}
-							onPress={this.copyAccountToClipboard}
-						>
-							<EthereumAddress
-								address={address}
-								style={[styles.address, brandStyles.address]}
-								type={'short'}
-							/>
+						<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
+							<EthereumAddress address={address} style={styles.address} type={'short'} />
 						</TouchableOpacity>
 
-						<View style={[styles.actions, brandStyles.actions]}>
+						<View style={styles.actions}>
 							<AssetActionButton
 								icon="receive"
 								onPress={this.onReceive}

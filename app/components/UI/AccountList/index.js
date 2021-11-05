@@ -31,11 +31,12 @@ import { refWebRTC } from '../../../services/WebRTC';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { RestoreSecretRequest } from '../../../services/Messages';
 import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
 
 /**
  * View that contains the list of all the available accounts
  */
+console.log(styles);
+
 class AccountList extends PureComponent {
 	static propTypes = {
 		/**
@@ -376,7 +377,7 @@ class AccountList extends PureComponent {
 		const { orderedAccounts } = this.state;
 		const { enableAccountsAddition, enableRestoreAccount } = this.props;
 		return (
-			<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'account-list'}>
+			<SafeAreaView style={styles.wrapper} testID={'account-list'}>
 				<View style={styles.titleWrapper}>
 					<View style={styles.dragger} testID={'account-list-dragger'} />
 				</View>

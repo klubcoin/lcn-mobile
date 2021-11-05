@@ -6,25 +6,16 @@ const brandStyles = StyleSheet.create({
 	scrollView: {
 		backgroundColor: colors.transparent
 	},
-	wrapper: {
-		paddingTop: 20,
-		paddingHorizontal: 20,
-		paddingBottom: 0,
-		alignItems: 'center'
-	},
-	info: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		textAlign: 'center'
-	},
 	label: {
+		fontSize: 24,
+		textAlign: 'center',
 		color: colors.fontPrimary,
 		...fontStyles.bold
 	},
-	labelInput: {
-		marginBottom: Device.isAndroid() ? -10 : 0
-	},
 	addressWrapper: {
+		borderRadius: 40,
+		marginTop: 20,
+		marginBottom: 20,
 		backgroundColor: colors.grey,
 		paddingVertical: 10,
 		paddingHorizontal: 50,
@@ -32,32 +23,29 @@ const brandStyles = StyleSheet.create({
 		borderWidth: 2
 	},
 	address: {
+		paddingTop: 5,
 		fontSize: 16,
 		color: colors.blue,
 		...fontStyles.bold
 	},
 	amountFiat: {
+		paddingTop: 5,
 		fontSize: 16,
-		color: colors.fontPrimary
-	},
-	avatar: {
-		width: 46,
-		height: 46,
-		borderRadius: 23
-	},
-	onboardingWizardLabel: {
-		borderWidth: 2,
-		borderRadius: 4,
-		paddingVertical: Device.isIos() ? 2 : -4,
-		paddingHorizontal: Device.isIos() ? 5 : 5,
-		top: Device.isIos() ? 0 : -2
+		color: colors.fontPrimary,
+		...fontStyles.normal
 	},
 	actions: {
 		width: '100%',
 		justifyContent: 'space-around',
-		alignItems: 'flex-start'
+		alignItems: 'flex-start',
+		flex: 1,
+		flexDirection: 'row'
 	},
-	shadowStyle: {
+	identiconBorder: {
+		borderRadius: 80,
+		borderWidth: 2,
+		padding: 2,
+		borderColor: colors.blue,
 		shadowColor: colors.blue,
 		shadowOpacity: 0.7,
 		shadowRadius: 10,

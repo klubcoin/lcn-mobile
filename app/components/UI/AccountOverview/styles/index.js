@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import { brandStyles } from './brand';
 
-const styles = StyleSheet.create({
+const index = StyleSheet.create({
 	scrollView: {
 		backgroundColor: colors.white
 	},
@@ -74,5 +75,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	}
 });
+
+const styles = Object.assign(index, brandStyles);
 
 export { styles };
