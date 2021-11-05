@@ -10,11 +10,11 @@ const brandStyles = StyleSheet.create({
 		color: colors.blue
 	},
 	closeButtonText: {
-		color: colors.white
+		color: colors.blue
 	},
 	centeredTitle: {
 		...fontStyles.bold
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

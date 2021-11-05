@@ -21,8 +21,7 @@ import { isGatewayUrl } from '../../../lib/ens-ipfs/resolver';
 import { getHost } from '../../../util/browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from 'common/colors';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 
 const { HOMEPAGE_URL } = AppConstants;
@@ -412,7 +411,7 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
 				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={[styles.header, brandStyles.header]}>{displayName.toUpperCase()}</Text>
+				<Text style={styles.header}>{displayName.toUpperCase()}</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
@@ -482,7 +481,7 @@ export function getOptinMetricsNavbarOptions() {
 				</View>
 				<View style={styles.metamaskNameWrapper}>
 					{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-					<Text style={[styles.header, brandStyles.header]}>{displayName.toUpperCase()}</Text>
+					<Text style={styles.header}>{displayName.toUpperCase()}</Text>
 				</View>
 			</View>
 		)
@@ -609,7 +608,7 @@ export function getWalletNavbarOptions(title, navigation) {
 		headerTitle: <NavbarTitle title={title} />,
 		headerLeft: (
 			<TouchableOpacity onPress={openDrawer} style={styles.backButton} testID={'hamburger-menu-button-wallet'}>
-				<Icon name={'bars'} size={16} style={[styles.backIcon, brandStyles.backIcon]} />
+				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		// headerRight: (
@@ -733,11 +732,7 @@ export function getPurchaseMethodNavbar(navigation) {
 	const rightAction = navigation.dismiss;
 
 	return {
-		headerTitle: (
-			<Text style={[styles.centeredTitle, brandStyles.centeredTitle]}>
-				{strings('fiat_on_ramp.purchase_method')}
-			</Text>
-		),
+		headerTitle: <Text style={styles.centeredTitle}>{strings('fiat_on_ramp.purchase_method')}</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
 				<Icon name={'arrow-left'} size={16} color={colors.white} />
