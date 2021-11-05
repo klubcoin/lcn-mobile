@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { toLowerCaseCompare } from '../../../util/general';
 import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
 
 /**
  * PureComponent that provides ability to add custom collectibles.
@@ -159,7 +158,7 @@ class AddCustomCollectible extends PureComponent {
 		const { address, tokenId } = this.state;
 
 		return (
-			<View style={[styles.wrapper, brandStyles.wrapper]} testID={'add-custom-token-screen'}>
+			<View style={styles.wrapper} testID={'add-custom-token-screen'}>
 				<ActionView
 					cancelTestID={'add-custom-asset-cancel-button'}
 					confirmTestID={'add-custom-asset-confirm-button'}
@@ -171,14 +170,11 @@ class AddCustomCollectible extends PureComponent {
 				>
 					<View>
 						<View style={styles.rowWrapper}>
-							<Text style={[fontStyles.normal, brandStyles.textColor]}>
-								{strings('collectible.collectible_address')}
-							</Text>
+							<Text style={fontStyles.normal}>{strings('collectible.collectible_address')}</Text>
 							<TextInput
 								style={[
 									styles.textInput,
-									this.state.inputWidth ? { width: this.state.inputWidth } : {},
-									brandStyles.textColor
+									this.state.inputWidth ? { width: this.state.inputWidth } : {}
 								]}
 								placeholder={'0x...'}
 								placeholderTextColor={colors.grey100}
@@ -193,14 +189,11 @@ class AddCustomCollectible extends PureComponent {
 							</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={[fontStyles.normal, brandStyles.textColor]}>
-								{strings('collectible.collectible_token_id')}
-							</Text>
+							<Text style={fontStyles.normal}>{strings('collectible.collectible_token_id')}</Text>
 							<TextInput
 								style={[
 									styles.textInput,
-									this.state.inputWidth ? { width: this.state.inputWidth } : {},
-									brandStyles.textColor
+									this.state.inputWidth ? { width: this.state.inputWidth } : {}
 								]}
 								value={this.state.tokenId}
 								keyboardType="numeric"

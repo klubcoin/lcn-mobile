@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import { brandStyles } from './brand';
 
-const styles = StyleSheet.create({
+const index = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.white,
 		flex: 1
@@ -23,5 +24,7 @@ const styles = StyleSheet.create({
 		...fontStyles.normal
 	}
 });
+
+const styles = Object.assign(index, brandStyles);
 
 export { styles };
