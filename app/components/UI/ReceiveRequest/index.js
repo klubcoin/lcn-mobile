@@ -27,8 +27,7 @@ import AddressQRCode from '../../Views/AddressQRCode';
 import EthereumAddress from '../EthereumAddress';
 import GlobalAlert from '../GlobalAlert';
 import StyledButton from '../StyledButton';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 
 /**
@@ -159,7 +158,7 @@ class ReceiveRequest extends PureComponent {
 
 	render() {
 		return (
-			<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]}>
+			<SafeAreaView style={styles.wrapper}>
 				<ModalDragger />
 				<View style={styles.titleWrapper}>
 					<Text style={styles.title} testID={'receive-request-screen'}>
@@ -210,7 +209,7 @@ class ReceiveRequest extends PureComponent {
 						<Text>
 							<EthereumAddress address={this.props.selectedAddress} type={'short'} />
 						</Text>
-						<Text style={[styles.copyButton, brandStyles.copyButton]} small>
+						<Text style={styles.copyButton} small>
 							{strings('receive_request.copy')}
 						</Text>
 						<TouchableOpacity onPress={this.onShare}>
