@@ -2,8 +2,9 @@ import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import { brandStyles } from './brand';
+import { assignNestedObj } from '../../../../util/object';
 
-const index = StyleSheet.create({
+const styles = {
 	wrapper: {
 		backgroundColor: colors.white,
 		borderTopLeftRadius: 10,
@@ -48,8 +49,6 @@ const index = StyleSheet.create({
 		borderTopWidth: StyleSheet.hairlineWidth,
 		borderColor: colors.grey100
 	}
-});
+};
 
-const styles = Object.assign(index, brandStyles);
-
-export { styles };
+export default assignNestedObj(styles, brandStyles);

@@ -30,7 +30,7 @@ import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { RestoreSecretRequest } from '../../../services/Messages';
-import { styles } from './styles/index';
+import styles from './styles/index';
 
 /**
  * View that contains the list of all the available accounts
