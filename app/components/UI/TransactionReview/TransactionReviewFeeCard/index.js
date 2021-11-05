@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	nonceNumber: {
-		marginLeft: 'auto'
+		marginLeft: 'auto',
+		color: colors.fontPrimary
 	}
 });
 
@@ -182,7 +183,7 @@ class TransactionReviewFeeCard extends PureComponent {
 				</Summary>
 				{showCustomNonce && (
 					<TouchableOpacity style={styles.customNonce} onPress={onNonceEdit}>
-						<Text bold black>
+						<Text bold style={{ color: colors.fontPrimary }}>
 							{strings('transaction.custom_nonce')}
 						</Text>
 						<Text bold link>
