@@ -119,14 +119,15 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	renderSelectTypes = () => {
 		const options = this.typeOptions.map(e => ({
 			key: e.shortCode,
-			value: e.name,
-			desc: e.description,
+			value: e.description,
+			desc: '',
 			icon: e.iconUrl,
 		}));
 
 		return (
 			<ModalSelector
 				visible={this.showTypes}
+				hideKey={true}
 				options={options}
 				onSelect={(item) => {
 					this.selectedAsset = null;
@@ -167,7 +168,7 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	}
 
 	renderSelectType() {
-		const { name, iconUrl } = this.selectedType;
+		const { name, description, iconUrl } = this.selectedType;
 
 		return (
 			<View style={styles.rowWrapper}>
@@ -183,7 +184,7 @@ export default class AddCustomTokenOrApp extends PureComponent {
 						style={styles.logo}
 					/>
 					<Text style={[fontStyles.normal, styles.type]}>
-						{name}
+						{description}
 					</Text>
 					<FontAwesome
 						name={'caret-down'}
