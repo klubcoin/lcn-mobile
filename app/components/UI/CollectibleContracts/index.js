@@ -13,8 +13,7 @@ import { favoritesCollectiblesObjectSelector } from '../../../reducers/collectib
 import Text from '../../Base/Text';
 import AppConstants from '../../../core/AppConstants';
 import { toLowerCaseCompare } from '../../../util/general';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * View that renders a list of CollectibleContract
@@ -44,7 +43,7 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 		<View style={styles.footer} key={'collectible-contracts-footer'}>
 			<TouchableOpacity style={styles.add} onPress={goToAddCollectible} testID={'add-collectible-button'}>
 				<Icon name="plus" size={16} color={colors.blue} />
-				<Text style={[styles.addText, brandStyles.addText]}>{strings('wallet.add_collectibles')}</Text>
+				<Text style={styles.addText}>{strings('wallet.add_collectibles')}</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -120,7 +119,7 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 	);
 
 	return (
-		<View style={[styles.wrapper, brandStyles.wrapper]} testID={'collectible-contracts'}>
+		<View style={styles.wrapper} testID={'collectible-contracts'}>
 			{collectibles.length ? renderList() : renderEmpty()}
 			{renderFooter()}
 			{collectible && contractName && (
