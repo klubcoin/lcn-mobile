@@ -26,9 +26,9 @@ const brandStyles = StyleSheet.create({
 	identiconBorder: {
 		borderColor: colors.blue
 	},
-	colorBlue: {
+	menuItemIconImage: {
 		tintColor: colors.blue
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

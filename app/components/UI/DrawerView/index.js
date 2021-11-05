@@ -58,8 +58,7 @@ import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
 import preferences from '../../../store/preferences';
 import RemoteImage from '../../Base/RemoteImage';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
@@ -508,13 +507,7 @@ class DrawerView extends PureComponent {
 	}
 
 	getImageIcon(name) {
-		return (
-			<Image
-				source={ICON_IMAGES[name]}
-				style={[styles.menuItemIconImage, brandStyles.colorBlue]}
-				resizeMode={'contain'}
-			/>
-		);
+		return <Image source={ICON_IMAGES[name]} style={styles.menuItemIconImage} resizeMode={'contain'} />;
 	}
 
 	getSelectedIcon(name, size) {
@@ -763,7 +756,7 @@ class DrawerView extends PureComponent {
 		}
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
 		return (
-			<View style={[styles.wrapper, brandStyles.wrapper]} testID={'drawer-screen'}>
+			<View style={styles.wrapper} testID={'drawer-screen'}>
 				<ScrollView>
 					<View style={styles.header}>
 						<View style={styles.metamaskLogo}>
@@ -803,7 +796,7 @@ class DrawerView extends PureComponent {
 								onPress={this.toggleEditWalletName}
 								testID={'navbar-account-identicon'}
 							>
-								<View style={[styles.identiconBorder, brandStyles.identiconBorder]}>
+								<View style={styles.identiconBorder}>
 									{!!avatar ? (
 										<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
 									) : (
@@ -822,11 +815,7 @@ class DrawerView extends PureComponent {
 											{account.name}
 										</Text>
 									)}
-									<Icon
-										name="caret-down"
-										size={24}
-										style={[styles.caretDown, brandStyles.caretDown]}
-									/>
+									<Icon name="caret-down" size={24} style={styles.caretDown} />
 								</View>
 								{isMainNet(chainId) && (
 									<Text style={styles.accountBalance}>
@@ -837,7 +826,7 @@ class DrawerView extends PureComponent {
 								{account && (
 									<EthereumAddress
 										address={account.address}
-										style={[styles.accountAddress, brandStyles.accountAddress]}
+										style={styles.accountAddress}
 										type={'short'}
 									/>
 								)}
@@ -860,9 +849,7 @@ class DrawerView extends PureComponent {
 						>
 							<View style={styles.buttonContent}>
 								{/* {this.getIcon('paper-plane', 16, Colors.primary)} */}
-								<Text style={[styles.buttonText, brandStyles.buttonText]}>
-									{strings('drawer.send_button')}
-								</Text>
+								<Text style={styles.buttonText}>{strings('drawer.send_button')}</Text>
 							</View>
 						</StyledButton>
 						<StyledButton
@@ -873,9 +860,7 @@ class DrawerView extends PureComponent {
 						>
 							<View style={styles.buttonContent}>
 								{/* {this.getIcon('dollar', 16, Colors.primary)} */}
-								<Text style={[styles.buttonText, brandStyles.buttonText]}>
-									{strings('drawer.receive_button')}
-								</Text>
+								<Text style={styles.buttonText}>{strings('drawer.receive_button')}</Text>
 							</View>
 						</StyledButton>
 					</View>
@@ -923,7 +908,6 @@ class DrawerView extends PureComponent {
 													<Text
 														style={[
 															styles.menuItemName,
-															brandStyles.menuItemName,
 															!item.icon ? styles.noIcon : null,
 															item.routeNames && item.routeNames.includes(currentRoute)
 																? styles.selectedName
