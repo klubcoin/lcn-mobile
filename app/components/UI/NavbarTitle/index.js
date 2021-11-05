@@ -7,8 +7,7 @@ import Networks from '../../../util/networks';
 import { toggleNetworkModal } from '../../../actions/modals';
 import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * UI PureComponent that renders inside the navbar
@@ -79,13 +78,13 @@ class NavbarTitle extends PureComponent {
 				testID={'open-networks-button'}
 			>
 				{title ? (
-					<Text numberOfLines={1} style={[styles.title, brandStyles.title]}>
+					<Text numberOfLines={1} style={styles.title}>
 						{realTitle}
 					</Text>
 				) : null}
 				<View style={styles.network}>
 					<View style={[styles.networkIcon, color ? { backgroundColor: color } : styles.otherNetworkIcon]} />
-					<Text style={[styles.networkName, brandStyles.networkName]} testID={'navbar-title-network'}>
+					<Text style={styles.networkName} testID={'navbar-title-network'}>
 						{name}
 					</Text>
 				</View>
