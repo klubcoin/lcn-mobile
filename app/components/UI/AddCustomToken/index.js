@@ -8,8 +8,7 @@ import { isValidAddress } from 'ethereumjs-util';
 import ActionView from '../ActionView';
 import { isSmartContractAddress } from '../../../util/transactions';
 import AnalyticsV2 from '../../../util/analyticsV2';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * Copmonent that provides ability to add custom tokens.

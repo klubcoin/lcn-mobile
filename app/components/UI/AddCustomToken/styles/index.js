@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
-import { brandStyles } from './brand';
+import { assignNestedObj } from '../../../../util/object';
+import brandStyles from './brand';
 
-const index = StyleSheet.create({
+const styles = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.white,
 		flex: 1
@@ -28,6 +29,4 @@ const index = StyleSheet.create({
 	}
 });
 
-const styles = Object.assign(index, brandStyles);
-
-export { styles };
+export default assignNestedObj(styles, brandStyles);
