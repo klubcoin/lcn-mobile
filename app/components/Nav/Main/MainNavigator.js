@@ -70,6 +70,9 @@ import StorageStatistic from '../../Views/FilesManager/StorageStatistic';
 import Notifications from '../../Views/Notifications';
 import Message from '../../Views/Message';
 import Chat from '../../Views/Message/Chat';
+import MarketPlace from '../../Views/MarketPlace';
+import MarketCategory from '../../Views/MarketPlace/Category';
+import MarketApp from '../../Views/MarketPlace/Application';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -176,6 +179,21 @@ export default createStackNavigator(
 						tabBarVisible: false
 					})
 				}
+			)
+		},
+		MarketPlace: {
+			screen: createStackNavigator(
+				{
+					MarketPlace: {
+						screen: MarketPlace
+					},
+					MarketCategory: {
+						screen: MarketCategory
+					},
+					MarketApp: {
+						screen: MarketApp
+					}
+				},
 			)
 		},
 		Webview: {
