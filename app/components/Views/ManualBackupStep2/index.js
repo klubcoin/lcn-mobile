@@ -11,8 +11,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Device from '../../../util/Device';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * View that's shown during the fifth step of
@@ -159,7 +158,7 @@ class ManualBackupStep2 extends PureComponent {
 		const { currentIndex, confirmedWords } = this.state;
 		return (
 			<View key={`word_${i}`} style={styles.wordBoxWrapper}>
-				<Text style={brandStyles.textColor}>{i + 1}.</Text>
+				<Text style={styles.wordText}>{i + 1}.</Text>
 				<TouchableOpacity
 					// eslint-disable-next-line react/jsx-no-bind
 					onPress={() => {
@@ -168,11 +167,10 @@ class ManualBackupStep2 extends PureComponent {
 					style={[
 						styles.wordWrapper,
 						i === currentIndex && styles.currentWord,
-						confirmedWords[i].word && styles.confirmedWord,
-						brandStyles.word
+						confirmedWords[i].word && styles.confirmedWord
 					]}
 				>
-					<Text style={[styles.word, brandStyles.textColor]}>{word}</Text>
+					<Text style={styles.word}>{word}</Text>
 				</TouchableOpacity>
 			</View>
 		);
@@ -200,7 +198,7 @@ class ManualBackupStep2 extends PureComponent {
 		const half = wordLength / 2;
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+				<SafeAreaView style={styles.mainWrapper}>
 					<View style={styles.onBoardingWrapper}>
 						<OnboardingProgress currentStep={this.state.currentStep} steps={this.steps} />
 					</View>
@@ -222,8 +220,7 @@ class ManualBackupStep2 extends PureComponent {
 								style={[
 									styles.seedPhraseWrapper,
 									seedPhraseReady && styles.seedPhraseWrapperError,
-									this.validateWords() && styles.seedPhraseWrapperComplete,
-									brandStyles.seedPhraseWrapper
+									this.validateWords() && styles.seedPhraseWrapperComplete
 								]}
 							>
 								<View style={styles.colLeft}>

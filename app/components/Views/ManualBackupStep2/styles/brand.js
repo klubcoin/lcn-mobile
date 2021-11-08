@@ -6,7 +6,7 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
-	textColor: {
+	word: {
 		color: colors.white
 	},
 	loader: {
@@ -15,9 +15,12 @@ const brandStyles = StyleSheet.create({
 	seedPhraseWrapper: {
 		backgroundColor: colors.grey
 	},
-	word: {
+	wordWrapper: {
 		backgroundColor: colors.transparent
+	},
+	wordText: {
+		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
