@@ -28,6 +28,8 @@ export default class APIService {
   static apiVoteDelegations = () => APIService.routePersistenceAPI() + `LiquivoteDelegation/list`;
   static apiVoteDelegation = (uuid) => APIService.routePersistenceAPI() + `LiquivoteDelegation/${uuid}`;
 
+  static apiMarketCategories = () => APIService.routePersistenceAPI() + `LiquimartProductCategory/list`;
+
   static announcePeerOnlineStatus(peerId, callback) {
     const data = {
       peer_id: peerId,
@@ -157,4 +159,10 @@ export default class APIService {
     };
     WebService.sendPostDirect(url, data, callback);
   }
+
+  static getMarketCategories(callback) {
+    const data = { basicAuth };
+    WebService.sendPostDirect(this.apiMarketCategories(), data, callback);
+  }
+
 }
