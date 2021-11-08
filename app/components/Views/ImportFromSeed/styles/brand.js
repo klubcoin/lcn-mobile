@@ -6,13 +6,23 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
-	colorText: {
+	biometryLabel: {
+		color: colors.white
+	},
+	label: {
+		color: colors.white
+	},
+	input: {
 		color: colors.white
 	},
 	seedPhrase: {
 		backgroundColor: colors.grey,
-		borderColor: colors.white
+		borderColor: colors.white,
+		color: colors.white
+	},
+	passwordStrengthLabel: {
+		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
