@@ -12,8 +12,7 @@ import {
 	TRANSFER_FUNCTION_SIGNATURE,
 	TRANSFER_FROM_FUNCTION_SIGNATURE
 } from '../../../../util/transactions';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const LabelElement = label => (
 	<View key={label} style={styles.labelElementWrapper}>
@@ -237,7 +236,7 @@ class AddressList extends PureComponent {
 		const { processedRecentsList, contactElements } = this.state;
 		const { onlyRenderAddressBook } = this.props;
 		return (
-			<View style={[styles.root, brandStyles.root]}>
+			<View style={styles.root}>
 				<ScrollView style={styles.myAccountsWrapper}>
 					{!onlyRenderAddressBook && this.renderMyAccounts()}
 					{!onlyRenderAddressBook && processedRecentsList}
