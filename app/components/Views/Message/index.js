@@ -26,8 +26,7 @@ import MessagingWebRTC from '../../../services/MessagingWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 import { Chat } from '../../../services/Messages';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const swipeOffset = Device.getDeviceWidth() / 4;
 
@@ -132,7 +131,7 @@ class Message extends Component {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-				<View style={[styles.standaloneRowFront, brandStyles.standaloneRowFront]}>
+				<View style={styles.standaloneRowFront}>
 					<MessageItem
 						recipient={item}
 						onItemPress={() => this.gotoChatRoom({ address: item.address })}

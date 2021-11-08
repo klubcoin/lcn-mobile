@@ -5,13 +5,7 @@ import Device from '../../../../util/Device';
 const brandStyles = StyleSheet.create({
 	standaloneRowFront: {
 		backgroundColor: colors.black
-	},
-	title: {
-		color: colors.white
-	},
-	subTextColor: {
-		color: colors.grey
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
