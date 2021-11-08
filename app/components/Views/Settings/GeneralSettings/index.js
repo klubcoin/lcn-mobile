@@ -20,8 +20,7 @@ import { toDataUrl } from '../../../../util/blockies.js';
 import Device from '../../../../util/Device';
 import Jazzicon from 'react-native-jazzicon';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const diameter = 40;
 const spacing = 8;
@@ -143,12 +142,10 @@ class Settings extends PureComponent {
 		} = this.props;
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView style={[styles.wrapper, brandStyles.wrapper]}>
+				<ScrollView style={styles.wrapper}>
 					<View style={styles.inner}>
 						<View style={[styles.setting, styles.firstSetting]}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.conversion_title')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.conversion_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.conversion_desc')}</Text>
 							<View style={styles.picker}>
 								<SelectComponent
@@ -160,9 +157,7 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.primary_currency_title')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.primary_currency_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.primary_currency_desc')}</Text>
 							<View style={styles.simplePicker}>
 								{this.primaryCurrencyOptions && (
@@ -178,9 +173,7 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.current_language')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.current_language')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.language_desc')}</Text>
 							<View style={styles.picker}>
 								{this.languageOptions && (
@@ -194,9 +187,7 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.search_engine')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.search_engine')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.engine_desc')}</Text>
 							<View style={styles.picker}>
 								{this.searchEngineOptions && (
@@ -210,9 +201,7 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.hide_zero_balance_tokens_title')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.hide_zero_balance_tokens_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.hide_zero_balance_tokens_desc')}</Text>
 							<View style={styles.marginTop}>
 								<Switch
@@ -224,22 +213,14 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.accounts_identicon_title')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.accounts_identicon_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.accounts_identicon_desc')}</Text>
 							<View style={styles.identicon_container}>
 								<TouchableOpacity onPress={() => setUseBlockieIcon(false)} style={styles.identicon_row}>
 									<View style={[styles.border, !useBlockieIcon && styles.selected]}>
 										<Jazzicon size={diameter} address={selectedAddress} />
 									</View>
-									<Text
-										style={[
-											styles.identicon_type,
-											brandStyles.identicon_type,
-											!useBlockieIcon && styles.selected_text
-										]}
-									>
+									<Text style={[styles.identicon_type, !useBlockieIcon && styles.selected_text]}>
 										{strings('app_settings.jazzicons')}
 									</Text>
 								</TouchableOpacity>
@@ -247,13 +228,7 @@ class Settings extends PureComponent {
 									<View style={[styles.border, useBlockieIcon && styles.selected]}>
 										<Image source={{ uri: toDataUrl(selectedAddress) }} style={styles.blockie} />
 									</View>
-									<Text
-										style={[
-											styles.identicon_type,
-											brandStyles.identicon_type,
-											useBlockieIcon && styles.selected_text
-										]}
-									>
+									<Text style={[styles.identicon_type, useBlockieIcon && styles.selected_text]}>
 										{strings('app_settings.blockies')}
 									</Text>
 								</TouchableOpacity>
