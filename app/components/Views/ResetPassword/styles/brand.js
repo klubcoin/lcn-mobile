@@ -6,9 +6,9 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
-	textColor: {
+	confirm_input: {
 		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

@@ -42,8 +42,7 @@ import NotificationManager from '../../../core/NotificationManager';
 import { syncPrefs } from '../../../util/sync';
 import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 const RESET_PASSWORD = 'reset_password';
@@ -408,7 +407,7 @@ class ResetPassword extends PureComponent {
 							) : (
 								<>
 									<TextInput
-										style={[styles.confirm_input, brandStyles.textColor]}
+										style={styles.confirm_input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
 										onChangeText={this.onPasswordChange}
@@ -584,10 +583,10 @@ class ResetPassword extends PureComponent {
 		if (!ready) return this.renderLoader();
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+				<SafeAreaView style={styles.mainWrapper}>
 					<ScrollView
 						contentContainerStyle={styles.scrollviewWrapper}
-						style={[styles.mainWrapper, brandStyles.mainWrapper]}
+						style={styles.mainWrapper}
 						testID={'account-backup-step-4-screen'}
 					>
 						{view === RESET_PASSWORD ? this.renderResetPassword() : this.renderConfirmPassword()}
