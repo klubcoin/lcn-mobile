@@ -3,7 +3,7 @@ import Device from '../../../../util/Device';
 import { colors, fontStyles } from '../../../../styles/common';
 
 const brandStyles = StyleSheet.create({
-	text: {
+	title: {
 		color: colors.fontPrimary
 	},
 	createWrapper: {
@@ -12,7 +12,10 @@ const brandStyles = StyleSheet.create({
 	image: {
 		alignSelf: 'center',
 		width: 200
+	},
+	buttonDescription: {
+		color: colors.fontPrimary
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

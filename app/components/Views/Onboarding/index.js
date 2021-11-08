@@ -51,8 +51,7 @@ import {
 	METRICS_OPT_IN,
 	TRUE
 } from '../../../constants/storage';
-import { styles } from './styles';
-import { brandStyles } from './styles/brand';
+import styles from './styles';
 import { displayName } from '../../../../app.json';
 
 const PUB_KEY = process.env.MM_PUBNUB_PUB_KEY;
@@ -490,16 +489,16 @@ class Onboarding extends PureComponent {
 			<View style={styles.ctas}>
 				<Image
 					source={require('../../../images/klubcoin_text.png')}
-					style={[styles.image, brandStyles.image]}
+					style={styles.image}
 					resizeMode={'contain'}
 				/>
-				<Text style={[styles.title, brandStyles.text]} testID={'onboarding-screen-title'}>
+				<Text style={styles.title} testID={'onboarding-screen-title'}>
 					{strings('onboarding.title')}
 				</Text>
 				<View style={styles.importWrapper}>
-					<Text style={[styles.buttonDescription, brandStyles.text]}>{strings('onboarding.import')}</Text>
+					<Text style={styles.buttonDescription}>{strings('onboarding.import')}</Text>
 				</View>
-				<View style={[styles.createWrapper, brandStyles.createWrapper]}>
+				<View style={styles.createWrapper}>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							type={'normal'}
