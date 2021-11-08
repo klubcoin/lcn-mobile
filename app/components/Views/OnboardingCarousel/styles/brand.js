@@ -34,7 +34,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-const onboarding_carousel = require('../../../../images/klubcoin_lighten.png'); // eslint-disable-line
-const brandImgs = [onboarding_carousel, onboarding_carousel, onboarding_carousel];
-
-export { brandStyles, brandImgs };
+export default brandStyles;

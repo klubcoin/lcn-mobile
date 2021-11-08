@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import Device from '../../../../util/Device';
 import { colors, fontStyles, baseStyles } from '../../../../styles/common';
-import brandStyles from '../../../UI/NavbarTitle/styles/brand';
+import brandStyles from './brand';
 import { assignNestedObj } from '../../../../util/object';
 
 const IMAGE_3_RATIO = 215 / 315;
@@ -96,6 +96,6 @@ const explain_backup_seedphrase = require('../../../../images/explain-backup-see
 const onboarding_carousel_klubcoin = require('../../../../images/klubcoin_lighten.png'); // eslint-disable-line
 
 const carousel_images = [onboarding_carousel_klubcoin, onboarding_carousel_klubcoin, onboarding_carousel_klubcoin];
-const styles = assignNestedObj(styles, brandStyles);
+const styles = assignNestedObj(index, brandStyles);
 
 export { styles, carousel_images };
