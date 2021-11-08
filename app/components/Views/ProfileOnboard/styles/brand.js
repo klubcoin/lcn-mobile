@@ -14,7 +14,7 @@ const brandStyles = StyleSheet.create({
 			height: 1
 		}
 	},
-	shadowStyle: {
+	avatarView: {
 		shadowColor: colors.blue,
 		shadowOpacity: 0.7,
 		shadowRadius: 10,
@@ -24,4 +24,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

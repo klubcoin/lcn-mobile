@@ -18,8 +18,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import Device from '../../../util/Device';
 import Toast from 'react-native-toast-message';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
@@ -93,7 +92,7 @@ class ProfileOnboard extends PureComponent {
 						<View style={styles.body}>
 							<TouchableOpacity
 								activeOpacity={0.5}
-								style={[styles.avatarView, brandStyles.shadowStyle]}
+								style={styles.avatarView}
 								onPress={() => this.onPickImage()}
 							>
 								<RemoteImage
@@ -104,7 +103,7 @@ class ProfileOnboard extends PureComponent {
 
 							<View style={styles.form}>
 								<TextInput
-									style={[styles.textInput, brandStyles.textInput]}
+									style={styles.textInput}
 									value={this.firstname}
 									placeholder={strings('profile.firstname')}
 									placeholderTextColor={colors.grey300}
@@ -112,7 +111,7 @@ class ProfileOnboard extends PureComponent {
 								/>
 
 								<TextInput
-									style={[styles.textInput, brandStyles.textInput]}
+									style={styles.textInput}
 									value={this.lastname}
 									placeholder={strings('profile.lastname')}
 									placeholderTextColor={colors.grey300}
