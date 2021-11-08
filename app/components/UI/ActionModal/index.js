@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { strings } from '../../../../locales/i18n';
 import ActionContent from './ActionContent';
+import { colors } from '../../../styles/common';
 
 const styles = StyleSheet.create({
 	modal: {
@@ -48,6 +49,7 @@ export default function ActionModal({
 			onSwipeComplete={onRequestClose}
 			swipeDirection={'down'}
 			propagateSwipe={propagateSwipe}
+			backdropColor={colors.overlayColor}
 		>
 			<ActionContent
 				cancelTestID={cancelTestID}

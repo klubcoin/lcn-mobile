@@ -11,6 +11,7 @@ import SharedDeeplinkManager from '../../../core/DeeplinkManager';
 import AppConstants from '../../../core/AppConstants';
 import { failedSeedPhraseRequirements, isValidMnemonic } from '../../../util/validators';
 import Engine from '../../../core/Engine';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	container: {
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const frameImage = require('../../../images/frame.png'); // eslint-disable-line import/no-commonjs
+const frameImage = require('../../../images/frame.png');
 
 /**
  * View that wraps the QR code scanner screen
@@ -92,7 +93,7 @@ export default class QrScanner extends PureComponent {
 		if (content.includes('lcn_ord:')) {
 			this.shouldReadBarCode = false;
 			data = {
-				orderId: content.replace('lcn_ord:', ''),
+				orderId: content.replace('lcn_ord:', '')
 			};
 		} else if (content.split('metamask-sync:').length > 1) {
 			this.shouldReadBarCode = false;
@@ -104,7 +105,10 @@ export default class QrScanner extends PureComponent {
 				this.mounted = false;
 				this.props.navigation.goBack();
 			} else {
-				Alert.alert(strings('qr_scanner.error'), strings('qr_scanner.attempting_sync_from_wallet_error'));
+				Alert.alert(
+					strings('qr_scanner.error'),
+					strings('qr_scanner.attempting_sync_from_wallet_error', { appName: displayName })
+				);
 				this.mounted = false;
 				this.props.navigation.goBack();
 			}

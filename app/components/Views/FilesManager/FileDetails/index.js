@@ -7,6 +7,8 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import TextSpan from '../components/TextSpan';
 import PartItem from '../components/PartItem';
 import { strings } from '../../../../../locales/i18n';
+import styles from './styles/index';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
 const statuses = {
 	success: 'SUCCESS',
@@ -155,44 +157,16 @@ export default class FileDetails extends Component {
 
 	render() {
 		return (
-			<SafeAreaView>
-				<ScrollView style={{ width: '100%' }}>
-					<View style={styles.fileContainer}>
-						{this.renderSummary()}
-						{this.renderDetails()}
-					</View>
-				</ScrollView>
-			</SafeAreaView>
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView>
+					<ScrollView style={{ width: '100%' }}>
+						<View style={styles.fileContainer}>
+							{this.renderSummary()}
+							{this.renderDetails()}
+						</View>
+					</ScrollView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	fileContainer: {
-		flex: 1,
-		flexDirection: 'column',
-		alignItems: 'center',
-		paddingVertical: 15,
-		paddingHorizontal: 30
-	},
-	fileName: {
-		fontSize: 18,
-		fontWeight: '600',
-		marginLeft: 10
-	},
-	percent: {
-		fontSize: 14,
-		fontWeight: '500'
-	},
-	listContainer: {
-		flex: 1,
-		width: '100%',
-		marginTop: 30,
-		alignItems: 'flex-start'
-	},
-	title: {
-		fontSize: 16,
-		fontWeight: '500',
-		marginBottom: 5
-	}
-});

@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Alert from '../../Base/Alert';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Text from '../../Base/Text';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	root: {
@@ -264,11 +265,11 @@ const AddCustomNetwork = ({ customNetworkInformation, currentPageInformation, on
 				{strings('add_custom_network.title')}
 			</Text>
 			<Text primary centered noMargin style={styles.warning}>
-				{strings('add_custom_network.warning')}
+				{strings('add_custom_network.warning', { appName: displayName })}
 			</Text>
 			<Text primary centered noMargin style={styles.warningSubtext}>
 				<Text primary bold noMargin>
-					{strings('add_custom_network.warning_subtext_1')}
+					{strings('add_custom_network.warning_subtext_1', { appName: displayName })}
 				</Text>{' '}
 				{strings('add_custom_network.warning_subtext_2')}
 				<Text primary link noMargin onPress={openHowToUseCustomNetworks}>

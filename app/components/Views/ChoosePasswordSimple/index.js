@@ -23,6 +23,7 @@ import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import zxcvbn from 'zxcvbn';
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -228,7 +229,9 @@ class ChoosePasswordSimple extends PureComponent {
 						<View testID={'create-password-screen'}>
 							<View style={styles.content}>
 								<View style={styles.text}>
-									<Text style={styles.subtitle}>{strings('choose_password.subtitle')}</Text>
+									<Text style={styles.subtitle}>
+										{strings('choose_password.subtitle', { appName: displayName })}
+									</Text>
 								</View>
 							</View>
 							<View style={styles.field}>

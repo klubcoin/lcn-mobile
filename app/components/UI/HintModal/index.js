@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
 	recovery: {
 		fontSize: 18,
 		...fontStyles.bold,
-		color: colors.fontPrimary
+		color: colors.black
 	},
 	leaveHint: {
 		fontSize: 14,
 		...fontStyles.regular,
-		color: colors.fontPrimary,
+		color: colors.black,
 		marginBottom: 16
 	},
 	noSeedphrase: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 const HintModal = ({ onCancel, onConfirm, modalVisible, onRequestClose, value, onChangeText }) => (
 	<ActionModal
 		confirmText={strings('manual_backup_step_3.save')}
-		confirmButtonMode={'confirm'}
+		confirmButtonMode={'info'}
 		onCancelPress={onCancel}
 		onConfirmPress={onConfirm}
 		modalVisible={modalVisible}

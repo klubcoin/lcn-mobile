@@ -6,14 +6,14 @@
  * Map of color names to HEX values
  */
 export const colors = {
-	fontPrimary: '#000000',
+	fontPrimary: '#FFFFFF',
 	fontSecondary: '#777777',
 	fontTertiary: '#AAAAAA',
 	fontError: '#D73A49',
 	fontWarning: '#f66a0a',
 	primaryFox: '#370e75',
 	primaryFox100: 'rgba(55, 14, 117, 0.1)',
-	black: '#24292E',
+	black: '#000000',
 	white: '#FFFFFF',
 	white100: '#F9FAFB',
 	grey450: '#8E8E93',
@@ -28,10 +28,11 @@ export const colors = {
 	grey000: '#f2f3f4',
 	greytransparent: 'rgba(36, 41, 46, 0.6)',
 	greytransparent100: 'rgba(115, 115, 115, 0.5)',
-	grey: '#333333',
+	grey: '#1e1e1e',
 	red: '#D73A49',
 	red000: '#fcf2f3',
-	blue: '#370e75',
+	blue: '#00b9fe',
+	borderBlue: '#35a7d1',
 	blue000: '#370e75',
 	blue200: '#370e75',
 	blue500: '#370e75',
@@ -64,7 +65,8 @@ export const colors = {
 	excelColor: '#237e4c',
 	pdfColor: '#b30d02',
 	pptColor: '#d04523',
-	mediaIcColor: '#28afea'
+	mediaIcColor: '#28afea',
+	overlayColor: 'rgba(0, 127, 174, 0.7)'
 };
 
 /**

@@ -28,107 +28,8 @@ import PreventScreenshot from '../../../core/PreventScreenshot';
 import { BIOMETRY_CHOICE } from '../../../constants/storage';
 import LoginWithKeycloak from '../LoginWithKeycloak';
 import preferences from '../../../store/preferences';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	header: {
-		borderBottomColor: colors.grey400,
-		borderBottomWidth: 1,
-		...fontStyles.normal
-	},
-	seedPhrase: {
-		backgroundColor: colors.white,
-		marginTop: 10,
-		paddingBottom: 20,
-		paddingLeft: 20,
-		paddingRight: 20,
-		borderColor: colors.grey400,
-		borderBottomWidth: 1,
-		fontSize: 20,
-		textAlign: 'center',
-		color: colors.black,
-		...fontStyles.normal
-	},
-	seedPhraseView: {
-		borderRadius: 10,
-		borderWidth: 1,
-		borderColor: colors.grey400,
-		marginTop: 10,
-		alignItems: 'center'
-	},
-	privateCredentialAction: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	rowWrapper: {
-		padding: 20
-	},
-	warningWrapper: {
-		backgroundColor: colors.red000
-	},
-	warningRowWrapper: {
-		flex: 1,
-		flexDirection: 'row',
-		alignContent: 'center',
-		alignItems: 'center'
-	},
-	warningText: {
-		marginTop: 10,
-		color: colors.red,
-		...fontStyles.normal
-	},
-	input: {
-		borderWidth: 2,
-		borderRadius: 5,
-		borderColor: colors.grey000,
-		padding: 10
-	},
-	icon: {
-		margin: 10,
-		color: colors.red
-	},
-	actionIcon: {
-		margin: 10,
-		color: colors.blue
-	},
-	actionText: {
-		color: colors.blue
-	},
-	warningMessageText: {
-		marginLeft: 10,
-		marginRight: 40,
-		...fontStyles.normal
-	},
-	enterPassword: {
-		marginBottom: 15
-	},
-	tabContent: {
-		padding: 20
-	},
-	qrCodeWrapper: {
-		marginTop: 20,
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	tabUnderlineStyle: {
-		height: 2,
-		backgroundColor: colors.blue
-	},
-	tabStyle: {
-		paddingBottom: 0,
-		backgroundColor: colors.beige
-	},
-	textStyle: {
-		fontSize: 12,
-		letterSpacing: 0.5,
-		...fontStyles.bold
-	}
-});
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const WRONG_PASSWORD_ERROR = 'Error: Decrypt failed';
 
@@ -236,13 +137,13 @@ class RevealPrivateCredential extends PureComponent {
 		}
 	}
 
-	tryUnlock = (hash) => {
+	tryUnlock = hash => {
 		const { password } = this.state;
 		hash = typeof hash === 'string' ? hash : '';
 		this.tryUnlockWithPassword(hash || password);
 	};
 
-	onKeycloakResult = async (error) => {
+	onKeycloakResult = async error => {
 		if (!error) {
 			const hash = await preferences.getKeycloakHash();
 			this.tryUnlock(hash);
@@ -273,7 +174,7 @@ class RevealPrivateCredential extends PureComponent {
 				underlineStyle={styles.tabUnderlineStyle}
 				activeTextColor={colors.blue}
 				inactiveTextColor={colors.fontTertiary}
-				backgroundColor={colors.white}
+				backgroundColor={colors.transparent}
 				tabStyle={styles.tabStyle}
 				textStyle={styles.textStyle}
 			/>
@@ -287,71 +188,77 @@ class RevealPrivateCredential extends PureComponent {
 			this.props.privateCredentialName || this.props.navigation.state.params.privateCredentialName;
 
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'reveal-private-credential-screen'}>
-				<ActionView
-					cancelText={strings('reveal_credential.cancel')}
-					confirmText={strings('reveal_credential.confirm')}
-					onCancelPress={this.cancel}
-					testID={`next-button`}
-					onConfirmPress={this.tryUnlock}
-					showConfirmButton={!unlocked}
-				>
-					<View>
-						<View style={[styles.rowWrapper, styles.header]}>
-							<Text>{strings(`reveal_credential.${privateCredentialName}_explanation`)}</Text>
-						</View>
-						<View style={styles.warningWrapper}>
-							<View style={[styles.rowWrapper, styles.warningRowWrapper]}>
-								<Icon style={styles.icon} name="warning" size={22} />
-								<Text style={styles.warningMessageText}>
-									{strings(`reveal_credential.${privateCredentialName}_warning_explanation`)}
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.wrapper} testID={'reveal-private-credential-screen'}>
+					<ActionView
+						cancelText={strings('reveal_credential.cancel')}
+						confirmText={strings('reveal_credential.confirm')}
+						onCancelPress={this.cancel}
+						testID={`next-button`}
+						onConfirmPress={this.tryUnlock}
+						showConfirmButton={!unlocked}
+					>
+						<View>
+							<View style={[styles.rowWrapper, styles.header]}>
+								<Text style={styles.label}>
+									{strings(`reveal_credential.${privateCredentialName}_explanation`)}
 								</Text>
 							</View>
-						</View>
+							<View style={styles.warningWrapper}>
+								<View style={[styles.rowWrapper, styles.warningRowWrapper]}>
+									<Icon style={styles.icon} name="warning" size={22} />
+									<Text style={styles.warningMessageText}>
+										{strings(`reveal_credential.${privateCredentialName}_warning_explanation`)}
+									</Text>
+								</View>
+							</View>
 
-						<View style={styles.rowWrapper}>
-							{unlocked ? (
-								<ScrollableTabView renderTabBar={this.renderTabBar}>
-									<View tabLabel={strings(`reveal_credential.text`)} style={styles.tabContent}>
-										<Text>{strings(`reveal_credential.${privateCredentialName}`)}</Text>
-										<View style={styles.seedPhraseView}>
-											<TextInput
-												value={privateCredential}
-												numberOfLines={3}
-												multiline
-												selectTextOnFocus
-												style={styles.seedPhrase}
-												editable={false}
-												testID={'private-credential-text'}
-											/>
-											<TouchableOpacity
-												style={styles.privateCredentialAction}
-												onPress={this.copyPrivateCredentialToClipboard}
-												testID={'private-credential-touchable'}
-											>
-												<Icon style={styles.actionIcon} name="copy" size={18} />
-												<Text style={styles.actionText}>
-													{strings('reveal_credential.copy_to_clipboard')}
-												</Text>
-											</TouchableOpacity>
+							<View style={styles.rowWrapper}>
+								{unlocked ? (
+									<ScrollableTabView renderTabBar={this.renderTabBar}>
+										<View tabLabel={strings(`reveal_credential.text`)} style={styles.tabContent}>
+											<Text style={styles.label}>
+												{strings(`reveal_credential.${privateCredentialName}`)}
+											</Text>
+											<View style={styles.seedPhraseView}>
+												<TextInput
+													value={privateCredential}
+													numberOfLines={3}
+													multiline
+													selectTextOnFocus
+													style={styles.seedPhrase}
+													editable={false}
+													testID={'private-credential-text'}
+												/>
+												<TouchableOpacity
+													style={styles.privateCredentialAction}
+													onPress={this.copyPrivateCredentialToClipboard}
+													testID={'private-credential-touchable'}
+												>
+													<Icon style={styles.actionIcon} name="copy" size={18} />
+													<Text style={styles.actionText}>
+														{strings('reveal_credential.copy_to_clipboard')}
+													</Text>
+												</TouchableOpacity>
+											</View>
 										</View>
-									</View>
-									<View tabLabel={strings(`reveal_credential.qr_code`)} style={styles.tabContent}>
-										<View style={styles.qrCodeWrapper}>
-											<QRCode
-												value={privateCredential}
-												size={Dimensions.get('window').width - 160}
-											/>
+										<View tabLabel={strings(`reveal_credential.qr_code`)} style={styles.tabContent}>
+											<View style={styles.qrCodeWrapper}>
+												<QRCode
+													value={privateCredential}
+													size={Dimensions.get('window').width - 160}
+												/>
+											</View>
 										</View>
-									</View>
-								</ScrollableTabView>
-							) : keycloakAuth ?
-								<LoginWithKeycloak
-									type={'sign'}
-									label={strings('reveal_credential.confirm_password')}
-									onSuccess={this.onKeycloakResult}
-									onError={this.onKeycloakResult}
-								/> : (
+									</ScrollableTabView>
+								) : keycloakAuth ? (
+									<LoginWithKeycloak
+										type={'sign'}
+										label={strings('reveal_credential.confirm_password')}
+										onSuccess={this.onKeycloakResult}
+										onError={this.onKeycloakResult}
+									/>
+								) : (
 									<View>
 										<Text style={styles.enterPassword}>
 											{strings('reveal_credential.enter_password')}
@@ -370,10 +277,11 @@ class RevealPrivateCredential extends PureComponent {
 										</Text>
 									</View>
 								)}
+							</View>
 						</View>
-					</View>
-				</ActionView>
-			</SafeAreaView>
+					</ActionView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	};
 }
@@ -381,7 +289,7 @@ class RevealPrivateCredential extends PureComponent {
 const mapStateToProps = state => ({
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	passwordSet: state.user.passwordSet,
-	keycloakAuth: state.user.keycloakAuth,
+	keycloakAuth: state.user.keycloakAuth
 });
 
 const mapDispatchToProps = dispatch => ({

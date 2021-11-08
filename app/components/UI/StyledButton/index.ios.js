@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { ViewPropTypes, Text } from 'react-native';
 import Button from 'react-native-button';
-import getStyles from './styledButtonStyles';
-
+import getStyles from './styles/index';
+import { styles } from './styles/brand';
 /**
  * UI component that renders a styled button
  * for iOS devices
@@ -61,6 +61,10 @@ export default class StyledButton extends PureComponent {
 		disabledContainerStyle: { opacity: 0.6 }
 	};
 
+	capitalizeFirstLetter = string => {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	};
+
 	render = () => {
 		const {
 			type,
@@ -75,6 +79,12 @@ export default class StyledButton extends PureComponent {
 		} = this.props;
 		const { fontStyle, containerStyle } = getStyles(type);
 
+		const typeArr = type.split('-');
+		typeArr.forEach((element, index) => {
+			if (typeArr.indexOf(element) != 0) typeArr[index] = this.capitalizeFirstLetter(element);
+		});
+		const formattedTypes = typeArr.join('');
+
 		return (
 			<Button
 				testID={testID}
@@ -83,8 +93,8 @@ export default class StyledButton extends PureComponent {
 				disabledContainerStyle={disabled ? disabledContainerStyle : null}
 				onPress={onPress}
 				onPressOut={onPressOut}
-				style={[...fontStyle, style]}
-				containerStyle={[...containerStyle, this.props.containerStyle]}
+				style={[...fontStyle, styles[`${formattedTypes}Text`], style]}
+				containerStyle={[...containerStyle, styles[formattedTypes], this.props.containerStyle]}
 			>
 				{children}
 			</Button>

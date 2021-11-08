@@ -25,6 +25,8 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { clearOnboardingEvents } from '../../../actions/onboarding';
 import { ONBOARDING_WIZARD, METRICS_OPT_IN, DENIED, AGREED } from '../../../constants/storage';
 import AppConstants from '../../../core/AppConstants';
+import { displayName } from '../../../../app.json';
+import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	root: {
@@ -47,18 +49,18 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		...fontStyles.bold,
-		color: colors.black,
+		color: colors.fontPrimary,
 		fontSize: 22
 	},
 	description: {
 		...fontStyles.normal,
-		color: colors.black,
+		color: colors.fontPrimary,
 		flex: 1
 	},
 	content: {
 		...fontStyles.normal,
 		fontSize: 14,
-		color: colors.black,
+		color: colors.fontPrimary,
 		paddingVertical: 10
 	},
 	wrapper: {
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
 	privacyPolicy: {
 		...fontStyles.normal,
 		fontSize: 14,
-		color: colors.grey400,
+		color: colors.grey300,
 		marginTop: 10
 	},
 	link: {
@@ -233,36 +235,44 @@ class OptinMetrics extends PureComponent {
 
 	render() {
 		return (
-			<SafeAreaView style={styles.root} testID={'metaMetrics-OptIn'}>
-				<ScrollView style={styles.root}>
-					<View style={styles.wrapper}>
-						<Text style={styles.title}>{strings('privacy_policy.description_title')}</Text>
-						<Text style={styles.content}>{strings('privacy_policy.description_content_1')}</Text>
-						<Text style={styles.content}>{strings('privacy_policy.description_content_2')}</Text>
-						{this.actionsList.map((action, i) => this.renderAction(action, i))}
-						{this.renderPrivacyPolicy()}
-					</View>
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.root} testID={'metaMetrics-OptIn'}>
+					<ScrollView style={styles.root}>
+						<View style={styles.wrapper}>
+							<Text style={styles.title}>
+								{strings('privacy_policy.description_title', { appName: displayName })}
+							</Text>
+							<Text style={styles.content}>
+								{strings('privacy_policy.description_content_1', { appName: displayName })}
+							</Text>
+							<Text style={styles.content}>
+								{strings('privacy_policy.description_content_2', { appName: displayName })}
+							</Text>
+							{this.actionsList.map((action, i) => this.renderAction(action, i))}
+							{this.renderPrivacyPolicy()}
+						</View>
 
-					<View style={styles.actionContainer}>
-						<StyledButton
-							containerStyle={[styles.button, styles.cancel]}
-							type={'cancel'}
-							onPress={this.onCancel}
-							testID={'cancel-button'}
-						>
-							{strings('privacy_policy.decline')}
-						</StyledButton>
-						<StyledButton
-							containerStyle={[styles.button, styles.confirm]}
-							type={'confirm'}
-							onPress={this.onConfirm}
-							testID={'agree-button'}
-						>
-							{strings('privacy_policy.agree')}
-						</StyledButton>
-					</View>
-				</ScrollView>
-			</SafeAreaView>
+						<View style={styles.actionContainer}>
+							<StyledButton
+								containerStyle={[styles.button, styles.cancel]}
+								type={'cancel'}
+								onPress={this.onCancel}
+								testID={'cancel-button'}
+							>
+								{strings('privacy_policy.decline')}
+							</StyledButton>
+							<StyledButton
+								containerStyle={[styles.button, styles.confirm]}
+								type={'confirm'}
+								onPress={this.onConfirm}
+								testID={'agree-button'}
+							>
+								{strings('privacy_policy.agree')}
+							</StyledButton>
+						</View>
+					</ScrollView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }

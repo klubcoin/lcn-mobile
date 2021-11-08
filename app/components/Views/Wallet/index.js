@@ -1,5 +1,13 @@
 import React, { PureComponent } from 'react';
-import { RefreshControl, ScrollView, InteractionManager, ActivityIndicator, StyleSheet, View } from 'react-native';
+import {
+	RefreshControl,
+	ScrollView,
+	InteractionManager,
+	ActivityIndicator,
+	StyleSheet,
+	View,
+	ImageBackground
+} from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -24,31 +32,8 @@ import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import preferences from '../../../store/preferences';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	tabUnderlineStyle: {
-		height: 2,
-		backgroundColor: colors.blue
-	},
-	tabStyle: {
-		paddingBottom: 0
-	},
-	textStyle: {
-		fontSize: 12,
-		letterSpacing: 0.5,
-		...fontStyles.bold
-	},
-	loader: {
-		backgroundColor: colors.white,
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	}
-});
+import Device from '../../../util/Device';
+import styles from './styles/index';
 
 /**
  * Main view for the wallet
@@ -222,7 +207,7 @@ class Wallet extends PureComponent {
 				underlineStyle={styles.tabUnderlineStyle}
 				activeTextColor={colors.blue}
 				inactiveTextColor={colors.fontTertiary}
-				backgroundColor={colors.white}
+				backgroundColor={colors.transparent}
 				tabStyle={styles.tabStyle}
 				textStyle={styles.textStyle}
 			/>
@@ -286,21 +271,27 @@ class Wallet extends PureComponent {
 
 		return (
 			<View style={styles.wrapper}>
-				{selectedAddress && account && (
-					<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
-				)}
-				<ScrollableTabView
-					renderTabBar={this.renderTabBar}
-					// eslint-disable-next-line react/jsx-no-bind
-					onChangeTab={obj => this.onChangeTab(obj)}
+				<ImageBackground
+					source={require('../../../images/klubcoin_filigram_logo.png')}
+					style={styles.imgBackground}
+					resizeMode={'cover'}
 				>
-					<Tokens navigation={navigation} tabLabel={'LCN Tokens/Apps'} tokens={assets} />
-					{/*<CollectibleContracts
-						navigation={navigation}
-						tabLabel={strings('wallet.collectibles')}
-						collectibles={collectibles}
-					/>*/}
-				</ScrollableTabView>
+					{selectedAddress && account && (
+						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
+					)}
+					<ScrollableTabView
+						renderTabBar={this.renderTabBar}
+						// eslint-disable-next-line react/jsx-no-bind
+						onChangeTab={obj => this.onChangeTab(obj)}
+					>
+						<Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
+						<CollectibleContracts
+							navigation={navigation}
+							tabLabel={strings('wallet.collectibles')}
+							collectibles={collectibles}
+						/>
+					</ScrollableTabView>
+				</ImageBackground>
 			</View>
 		);
 	}

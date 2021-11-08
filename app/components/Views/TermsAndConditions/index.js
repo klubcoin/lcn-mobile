@@ -4,18 +4,7 @@ import PropTypes from 'prop-types';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import AppConstants from '../../../core/AppConstants';
-
-const styles = StyleSheet.create({
-	text: {
-		...fontStyles.normal,
-		color: colors.grey500,
-		textAlign: 'center',
-		fontSize: 10
-	},
-	link: {
-		textDecorationLine: 'underline'
-	}
-});
+import styles from './styles';
 
 /**
  * View that is displayed in the flow to agree terms and conditions

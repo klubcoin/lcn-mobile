@@ -89,7 +89,8 @@ import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
 const styles = StyleSheet.create({
 	flex: {
 		flex: 1,
-		marginTop: Device.isIphone12() ? 20 : 0
+		backgroundColor: colors.grey,
+		paddingTop: Device.isIos() ? 20 : 0
 	},
 	loader: {
 		backgroundColor: colors.white,
@@ -350,7 +351,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-						swapsUtils.getSwapsContractAddress(props.chainId)))
+							swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -619,7 +620,7 @@ const Main = props => {
 		}
 	};
 
-	const getPeerInfo = async (message) => {
+	const getPeerInfo = async message => {
 		const address = message.from;
 		const profile = await preferences.peerProfile(address);
 
@@ -630,11 +631,11 @@ const Main = props => {
 		}
 		// request if not yet exists
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
+		webrtc.once(`${WalletProfile().action}:${address}`, data => {
 			if (!data.profile) return true;
 			Object.assign(message.data, data.profile, { address });
 			setFriendMessage(message);
-		})
+		});
 		webrtc.sendToPeer(address, WalletProfile());
 	};
 
@@ -1015,7 +1016,7 @@ const mapDispatchToProps = dispatch => ({
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
 	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
 	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data)),
-	toggleFriendRequestQR: (visible) => dispatch(toggleFriendRequestQR(visible)),
+	toggleFriendRequestQR: visible => dispatch(toggleFriendRequestQR(visible))
 });
 
 export default connect(

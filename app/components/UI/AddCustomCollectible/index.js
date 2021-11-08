@@ -11,28 +11,7 @@ import Device from '../../../util/Device';
 import { connect } from 'react-redux';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { toLowerCaseCompare } from '../../../util/general';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	rowWrapper: {
-		padding: 20
-	},
-	textInput: {
-		borderWidth: 1,
-		borderRadius: 4,
-		borderColor: colors.grey100,
-		padding: 16,
-		...fontStyles.normal
-	},
-	warningText: {
-		marginTop: 15,
-		color: colors.red,
-		...fontStyles.normal
-	}
-});
+import styles from './styles/index';
 
 /**
  * PureComponent that provides ability to add custom collectibles.
@@ -191,7 +170,7 @@ class AddCustomCollectible extends PureComponent {
 				>
 					<View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('collectible.collectible_address')}</Text>
+							<Text style={styles.label}>{strings('collectible.collectible_address')}</Text>
 							<TextInput
 								style={[
 									styles.textInput,
@@ -210,7 +189,7 @@ class AddCustomCollectible extends PureComponent {
 							</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('collectible.collectible_token_id')}</Text>
+							<Text style={styles.label}>{strings('collectible.collectible_token_id')}</Text>
 							<TextInput
 								style={[
 									styles.textInput,

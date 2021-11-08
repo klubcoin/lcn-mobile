@@ -36,8 +36,10 @@ export default class MessageItem extends Component {
 						text: strings('chat.payment_request')
 					};
 				case TransactionSync().action: {
-					const incoming = payload.transaction && payload.transaction.from
-						&& payload.transaction.from.toLowerCase() == recipient.address.toLowerCase();
+					const incoming =
+						payload.transaction &&
+						payload.transaction.from &&
+						payload.transaction.from.toLowerCase() == recipient.address.toLowerCase();
 					return {
 						...lastMessage,
 						text: incoming ? strings('chat.received_transaction') : strings('chat.sent_transaction')
@@ -45,12 +47,19 @@ export default class MessageItem extends Component {
 				}
 				case ChatFile().action: {
 					const { type } = payload;
-					const mimeType = type.indexOf('image') == 0 ? strings('chat.image')
-						: type.indexOf('audio') == 0 ? strings('chat.audio')
-							: type.indexOf('video') == 0 ? strings('chat.video') : strings('chat.file');
+					const mimeType =
+						type.indexOf('image') == 0
+							? strings('chat.image')
+							: type.indexOf('audio') == 0
+							? strings('chat.audio')
+							: type.indexOf('video') == 0
+							? strings('chat.video')
+							: strings('chat.file');
 
-					const incoming = lastMessage.user && lastMessage.user._id
-						&& lastMessage.user._id.toLowerCase() == recipient.address.toLowerCase();
+					const incoming =
+						lastMessage.user &&
+						lastMessage.user._id &&
+						lastMessage.user._id.toLowerCase() == recipient.address.toLowerCase();
 					const action = incoming ? strings('chat.received') : strings('chat.sent');
 
 					return {
@@ -72,7 +81,7 @@ export default class MessageItem extends Component {
 
 		return (
 			<TouchableOpacity style={styles.container} onPress={onItemPress}>
-				<View style={[styles.hasMessage, !isRead && { backgroundColor: 'dodgerblue' }]} />
+				<View style={[styles.hasMessage, !isRead && { backgroundColor: colors.blue }]} />
 				{this.renderAvatar()}
 				<View style={{ flex: 3, marginHorizontal: 8 }}>
 					<Text
@@ -106,18 +115,19 @@ const styles = StyleSheet.create({
 	address: {
 		fontSize: 16,
 		fontWeight: '400',
-		maxWidth: 200
+		maxWidth: 200,
+		color: colors.fontPrimary
 	},
 	message: {
 		textAlign: 'left',
-		color: colors.grey400,
+		color: colors.grey300,
 		fontWeight: '300',
 		fontSize: 14
 	},
 	time: {
 		flex: 1,
 		marginLeft: 10,
-		color: colors.grey400,
+		color: colors.grey300,
 		fontWeight: '300',
 		fontSize: 14
 	},

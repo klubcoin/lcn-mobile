@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 		margin: 0
 	},
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.grey,
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
 		height: 450
@@ -76,7 +76,7 @@ class ModalSelector extends PureComponent {
 					icon
 				)}
 				<View>
-					<Text black style={styles.value}>
+					<Text black style={[styles.value, { color: colors.white }]}>
 						{value} {key && !hideKey ? `(${key})` : ''}
 					</Text>
 					{!!desc && (

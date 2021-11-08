@@ -18,6 +18,7 @@ import AccountList from '../../UI/AccountList';
 import StyledButton from '../../UI/StyledButton';
 import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
 import { ConfirmProfileRequest } from '../../../services/Messages';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	container: {
@@ -44,11 +45,12 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		fontSize: 24,
 		fontWeight: '600',
-		color: colors.black
+		color: colors.fontPrimary
 	},
 	email: {
 		fontSize: 18,
-		fontWeight: '600'
+		fontWeight: '600',
+		color: colors.fontPrimary
 	},
 	accounts: {
 		marginTop: 30,
@@ -134,34 +136,44 @@ class Profile extends PureComponent {
 		const { identities } = Engine.state.PreferencesController;
 
 		return (
-			<View style={styles.container}>
-				<View style={styles.body}>
-					<TouchableOpacity activeOpacity={0.5} style={styles.avatarView} onPress={() => this.onPickImage()}>
-						{avatar ? (
-							<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
-						) : (
-							<Identicon diameter={96} address={this.selectedAddress} />
-						)}
-					</TouchableOpacity>
-					<Text style={styles.name}>{name}</Text>
-					<Text style={styles.email}>{email}</Text>
-					<View style={styles.actions}>
-						<StyledButton type={'normal'} onPress={this.onRequest.bind(this)} containerStyle={{ flex: 1 }}>
-							{strings('profile.request_profile_confirmation')}
-						</StyledButton>
-					</View>
-					<View style={styles.accounts}>
-						<AccountList
-							navigation={this.props.navigation}
-							enableAccountsAddition={false}
-							enableRestoreAccount={true}
-							identities={identities}
-							selectedAddress={this.selectedAddress}
-							ticker={routes.mainNetWork.ticker}
-						/>
+			<OnboardingScreenWithBg screen="a">
+				<View style={styles.container}>
+					<View style={styles.body}>
+						<TouchableOpacity
+							activeOpacity={0.5}
+							style={styles.avatarView}
+							onPress={() => this.onPickImage()}
+						>
+							{avatar ? (
+								<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+							) : (
+								<Identicon diameter={96} address={this.selectedAddress} />
+							)}
+						</TouchableOpacity>
+						<Text style={styles.name}>{name}</Text>
+						<Text style={styles.email}>{email}</Text>
+						<View style={styles.actions}>
+							<StyledButton
+								type={'normal'}
+								onPress={this.onRequest.bind(this)}
+								containerStyle={{ flex: 1 }}
+							>
+								{strings('profile.request_profile_confirmation')}
+							</StyledButton>
+						</View>
+						<View style={styles.accounts}>
+							<AccountList
+								navigation={this.props.navigation}
+								enableAccountsAddition={false}
+								enableRestoreAccount={true}
+								identities={identities}
+								selectedAddress={this.selectedAddress}
+								ticker={routes.mainNetWork.ticker}
+							/>
+						</View>
 					</View>
 				</View>
-			</View>
+			</OnboardingScreenWithBg>
 		);
 	}
 }

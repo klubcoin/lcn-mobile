@@ -73,6 +73,8 @@ import Chat from '../../Views/Message/Chat';
 import MarketPlace from '../../Views/MarketPlace';
 import MarketCategory from '../../Views/MarketPlace/Category';
 import MarketApp from '../../Views/MarketPlace/Application';
+import Partners from '../../Views/Partners';
+import PartnerDetails from '../../Views/Partners/PartnerDetails';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -132,6 +134,12 @@ export default createStackNavigator(
 						},
 						Profile: {
 							screen: Profile
+						},
+						Partners: {
+							screen: Partners
+						},
+						PartnerDetails: {
+							screen: PartnerDetails
 						}
 					}),
 					VotingAppHome: createDrawerNavigator({
@@ -182,19 +190,17 @@ export default createStackNavigator(
 			)
 		},
 		MarketPlace: {
-			screen: createStackNavigator(
-				{
-					MarketPlace: {
-						screen: MarketPlace
-					},
-					MarketCategory: {
-						screen: MarketCategory
-					},
-					MarketApp: {
-						screen: MarketApp
-					}
+			screen: createStackNavigator({
+				MarketPlace: {
+					screen: MarketPlace
 				},
-			)
+				MarketCategory: {
+					screen: MarketCategory
+				},
+				MarketApp: {
+					screen: MarketApp
+				}
+			})
 		},
 		Webview: {
 			screen: createStackNavigator(

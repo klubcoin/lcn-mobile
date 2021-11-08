@@ -22,6 +22,7 @@ import Text from '../../../Base/Text';
 import DetailsModal from '../../../Base/DetailsModal';
 import { RPC } from '../../../../constants/network';
 import { withNavigation } from 'react-navigation';
+import { displayName } from '../../../../../app.json';
 
 const styles = StyleSheet.create({
 	viewOnEtherscan: {
@@ -249,7 +250,7 @@ class TransactionDetails extends PureComponent {
 							<Text reset style={styles.viewOnEtherscan}>
 								{(rpcBlockExplorer &&
 									`${strings('transactions.view_on')} ${getBlockExplorerName(rpcBlockExplorer)}`) ||
-									strings('transactions.view_on_etherscan')}
+									strings('transactions.view_on_etherscan', { appName: displayName })}
 							</Text>
 						</TouchableOpacity>
 					)}

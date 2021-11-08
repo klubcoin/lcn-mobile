@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
 });
 
 const { HOMEPAGE_URL } = AppConstants;
-const METAMASK_FOX = require('../../../../images/fox.png'); // eslint-disable-line import/no-commonjs
+const METAMASK_FOX = require('../../../../images/klubcoin_lighten.png');
 
 /**
  * PureComponent that renders an a thumbnail

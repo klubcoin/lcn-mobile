@@ -11,18 +11,21 @@ import Engine from '../../../core/Engine';
 import { safeToChecksumAddress } from '../../../util/address';
 import { addAccountTimeFlagFilter } from '../../../util/transactions';
 import { toLowerCaseCompare } from '../../../util/general';
-import Colors from 'common/colors'
+import Colors from 'common/colors';
+import { colors } from '../../../styles/common';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: 'white',
-		flex: 1
+		backgroundColor: colors.transparent,
+		flex: 1,
+		justifyContent: 'center'
 	},
 	assetOverviewWrapper: {
 		height: 280
 	},
 	loader: {
-		backgroundColor: 'white',
+		backgroundColor: colors.transparent,
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center'
@@ -99,7 +102,7 @@ class Asset extends PureComponent {
 	componentDidMount() {
 		this.setState({
 			loading: true
-		})
+		});
 		InteractionManager.runAfterInteractions(() => {
 			this.normalizeTransactions();
 			this.mounted = true;
@@ -257,11 +260,13 @@ class Asset extends PureComponent {
 	}
 
 	renderLoader = () => (
-		<View style={{
-			flex: 1,
-			alignItems: 'center',
-			justifyContent: 'center'
-		}}>
+		<View
+			style={{
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center'
+			}}
+		>
 			<ActivityIndicator color={Colors.primary} size="large" />
 		</View>
 	);
@@ -286,16 +291,12 @@ class Asset extends PureComponent {
 		} = this.props;
 		console.log({
 			loading
-		})
+		});
 		return (
-			<View style={styles.wrapper}>
-				{
-					loading && (
-						<ActivityIndicator color={Colors.primary} size="large" />
-					)
-				}
-				{
-					!loading && (
+			<OnboardingScreenWithBg screen="a">
+				<View style={styles.wrapper}>
+					{loading && <ActivityIndicator color={colors.blue} size="large" />}
+					{!loading && (
 						<Transactions
 							header={
 								<View style={styles.assetOverviewWrapper}>
@@ -314,10 +315,9 @@ class Asset extends PureComponent {
 							loading={!transactionsUpdated}
 							headerHeight={280}
 						/>
-					)
-				}
-					
-			</View>
+					)}
+				</View>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

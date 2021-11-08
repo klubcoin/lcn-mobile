@@ -11,83 +11,20 @@ import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { setShowCustomNonce, setShowHexData } from '../../../../actions/settings';
 import { strings } from '../../../../../locales/i18n';
 import { getApplicationName, getVersion, getBuildNumber } from 'react-native-device-info';
-import Share from 'react-native-share'; // eslint-disable-line  import/default
+import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
-// eslint-disable-next-line import/no-nodejs-modules
 import { Buffer } from 'buffer';
 import Logger from '../../../../util/Logger';
 import ipfsGateways from '../../../../util/ipfs-gateways.json';
 import SelectComponent from '../../../UI/SelectComponent';
 import { timeoutFetch } from '../../../../util/general';
 import Device from '../../../../util/Device';
+import { displayName } from '../../../../../app.json';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const HASH_TO_TEST = 'Qmaisz6NMhDB51cCvNWa1GMS7LU1pAxdF4Ld6Ft9kZEP2a';
 const HASH_STRING = 'Hello from IPFS Gateway Checker';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1,
-		padding: 24,
-		paddingBottom: 48
-	},
-	title: {
-		...fontStyles.normal,
-		color: colors.fontPrimary,
-		fontSize: 20,
-		lineHeight: 20
-	},
-	desc: {
-		...fontStyles.normal,
-		color: colors.grey500,
-		fontSize: 14,
-		lineHeight: 20,
-		marginTop: 12
-	},
-	marginTop: {
-		marginTop: 18
-	},
-	setting: {
-		marginTop: 50
-	},
-	firstSetting: {
-		marginTop: 0
-	},
-	modalView: {
-		alignItems: 'center',
-		flex: 1,
-		flexDirection: 'column',
-		justifyContent: 'center',
-		padding: 20
-	},
-	modalText: {
-		...fontStyles.normal,
-		fontSize: 16,
-		textAlign: 'center',
-		color: colors.black
-	},
-	modalTitle: {
-		...fontStyles.bold,
-		fontSize: 24,
-		textAlign: 'center',
-		marginBottom: 20,
-		color: colors.black
-	},
-	picker: {
-		borderColor: colors.grey200,
-		borderRadius: 5,
-		borderWidth: 2,
-		marginTop: 16
-	},
-	inner: {
-		paddingBottom: 48
-	},
-	ipfsGatewayLoadingWrapper: {
-		height: 37,
-		alignItems: 'center',
-		justifyContent: 'center'
-	}
-});
 
 /**
  * Main view for app configurations
@@ -229,94 +166,98 @@ class AdvancedSettings extends PureComponent {
 		const { showHexData, showCustomNonce, setShowHexData, setShowCustomNonce, ipfsGateway } = this.props;
 		const { resetModalVisible, onlineIpfsGateways } = this.state;
 		return (
-			<SafeAreaView style={baseStyles.flexGrow}>
-				<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
-					<View style={styles.inner}>
-						<ActionModal
-							modalVisible={resetModalVisible}
-							confirmText={strings('app_settings.reset_account_confirm_button')}
-							cancelText={strings('app_settings.reset_account_cancel_button')}
-							onCancelPress={this.cancelResetAccount}
-							onRequestClose={this.cancelResetAccount}
-							onConfirmPress={this.resetAccount}
-						>
-							<View style={styles.modalView}>
-								<Text style={styles.modalTitle}>
-									{strings('app_settings.reset_account_modal_title')}
-								</Text>
-								<Text style={styles.modalText}>
-									{strings('app_settings.reset_account_modal_message')}
-								</Text>
-							</View>
-						</ActionModal>
-						<View style={[styles.setting, styles.firstSetting]}>
-							<Text style={styles.title}>{strings('app_settings.reset_account')}</Text>
-							<Text style={styles.desc}>{strings('app_settings.reset_desc')}</Text>
-							<StyledButton
-								type="info"
-								onPress={this.displayResetAccountModal}
-								containerStyle={styles.marginTop}
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={baseStyles.flexGrow}>
+					<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
+						<View style={styles.inner}>
+							<ActionModal
+								modalVisible={resetModalVisible}
+								confirmText={strings('app_settings.reset_account_confirm_button')}
+								cancelText={strings('app_settings.reset_account_cancel_button')}
+								onCancelPress={this.cancelResetAccount}
+								onRequestClose={this.cancelResetAccount}
+								onConfirmPress={this.resetAccount}
 							>
-								{strings('app_settings.reset_account_button')}
-							</StyledButton>
-						</View>
-						<View style={[styles.setting]}>
-							<Text style={styles.title}>{strings('app_settings.ipfs_gateway')}</Text>
-							<Text style={styles.desc}>{strings('app_settings.ipfs_gateway_desc')}</Text>
-							<View style={styles.picker}>
-								{this.state.gotAvailableGateways ? (
-									<SelectComponent
-										selectedValue={ipfsGateway}
-										defaultValue={strings('app_settings.ipfs_gateway_down')}
-										onValueChange={this.setIpfsGateway}
-										label={strings('app_settings.ipfs_gateway')}
-										options={onlineIpfsGateways}
+								<View style={styles.modalView}>
+									<Text style={styles.modalTitle}>
+										{strings('app_settings.reset_account_modal_title')}
+									</Text>
+									<Text style={styles.modalText}>
+										{strings('app_settings.reset_account_modal_message')}
+									</Text>
+								</View>
+							</ActionModal>
+							<View style={[styles.setting, styles.firstSetting]}>
+								<Text style={styles.title}>{strings('app_settings.reset_account')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.reset_desc')}</Text>
+								<StyledButton
+									type="confirm"
+									onPress={this.displayResetAccountModal}
+									containerStyle={styles.marginTop}
+								>
+									{strings('app_settings.reset_account_button')}
+								</StyledButton>
+							</View>
+							<View style={[styles.setting]}>
+								<Text style={styles.title}>{strings('app_settings.ipfs_gateway')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.ipfs_gateway_desc')}</Text>
+								<View style={styles.picker}>
+									{this.state.gotAvailableGateways ? (
+										<SelectComponent
+											selectedValue={ipfsGateway}
+											defaultValue={strings('app_settings.ipfs_gateway_down')}
+											onValueChange={this.setIpfsGateway}
+											label={strings('app_settings.ipfs_gateway')}
+											options={onlineIpfsGateways}
+										/>
+									) : (
+										<View style={styles.ipfsGatewayLoadingWrapper}>
+											<ActivityIndicator size="small" />
+										</View>
+									)}
+								</View>
+							</View>
+							<View style={styles.setting}>
+								<Text style={styles.title}>{strings('app_settings.show_hex_data')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.hex_desc')}</Text>
+								<View style={styles.marginTop}>
+									<Switch
+										value={showHexData}
+										onValueChange={setShowHexData}
+										trackColor={Device.isIos() && { true: colors.blue, false: colors.grey000 }}
+										ios_backgroundColor={colors.grey000}
 									/>
-								) : (
-									<View style={styles.ipfsGatewayLoadingWrapper}>
-										<ActivityIndicator size="small" />
-									</View>
-								)}
+								</View>
+							</View>
+							<View style={styles.setting}>
+								<Text style={styles.title}>{strings('app_settings.show_custom_nonce')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.custom_nonce_desc')}</Text>
+								<View style={styles.marginTop}>
+									<Switch
+										value={showCustomNonce}
+										onValueChange={setShowCustomNonce}
+										trackColor={Device.isIos() && { true: colors.blue, false: colors.grey000 }}
+										ios_backgroundColor={colors.grey000}
+									/>
+								</View>
+							</View>
+							<View style={styles.setting}>
+								<Text style={styles.title}>{strings('app_settings.state_logs')}</Text>
+								<Text style={styles.desc}>
+									{strings('app_settings.state_logs_desc', { appName: displayName })}
+								</Text>
+								<StyledButton
+									type="confirm"
+									onPress={this.downloadStateLogs}
+									containerStyle={styles.marginTop}
+								>
+									{strings('app_settings.state_logs_button')}
+								</StyledButton>
 							</View>
 						</View>
-						<View style={styles.setting}>
-							<Text style={styles.title}>{strings('app_settings.show_hex_data')}</Text>
-							<Text style={styles.desc}>{strings('app_settings.hex_desc')}</Text>
-							<View style={styles.marginTop}>
-								<Switch
-									value={showHexData}
-									onValueChange={setShowHexData}
-									trackColor={Device.isIos() && { true: colors.blue, false: colors.grey000 }}
-									ios_backgroundColor={colors.grey000}
-								/>
-							</View>
-						</View>
-						<View style={styles.setting}>
-							<Text style={styles.title}>{strings('app_settings.show_custom_nonce')}</Text>
-							<Text style={styles.desc}>{strings('app_settings.custom_nonce_desc')}</Text>
-							<View style={styles.marginTop}>
-								<Switch
-									value={showCustomNonce}
-									onValueChange={setShowCustomNonce}
-									trackColor={Device.isIos() && { true: colors.blue, false: colors.grey000 }}
-									ios_backgroundColor={colors.grey000}
-								/>
-							</View>
-						</View>
-						<View style={styles.setting}>
-							<Text style={styles.title}>{strings('app_settings.state_logs')}</Text>
-							<Text style={styles.desc}>{strings('app_settings.state_logs_desc')}</Text>
-							<StyledButton
-								type="info"
-								onPress={this.downloadStateLogs}
-								containerStyle={styles.marginTop}
-							>
-								{strings('app_settings.state_logs_button')}
-							</StyledButton>
-						</View>
-					</View>
-				</KeyboardAwareScrollView>
-			</SafeAreaView>
+					</KeyboardAwareScrollView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

@@ -6,6 +6,7 @@ import StyledButton from '../../UI/StyledButton';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import URL from 'url-parse';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	warningIcon: {
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const foxImage = require('../../../images/fox.png'); // eslint-disable-line import/no-commonjs
+const foxImage = require('../../../images/klubcoin_lighten.png');
 
 export default class PhishingModal extends PureComponent {
 	static propTypes = {
@@ -115,7 +116,9 @@ export default class PhishingModal extends PureComponent {
 				<View style={styles.phishingModalContent}>
 					<View style={styles.phishingModalHeader}>
 						<Icon name="warning" size={15} style={styles.warningIcon} />
-						<Text style={styles.phishingModalTitle}>{strings('phishing.ethereum_phishing_detection')}</Text>
+						<Text style={styles.phishingModalTitle}>
+							{strings('phishing.ethereum_phishing_detection', { appName: displayName })}
+						</Text>
 					</View>
 					<ScrollView
 						style={styles.phishingModalInfo}
@@ -123,19 +126,19 @@ export default class PhishingModal extends PureComponent {
 					>
 						<Text style={styles.phishingText}>
 							<Text style={styles.bold}>{host}</Text>
-							{strings('phishing.intro')}
+							{strings('phishing.intro', { appName: displayName })}
 						</Text>
 						<Text style={styles.phishingText}>
 							{strings('phishing.reasons')}
 							<Text style={styles.link} onPress={this.props.goToETHPhishingDetector}>
-								{strings('phishing.ethereum_phishing_detector')}
+								{strings('phishing.ethereum_phishing_detector', { appName: displayName })}
 							</Text>
 							. {strings('phishing.list_content')}
 						</Text>
 						<Text style={styles.phishingText}>
 							{strings('phishing.to_read_more')}
 							<Text style={styles.link} onPress={this.props.goToEtherscam}>
-								{strings('phishing.review_on_etherscam')}
+								{strings('phishing.review_on_etherscam', { appName: displayName })}
 							</Text>
 						</Text>
 						<Text style={styles.phishingText}>

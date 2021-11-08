@@ -20,6 +20,7 @@ import setOnboardingWizardStep from '../../../actions/wizard';
 import { connect } from 'react-redux';
 import Confetti from '../../UI/Confetti';
 import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -153,7 +154,7 @@ class SyncWithExtensionSuccess extends PureComponent {
 	learnMore = () => {
 		this.props.navigation.navigate('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};
 
@@ -174,7 +175,7 @@ class SyncWithExtensionSuccess extends PureComponent {
 				<Text style={styles.title}>{strings('sync_with_extension_success.title')}</Text>
 				<View style={styles.textContainer}>
 					<Text style={styles.text}>
-						{strings('sync_with_extension_success.sync_complete_1')}{' '}
+						{strings('sync_with_extension_success.sync_complete_1', { appName: displayName })}{' '}
 						<Text style={styles.bold}>{strings('sync_with_extension_success.sync_complete_2')}</Text>
 					</Text>
 					<TouchableOpacity onPress={this.learnMore} hitSlop={styles.hitSlopLearnMore}>

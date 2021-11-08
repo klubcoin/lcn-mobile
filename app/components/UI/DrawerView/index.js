@@ -8,6 +8,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import { colors, fontStyles } from '../../../styles/common';
 import { hasBlockExplorer, findBlockExplorerForRpc, getBlockExplorerName, isMainNet } from '../../../util/networks';
 import Identicon from '../Identicon';
@@ -55,237 +58,16 @@ import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';
 import preferences from '../../../store/preferences';
 import RemoteImage from '../../Base/RemoteImage';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	header: {
-		paddingTop: Device.isIphoneX() ? 60 : 24,
-		backgroundColor: colors.grey000,
-		height: Device.isIphoneX() ? 110 : 74,
-		flexDirection: 'column',
-		paddingBottom: 0
-	},
-	metamaskLogo: {
-		flexDirection: 'row',
-		flex: 1,
-		marginTop: Device.isAndroid() ? 0 : 12,
-		marginLeft: 15,
-		paddingTop: Device.isAndroid() ? 10 : 0
-	},
-	metamaskFox: {
-		height: 27,
-		width: 27,
-		marginRight: 15
-	},
-	metamaskName: {
-		marginTop: 4,
-		width: 90,
-		height: 18
-	},
-	account: {
-		flex: 1,
-		backgroundColor: colors.grey000
-	},
-	accountBgOverlay: {
-		borderBottomColor: colors.grey100,
-		borderBottomWidth: 1,
-		padding: 17
-	},
-	identiconWrapper: {
-		marginBottom: 12,
-		width: 56,
-		height: 56
-	},
-	identiconBorder: {
-		borderRadius: 96,
-		borderWidth: 2,
-		padding: 2,
-		borderColor: colors.blue
-	},
-	avatar: {
-		width: 48,
-		height: 48,
-		borderRadius: 24
-	},
-	accountNameWrapper: {
-		flexDirection: 'row',
-		paddingRight: 17
-	},
-	accountName: {
-		fontSize: 20,
-		lineHeight: 24,
-		marginBottom: 5,
-		color: colors.fontPrimary,
-		...fontStyles.normal
-	},
-	caretDown: {
-		textAlign: 'right',
-		marginLeft: 7,
-		marginTop: 3,
-		fontSize: 18,
-		color: colors.fontPrimary
-	},
-	accountBalance: {
-		fontSize: 14,
-		lineHeight: 17,
-		marginBottom: 5,
-		color: colors.fontPrimary,
-		...fontStyles.normal
-	},
-	accountAddress: {
-		fontSize: 12,
-		lineHeight: 17,
-		color: colors.fontSecondary,
-		...fontStyles.normal
-	},
-	buttons: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderBottomColor: colors.grey100,
-		borderBottomWidth: 1,
-		padding: 15
-	},
-	button: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderRadius: 30,
-		borderWidth: 1.5
-	},
-	leftButton: {
-		marginRight: 5
-	},
-	rightButton: {
-		marginLeft: 5
-	},
-	buttonText: {
-		paddingLeft: 8,
-		fontSize: 15,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	buttonContent: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	buttonIcon: {
-		marginTop: 0
-	},
-	buttonReceive: {
-		transform: [{ rotate: '90deg' }]
-	},
-	menu: {},
-	noTopBorder: {
-		borderTopWidth: 0
-	},
-	menuSection: {
-		borderTopWidth: 1,
-		borderColor: colors.grey100,
-		paddingVertical: 10
-	},
-	menuItem: {
-		flex: 1,
-		flexDirection: 'row',
-		paddingVertical: 9,
-		paddingLeft: 17
-	},
-	selectedRoute: {
-		backgroundColor: '#fff',
-		marginRight: 10,
-		borderTopRightRadius: 20,
-		borderBottomRightRadius: 20
-	},
-	selectedName: {
-		color: colors.blue
-	},
-	menuItemName: {
-		flex: 1,
-		paddingHorizontal: 15,
-		paddingTop: 2,
-		fontSize: 16,
-		color: colors.grey400,
-		...fontStyles.normal
-	},
-	unread: {
-		color: colors.red,
-		fontSize: 28,
-		position: 'absolute',
-		left: 36
-	},
-	menuItemWarningText: {
-		color: colors.red,
-		fontSize: 12,
-		...fontStyles.normal
-	},
-	noIcon: {
-		paddingLeft: 0
-	},
-	menuItemIconImage: {
-		width: 22,
-		height: 22
-	},
-	bottomModal: {
-		justifyContent: 'flex-end',
-		margin: 0
-	},
-	importedWrapper: {
-		marginTop: 10,
-		width: 73,
-		paddingHorizontal: 10,
-		paddingVertical: 3,
-		borderRadius: 10,
-		borderWidth: 1,
-		borderColor: colors.grey400
-	},
-	importedText: {
-		color: colors.grey400,
-		fontSize: 10,
-		...fontStyles.bold
-	},
-	protectWalletContainer: {
-		backgroundColor: colors.white,
-		paddingTop: 24,
-		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20,
-		paddingVertical: 16,
-		paddingBottom: Device.isIphoneX() ? 20 : 0,
-		paddingHorizontal: 40
-	},
-	protectWalletIconContainer: {
-		alignSelf: 'center',
-		width: 56,
-		height: 56,
-		borderRadius: 28,
-		backgroundColor: colors.red000,
-		borderColor: colors.red,
-		borderWidth: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	protectWalletIcon: { alignSelf: 'center', color: colors.red },
-	protectWalletTitle: { textAlign: 'center', fontSize: 18, marginVertical: 8, ...fontStyles.bold },
-	protectWalletContent: {
-		textAlign: 'center',
-		fontSize: 14,
-		marginVertical: 8,
-		justifyContent: 'center',
-		...fontStyles.normal
-	},
-	protectWalletButtonWrapper: { marginVertical: 8 }
-});
+import styles from './styles/index';
+import { displayName } from '../../../../app.json';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
 const ICON_IMAGES = {
 	wallet: require('../../../images/wallet-icon.png'),
-	'selected-wallet': require('../../../images/selected-wallet-icon.png')
+	partners: require('../../../images/ic_partners.png'),
+	'selected-wallet': require('../../../images/selected-wallet-icon.png'),
+	'selected-partners': require('../../../images/ic_partners.png')
 };
 
 /**
@@ -601,6 +383,12 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_CONTACTS);
 	};
 
+	gotoPartners = () => {
+		this.props.navigation.navigate('Partners');
+		this.hideDrawer();
+		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_PARTNERS);
+	};
+
 	showSettings = async () => {
 		this.props.navigation.navigate('SettingsView');
 		this.hideDrawer();
@@ -635,17 +423,20 @@ class DrawerView extends PureComponent {
 		} = this.props;
 		const url = getEtherscanAddressUrl(network.provider.type, selectedAddress);
 		const etherscan_url = getEtherscanBaseUrl(network.provider.type).replace('https://', '');
-		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, 'Liquichain');
+		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, displayName);
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_VIEW_ETHERSCAN);
 	};
 
 	submitFeedback = () => {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_SEND_FEEDBACK);
-		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Liquichain Support');
+		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, `${displayName} Support`);
 	};
 
 	showHelp = () => {
-		this.goToBrowserUrl(Routes.mainNetWork.helpSupportUrl, 'Liquichain Support');
+		this.goToBrowserUrl(
+			Routes.mainNetWork.helpSupportUrl,
+			strings('drawer.metamask_support', { appName: displayName })
+		);
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
@@ -696,23 +487,27 @@ class DrawerView extends PureComponent {
 	};
 
 	getIcon(name, size, color = null) {
-		return <Icon name={name} size={size || 24} color={color ? color : colors.grey400} />;
+		return (
+			<View style={{ width: 24, height: 24, alignItems: 'center' }}>
+				<Icon name={name} size={size || 24} color={color ? color : colors.blue} />
+			</View>
+		);
 	}
 
 	getFeatherIcon(name, size) {
-		return <FeatherIcon name={name} size={size || 24} color={colors.grey400} />;
+		return <FeatherIcon name={name} size={size || 24} color={colors.blue} />;
 	}
 
 	getAntDesignIcon(name, size) {
-		return <AntDesignIcon name={name} size={size || 24} color={colors.grey400} />;
+		return <AntDesignIcon name={name} size={size || 24} color={colors.blue} />;
 	}
 
 	getMaterialIcon(name, size) {
-		return <MaterialIcon name={name} size={size || 24} color={colors.grey400} />;
+		return <MaterialIcon name={name} size={size || 24} color={colors.blue} />;
 	}
 
 	getImageIcon(name) {
-		return <Image source={ICON_IMAGES[name]} style={styles.menuItemIconImage} />;
+		return <Image source={ICON_IMAGES[name]} style={styles.menuItemIconImage} resizeMode={'contain'} />;
 	}
 
 	getSelectedIcon(name, size) {
@@ -725,6 +520,18 @@ class DrawerView extends PureComponent {
 
 	getSelectedMaterialIcon(name, size) {
 		return <MaterialIcon name={name} size={size || 24} color={colors.blue} />;
+	}
+
+	getFontAwesomeIcon(name, size) {
+		return <FontAwesomeIcon name={name} size={size || 24} color={colors.blue} />;
+	}
+
+	getFontAwesome5Icon(name, size) {
+		return <FontAwesome5Icon name={name} size={size || 24} color={colors.blue} />;
+	}
+
+	getIonIcon(name, size) {
+		return <IonIcon name={name} size={size || 24} color={colors.blue} />;
 	}
 
 	getSelectedImageIcon(name) {
@@ -759,13 +566,13 @@ class DrawerView extends PureComponent {
 					action: this.showWallet,
 					routeNames: ['WalletView', 'Asset', 'AddAsset', 'Collectible']
 				},
-				{
-					name: strings('drawer.profile'),
-					icon: this.getMaterialIcon('account-circle'),
-					selectedIcon: this.getMaterialIcon('account-circle'),
-					action: this.goToProfile,
-					routeNames: ['Profile']
-				},
+				// {
+				// 	name: strings('drawer.profile'),
+				// 	icon: this.getMaterialIcon('account-circle'),
+				// 	selectedIcon: this.getMaterialIcon('account-circle'),
+				// 	action: this.goToProfile,
+				// 	routeNames: ['Profile']
+				// },
 				{
 					name: strings('drawer.transaction_history'),
 					icon: this.getIcon('list'),
@@ -774,23 +581,23 @@ class DrawerView extends PureComponent {
 					routeNames: ['TransactionsView']
 				}
 			],
-			[
-				{
-					name: strings('drawer.contacts'),
-					icon: this.getAntDesignIcon('contacts'),
-					selectedIcon: this.getAntDesignIcon('contacts'),
-					action: this.gotoContacts,
-					routeNames: ['Contacts']
-				},
-				{
-					name: strings('drawer.notifications'),
-					icon: this.getFeatherIcon('bell'),
-					selectedIcon: this.getFeatherIcon('bell'),
-					action: this.gotoNotifications,
-					key: 'notifications',
-					routeNames: ['Notifications']
-				}
-			],
+			// [
+			// 	{
+			// 		name: strings('drawer.contacts'),
+			// 		icon: this.getAntDesignIcon('contacts'),
+			// 		selectedIcon: this.getAntDesignIcon('contacts'),
+			// 		action: this.gotoContacts,
+			// 		routeNames: ['Contacts']
+			// 	},
+			// 	{
+			// 		name: strings('drawer.notifications'),
+			// 		icon: this.getFeatherIcon('bell'),
+			// 		selectedIcon: this.getFeatherIcon('bell'),
+			// 		action: this.gotoNotifications,
+			// 		key: 'notifications',
+			// 		routeNames: ['Notifications']
+			// 	}
+			// ],
 			[
 				{
 					name: strings('drawer.share_address'),
@@ -800,9 +607,14 @@ class DrawerView extends PureComponent {
 				{
 					name:
 						(blockExplorer && `${strings('drawer.view_in')} ${blockExplorerName}`) ||
-						strings('drawer.view_in_liquichain'),
+						strings('drawer.view_in_liquichain', { appName: displayName }),
 					icon: this.getIcon('eye'),
 					action: this.viewInEtherscan
+				},
+				{
+					name: strings('drawer.partners'),
+					icon: this.getImageIcon('partners'),
+					action: this.gotoPartners
 				}
 			],
 			[
@@ -814,14 +626,14 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.help'),
-					icon: this.getIcon('help'),
+					icon: this.getIcon('info'),
 					action: this.showHelp
 				},
-				// {
-				// 	name: strings('drawer.request_feature'),
-				// 	icon: this.getFeatherIcon('message-square'),
-				// 	action: this.submitFeedback
-				// },
+				{
+					name: strings('drawer.request_feature'),
+					icon: this.getFontAwesome5Icon('comment-alt'),
+					action: this.submitFeedback
+				},
 				{
 					name: strings('drawer.logout'),
 					icon: this.getIcon('sign-out'),
@@ -958,13 +770,14 @@ class DrawerView extends PureComponent {
 								}}
 							>
 								<Image
-									source={require('../../../images/logo.png')}
+									source={require('../../../images/klubcoin_horizontal_logo.png')}
 									style={{
-										width: 30,
-										height: 30
+										width: 150,
+										marginBottom: 10
 									}}
+									resizeMode={'contain'}
 								/>
-								<Text
+								{/* <Text
 									style={{
 										fontSize: 20,
 										color: '#370e75',
@@ -972,7 +785,7 @@ class DrawerView extends PureComponent {
 									}}
 								>
 									LIQUICHAIN
-								</Text>
+								</Text> */}
 							</View>
 						</View>
 					</View>
@@ -1035,7 +848,7 @@ class DrawerView extends PureComponent {
 							testID={'drawer-send-button'}
 						>
 							<View style={styles.buttonContent}>
-								{this.getIcon('paper-plane', 16, Colors.primary)}
+								{/* {this.getIcon('paper-plane', 16, Colors.primary)} */}
 								<Text style={styles.buttonText}>{strings('drawer.send_button')}</Text>
 							</View>
 						</StyledButton>
@@ -1046,7 +859,7 @@ class DrawerView extends PureComponent {
 							testID={'drawer-receive-button'}
 						>
 							<View style={styles.buttonContent}>
-								{this.getIcon('dollar', 16, Colors.primary)}
+								{/* {this.getIcon('dollar', 16, Colors.primary)} */}
 								<Text style={styles.buttonText}>{strings('drawer.receive_button')}</Text>
 							</View>
 						</StyledButton>

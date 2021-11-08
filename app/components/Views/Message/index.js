@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-	FlatList,
-	TouchableWithoutFeedback,
-	Alert
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, FlatList, TouchableWithoutFeedback, Alert } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
@@ -21,6 +13,8 @@ import Device from '../../../util/Device';
 import MessagingWebRTC from '../../../services/MessagingWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 import { Chat } from '../../../services/Messages';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const swipeOffset = Device.getDeviceWidth() / 4;
 
@@ -56,7 +50,9 @@ class Message extends Component {
 		const records = await preferences.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
-		const users = Object.keys(records).map(e => addresses[e]).filter(e => !!e);
+		const users = Object.keys(records)
+			.map(e => addresses[e])
+			.filter(e => !!e);
 		const profiles = preferences.peerProfiles;
 
 		users.forEach(e => {
@@ -80,9 +76,10 @@ class Message extends Component {
 		const { conversations, searchQuery } = this.state;
 		const query = searchQuery.toLocaleLowerCase();
 
-		return conversations.filter(e => {
-			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
-		})
+		return conversations
+			.filter(e => {
+				return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
+			})
 			.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
 	};
 
@@ -138,22 +135,24 @@ class Message extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<NavigationEvents onWillFocus={this.fetchHistoryMessages} />
-				<SearchBar
-					placeholder={'Search messages...'}
-					value={this.state.searchQuery}
-					onChange={this.handleSearch}
-				/>
-				<FlatList
-					data={this.filterConversations()}
-					keyExtractor={item => `${item.name}${item.address}`}
-					renderItem={data => this.renderMessage(data)}
-				/>
-				<TouchableOpacity style={styles.floatingButton} onPress={this.selectContact}>
-					<Icon name="plus" style={{ color: colors.white }} size={20} />
-				</TouchableOpacity>
-			</View>
+			<OnboardingScreenWithBg screen="a">
+				<View style={styles.container}>
+					<NavigationEvents onWillFocus={this.fetchHistoryMessages} />
+					<SearchBar
+						placeholder={'Search messages...'}
+						value={this.state.searchQuery}
+						onChange={this.handleSearch}
+					/>
+					<FlatList
+						data={this.filterConversations()}
+						keyExtractor={item => `${item.name}${item.address}`}
+						renderItem={data => this.renderMessage(data)}
+					/>
+					<TouchableOpacity style={styles.floatingButton} onPress={this.selectContact}>
+						<Icon name="plus" style={{ color: colors.white }} size={20} />
+					</TouchableOpacity>
+				</View>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
@@ -164,58 +163,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(Message);
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingHorizontal: 16
-	},
-	searchSection: {
-		marginHorizontal: 20,
-		marginVertical: 10,
-		padding: 10,
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderWidth: 1,
-		borderRadius: 8,
-		borderColor: colors.grey100
-	},
-	textInput: {
-		flex: 1,
-		height: 30,
-		marginLeft: 5,
-		paddingVertical: 0
-	},
-	floatingButton: {
-		borderRadius: 30,
-		backgroundColor: colors.primaryFox,
-		width: 50,
-		height: 50,
-		alignItems: 'center',
-		justifyContent: 'center',
-		position: 'absolute',
-		bottom: 30,
-		right: 30
-	},
-	standaloneRowBack: {
-		alignItems: 'center',
-		backgroundColor: colors.red,
-		flex: 1,
-		height: 70,
-		flexDirection: 'row',
-		justifyContent: 'flex-end'
-	},
-	standaloneRowFront: {
-		backgroundColor: colors.white,
-		justifyContent: 'center',
-		flex: 1,
-		height: 70
-	},
-	swipeableOption: {
-		width: swipeOffset,
-		alignItems: 'center',
-		backgroundColor: colors.red,
-		height: '100%',
-		justifyContent: 'center'
-	}
-});

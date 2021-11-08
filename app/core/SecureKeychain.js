@@ -1,4 +1,4 @@
-import * as Keychain from 'react-native-keychain'; // eslint-disable-line import/no-namespace
+import * as Keychain from 'react-native-keychain';
 import Encryptor from './Encryptor';
 import { strings } from '../../locales/i18n';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -10,16 +10,17 @@ import {
 	PASSCODE_DISABLED,
 	TRUE
 } from '../constants/storage';
+import { displayName } from '../../app.json';
 
 const privates = new WeakMap();
 const encryptor = new Encryptor();
 const defaultOptions = {
 	service: 'com.metamask',
 	authenticationPromptTitle: strings('authentication.auth_prompt_title'),
-	authenticationPrompt: { title: strings('authentication.auth_prompt_desc') },
+	authenticationPrompt: { title: strings('authentication.auth_prompt_desc', { appName: displayName }) },
 	authenticationPromptDesc: strings('authentication.auth_prompt_desc'),
 	fingerprintPromptTitle: strings('authentication.fingerprint_prompt_title'),
-	fingerprintPromptDesc: strings('authentication.fingerprint_prompt_desc'),
+	fingerprintPromptDesc: strings('authentication.fingerprint_prompt_desc', { appName: displayName }),
 	fingerprintPromptCancel: strings('authentication.fingerprint_prompt_cancel')
 };
 

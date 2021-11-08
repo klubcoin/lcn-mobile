@@ -51,111 +51,10 @@ import {
 	METRICS_OPT_IN,
 	TRUE
 } from '../../../constants/storage';
+import styles from './styles';
+import { displayName } from '../../../../app.json';
 
 const PUB_KEY = process.env.MM_PUBNUB_PUB_KEY;
-
-const styles = StyleSheet.create({
-	scroll: {
-		flex: 1
-	},
-	wrapper: {
-		flex: 1,
-		alignItems: 'center',
-		paddingVertical: 30
-	},
-	modalWrapper: {
-		flexGrow: 1,
-		paddingHorizontal: 24,
-		marginTop: 24
-	},
-	foxWrapper: {
-		width: Device.isIos() ? 90 : 45,
-		height: Device.isIos() ? 90 : 45,
-		marginVertical: 20
-	},
-	image: {
-		alignSelf: 'center',
-		width: Device.isIos() ? 90 : 45,
-		height: Device.isIos() ? 90 : 45
-	},
-	termsAndConditions: {
-		paddingBottom: 30
-	},
-	title: {
-		fontSize: 24,
-		color: colors.fontPrimary,
-		...fontStyles.bold,
-		textAlign: 'center'
-	},
-	ctas: {
-		flex: 1,
-		position: 'relative'
-	},
-	footer: {
-		marginTop: -20,
-		marginBottom: 20
-	},
-	login: {
-		fontSize: 18,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	buttonDescription: {
-		...fontStyles.normal,
-		fontSize: 14,
-		textAlign: 'center',
-		marginBottom: 16,
-		color: colors.fontPrimary,
-		lineHeight: 20
-	},
-	importWrapper: {
-		marginVertical: 24
-	},
-	createWrapper: {
-		flex: 1,
-		justifyContent: 'flex-end',
-		marginBottom: 24
-	},
-	buttonWrapper: {
-		marginBottom: 16
-	},
-	scanTitle: {
-		...fontStyles.bold,
-		fontSize: 18,
-		color: colors.fontPrimary,
-		textAlign: 'center',
-		lineHeight: 28
-	},
-	loader: {
-		marginTop: 180,
-		justifyContent: 'center',
-		textAlign: 'center'
-	},
-	loadingText: {
-		marginTop: 30,
-		fontSize: 14,
-		textAlign: 'center',
-		color: colors.fontPrimary,
-		...fontStyles.normal
-	},
-	column: {
-		marginVertical: 24,
-		alignItems: 'flex-start'
-	},
-	modalTypeView: {
-		position: 'absolute',
-		bottom: 0,
-		paddingBottom: Device.isIphoneX() ? 20 : 10,
-		left: 0,
-		right: 0,
-		backgroundColor: colors.transparent
-	},
-	notificationContainer: {
-		flex: 0.1,
-		flexDirection: 'row',
-		alignItems: 'flex-end'
-	}
-});
 
 const keyExtractor = ({ id }) => id;
 
@@ -382,7 +281,10 @@ class Onboarding extends PureComponent {
 				this.setState({ biometryType, biometryChoice: true });
 				Alert.alert(
 					strings('sync_with_extension.allow_biometrics_title', { biometrics: biometryType }),
-					strings('sync_with_extension.allow_biometrics_desc', { biometrics: biometryType }),
+					strings('sync_with_extension.allow_biometrics_desc', {
+						biometrics: biometryType,
+						appName: displayName
+					}),
 					[
 						{
 							text: strings('sync_with_extension.warning_cancel_button'),
@@ -521,6 +423,11 @@ class Onboarding extends PureComponent {
 		}
 	};
 
+	onViewPartners = () => {
+		const { navigation } = this.props;
+		navigation.navigate('Partners');
+	};
+
 	safeSync = () => {
 		if (!PUB_KEY) {
 			// Dev message
@@ -580,6 +487,11 @@ class Onboarding extends PureComponent {
 	renderContent() {
 		return (
 			<View style={styles.ctas}>
+				<Image
+					source={require('../../../images/klubcoin_text.png')}
+					style={styles.image}
+					resizeMode={'contain'}
+				/>
 				<Text style={styles.title} testID={'onboarding-screen-title'}>
 					{strings('onboarding.title')}
 				</Text>
@@ -603,7 +515,17 @@ class Onboarding extends PureComponent {
 							onPress={this.onPressSync}
 							testID={'onboarding-import-button'}
 						>
-							{strings('import_wallet.sync_from_browser_extension_button')}
+							{strings('import_wallet.sync_from_browser_extension_button', { appName: displayName })}
+						</StyledButton>
+					</View>
+					<View style={styles.buttonWrapper}>
+						<StyledButton
+							style={styles.button}
+							type={'normal'}
+							onPress={this.onViewPartners}
+							testID={'onboarding-import-button'}
+						>
+							{strings('onboarding.view_partners')}
 						</StyledButton>
 					</View>
 					<View style={styles.buttonWrapper}>
@@ -613,7 +535,7 @@ class Onboarding extends PureComponent {
 							onPress={this.onPressCreate}
 							testID={'create-wallet-button'}
 						>
-							{strings('onboarding.start_exploring_now')}
+							{strings('onboarding.start_exploring_now').toUpperCase()}
 						</StyledButton>
 					</View>
 				</View>
@@ -652,7 +574,7 @@ class Onboarding extends PureComponent {
 							{loading && (
 								<View style={styles.foxWrapper}>
 									<Image
-										source={require('../../../images/fox.png')}
+										source={require('../../../images/klubcoin_lighten.png')}
 										style={styles.image}
 										resizeMethod={'auto'}
 									/>
@@ -692,7 +614,9 @@ class Onboarding extends PureComponent {
 					confirmButtonMode="confirm"
 				>
 					<View style={styles.modalWrapper}>
-						<Text style={styles.scanTitle}>{strings('onboarding.scan_title')}</Text>
+						<Text style={styles.scanTitle}>
+							{strings('onboarding.scan_title', { appName: displayName })}
+						</Text>
 						<View style={styles.column}>
 							<FlatList
 								data={ONBOARDING_SCAN_STEPS}

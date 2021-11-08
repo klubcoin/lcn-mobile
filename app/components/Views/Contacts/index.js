@@ -24,71 +24,8 @@ import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import Text from '../../Base/Text';
 import { refWebRTC } from '../../../services/WebRTC';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	addContact: {
-		marginHorizontal: 24,
-		marginBottom: 16
-	},
-	searchSection: {
-		marginHorizontal: 20,
-		marginVertical: 10,
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderWidth: 1,
-		borderRadius: 8,
-		borderColor: colors.grey100
-	},
-	textInput: {
-		flex: 1,
-		height: 30,
-		...fontStyles.normal
-	},
-	icon: {
-		padding: 16
-	},
-	online: {
-		position: 'absolute',
-		top: 8,
-		right: 10,
-		width: 8,
-		height: 8,
-		borderRadius: 4,
-		backgroundColor: colors.green500
-	},
-	selectedBar: {
-		position: 'absolute',
-		width: 5,
-		height: '100%',
-		left: 0,
-		backgroundColor: colors.blue
-	},
-	bottomModal: {
-		flex: 1,
-		justifyContent: 'flex-end',
-		margin: 0
-	},
-	scanQR: {
-		backgroundColor: colors.white,
-		paddingHorizontal: 20,
-		paddingTop: 30,
-		paddingBottom: 40,
-		alignItems: 'center'
-	},
-	qrTitle: {
-		marginBottom: 10,
-		fontSize: 16,
-		color: colors.black
-	},
-	shareQR: {
-		width: 300,
-		marginTop: 20
-	}
-});
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const EDIT = 'edit';
 
@@ -210,13 +147,13 @@ class Contacts extends PureComponent {
 		}
 	}
 
-	getPeerInfo = (address) => {
+	getPeerInfo = address => {
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
+		webrtc.once(`${WalletProfile().action}:${address}`, data => {
 			if (!data.profile) return true;
 			Object.assign(this.data.data, data.profile);
 			this.setState({ data: data.profile });
-		})
+		});
 		webrtc.sendToPeer(address, WalletProfile());
 	};
 
@@ -406,98 +343,100 @@ class Contacts extends PureComponent {
 		const { friendRequestQRVisible } = this.props;
 
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'contacts-screen'}>
-				<View style={styles.searchSection}>
-					<Icon name="search" size={22} style={styles.icon} />
-					<TextInput
-						style={styles.textInput}
-						value={searchQuery}
-						placeholder={`${strings('contacts.search')}...`}
-						placeholderTextColor={colors.grey100}
-						onChangeText={this.handleSearch}
-					/>
-				</View>
-
-				<FlatList
-					data={this.filterContacts(contacts)}
-					keyExtractor={item => `${item.name}${item.address}`}
-					renderItem={data => this.renderContact(data)}
-					style={styles.optionList}
-				/>
-				{this.contactSelection ? (
-					<StyledButton
-						type={'confirm'}
-						containerStyle={styles.addContact}
-						onPress={this.onConfirm.bind(this)}
-					>
-						{strings('contacts.confirm')}
-					</StyledButton>
-				) : (
-					<StyledButton
-						type={'confirm'}
-						containerStyle={styles.addContact}
-						onPress={this.createFriendRequest}
-						testID={'add-contact-button'}
-					>
-						{strings('contacts.create_friend_request')}
-					</StyledButton>
-				)}
-
-				<ConfirmModal
-					visible={confirmDeleteVisible}
-					title={strings('contacts.delete_contact')}
-					message={`${this.contactToRemove?.name}`}
-					subMessage={`${this.contactToRemove?.address}?`}
-					confirmLabel={strings('contacts.delete')}
-					cancelLabel={strings('contacts.cancel')}
-					onConfirm={() => this.deleteContact()}
-					hideModal={this.toggleConfirmDeleteModal}
-				/>
-
-				<FriendMessageOverview
-					visible={friendRequestVisible}
-					data={this.data?.data}
-					networkInfo={this.data?.meta}
-					title={strings('contacts.friend_request')}
-					message={`${strings('contacts.accept_friend_request')}?`}
-					confirmLabel={strings('contacts.accept')}
-					cancelLabel={strings('contacts.reject')}
-					onConfirm={() => setTimeout(this.onAcceptFriend.bind(this), 1000)}
-					hideModal={this.toggleFriendRequestModal}
-				/>
-
-				<FriendMessageOverview
-					visible={acceptedNameCardVisible}
-					data={this.data?.data}
-					networkInfo={this.data?.meta}
-					title={strings('contacts.friend_request_accepted')}
-					message={`${strings('contacts.add_this_contact')}?`}
-					confirmLabel={strings('contacts.accept')}
-					cancelLabel={strings('contacts.reject')}
-					onConfirm={this.onAddContact.bind(this)}
-					hideModal={this.toggleAcceptContactModal}
-				/>
-
-				<Modal
-					isVisible={!!showLinkQR && friendRequestQRVisible}
-					style={styles.bottomModal}
-					onBackdropPress={this.hideQR}
-					onBackButtonPress={this.hideQR}
-					onSwipeComplete={this.hideQR}
-					swipeDirection={'down'}
-					propagateSwipe
-				>
-					<View style={styles.scanQR}>
-						<Text bold style={styles.qrTitle}>
-							{strings('contacts.scan_qr_connect')}
-						</Text>
-						{showLinkQR && <QRCode value={showLinkQR} size={280} />}
-						<StyledButton type={'normal'} containerStyle={styles.shareQR} onPress={this.shareQR}>
-							{strings('contacts.share_namecard')}
-						</StyledButton>
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.wrapper} testID={'contacts-screen'}>
+					<View style={styles.searchSection}>
+						<Icon name="search" size={22} style={styles.icon} color={colors.white} />
+						<TextInput
+							style={styles.textInput}
+							value={searchQuery}
+							placeholder={`${strings('contacts.search')}...`}
+							placeholderTextColor={colors.grey300}
+							onChangeText={this.handleSearch}
+						/>
 					</View>
-				</Modal>
-			</SafeAreaView>
+
+					<FlatList
+						data={this.filterContacts(contacts)}
+						keyExtractor={item => `${item.name}${item.address}`}
+						renderItem={data => this.renderContact(data)}
+						style={styles.optionList}
+					/>
+					{this.contactSelection ? (
+						<StyledButton
+							type={'confirm'}
+							containerStyle={styles.addContact}
+							onPress={this.onConfirm.bind(this)}
+						>
+							{strings('contacts.confirm')}
+						</StyledButton>
+					) : (
+						<StyledButton
+							type={'confirm'}
+							containerStyle={styles.addContact}
+							onPress={this.createFriendRequest}
+							testID={'add-contact-button'}
+						>
+							{strings('contacts.create_friend_request')}
+						</StyledButton>
+					)}
+
+					<ConfirmModal
+						visible={confirmDeleteVisible}
+						title={strings('contacts.delete_contact')}
+						message={`${this.contactToRemove?.name}`}
+						subMessage={`${this.contactToRemove?.address}?`}
+						confirmLabel={strings('contacts.delete')}
+						cancelLabel={strings('contacts.cancel')}
+						onConfirm={() => this.deleteContact()}
+						hideModal={this.toggleConfirmDeleteModal}
+					/>
+
+					<FriendMessageOverview
+						visible={friendRequestVisible}
+						data={this.data?.data}
+						networkInfo={this.data?.meta}
+						title={strings('contacts.friend_request')}
+						message={`${strings('contacts.accept_friend_request')}?`}
+						confirmLabel={strings('contacts.accept')}
+						cancelLabel={strings('contacts.reject')}
+						onConfirm={() => setTimeout(this.onAcceptFriend.bind(this), 1000)}
+						hideModal={this.toggleFriendRequestModal}
+					/>
+
+					<FriendMessageOverview
+						visible={acceptedNameCardVisible}
+						data={this.data?.data}
+						networkInfo={this.data?.meta}
+						title={strings('contacts.friend_request_accepted')}
+						message={`${strings('contacts.add_this_contact')}?`}
+						confirmLabel={strings('contacts.accept')}
+						cancelLabel={strings('contacts.reject')}
+						onConfirm={this.onAddContact.bind(this)}
+						hideModal={this.toggleAcceptContactModal}
+					/>
+
+					<Modal
+						isVisible={!!showLinkQR && friendRequestQRVisible}
+						style={styles.bottomModal}
+						onBackdropPress={this.hideQR}
+						onBackButtonPress={this.hideQR}
+						onSwipeComplete={this.hideQR}
+						swipeDirection={'down'}
+						propagateSwipe
+					>
+						<View style={styles.scanQR}>
+							<Text bold style={styles.qrTitle}>
+								{strings('contacts.scan_qr_connect')}
+							</Text>
+							{showLinkQR && <QRCode value={showLinkQR} size={280} />}
+							<StyledButton type={'normal'} containerStyle={styles.shareQR} onPress={this.shareQR}>
+								{strings('contacts.share_namecard')}
+							</StyledButton>
+						</View>
+					</Modal>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
@@ -508,7 +447,7 @@ const mapStateToProps = state => ({
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	identities: state.engine.backgroundState.PreferencesController.identities,
 	onlinePeers: state.contacts.onlineWallets,
-	friendRequestQRVisible: state.modals.friendRequestQRVisible,
+	friendRequestQRVisible: state.modals.friendRequestQRVisible
 });
 
 const mapDispatchToProps = dispatch => ({

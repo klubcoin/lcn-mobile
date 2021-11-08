@@ -6,7 +6,7 @@ import { colors } from '../../styles/common';
 export default function SearchBar({ value, onChange, placeholder, containerStyle }) {
 	return (
 		<View style={[styles.searchSection, containerStyle]}>
-			<Icon name="search" size={22} style={styles.icon} />
+			<Icon name="search" size={22} style={styles.icon} color={colors.white} />
 			<TextInput
 				style={styles.textInput}
 				value={value}
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		height: 30,
 		marginLeft: 5,
-		paddingVertical: 0
+		paddingVertical: 0,
+		color: colors.fontPrimary
 	}
 });

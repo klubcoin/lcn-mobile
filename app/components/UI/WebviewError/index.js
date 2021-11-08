@@ -84,7 +84,11 @@ export default class WebviewError extends PureComponent {
 		return error ? (
 			<View style={styles.wrapper}>
 				<View style={styles.foxWrapper}>
-					<Image source={require('../../../images/fox.png')} style={styles.image} resizeMethod={'auto'} />
+					<Image
+						source={require('../../../images/klubcoin_lighten.png')}
+						style={styles.image}
+						resizeMethod={'auto'}
+					/>
 				</View>
 				<View style={styles.textWrapper}>
 					<Text style={styles.errorTitle}>{strings('webview_error.title')}</Text>

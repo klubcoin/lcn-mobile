@@ -5,12 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import ActionModal from '../../UI/ActionModal';
+import { displayName } from '../../../../app.json';
 
 const styles = {
 	whatIsSeedphraseTitle: {
 		flex: 1,
 		fontSize: 18,
-		color: colors.fontPrimary,
+		color: colors.black,
 		textAlign: 'center',
 		...fontStyles.bold
 	},
@@ -40,7 +41,7 @@ const styles = {
 		marginTop: 16,
 		textAlign: 'center',
 		...fontStyles.normal,
-		color: colors.fontPrimary,
+		color: colors.black,
 		lineHeight: 20
 	},
 	modalXIcon: {
@@ -73,7 +74,9 @@ const SeedphraseModal = ({ showWhatIsSeedphraseModal, hideWhatIsSeedphrase }) =>
 			<View>
 				<Text style={styles.explanationText}>{strings('account_backup_step_1.what_is_seedphrase_text_1')}</Text>
 				<Text style={styles.explanationText}>{strings('account_backup_step_1.what_is_seedphrase_text_2')}</Text>
-				<Text style={styles.explanationText}>{strings('account_backup_step_1.what_is_seedphrase_text_3')}</Text>
+				<Text style={styles.explanationText}>
+					{strings('account_backup_step_1.what_is_seedphrase_text_3', { appName: displayName })}
+				</Text>
 			</View>
 		</View>
 	</ActionModal>

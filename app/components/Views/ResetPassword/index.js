@@ -14,7 +14,6 @@ import {
 	Image,
 	InteractionManager
 } from 'react-native';
-// eslint-disable-next-line import/no-unresolved
 import CheckBox from '@react-native-community/checkbox';
 import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -41,211 +40,9 @@ import { EXISTING_USER, TRUE, BIOMETRY_CHOICE_DISABLED } from '../../../constant
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import NotificationManager from '../../../core/NotificationManager';
 import { syncPrefs } from '../../../util/sync';
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	scrollviewWrapper: {
-		flexGrow: 1
-	},
-	confirm_title: {
-		fontSize: 32,
-		marginTop: 10,
-		marginBottom: 10,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	confirm_input: {
-		borderWidth: 2,
-		borderRadius: 5,
-		width: '100%',
-		borderColor: colors.grey000,
-		padding: 10,
-		height: 40
-	},
-	confirm_label: {
-		fontSize: 16,
-		lineHeight: 23,
-		color: colors.fontPrimary,
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	wrapper: {
-		flex: 1,
-		marginBottom: 10
-	},
-	scrollableWrapper: {
-		flex: 1,
-		paddingHorizontal: 32
-	},
-	keyboardScrollableWrapper: {
-		flexGrow: 1
-	},
-	loadingWrapper: {
-		paddingHorizontal: 40,
-		paddingBottom: 30,
-		alignItems: 'center',
-		flex: 1
-	},
-	foxWrapper: {
-		width: Device.isIos() ? 90 : 80,
-		height: Device.isIos() ? 90 : 80,
-		marginTop: 30,
-		marginBottom: 30
-	},
-	image: {
-		alignSelf: 'center',
-		width: 80,
-		height: 80
-	},
-	passwordRequiredContent: {
-		marginBottom: 20
-	},
-	content: {
-		alignItems: 'flex-start'
-	},
-	title: {
-		fontSize: 24,
-		marginTop: 20,
-		marginBottom: 20,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'center',
-		width: '100%',
-		...fontStyles.normal
-	},
-	subtitle: {
-		fontSize: 16,
-		lineHeight: 23,
-		color: colors.fontPrimary,
-		textAlign: 'center',
-		...fontStyles.normal
-	},
-	text: {
-		marginBottom: 10,
-		justifyContent: 'center',
-		...fontStyles.normal
-	},
-	checkboxContainer: {
-		marginTop: 10,
-		marginHorizontal: 10,
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		flexDirection: 'row'
-	},
-	checkbox: {
-		width: 18,
-		height: 18,
-		margin: 10,
-		marginTop: -5
-	},
-	label: {
-		...fontStyles.normal,
-		fontSize: 14,
-		color: colors.black,
-		paddingHorizontal: 10,
-		lineHeight: 18
-	},
-	learnMore: {
-		color: colors.blue,
-		textDecorationLine: 'underline',
-		textDecorationColor: colors.blue
-	},
-	field: {
-		position: 'relative'
-	},
-	input: {
-		borderWidth: 1,
-		borderColor: colors.grey500,
-		padding: 10,
-		borderRadius: 6,
-		fontSize: 14,
-		height: 50,
-		...fontStyles.normal
-	},
-	ctaWrapper: {
-		flex: 1,
-		marginTop: 20,
-		paddingHorizontal: 10
-	},
-	errorMsg: {
-		color: colors.red,
-		...fontStyles.normal
-	},
-	biometrics: {
-		position: 'relative',
-		marginTop: 20,
-		marginBottom: 30
-	},
-	biometryLabel: {
-		fontSize: 14,
-		color: colors.fontPrimary,
-		position: 'absolute',
-		top: 0,
-		left: 0
-	},
-	biometrySwitch: {
-		position: 'absolute',
-		top: 0,
-		right: 0
-	},
-	hintLabel: {
-		height: 20,
-		marginTop: 14,
-		fontSize: 12,
-		color: colors.grey450,
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	showPassword: {
-		position: 'absolute',
-		top: 0,
-		right: 0
-	},
-	// eslint-disable-next-line react-native/no-unused-styles
-	strength_weak: {
-		color: colors.red
-	},
-	// eslint-disable-next-line react-native/no-unused-styles
-	strength_good: {
-		color: colors.blue
-	},
-	// eslint-disable-next-line react-native/no-unused-styles
-	strength_strong: {
-		color: colors.green300
-	},
-	showMatchingPasswords: {
-		position: 'absolute',
-		top: 50,
-		right: 17,
-		alignSelf: 'flex-end'
-	},
-	confirmPasswordWrapper: {
-		flex: 1,
-		padding: 30,
-		paddingTop: 0
-	},
-	buttonWrapper: {
-		flex: 1,
-		marginTop: 20,
-		justifyContent: 'flex-end'
-	},
-	warningMessageText: {
-		paddingVertical: 10,
-		color: colors.red,
-		...fontStyles.normal
-	},
-	keyboardAvoidingView: {
-		flex: 1,
-		flexDirection: 'row',
-		alignSelf: 'center'
-	}
-});
+import { displayName } from '../../../../app.json';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 const RESET_PASSWORD = 'reset_password';
@@ -549,12 +346,12 @@ class ResetPassword extends PureComponent {
 		}
 	};
 
-	tryUnlock = (hash) => {
+	tryUnlock = hash => {
 		const { password } = this.state;
 		this.tryUnlockWithPassword(hash || password);
 	};
 
-	onKeycloakResult = async (error) => {
+	onKeycloakResult = async error => {
 		if (!error) {
 			const hash = await preferences.getKeycloakHash();
 			this.tryUnlock(hash);
@@ -574,7 +371,7 @@ class ResetPassword extends PureComponent {
 	learnMore = () => {
 		this.props.navigation.push('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};
 
@@ -600,13 +397,14 @@ class ResetPassword extends PureComponent {
 									{strings('manual_backup_step_1.before_continiuing')}
 								</Text>
 							</View>
-							{keycloakAuth ?
+							{keycloakAuth ? (
 								<LoginWithKeycloak
 									type={'sign'}
 									label={strings('manual_backup_step_1.confirm_password')}
 									onSuccess={this.onKeycloakResult}
 									onError={this.onKeycloakResult}
-								/> :
+								/>
+							) : (
 								<>
 									<TextInput
 										style={styles.confirm_input}
@@ -631,7 +429,7 @@ class ResetPassword extends PureComponent {
 										</StyledButton>
 									</View>
 								</>
-							}
+							)}
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
@@ -661,7 +459,7 @@ class ResetPassword extends PureComponent {
 					<View style={styles.loadingWrapper}>
 						<View style={styles.foxWrapper}>
 							<Image
-								source={require('../../../images/fox.png')}
+								source={require('../../../images/klubcoin_lighten.png')}
 								style={styles.image}
 								resizeMethod={'auto'}
 							/>
@@ -687,7 +485,9 @@ class ResetPassword extends PureComponent {
 								<View style={styles.content}>
 									<Text style={styles.title}>{strings('reset_password.title')}</Text>
 									<View style={styles.text}>
-										<Text style={styles.subtitle}>{strings('reset_password.subtitle')}</Text>
+										<Text style={styles.subtitle}>
+											{strings('reset_password.subtitle', { appName: displayName })}
+										</Text>
 									</View>
 								</View>
 								<View style={styles.field}>
@@ -751,7 +551,7 @@ class ResetPassword extends PureComponent {
 										testID={'password-understand-box'}
 									/>
 									<Text style={styles.label} onPress={this.setSelection} testID={'i-understand-text'}>
-										{strings('reset_password.i_understand')}{' '}
+										{strings('reset_password.i_understand', { appName: displayName })}{' '}
 										<Text onPress={this.learnMore} style={styles.learnMore}>
 											{strings('reset_password.learn_more')}
 										</Text>
@@ -782,15 +582,17 @@ class ResetPassword extends PureComponent {
 		const { view, ready } = this.state;
 		if (!ready) return this.renderLoader();
 		return (
-			<SafeAreaView style={styles.mainWrapper}>
-				<ScrollView
-					contentContainerStyle={styles.scrollviewWrapper}
-					style={styles.mainWrapper}
-					testID={'account-backup-step-4-screen'}
-				>
-					{view === RESET_PASSWORD ? this.renderResetPassword() : this.renderConfirmPassword()}
-				</ScrollView>
-			</SafeAreaView>
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.mainWrapper}>
+					<ScrollView
+						contentContainerStyle={styles.scrollviewWrapper}
+						style={styles.mainWrapper}
+						testID={'account-backup-step-4-screen'}
+					>
+						{view === RESET_PASSWORD ? this.renderResetPassword() : this.renderConfirmPassword()}
+					</ScrollView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }

@@ -38,143 +38,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { collectConfusables, hasZeroWidthPoints } from '../../../../util/validators';
 import Helper from 'common/Helper';
 import Routes from '../../../../common/routes';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
+import { displayName } from '../../../../../app.json';
 
 const { hexToBN } = util;
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	imputWrapper: {
-		flex: 0,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey050,
-		paddingHorizontal: 8
-	},
-	bottomModal: {
-		justifyContent: 'flex-end',
-		margin: 0
-	},
-	myAccountsText: {
-		...fontStyles.normal,
-		color: colors.blue,
-		fontSize: 16,
-		alignSelf: 'center'
-	},
-	myAccountsTouchable: {
-		padding: 28
-	},
-	addToAddressBookRoot: {
-		flex: 1,
-		padding: 24
-	},
-	addToAddressBookWrapper: {
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	addTextTitle: {
-		...fontStyles.normal,
-		fontSize: 24,
-		color: colors.black,
-		marginBottom: 24
-	},
-	addTextSubtitle: {
-		...fontStyles.normal,
-		fontSize: 16,
-		color: colors.grey600,
-		marginBottom: 24
-	},
-	addTextInput: {
-		...fontStyles.normal,
-		color: colors.black,
-		fontSize: 20
-	},
-	addInputWrapper: {
-		flexDirection: 'row',
-		borderWidth: 1,
-		borderRadius: 8,
-		borderColor: colors.grey050,
-		height: 50,
-		width: '100%'
-	},
-	input: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginHorizontal: 6,
-		width: '100%'
-	},
-	nextActionWrapper: {
-		flex: 1,
-		marginBottom: 16
-	},
-	buttonNextWrapper: {
-		flexDirection: 'row',
-		alignItems: 'flex-end'
-	},
-	buttonNext: {
-		flex: 1,
-		marginHorizontal: 24
-	},
-	addressErrorWrapper: {
-		margin: 16
-	},
-	footerContainer: {
-		flex: 1,
-		justifyContent: 'flex-end'
-	},
-	warningContainer: {
-		marginTop: 20,
-		marginHorizontal: 24,
-		marginBottom: 32
-	},
-	buyEth: {
-		color: colors.black,
-		textDecorationLine: 'underline'
-	},
-	confusabeError: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		margin: 16,
-		padding: 16,
-		borderWidth: 1,
-		borderColor: colors.red,
-		backgroundColor: colors.red000,
-		borderRadius: 8
-	},
-	confusabeWarning: {
-		borderColor: colors.yellow,
-		backgroundColor: colors.yellow100
-	},
-	confusableTitle: {
-		marginTop: -3,
-		color: colors.red,
-		...fontStyles.bold,
-		fontSize: 14
-	},
-	confusableMsg: {
-		color: colors.red,
-		fontSize: 12,
-		lineHeight: 16,
-		paddingRight: 10
-	},
-	black: {
-		color: colors.black
-	},
-	warningIcon: {
-		marginRight: 8
-	}
-});
-
 const dummy = () => true;
 
 /**
  * View that wraps the wraps the "Send" screen
  */
 class SendFlow extends PureComponent {
-	static navigationOptions = ({ navigation, screenProps }) =>
-		getSendFlowTitle('send.send_to', navigation, screenProps);
+	static navigationOptions = ({ navigation, screenProps }) => getSendFlowTitle('send.title', navigation, screenProps);
 
 	static propTypes = {
 		/**
@@ -615,7 +490,7 @@ class SendFlow extends PureComponent {
 			<>
 				{'\n'}
 				<Text bold style={styles.buyEth} onPress={this.goToBuy}>
-					{strings('fiat_on_ramp.buy_eth')}
+					{strings('fiat_on_ramp.buy_eth', { appName: displayName })}
 				</Text>
 			</>
 		);
@@ -649,114 +524,115 @@ class SendFlow extends PureComponent {
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'send-screen'}>
-				<View style={styles.imputWrapper}>
-					<AddressFrom
-						onPressIcon={this.toggleFromAccountModal}
-						fromAccountAddress={fromSelectedAddress}
-						fromAccountName={fromAccountName}
-						fromAccountBalance={fromAccountBalance}
-					/>
-					<AddressTo
-						inputRef={this.addressToInputRef}
-						highlighted={toInputHighlighted}
-						addressToReady={toSelectedAddressReady}
-						toSelectedAddress={toSelectedAddress}
-						toAddressName={toSelectedAddressName}
-						onToSelectedAddressChange={this.onToSelectedAddressChange}
-						onScan={this.onScan}
-						onClear={this.onToClear}
-						onInputFocus={this.onToInputFocus}
-						onInputBlur={this.onToInputFocus}
-						onSubmit={this.onTransactionDirectionSet}
-						inputWidth={inputWidth}
-						confusableCollection={(!existingContact && confusableCollection) || []}
-					/>
-				</View>
-
-				{!toSelectedAddressReady ? (
-					<AddressList
-						inputSearch={toSelectedAddress}
-						onAccountPress={this.onToSelectedAddressChangeDirect}
-						onAccountLongPress={dummy}
-					/>
-				) : (
-					<View style={styles.nextActionWrapper}>
-						<ScrollView>
-							{addressError && (
-								<View style={styles.addressErrorWrapper} testID={'address-error'}>
-									<ErrorMessage
-										errorMessage={addressError}
-										errorContinue={!!errorContinue}
-										onContinue={this.onTransactionDirectionSet}
-										isOnlyWarning={!!isOnlyWarning}
-									/>
-								</View>
-							)}
-							{displayConfusableWarning && (
-								<View style={[styles.confusabeError, displayAsWarning && styles.confusabeWarning]}>
-									<View style={styles.warningIcon}>
-										<Icon
-											size={16}
-											color={displayAsWarning ? colors.black : colors.red}
-											name="exclamation-triangle"
+				<OnboardingScreenWithBg screen={'a'}>
+					<View style={styles.inputWrapper}>
+						<AddressFrom
+							onPressIcon={this.toggleFromAccountModal}
+							fromAccountAddress={fromSelectedAddress}
+							fromAccountName={fromAccountName}
+							fromAccountBalance={fromAccountBalance}
+						/>
+						<AddressTo
+							inputRef={this.addressToInputRef}
+							highlighted={toInputHighlighted}
+							addressToReady={toSelectedAddressReady}
+							toSelectedAddress={toSelectedAddress}
+							toAddressName={toSelectedAddressName}
+							onToSelectedAddressChange={this.onToSelectedAddressChange}
+							onScan={this.onScan}
+							onClear={this.onToClear}
+							onInputFocus={this.onToInputFocus}
+							onInputBlur={this.onToInputFocus}
+							onSubmit={this.onTransactionDirectionSet}
+							inputWidth={inputWidth}
+							confusableCollection={(!existingContact && confusableCollection) || []}
+						/>
+					</View>
+					{!toSelectedAddressReady ? (
+						<AddressList
+							inputSearch={toSelectedAddress}
+							onAccountPress={this.onToSelectedAddressChangeDirect}
+							onAccountLongPress={dummy}
+						/>
+					) : (
+						<View style={styles.nextActionWrapper}>
+							<ScrollView>
+								{addressError && (
+									<View style={styles.addressErrorWrapper} testID={'address-error'}>
+										<ErrorMessage
+											errorMessage={addressError}
+											errorContinue={!!errorContinue}
+											onContinue={this.onTransactionDirectionSet}
+											isOnlyWarning={!!isOnlyWarning}
 										/>
 									</View>
-									<View>
-										<Text style={[styles.confusableTitle, displayAsWarning && styles.black]}>
-											{strings('transaction.confusable_title')}
-										</Text>
-										<Text style={[styles.confusableMsg, displayAsWarning && styles.black]}>
-											{strings('transaction.confusable_msg')}
-										</Text>
+								)}
+								{displayConfusableWarning && (
+									<View style={[styles.confusabeError, displayAsWarning && styles.confusabeWarning]}>
+										<View style={styles.warningIcon}>
+											<Icon
+												size={16}
+												color={displayAsWarning ? colors.black : colors.red}
+												name="exclamation-triangle"
+											/>
+										</View>
+										<View>
+											<Text style={[styles.confusableTitle, displayAsWarning && styles.black]}>
+												{strings('transaction.confusable_title')}
+											</Text>
+											<Text style={[styles.confusableMsg, displayAsWarning && styles.black]}>
+												{strings('transaction.confusable_msg')}
+											</Text>
+										</View>
 									</View>
-								</View>
-							)}
-							{addToAddressToAddressBook && (
-								<TouchableOpacity
-									style={styles.myAccountsTouchable}
-									onPress={this.toggleAddToAddressBookModal}
-									testID={'add-address-button'}
-								>
-									<Text style={styles.myAccountsText}>
-										{strings('address_book.add_this_address')}
-									</Text>
-								</TouchableOpacity>
-							)}
-							{balanceIsZero && (
-								<View style={styles.warningContainer}>
-									<WarningMessage
-										warningMessage={
-											<>
-												{strings('transaction.not_enough_for_gas', {
-													ticker: getTicker(ticker)
-												})}
-
-												{this.renderBuyEth()}
-											</>
-										}
-									/>
-								</View>
-							)}
-						</ScrollView>
-						<View style={styles.footerContainer} testID={'no-eth-message'}>
-							{!errorContinue && (
-								<View style={styles.buttonNextWrapper}>
-									<StyledButton
-										type={'confirm'}
-										containerStyle={styles.buttonNext}
-										onPress={this.onTransactionDirectionSet}
-										testID={'address-book-next-button'}
+								)}
+								{addToAddressToAddressBook && (
+									<TouchableOpacity
+										style={styles.myAccountsTouchable}
+										onPress={this.toggleAddToAddressBookModal}
+										testID={'add-address-button'}
 									>
-										{strings('address_book.next')}
-									</StyledButton>
-								</View>
-							)}
-						</View>
-					</View>
-				)}
+										<Text style={styles.myAccountsText}>
+											{strings('address_book.add_this_address')}
+										</Text>
+									</TouchableOpacity>
+								)}
+								{balanceIsZero && (
+									<View style={styles.warningContainer}>
+										<WarningMessage
+											warningMessage={
+												<>
+													{strings('transaction.not_enough_for_gas', {
+														ticker: getTicker(ticker)
+													})}
 
-				{this.renderFromAccountModal()}
-				{this.renderAddToAddressBookModal()}
+													{this.renderBuyEth()}
+												</>
+											}
+										/>
+									</View>
+								)}
+							</ScrollView>
+							<View style={styles.footerContainer} testID={'no-eth-message'}>
+								{!errorContinue && (
+									<View style={styles.buttonNextWrapper}>
+										<StyledButton
+											type={'confirm'}
+											containerStyle={styles.buttonNext}
+											onPress={this.onTransactionDirectionSet}
+											testID={'address-book-next-button'}
+										>
+											{strings('address_book.next')}
+										</StyledButton>
+									</View>
+								)}
+							</View>
+						</View>
+					)}
+
+					{this.renderFromAccountModal()}
+					{this.renderAddToAddressBookModal()}
+				</OnboardingScreenWithBg>
 			</SafeAreaView>
 		);
 	};

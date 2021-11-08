@@ -8,39 +8,7 @@ import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { connect } from 'react-redux';
 import preferences from '../../../../store/preferences';
 import RemoteImage from '../../../Base/RemoteImage';
-
-const styles = StyleSheet.create({
-	addressElementWrapper: {
-		padding: 16,
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey050
-	},
-	addressElementInformation: {
-		flex: 1,
-		flexDirection: 'column'
-	},
-	avatar: {
-		width: 28,
-		height: 28,
-		borderRadius: 14,
-	},
-	addressIdenticon: {
-		paddingRight: 16
-	},
-	addressTextNickname: {
-		...fontStyles.normal,
-		flex: 1,
-		color: colors.black,
-		fontSize: 14
-	},
-	addressTextAddress: {
-		...fontStyles.normal,
-		fontSize: 12,
-		color: colors.grey500
-	}
-});
+import styles from './styles/index';
 
 class AddressElement extends PureComponent {
 	static propTypes = {
@@ -69,7 +37,7 @@ class AddressElement extends PureComponent {
 	state = {
 		name: this.props.name,
 		address: this.props.address,
-		profile: {},
+		profile: {}
 	};
 
 	componentDidMount = async () => {
@@ -82,14 +50,18 @@ class AddressElement extends PureComponent {
 		this.fetchProfile(address);
 	};
 
-	fetchProfile = async (address) => {
+	fetchProfile = async address => {
 		const profile = await preferences.peerProfile(address);
 		if (profile) this.setState({ profile });
-	}
+	};
 
 	render = () => {
 		const { onAccountPress, onAccountLongPress } = this.props;
-		const { name, address, profile: { avatar } } = this.state;
+		const {
+			name,
+			address,
+			profile: { avatar }
+		} = this.state;
 		const primaryLabel = name && name[0] !== ' ' ? name : renderShortAddress(address);
 		const secondaryLabel = name && name[0] !== ' ' && renderShortAddress(address);
 		return (
@@ -100,10 +72,11 @@ class AddressElement extends PureComponent {
 				style={styles.addressElementWrapper}
 			>
 				<View style={styles.addressIdenticon}>
-					{avatar && avatar.length != 0
-						? <RemoteImage source={{ uri: `data:image/*;base64,${avatar}` }} style={styles.avatar} />
-						: <Identicon address={address} diameter={28} />
-					}
+					{avatar && avatar.length != 0 ? (
+						<RemoteImage source={{ uri: `data:image/*;base64,${avatar}` }} style={styles.avatar} />
+					) : (
+						<Identicon address={address} diameter={28} />
+					)}
 				</View>
 				<View style={styles.addressElementInformation}>
 					<Text style={styles.addressTextNickname} numberOfLines={1}>

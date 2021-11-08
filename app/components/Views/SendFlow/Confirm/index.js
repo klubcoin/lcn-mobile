@@ -61,166 +61,14 @@ import { collectConfusables } from '../../../../util/validators';
 import InfoModal from '../../../UI/Swaps/components/InfoModal';
 import { toChecksumAddress } from 'ethereumjs-util';
 import { removeFavoriteCollectible } from '../../../../actions/collectibles';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const EDIT = 'edit';
 const EDIT_NONCE = 'edit_nonce';
 const REVIEW = 'review';
 
 const { hexToBN, BNToHex } = util;
-
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	inputWrapper: {
-		flex: 0,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey050,
-		paddingHorizontal: 8
-	},
-	amountWrapper: {
-		flexDirection: 'column',
-		margin: 24
-	},
-	textAmountLabel: {
-		...fontStyles.normal,
-		fontSize: 14,
-		textAlign: 'center',
-		color: colors.grey500,
-		textTransform: 'uppercase',
-		marginVertical: 3
-	},
-	textAmount: {
-		...fontStyles.normal,
-		fontWeight: fontStyles.light.fontWeight,
-		color: colors.black,
-		fontSize: 44,
-		textAlign: 'center'
-	},
-	buttonNext: {
-		flex: 1,
-		marginHorizontal: 24,
-		alignSelf: 'flex-end'
-	},
-	buttonNextWrapper: {
-		flexDirection: 'row',
-		alignItems: 'flex-end',
-		marginBottom: 16
-	},
-	actionTouchable: {
-		padding: 12
-	},
-	actionText: {
-		...fontStyles.normal,
-		color: colors.blue,
-		fontSize: 14,
-		alignSelf: 'center'
-	},
-	actionsWrapper: {
-		margin: 24
-	},
-	CollectibleMediaWrapper: {
-		flexDirection: 'column',
-		alignItems: 'center',
-		margin: 16
-	},
-	collectibleName: {
-		...fontStyles.normal,
-		fontSize: 18,
-		color: colors.black,
-		textAlign: 'center'
-	},
-	collectibleTokenId: {
-		...fontStyles.normal,
-		fontSize: 12,
-		color: colors.grey500,
-		marginTop: 8,
-		textAlign: 'center'
-	},
-	CollectibleMedia: {
-		height: 120,
-		width: 120
-	},
-	qrCode: {
-		marginBottom: 16,
-		paddingHorizontal: 36,
-		paddingBottom: 24,
-		paddingTop: 16,
-		backgroundColor: colors.grey000,
-		borderRadius: 8,
-		width: '100%'
-	},
-	hexDataWrapper: {
-		padding: 10,
-		alignItems: 'center'
-	},
-	addressTitle: {
-		...fontStyles.bold,
-		color: colors.black,
-		alignItems: 'center',
-		justifyContent: 'center',
-		textAlign: 'center',
-		fontSize: 16,
-		marginBottom: 16
-	},
-	hexDataClose: {
-		zIndex: 999,
-		position: 'absolute',
-		top: 12,
-		right: 20
-	},
-	hexDataText: {
-		textAlign: 'justify'
-	},
-	bottomModal: {
-		justifyContent: 'flex-end',
-		margin: 0
-	},
-	totalAmount: {
-		...fontStyles.normal,
-		color: colors.fontPrimary,
-		fontSize: 14,
-		textAlign: 'right',
-		textTransform: 'uppercase',
-		flexWrap: 'wrap',
-		flex: 1
-	},
-	keyboardAwareWrapper: {
-		flex: 1,
-		justifyContent: 'flex-end'
-	},
-	errorWrapper: {
-		marginHorizontal: 24,
-		marginTop: 12,
-		paddingHorizontal: 10,
-		paddingVertical: 8,
-		backgroundColor: colors.red000,
-		borderColor: colors.red,
-		borderRadius: 8,
-		borderWidth: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	error: {
-		color: colors.red,
-		fontSize: 12,
-		lineHeight: 16,
-		...fontStyles.normal,
-		textAlign: 'center'
-	},
-	underline: {
-		textDecorationLine: 'underline',
-		...fontStyles.bold
-	},
-	over: {
-		color: colors.red,
-		...fontStyles.bold
-	},
-	text: {
-		lineHeight: 20
-	}
-});
 
 /**
  * View that wraps the wraps the "Send" screen
@@ -873,6 +721,7 @@ class Confirm extends PureComponent {
 	renderHexDataModal = () => {
 		const { hexDataModalVisible } = this.state;
 		const { data } = this.props.transactionState.transaction;
+
 		return (
 			<Modal
 				isVisible={hexDataModalVisible}
@@ -995,110 +844,114 @@ class Confirm extends PureComponent {
 			? strings('transaction.buy_more_eth')
 			: strings('transaction.get_ether', { networkName });
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'txn-confirm-screen'}>
-				<View style={styles.inputWrapper}>
-					<AddressFrom
-						onPressIcon={!paymentRequest ? null : this.toggleFromAccountModal}
-						fromAccountAddress={fromSelectedAddress}
-						fromAccountName={fromAccountName}
-						fromAccountBalance={fromAccountBalance}
-					/>
-					<AdressToComponentWrap />
-				</View>
-
-				<InfoModal
-					isVisible={warningModalVisible}
-					toggleModal={this.toggleWarningModal}
-					title={strings('transaction.confusable_title')}
-					body={<Text style={styles.text}>{strings('transaction.confusable_msg')}</Text>}
-				/>
-
-				<ScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
-					{!selectedAsset.tokenId ? (
-						<View style={styles.amountWrapper}>
-							<Text style={styles.textAmountLabel}>{strings('transaction.amount')}</Text>
-							<Text style={styles.textAmount} testID={'confirm-txn-amount'}>
-								{transactionValue}
-							</Text>
-							{isMainNet(chainId) && <Text style={styles.textAmountLabel}>{transactionValueFiat}</Text>}
-						</View>
-					) : (
-						<View style={styles.amountWrapper}>
-							<Text style={styles.textAmountLabel}>{strings('transaction.asset')}</Text>
-							<View style={styles.CollectibleMediaWrapper}>
-								<CollectibleMedia
-									small
-									iconStyle={styles.CollectibleMedia}
-									containerStyle={styles.CollectibleMedia}
-									collectible={selectedAsset}
-								/>
-							</View>
-							<View>
-								<Text style={styles.collectibleName}>{selectedAsset.name}</Text>
-								<Text style={styles.collectibleTokenId}>{`#${selectedAsset.tokenId}`}</Text>
-							</View>
-						</View>
-					)}
-					<TransactionReviewFeeCard
-						totalGasFiat={transactionFeeFiat}
-						totalGasEth={transactionFee}
-						totalFiat={isMainNet(chainId) ? transactionTotalAmountFiat : <Text />}
-						fiat={transactionValueFiat}
-						totalValue={transactionTotalAmount}
-						transactionValue={transactionValue}
-						primaryCurrency={primaryCurrency}
-						gasEstimationReady={gasEstimationReady}
-						edit={() => this.edit(EDIT)}
-						over={over}
-						warningGasPriceHigh={warningGasPriceHigh}
-						showCustomNonce={showCustomNonce}
-						nonceValue={nonce}
-						onNonceEdit={() => this.edit(EDIT_NONCE)}
-					/>
-					{errorMessage && (
-						<View style={styles.errorWrapper}>
-							<TouchableOpacity onPress={errorPress}>
-								<Text style={styles.error}>{errorMessage}</Text>
-								{/* only show buy more on mainnet */}
-								{over && is_main_net && (
-									<Text style={[styles.error, styles.underline]}>{errorLinkText}</Text>
-								)}
-							</TouchableOpacity>
-						</View>
-					)}
-					{!!warningGasPriceHigh && (
-						<View style={styles.errorWrapper}>
-							<Text style={styles.error}>{warningGasPriceHigh}</Text>
-						</View>
-					)}
-					<View style={styles.actionsWrapper}>
-						{showHexData && (
-							<TouchableOpacity style={styles.actionTouchable} onPress={this.toggleHexDataModal}>
-								<Text style={styles.actionText}>{strings('transaction.hex_data')}</Text>
-							</TouchableOpacity>
-						)}
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.wrapper} testID={'txn-confirm-screen'}>
+					<View style={styles.inputWrapper}>
+						<AddressFrom
+							onPressIcon={!paymentRequest ? null : this.toggleFromAccountModal}
+							fromAccountAddress={fromSelectedAddress}
+							fromAccountName={fromAccountName}
+							fromAccountBalance={fromAccountBalance}
+						/>
+						<AdressToComponentWrap />
 					</View>
-				</ScrollView>
-				<View style={styles.buttonNextWrapper}>
-					<StyledButton
-						type={'confirm'}
-						disabled={!gasEstimationReady || Boolean(errorMessage)}
-						containerStyle={styles.buttonNext}
-						onPress={this.onNext}
-						testID={'txn-confirm-send-button'}
-					>
-						{transactionConfirmed ? (
-							<ActivityIndicator size="small" color="white" />
+
+					<InfoModal
+						isVisible={warningModalVisible}
+						toggleModal={this.toggleWarningModal}
+						title={strings('transaction.confusable_title')}
+						body={<Text style={styles.text}>{strings('transaction.confusable_msg')}</Text>}
+					/>
+
+					<ScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
+						{!selectedAsset.tokenId ? (
+							<View style={styles.amountWrapper}>
+								<Text style={styles.textAmountLabel}>{strings('transaction.amount')}</Text>
+								<Text style={styles.textAmount} testID={'confirm-txn-amount'}>
+									{transactionValue}
+								</Text>
+								{isMainNet(chainId) && (
+									<Text style={styles.textAmountLabel}>{transactionValueFiat}</Text>
+								)}
+							</View>
 						) : (
-							strings('transaction.send')
+							<View style={styles.amountWrapper}>
+								<Text style={styles.textAmountLabel}>{strings('transaction.asset')}</Text>
+								<View style={styles.CollectibleMediaWrapper}>
+									<CollectibleMedia
+										small
+										iconStyle={styles.CollectibleMedia}
+										containerStyle={styles.CollectibleMedia}
+										collectible={selectedAsset}
+									/>
+								</View>
+								<View>
+									<Text style={styles.collectibleName}>{selectedAsset.name}</Text>
+									<Text style={styles.collectibleTokenId}>{`#${selectedAsset.tokenId}`}</Text>
+								</View>
+							</View>
 						)}
-					</StyledButton>
-				</View>
-				{this.renderFromAccountModal()}
-				{mode === EDIT && this.renderCustomGasModal()}
-				{mode === EDIT_NONCE && this.renderCustomNonceModal()}
-				{this.renderHexDataModal()}
-			</SafeAreaView>
+						<TransactionReviewFeeCard
+							totalGasFiat={transactionFeeFiat}
+							totalGasEth={transactionFee}
+							totalFiat={isMainNet(chainId) ? transactionTotalAmountFiat : <Text />}
+							fiat={transactionValueFiat}
+							totalValue={transactionTotalAmount}
+							transactionValue={transactionValue}
+							primaryCurrency={primaryCurrency}
+							gasEstimationReady={gasEstimationReady}
+							edit={() => this.edit(EDIT)}
+							over={over}
+							warningGasPriceHigh={warningGasPriceHigh}
+							showCustomNonce={showCustomNonce}
+							nonceValue={nonce}
+							onNonceEdit={() => this.edit(EDIT_NONCE)}
+						/>
+						{errorMessage && (
+							<View style={styles.errorWrapper}>
+								<TouchableOpacity onPress={errorPress}>
+									<Text style={styles.error}>{errorMessage}</Text>
+									{/* only show buy more on mainnet */}
+									{over && is_main_net && (
+										<Text style={[styles.error, styles.underline]}>{errorLinkText}</Text>
+									)}
+								</TouchableOpacity>
+							</View>
+						)}
+						{!!warningGasPriceHigh && (
+							<View style={styles.errorWrapper}>
+								<Text style={styles.error}>{warningGasPriceHigh}</Text>
+							</View>
+						)}
+						<View style={styles.actionsWrapper}>
+							{showHexData && (
+								<TouchableOpacity style={styles.actionTouchable} onPress={this.toggleHexDataModal}>
+									<Text style={styles.actionText}>{strings('transaction.hex_data')}</Text>
+								</TouchableOpacity>
+							)}
+						</View>
+					</ScrollView>
+					<View style={styles.buttonNextWrapper}>
+						<StyledButton
+							type={'confirm'}
+							disabled={!gasEstimationReady || Boolean(errorMessage)}
+							containerStyle={styles.buttonNext}
+							onPress={this.onNext}
+							testID={'txn-confirm-send-button'}
+						>
+							{transactionConfirmed ? (
+								<ActivityIndicator size="small" color="white" />
+							) : (
+								strings('transaction.send')
+							)}
+						</StyledButton>
+					</View>
+					{this.renderFromAccountModal()}
+					{mode === EDIT && this.renderCustomGasModal()}
+					{mode === EDIT_NONCE && this.renderCustomNonceModal()}
+					{this.renderHexDataModal()}
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

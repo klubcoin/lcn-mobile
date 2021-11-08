@@ -21,100 +21,9 @@ import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
 import { importAccountFromPrivateKey } from '../../../util/address';
 import PreventScreenshot from '../../../core/PreventScreenshot';
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		backgroundColor: colors.blue000
-	},
-	wrapper: {
-		flexGrow: 1
-	},
-	content: {
-		alignItems: 'flex-start'
-	},
-	title: {
-		fontSize: 32,
-		marginTop: 20,
-		marginBottom: 40,
-		color: colors.fontPrimary,
-		justifyContent: 'center',
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	dataRow: {
-		marginBottom: 10
-	},
-	label: {
-		fontSize: 14,
-		color: colors.fontPrimary,
-		textAlign: 'left',
-		...fontStyles.normal
-	},
-	subtitleText: {
-		fontSize: 18,
-		...fontStyles.bold
-	},
-	scanPkeyRow: {
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginTop: 20
-	},
-	scanPkeyText: {
-		fontSize: 14,
-		color: colors.blue
-	},
-	icon: {
-		textAlign: 'left',
-		fontSize: 50,
-		marginTop: 0,
-		marginLeft: 0
-	},
-	buttonWrapper: {
-		flex: 1,
-		justifyContent: 'flex-end',
-		padding: 20,
-		backgroundColor: colors.white
-	},
-	button: {
-		marginBottom: Device.isIphoneX() ? 20 : 0
-	},
-	top: {
-		paddingTop: 0,
-		padding: 30
-	},
-	bottom: {
-		width: '100%',
-		padding: 30,
-		backgroundColor: colors.white
-	},
-	input: {
-		marginTop: 20,
-		marginBottom: 10,
-		backgroundColor: colors.white,
-		paddingTop: 20,
-		paddingBottom: 20,
-		paddingLeft: 20,
-		paddingRight: 20,
-		fontSize: 15,
-		borderRadius: 4,
-		height: 120,
-		borderWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100,
-		...fontStyles.normal
-	},
-	navbarRightButton: {
-		alignSelf: 'flex-end',
-		paddingHorizontal: 22,
-		paddingTop: 20,
-		paddingBottom: 10,
-		marginTop: Device.isIphoneX() ? 40 : 20
-	},
-	closeIcon: {
-		fontSize: 28,
-		color: colors.fontSecondary
-	}
-});
-
+import { displayName } from '../../../../app.json';
+import styles from './styles/index';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 /**
  * View that's displayed the first time a user receives funds
  */
@@ -169,7 +78,7 @@ export default class ImportPrivateKey extends PureComponent {
 	learnMore = () =>
 		this.props.navigation.navigate('Webview', {
 			url: routes.mainNetWork.helpSupportUrl,
-			title: strings('drawer.metamask_support')
+			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 
 	onInputChange = value => {
@@ -208,10 +117,12 @@ export default class ImportPrivateKey extends PureComponent {
 							<MaterialIcon name="close" size={15} style={styles.closeIcon} />
 						</TouchableOpacity>
 						<View style={styles.top}>
-							<Icon name="download" style={styles.icon} />
+							<Icon name="download" style={styles.icon} color={colors.white} />
 							<Text style={styles.title}>{strings('import_private_key.title')}</Text>
 							<View style={styles.dataRow}>
-								<Text style={styles.label}>{strings('import_private_key.description_one')}</Text>
+								<Text style={styles.label}>
+									{strings('import_private_key.description_one', { appName: displayName })}
+								</Text>
 							</View>
 							<View style={styles.dataRow}>
 								<Text style={styles.label} onPress={this.learnMore}>

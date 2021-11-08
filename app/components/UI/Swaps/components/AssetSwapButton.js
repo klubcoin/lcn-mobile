@@ -8,6 +8,7 @@ import InfoModal from './InfoModal';
 
 import useModalHandler from '../../../Base/hooks/useModalHandler';
 import { strings } from '../../../../../locales/i18n';
+import { displayName } from '../../../../../app.json';
 
 const styles = StyleSheet.create({
 	disabledButton: {
@@ -20,9 +21,14 @@ function AssetSwapButton({ isFeatureLive, isNetworkAllowed, isAssetAllowed, onPr
 	const isDisabled = !isFeatureLive || !isNetworkAllowed || !isAssetAllowed;
 
 	const [title, body] = useMemo(() => {
-		if (!isNetworkAllowed) return [strings('swaps.wrong_network_title'), strings('swaps.wrong_network_body')];
+		if (!isNetworkAllowed)
+			return [
+				strings('swaps.wrong_network_title'),
+				strings('swaps.wrong_network_body', { appName: displayName })
+			];
 		if (!isAssetAllowed) return [strings('swaps.unallowed_asset_title'), strings('swaps.unallowed_asset_body')];
-		if (!isFeatureLive) return [strings('swaps.feature_off_title'), strings('swaps.feature_off_body')];
+		if (!isFeatureLive)
+			return [strings('swaps.feature_off_title'), strings('swaps.feature_off_body', { appName: displayName })];
 		return ['', ''];
 	}, [isAssetAllowed, isFeatureLive, isNetworkAllowed]);
 	return (

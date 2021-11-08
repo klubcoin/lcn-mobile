@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
@@ -14,23 +14,22 @@ import APIService from '../../../services/APIService';
 import AddCustomApps from './AddCustomApps';
 import RemoteImage from '../../Base/RemoteImage';
 
-const contracts = Object.keys(contractMap)
-	.map(address => ({
-		address,
-		...contractMap[address],
-		watchedAsset: true,
-	}));
+const contracts = Object.keys(contractMap).map(address => ({
+	address,
+	...contractMap[address],
+	watchedAsset: true
+}));
 
 const AddTokenByAddress = () => ({
 	type: 'address',
 	name: strings('asset_overview.address'),
 	description: 'Add token by address',
-	iconUrl: 'https://docs.liquichain.io/media/app/licoin.png',
+	iconUrl: 'https://docs.liquichain.io/media/app/licoin.png'
 });
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.transparent,
 		flex: 1
 	},
 	rowWrapper: {
@@ -47,15 +46,15 @@ const styles = StyleSheet.create({
 		width: 32,
 		height: 32,
 		borderRadius: 16,
-		marginLeft: 10,
+		marginLeft: 10
 	},
 	type: {
 		flex: 1,
-		padding: 16,
+		padding: 16
 	},
 	dropdownIcon: {
 		marginHorizontal: 10,
-		alignSelf: 'center',
+		alignSelf: 'center'
 	},
 	textInput: {
 		borderWidth: 1,
@@ -68,14 +67,13 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		color: colors.red,
 		...fontStyles.normal
-	},
+	}
 });
 
 /**
  * Copmonent that provides ability to add custom tokens.
  */
 export default class AddCustomTokenOrApp extends PureComponent {
-
 	static propTypes = {
 		/**
 		/* navigation object required to push new views
@@ -95,8 +93,8 @@ export default class AddCustomTokenOrApp extends PureComponent {
 			typeOptions: observable,
 			selectedType: observable,
 			showTypes: observable,
-			appList: observable,
-		})
+			appList: observable
+		});
 	}
 
 	onBack = () => {
@@ -113,15 +111,15 @@ export default class AddCustomTokenOrApp extends PureComponent {
 				this.appList = [...json].filter(e => e.shortCode !== 'LIC');
 				this.typeOptions = [AddTokenByAddress(), ...this.appList];
 			}
-		})
+		});
 	}
 
 	renderSelectTypes = () => {
 		const options = this.typeOptions.map(e => ({
 			key: e.shortCode,
-			value: e.description,
-			desc: '',
-			icon: e.iconUrl,
+			value: e.name,
+			desc: e.description,
+			icon: e.iconUrl
 		}));
 
 		return (
@@ -129,12 +127,12 @@ export default class AddCustomTokenOrApp extends PureComponent {
 				visible={this.showTypes}
 				hideKey={true}
 				options={options}
-				onSelect={(item) => {
+				onSelect={item => {
 					this.selectedAsset = null;
 					this.selectedType = this.typeOptions.find(e => e.shortCode === item.key);
 					this.showTypes = false;
 				}}
-				onClose={() => this.showTypes = false}
+				onClose={() => (this.showTypes = false)}
 			/>
 		);
 	};
@@ -142,28 +140,29 @@ export default class AddCustomTokenOrApp extends PureComponent {
 	renderForm() {
 		const { name, shortCode } = this.selectedType;
 		if (name === AddTokenByAddress().name) {
-			return <AddByTokenAddress
-				onCancel={this.onBack.bind(this)}
-				onAddToken={this.onBack.bind(this)}
-			/>
+			return <AddByTokenAddress onCancel={this.onBack.bind(this)} onAddToken={this.onBack.bind(this)} />;
 		}
 
 		switch (shortCode) {
 			case 'E20':
 			case 'E72':
-				return <AddContractsERC
-					contracts={contracts.filter((e) =>
-						(e.erc20 && shortCode == 'E20') || (e.erc721 && shortCode == 'E72')
-					)}
-					onCancel={this.onBack.bind(this)}
-					onAddToken={this.onBack.bind(this)}
-				/>
+				return (
+					<AddContractsERC
+						contracts={contracts.filter(
+							e => (e.erc20 && shortCode == 'E20') || (e.erc721 && shortCode == 'E72')
+						)}
+						onCancel={this.onBack.bind(this)}
+						onAddToken={this.onBack.bind(this)}
+					/>
+				);
 			default:
-				return <AddCustomApps
-					selectedApp={this.selectedType}
-					onCancel={this.onBack.bind(this)}
-					onAddToken={this.onBack.bind(this)}
-				/>
+				return (
+					<AddCustomApps
+						selectedApp={this.selectedType}
+						onCancel={this.onBack.bind(this)}
+						onAddToken={this.onBack.bind(this)}
+					/>
+				);
 		}
 	}
 
@@ -172,28 +171,14 @@ export default class AddCustomTokenOrApp extends PureComponent {
 
 		return (
 			<View style={styles.rowWrapper}>
-				<Text style={fontStyles.normal}>{strings('token.select_type')}</Text>
-				<TouchableOpacity
-					style={styles.selectType}
-					activeOpacity={0.8}
-					onPress={() => this.showTypes = true}
-				>
-					<RemoteImage
-						resizeMode={'contain'}
-						source={{ uri: iconUrl }}
-						style={styles.logo}
-					/>
-					<Text style={[fontStyles.normal, styles.type]}>
-						{description}
-					</Text>
-					<FontAwesome
-						name={'caret-down'}
-						size={20}
-						style={styles.dropdownIcon}
-					/>
+				<Text style={[fontStyles.normal, { color: colors.white }]}>{strings('token.select_type')}</Text>
+				<TouchableOpacity style={styles.selectType} activeOpacity={0.8} onPress={() => (this.showTypes = true)}>
+					<RemoteImage resizeMode={'contain'} source={{ uri: iconUrl }} style={styles.logo} />
+					<Text style={[fontStyles.normal, styles.type, { color: colors.white }]}>{name}</Text>
+					<FontAwesome name={'caret-down'} size={20} style={styles.dropdownIcon} />
 				</TouchableOpacity>
 			</View>
-		)
+		);
 	}
 
 	render() {
@@ -202,9 +187,9 @@ export default class AddCustomTokenOrApp extends PureComponent {
 				{this.renderSelectType()}
 				{this.renderForm()}
 				{this.renderSelectTypes()}
-			</View >
+			</View>
 		);
-	};
+	}
 }
 
 observer(AddCustomTokenOrApp);

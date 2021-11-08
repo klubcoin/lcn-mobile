@@ -12,6 +12,7 @@ import AppConstants from './AppConstants';
 import { PUSH_NOTIFICATIONS_PROMPT_COUNT, PUSH_NOTIFICATIONS_PROMPT_TIME } from '../constants/storage';
 import { RPC } from '../constants/network';
 import { safeToChecksumAddress } from '../util/address';
+import { displayName } from '../../app.json';
 
 const constructTitleAndMessage = data => {
 	let title, message;
@@ -264,7 +265,7 @@ class NotificationManager {
 				if (!permissions || !permissions.alert) {
 					Alert.alert(
 						strings('notifications.prompt_title'),
-						strings('notifications.prompt_desc'),
+						strings('notifications.prompt_desc', { appName: displayName }),
 						[
 							{
 								text: strings('notifications.prompt_cancel'),

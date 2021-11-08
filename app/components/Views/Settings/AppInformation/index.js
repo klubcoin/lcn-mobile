@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import { strings } from '../../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import AppConstants from '../../../../core/AppConstants';
+import { displayName } from '../../../../../app.json';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -68,14 +69,14 @@ const styles = StyleSheet.create({
 	}
 });
 
-const foxImage = require('../../../../images/fox.png'); // eslint-disable-line import/no-commonjs
+const foxImage = require('../../../../images/klubcoin_lighten.png');
 
 /**
  * View that contains app information
  */
 export default class AppInformation extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
-		getNavigationOptionsTitle(strings('app_settings.info_title'), navigation);
+		getNavigationOptionsTitle(strings('app_settings.info_title', { appName: displayName }), navigation);
 
 	static propTypes = {
 		/**
@@ -121,7 +122,7 @@ export default class AppInformation extends PureComponent {
 
 	onSupportCenter = () => {
 		const url = routes.mainNetWork.helpSupportUrl;
-		this.goTo(url, strings('drawer.metamask_support'));
+		this.goTo(url, strings('drawer.metamask_support', { appName: displayName }));
 	};
 
 	onWebSite = () => {
@@ -131,7 +132,7 @@ export default class AppInformation extends PureComponent {
 
 	onContactUs = () => {
 		const url = routes.mainNetWork.reportIssueUrl;
-		this.goTo(url, strings('drawer.metamask_support'));
+		this.goTo(url, strings('drawer.metamask_support', { appName: displayName }));
 	};
 
 	render = () => (

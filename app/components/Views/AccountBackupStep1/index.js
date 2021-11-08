@@ -16,87 +16,8 @@ import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import SkipAccountSecurityModal from '../../UI/SkipAccountSecurityModal';
 import SeedPhraseVideo from '../../UI/SeedPhraseVideo';
-
-const styles = StyleSheet.create({
-	mainWrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	scrollviewWrapper: {
-		flexGrow: 1
-	},
-	wrapper: {
-		flex: 1,
-		padding: 20,
-		paddingTop: 0,
-		paddingBottom: 0
-	},
-	content: {
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		flex: 1,
-		marginBottom: 10
-	},
-	title: {
-		fontSize: 24,
-		marginBottom: 40,
-		color: colors.fontPrimary,
-		textAlign: 'center',
-		...fontStyles.bold
-	},
-	text: {
-		marginTop: 32,
-		justifyContent: 'center'
-	},
-	label: {
-		lineHeight: scaling.scale(20),
-		fontSize: scaling.scale(14),
-		color: colors.fontPrimary,
-		textAlign: 'center',
-		...fontStyles.normal
-	},
-	buttonWrapper: {
-		flex: 1,
-		justifyContent: 'flex-end'
-	},
-	bold: {
-		...fontStyles.bold
-	},
-	blue: {
-		color: colors.blue
-	},
-	remindLaterText: {
-		textAlign: 'center',
-		fontSize: 15,
-		lineHeight: 20,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	remindLaterSubText: {
-		textAlign: 'center',
-		fontSize: 11,
-		lineHeight: 20,
-		color: colors.grey600,
-		...fontStyles.normal
-	},
-	startSubText: {
-		textAlign: 'center',
-		fontSize: 11,
-		marginTop: 12,
-		color: colors.grey600,
-		...fontStyles.normal
-	},
-	remindLaterContainer: {
-		marginBottom: 34
-	},
-	remindLaterButton: {
-		elevation: 10,
-		zIndex: 10
-	},
-	ctaContainer: {
-		marginBottom: 30
-	}
-});
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 /**
  * View that's shown during the first step of
@@ -171,74 +92,76 @@ const AccountBackupStep1 = props => {
 	const hideWhatIsSeedphrase = () => setWhatIsSeedphraseModal(false);
 
 	return (
-		<SafeAreaView style={styles.mainWrapper}>
-			<ScrollView
-				contentContainerStyle={styles.scrollviewWrapper}
-				style={styles.mainWrapper}
-				testID={'account-backup-step-1-screen'}
-			>
-				<View style={styles.wrapper} testID={'protect-your-account-screen'}>
-					<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={2} />
-					<View style={styles.content}>
-						<Text style={styles.title}>{strings('account_backup_step_1.title')}</Text>
-						<SeedPhraseVideo />
-						<View style={styles.text}>
-							<Text style={styles.label}>
-								{strings('account_backup_step_1.info_text_1_1')}{' '}
-								<Text style={styles.blue} onPress={showWhatIsSeedphrase}>
-									{strings('account_backup_step_1.info_text_1_2')}
-								</Text>{' '}
-								{strings('account_backup_step_1.info_text_1_3')}{' '}
-								<Text style={styles.bold}>{strings('account_backup_step_1.info_text_1_4')}</Text>
-							</Text>
-						</View>
-					</View>
-					<View style={styles.buttonWrapper}>
-						{!hasFunds && (
-							<View style={styles.remindLaterContainer}>
-								<TouchableOpacity
-									style={styles.remindLaterButton}
-									onPress={showRemindLater}
-									hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
-									testID={'remind-me-later-button'}
-								>
-									<Text style={styles.remindLaterText}>
-										{strings('account_backup_step_1.remind_me_later')}
-									</Text>
-								</TouchableOpacity>
-								<Text style={styles.remindLaterSubText}>
-									{strings('account_backup_step_1.remind_me_later_subtext')}
+		<OnboardingScreenWithBg screen="a">
+			<SafeAreaView style={styles.mainWrapper}>
+				<ScrollView
+					contentContainerStyle={styles.scrollviewWrapper}
+					style={styles.mainWrapper}
+					testID={'account-backup-step-1-screen'}
+				>
+					<View style={styles.wrapper} testID={'protect-your-account-screen'}>
+						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={2} />
+						<View style={styles.content}>
+							<Text style={styles.title}>{strings('account_backup_step_1.title')}</Text>
+							<SeedPhraseVideo />
+							<View style={styles.text}>
+								<Text style={styles.label}>
+									{strings('account_backup_step_1.info_text_1_1')}{' '}
+									<Text style={styles.blue} onPress={showWhatIsSeedphrase}>
+										{strings('account_backup_step_1.info_text_1_2')}
+									</Text>{' '}
+									{strings('account_backup_step_1.info_text_1_3')}{' '}
+									<Text style={styles.bold}>{strings('account_backup_step_1.info_text_1_4')}</Text>
 								</Text>
 							</View>
-						)}
-						<View style={styles.ctaContainer}>
-							<StyledButton
-								containerStyle={styles.button}
-								type={'confirm'}
-								onPress={goNext}
-								testID={'submit-button'}
-							>
-								{strings('account_backup_step_1.cta_text')}
-							</StyledButton>
-							<Text style={styles.startSubText}>{strings('account_backup_step_1.cta_subText')}</Text>
+						</View>
+						<View style={styles.buttonWrapper}>
+							{!hasFunds && (
+								<View style={styles.remindLaterContainer}>
+									<TouchableOpacity
+										style={styles.remindLaterButton}
+										onPress={showRemindLater}
+										hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
+										testID={'remind-me-later-button'}
+									>
+										<Text style={styles.remindLaterText}>
+											{strings('account_backup_step_1.remind_me_later')}
+										</Text>
+									</TouchableOpacity>
+									<Text style={styles.remindLaterSubText}>
+										{strings('account_backup_step_1.remind_me_later_subtext')}
+									</Text>
+								</View>
+							)}
+							<View style={styles.ctaContainer}>
+								<StyledButton
+									containerStyle={styles.button}
+									type={'confirm'}
+									onPress={goNext}
+									testID={'submit-button'}
+								>
+									{strings('account_backup_step_1.cta_text')}
+								</StyledButton>
+								<Text style={styles.startSubText}>{strings('account_backup_step_1.cta_subText')}</Text>
+							</View>
 						</View>
 					</View>
-				</View>
-			</ScrollView>
-			{Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />}
-			<SkipAccountSecurityModal
-				modalVisible={showRemindLaterModal}
-				onCancel={secureNow}
-				onConfirm={skip}
-				skipCheckbox={skipCheckbox}
-				onPress={hideRemindLaterModal}
-				toggleSkipCheckbox={toggleSkipCheckbox}
-			/>
-			<SeedphraseModal
-				showWhatIsSeedphraseModal={showWhatIsSeedphraseModal}
-				hideWhatIsSeedphrase={hideWhatIsSeedphrase}
-			/>
-		</SafeAreaView>
+				</ScrollView>
+				{Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />}
+				<SkipAccountSecurityModal
+					modalVisible={showRemindLaterModal}
+					onCancel={secureNow}
+					onConfirm={skip}
+					skipCheckbox={skipCheckbox}
+					onPress={hideRemindLaterModal}
+					toggleSkipCheckbox={toggleSkipCheckbox}
+				/>
+				<SeedphraseModal
+					showWhatIsSeedphraseModal={showWhatIsSeedphraseModal}
+					hideWhatIsSeedphrase={hideWhatIsSeedphrase}
+				/>
+			</SafeAreaView>
+		</OnboardingScreenWithBg>
 	);
 };
 

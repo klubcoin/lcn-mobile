@@ -41,79 +41,7 @@ import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import Helper from 'common/Helper';
 import RemoteImage from '../../Base/RemoteImage';
-
-const styles = StyleSheet.create({
-	scrollView: {
-		backgroundColor: colors.white
-	},
-	wrapper: {
-		paddingTop: 20,
-		paddingHorizontal: 20,
-		paddingBottom: 0,
-		alignItems: 'center'
-	},
-	info: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		textAlign: 'center'
-	},
-	data: {
-		textAlign: 'center',
-		paddingTop: 7
-	},
-	label: {
-		fontSize: 24,
-		textAlign: 'center',
-		...fontStyles.normal
-	},
-	labelInput: {
-		marginBottom: Device.isAndroid() ? -10 : 0
-	},
-	addressWrapper: {
-		backgroundColor: colors.blue000,
-		borderRadius: 40,
-		marginTop: 20,
-		marginBottom: 20,
-		paddingVertical: 7,
-		paddingHorizontal: 15
-	},
-	address: {
-		fontSize: 12,
-		color: colors.grey400,
-		...fontStyles.normal,
-		letterSpacing: 0.8
-	},
-	amountFiat: {
-		fontSize: 12,
-		paddingTop: 5,
-		color: colors.fontSecondary,
-		...fontStyles.normal
-	},
-	identiconBorder: {
-		borderRadius: 80,
-		borderWidth: 2,
-		padding: 2,
-		borderColor: colors.blue
-	},
-	avatar: {
-		width: 46,
-		height: 46,
-		borderRadius: 23
-	},
-	onboardingWizardLabel: {
-		borderWidth: 2,
-		borderRadius: 4,
-		paddingVertical: Device.isIos() ? 2 : -4,
-		paddingHorizontal: Device.isIos() ? 5 : 5,
-		top: Device.isIos() ? 0 : -2
-	},
-	actions: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'flex-start',
-		flexDirection: 'row'
-	}
-});
+import styles from './styles/index';
 
 /**
  * View that's part of the <Wallet /> component
@@ -321,7 +249,7 @@ class AccountOverview extends PureComponent {
 		const { avatar } = onboardProfile || {};
 
 		return (
-			<View style={baseStyles.flexGrow} ref={this.scrollViewContainer} collapsable={false}>
+			<View ref={this.scrollViewContainer} collapsable={false}>
 				<ScrollView
 					bounces={false}
 					keyboardShouldPersistTaps={'never'}
@@ -372,7 +300,7 @@ class AccountOverview extends PureComponent {
 											styles.onboardingWizardLabel,
 											onboardingWizard
 												? { borderColor: colors.blue }
-												: { borderColor: colors.white }
+												: { borderColor: colors.transparent }
 										]}
 										numberOfLines={1}
 										testID={'edit-account-label'}
@@ -408,11 +336,11 @@ class AccountOverview extends PureComponent {
 								onPress={this.onSend}
 								label={strings('asset_overview.send_button')}
 							/>
-							<AssetActionButton
+							{/* <AssetActionButton
 								icon="send"
 								onPress={this.onPayQR}
 								label={strings('asset_overview.pay_button')}
-							/>
+							/> */}
 							{/*AppConstants.SWAPS.ACTIVE && (
 								<AssetSwapButton
 									isFeatureLive={swapsIsLive}

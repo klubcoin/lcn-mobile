@@ -7,6 +7,7 @@ import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import Device from '../../../util/Device';
 import Text from '../../Base/Text';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	root: {
@@ -99,7 +100,7 @@ const SwitchCustomNetwork = ({ customNetworkInformation, currentPageInformation,
 			</Text>
 			<Text primary noMargin style={styles.warning}>
 				{type === 'switch' ? (
-					strings('switch_custom_network.switch_warning')
+					strings('switch_custom_network.switch_warning', { appName: displayName })
 				) : (
 					<Text>
 						<Text bold primary noMargin>{`"${customNetworkInformation.chainName}"`}</Text>

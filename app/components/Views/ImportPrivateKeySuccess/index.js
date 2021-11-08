@@ -10,6 +10,7 @@ import Device from '../../../util/Device';
 import Engine from '../../../core/Engine';
 import Logger from '../../../util/Logger';
 import PreventScreenshot from '../../../core/PreventScreenshot';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -133,7 +134,7 @@ class ImportPrivateKeySuccess extends PureComponent {
 							<Text style={styles.title}>{strings('import_private_key_success.title')}</Text>
 							<View style={styles.dataRow}>
 								<Text style={styles.label}>
-									{strings('import_private_key_success.description_one')}
+									{strings('import_private_key_success.description_one', { appName: displayName })}
 								</Text>
 							</View>
 						</View>

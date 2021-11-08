@@ -13,26 +13,8 @@ import { strings } from '../../../../locales/i18n';
 import AddCustomCollectible from '../../UI/AddCustomCollectible';
 import { getNetworkNavbarOptions } from '../../UI/Navbar';
 import { NetworksChainId } from '@metamask/controllers';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	tabUnderlineStyle: {
-		height: 2,
-		backgroundColor: colors.blue
-	},
-	tabStyle: {
-		paddingBottom: 0
-	},
-	textStyle: {
-		fontSize: 16,
-		letterSpacing: 0.5,
-		...fontStyles.bold
-	}
-});
-
+import styles from './styles/index';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 /**
  * PureComponent that provides ability to add assets.
  */
@@ -67,7 +49,7 @@ class AddAsset extends PureComponent {
 				underlineStyle={styles.tabUnderlineStyle}
 				activeTextColor={colors.blue}
 				inactiveTextColor={colors.fontTertiary}
-				backgroundColor={colors.white}
+				backgroundColor={colors.transparent}
 				tabStyle={styles.tabStyle}
 				textStyle={styles.textStyle}
 			/>
@@ -85,28 +67,27 @@ class AddAsset extends PureComponent {
 			navigation
 		} = this.props;
 		return (
-			<SafeAreaView style={styles.wrapper} testID={`add-${assetType}-screen`}>
-				{assetType === 'token' ?
-					chainId == Routes.mainNetWork.chainId ? (
-						<AddCustomTokenOrApp
-							navigation={navigation}
-							tabLabel={strings('add_asset.custom_token')}
-						/>
-					) : (
-						<ScrollableTabView renderTabBar={this.renderTabBar}>
-							{NetworksChainId.mainnet === this.props.chainId && (
-								<SearchTokenAutocomplete
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.wrapper} testID={`add-${assetType}-screen`}>
+					{assetType === 'token' ? (
+						chainId == Routes.mainNetWork.chainId ? (
+							<AddCustomTokenOrApp navigation={navigation} tabLabel={strings('add_asset.custom_token')} />
+						) : (
+							<ScrollableTabView renderTabBar={this.renderTabBar}>
+								{NetworksChainId.mainnet === this.props.chainId && (
+									<SearchTokenAutocomplete
+										navigation={navigation}
+										tabLabel={strings('add_asset.search_token')}
+										testID={'tab-search-token'}
+									/>
+								)}
+								<AddCustomToken
 									navigation={navigation}
-									tabLabel={strings('add_asset.search_token')}
-									testID={'tab-search-token'}
+									tabLabel={strings('add_asset.custom_token')}
+									testID={'tab-add-custom-token'}
 								/>
-							)}
-							<AddCustomToken
-								navigation={navigation}
-								tabLabel={strings('add_asset.custom_token')}
-								testID={'tab-add-custom-token'}
-							/>
-						</ScrollableTabView>
+							</ScrollableTabView>
+						)
 					) : (
 						<AddCustomCollectible
 							navigation={navigation}
@@ -114,7 +95,8 @@ class AddAsset extends PureComponent {
 							testID={'add-custom-collectible'}
 						/>
 					)}
-			</SafeAreaView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

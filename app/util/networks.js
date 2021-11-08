@@ -4,6 +4,7 @@ import AppConstants from '../core/AppConstants';
 import { MAINNET, ROPSTEN, KOVAN, RINKEBY, GOERLI, RPC } from '../../app/constants/network';
 import { util } from '@metamask/controllers';
 import Engine from '../core/Engine';
+import { displayName } from '../../app.json';
 
 /**
  * List of the supported networks
@@ -14,12 +15,12 @@ import Engine from '../core/Engine';
  */
 const NetworkList = {
 	[MAINNET]: {
-		name: 'Liquichain Main Network',
+		name: `${displayName} Main Network`,
 		shortName: 'Ethereum',
 		networkId: 1,
 		chainId: 1,
 		hexChainId: '0x1',
-		color: '#370e75',
+		color: colors.blue,
 		networkType: 'mainnet'
 	},
 	[ROPSTEN]: {

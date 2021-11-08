@@ -8,28 +8,7 @@ import { isValidAddress } from 'ethereumjs-util';
 import ActionView from '../ActionView';
 import { isSmartContractAddress } from '../../../util/transactions';
 import AnalyticsV2 from '../../../util/analyticsV2';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1
-	},
-	rowWrapper: {
-		padding: 20
-	},
-	textInput: {
-		borderWidth: 1,
-		borderRadius: 4,
-		borderColor: colors.grey100,
-		padding: 16,
-		...fontStyles.normal
-	},
-	warningText: {
-		marginTop: 15,
-		color: colors.red,
-		...fontStyles.normal
-	}
-});
+import styles from './styles/index';
 
 /**
  * Copmonent that provides ability to add custom tokens.
@@ -203,7 +182,7 @@ export default class AddCustomToken extends PureComponent {
 				>
 					<View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('token.token_address')}</Text>
+							<Text style={styles.tokenAddress}>{strings('token.token_address')}</Text>
 							<TextInput
 								style={styles.textInput}
 								placeholder={'0x...'}
@@ -220,7 +199,7 @@ export default class AddCustomToken extends PureComponent {
 							</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('token.token_symbol')}</Text>
+							<Text style={styles.tokenAddress}>{strings('token.token_symbol')}</Text>
 							<TextInput
 								style={styles.textInput}
 								placeholder={'GNO'}
@@ -236,7 +215,7 @@ export default class AddCustomToken extends PureComponent {
 							<Text style={styles.warningText}>{this.state.warningSymbol}</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('token.token_precision')}</Text>
+							<Text style={styles.tokenAddress}>{strings('token.token_precision')}</Text>
 							<TextInput
 								style={styles.textInput}
 								value={this.state.decimals}

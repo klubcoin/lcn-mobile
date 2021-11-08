@@ -5,6 +5,7 @@ import AppConstants from '../../../../core/AppConstants';
 import Logger from '../../../../util/Logger';
 import { strings } from '../../../../../locales/i18n';
 import { FIAT_ORDER_PROVIDERS, FIAT_ORDER_STATES } from '../../../../reducers/fiatOrders';
+import { displayName } from '../../../../../app.json';
 
 //* env vars
 
@@ -297,7 +298,7 @@ const getPaymentDetails = (cryptoCurrency, amount, fee, total) => ({
 	],
 	total: {
 		amount: { currency: USD_CURRENCY_CODE, value: `${total}` },
-		label: strings('fiat_on_ramp.wyre_total_label')
+		label: strings('fiat_on_ramp.wyre_total_label', { appName: displayName })
 	}
 });
 

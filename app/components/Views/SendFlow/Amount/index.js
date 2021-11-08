@@ -54,239 +54,16 @@ import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { isMainNet } from '../../../../util/networks';
 import { toLowerCaseCompare } from '../../../../util/general';
-import Helper from 'common/Helper'
-import Routes from 'common/routes'
+import Helper from 'common/Helper';
+import Routes from 'common/routes';
 import { BaseController } from '@metamask/controllers';
-import API from 'services/api'
+import API from 'services/api';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import styles from './styles/index';
 
 const { hexToBN, BNToHex } = util;
 
 const KEYBOARD_OFFSET = Device.isSmallDevice() ? 80 : 120;
-
-const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: colors.white
-	},
-	scrollWrapper: {
-		marginBottom: 60
-	},
-	buttonNextWrapper: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'flex-end'
-	},
-	buttonNext: {
-		flex: 1,
-		marginHorizontal: 24
-	},
-	inputWrapper: {
-		flex: 1,
-		marginTop: 30,
-		marginHorizontal: 24
-	},
-	actionsWrapper: {
-		flexDirection: 'row'
-	},
-	action: {
-		flex: 1,
-		alignItems: 'center'
-	},
-	actionBorder: {
-		flex: 0.8
-	},
-	actionDropdown: {
-		...fontStyles.normal,
-		backgroundColor: colors.blue,
-		paddingHorizontal: 16,
-		paddingVertical: 2,
-		borderRadius: 100,
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	textDropdown: {
-		...fontStyles.normal,
-		fontSize: 14,
-		color: colors.white,
-		paddingVertical: 2
-	},
-	iconDropdown: {
-		paddingLeft: 10
-	},
-	maxText: {
-		...fontStyles.normal,
-		fontSize: 12,
-		color: colors.blue,
-		alignSelf: 'flex-end',
-		textTransform: 'uppercase'
-	},
-	actionMax: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'flex-end'
-	},
-	actionMaxTouchable: {},
-	inputContainerWrapper: {
-		marginVertical: 16,
-		alignItems: 'center'
-	},
-	inputContainer: {
-		flexDirection: 'row'
-	},
-	inputCurrencyText: {
-		...fontStyles.normal,
-		fontWeight: fontStyles.light.fontWeight,
-		color: colors.black,
-		fontSize: 44,
-		marginRight: 8,
-		paddingVertical: Device.isIos() ? 0 : 8,
-		justifyContent: 'center',
-		alignItems: 'center',
-		textTransform: 'uppercase'
-	},
-	textInput: {
-		...fontStyles.normal,
-		fontWeight: fontStyles.light.fontWeight,
-		fontSize: 44,
-		textAlign: 'center',
-		color: colors.black
-	},
-	switch: {
-		flex: 1,
-		marginTop: Device.isIos() ? 0 : 2
-	},
-	actionSwitch: {
-		paddingHorizontal: 8,
-		paddingVertical: 2,
-		borderRadius: 8,
-		flexDirection: 'row',
-		borderColor: colors.grey500,
-		borderWidth: 1,
-		right: -2
-	},
-	textSwitch: {
-		...fontStyles.normal,
-		fontSize: 14,
-		color: colors.grey500,
-		textTransform: 'uppercase'
-	},
-	switchWrapper: {
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	bottomModal: {
-		justifyContent: 'flex-end',
-		margin: 0
-	},
-	tokenImage: {
-		width: 36,
-		height: 36,
-		overflow: 'hidden'
-	},
-	assetElementWrapper: {
-		height: 70,
-		backgroundColor: colors.white,
-		borderWidth: 1,
-		borderColor: colors.grey000,
-		flexDirection: 'row',
-		alignItems: 'center',
-		paddingHorizontal: 24
-	},
-	assetElement: {
-		flexDirection: 'row',
-		flex: 1
-	},
-	assetsModalWrapper: {
-		backgroundColor: colors.white,
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10,
-		height: 450
-	},
-	titleWrapper: {
-		width: '100%',
-		height: 33,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100
-	},
-	dragger: {
-		width: 48,
-		height: 5,
-		borderRadius: 4,
-		backgroundColor: colors.grey400,
-		opacity: Device.isAndroid() ? 0.6 : 0.5
-	},
-	textAssetTitle: {
-		...fontStyles.normal,
-		fontSize: 18
-	},
-	assetInformationWrapper: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginLeft: 16
-	},
-	assetBalanceWrapper: {
-		flexDirection: 'column'
-	},
-	textAssetBalance: {
-		...fontStyles.normal,
-		fontSize: 18,
-		textAlign: 'right'
-	},
-	textAssetFiat: {
-		...fontStyles.normal,
-		fontSize: 12,
-		color: colors.grey500,
-		textAlign: 'right',
-		textTransform: 'uppercase'
-	},
-	errorMessageWrapper: {
-		marginVertical: 16
-	},
-	CollectibleMedia: {
-		width: 120,
-		height: 120
-	},
-	collectibleName: {
-		...fontStyles.normal,
-		fontSize: 32,
-		color: colors.grey500,
-		textAlign: 'center'
-	},
-	collectibleId: {
-		...fontStyles.normal,
-		fontSize: 14,
-		color: colors.grey500,
-		marginTop: 8,
-		textAlign: 'center'
-	},
-	collectibleInputWrapper: {
-		margin: 24
-	},
-	collectibleInputImageWrapper: {
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	collectibleInputInformationWrapper: {
-		marginTop: 12
-	},
-	nextActionWrapper: {
-		flex: 1,
-		marginBottom: 16
-	},
-	balanceWrapper: {
-		marginVertical: 16
-	},
-	balanceText: {
-		...fontStyles.normal,
-		alignSelf: 'center',
-		fontSize: 12,
-		lineHeight: 16
-	}
-});
 
 /**
  * View that wraps the wraps the "Send" screen
@@ -408,8 +185,8 @@ class Amount extends PureComponent {
 		// For analytics
 		navigation.setParams({ providerType });
 
-		this.getCurrentConversion()
-		this.getBalance()
+		this.getCurrentConversion();
+		this.getBalance();
 
 		this.tokens = [getEther(ticker), ...tokens];
 		this.collectibles = this.processCollectibles();
@@ -421,43 +198,50 @@ class Amount extends PureComponent {
 			estimatedTotalGas,
 			inputValue: readableValue
 		});
-
 	};
 
 	getCurrentConversion = () => {
-		API.getRequest(Routes.getConversions, response => {
-      if(response.data.length > 0){
-      	console.log({
-      		currentConversion: response.data[1].to
-      	})
-      	this.setState({
-      		currentConversion: response.data[1].to
-      	})
-      }
-    }, error => {
-      console.log(error)
-    })
-  }
-
-	getBalance = async() => {
-		const { accounts, selectedAddress, identities } = this.props;
-		// for(const account in accounts){
-			let params = [selectedAddress]
-			await API.postRequest(Routes.getBalance, params, response => {
-				// console.log(parseInt(response.result, 16))
-				const balance = response.result
-				accounts[selectedAddress] = {
-					balance: balance
+		API.getRequest(
+			Routes.getConversions,
+			response => {
+				if (response.data.length > 0) {
+					console.log({
+						currentConversion: response.data[1].to
+					});
+					this.setState({
+						currentConversion: response.data[1].to
+					});
 				}
-				const { AccountTrackerController } = Engine.context;
-				AccountTrackerController.update({ accounts: Object.assign({}, accounts) })
-				this.handleSelectedAssetBalance()
-			}, error => {
-				console.log(error.message)
-			})
-		// }
+			},
+			error => {
+				console.log(error);
+			}
+		);
 	};
 
+	getBalance = async () => {
+		const { accounts, selectedAddress, identities } = this.props;
+		// for(const account in accounts){
+		let params = [selectedAddress];
+		await API.postRequest(
+			Routes.getBalance,
+			params,
+			response => {
+				// console.log(parseInt(response.result, 16))
+				const balance = response.result;
+				accounts[selectedAddress] = {
+					balance: balance
+				};
+				const { AccountTrackerController } = Engine.context;
+				AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
+				this.handleSelectedAssetBalance();
+			},
+			error => {
+				console.log(error.message);
+			}
+		);
+		// }
+	};
 
 	validateCollectibleOwnership = async () => {
 		const { AssetsContractController } = Engine.context;
@@ -775,10 +559,10 @@ class Amount extends PureComponent {
 
 		if (comma) inputValue = inputValue && inputValue.replace('.', ',');
 		inputValueConversion = inputValueConversion === '0' ? undefined : inputValueConversion;
-		
+
 		console.log({
 			currentConversion
-		})
+		});
 		const conversionValue = currentConversion?.value || 2;
 		this.setState({
 			inputValue,
@@ -797,10 +581,10 @@ class Amount extends PureComponent {
 
 	handleSelectedAssetBalance = () => {
 		const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
-		if(accounts && accounts[selectedAddress]){
+		if (accounts && accounts[selectedAddress]) {
 			this.setState({
 				currentBalance: `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${selectedAsset.symbol}`
-			});	
+			});
 		}
 	};
 
@@ -967,7 +751,7 @@ class Amount extends PureComponent {
 		} = this.state;
 		console.log({
 			currentBalance
-		})
+		});
 		const { currentCurrency } = this.props;
 		return (
 			<View>
@@ -979,6 +763,7 @@ class Amount extends PureComponent {
 						<TextInput
 							ref={this.amountInput}
 							style={styles.textInput}
+							placeholderTextColor={colors.fontSecondary}
 							value={inputValue}
 							onChangeText={this.onInputChange}
 							keyboardType={'numeric'}
@@ -1006,14 +791,12 @@ class Amount extends PureComponent {
 						</View>
 					</View>
 				)}
-				{
-					currentBalance && (
-						<View style={styles.balanceWrapper}>
-							<Text style={styles.balanceText}>{`${strings('transaction.balance')}: ${currentBalance}`}</Text>
-						</View>
-					)
-				}
-				
+				{currentBalance && (
+					<View style={styles.balanceWrapper}>
+						<Text style={styles.balanceText}>{`${strings('transaction.balance')}: ${currentBalance}`}</Text>
+					</View>
+				)}
+
 				{amountError && (
 					<View style={styles.errorMessageWrapper} testID={'amount-error'}>
 						<ErrorMessage errorMessage={amountError} />
@@ -1051,66 +834,68 @@ class Amount extends PureComponent {
 		} = this.props;
 
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'amount-screen'}>
-				<ScrollView style={styles.scrollWrapper}>
-					<View style={styles.inputWrapper}>
-						<View style={styles.actionsWrapper}>
-							<View style={styles.actionBorder} />
-							<View style={styles.action}>
-								<TouchableOpacity
-									style={styles.actionDropdown}
-									disabled={isPaymentRequest}
-									onPress={this.toggleAssetsModal}
-								>
-									<Text style={styles.textDropdown}>
-										{selectedAsset.symbol || strings('wallet.collectible')}
-									</Text>
-									<View styles={styles.arrow}>
-										<Ionicons
-											name="ios-arrow-down"
-											size={16}
-											color={colors.white}
-											style={styles.iconDropdown}
-										/>
-									</View>
-								</TouchableOpacity>
-							</View>
-							<View style={[styles.actionBorder, styles.actionMax]}>
-								{!selectedAsset.tokenId && (
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.wrapper} testID={'amount-screen'}>
+					<ScrollView style={styles.scrollWrapper}>
+						<View style={styles.inputWrapper}>
+							<View style={styles.actionsWrapper}>
+								<View style={styles.actionBorder} />
+								<View style={styles.action}>
 									<TouchableOpacity
-										style={styles.actionMaxTouchable}
-										disabled={!estimatedTotalGas}
-										onPress={this.useMax}
+										style={styles.actionDropdown}
+										disabled={isPaymentRequest}
+										onPress={this.toggleAssetsModal}
 									>
-										<Text style={styles.maxText}>{strings('transaction.use_max')}</Text>
+										<Text style={styles.textDropdown}>
+											{selectedAsset.symbol || strings('wallet.collectible')}
+										</Text>
+										<View styles={styles.arrow}>
+											<Ionicons
+												name="ios-arrow-down"
+												size={16}
+												color={colors.white}
+												style={styles.iconDropdown}
+											/>
+										</View>
 									</TouchableOpacity>
-								)}
+								</View>
+								<View style={[styles.actionBorder, styles.actionMax]}>
+									{!selectedAsset.tokenId && (
+										<TouchableOpacity
+											style={styles.actionMaxTouchable}
+											disabled={!estimatedTotalGas}
+											onPress={this.useMax}
+										>
+											<Text style={styles.maxText}>{strings('transaction.use_max')}</Text>
+										</TouchableOpacity>
+									)}
+								</View>
 							</View>
+							{selectedAsset.tokenId ? this.renderCollectibleInput() : this.renderTokenInput()}
 						</View>
-						{selectedAsset.tokenId ? this.renderCollectibleInput() : this.renderTokenInput()}
-					</View>
-				</ScrollView>
+					</ScrollView>
 
-				<KeyboardAvoidingView
-					style={styles.nextActionWrapper}
-					behavior={'padding'}
-					keyboardVerticalOffset={KEYBOARD_OFFSET}
-					enabled={Device.isIos()}
-				>
-					<View style={styles.buttonNextWrapper}>
-						<StyledButton
-							type={'confirm'}
-							containerStyle={styles.buttonNext}
-							disabled={!estimatedTotalGas}
-							onPress={this.onNext}
-							testID={'txn-amount-next-button'}
-						>
-							{strings('transaction.next')}
-						</StyledButton>
-					</View>
-				</KeyboardAvoidingView>
-				{this.renderAssetsModal()}
-			</SafeAreaView>
+					<KeyboardAvoidingView
+						style={styles.nextActionWrapper}
+						behavior={'padding'}
+						keyboardVerticalOffset={KEYBOARD_OFFSET}
+						enabled={Device.isIos()}
+					>
+						<View style={styles.buttonNextWrapper}>
+							<StyledButton
+								type={'confirm'}
+								containerStyle={styles.buttonNext}
+								disabled={!estimatedTotalGas}
+								onPress={this.onNext}
+								testID={'txn-amount-next-button'}
+							>
+								{strings('transaction.next')}
+							</StyledButton>
+						</View>
+					</KeyboardAvoidingView>
+					{this.renderAssetsModal()}
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	};
 }

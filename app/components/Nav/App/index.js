@@ -31,7 +31,9 @@ import AppConstants from '../../../core/AppConstants';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
-
+import { colors } from '../../../styles/common';
+import Partners from '../../Views/Partners';
+import PartnerDetails from '../../Views/Partners/PartnerDetails';
 /**
  * Stack navigator responsible for the onboarding process
  * Create Wallet, Import from Seed and Sync
@@ -115,6 +117,15 @@ const OnboardingRootNav = createStackNavigator(
 			navigationOptions: {
 				header: null
 			}
+		},
+		Onboarding: {
+			screen: Onboarding
+		},
+		Partners: {
+			screen: Partners
+		},
+		PartnerDetails: {
+			screen: PartnerDetails
 		}
 	},
 	{
@@ -135,7 +146,7 @@ const HomeNav = createDrawerNavigator(
 	{
 		contentComponent: DrawerView,
 		drawerWidth: 315,
-		overlayColor: 'rgba(0, 0, 0, 0.5)'
+		overlayColor: colors.overlayColor
 	}
 );
 

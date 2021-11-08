@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Text, TouchableNativeFeedback, View, ViewPropTypes } from 'react-native';
 import coalesceNonElementChildren from 'react-native-button/coalesceNonElementChildren';
-import getStyles from './styledButtonStyles';
+import getStyles from './styles/index';
+import { styles } from './styles/brand';
 
 /**
  * UI component that wraps StyledButton
@@ -70,8 +71,13 @@ export default class StyledButton extends PureComponent {
 	};
 
 	renderGroupedChildren = fontStyle => {
-		const { disabled } = this.props;
-		const style = [...fontStyle, this.props.style, disabled ? this.props.styleDisabled : null];
+		const { disabled, type } = this.props;
+		const style = [
+			...fontStyle,
+			styles[`${type}Text`],
+			this.props.style,
+			disabled ? this.props.styleDisabled : null
+		];
 
 		const childGroupStyle = [this.props.childGroupStyle];
 
@@ -94,9 +100,16 @@ export default class StyledButton extends PureComponent {
 	render = () => {
 		const { type } = this.props;
 		const { fontStyle, containerStyle } = getStyles(type);
+		const typeArr = type.split('-');
+		typeArr.forEach((element, index) => {
+			if (typeArr.indexOf(element) != 0) typeArr[index] = this.capitalizeFirstLetter(element);
+		});
+		const formattedTypes = typeArr.join('');
+
 		const touchableProps = {};
 		const containerStyles = [
 			...containerStyle,
+			styles[type],
 			this.props.disabled ? this.props.disabledContainerStyle : null,
 			this.props.containerStyle
 		];
@@ -108,7 +121,7 @@ export default class StyledButton extends PureComponent {
 
 		return (
 			<TouchableNativeFeedback {...touchableProps} testID={this.props.testID} disabled={this.props.disabled}>
-				<View style={containerStyles}>{this.renderGroupedChildren(fontStyle, containerStyles)}</View>
+				<View style={containerStyles}>{this.renderGroupedChildren(formattedTypes, containerStyles)}</View>
 			</TouchableNativeFeedback>
 		);
 	};
