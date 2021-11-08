@@ -52,15 +52,14 @@ import { ReadFile } from '../../../../services/FileStore';
 import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
 import { refWebRTC } from '../../../../services/WebRTC';
 import { displayName } from '../../../../../app.json';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
 const isIos = Device.isIos();
 
 const Heading = ({ children, first }) => (
 	<View style={[styles.setting, first && styles.firstSetting]}>
-		<Text style={[[styles.title, brandStyles.title], styles.heading]}>{children}</Text>
+		<Text style={[styles.title, styles.heading]}>{children}</Text>
 	</View>
 );
 
@@ -508,20 +507,20 @@ class Settings extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView style={[styles.wrapper, brandStyles.wrapper]} testID={'security-settings-scrollview'}>
+				<ScrollView style={styles.wrapper} testID={'security-settings-scrollview'}>
 					<View style={styles.inner}>
 						<Heading first>{strings('app_settings.security_heading')}</Heading>
 						<View style={[styles.setting, styles.firstSetting]}>
-							<Text style={[styles.title, brandStyles.title]}>
+							<Text style={styles.title}>
 								{!seedphraseBackedUp ? (
 									<>
 										<WarningIcon />{' '}
 									</>
 								) : null}
-								<Text style={[styles.title, brandStyles.title]}>Test</Text>
+								<Text style={styles.title}>Test</Text>
 							</Text>
 							<SeedPhraseVideo style={styles.seedPhraseVideo} />
-							<Text style={[styles.desc, brandStyles.desc]}>{strings('app_settings.protect_desc')}</Text>
+							<Text style={styles.desc}>{strings('app_settings.protect_desc')}</Text>
 							<SettingsNotification isWarning={!seedphraseBackedUp}>
 								<Text
 									style={[
@@ -569,10 +568,8 @@ class Settings extends PureComponent {
 							)}
 						</View>
 						<View style={styles.setting} testID={'change-password-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('password_reset.password_title')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
+							<Text style={styles.title}>{strings('password_reset.password_title')}</Text>
+							<Text style={styles.desc}>
 								{strings('password_reset.password_desc', { appName: displayName })}
 							</Text>
 							<StyledButton type="normal" onPress={this.resetPassword} containerStyle={styles.confirm}>
@@ -580,10 +577,8 @@ class Settings extends PureComponent {
 							</StyledButton>
 						</View>
 						<View style={styles.setting} testID={'auto-lock-section'}>
-							<Text style={[styles.title, brandStyles.title]}>{strings('app_settings.auto_lock')}</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('app_settings.auto_lock_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.auto_lock')}</Text>
+							<Text style={styles.desc}>{strings('app_settings.auto_lock_desc')}</Text>
 							<View style={styles.picker}>
 								{this.autolockOptions && (
 									<SelectComponent
@@ -597,7 +592,7 @@ class Settings extends PureComponent {
 						</View>
 						{biometryType && (
 							<View style={styles.setting} testID={'biometrics-option'}>
-								<Text style={[styles.title, brandStyles.title]}>
+								<Text style={styles.title}>
 									{strings(`biometrics.enable_${this.state.biometryType.toLowerCase()}`)}
 								</Text>
 								<View style={styles.switchElement}>
@@ -612,7 +607,7 @@ class Settings extends PureComponent {
 						)}
 						{biometryType && !this.state.biometryChoice && (
 							<View style={styles.setting}>
-								<Text style={[styles.title, brandStyles.title]}>
+								<Text style={styles.title}>
 									{isIos
 										? strings(`biometrics.enable_device_passcode_ios`)
 										: strings(`biometrics.enable_device_passcode_android`)}
@@ -628,12 +623,12 @@ class Settings extends PureComponent {
 							</View>
 						)}
 						<View style={styles.setting} testID={'reveal-private-key-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
+							<Text style={styles.title}>
 								{strings('reveal_credential.private_key_title_for_account', {
 									accountName: account.name
 								})}
 							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
+							<Text style={styles.desc}>
 								{strings('reveal_credential.private_key_warning', { accountName: account.name })}
 							</Text>
 							<StyledButton
@@ -645,12 +640,8 @@ class Settings extends PureComponent {
 							</StyledButton>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('private_key.backup_private_key')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('private_key.backup_private_key_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
+							<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
 							<StyledButton
 								type="confirm"
 								onPress={this.backupPrivateKey}
@@ -660,7 +651,7 @@ class Settings extends PureComponent {
 							</StyledButton>
 							{!!privateKeyBackupStats && (
 								<View style={{ flexDirection: 'row' }}>
-									<Text style={[styles.desc, brandStyles.desc]}>
+									<Text style={styles.desc}>
 										{strings('private_key.sending_backup_progress', {
 											progress: privateKeyBackupStats.currentPart + 1,
 											total: privateKeyBackupStats.partCount
@@ -671,12 +662,8 @@ class Settings extends PureComponent {
 							)}
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('private_key.recover_private_key')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('private_key.recover_private_key_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('private_key.recover_private_key')}</Text>
+							<Text style={styles.desc}>{strings('private_key.recover_private_key_desc')}</Text>
 							<StyledButton
 								type="normal"
 								onPress={this.recoverPrivateKey}
@@ -687,12 +674,8 @@ class Settings extends PureComponent {
 						</View>
 						<Heading>{strings('app_settings.privacy_heading')}</Heading>
 						<View style={[styles.setting, styles.firstSetting]} testID={'clear-privacy-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.clear_privacy_title')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('app_settings.clear_privacy_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.clear_privacy_title')}</Text>
+							<Text style={styles.desc}>{strings('app_settings.clear_privacy_desc')}</Text>
 							<StyledButton
 								type="normal"
 								onPress={this.toggleClearApprovalsModal}
@@ -703,12 +686,8 @@ class Settings extends PureComponent {
 							</StyledButton>
 						</View>
 						<View style={styles.setting}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.clear_browser_history_desc')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('app_settings.clear_history_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.clear_browser_history_desc')}</Text>
+							<Text style={styles.desc}>{strings('app_settings.clear_history_desc')}</Text>
 							<StyledButton
 								type="normal"
 								onPress={this.toggleClearBrowserHistoryModal}
@@ -719,12 +698,8 @@ class Settings extends PureComponent {
 							</StyledButton>
 						</View>
 						<View style={styles.setting} testID={'clear-cookies-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.clear_browser_cookies_desc')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('app_settings.clear_cookies_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.clear_browser_cookies_desc')}</Text>
+							<Text style={styles.desc}>{strings('app_settings.clear_cookies_desc')}</Text>
 							<StyledButton
 								type="normal"
 								onPress={this.toggleClearCookiesModal}
@@ -734,12 +709,8 @@ class Settings extends PureComponent {
 							</StyledButton>
 						</View>
 						<View style={styles.setting} testID={'privacy-mode-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.privacy_mode')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
-								{strings('app_settings.privacy_mode_desc')}
-							</Text>
+							<Text style={styles.title}>{strings('app_settings.privacy_mode')}</Text>
+							<Text style={styles.desc}>{strings('app_settings.privacy_mode_desc')}</Text>
 							<View style={styles.switchElement}>
 								<Switch
 									value={privacyMode}
@@ -750,10 +721,8 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting} testID={'metametrics-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.metametrics_title')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
+							<Text style={styles.title}>{strings('app_settings.metametrics_title')}</Text>
+							<Text style={styles.desc}>
 								{strings('app_settings.metametrics_description', { appName: displayName })}
 							</Text>
 							<View style={styles.switchElement}>
@@ -767,10 +736,8 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 						<View style={styles.setting} testID={'third-party-section'}>
-							<Text style={[styles.title, brandStyles.title]}>
-								{strings('app_settings.third_party_title')}
-							</Text>
-							<Text style={[styles.desc, brandStyles.desc]}>
+							<Text style={styles.title}>{strings('app_settings.third_party_title')}</Text>
+							<Text style={styles.desc}>
 								{strings('app_settings.third_party_description', { appName: displayName })}
 							</Text>
 							<View style={styles.switchElement}>
