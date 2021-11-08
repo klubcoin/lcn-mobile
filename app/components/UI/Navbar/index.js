@@ -97,7 +97,8 @@ export function getNavigationOptionsTitle(title, navigation) {
 			</TouchableOpacity>
 		),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.grey,
+			marginTop: 20
 		}
 	};
 }
@@ -175,7 +176,10 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
 			<TouchableOpacity onPress={() => navigation.pop()} style={styles.closeButton}>
 				<IonicIcon name={'ios-close'} size={38} style={[styles.backIcon, styles.backIconIOS]} />
 			</TouchableOpacity>
-		)
+		),
+		headerStyle: {
+			backgroundColor: colors.grey
+		}
 	};
 }
 
@@ -190,7 +194,7 @@ export function getPaymentRequestSuccessOptionsTitle(navigation) {
 		headerStyle: {
 			shadowColor: colors.transparent,
 			elevation: 0,
-			backgroundColor: colors.white,
+			backgroundColor: colors.grey,
 			borderBottomWidth: 0
 		},
 		headerTintColor: colors.blue,
