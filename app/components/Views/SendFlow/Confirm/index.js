@@ -62,8 +62,7 @@ import InfoModal from '../../../UI/Swaps/components/InfoModal';
 import { toChecksumAddress } from 'ethereumjs-util';
 import { removeFavoriteCollectible } from '../../../../actions/collectibles';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const EDIT = 'edit';
 const EDIT_NONCE = 'edit_nonce';
@@ -846,7 +845,7 @@ class Confirm extends PureComponent {
 			: strings('transaction.get_ether', { networkName });
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'txn-confirm-screen'}>
+				<SafeAreaView style={styles.wrapper} testID={'txn-confirm-screen'}>
 					<View style={styles.inputWrapper}>
 						<AddressFrom
 							onPressIcon={!paymentRequest ? null : this.toggleFromAccountModal}
