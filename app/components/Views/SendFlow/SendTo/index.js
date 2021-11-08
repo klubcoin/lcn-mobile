@@ -39,8 +39,7 @@ import { collectConfusables, hasZeroWidthPoints } from '../../../../util/validat
 import Helper from 'common/Helper';
 import Routes from '../../../../common/routes';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../../app.json';
 
 const { hexToBN } = util;
@@ -524,9 +523,9 @@ class SendFlow extends PureComponent {
 			confusableCollection && confusableCollection.length && !confusableCollection.some(hasZeroWidthPoints);
 
 		return (
-			<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'send-screen'}>
+			<SafeAreaView style={styles.wrapper} testID={'send-screen'}>
 				<OnboardingScreenWithBg screen={'a'}>
-					<View style={[styles.inputWrapper, brandStyles.inputWrapper]}>
+					<View style={styles.inputWrapper}>
 						<AddressFrom
 							onPressIcon={this.toggleFromAccountModal}
 							fromAccountAddress={fromSelectedAddress}

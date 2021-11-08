@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
+import { assignNestedObj } from '../../../../../util/object';
+import brandStyles from './brand';
 
 const deviceHeight = Device.getDeviceHeight();
 const breakPoint = deviceHeight < 700;
@@ -132,4 +134,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export { styles };
+export default assignNestedObj(styles, brandStyles);
