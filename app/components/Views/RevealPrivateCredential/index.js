@@ -29,8 +29,7 @@ import { BIOMETRY_CHOICE } from '../../../constants/storage';
 import LoginWithKeycloak from '../LoginWithKeycloak';
 import preferences from '../../../store/preferences';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const WRONG_PASSWORD_ERROR = 'Error: Decrypt failed';
 
@@ -190,7 +189,7 @@ class RevealPrivateCredential extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'reveal-private-credential-screen'}>
+				<SafeAreaView style={styles.wrapper} testID={'reveal-private-credential-screen'}>
 					<ActionView
 						cancelText={strings('reveal_credential.cancel')}
 						confirmText={strings('reveal_credential.confirm')}
@@ -201,7 +200,7 @@ class RevealPrivateCredential extends PureComponent {
 					>
 						<View>
 							<View style={[styles.rowWrapper, styles.header]}>
-								<Text style={brandStyles.textColor}>
+								<Text style={styles.label}>
 									{strings(`reveal_credential.${privateCredentialName}_explanation`)}
 								</Text>
 							</View>
@@ -218,16 +217,16 @@ class RevealPrivateCredential extends PureComponent {
 								{unlocked ? (
 									<ScrollableTabView renderTabBar={this.renderTabBar}>
 										<View tabLabel={strings(`reveal_credential.text`)} style={styles.tabContent}>
-											<Text style={[brandStyles.textColor, fontStyles.bold]}>
+											<Text style={styles.label}>
 												{strings(`reveal_credential.${privateCredentialName}`)}
 											</Text>
-											<View style={[styles.seedPhraseView, brandStyles.seedPhraseView]}>
+											<View style={styles.seedPhraseView}>
 												<TextInput
 													value={privateCredential}
 													numberOfLines={3}
 													multiline
 													selectTextOnFocus
-													style={[styles.seedPhrase, brandStyles.seedPhrase]}
+													style={styles.seedPhrase}
 													editable={false}
 													testID={'private-credential-text'}
 												/>
@@ -261,11 +260,11 @@ class RevealPrivateCredential extends PureComponent {
 									/>
 								) : (
 									<View>
-										<Text style={[styles.enterPassword, brandStyles.textColor]}>
+										<Text style={styles.enterPassword}>
 											{strings('reveal_credential.enter_password')}
 										</Text>
 										<TextInput
-											style={[styles.input, brandStyles.textColor]}
+											style={styles.input}
 											testID={'private-credential-password-text-input'}
 											placeholder={'Password'}
 											placeholderTextColor={colors.grey100}

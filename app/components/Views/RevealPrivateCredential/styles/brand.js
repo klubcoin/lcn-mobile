@@ -6,7 +6,10 @@ const brandStyles = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.transparent
 	},
-	textColor: {
+	input: {
+		color: colors.white
+	},
+	enterPassword: {
 		color: colors.white
 	},
 	seedPhraseView: {
@@ -15,7 +18,10 @@ const brandStyles = StyleSheet.create({
 	seedPhrase: {
 		backgroundColor: colors.transparent,
 		color: colors.white
+	},
+	label: {
+		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
