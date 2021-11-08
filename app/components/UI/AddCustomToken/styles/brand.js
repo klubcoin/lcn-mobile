@@ -4,7 +4,7 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white
+		backgroundColor: colors.transparent
 	},
 	textInput: {
 		color: colors.white
