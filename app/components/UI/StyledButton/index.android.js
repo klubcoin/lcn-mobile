@@ -100,6 +100,12 @@ export default class StyledButton extends PureComponent {
 	render = () => {
 		const { type } = this.props;
 		const { fontStyle, containerStyle } = getStyles(type);
+		const typeArr = type.split('-');
+		typeArr.forEach((element, index) => {
+			if (typeArr.indexOf(element) != 0) typeArr[index] = this.capitalizeFirstLetter(element);
+		});
+		const formattedTypes = typeArr.join('');
+
 		const touchableProps = {};
 		const containerStyles = [
 			...containerStyle,
@@ -115,7 +121,7 @@ export default class StyledButton extends PureComponent {
 
 		return (
 			<TouchableNativeFeedback {...touchableProps} testID={this.props.testID} disabled={this.props.disabled}>
-				<View style={containerStyles}>{this.renderGroupedChildren(fontStyle, containerStyles)}</View>
+				<View style={containerStyles}>{this.renderGroupedChildren(formattedTypes, containerStyles)}</View>
 			</TouchableNativeFeedback>
 		);
 	};
