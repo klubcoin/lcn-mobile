@@ -49,8 +49,7 @@ import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { tlc, toLowerCaseCompare } from '../../../util/general';
 import LoginWithKeycloak from '../LoginWithKeycloak';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 
 const isTextDelete = text => tlc(text) === 'delete';
@@ -275,13 +274,13 @@ class Login extends PureComponent {
 		if (this.state.biometryType && !this.state.biometryPreviouslyDisabled) {
 			return (
 				<View style={styles.biometrics}>
-					<Text style={[styles.biometryLabel, brandStyles.biometryLabel]}>
+					<Text style={styles.biometryLabel}>
 						{strings(`biometrics.enable_${this.state.biometryType.toLowerCase()}`)}
 					</Text>
 					<Switch
 						onValueChange={biometryChoice => this.updateBiometryChoice(biometryChoice)} // eslint-disable-line react/jsx-no-bind
 						value={this.state.biometryChoice}
-						style={[styles.biometrySwitch, brandStyles.biometrySwitch]}
+						style={styles.biometrySwitch}
 						trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
 						ios_backgroundColor={colors.grey300}
 					/>
@@ -291,9 +290,7 @@ class Login extends PureComponent {
 
 		return (
 			<View style={styles.biometrics}>
-				<Text style={[styles.biometryLabel, brandStyles.biometryLabel]}>
-					{strings(`choose_password.remember_me`)}
-				</Text>
+				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
 				<Switch
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
@@ -396,17 +393,17 @@ class Login extends PureComponent {
 			</WarningExistingUserModal>
 
 			<OnboardingScreenWithBg screen={'a'}>
-				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+				<SafeAreaView style={styles.mainWrapper}>
 					<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
 						<View testID={'login'}>
 							<View style={styles.foxWrapper}>
 								<Image
 									source={require('../../../images/klubcoin_vertical_logo.png')}
-									style={[styles.image, brandStyles.image]}
+									style={styles.image}
 									resizeMethod={'auto'}
 								/>
 							</View>
-							<Text style={[styles.title, brandStyles.title]}>{strings('login.title')}</Text>
+							<Text style={styles.title}>{strings('login.title')}</Text>
 							{this.props.keycloakAuth ? (
 								<LoginWithKeycloak
 									type={'sign'}
@@ -417,12 +414,10 @@ class Login extends PureComponent {
 							) : (
 								<>
 									<View style={styles.field}>
-										<Text style={[styles.label, brandStyles.label]}>
-											{strings('login.password')}
-										</Text>
+										<Text style={styles.label}>{strings('login.password')}</Text>
 										<OutlinedTextField
-											style={[styles.input, brandStyles.input]}
-											inputContainerStyle={[styles.inputContainer, brandStyles.inputContainer]}
+											style={styles.input}
+											inputContainerStyle={styles.inputContainer}
 											placeholder={'Password'}
 											placeholderTextColor={'white'}
 											testID={'login-password-input'}
@@ -472,8 +467,8 @@ class Login extends PureComponent {
 							)}
 
 							<View style={styles.footer}>
-								<Text style={[styles.cant, brandStyles.cant]}>{strings('login.go_back')}</Text>
-								<Button style={[styles.goBack, brandStyles.goBack]} onPress={this.toggleWarningModal}>
+								<Text style={styles.cant}>{strings('login.go_back')}</Text>
+								<Button style={styles.goBack} onPress={this.toggleWarningModal}>
 									{strings('login.reset_wallet')}
 								</Button>
 							</View>
