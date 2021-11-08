@@ -6,9 +6,12 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
-	subTextColor: {
+	remindLaterSubText: {
+		color: colors.grey300
+	},
+	startSubText: {
 		color: colors.grey300
 	}
 });
 
-export { brandStyles };
+export default brandStyles;

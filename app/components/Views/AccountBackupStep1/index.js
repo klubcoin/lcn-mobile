@@ -17,8 +17,7 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import SkipAccountSecurityModal from '../../UI/SkipAccountSecurityModal';
 import SeedPhraseVideo from '../../UI/SeedPhraseVideo';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * View that's shown during the first step of
@@ -94,10 +93,10 @@ const AccountBackupStep1 = props => {
 
 	return (
 		<OnboardingScreenWithBg screen="a">
-			<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+			<SafeAreaView style={styles.mainWrapper}>
 				<ScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
-					style={[styles.mainWrapper, brandStyles.mainWrapper]}
+					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
 				>
 					<View style={styles.wrapper} testID={'protect-your-account-screen'}>
@@ -129,7 +128,7 @@ const AccountBackupStep1 = props => {
 											{strings('account_backup_step_1.remind_me_later')}
 										</Text>
 									</TouchableOpacity>
-									<Text style={[styles.remindLaterSubText, brandStyles.subTextColor]}>
+									<Text style={styles.remindLaterSubText}>
 										{strings('account_backup_step_1.remind_me_later_subtext')}
 									</Text>
 								</View>
@@ -143,9 +142,7 @@ const AccountBackupStep1 = props => {
 								>
 									{strings('account_backup_step_1.cta_text')}
 								</StyledButton>
-								<Text style={[styles.startSubText, brandStyles.subTextColor]}>
-									{strings('account_backup_step_1.cta_subText')}
-								</Text>
+								<Text style={styles.startSubText}>{strings('account_backup_step_1.cta_subText')}</Text>
 							</View>
 						</View>
 					</View>
