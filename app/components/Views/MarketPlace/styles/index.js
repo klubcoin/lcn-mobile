@@ -6,6 +6,7 @@ import brandStyles from './brand';
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: '#748cfb'
   },
   navBar: {
     flexDirection: 'row',
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backIcon: {
-    color: colors.blue
+    color: colors.white
   },
   logo: {
     width: 60,
@@ -27,8 +28,27 @@ const styles = StyleSheet.create({
   searchBox: {
     marginHorizontal: 20,
   },
+  search: {
+    borderRadius: 24,
+    backgroundColor: colors.white,
+  },
+  searchButton: {
+    position: 'absolute',
+    top: 18,
+    right: 8,
+    width: 52,
+    height: 36,
+    borderRadius: 18,
+    overflow: 'hidden',
+  },
+  searchIcon: {
+    position: 'absolute',
+    alignSelf: 'center',
+    marginVertical: 8,
+    color: colors.white,
+  },
   categories: {
-    marginBottom: 20,
+
   },
   tabs: {
     flexDirection: 'row',
@@ -54,6 +74,9 @@ const styles = StyleSheet.create({
   category: {
     marginHorizontal: 10,
     marginTop: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between'
   },
   sectionHead: {
     flexDirection: 'row'
@@ -75,8 +98,11 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   app: {
-    width: 100,
+    width: '40%',
+    marginVertical: 10,
     marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
     width: 70,
@@ -93,7 +119,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     color: colors.grey500,
-  }
+  },
+  dotStyles: {
+    backgroundColor: colors.transparent,
+  },
+  dotActive: {
+    backgroundColor: colors.transparent,
+  },
 });
 
 export default assignNestedObj(styles, brandStyles);

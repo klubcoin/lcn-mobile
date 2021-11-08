@@ -202,3 +202,13 @@ export default [
     ]
   }
 ]
+
+export const photos = [
+  'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80',
+  'https://cdn.tgdd.vn/Products/Images/7077/194536/apple-watch-s3-gps-42mm-vien-nhom-day-cao-su-den-thumb-2-600x600.jpg',
+  'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+  'https://images.unsplash.com/photo-1526947425960-945c6e72858f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80',
+  'https://store.magenest.com/wp/wp-content/uploads/2020/09/eCommerce-product-images-Which-is-the-best-size.png',
+  'https://st4.depositphotos.com/13324256/20808/i/600/depositphotos_208086560-stock-photo-flat-lay-bottles-cream-natural.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/6/65/Product_Photography.jpg',
+]
