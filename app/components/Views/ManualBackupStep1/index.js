@@ -34,8 +34,7 @@ import {
 	WRONG_PASSWORD_ERROR
 } from '../../../constants/onboarding';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * View that's shown during the second step of
@@ -129,7 +128,7 @@ export class ManualBackupStep1 extends PureComponent {
 	};
 
 	renderLoader = () => (
-		<View style={[styles.loader, brandStyles.loader]}>
+		<View style={styles.loader}>
 			<ActivityIndicator size="small" />
 		</View>
 	);
@@ -179,7 +178,7 @@ export class ManualBackupStep1 extends PureComponent {
 							) : (
 								<>
 									<TextInput
-										style={[styles.input, brandStyles.textColor]}
+										style={styles.input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
 										onChangeText={this.onPasswordChange}
@@ -227,18 +226,18 @@ export class ManualBackupStep1 extends PureComponent {
 					<View style={styles.infoWrapper}>
 						<Text style={styles.info}>{strings('manual_backup_step_1.info')}</Text>
 					</View>
-					<View style={[styles.seedPhraseWrapper, brandStyles.seedPhraseWrapper]}>
+					<View style={styles.seedPhraseWrapper}>
 						<View style={styles.wordColumn}>
 							{this.words.slice(0, half).map((word, i) => (
 								<View key={`word_${i}`} style={styles.wordWrapper}>
-									<Text style={[styles.word, brandStyles.word]}>{`${i + 1}. ${word}`}</Text>
+									<Text style={styles.word}>{`${i + 1}. ${word}`}</Text>
 								</View>
 							))}
 						</View>
 						<View style={styles.wordColumn}>
 							{this.words.slice(-half).map((word, i) => (
 								<View key={`word_${i}`} style={styles.wordWrapper}>
-									<Text style={[styles.word, brandStyles.word]}>{`${i + (half + 1)}. ${word}`}</Text>
+									<Text style={styles.word}>{`${i + (half + 1)}. ${word}`}</Text>
 								</View>
 							))}
 						</View>
@@ -254,7 +253,7 @@ export class ManualBackupStep1 extends PureComponent {
 		if (!ready) return this.renderLoader();
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+				<SafeAreaView style={styles.mainWrapper}>
 					<View style={styles.onBoardingWrapper}>
 						<OnboardingProgress currentStep={currentStep} steps={this.steps} />
 					</View>

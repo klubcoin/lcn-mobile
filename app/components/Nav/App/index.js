@@ -31,7 +31,6 @@ import AppConstants from '../../../core/AppConstants';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
-import Login1 from '../../Views/Login1';
 import { colors } from '../../../styles/common';
 import Partners from '../../Views/Partners';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';

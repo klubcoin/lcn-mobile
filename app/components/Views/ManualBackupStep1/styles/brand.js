@@ -6,7 +6,7 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
-	textColor: {
+	input: {
 		color: colors.white
 	},
 	loader: {
@@ -20,4 +20,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
