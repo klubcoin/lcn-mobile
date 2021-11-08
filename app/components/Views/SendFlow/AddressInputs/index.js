@@ -9,8 +9,7 @@ import { renderShortAddress } from '../../../../util/address';
 import { strings } from '../../../../../locales/i18n';
 import Text from '../../../Base/Text';
 import { hasZeroWidthPoints } from '../../../../util/validators';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const AddressName = ({ toAddressName, confusableCollection = [] }) => {
 	if (confusableCollection.length) {
@@ -38,7 +37,7 @@ const AddressName = ({ toAddressName, confusableCollection = [] }) => {
 		);
 	}
 	return (
-		<Text style={[styles.textAddress, brandStyles.textColor]} numberOfLines={1}>
+		<Text style={styles.textAddress} numberOfLines={1}>
 			{toAddressName}
 		</Text>
 	);
@@ -69,7 +68,7 @@ export const AddressTo = props => {
 	return (
 		<View style={styles.wrapper}>
 			<View style={styles.label}>
-				<Text style={[styles.labelText, brandStyles.labelText]}>To:</Text>
+				<Text style={styles.labelText}>To:</Text>
 			</View>
 			{!addressToReady ? (
 				<View style={[styles.selectWrapper, highlighted ? styles.borderHighlighted : styles.borderOpaque]}>
@@ -82,7 +81,7 @@ export const AddressTo = props => {
 							placeholder={strings('transactions.address_to_placeholder')}
 							placeholderTextColor={colors.grey100}
 							spellCheck={false}
-							style={[styles.textInput, inputWidth, brandStyles.textInput]}
+							style={[styles.textInput, inputWidth]}
 							numberOfLines={1}
 							onFocus={onInputFocus}
 							onBlur={onInputBlur}
@@ -120,11 +119,7 @@ export const AddressTo = props => {
 								)}
 								<View style={styles.addressWrapper}>
 									<Text
-										style={
-											toAddressName
-												? [styles.textBalance, brandStyles.textColor]
-												: [styles.textAddress, brandStyles.textColor]
-										}
+										style={toAddressName ? styles.textBalance : styles.textAddress}
 										numberOfLines={1}
 									>
 										{renderShortAddress(toSelectedAddress)}
@@ -216,15 +211,15 @@ export const AddressFrom = props => {
 	return (
 		<View style={styles.wrapper}>
 			<View style={styles.label}>
-				<Text style={[styles.labelText, brandStyles.labelText]}>From:</Text>
+				<Text style={styles.labelText}>From:</Text>
 			</View>
 			<View style={[styles.inputWrapper, highlighted ? styles.borderHighlighted : styles.borderOpaque]}>
 				<View style={styles.identiconWrapper}>
 					<Identicon address={fromAccountAddress} diameter={30} />
 				</View>
 				<View style={[baseStyles.flexGrow, styles.address]}>
-					<Text style={[styles.textAddress, brandStyles.textColor]}>{fromAccountName}</Text>
-					<Text style={[styles.textBalance, brandStyles.textColor]}>{`${strings(
+					<Text style={styles.textAddress}>{fromAccountName}</Text>
+					<Text style={styles.textBalance}>{`${strings(
 						'transactions.address_from_balance'
 					)} ${fromAccountBalance}`}</Text>
 				</View>

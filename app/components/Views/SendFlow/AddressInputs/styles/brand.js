@@ -10,9 +10,12 @@ const brandStyles = StyleSheet.create({
 	textInput: {
 		color: colors.white
 	},
-	textColor: {
+	textAddress: {
+		color: colors.white
+	},
+	textBalance: {
 		color: colors.white
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
