@@ -22,8 +22,7 @@ import Device from '../../../util/Device';
 import { importAccountFromPrivateKey } from '../../../util/address';
 import PreventScreenshot from '../../../core/PreventScreenshot';
 import { displayName } from '../../../../app.json';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 /**
  * View that's displayed the first time a user receives funds
@@ -106,10 +105,10 @@ export default class ImportPrivateKey extends PureComponent {
 
 	render() {
 		return (
-			<View style={[styles.mainWrapper, brandStyles.mainWrapper]}>
+			<View style={styles.mainWrapper}>
 				<KeyboardAwareScrollView
 					contentContainerStyle={styles.wrapper}
-					style={[styles.mainWrapper, brandStyles.mainWrapper]}
+					style={styles.mainWrapper}
 					testID={'first-incoming-transaction-screen'}
 					resetScrollToCoords={{ x: 0, y: 0 }}
 				>
@@ -131,21 +130,15 @@ export default class ImportPrivateKey extends PureComponent {
 								</Text>
 							</View>
 						</View>
-						<View style={[styles.bottom, brandStyles.bottom]}>
+						<View style={styles.bottom}>
 							<View style={styles.subtitleText}>
-								<Text style={[styles.subtitleText, brandStyles.textColor]}>
-									{strings('import_private_key.subtitle')}
-								</Text>
+								<Text style={styles.subtitleText}>{strings('import_private_key.subtitle')}</Text>
 							</View>
 							<TextInput
 								value={this.state.privateKey}
 								numberOfLines={3}
 								multiline
-								style={[
-									styles.input,
-									this.state.inputWidth ? { width: this.state.inputWidth } : {},
-									brandStyles.input
-								]}
+								style={[styles.input, this.state.inputWidth ? { width: this.state.inputWidth } : {}]}
 								onChangeText={this.onInputChange}
 								testID={'input-private-key'}
 								blurOnSubmit
@@ -164,7 +157,7 @@ export default class ImportPrivateKey extends PureComponent {
 							</View>
 						</View>
 					</View>
-					<View style={[styles.buttonWrapper, brandStyles.buttonWrapper]}>
+					<View style={styles.buttonWrapper}>
 						<StyledButton
 							containerStyle={styles.button}
 							type={'confirm'}

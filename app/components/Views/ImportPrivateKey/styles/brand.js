@@ -13,6 +13,9 @@ const brandStyles = StyleSheet.create({
 	textColor: {
 		color: colors.fontPrimary
 	},
+	subtitleText: {
+		color: colors.fontPrimary
+	},
 	input: {
 		backgroundColor: colors.grey,
 		borderWidth: StyleSheet.hairlineWidth,
@@ -25,4 +28,4 @@ const brandStyles = StyleSheet.create({
 	}
 });
 
-export { brandStyles };
+export default brandStyles;
