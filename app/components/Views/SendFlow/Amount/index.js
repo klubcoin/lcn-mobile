@@ -59,8 +59,7 @@ import Routes from 'common/routes';
 import { BaseController } from '@metamask/controllers';
 import API from 'services/api';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const { hexToBN, BNToHex } = util;
 
@@ -836,7 +835,7 @@ class Amount extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<SafeAreaView style={[styles.wrapper, brandStyles.wrapper]} testID={'amount-screen'}>
+				<SafeAreaView style={styles.wrapper} testID={'amount-screen'}>
 					<ScrollView style={styles.scrollWrapper}>
 						<View style={styles.inputWrapper}>
 							<View style={styles.actionsWrapper}>
