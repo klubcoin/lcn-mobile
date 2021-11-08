@@ -6,8 +6,7 @@ import { fontStyles, colors } from '../../../../styles/common';
 import PropTypes from 'prop-types';
 import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { connect } from 'react-redux';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 class AddressElement extends PureComponent {
 	static propTypes = {
@@ -63,11 +62,11 @@ class AddressElement extends PureComponent {
 					<Identicon address={address} diameter={28} />
 				</View>
 				<View style={styles.addressElementInformation}>
-					<Text style={[styles.addressTextNickname, brandStyles.addressTextNickname]} numberOfLines={1}>
+					<Text style={styles.addressTextNickname} numberOfLines={1}>
 						{primaryLabel}
 					</Text>
 					{!!secondaryLabel && (
-						<Text style={[styles.addressTextAddress, brandStyles.addressTextNickname]} numberOfLines={1}>
+						<Text style={styles.addressTextAddress} numberOfLines={1}>
 							{secondaryLabel}
 						</Text>
 					)}
