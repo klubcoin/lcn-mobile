@@ -8,7 +8,10 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const IMG_PADDING = Device.isIphoneX() ? 100 : Device.isIphone5S() ? 180 : 220;
 
 const brandStyles = StyleSheet.create({
-	textColor: {
+	title: {
+		color: colors.fontPrimary
+	},
+	subtitle: {
 		color: colors.fontPrimary
 	},
 	carouselImage1: {

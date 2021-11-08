@@ -1,6 +1,8 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import Device from '../../../../util/Device';
 import { colors, fontStyles, baseStyles } from '../../../../styles/common';
+import brandStyles from '../../../UI/NavbarTitle/styles/brand';
+import { assignNestedObj } from '../../../../util/object';
 
 const IMAGE_3_RATIO = 215 / 315;
 const IMAGE_2_RATIO = 222 / 239;
@@ -9,7 +11,7 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 
 const IMG_PADDING = Device.isIphoneX() ? 100 : Device.isIphone5S() ? 180 : 220;
 
-const styles = StyleSheet.create({
+const index = StyleSheet.create({
 	scroll: {
 		flexGrow: 1
 	},
@@ -91,7 +93,9 @@ const onboarding_carousel_1 = require('../../../../images/intro1.png'); // eslin
 const onboarding_carousel_2 = require('../../../../images/intro2.png'); // eslint-disable-line
 const onboarding_carousel_3 = require('../../../../images/intro3.png'); // eslint-disable-line
 const explain_backup_seedphrase = require('../../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
+const onboarding_carousel_klubcoin = require('../../../../images/klubcoin_lighten.png'); // eslint-disable-line
 
-const carousel_images = [onboarding_carousel_1, onboarding_carousel_2, onboarding_carousel_3];
+const carousel_images = [onboarding_carousel_klubcoin, onboarding_carousel_klubcoin, onboarding_carousel_klubcoin];
+const styles = assignNestedObj(styles, brandStyles);
 
 export { styles, carousel_images };

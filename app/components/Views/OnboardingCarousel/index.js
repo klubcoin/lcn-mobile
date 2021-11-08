@@ -10,7 +10,6 @@ import { getTransparentOnboardingNavbarOptions } from '../../UI/Navbar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import Device from '../../../util/Device';
 import { styles, carousel_images } from './styles/index';
-import { brandStyles, brandImgs } from './styles/brand';
 import { displayName } from '../../../../app.json';
 
 /**
@@ -58,15 +57,12 @@ export default class OnboardingCarousel extends PureComponent {
 									return (
 										<View key={key} style={baseStyles.flexGrow}>
 											<View style={styles.tab}>
-												<Text
-													style={[styles.title, brandStyles.textColor]}
-													testID={`carousel-screen-${value}`}
-												>
+												<Text style={styles.title} testID={`carousel-screen-${value}`}>
 													{strings(`onboarding_carousel.title${key}`, {
 														appName: displayName
 													})}
 												</Text>
-												<Text style={[styles.subtitle, brandStyles.textColor]}>
+												<Text style={styles.subtitle}>
 													{strings(`onboarding_carousel.subtitle${key}`, {
 														appName: displayName
 													})}
@@ -74,12 +70,8 @@ export default class OnboardingCarousel extends PureComponent {
 											</View>
 											<View style={styles.carouselImageWrapper}>
 												<Image
-													source={brandImgs[index]}
-													style={[
-														styles.carouselImage,
-														styles[imgStyleKey],
-														brandStyles[imgStyleKey]
-													]}
+													source={carousel_images[index]}
+													style={[styles.carouselImage, styles[imgStyleKey]]}
 													resizeMethod={'auto'}
 													testID={`carousel-${value}-image`}
 												/>
@@ -91,14 +83,7 @@ export default class OnboardingCarousel extends PureComponent {
 
 							<View style={styles.progessContainer}>
 								{[1, 2, 3].map(i => (
-									<View
-										key={i}
-										style={[
-											styles.circle,
-											brandStyles.circle,
-											currentTab === i ? styles.solidCircle : {}
-										]}
-									/>
+									<View key={i} style={[styles.circle, currentTab === i ? styles.solidCircle : {}]} />
 								))}
 							</View>
 						</View>
