@@ -11,7 +11,7 @@ import Device from '../../../util/Device';
 import { connect } from 'react-redux';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { toLowerCaseCompare } from '../../../util/general';
-import { styles } from './styles/index';
+import styles from './styles/index';
 
 /**
  * PureComponent that provides ability to add custom collectibles.
@@ -170,7 +170,7 @@ class AddCustomCollectible extends PureComponent {
 				>
 					<View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('collectible.collectible_address')}</Text>
+							<Text style={styles.label}>{strings('collectible.collectible_address')}</Text>
 							<TextInput
 								style={[
 									styles.textInput,
@@ -189,7 +189,7 @@ class AddCustomCollectible extends PureComponent {
 							</Text>
 						</View>
 						<View style={styles.rowWrapper}>
-							<Text style={fontStyles.normal}>{strings('collectible.collectible_token_id')}</Text>
+							<Text style={styles.label}>{strings('collectible.collectible_token_id')}</Text>
 							<TextInput
 								style={[
 									styles.textInput,
