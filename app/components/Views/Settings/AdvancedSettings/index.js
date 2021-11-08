@@ -21,8 +21,7 @@ import { timeoutFetch } from '../../../../util/general';
 import Device from '../../../../util/Device';
 import { displayName } from '../../../../../app.json';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 const HASH_TO_TEST = 'Qmaisz6NMhDB51cCvNWa1GMS7LU1pAxdF4Ld6Ft9kZEP2a';
 const HASH_STRING = 'Hello from IPFS Gateway Checker';
@@ -169,10 +168,7 @@ class AdvancedSettings extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={baseStyles.flexGrow}>
-					<KeyboardAwareScrollView
-						style={[styles.wrapper, brandStyles.wrapper]}
-						resetScrollToCoords={{ x: 0, y: 0 }}
-					>
+					<KeyboardAwareScrollView style={styles.wrapper} resetScrollToCoords={{ x: 0, y: 0 }}>
 						<View style={styles.inner}>
 							<ActionModal
 								modalVisible={resetModalVisible}
@@ -192,12 +188,8 @@ class AdvancedSettings extends PureComponent {
 								</View>
 							</ActionModal>
 							<View style={[styles.setting, styles.firstSetting]}>
-								<Text style={[styles.title, brandStyles.title]}>
-									{strings('app_settings.reset_account')}
-								</Text>
-								<Text style={[styles.desc, brandStyles.desc]}>
-									{strings('app_settings.reset_desc')}
-								</Text>
+								<Text style={styles.title}>{strings('app_settings.reset_account')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.reset_desc')}</Text>
 								<StyledButton
 									type="confirm"
 									onPress={this.displayResetAccountModal}
@@ -207,12 +199,8 @@ class AdvancedSettings extends PureComponent {
 								</StyledButton>
 							</View>
 							<View style={[styles.setting]}>
-								<Text style={[styles.title, brandStyles.title]}>
-									{strings('app_settings.ipfs_gateway')}
-								</Text>
-								<Text style={[styles.desc, brandStyles.desc]}>
-									{strings('app_settings.ipfs_gateway_desc')}
-								</Text>
+								<Text style={styles.title}>{strings('app_settings.ipfs_gateway')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.ipfs_gateway_desc')}</Text>
 								<View style={styles.picker}>
 									{this.state.gotAvailableGateways ? (
 										<SelectComponent
@@ -230,10 +218,8 @@ class AdvancedSettings extends PureComponent {
 								</View>
 							</View>
 							<View style={styles.setting}>
-								<Text style={[styles.title, brandStyles.title]}>
-									{strings('app_settings.show_hex_data')}
-								</Text>
-								<Text style={[styles.desc, brandStyles.desc]}>{strings('app_settings.hex_desc')}</Text>
+								<Text style={styles.title}>{strings('app_settings.show_hex_data')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.hex_desc')}</Text>
 								<View style={styles.marginTop}>
 									<Switch
 										value={showHexData}
@@ -244,12 +230,8 @@ class AdvancedSettings extends PureComponent {
 								</View>
 							</View>
 							<View style={styles.setting}>
-								<Text style={[styles.title, brandStyles.title]}>
-									{strings('app_settings.show_custom_nonce')}
-								</Text>
-								<Text style={[styles.desc, brandStyles.desc]}>
-									{strings('app_settings.custom_nonce_desc')}
-								</Text>
+								<Text style={styles.title}>{strings('app_settings.show_custom_nonce')}</Text>
+								<Text style={styles.desc}>{strings('app_settings.custom_nonce_desc')}</Text>
 								<View style={styles.marginTop}>
 									<Switch
 										value={showCustomNonce}
@@ -260,10 +242,8 @@ class AdvancedSettings extends PureComponent {
 								</View>
 							</View>
 							<View style={styles.setting}>
-								<Text style={[styles.title, brandStyles.title]}>
-									{strings('app_settings.state_logs')}
-								</Text>
-								<Text style={[styles.desc, brandStyles.desc]}>
+								<Text style={styles.title}>{strings('app_settings.state_logs')}</Text>
+								<Text style={styles.desc}>
 									{strings('app_settings.state_logs_desc', { appName: displayName })}
 								</Text>
 								<StyledButton
