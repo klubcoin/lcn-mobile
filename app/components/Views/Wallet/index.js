@@ -33,8 +33,7 @@ import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import preferences from '../../../store/preferences';
 import Device from '../../../util/Device';
-import { styles } from './styles/index';
-import { brandStyles } from './styles/brand';
+import styles from './styles/index';
 
 /**
  * Main view for the wallet
@@ -205,12 +204,12 @@ class Wallet extends PureComponent {
 	renderTabBar() {
 		return (
 			<DefaultTabBar
-				underlineStyle={[styles.tabUnderlineStyle, brandStyles.tabUnderlineStyle]}
+				underlineStyle={styles.tabUnderlineStyle}
 				activeTextColor={colors.blue}
 				inactiveTextColor={colors.fontTertiary}
 				backgroundColor={colors.transparent}
 				tabStyle={styles.tabStyle}
-				textStyle={[styles.textStyle, brandStyles.textStyle]}
+				textStyle={styles.textStyle}
 			/>
 		);
 	}
@@ -250,14 +249,14 @@ class Wallet extends PureComponent {
 			balance = accounts[selectedAddress].balance;
 			// balance = "0x00"
 			assets = [
-				// {
-				// 	name: 'Liquichain',
-				// 	symbol: getTicker(ticker),
-				// 	isETH: true,
-				// 	balance,
-				// 	balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
-				// 	logo: '../images/logo.png'
-				// },
+				{
+					name: 'Liquichain',
+					symbol: getTicker(ticker),
+					isETH: true,
+					balance,
+					balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
+					logo: '../images/logo.png'
+				},
 				...tokens
 			];
 		} else {
@@ -271,10 +270,10 @@ class Wallet extends PureComponent {
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 
 		return (
-			<View style={[styles.wrapper, brandStyles.wrapper]}>
+			<View style={styles.wrapper}>
 				<ImageBackground
 					source={require('../../../images/klubcoin_filigram_logo.png')}
-					style={[styles.imgBackground, brandStyles.imgBackground]}
+					style={styles.imgBackground}
 					resizeMode={'cover'}
 				>
 					{selectedAddress && account && (
