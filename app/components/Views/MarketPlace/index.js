@@ -11,8 +11,10 @@ import styles from './styles';
 import metaCategories, { photos } from './test';
 import APIService from '../../../services/APIService';
 import preferences from '../../../store/preferences';
+import store from './store';
 import LinearGrad from '../../Base/LinearGrad';
 import test from './test';
+import { menuKeys } from './Drawer';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -28,6 +30,7 @@ class MarketPlace extends PureComponent {
   }
 
   componentDidMount() {
+    store.marketMenuKey = menuKeys().shopping;
     this.fetchCategories();
     this.slideAnimate();
   }
@@ -63,7 +66,7 @@ class MarketPlace extends PureComponent {
     APIService.getMarketCategories((success, json) => {
       console.log('wowow', json)
       if (success && json) {
-        preferences.saveProductCategories(json);
+        store.saveProductCategories(json);
         this.setState({ categories: [...json] })
       }
     })
@@ -413,12 +416,16 @@ class MarketPlace extends PureComponent {
     this.props.navigation.navigate('WalletView');
   }
 
+  toggleDrawer = () => {
+    this.props.navigation.toggleDrawer();
+  }
+
   renderNavBar() {
     return (
       <SafeAreaView >
         <View style={styles.navBar}>
-          <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.navButton}>
-            <Icon style={styles.backIcon} name={'home'} size={16} />
+          <TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
+            <Icon style={styles.backIcon} name={'bars'} size={16} />
           </TouchableOpacity>
           <NavbarTitle title={'market.title'} disableNetwork />
           <View style={styles.navButton} />
