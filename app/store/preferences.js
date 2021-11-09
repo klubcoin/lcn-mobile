@@ -15,7 +15,6 @@ export const kNotifications = 'Notifications';
 export const kPublicKeys = 'PublicKeys';
 export const kChatMessages = 'ChatMessages';
 export const kPeerProfiles = 'PeerProfiles';
-export const kMarketCategories = 'MarketCategories';
 
 const keys = [
 	kAppList,
@@ -29,8 +28,7 @@ const keys = [
 	kNotifications,
 	kPublicKeys,
 	kChatMessages,
-	kPeerProfiles,
-	kMarketCategories,
+	kPeerProfiles
 ];
 
 class Preferences {
@@ -40,7 +38,6 @@ class Preferences {
 	notifications = {};
 	publicKeys = {};
 	peerProfiles = {};
-	marketCategories = [];
 
 	// session variables
 	activeChatPeerId = null;
@@ -79,9 +76,6 @@ class Preferences {
 				break;
 			case kPeerProfiles:
 				this.peerProfiles = data || {};
-				break;
-			case kMarketCategories:
-				this.marketCategories = data || [];
 				break;
 		}
 	}
@@ -266,11 +260,6 @@ class Preferences {
 
 	setActiveChatPeerId(address) {
 		this.activeChatPeerId = address;
-	}
-
-	async saveProductCategories(categories) {
-		this.marketCategories = categories || [];
-		await this.save(kMarketCategories, categories);
 	}
 }
 
