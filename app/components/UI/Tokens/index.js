@@ -18,9 +18,9 @@ import StyledButton from '../StyledButton';
 import { allowedToBuy } from '../FiatOrders';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { isMainNet } from '../../../util/networks';
-import Helper from 'common/Helper'
+import Helper from 'common/Helper';
 import Routes from '../../../common/routes';
-import preferences, { kAppList } from '../../../store/preferences'
+import preferences, { kAppList } from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -73,17 +73,17 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flex: 1,
-		flexDirection: 'row',
+		flexDirection: 'row'
 	},
 	name: {
 		fontSize: 16,
 		color: colors.fontPrimary,
-		...fontStyles.normal,
+		...fontStyles.normal
 	},
 	desc: {
 		fontSize: 12,
 		color: colors.fontSecondary,
-		...fontStyles.normal,
+		...fontStyles.normal
 	},
 	balances: {
 		flex: 1,
@@ -112,12 +112,11 @@ const styles = StyleSheet.create({
 	}
 });
 
-
 const TokenRoutes = {
 	Liquichat: 'Message',
 	LiquiShare: 'FilesManager',
-	Liquimart: 'MarketPlace',
-}
+	Liquimart: 'MarketPlaceApp'
+};
 
 /**
  * View that renders a list of ERC-20 Tokens
@@ -236,17 +235,18 @@ class Tokens extends PureComponent {
 		let balance =
 			asset.balance ||
 			(itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], asset.decimals) : 0);
-		const balanceFiat = isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
-			? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
-			: null;
+		const balanceFiat =
+			isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
+				? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
+				: null;
 
-		let account = null
+		let account = null;
 		if (selectedAddress && typeof accounts[selectedAddress] != 'undefined') {
-			account = accounts[selectedAddress]
-			balance = accounts[selectedAddress].balance
+			account = accounts[selectedAddress];
+			balance = accounts[selectedAddress].balance;
 		}
 
-		balance = Helper.demosToLiquichain(balance || 0)
+		balance = Helper.demosToLiquichain(balance || 0);
 
 		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 		const app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
@@ -344,10 +344,10 @@ class Tokens extends PureComponent {
 		const { tokens, hideZeroBalanceTokens, tokenBalances } = this.props;
 		const tokensToDisplay = hideZeroBalanceTokens
 			? tokens.filter(token => {
-				const { address, isETH } = token;
-				return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
-				// eslint-disable-next-line no-mixed-spaces-and-tabs
-			})
+					const { address, isETH } = token;
+					return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
+			  })
 			: tokens;
 
 		return (

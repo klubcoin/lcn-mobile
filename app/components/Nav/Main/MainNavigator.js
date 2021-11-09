@@ -72,7 +72,11 @@ import Message from '../../Views/Message';
 import Chat from '../../Views/Message/Chat';
 import MarketPlace from '../../Views/MarketPlace';
 import MarketCategory from '../../Views/MarketPlace/Category';
-import MarketApp from '../../Views/MarketPlace/Application';
+import MarketSellerCategory from '../../Views/MarketPlace/SellerCategory';
+import MarketSellerOverview from '../../Views/MarketPlace/SellerOverview';
+import MarketAddEditProduct from '../../Views/MarketPlace/AddEditProduct';
+import MarketDrawer from '../../Views/MarketPlace/Drawer';
+import MarketProduct from '../../Views/MarketPlace/ProductDetails';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -181,21 +185,33 @@ export default createStackNavigator(
 				}
 			)
 		},
-		MarketPlace: {
-			screen: createStackNavigator(
-				{
-					MarketPlace: {
-						screen: MarketPlace
-					},
-					MarketCategory: {
-						screen: MarketCategory
-					},
-					MarketApp: {
-						screen: MarketApp
-					}
+		MarketPlaceApp: createDrawerNavigator(
+			{
+				MarketPlace: {
+					screen: MarketPlace
 				},
-			)
-		},
+				MarketCategory: {
+					screen: MarketCategory
+				},
+				MarketProduct: {
+					screen: MarketProduct
+				},
+				MarketSellerOverview: {
+					screen: MarketSellerOverview
+				},
+				MarketSellerCategory: {
+					screen: MarketSellerCategory
+				},
+				MarketAddEditProduct: {
+					screen: MarketAddEditProduct
+				}
+			},
+			{
+				contentComponent: MarketDrawer,
+				drawerWidth: 200,
+				overlayColor: 'rgba(0, 0, 0, 0.5)'
+			}
+		),
 		Webview: {
 			screen: createStackNavigator(
 				{
