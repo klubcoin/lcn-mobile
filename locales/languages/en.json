@@ -1760,6 +1760,19 @@
 		"write_review": "Write review",
 		"additional_info": "Additional information",
 		"provided_by": "Provided by",
-		"search": "Search"
+		"search": "Search",
+		"search_products_services": "Search products and services",
+		"home": "Home",
+		"shopping": "Shopping",
+		"my_store": "My Store",
+		"add_product": "Add Product",
+		"category": "Category",
+		"product_title": "Product title",
+		"price": "Price",
+		"desc": "Description",
+		"images": "Images",
+		"tags": "Tags",
+		"save": "Save",
+		"cancel": "Cancel"
 	}
 }
