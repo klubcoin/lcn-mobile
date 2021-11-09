@@ -997,7 +997,7 @@ class DrawerView extends PureComponent {
 								testID={'navbar-account-button'}
 							>
 								<View style={styles.accountNameWrapper}>
-									{account && (
+									{!!account && (
 										<Text style={styles.accountName} numberOfLines={1}>
 											{account.name}
 										</Text>
