@@ -124,14 +124,73 @@ const styles = StyleSheet.create({
     width: 140,
     marginLeft: 20,
   },
+  input: {
+    height: 36,
+    marginTop: 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 20,
+    borderRadius: 4,
+    borderColor: colors.grey400,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  desc: {
+    height: 100,
+    marginTop: 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 20,
+    borderRadius: 4,
+    borderColor: colors.grey400,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: 20,
+    marginTop: 10
+  },
   chip: {
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 12,
     marginRight: 8,
+    marginBottom: 10,
+    borderStyle: 'dotted',
     borderWidth: StyleSheet.hairlineWidth,
     alignItems: 'center'
   },
+  addChip: {
+    width: 27,
+    height: 27,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.orange
+  },
+  addIcon: {
+    color: colors.white
+  },
+  photos: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+  photo: {
+    marginRight: 10,
+    marginBottom: 15,
+    borderStyle: 'dashed',
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  image: {
+    width: 72,
+    height: 72,
+  },
+  addImageIcon: {
+    position: 'absolute',
+    top: 20,
+    right: 25,
+    color: colors.orange,
+  }
 });
 
 export default assignNestedObj(styles, brandStyles);

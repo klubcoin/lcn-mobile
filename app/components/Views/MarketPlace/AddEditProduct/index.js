@@ -4,113 +4,140 @@ import React, { PureComponent } from 'react';
 import {
 	View,
 	Text,
-	StyleSheet,
 	KeyboardAvoidingView,
 	ScrollView,
 	TouchableOpacity,
 	ActivityIndicator,
 	Image,
+	TextInput,
 } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import APIService from '../../../../services/APIService';
-import preferences from '../../../../store/preferences';
 import NavbarTitle from '../../../UI/NavbarTitle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import StyledButton from '../../../UI/StyledButton';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
-import { TextInput } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import ConfirmModal from '../../../UI/ConfirmModal';
+import ConfirmInputModal from '../../../UI/ConfirmInputModal';
 import ImagePicker from 'react-native-image-crop-picker';
+import { v4 as uuid } from 'uuid';
 import styles from './styles';
-import { photos } from '../test';
 import drawables from '../../../../common/drawables';
+import store from '../store';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
 
-	categories = [];
-	voteTypes = [];
-	category = '';
-	showCategories = false;
-	type = '';
-	showTypes = false;
 	title = '';
-	content = '';
+	category = '';
+	categories = [];
+	showCategories = false;
+	price = '';
+	quantity = '';
+	description = '';
+	tags = [];
+	showAddTag = false;
+	images = [];
 	confirmDeleteVisible = false;
 	processing = false;
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
+			title: observable,
 			category: observable,
 			categories: observable,
 			showCategories: observable,
-			type: observable,
-			voteTypes: observable,
-			showTypes: observable,
-			title: observable,
-			content: observable,
+			price: observable,
+			quantity: observable,
+			description: observable,
+			tags: observable,
+			showAddTag: observable,
+			images: observable,
 			confirmDeleteVisible: observable,
 			processing: observable,
 		});
 
 		this.prefs = props.store;
-		this.proposal = props.navigation.getParam('proposal');
+		this.product = props.navigation.getParam('product');
 
-		const { uuid, category, title, content, type } = this.proposal || {};
-		this.category = category;
+		const { uuid, title, category, price, quantity, description, tags, images } = this.product || {};
 		this.title = title;
-		this.content = content;
-		this.type = type;
+		this.category = category;
+		this.price = price || '';
+		this.quantity = quantity || '';
+		this.description = description || '';
+		this.tags = tags || [];
+		this.images = images || [];
 		this.uuid = uuid;
-
-		// this.voteTypes = [this.type];
 	}
 
 	componentDidMount() {
-		this.fetchData();
+		this.fetchCategories();
 	}
 
-	async addProposal() {
-		const app = await preferences.getCurrentApp();
-		const voteInstance = app.instance;
+	async fetchCategories() {
+		const categories = store.marketCategories;
+		this.categories = [...categories];
 
-		APIService.createVoteProposal(
-			{
-				liquivoteInstance: voteInstance.uuid,
-				category: this.category,
-				title: this.title,
-				content: this.content,
-				uuid: this.uuid,
-			},
-			(success, json) => {
-				if (success && Array.isArray(json)) {
-					this.showNotice(strings('proposal.saved_successfully'), 'success');
-					const onUpdate = this.props.navigation.getParam('onUpdate');
-					if (onUpdate) {
-						onUpdate(json[0]);
-					}
-					this.onBack();
-				} else {
-					alert(JSON.stringify(json));
+		if (categories && !this.category) {
+			this.category = categories[0];
+		}
+
+		APIService.getMarketCategories((success, json) => {
+			if (success && json) {
+				store.saveProductCategories(json);
+				this.categories = [...json];
+
+				if (categories && !this.category) {
+					this.category = categories[0];
 				}
 			}
-		);
+		})
 	}
 
-	async fetchData() {
-		const app = await preferences.getCurrentApp();
-		const voteInstance = app.instance;
-		this.categories = [...voteInstance.delegationCategories];
+
+	async addProduct() {
+		const { title, category, price, quantity, description, tags, images } = this;
+		const data = {
+			uuid: uuid.v4(),
+			title,
+			category,
+			price,
+			quantity,
+			description,
+			tags,
+			images,
+		};
+
+		store.addProduct(data);
+
+		const onUpdate = this.props.navigation.getParam('onUpdate');
+		onUpdate && onUpdate(data);
+
+		this.showNotice(strings('market.saved_successfully'), 'success');
+		this.onBack();
+	}
+
+	resetInputs() {
+		this.title = '';
+		this.category = '';
+		this.price = '';
+		this.quantity = '';
+		this.description = '';
+		this.tags = [];
+		this.images = [];
+		this.processing = false;
 	}
 
 	onBack = () => {
-		this.props.navigation.goBack();
+		this.resetInputs();
+		this.props.navigation.navigate('MarketSellerOverview');
 	};
 
 	showNotice(message, type) {
@@ -123,38 +150,27 @@ export class MarketAddEditProduct extends PureComponent {
 	}
 
 	onSave() {
-		if (!this.category) {
-			return this.showNotice(strings('proposal.missing_category'));
-		}
 		if (!this.title) {
-			return this.showNotice(strings('proposal.missing_title'));
+			return this.showNotice(strings('market.missing_title'));
 		}
-		if (!this.content) {
-			return this.showNotice(strings('proposal.missing_content'));
+		if (!this.price) {
+			return this.showNotice(strings('market.missing_price'));
+		}
+		if (!this.description) {
+			return this.showNotice(strings('market.missing_description'));
+		}
+		if (!this.images || this.images.length == 0) {
+			return this.showNotice(strings('market.missing_photo'));
 		}
 
-		this.addProposal();
+		this.addProduct();
 	}
 
-	onDelete() {
-		if (this.processing) {
-			return;
-		}
-		this.processing = true;
-
-		this.confirmDeleteVisible = false;
-		APIService.deleteVoteProposal(this.uuid, (success, json) => {
-			this.processing = false;
-			if (success) {
-				const onDelete = this.props.navigation.getParam('onDelete');
-				if (onDelete) {
-					onDelete();
-				}
-				this.onBack();
-			} else {
-				this.showNotice(json.error);
-			}
-		});
+	async onDelete() {
+		await store.deleteProduct(this.uuid);
+		const onDelete = this.props.navigation.getParam('onDelete');
+		if (onDelete) onDelete();
+		this.onBack();
 	}
 
 	onCancel() {
@@ -167,14 +183,15 @@ export class MarketAddEditProduct extends PureComponent {
 			height: 300,
 			cropping: true
 		}).then(image => {
+			console.log('this images', this.images)
 			this.images.push(image.path);
 		});
 	}
 
 	renderCategoryModal = () => {
 		const options = this.categories.map(e => ({
-			key: e,
-			value: e,
+			key: e.uuid,
+			value: e.name,
 		}));
 
 		return (
@@ -183,30 +200,10 @@ export class MarketAddEditProduct extends PureComponent {
 				options={options}
 				hideKey={true}
 				onSelect={item => {
-					this.category = item.value;
+					this.category = this.categories.find(e => e.uuid == item.key);
 					this.showCategories = false;
 				}}
 				onClose={() => (this.showCategories = false)}
-			/>
-		);
-	};
-
-	renderVoteTypeModal = () => {
-		const options = this.voteTypes.map(e => ({
-			key: e.shortCode,
-			value: e.name,
-		}));
-
-		return (
-			<ModalSelector
-				visible={this.showTypes}
-				options={options}
-				hideKey={true}
-				onSelect={item => {
-					this.type = e.value;
-					this.showTypes = false;
-				}}
-				onClose={() => (this.showTypes = false)}
 			/>
 		);
 	};
@@ -226,7 +223,8 @@ export class MarketAddEditProduct extends PureComponent {
 	}
 
 	renderSelector({ selected, onTap }) {
-		const value = selected;
+		const category = selected ?? this.categories[0];
+		const value = category?.name || '';
 
 		return (
 			<TouchableOpacity style={styles.selectOption} activeOpacity={0.8} onPress={() => onTap && onTap()}>
@@ -240,19 +238,33 @@ export class MarketAddEditProduct extends PureComponent {
 		return (
 			<ConfirmModal
 				visible={this.confirmDeleteVisible}
-				title={strings('proposal.delete')}
-				message={strings('proposal.confirm_delete_message')}
-				confirmLabel={strings('proposal.yes')}
-				cancelLabel={strings('proposal.no')}
+				title={strings('market.delete')}
+				message={strings('market.confirm_delete_message')}
+				confirmLabel={strings('market.yes')}
+				cancelLabel={strings('market.no')}
 				onConfirm={() => this.onDelete()}
 				hideModal={() => (this.confirmDeleteVisible = false)}
 			/>
 		);
 	}
 
-	onAddTag = () => {};
+	renderAddTagModal() {
+		return (
+			<ConfirmInputModal
+				visible={this.showAddTag}
+				title={strings('market.add_tag')}
+				value={this.tag}
+				confirmLabel={strings('market.save')}
+				cancelLabel={strings('market.cancel')}
+				onConfirm={text => this.tags.push(text)}
+				hideModal={() => this.showAddTag = false}
+			/>
+		)
+	}
 
-	onAddImage = () => {};
+	onAddTag = () => {
+		this.showAddTag = true;
+	};
 
 	render() {
 		const editing = !!this.uuid;
@@ -265,15 +277,7 @@ export class MarketAddEditProduct extends PureComponent {
 					<TextInput
 						value={this.title}
 						onChangeText={text => (this.title = text)}
-						style={{
-							height: 36,
-							marginTop: 10,
-							paddingHorizontal: 10,
-							marginHorizontal: 20,
-							borderRadius: 4,
-							borderColor: colors.grey400,
-							borderWidth: StyleSheet.hairlineWidth,
-						}}
+						style={styles.input}
 					/>
 
 					<Text style={styles.heading}>{strings('market.category')}</Text>
@@ -284,65 +288,51 @@ export class MarketAddEditProduct extends PureComponent {
 
 					<Text style={styles.heading}>{strings('market.price')}</Text>
 					<TextInput
-						value={this.title}
-						onChangeText={text => (this.title = text)}
-						style={{
-							height: 36,
-							marginTop: 10,
-							paddingHorizontal: 10,
-							marginHorizontal: 20,
-							borderRadius: 4,
-							borderColor: colors.grey400,
-							borderWidth: StyleSheet.hairlineWidth,
-						}}
+						value={this.price}
+						onChangeText={text => (this.price = text)}
+						style={styles.input}
+						keyboardType={'numeric'}
+					/>
+
+					<Text style={styles.heading}>{strings('market.quantity')}</Text>
+					<TextInput
+						value={this.quantity}
+						onChangeText={text => (this.quantity = text)}
+						style={styles.input}
+						keyboardType={'numeric'}
 					/>
 
 					<Text style={styles.heading}>{strings('market.desc')}</Text>
 					<TextInput
 						multiline={true}
 						numberOfLines={5}
-						value={this.content}
-						onChangeText={text => (this.content = text)}
-						style={{
-							height: 100,
-							marginTop: 10,
-							paddingHorizontal: 10,
-							marginHorizontal: 20,
-							borderRadius: 4,
-							borderColor: colors.grey400,
-							borderWidth: StyleSheet.hairlineWidth,
-						}}
+						value={this.description}
+						onChangeText={text => (this.description = text)}
+						style={styles.desc}
 					/>
 
 					<Text style={styles.heading}>{strings('market.tags')}</Text>
-					<View style={{ flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: 20, marginTop: 10 }}>
-						<View style={styles.chip}>
-							<Text>tag chip 1</Text>
-						</View>
-						<View style={styles.chip}>
-							<Text>tag chip 2</Text>
-						</View>
-						<TouchableOpacity onPress={this.onAddTag} style={styles.chip}>
-							<Icon style={styles.backIcon} name={'plus'} size={16} />
+					<View style={styles.tags}>
+						{this.tags.map(e => (
+							<View style={styles.chip}>
+								<Text>{e}</Text>
+							</View>
+						))}
+						<TouchableOpacity onPress={this.onAddTag} style={styles.addChip}>
+							<Icon style={styles.addIcon} name={'plus'} size={16} />
 						</TouchableOpacity>
 					</View>
 
 					<Text style={styles.heading}>{strings('market.images')}</Text>
-					<View
-						style={{
-							flexDirection: 'row',
-							flexWrap: 'wrap',
-							marginHorizontal: 20,
-							marginTop: 10,
-							backgroundColor: 'blue',
-						}}
-					>
-						<Image style={{ with: 72, height: 72, marginRight: 10 }} source={{ uri: photos[0] }} />
-						<Image style={{ with: 72, height: 72, marginRight: 10 }} source={{ uri: photos[1] }} />
-						<Image style={{ with: 72, height: 72, marginRight: 10 }} source={{ uri: photos[2] }} />
-
-						<TouchableOpacity onPress={this.onAddImage} style={styles.addImage}>
-							<Image style={{ with: 72, height: 72 }} source={{ uri: drawables.image }} />
+					<View style={styles.photos} >
+						{this.images.map(e => (
+							<View style={styles.photo}>
+								<Image style={styles.image} source={{ uri: e }} />
+							</View>
+						))}
+						<TouchableOpacity onPress={() => this.onPickImage()} style={styles.photo}>
+							<Image style={styles.image} source={{ uri: drawables.noImage }} />
+							<Icon style={styles.addImageIcon} name={'plus'} size={16} />
 						</TouchableOpacity>
 					</View>
 
@@ -359,7 +349,7 @@ export class MarketAddEditProduct extends PureComponent {
 								{this.processing ? (
 									<ActivityIndicator color={colors.white} size={18} />
 								) : (
-									strings('proposal.delete')
+									strings('market.delete')
 								)}
 							</StyledButton>
 						) : (
@@ -375,6 +365,7 @@ export class MarketAddEditProduct extends PureComponent {
 				</ScrollView>
 
 				{this.renderCategoryModal()}
+				{this.renderAddTagModal()}
 				{this.renderConfirmDelete()}
 			</KeyboardAvoidingView>
 		);

@@ -1769,10 +1769,21 @@
 		"category": "Category",
 		"product_title": "Product title",
 		"price": "Price",
+		"quantity": "Quantity",
 		"desc": "Description",
 		"images": "Images",
 		"tags": "Tags",
 		"save": "Save",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"add_tag": "Add tag",
+		"missing_title": "Title is missing",
+		"missing_price": "Input price",
+		"missing_description": "Missing description",
+		"missing_photo": "Photo is missing",
+		"saved_successfully": "Saved successfully",
+		"delete": "Delete",
+		"confirm_delete_message": "Do you confirm to delete?",
+		"yes": "Yes",
+		"no": "No"
 	}
 }
