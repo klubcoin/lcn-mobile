@@ -2,13 +2,18 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { makeAutoObservable } from 'mobx';
 
 export const kMarketCategories = 'MarketCategories';
+export const kMarketStoreProducts = 'MarketStoreProducts';
 
-const keys = [kMarketCategories];
+const keys = [
+	kMarketCategories,
+	kMarketStoreProducts,
+];
 
 class Store {
 	storage = {};
 	marketCategories = [];
 	marketMenuKey = null;
+	marketProducts = [];
 
 	constructor() {
 		makeAutoObservable(this);
@@ -33,12 +38,31 @@ class Store {
 			case kMarketCategories:
 				this.marketCategories = data || [];
 				break;
+			case kMarketStoreProducts:
+				this.marketProducts = data || [];
+				break;
 		}
+	}
+
+	async save(key, value) {
+		this.storage[key] = value;
+		await AsyncStorage.setItem(key, JSON.stringify(value));
 	}
 
 	async saveProductCategories(categories) {
 		this.marketCategories = categories || [];
 		await this.save(kMarketCategories, categories);
+	}
+
+	async addProduct(product) {
+		this.marketProducts.push(product);
+		await this.save(kMarketStoreProducts, this.marketProducts);
+	}
+
+	async deleteProduct(uuid) {
+		const index = this.marketProducts.findIndex(e => e.uuid = uuid);
+		if (index >= 0) this.marketProducts.splice(index, 1);
+		await this.save(kMarketStoreProducts, this.marketProducts);
 	}
 }
 
