@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
 		marginVertical: 8,
 		color: colors.white
 	},
-	categories: {
-		backgroundColor: colors.white
+	body: {
+		backgroundColor: colors.white,
 	},
 	tabs: {
 		flexDirection: 'row',
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey200
 	},
 	tab: {
+		marginTop: 10,
 		marginHorizontal: 8
 	},
 	tabTitle: {
@@ -78,36 +79,16 @@ const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		justifyContent: 'space-between'
 	},
-	sectionHead: {
-		flexDirection: 'row'
-	},
-	sectionTitle: {
-		color: colors.blue,
-		fontWeight: '600',
-		fontSize: 15
-	},
-	more: {
-		width: 28,
-		height: 28,
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	apps: {
-		marginTop: 20,
-		flexDirection: 'row',
-		paddingBottom: 15
-	},
-	app: {
+	product: {
 		width: '40%',
 		marginVertical: 10,
-		marginRight: 10,
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
-	icon: {
-		width: 70,
-		height: 70,
-		borderRadius: 20
+	photo: {
+		width: 120,
+		height: 120,
+		borderRadius: 4
 	},
 	title: {
 		marginTop: 5,
@@ -120,12 +101,12 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: colors.grey500
 	},
-	dotStyles: {
-		backgroundColor: colors.transparent
+	price: {
+		textAlign: 'center',
+		marginTop: 5,
+		color: '#f84880',
+		fontWeight: 'bold'
 	},
-	dotActive: {
-		backgroundColor: colors.transparent
-	}
 });
 
 export default assignNestedObj(styles, brandStyles);

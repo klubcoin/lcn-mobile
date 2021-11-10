@@ -1,23 +1,44 @@
 import React, { PureComponent } from 'react';
+import { makeObservable, observable } from 'mobx';
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../store';
-import NavbarTitle from '../../../UI/NavbarTitle';
 import { menuKeys } from '../Drawer';
 import styles from './styles';
-import test, { photos } from '../test';
 import { colors } from '../../../../styles/common';
 import Search from '../components /Search';
 import { strings } from '../../../../../locales/i18n';
+import { inject, observer } from 'mobx-react';
 
 class MarketSellerOverview extends PureComponent {
-	state = {
-		activeTab: 0,
-		query: ''
-	};
+	activeTab = 0;
+	query = '';
+	categories = [];
+	products = [];
+
+	constructor(props) {
+		super(props)
+		makeObservable(this, {
+			activeTab: observable,
+			query: observable,
+			categories: observable,
+			products: observable,
+		})
+	}
 
 	componentDidMount() {
 		store.marketMenuKey = menuKeys().store;
+		this.fetchProducts();
+	}
+
+	async fetchProducts() {
+		await store.load();
+		const products = await store.marketProducts;
+		const categories = await store.marketCategories;
+
+		const categoryIds = products.map(e => e.category?.uuid);
+		this.categories = categories.filter(e => categoryIds.includes(e.uuid));
+		this.products = [...products];
 	}
 
 	toggleDrawer = () => {
@@ -25,7 +46,10 @@ class MarketSellerOverview extends PureComponent {
 	};
 
 	onAddProduct = () => {
-		this.props.navigation.navigate('MarketAddEditProduct');
+		this.props.navigation.navigate('MarketAddEditProduct', {
+			onUpdate: () => this.fetchProducts(),
+			onDelete: () => this.fetchProducts(),
+		});
 	};
 
 	renderNavBar() {
@@ -50,12 +74,11 @@ class MarketSellerOverview extends PureComponent {
 	}
 
 	renderCategoryTabs() {
-		const { activeTab } = this.state;
-		const categories = Array(10)
-			.fill(1)
-			.map(() => ({
-				title: 'category 1'
-			}));
+		const { query, activeTab, categories } = this;
+		const search = query.toLowerCase();
+		const searchMode = search && search.length > 0;
+		if (searchMode) return;
+
 		return (
 			<ScrollView style={styles.tabs} horizontal>
 				{categories.map((e, index) => {
@@ -64,9 +87,9 @@ class MarketSellerOverview extends PureComponent {
 						<TouchableOpacity
 							style={styles.tab}
 							activeOpacity={0.6}
-							onPress={() => this.setState({ activeTab: index })}
+							onPress={() => this.activeTab = index}
 						>
-							<Text style={[styles.tabTitle, active && styles.activeTab]}>{e.title}</Text>
+							<Text style={[styles.tabTitle, active && styles.activeTab]}>{e.name}</Text>
 							{active && <View style={styles.tabActive} />}
 						</TouchableOpacity>
 					);
@@ -75,44 +98,28 @@ class MarketSellerOverview extends PureComponent {
 		);
 	}
 
-	renderCategories = () => {
-		const { activeTab } = this.state;
-		const categories = test;
-		const tabCategory = categories[activeTab];
+	renderCategory = () => {
+		const { activeTab, categories, products, query } = this;
+		const category = categories[activeTab];
+		const search = query.toLowerCase();
+		const items = search && search.length > 0 ?
+			products.filter(e => e.title?.toLowerCase().indexOf(search) >= 0
+				|| e.description?.toLowerCase().indexOf(search) >= 0
+				|| `${e.price}`.indexOf(search) >= 0) :
+			products.filter(e => e.category?.uuid == category.uuid);
 
-		return this.renderCategory(tabCategory.categories[0]);
-	};
-
-	renderCategory = category => {
-		const { activeTab } = this.state;
-		const { apps } = category;
 		return (
 			<View style={styles.category}>
-				{apps &&
-					apps.map((e, index) => {
-						const photo = photos[(activeTab * 3 + index) % photos.length];
+				{
+					items.map((e, index) => {
+						const { title, price, description, images } = e;
+						const photo = images[0];
 						return (
-							<TouchableOpacity style={styles.app} activeOpacity={0.6} onPress={() => this.showApp(e)}>
-								<Image source={{ uri: photo }} style={styles.icon} />
-								<Text numberOfLines={2} style={{ textAlign: 'center', color: colors.grey }}>
-									{'Awesome product name and brief description'}
-								</Text>
-								<Text
-									numberOfLines={1}
-									style={{ textAlign: 'center', marginTop: 5, color: '#f84880', fontWeight: 'bold' }}
-								>
-									{'$89'}
-								</Text>
-								<Text
-									numberOfLines={1}
-									style={{
-										textAlign: 'center',
-										textDecorationLine: 'line-through',
-										color: colors.grey500
-									}}
-								>
-									{'$99'}
-								</Text>
+							<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(e)}>
+								<Image source={{ uri: photo }} style={styles.photo} />
+								<Text style={styles.title}>{title}</Text>
+								<Text numberOfLines={1} style={styles.desc}>{description}</Text>
+								<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
 							</TouchableOpacity>
 						);
 					})}
@@ -120,21 +127,21 @@ class MarketSellerOverview extends PureComponent {
 		);
 	};
 
+	onSearch = (text) => this.searchText = text;
+	handleSearch = () => this.query = this.searchText;
+
 	render() {
-		const { query } = this.state;
 		return (
-			<View style={{ flex: 1, backgroundColor: '#748cfb' }}>
+			<View style={styles.root}>
 				{this.renderNavBar()}
-				<Search value={query} onChange={() => {}} onSearch={() => {}} />
-				<ScrollView style={styles.categories} nestedScrollEnabled>
-					<View style={{ paddingTop: 30, paddingBottom: 40 }}>
-						{this.renderCategoryTabs()}
-						{this.renderCategories()}
-					</View>
+				<Search onChange={this.onSearch} onSearch={this.handleSearch} />
+				<ScrollView style={styles.body} nestedScrollEnabled>
+					{this.renderCategoryTabs()}
+					{this.renderCategory()}
 				</ScrollView>
 			</View>
 		);
 	}
 }
 
-export default MarketSellerOverview;
+export default inject('store')(observer(MarketSellerOverview));
