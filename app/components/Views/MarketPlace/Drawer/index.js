@@ -35,7 +35,7 @@ const menuItems = () => [
 		key: 'seller',
 		title: strings('market.my_store'),
 		icon: 'widgets-outline',
-		screen: 'MarketSellerOverview'
+		screen: 'MarketSeller'
 	}
 ];
 

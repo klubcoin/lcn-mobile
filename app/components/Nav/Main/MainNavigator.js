@@ -186,24 +186,45 @@ export default createStackNavigator(
 		},
 		MarketPlaceApp: createDrawerNavigator(
 			{
-				MarketPlace: {
-					screen: MarketPlace
-				},
-				MarketCategory: {
-					screen: MarketCategory
-				},
-				MarketProduct: {
-					screen: MarketProduct
-				},
-				MarketSellerOverview: {
-					screen: MarketSellerOverview
-				},
-				MarketAddEditProduct: {
-					screen: MarketAddEditProduct
-				},
-				MarketSellerCategory: {
-					screen: MarketSellerCategory
-				}
+				MarketPlace: createStackNavigator(
+					{
+						MarketPlaceSearch: {
+							screen: MarketPlace
+						},
+						MarketCategory: {
+							screen: MarketCategory
+						},
+						MarketProduct: {
+							screen: MarketProduct
+						},
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
+				MarketSeller: createStackNavigator(
+					{
+						MarketSellerOverview: {
+							screen: MarketSellerOverview
+						},
+						MarketSellerCategory: {
+							screen: MarketSellerCategory
+						},
+						MarketProduct: {
+							screen: MarketProduct
+						},
+						MarketAddEditProduct: {
+							screen: MarketAddEditProduct
+						},
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
 			},
 			{
 				contentComponent: MarketDrawer,
