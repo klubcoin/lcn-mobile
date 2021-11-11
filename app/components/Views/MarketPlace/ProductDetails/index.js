@@ -10,6 +10,8 @@ import routes from "../../../../common/routes";
 import { strings } from "../../../../../locales/i18n";
 import Carousel from 'react-native-snap-carousel';
 import { isTablet } from "react-native-device-info";
+import Engine from "../../../../core/Engine";
+import CryptoSignature from "../../../../core/CryptoSignature";
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -247,8 +249,9 @@ class MarketProduct extends PureComponent {
   }
 
   openChat = async () => {
-    const { provider } = this.product || {};
-    this.props.navigation.navigate('Chat', { selectedContact: provider?.address });
+    const { uuid, title, wallet, signature } = this.product || {};
+    const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
+    this.props.navigation.navigate('Chat', { selectedContact: { address } });
   }
 
   renderChatButton = () => {

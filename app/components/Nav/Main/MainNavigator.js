@@ -197,6 +197,9 @@ export default createStackNavigator(
 						MarketProduct: {
 							screen: MarketProduct
 						},
+						Chat: {
+							screen: Chat
+						},
 					},
 					{
 						defaultNavigationOptions: {
@@ -217,6 +220,9 @@ export default createStackNavigator(
 						},
 						MarketAddEditProduct: {
 							screen: MarketAddEditProduct
+						},
+						Chat: {
+							screen: Chat
 						},
 					},
 					{
