@@ -136,6 +136,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginTop: 10
   },
+  tagLabel: {
+    fontWeight: '600'
+  },
   desc: {
     fontSize: 14,
   },

@@ -153,8 +153,8 @@ class MarketProduct extends PureComponent {
 
     return (
       <View style={styles.tags}>
-        <Text>{strings('market.tags')}: </Text>
-        <Text style={styles.tag}>{tags.join('; ')}</Text>
+        <Text style={styles.tagLabel}>{strings('market.tags')}: </Text>
+        <Text>{tags.join('; ')}</Text>
       </View>
     )
   }
