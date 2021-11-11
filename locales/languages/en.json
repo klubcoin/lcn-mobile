@@ -1784,6 +1784,16 @@
 		"delete": "Delete",
 		"confirm_delete_message": "Do you confirm to delete?",
 		"yes": "Yes",
-		"no": "No"
+		"no": "No",
+		"contact_info": "Contact Information",
+		"add_to_cart": "Add to cart",
+		"purchase": "Purchase",
+		"review": "Review",
+		"purchased": "Purchased",
+		"read_more": "Read more",
+		"recently_viewed": "Recently Viewed",
+		"no_review_yet": "No review yet",
+		"products_same_provider": "Products from same provider",
+		"contact_phone": "Contact Phone"
 	}
 }
