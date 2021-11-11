@@ -52,6 +52,13 @@ class MarketSellerOverview extends PureComponent {
 		});
 	};
 
+	showProduct = (product) => {
+		this.props.navigation.navigate('MarketProduct', {
+			product,
+			onUpdate: () => this.fetchProducts(),
+		});
+	};
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
