@@ -52,12 +52,12 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 5,
-    fontSize: 22,
+    fontSize: isTablet() ? 22 : 18,
     color: colors.blue,
     fontWeight: '600'
   },
   category: {
-    fontSize: 16,
+    fontSize: isTablet() ? 16 : 14,
   },
   infoTitle: {
     fontWeight: '600'
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   quantity: {
-    width: 40,
-    height: 40,
+    width: isTablet() ? 40 : 32,
+    height: isTablet() ? 40 : 32,
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',

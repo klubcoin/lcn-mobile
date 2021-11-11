@@ -102,7 +102,7 @@ class MarketProduct extends PureComponent {
           activeOpacity={0.6}
           onPress={this.decreaseQuantity}
         >
-          <Icon style={styles.quantityIcon} name={'minus'} size={18} />
+          <Icon style={styles.quantityIcon} name={'minus'} size={isTablet() ? 18 : 16} />
         </TouchableOpacity>
         <TextInput
           value={`${this.quantity}`}
@@ -115,7 +115,7 @@ class MarketProduct extends PureComponent {
           activeOpacity={0.6}
           onPress={this.increaseQuantity}
         >
-          <Icon style={styles.quantityIcon} name={'plus'} size={18} />
+          <Icon style={styles.quantityIcon} name={'plus'} size={isTablet() ? 18 : 16} />
         </TouchableOpacity>
       </View>
     )
@@ -246,7 +246,7 @@ class MarketProduct extends PureComponent {
     )
   }
 
-  openChat = () => {
+  openChat = async () => {
     const { provider } = this.product || {};
     this.props.navigation.navigate('Chat', { selectedContact: provider?.address });
   }
