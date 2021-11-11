@@ -72,7 +72,6 @@ import Message from '../../Views/Message';
 import Chat from '../../Views/Message/Chat';
 import MarketPlace from '../../Views/MarketPlace';
 import MarketCategory from '../../Views/MarketPlace/Category';
-import MarketSellerCategory from '../../Views/MarketPlace/SellerCategory';
 import MarketSellerOverview from '../../Views/MarketPlace/SellerOverview';
 import MarketAddEditProduct from '../../Views/MarketPlace/AddEditProduct';
 import MarketDrawer from '../../Views/MarketPlace/Drawer';
@@ -198,9 +197,6 @@ export default createStackNavigator(
 				},
 				MarketSellerOverview: {
 					screen: MarketSellerOverview
-				},
-				MarketSellerCategory: {
-					screen: MarketSellerCategory
 				},
 				MarketAddEditProduct: {
 					screen: MarketAddEditProduct
