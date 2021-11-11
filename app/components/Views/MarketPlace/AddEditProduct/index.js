@@ -29,6 +29,8 @@ import { v4 as uuid } from 'uuid';
 import styles from './styles';
 import drawables from '../../../../common/drawables';
 import store from '../store';
+import Engine from '../../../../core/Engine';
+import CryptoSignature from '../../../../core/CryptoSignature';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -103,6 +105,7 @@ export class MarketAddEditProduct extends PureComponent {
 
 
 	async addProduct() {
+		const { selectedAddress } = Engine.state.PreferencesController;
 		const { title, category, price, quantity, description, tags, images } = this;
 		const data = {
 			uuid: uuid.v4(),
@@ -113,7 +116,9 @@ export class MarketAddEditProduct extends PureComponent {
 			description,
 			tags,
 			images,
+			wallet: selectedAddress,
 		};
+		data.signature = await CryptoSignature.signMessage(selectedAddress, data.uuid + data.title + data.wallet);
 
 		store.addProduct(data);
 
@@ -137,7 +142,7 @@ export class MarketAddEditProduct extends PureComponent {
 
 	onBack = () => {
 		this.resetInputs();
-		this.props.navigation.navigate('MarketSellerOverview');
+		this.props.navigation.goBack();
 	};
 
 	showNotice(message, type) {
