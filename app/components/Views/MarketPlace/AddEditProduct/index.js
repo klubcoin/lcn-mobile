@@ -126,7 +126,7 @@ export class MarketAddEditProduct extends PureComponent {
 
 	resetInputs() {
 		this.title = '';
-		this.category = '';
+		this.category = this.categories[0];
 		this.price = '';
 		this.quantity = '';
 		this.description = '';
