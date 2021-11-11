@@ -20,7 +20,7 @@ class Store {
 	}
 
 	async load() {
-		keys.map(key => this.fetch(key));
+		return Promise.all(keys.map(key => this.fetch(key)));
 	}
 
 	async fetch(key) {
