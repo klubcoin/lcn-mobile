@@ -75,7 +75,7 @@ import MarketCategory from '../../Views/MarketPlace/Category';
 import MarketSellerOverview from '../../Views/MarketPlace/SellerOverview';
 import MarketAddEditProduct from '../../Views/MarketPlace/AddEditProduct';
 import MarketDrawer from '../../Views/MarketPlace/Drawer';
-import MarketProduct from '../../Views/MarketPlace/ProductDetails';
+// import MarketProduct from '../../Views/MarketPlace/ProductDetails';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -192,9 +192,9 @@ export default createStackNavigator(
 				MarketCategory: {
 					screen: MarketCategory
 				},
-				MarketProduct: {
-					screen: MarketProduct
-				},
+				// MarketProduct: {
+				// 	screen: MarketProduct
+				// },
 				MarketSellerOverview: {
 					screen: MarketSellerOverview
 				},

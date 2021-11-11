@@ -33,7 +33,8 @@ const Search = ({ value, placeholder, onSearch, onChange }) => {
 
 const styles = StyleSheet.create({
 	searchBox: {
-		marginHorizontal: 20
+		marginHorizontal: 20,
+		flex: 1
 	},
 	search: {
 		borderRadius: 24,

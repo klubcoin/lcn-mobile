@@ -17,13 +17,13 @@ class MarketSellerOverview extends PureComponent {
 	products = [];
 
 	constructor(props) {
-		super(props)
+		super(props);
 		makeObservable(this, {
 			activeTab: observable,
 			query: observable,
 			categories: observable,
-			products: observable,
-		})
+			products: observable
+		});
 	}
 
 	componentDidMount() {
@@ -45,17 +45,21 @@ class MarketSellerOverview extends PureComponent {
 		this.props.navigation.toggleDrawer();
 	};
 
+	onViewFilter = () => {
+		this.props.navigation.navigate('MarketSellerCategory');
+	};
+
 	onAddProduct = () => {
 		this.props.navigation.navigate('MarketAddEditProduct', {
 			onUpdate: () => this.fetchProducts(),
-			onDelete: () => this.fetchProducts(),
+			onDelete: () => this.fetchProducts()
 		});
 	};
 
-	showProduct = (product) => {
+	showProduct = product => {
 		this.props.navigation.navigate('MarketProduct', {
 			product,
-			onUpdate: () => this.fetchProducts(),
+			onUpdate: () => this.fetchProducts()
 		});
 	};
 
@@ -94,7 +98,7 @@ class MarketSellerOverview extends PureComponent {
 						<TouchableOpacity
 							style={styles.tab}
 							activeOpacity={0.6}
-							onPress={() => this.activeTab = index}
+							onPress={() => (this.activeTab = index)}
 						>
 							<Text style={[styles.tabTitle, active && styles.activeTab]}>{e.name}</Text>
 							{active && <View style={styles.tabActive} />}
@@ -109,39 +113,56 @@ class MarketSellerOverview extends PureComponent {
 		const { activeTab, categories, products, query } = this;
 		const category = categories[activeTab];
 		const search = query.toLowerCase();
-		const items = search && search.length > 0 ?
-			products.filter(e => e.title?.toLowerCase().indexOf(search) >= 0
-				|| e.description?.toLowerCase().indexOf(search) >= 0
-				|| `${e.price}`.indexOf(search) >= 0) :
-			products.filter(e => e.category?.uuid == category.uuid);
+		const items =
+			search && search.length > 0
+				? products.filter(
+						e =>
+							e.title?.toLowerCase().indexOf(search) >= 0 ||
+							e.description?.toLowerCase().indexOf(search) >= 0 ||
+							`${e.price}`.indexOf(search) >= 0
+				  )
+				: products.filter(e => e.category?.uuid == category.uuid);
 
 		return (
 			<View style={styles.category}>
-				{
-					items.map((e, index) => {
-						const { title, price, description, images } = e;
-						const photo = images[0];
-						return (
-							<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(e)}>
-								<Image source={{ uri: photo }} style={styles.photo} />
-								<Text style={styles.title}>{title}</Text>
-								<Text numberOfLines={1} style={styles.desc}>{description}</Text>
-								<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
-							</TouchableOpacity>
-						);
-					})}
+				{items.map((e, index) => {
+					const { title, price, description, images } = e;
+					const photo = images[0];
+					return (
+						<TouchableOpacity
+							style={styles.product}
+							activeOpacity={0.6}
+							onPress={() => this.showProduct(e)}
+						>
+							<Image source={{ uri: photo }} style={styles.photo} />
+							<Text style={styles.title}>{title}</Text>
+							<Text numberOfLines={1} style={styles.desc}>
+								{description}
+							</Text>
+							<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+						</TouchableOpacity>
+					);
+				})}
 			</View>
 		);
 	};
 
-	onSearch = (text) => this.searchText = text;
-	handleSearch = () => this.query = this.searchText;
+	onSearch = text => (this.searchText = text);
+	handleSearch = () => (this.query = this.searchText);
 
 	render() {
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
-				<Search onChange={this.onSearch} onSearch={this.handleSearch} />
+				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+					<Search onChange={this.onSearch} onSearch={this.handleSearch} />
+					<Icon
+						name="filter"
+						size={20}
+						style={{ paddingHorizontal: 16, color: colors.white }}
+						onPress={this.onViewFilter}
+					/>
+				</View>
 				<ScrollView style={styles.body} nestedScrollEnabled>
 					{this.renderCategoryTabs()}
 					{this.renderCategory()}
