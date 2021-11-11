@@ -148,6 +148,17 @@ class MarketProduct extends PureComponent {
     )
   }
 
+  renderTags = () => {
+    const { tags } = this.product || {};
+
+    return (
+      <View style={styles.tags}>
+        <Text>{strings('market.tags')}: </Text>
+        <Text style={styles.tag}>{tags.join('; ')}</Text>
+      </View>
+    )
+  }
+
   renderRating = () => {
     return (
       <View style={styles.columns}>
@@ -296,6 +307,7 @@ class MarketProduct extends PureComponent {
                 {this.renderQuantity()}
                 {this.renderAddToCart()}
               </View>
+              {this.renderTags()}
               {this.renderRating()}
             </View>
           </View>

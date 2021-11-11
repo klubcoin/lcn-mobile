@@ -131,6 +131,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 50,
   },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10
+  },
   desc: {
     fontSize: 14,
   },
