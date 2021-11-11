@@ -87,7 +87,7 @@ class MarketSellerCategory extends PureComponent {
 							marginVertical: 5
 						}}
 					>
-						{strings('market.my_store')}
+						{this.selectedCategory.name ?? ''}
 					</Text>
 					<View style={styles.navButton} />
 				</View>
