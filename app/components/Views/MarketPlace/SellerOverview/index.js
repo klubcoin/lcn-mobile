@@ -10,6 +10,7 @@ import Search from '../components /Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { isTablet } from 'react-native-device-info';
 
 class MarketSellerOverview extends PureComponent {
 	activeTab = 0;
@@ -152,6 +153,8 @@ class MarketSellerOverview extends PureComponent {
 							? e.category?.uuid == this.selectedCategory.uuid
 							: true
 				  );
+		const countInRow = isTablet() ? 4 : 2;
+		const placeholder = countInRow - (items.length % countInRow);
 
 		return (
 			<SafeAreaView>
@@ -183,6 +186,11 @@ class MarketSellerOverview extends PureComponent {
 							</TouchableOpacity>
 						);
 					})}
+					{placeholder > 0 &&
+						placeholder < countInRow &&
+						Array(placeholder)
+							.fill(1)
+							.map(() => <View style={styles.product} />)}
 				</View>
 				{items.length < products.length && (
 					<TouchableOpacity onPress={() => this.seeAllProducts()} style={{ alignSelf: 'center' }}>
