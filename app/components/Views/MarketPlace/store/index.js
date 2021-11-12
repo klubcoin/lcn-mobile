@@ -3,10 +3,16 @@ import { makeAutoObservable } from 'mobx';
 
 export const kMarketCategories = 'MarketCategories';
 export const kMarketStoreProducts = 'MarketStoreProducts';
+export const kMarketRecentProducts = 'MarketRecentProducts';
+export const kMarketRecentProviders = 'MarketRecentProviders';
+export const kMarketFavoriteProducts = 'MarketFavoriteProducts';
 
 const keys = [
 	kMarketCategories,
 	kMarketStoreProducts,
+	kMarketRecentProducts,
+	kMarketRecentProviders,
+	kMarketFavoriteProducts
 ];
 
 class Store {
@@ -14,6 +20,9 @@ class Store {
 	marketCategories = [];
 	marketMenuKey = null;
 	marketProducts = [];
+	marketRecentProducts = [];
+	marketRecentProviders = [];
+	marketFavoriteProducts = [];
 
 	constructor() {
 		makeAutoObservable(this);
@@ -41,6 +50,15 @@ class Store {
 			case kMarketStoreProducts:
 				this.marketProducts = data || [];
 				break;
+			case kMarketRecentProducts:
+				this.marketRecentProducts = data || [];
+				break;
+			case kMarketRecentProviders:
+				this.marketRecentProviders = data || [];
+				break;
+			case kMarketFavoriteProducts:
+				this.marketFavoriteProducts = data || [];
+				break;
 		}
 	}
 
@@ -60,9 +78,42 @@ class Store {
 	}
 
 	async deleteProduct(uuid) {
-		const index = this.marketProducts.findIndex(e => e.uuid = uuid);
+		const index = this.marketProducts.findIndex(e => (e.uuid = uuid));
 		if (index >= 0) this.marketProducts.splice(index, 1);
 		await this.save(kMarketStoreProducts, this.marketProducts);
+	}
+
+	async addRecentlyViewedProduct(product) {
+		this.marketRecentProducts.unshift(product);
+		await this.save(kMarketRecentProducts, this.marketRecentProducts);
+	}
+
+	async removeRecentlyViewedProduct(uuid) {
+		const index = this.marketRecentProducts.findIndex(e => (e.uuid = uuid));
+		if (index >= 0) this.marketRecentProducts.splice(index, 1);
+		await this.save(kMarketRecentProducts, this.marketRecentProducts);
+	}
+
+	async addRecentProvider(provider) {
+		this.marketRecentProviders.unshift(provider);
+		await this.save(kMarketRecentProviders, this.marketRecentProviders);
+	}
+
+	async removeRecentProvider(uuid) {
+		const index = this.marketRecentProviders.findIndex(e => (e.uuid = uuid));
+		if (index >= 0) this.marketRecentProviders.splice(index, 1);
+		await this.save(kMarketRecentProviders, this.marketRecentProviders);
+	}
+
+	async addFavoriteProduct(product) {
+		this.marketFavoriteProducts.push(product);
+		await this.save(kMarketFavoriteProducts, this.marketFavoriteProducts);
+	}
+
+	async removeFavoriteProduct(uuid) {
+		const index = this.marketFavoriteProducts.findIndex(e => (e.uuid = uuid));
+		if (index >= 0) this.marketFavoriteProducts.splice(index, 1);
+		await this.save(kMarketFavoriteProducts, this.marketFavoriteProducts);
 	}
 }
 
