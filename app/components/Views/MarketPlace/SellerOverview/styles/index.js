@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import Device from '../../../../../util/Device';
 
 const styles = StyleSheet.create({
 	root: {
@@ -10,7 +12,15 @@ const styles = StyleSheet.create({
 	},
 	navBar: {
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
+		paddingHorizontal: 15
+	},
+	titleNavBar: {
+		textAlign: 'center',
+		flex: 1,
+		fontSize: RFValue(15),
+		color: colors.white,
+		marginVertical: 5
 	},
 	navButton: {
 		width: 32,
@@ -48,7 +58,8 @@ const styles = StyleSheet.create({
 		color: colors.white
 	},
 	body: {
-		backgroundColor: colors.white
+		backgroundColor: colors.white,
+		paddingVertical: 50
 	},
 	tabs: {
 		flexDirection: 'row',
@@ -74,46 +85,54 @@ const styles = StyleSheet.create({
 	},
 	category: {
 		marginHorizontal: 10,
-		marginTop: 20,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		justifyContent: 'space-between'
 	},
 	product: {
-		width: '40%',
+		width: Device.isIpad() ? '30%' : '40%',
+		maxHeight: Device.getDeviceHeight() / 5,
 		marginVertical: 10,
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
 	photo: {
-		width: 120,
-		height: 120,
+		resizeMode: 'cover',
+		width: '80%',
+		height: '90%',
 		borderRadius: 4
 	},
 	title: {
 		marginTop: 5,
-		fontSize: 14,
+		fontSize: RFValue(12),
 		color: colors.blue,
 		fontWeight: '600'
 	},
 	desc: {
 		marginTop: 5,
-		fontSize: 12,
+		fontSize: RFValue(10),
 		color: colors.grey500
 	},
 	price: {
 		textAlign: 'center',
 		marginTop: 5,
 		color: '#f84880',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		fontSize: RFValue(10)
 	},
 	notFoundWrapper: {
 		alignItems: 'center',
 		flex: 1
 	},
 	notFoundText: {
-		fontSize: 30,
-		color: colors.grey300
+		fontSize: RFValue(20),
+		color: colors.grey300,
+		textAlign: 'center'
+	},
+	seeAllText: {
+		fontSize: RFValue(15),
+		color: colors.primaryFox,
+		paddingVertical: 20
 	}
 });
 

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
@@ -32,15 +33,16 @@ const styles = StyleSheet.create({
 		color: colors.primaryFox
 	},
 	menuName: {
-		fontSize: 18,
-		color: colors.grey600
+		fontSize: RFValue(10),
+		color: colors.grey600,
+		textAlign: 'center'
 	},
 	selectedCategoryWrapper: {
 		flex: 1,
 		backgroundColor: colors.white
 	},
 	contentItemText: {
-		fontSize: 18
+		fontSize: RFValue(15)
 	},
 	contentItem: {
 		width: '100%',

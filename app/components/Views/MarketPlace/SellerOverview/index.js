@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../store';
 import { menuKeys } from '../Drawer';
@@ -9,6 +9,7 @@ import { colors } from '../../../../styles/common';
 import Search from '../components /Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 class MarketSellerOverview extends PureComponent {
 	activeTab = 0;
@@ -73,16 +74,12 @@ class MarketSellerOverview extends PureComponent {
 			<SafeAreaView>
 				<View style={styles.navBar}>
 					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
-						<Icon style={styles.backIcon} name={'bars'} size={16} />
+						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
 					</TouchableOpacity>
-					<Text
-						style={{ textAlign: 'center', flex: 1, fontSize: 18, color: colors.white, marginVertical: 5 }}
-					>
-						{strings('market.my_store')}
-					</Text>
+					<Text style={styles.titleNavBar}>{strings('market.my_store')}</Text>
 					<View style={styles.navButton} />
 					<TouchableOpacity onPress={this.onAddProduct.bind(this)} style={styles.navButton}>
-						<Icon style={styles.backIcon} name={'plus'} size={16} />
+						<Icon style={styles.backIcon} name={'plus'} size={RFValue(15)} />
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
@@ -123,6 +120,21 @@ class MarketSellerOverview extends PureComponent {
 		);
 	}
 
+	renderItemCategory = item => {
+		const { title, price, description, images } = item;
+		const photo = images[0];
+		return (
+			<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(item)}>
+				<Image source={{ uri: photo }} style={styles.photo} />
+				<Text style={styles.title}>{title}</Text>
+				<Text numberOfLines={1} style={styles.desc}>
+					{description}
+				</Text>
+				<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+			</TouchableOpacity>
+		);
+	};
+
 	renderCategory = () => {
 		const { activeTab, categories, products, query } = this;
 		const category = categories[activeTab];
@@ -142,11 +154,15 @@ class MarketSellerOverview extends PureComponent {
 				  );
 
 		return (
-			<View>
+			<SafeAreaView>
 				<View style={styles.category}>
 					{items.length <= 0 && (
 						<View style={styles.notFoundWrapper}>
-							<Text style={styles.notFoundText}>{strings('market.not_found_product')}</Text>
+							<Text style={styles.notFoundText}>
+								{products.length <= 0
+									? strings('market.not_have_products')
+									: strings('market.not_found_product')}
+							</Text>
 						</View>
 					)}
 					{items.map((e, index) => {
@@ -170,12 +186,10 @@ class MarketSellerOverview extends PureComponent {
 				</View>
 				{items.length < products.length && (
 					<TouchableOpacity onPress={() => this.seeAllProducts()} style={{ alignSelf: 'center' }}>
-						<Text style={{ fontSize: 22, color: colors.primaryFox, paddingVertical: 20 }}>
-							{strings('market.see_all_products')}
-						</Text>
+						<Text style={styles.seeAllText}>{strings('market.see_all_products')}</Text>
 					</TouchableOpacity>
 				)}
-			</View>
+			</SafeAreaView>
 		);
 	};
 

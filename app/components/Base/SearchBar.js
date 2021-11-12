@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../styles/common';
 
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		height: 30,
 		marginLeft: 5,
-		paddingVertical: 0
+		paddingVertical: 0,
+		fontSize: RFValue(12)
 	}
 });

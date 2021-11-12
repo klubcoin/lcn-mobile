@@ -116,12 +116,7 @@ class MarketSellerCategory extends PureComponent {
 							size={28}
 							style={[styles.icon, this.selectedCategory.uuid === e.uuid && styles.selected]}
 						/>
-						<Text
-							style={[styles.menuName, this.selectedCategory.uuid === e.uuid && styles.selected]}
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							minimumFontScale={0.5}
-						>
+						<Text style={[styles.menuName, this.selectedCategory.uuid === e.uuid && styles.selected]}>
 							{e.name}
 						</Text>
 					</TouchableOpacity>
