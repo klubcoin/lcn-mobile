@@ -76,8 +76,9 @@ class MarketSellerCategory extends PureComponent {
 	}
 
 	onBack(selectedCategory) {
-		// this.props.navigation.state.params.onGoBack(selectedCategory);
-		this.props.navigation.goBack();
+		const { navigation, route } = this.props;
+		navigation.state.params.onGoBack(selectedCategory);
+		navigation.goBack();
 	}
 
 	renderNavBar() {

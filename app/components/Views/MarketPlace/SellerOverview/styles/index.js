@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 		color: colors.white
 	},
 	body: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.white
 	},
 	tabs: {
 		flexDirection: 'row',
@@ -107,6 +107,14 @@ const styles = StyleSheet.create({
 		color: '#f84880',
 		fontWeight: 'bold'
 	},
+	notFoundWrapper: {
+		alignItems: 'center',
+		flex: 1
+	},
+	notFoundText: {
+		fontSize: 30,
+		color: colors.grey300
+	}
 });
 
 export default assignNestedObj(styles, brandStyles);
