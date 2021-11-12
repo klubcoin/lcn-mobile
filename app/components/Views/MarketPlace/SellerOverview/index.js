@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../store';
@@ -15,6 +15,7 @@ class MarketSellerOverview extends PureComponent {
 	query = '';
 	categories = [];
 	products = [];
+	selectedCategory = {};
 
 	constructor(props) {
 		super(props);
@@ -22,7 +23,9 @@ class MarketSellerOverview extends PureComponent {
 			activeTab: observable,
 			query: observable,
 			categories: observable,
-			products: observable
+			products: observable,
+			selectedCategory: observable,
+			onGoBack: action
 		});
 	}
 
@@ -46,7 +49,9 @@ class MarketSellerOverview extends PureComponent {
 	};
 
 	onViewFilter = () => {
-		this.props.navigation.navigate('MarketSellerCategory');
+		this.props.navigation.navigate('MarketSellerCategory', {
+			onGoBack: selectedCategory => this.onGoBack(selectedCategory)
+		});
 	};
 
 	onAddProduct = () => {
@@ -84,6 +89,15 @@ class MarketSellerOverview extends PureComponent {
 		);
 	}
 
+	onGoBack(selectedCategory) {
+		this.selectedCategory = selectedCategory;
+	}
+
+	seeAllProducts() {
+		this.selectedCategory = {};
+		this.query = '';
+	}
+
 	renderCategoryTabs() {
 		const { query, activeTab, categories } = this;
 		const search = query.toLowerCase();
@@ -112,7 +126,7 @@ class MarketSellerOverview extends PureComponent {
 	renderCategory = () => {
 		const { activeTab, categories, products, query } = this;
 		const category = categories[activeTab];
-		const search = query.toLowerCase();
+		const search = query?.toLowerCase() ?? '';
 		const items =
 			search && search.length > 0
 				? products.filter(
@@ -121,28 +135,46 @@ class MarketSellerOverview extends PureComponent {
 							e.description?.toLowerCase().indexOf(search) >= 0 ||
 							`${e.price}`.indexOf(search) >= 0
 				  )
-				: products.filter(e => e.category?.uuid == category.uuid);
+				: products.filter(e =>
+						Object.keys(this.selectedCategory).length > 0
+							? e.category?.uuid == this.selectedCategory.uuid
+							: true
+				  );
 
 		return (
-			<View style={styles.category}>
-				{items.map((e, index) => {
-					const { title, price, description, images } = e;
-					const photo = images[0];
-					return (
-						<TouchableOpacity
-							style={styles.product}
-							activeOpacity={0.6}
-							onPress={() => this.showProduct(e)}
-						>
-							<Image source={{ uri: photo }} style={styles.photo} />
-							<Text style={styles.title}>{title}</Text>
-							<Text numberOfLines={1} style={styles.desc}>
-								{description}
-							</Text>
-							<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
-						</TouchableOpacity>
-					);
-				})}
+			<View>
+				<View style={styles.category}>
+					{items.length <= 0 && (
+						<View style={styles.notFoundWrapper}>
+							<Text style={styles.notFoundText}>{strings('market.not_found_product')}</Text>
+						</View>
+					)}
+					{items.map((e, index) => {
+						const { title, price, description, images } = e;
+						const photo = images[0];
+						return (
+							<TouchableOpacity
+								style={styles.product}
+								activeOpacity={0.6}
+								onPress={() => this.showProduct(e)}
+							>
+								<Image source={{ uri: photo }} style={styles.photo} />
+								<Text style={styles.title}>{title}</Text>
+								<Text numberOfLines={1} style={styles.desc}>
+									{description}
+								</Text>
+								<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+							</TouchableOpacity>
+						);
+					})}
+				</View>
+				{items.length < products.length && (
+					<TouchableOpacity onPress={() => this.seeAllProducts()} style={{ alignSelf: 'center' }}>
+						<Text style={{ fontSize: 22, color: colors.primaryFox, paddingVertical: 20 }}>
+							{strings('market.see_all_products')}
+						</Text>
+					</TouchableOpacity>
+				)}
 			</View>
 		);
 	};
@@ -164,7 +196,6 @@ class MarketSellerOverview extends PureComponent {
 					/>
 				</View>
 				<ScrollView style={styles.body} nestedScrollEnabled>
-					{this.renderCategoryTabs()}
 					{this.renderCategory()}
 				</ScrollView>
 			</View>
