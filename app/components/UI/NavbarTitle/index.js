@@ -7,6 +7,7 @@ import Networks from '../../../util/networks';
 import { toggleNetworkModal } from '../../../actions/modals';
 import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
 		marginTop: Device.isIos() ? 4 : 5
 	},
 	title: {
-		fontSize: 18,
+		fontSize: RFValue(12),
 		...fontStyles.normal,
 		color: colors.black
 	},

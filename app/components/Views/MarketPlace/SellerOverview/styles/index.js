@@ -91,11 +91,12 @@ const styles = StyleSheet.create({
 	},
 	product: {
 		width: Device.isIpad() ? '30%' : '50%',
-		maxHeight: Device.getDeviceHeight() / 5,
+		maxHeight: Device.isIpad() ? '40%' : '30%',
 		marginVertical: 10,
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
+		marginBottom: 100
 	},
 	photo: {
 		resizeMode: 'cover',
