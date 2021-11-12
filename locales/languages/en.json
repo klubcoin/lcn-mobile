@@ -1791,12 +1791,14 @@
 		"review": "Review",
 		"purchased": "Purchased",
 		"read_more": "Read more",
-		"recently_viewed": "Recently Viewed",
+		"recently_viewed": "Recently viewed",
 		"no_review_yet": "No review yet",
 		"products_same_provider": "Products from same provider",
 		"contact_phone": "Contact Phone",
 		"not_found_product": "Can not find suitable products",
 		"see_all_products": "See all your products",
-		"not_have_products": "You do not have any products"
+		"not_have_products": "You do not have any products",
+		"recently_viewed_products": "Recently Viewed Products",
+		"recently_visited_providers": "Recently Visited Providers"
 	}
 }
