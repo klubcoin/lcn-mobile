@@ -1,10 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import Device from '../../../../../util/Device';
+import { isTablet } from 'react-native-device-info';
 
+const screenWidth = Dimensions.get('window').width;
+const photoWidth = (screenWidth - 40) / (isTablet() ? 4 : 2);
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
@@ -90,8 +93,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	product: {
-		width: Device.isIpad() ? '30%' : '50%',
-		maxHeight: Device.isIpad() ? '40%' : '30%',
+		width: photoWidth,
+		maxHeight: photoWidth,
 		marginVertical: 10,
 		alignItems: 'center',
 		justifyContent: 'center',
