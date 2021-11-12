@@ -25,14 +25,13 @@ const styles = StyleSheet.create({
 		color: colors.blue
 	},
 	image: {
-		height: isTablet() ? '100%' : 200,
+		height: isTablet() ? 240 : 200,
 		width: '100%',
 		resizeMode: 'cover'
 	},
 	header: {
 		marginTop: 20,
-		marginHorizontal: 10,
-		maxHeight: 500
+		marginHorizontal: 10
 	},
 	badge: {
 		backgroundColor: colors.green600,
@@ -50,25 +49,25 @@ const styles = StyleSheet.create({
 		fontSize: 14
 	},
 	about: {
-		// flex: 1,
+		flex: 1,
 		marginTop: isTablet() ? 0 : 20,
 		marginLeft: isTablet() ? 20 : 10
 	},
 	title: {
 		marginTop: 5,
-		fontSize: RFValue(20),
+		fontSize: RFValue(16),
 		color: colors.blue,
 		fontWeight: '600'
 	},
 	category: {
-		fontSize: RFValue(16)
+		fontSize: RFValue(12)
 	},
 	infoTitle: {
 		fontWeight: '600',
-		fontSize: RFValue(15)
+		fontSize: RFValue(12)
 	},
 	infoDesc: {
-		fontSize: RFValue(13)
+		fontSize: RFValue(12)
 	},
 	columns: {
 		width: '100%',
@@ -142,14 +141,13 @@ const styles = StyleSheet.create({
 	},
 	tagLabel: {
 		fontWeight: '600',
-		fontSize: RFValue(15)
+		fontSize: RFValue(12)
 	},
-	descLabel: {
-		fontSize: RFValue(15),
-		fontWeight: 'bold'
+	tag: {
+		fontSize: RFValue(12)
 	},
 	desc: {
-		fontSize: RFValue(13),
+		fontSize: RFValue(12),
 		fontWeight: '400'
 	},
 	more: {
@@ -158,7 +156,7 @@ const styles = StyleSheet.create({
 		marginVertical: 10
 	},
 	heading: {
-		fontSize: 20,
+		fontSize: RFValue(14),
 		fontWeight: '600',
 		marginTop: 15
 	},

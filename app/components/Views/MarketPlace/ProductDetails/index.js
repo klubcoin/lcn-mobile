@@ -137,7 +137,7 @@ class MarketProduct extends PureComponent {
 		return (
 			<View style={styles.tags}>
 				<Text style={styles.tagLabel}>{strings('market.tags')}: </Text>
-				<Text style={{ fontSize: RFValue(15) }}>{tags.join('; ')}</Text>
+				<Text style={styles.tag}>{tags.join('; ')}</Text>
 			</View>
 		);
 	};
@@ -168,7 +168,7 @@ class MarketProduct extends PureComponent {
 
 		return (
 			<View>
-				<Text style={styles.descLabel}>Description</Text>
+				<Text style={styles.heading}>Description</Text>
 				<Text style={styles.desc}>{desc}</Text>
 				{hasMore && !this.readMore && (
 					<TouchableOpacity style={styles.readMore} activeOpacity={0.6} onPress={this.toggleReadMore}>
