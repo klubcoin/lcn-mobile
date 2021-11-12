@@ -90,16 +90,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	product: {
-		width: Device.isIpad() ? '30%' : '40%',
+		width: Device.isIpad() ? '30%' : '50%',
 		maxHeight: Device.getDeviceHeight() / 5,
 		marginVertical: 10,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		paddingHorizontal: 10
 	},
 	photo: {
 		resizeMode: 'cover',
-		width: '80%',
-		height: '90%',
+		width: '100%',
+		height: '100%',
 		borderRadius: 4
 	},
 	title: {
