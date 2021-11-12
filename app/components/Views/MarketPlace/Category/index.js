@@ -1,98 +1,228 @@
-import React, { PureComponent } from "react";
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { connect } from "react-redux";
-import styles from "./styles";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import SearchBar from "../../../Base/SearchBar";
-import NavbarTitle from "../../../UI/NavbarTitle";
-
+import React, { PureComponent } from 'react';
+import { action, makeObservable, observable } from 'mobx';
+import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import store from '../store';
+import { menuKeys } from '../Drawer';
+import styles from './styles';
+import { colors } from '../../../../styles/common';
+import Search from '../components /Search';
+import { strings } from '../../../../../locales/i18n';
+import { inject, observer } from 'mobx-react';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { isTablet } from 'react-native-device-info';
 
 class MarketCategory extends PureComponent {
-  static navigationOptions = () => ({ header: null });
+	activeTab = 0;
+	query = '';
+	categories = [];
+	products = [];
+	selectedCategory = {};
 
-  state = {
-    category: {}
-  }
+	constructor(props) {
+		super(props);
+		makeObservable(this, {
+			activeTab: observable,
+			query: observable,
+			categories: observable,
+			products: observable,
+			selectedCategory: observable,
+			onGoBack: action
+		});
+	}
 
-  constructor(props) {
-    super(props);
-    this.state.category = props.navigation.getParam('category');
-  }
+	componentDidMount() {
+		store.marketMenuKey = menuKeys().store;
+		this.fetchProducts();
+	}
 
-  showApp = (app) => {
-    this.props.navigation.navigate('MarketApp', { app })
-  }
+	async fetchProducts() {
+		await store.load();
+		const products = await store.marketProducts;
+		const categories = await store.marketCategories;
 
-  renderCategory = (category) => {
-    const { apps } = category;
-    return (
-      <View style={styles.category}>
-        {
-          Array(3).fill(1).map(e => {
-            return apps && apps.map(e => {
-              const { title, desc, icon } = e;
-              return (
-                <TouchableOpacity
-                  style={styles.app}
-                  activeOpacity={0.6}
-                  onPress={() => this.showApp(e)}
-                >
-                  <Image source={{ uri: icon }} style={styles.icon} />
-                  <Text style={styles.title} numberOfLines={1}>{title}</Text>
-                  <Text style={styles.desc} numberOfLines={2}>{desc}</Text>
-                </TouchableOpacity>
-              )
-            })
-          })
-        }
-      </View>
-    )
-  }
+		const categoryIds = products.map(e => e.category?.uuid);
+		this.categories = categories.filter(e => categoryIds.includes(e.uuid));
+		this.products = [...products];
+	}
 
-  onBack = () => {
-    this.props.navigation.goBack();
-  }
+	toggleDrawer = () => {
+		this.props.navigation.toggleDrawer();
+	};
 
-  renderNavBar() {
-    const { category } = this.state;
-    return (
-      <SafeAreaView >
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.navButton}>
-            <Icon style={styles.backIcon} name={'arrow-left'} size={16} />
-          </TouchableOpacity>
-          <NavbarTitle title={category.title} disableNetwork translate={false} />
-          <View style={styles.navButton} />
-        </View>
-      </SafeAreaView>
-    )
-  }
+	onViewFilter = () => {
+		this.props.navigation.navigate('MarketSellerCategory', {
+			onGoBack: selectedCategory => this.onGoBack(selectedCategory)
+		});
+	};
 
-  render() {
-    const { searchQuery, category } = this.state;
+	onAddProduct = () => {
+		this.props.navigation.navigate('MarketAddEditProduct', {
+			onUpdate: () => this.fetchProducts(),
+			onDelete: () => this.fetchProducts()
+		});
+	};
 
-    return (
-      <View style={styles.root}>
-        {this.renderNavBar()}
-        <View style={styles.searchBox}>
-          <SearchBar
-            placeholder={'Search...'}
-            value={searchQuery}
-            onChange={this.handleSearch}
-          />
-        </View>
-        <ScrollView nestedScrollEnabled>
-          {this.renderCategory(category)}
-        </ScrollView>
-      </View>
-    )
-  }
+	showProduct = product => {
+		this.props.navigation.navigate('MarketProduct', {
+			product,
+			onUpdate: () => this.fetchProducts()
+		});
+	};
+
+	renderNavBar() {
+		return (
+			<SafeAreaView>
+				<View style={styles.navBar}>
+					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
+						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
+					</TouchableOpacity>
+					<Text style={styles.titleNavBar}>{strings('market.my_store')}</Text>
+					<View style={styles.navButton} />
+					<TouchableOpacity onPress={this.onAddProduct.bind(this)} style={styles.navButton}>
+						<Icon style={styles.backIcon} name={'plus'} size={RFValue(15)} />
+					</TouchableOpacity>
+				</View>
+			</SafeAreaView>
+		);
+	}
+
+	onGoBack(selectedCategory) {
+		this.selectedCategory = selectedCategory;
+	}
+
+	seeAllProducts() {
+		this.selectedCategory = {};
+		this.query = '';
+	}
+
+	renderCategoryTabs() {
+		const { query, activeTab, categories } = this;
+		const search = query.toLowerCase();
+		const searchMode = search && search.length > 0;
+		if (searchMode) return;
+
+		return (
+			<ScrollView style={styles.tabs} horizontal>
+				{categories.map((e, index) => {
+					const active = index == activeTab;
+					return (
+						<TouchableOpacity
+							style={styles.tab}
+							activeOpacity={0.6}
+							onPress={() => (this.activeTab = index)}
+						>
+							<Text style={[styles.tabTitle, active && styles.activeTab]}>{e.name}</Text>
+							{active && <View style={styles.tabActive} />}
+						</TouchableOpacity>
+					);
+				})}
+			</ScrollView>
+		);
+	}
+
+	renderItemCategory = item => {
+		const { title, price, description, images } = item;
+		const photo = images[0];
+		return (
+			<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(item)}>
+				<Image source={{ uri: photo }} style={styles.photo} />
+				<Text style={styles.title}>{title}</Text>
+				<Text numberOfLines={1} style={styles.desc}>
+					{description}
+				</Text>
+				<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+			</TouchableOpacity>
+		);
+	};
+
+	renderCategory = () => {
+		const { activeTab, categories, products, query } = this;
+		const category = categories[activeTab];
+		const search = query?.toLowerCase() ?? '';
+		const items =
+			search && search.length > 0
+				? products.filter(
+						e =>
+							e.title?.toLowerCase().indexOf(search) >= 0 ||
+							e.description?.toLowerCase().indexOf(search) >= 0 ||
+							`${e.price}`.indexOf(search) >= 0
+				  )
+				: products.filter(e =>
+						Object.keys(this.selectedCategory).length > 0
+							? e.category?.uuid == this.selectedCategory.uuid
+							: true
+				  );
+		const countInRow = isTablet() ? 4 : 2;
+		const placeholder = countInRow - (items.length % countInRow);
+
+		return (
+			<SafeAreaView>
+				<View style={styles.category}>
+					{items.length <= 0 && (
+						<View style={styles.notFoundWrapper}>
+							<Text style={styles.notFoundText}>
+								{products.length <= 0
+									? strings('market.not_have_products')
+									: strings('market.not_found_product')}
+							</Text>
+						</View>
+					)}
+					{items.map((e, index) => {
+						const { title, price, description, images } = e;
+						const photo = images[0];
+						return (
+							<TouchableOpacity
+								style={styles.product}
+								activeOpacity={0.6}
+								onPress={() => this.showProduct(e)}
+							>
+								<Image source={{ uri: photo }} style={styles.photo} />
+								<Text style={styles.title}>{title}</Text>
+								<Text numberOfLines={1} style={styles.desc}>
+									{description}
+								</Text>
+								<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+							</TouchableOpacity>
+						);
+					})}
+					{placeholder > 0 &&
+						placeholder < countInRow &&
+						Array(placeholder)
+							.fill(1)
+							.map(() => <View style={styles.product} />)}
+				</View>
+				{items.length < products.length && (
+					<TouchableOpacity onPress={() => this.seeAllProducts()} style={{ alignSelf: 'center' }}>
+						<Text style={styles.seeAllText}>{strings('market.see_all_products')}</Text>
+					</TouchableOpacity>
+				)}
+			</SafeAreaView>
+		);
+	};
+
+	onSearch = text => (this.searchText = text);
+	handleSearch = () => (this.query = this.searchText);
+
+	render() {
+		return (
+			<View style={styles.root}>
+				{this.renderNavBar()}
+				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+					<Search onChange={this.onSearch} onSearch={this.handleSearch} />
+					<Icon
+						name="filter"
+						size={20}
+						style={{ paddingHorizontal: 16, color: colors.white }}
+						onPress={this.onViewFilter}
+					/>
+				</View>
+				<ScrollView style={styles.body} nestedScrollEnabled>
+					{this.renderCategory()}
+				</ScrollView>
+			</View>
+		);
+	}
 }
 
-
-const mapStateToProps = state => ({
-  network: state.engine.backgroundState.NetworkController.network,
-  selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
-});
-
-export default connect(mapStateToProps)(MarketCategory);
+export default inject('store')(observer(MarketCategory));
