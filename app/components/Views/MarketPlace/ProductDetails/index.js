@@ -13,6 +13,7 @@ import { isTablet } from 'react-native-device-info';
 import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import store from '../store';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -39,6 +40,8 @@ class MarketProduct extends PureComponent {
 		this.product = props.navigation.getParam('product');
 		this.favorite = true; //TODO: check if product was added to favorite list
 		this.cartBadge = 0; //TODO: get product count from cart
+
+		store.addRecentlyViewedProduct(this.product);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -93,6 +96,11 @@ class MarketProduct extends PureComponent {
 
 	addFavorite = () => {
 		this.favorite = !this.favorite;
+		if (this.favorite) {
+			store.addFavoriteProduct(this.product);
+		} else {
+			store.removeFavoriteProduct(this.product.uuid);
+		}
 	};
 
 	renderQuantity = () => {

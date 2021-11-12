@@ -2,8 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
-import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
-import Device from '../../../../../util/Device';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 
 const screenWidth = Dimensions.get('window').width;
