@@ -39,20 +39,21 @@ class MarketSellerCategory extends PureComponent {
 	}
 
 	initData(fetchedCategories) {
-		const idMapping = fetchedCategories.reduce((acc, el, i) => {
+		var cloneArr = JSON.parse(JSON.stringify(fetchedCategories));
+
+		const idMapping = cloneArr.reduce((acc, el, i) => {
 			acc[el.uuid] = i;
 			return acc;
 		}, {});
 
-		fetchedCategories.forEach(el => {
+		cloneArr.forEach(el => {
 			if (!el.parent) {
 				this.categories.push(el);
 				return;
 			}
-			const parentEl = fetchedCategories[idMapping[el.parent]];
+			const parentEl = cloneArr[idMapping[el.parent]];
 			parentEl.children = [...(parentEl.children || []), el];
 		});
-
 		this.selectedCategory = this.categories[0];
 	}
 
@@ -74,6 +75,11 @@ class MarketSellerCategory extends PureComponent {
 		else this.selectedSubCategory = item;
 	}
 
+	onBack(selectedCategory) {
+		// this.props.navigation.state.params.onGoBack(selectedCategory);
+		this.props.navigation.goBack();
+	}
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
@@ -87,7 +93,7 @@ class MarketSellerCategory extends PureComponent {
 							marginVertical: 5
 						}}
 					>
-						{this.selectedCategory.name ?? ''}
+						{this.selectedCategory.name}
 					</Text>
 					<View style={styles.navButton} />
 				</View>
@@ -109,7 +115,12 @@ class MarketSellerCategory extends PureComponent {
 							size={28}
 							style={[styles.icon, this.selectedCategory.uuid === e.uuid && styles.selected]}
 						/>
-						<Text style={[styles.menuName, this.selectedCategory.uuid === e.uuid && styles.selected]}>
+						<Text
+							style={[styles.menuName, this.selectedCategory.uuid === e.uuid && styles.selected]}
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							minimumFontScale={0.5}
+						>
 							{e.name}
 						</Text>
 					</TouchableOpacity>
@@ -127,23 +138,25 @@ class MarketSellerCategory extends PureComponent {
 							{this.selectedCategory.children &&
 								this.selectedCategory.children.map(e => (
 									<View>
-										<View style={styles.contentItem}>
-											<Text style={styles.contentItemText}>{e.name}</Text>
-											{e.children && (
-												<TouchableOpacity onPress={() => this.onSelectSubCategory(e)}>
-													<Icon
-														name={`chevron-${
-															Object.keys(this.selectedSubCategory).length !== 0
-																? 'up'
-																: 'down'
-														}`}
-														size={20}
-													/>
-												</TouchableOpacity>
-											)}
-										</View>
+										<TouchableOpacity onPress={() => this.onBack(e)}>
+											<View style={styles.contentItem}>
+												<Text style={styles.contentItemText}>{e.name}</Text>
+												{e.children && (
+													<TouchableOpacity onPress={() => this.onSelectSubCategory(e)}>
+														<Icon
+															name={`chevron-${
+																Object.keys(this.selectedSubCategory).length !== 0
+																	? 'up'
+																	: 'down'
+															}`}
+															size={20}
+														/>
+													</TouchableOpacity>
+												)}
+											</View>
+										</TouchableOpacity>
 										{this.selectedSubCategory.uuid === e.uuid &&
-											e.children?.map(e => this.renderSubCategories(e.name))}
+											e.children?.map(e => this.renderSubCategories(e))}
 									</View>
 								))}
 						</ScrollView>
@@ -153,11 +166,13 @@ class MarketSellerCategory extends PureComponent {
 		);
 	}
 
-	renderSubCategories(name) {
+	renderSubCategories(category) {
 		return (
-			<View style={[styles.contentItem, styles.subItem]}>
-				<Text style={styles.contentItemText}>{name}</Text>
-			</View>
+			<TouchableOpacity onPress={() => this.onBack(category)}>
+				<View style={[styles.contentItem, styles.subItem]}>
+					<Text style={styles.contentItemText}>{category.name}</Text>
+				</View>
+			</TouchableOpacity>
 		);
 	}
 

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 		color: colors.primaryFox
 	},
 	menuName: {
-		fontSize: 20,
+		fontSize: 18,
 		color: colors.grey600
 	},
 	selectedCategoryWrapper: {
