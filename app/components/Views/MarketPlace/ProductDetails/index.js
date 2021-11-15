@@ -44,10 +44,19 @@ class MarketProduct extends PureComponent {
 		store.addRecentlyViewedProduct(this.product);
 	}
 
+	componentDidMount() {
+		this.fetchData();
+	}
+
 	componentDidUpdate(prevProps) {
 		if (this.props != prevProps) {
 			this.product = this.props.navigation.getParam('product');
+			this.fetchData();
 		}
+	}
+
+	async fetchData() {
+		this.favorite = store.marketFavoriteProducts.find(e => e.uuid == this.product.uuid);
 	}
 
 	onBack = () => {
