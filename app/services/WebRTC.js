@@ -133,7 +133,7 @@ export default class WebRTC {
 			this.sendChannels[peerId] = event.channel;
 			this.sendChannels[peerId].onmessage = message => this.handleReceiveMessage(message, peerId);
 			console.log('[SUCCESS] Connection established');
-			this.sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
+			this._sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
 			// if (this.onReady) this.onReady(this.sendChannels[peerId]);
 			this.events.ready.map(callback => callback(this.sendChannels[peerId], peerId));
 		};
@@ -194,12 +194,12 @@ export default class WebRTC {
 
 			if (data.action == 'ping') {
 				this.peerPublicKeys[peerId] = data.publicKey;
-				this.sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
+				this._sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			} else if (data.checksum) {
-				this.sendToPeer(peerId, AckWebRTC(data.checksum));
+				this._sendToPeer(peerId, AckWebRTC(data.checksum));
 			} else if (data.action == AckWebRTC().action && data.hash) {
 				if (this.monitors[peerId]) {
 					clearTimeout(this.monitors[peerId]);
