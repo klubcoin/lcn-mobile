@@ -76,7 +76,6 @@ import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import BigNumber from 'bignumber.js';
 import { setInfuraAvailabilityBlocked, setInfuraAvailabilityNotBlocked } from '../../../actions/infuraAvailability';
-import Messaging, { Pong, WSEvent } from '../../../services/Messaging';
 import { FriendRequestTypes, LiquichainNameCard, WalletProfile } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { refWebRTC, setWebRTC } from '../../../services/WebRTC';
@@ -103,7 +102,6 @@ const styles = StyleSheet.create({
 	}
 });
 const Main = props => {
-	const [messaging, setMessaging] = useState(null);
 	const [friendMessage, setFriendMessage] = useState(null);
 	const [acceptedNameCardVisible, showAcceptedNameCard] = useState(null);
 	const [identity2Confirm, showConfirmOtherIdentity] = useState(null);
@@ -671,13 +669,8 @@ const Main = props => {
 			encryptor.setKeyPairHandler(bindPrivateKey);
 			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
 
-			const messaging = new Messaging(selectedAddress);
-			setMessaging(messaging);
-			messaging.initConnection();
-
 			return () => {
 				revokeWebRTC();
-				messaging && messaging.disconnect();
 			};
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -833,7 +826,7 @@ const Main = props => {
 						const addresses = addressBook[network] || {};
 						const sender = addresses[from];
 
-						showNotice(sender.name, message.text);
+						if (sender) showNotice(sender.name, message.text);
 					}
 					break;
 				case LiquichainNameCard().action:
