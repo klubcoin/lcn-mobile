@@ -58,7 +58,7 @@ class EditStoreProfile extends Component {
 
 	fetchStoreProfile = async () => {
 		await store.load();
-		this.profile = store.storedProfile;
+		this.profile = store.storeProfile;
 		this.updateInfo();
 	};
 

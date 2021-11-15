@@ -52,7 +52,7 @@ class StoreProfile extends PureComponent {
 
 	fetchStoreProfile = async () => {
 		await store.load();
-		this.profile = store.storedProfile;
+		this.profile = store.storeProfile;
 	};
 
 	componentDidMount() {

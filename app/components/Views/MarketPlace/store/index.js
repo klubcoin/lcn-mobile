@@ -25,7 +25,7 @@ class Store {
 	marketRecentProducts = [];
 	marketRecentProviders = [];
 	marketFavoriteProducts = [];
-	storedProfile = {};
+	storeProfile = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -63,7 +63,7 @@ class Store {
 				this.marketFavoriteProducts = data || [];
 				break;
 			case kStoreProfile:
-				this.storedProfile = data || {};
+				this.storeProfile = data || {};
 				break;
 		}
 	}
@@ -123,8 +123,8 @@ class Store {
 	}
 
 	async saveProfile(profile) {
-		this.storedProfile = profile;
-		await this.save(kStoreProfile, this.storedProfile);
+		this.storeProfile = profile;
+		await this.save(kStoreProfile, this.storeProfile);
 	}
 }
 
