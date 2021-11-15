@@ -30,13 +30,18 @@ import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
-
-const shopInfo = {
-	desc:
-		'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.'
-};
+import store from '../store';
 
 class StoreProfile extends PureComponent {
+	profile = {};
+
+	constructor(props) {
+		super(props);
+		makeObservable(this, {
+			profile: observable
+		});
+	}
+
 	toggleDrawer = () => {
 		this.props.navigation.toggleDrawer();
 	};
@@ -44,6 +49,19 @@ class StoreProfile extends PureComponent {
 	onEdit = () => {
 		this.props.navigation.navigate('EditStoreProfile');
 	};
+
+	fetchStoreProfile = async () => {
+		await store.load();
+		this.profile = store.storedProfile;
+	};
+
+	componentDidMount() {
+		this.fetchStoreProfile();
+	}
+
+	componentDidUpdate() {
+		this.fetchStoreProfile();
+	}
 
 	renderNavBar() {
 		return (
@@ -70,18 +88,18 @@ class StoreProfile extends PureComponent {
 							<TouchableOpacity onPress={this.onEdit} style={styles.editIcon}>
 								<Icon name={'edit'} size={RFPercentage(2)} />
 							</TouchableOpacity>
-							<Text style={styles.storeName}>DEV SHOP</Text>
+							<Text style={styles.storeName}>{this.profile.storeName}</Text>
 							<View style={styles.content}>
 								<Text style={styles.header}>About</Text>
-								<Text style={styles.desc}>{shopInfo.desc}</Text>
+								<Text style={styles.desc}>{this.profile.about || 'No description'}</Text>
 								<Text style={styles.header}>Contacts</Text>
-								<Text style={styles.contact}>Phone: 01235689</Text>
-								<Text style={styles.contact}>Email: liqui@gmail.com</Text>
+								<Text style={styles.contact}>Phone: {this.profile.phone || 'No phone'}</Text>
+								<Text style={styles.contact}>Email: {this.profile.email || 'No email'}</Text>
 							</View>
 						</View>
 					</ScrollView>
 					<Image
-						source={{ uri: 'https://i.pinimg.com/736x/f6/d0/af/f6d0af482a5a1116dbbd2fd3ff95e58c.jpg' }}
+						source={{ uri: this.profile.logoStore || drawables.noImage }}
 						style={styles.logo}
 						resizeMode={'cover'}
 					/>

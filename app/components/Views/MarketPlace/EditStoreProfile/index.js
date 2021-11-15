@@ -1,7 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, SafeAreaView, Text } from 'react-native';
-import { inject, observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, ObservableMap } from 'mobx';
 import preferences from '../../../../store/preferences';
 import { getOnboardingNavbarOptions } from '../../../UI/Navbar';
 import RemoteImage from '../../../Base/RemoteImage';
@@ -21,26 +20,65 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
 import { OutlinedTextField } from 'react-native-material-textfield';
+import { inject, observer } from 'mobx-react';
+import store from '../store';
 
-class EditStoreProfile extends PureComponent {
-	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
+const showNotice = (message, type) => {
+	Toast.show({
+		type: type || 'error',
+		text1: message,
+		text2: strings('profile.notice'),
+		visibilityTime: 1000
+	});
+};
 
-	avatar = '';
+class EditStoreProfile extends Component {
+	logoStore = '';
 	storeName = '';
 	phone = '';
 	email = '';
 	about = '';
+	isChangedAvatar = false;
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
-			avatar: observable,
+			logoStore: observable,
 			storeName: observable,
 			phone: observable,
 			email: observable,
-			about: observable
+			about: observable,
+			isChangedAvatar: observable
 		});
 	}
+
+	componentDidMount() {
+		this.fetchStoreProfile();
+	}
+
+	fetchStoreProfile = async () => {
+		await store.load();
+		this.profile = store.storedProfile;
+		this.updateInfo();
+	};
+
+	updateInfo = () => {
+		const { storeName, phone, email, about, logoStore } = this.profile;
+
+		this.storeName = storeName;
+		this.storeNameRef.setValue(storeName);
+
+		this.phone = phone;
+		this.phoneRef.setValue(phone);
+
+		this.email = email;
+		this.emailRef.setValue(email);
+
+		this.about = about;
+		this.aboutRef.setValue(about);
+
+		this.logoStore = logoStore;
+	};
 
 	onPickImage() {
 		ImagePicker.openPicker({
@@ -48,46 +86,56 @@ class EditStoreProfile extends PureComponent {
 			height: 300,
 			cropping: true
 		}).then(image => {
-			this.avatar = image.path;
+			this.logoStore = image.path;
+			this.isChangedAvatar = true;
 		});
 	}
 
-	showNotice(message) {
-		Toast.show({
-			type: 'error',
-			text1: message,
-			text2: strings('profile.notice'),
-			visibilityTime: 1000
-		});
-	}
+	onUpdate = async () => {
+		const storeName = this.storeName?.trim() || '';
+		const phone = this.phone?.trim();
+		const email = this.email?.trim();
+		const about = this.about?.trim();
 
-	async onNext() {
-		const firstname = this.storeName.trim();
-		const lastname = this.phone.trim();
-
-		if (!this.avatar) {
-			this.showNotice(strings('profile.missing_photo'));
+		if (!this.logoStore) {
+			showNotice('Missing photo');
 			return;
 		}
-		if (!firstname || !lastname) {
-			this.showNotice(strings('profile.missing_name'));
+		if (!storeName) {
+			showNotice('Missing store name');
+			return;
+		}
+		if (!phone) {
+			showNotice('Missing phone of store');
+			return;
+		}
+		if (!email) {
+			showNotice('Missing email of store');
+			return;
+		}
+		if (!about) {
+			showNotice('Missing description of store');
 			return;
 		}
 
-		const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
-		if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
-		await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+		var fileName = '';
+		if (this.logoStore.length > 0) fileName = this.logoStore.substring(this.logoStore.lastIndexOf('/') + 1);
 
-		preferences.setOnboardProfile({
-			avatar: path,
-			firstname,
-			lastname
-		});
+		const path = `${RNFS.DocumentDirectoryPath}/${fileName || 'logo_store.png'}`;
 
-		this.props.navigation.navigate('ChoosePassword', {
-			[PREVIOUS_SCREEN]: ONBOARDING
-		});
-	}
+		if ((await RNFS.exists(path)) && this.isChangedAvatar) await RNFS.unlink(path); //remove existing file
+		await RNFS.moveFile(this.logoStore, path); // copy temporary file to persist
+
+		store
+			.saveProfile({
+				storeName,
+				logoStore: path,
+				phone,
+				email,
+				about
+			})
+			.then(value => showNotice('Update successfully', 'success'));
+	};
 
 	onBack = () => {
 		this.props.navigation.goBack();
@@ -117,24 +165,26 @@ class EditStoreProfile extends PureComponent {
 							style={styles.avatarView}
 							onPress={() => this.onPickImage()}
 						>
-							<RemoteImage source={{ uri: this.avatar || drawables.noImage }} style={styles.avatar} />
+							<RemoteImage source={{ uri: this.logoStore || drawables.noImage }} style={styles.avatar} />
 						</TouchableOpacity>
 
 						<View style={styles.form}>
 							<OutlinedTextField
+								ref={ref => (this.storeNameRef = ref)}
 								placeholder={'Enter your store name'}
 								returnKeyType="next"
 								label={strings('market.store_name')}
-								onChange={text => (this.storeName = text)}
+								onChangeText={text => (this.storeName = text)}
 								value={this.storeName}
 								baseColor={colors.grey500}
 								tintColor={colors.blue}
 								containerStyle={styles.input}
 							/>
 							<OutlinedTextField
+								ref={ref => (this.phoneRef = ref)}
 								placeholder={'Enter your business phone'}
 								returnKeyType="next"
-								onChange={text => (this.phone = text)}
+								onChangeText={text => (this.phone = text)}
 								value={this.phone}
 								label={strings('market.phone')}
 								keyboardType="phone-pad"
@@ -143,10 +193,11 @@ class EditStoreProfile extends PureComponent {
 								containerStyle={styles.input}
 							/>
 							<OutlinedTextField
+								ref={ref => (this.emailRef = ref)}
 								placeholder={'Enter your business email'}
 								returnKeyType="next"
 								label={strings('market.email')}
-								onChange={text => (this.email = text)}
+								onChangeText={text => (this.email = text)}
 								value={this.email}
 								keyboardType="email-address"
 								baseColor={colors.grey500}
@@ -154,10 +205,11 @@ class EditStoreProfile extends PureComponent {
 								containerStyle={styles.input}
 							/>
 							<OutlinedTextField
+								ref={ref => (this.aboutRef = ref)}
 								placeholder={'Enter your business description'}
 								returnKeyType="next"
 								label={strings('market.about')}
-								onChange={text => (this.about = text)}
+								onChangeText={text => (this.about = text)}
 								value={this.about}
 								labelOffset={{ y1: -4 }}
 								baseColor={colors.grey500}
@@ -170,12 +222,8 @@ class EditStoreProfile extends PureComponent {
 							/>
 						</View>
 
-						<StyledButton
-							type={'confirm'}
-							onPress={() => console.log('onChange')}
-							containerStyle={styles.next}
-						>
-							{strings('market.edit')}
+						<StyledButton type={'confirm'} onPress={this.onUpdate} containerStyle={styles.next}>
+							{strings('market.update')}
 						</StyledButton>
 					</View>
 				</ScrollView>

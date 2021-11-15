@@ -6,13 +6,15 @@ export const kMarketStoreProducts = 'MarketStoreProducts';
 export const kMarketRecentProducts = 'MarketRecentProducts';
 export const kMarketRecentProviders = 'MarketRecentProviders';
 export const kMarketFavoriteProducts = 'MarketFavoriteProducts';
+export const kStoreProfile = 'StoreProfile';
 
 const keys = [
 	kMarketCategories,
 	kMarketStoreProducts,
 	kMarketRecentProducts,
 	kMarketRecentProviders,
-	kMarketFavoriteProducts
+	kMarketFavoriteProducts,
+	kStoreProfile
 ];
 
 class Store {
@@ -23,6 +25,7 @@ class Store {
 	marketRecentProducts = [];
 	marketRecentProviders = [];
 	marketFavoriteProducts = [];
+	storedProfile = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -58,6 +61,9 @@ class Store {
 				break;
 			case kMarketFavoriteProducts:
 				this.marketFavoriteProducts = data || [];
+				break;
+			case kStoreProfile:
+				this.storedProfile = data || {};
 				break;
 		}
 	}
@@ -114,6 +120,11 @@ class Store {
 		const index = this.marketFavoriteProducts.findIndex(e => (e.uuid = uuid));
 		if (index >= 0) this.marketFavoriteProducts.splice(index, 1);
 		await this.save(kMarketFavoriteProducts, this.marketFavoriteProducts);
+	}
+
+	async saveProfile(profile) {
+		this.storedProfile = profile;
+		await this.save(kStoreProfile, this.storedProfile);
 	}
 }
 
