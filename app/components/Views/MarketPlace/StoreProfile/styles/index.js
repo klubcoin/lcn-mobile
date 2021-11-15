@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15
 	},
 	logo: {
-		borderRadius: 20,
+		borderRadius: 96,
 		borderWidth: 1,
 		borderColor: colors.primaryFox,
 		height: 90,

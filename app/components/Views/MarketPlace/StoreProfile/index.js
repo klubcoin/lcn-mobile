@@ -40,6 +40,10 @@ class StoreProfile extends PureComponent {
 		this.props.navigation.toggleDrawer();
 	};
 
+	onEdit = () => {
+		this.props.navigation.navigate('EditStoreProfile');
+	};
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
@@ -66,7 +70,7 @@ class StoreProfile extends PureComponent {
 				/>
 				<ScrollView>
 					<View style={styles.body}>
-						<TouchableOpacity onPress={() => console.log('on edit')}>
+						<TouchableOpacity onPress={this.onEdit}>
 							<Icon name={'edit'} size={20} style={styles.editIcon} />
 						</TouchableOpacity>
 						<Text style={styles.shopName}>DEV SHOP</Text>
@@ -76,7 +80,6 @@ class StoreProfile extends PureComponent {
 							<Text style={styles.header}>Contacts</Text>
 							<Text>Phone: 01235689</Text>
 							<Text>Email: liqui@gmail.com</Text>
-							<Text>Address: 1045 Seltice Way, Idaho</Text>
 						</View>
 					</View>
 				</ScrollView>

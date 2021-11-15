@@ -78,6 +78,7 @@ import MarketDrawer from '../../Views/MarketPlace/Drawer';
 import MarketSellerCategory from '../../Views/MarketPlace/SellerCategory';
 import MarketProduct from '../../Views/MarketPlace/ProductDetails';
 import StoreProfile from '../../Views/MarketPlace/StoreProfile';
+import EditStoreProfile from '../../Views/MarketPlace/EditStoreProfile';
 const styles = StyleSheet.create({
 	headerLogo: {
 		width: 125,
@@ -236,6 +237,9 @@ export default createStackNavigator(
 					{
 						StoreProfile: {
 							screen: StoreProfile
+						},
+						EditStoreProfile: {
+							screen: EditStoreProfile
 						}
 					},
 					{
