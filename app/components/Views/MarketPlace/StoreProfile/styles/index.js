@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue, RFPercentage } from 'react-native-responsive-fontsize';
 import { colors } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
+
+const logoSize = RFPercentage(10);
 
 const styles = StyleSheet.create({
 	container: {
@@ -26,24 +28,28 @@ const styles = StyleSheet.create({
 		borderRadius: 96,
 		borderWidth: 1,
 		borderColor: colors.primaryFox,
-		height: 90,
-		width: 90,
+		height: logoSize,
+		width: logoSize,
 		padding: 2,
 		alignItems: 'center',
 		justifyContent: 'center',
 		alignSelf: 'center',
 		position: 'absolute',
-		top: Device.getDeviceHeight() * 0.1 + 25,
+		top: 0 - logoSize / 2,
 		zIndex: 999
 	},
 	editIcon: {
-		alignSelf: 'flex-end'
+		position: 'absolute',
+		width: RFPercentage(3),
+		height: RFPercentage(3),
+		right: 10,
+		top: 10
 	},
-	shopName: {
+	storeName: {
 		fontSize: RFValue(15),
 		fontWeight: 'bold',
 		alignSelf: 'center',
-		marginTop: 20
+		marginTop: logoSize / 2
 	},
 	header: {
 		fontSize: RFValue(12),
@@ -53,7 +59,11 @@ const styles = StyleSheet.create({
 		paddingVertical: 10
 	},
 	desc: {
-		marginBottom: 20
+		marginBottom: 20,
+		fontSize: RFValue(12)
+	},
+	contact: {
+		fontSize: RFValue(12)
 	},
 	navBar: {
 		flexDirection: 'row',
