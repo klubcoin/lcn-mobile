@@ -84,6 +84,9 @@ import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileReques
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
 import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
+import store from '../../Views/MarketPlace/store';
+import StoreService from '../../Views/MarketPlace/store/StoreService';
+import StoreMessaging from '../../Views/MarketPlace/store/StoreMessaging';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -656,6 +659,21 @@ const Main = props => {
 		return { privateKey, publicKey };
 	};
 
+	initializeStore = async (address) => {
+		const apps = await preferences.getSavedAppList();
+		const marketApp = apps.find(app => app.instance.name == 'Liquimart');
+		if (marketApp) {
+			await store.load();
+			const storeMessaging = new StoreMessaging(address, refWebRTC());
+			storeMessaging.addListener('message', (data, peerId) => {
+				console.log(data, peerId)
+			})
+
+			const storeService = new StoreService(address);
+			storeService.announceToTracker();
+		}
+	}
+
 	// Remove all notifications that aren't visible
 	useEffect(
 		() => {
@@ -668,6 +686,7 @@ const Main = props => {
 			webrtc.addEncryptor(encryptor);
 			encryptor.setKeyPairHandler(bindPrivateKey);
 			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
+			initializeStore(selectedAddress);
 
 			return () => {
 				revokeWebRTC();
