@@ -35,6 +35,36 @@ const styles = StyleSheet.create({
 	searchBox: {
 		height: 80
 	},
+	categorySelector: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginBottom: 10
+	},
+	labelCategory: {
+		fontSize: RFValue(14),
+		color: colors.white,
+		fontWeight: '600'
+	},
+	category: {
+		width: 240,
+		backgroundColor: colors.white,
+		flexDirection: 'row',
+		marginHorizontal: 10,
+		borderWidth: StyleSheet.hairlineWidth,
+		borderRadius: 20,
+		borderColor: colors.grey300,
+		alignItems: 'center'
+	},
+	option: {
+		flex: 1,
+		padding: 10,
+		fontSize: 14
+	},
+	dropdownIcon: {
+		marginHorizontal: 10,
+		alignSelf: 'center'
+	},
 	body: {
 		backgroundColor: colors.white,
 		paddingTop: 10,

@@ -13,6 +13,8 @@ import { strings } from '../../../../locales/i18n';
 import Carousel from 'react-native-snap-carousel';
 import { isTablet } from 'react-native-device-info';
 import routes from '../../../common/routes';
+import ModalSelector from '../../UI/AddCustomTokenOrApp/ModalSelector';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -24,6 +26,9 @@ class MarketPlace extends PureComponent {
 
 	activeTab = 0;
 	searchQuery = '';
+	category = '';
+	categories = [];
+	showCategories = false;
 	recentProducts = [];
 	recentProviders = [];
 
@@ -32,6 +37,9 @@ class MarketPlace extends PureComponent {
 		makeObservable(this, {
 			activeTab: observable,
 			searchQuery: observable,
+			category: observable,
+			categories: observable,
+			showCategories: observable,
 			recentProducts: observable,
 			recentProviders: observable
 		});
@@ -43,10 +51,22 @@ class MarketPlace extends PureComponent {
 		this.fetchStore();
 	}
 
-	fetchCategories() {
+	async fetchCategories() {
+		const categories = store.marketCategories;
+		this.categories = [...categories];
+
+		if (categories && !this.category) {
+			this.category = categories[0];
+		}
+
 		APIService.getMarketCategories((success, json) => {
 			if (success && json) {
 				store.saveProductCategories(json);
+				this.categories = [...json];
+
+				if (categories && !this.category) {
+					this.category = categories[0];
+				}
 			}
 		});
 	}
@@ -284,6 +304,38 @@ class MarketPlace extends PureComponent {
 		);
 	}
 
+	renderSelector() {
+		const category = this.category ?? this.categories[0];
+		const value = category?.name || '';
+
+		return (
+			<TouchableOpacity style={styles.category} activeOpacity={0.6} onPress={() => (this.showCategories = true)}>
+				<Text style={styles.option}>{value}</Text>
+				<FontAwesome name={'caret-down'} size={20} style={styles.dropdownIcon} />
+			</TouchableOpacity>
+		);
+	}
+
+	renderCategoryModal = () => {
+		const options = this.categories.map(e => ({
+			key: e.uuid,
+			value: e.name
+		}));
+
+		return (
+			<ModalSelector
+				visible={!!this.showCategories}
+				options={options}
+				hideKey={true}
+				onSelect={item => {
+					this.category = this.categories.find(e => e.uuid == item.key);
+					this.showCategories = false;
+				}}
+				onClose={() => (this.showCategories = false)}
+			/>
+		);
+	};
+
 	render() {
 		return (
 			<View style={styles.root}>
@@ -291,13 +343,15 @@ class MarketPlace extends PureComponent {
 				<View style={styles.searchBox}>
 					<Search onChange={this.onSearch} onSearch={this.handleSearch} />
 				</View>
+				<View style={styles.categorySelector}>
+					<Text style={styles.labelCategory}>{strings('market.in_category')} :</Text>
+					{this.renderSelector()}
+				</View>
 				<ScrollView style={styles.body} nestedScrollEnabled>
-					<View>
-						{this.renderCategoryTabs()}
-						{this.renderProviders()}
-					</View>
+					{this.renderProviders()}
 					{this.renderRecentlyViewedProducts()}
 					{this.renderRecentlyVisitedProviders()}
+					{this.renderCategoryModal()}
 				</ScrollView>
 			</View>
 		);
