@@ -13,6 +13,7 @@ import { strings } from '../../../../locales/i18n';
 import Carousel from 'react-native-snap-carousel';
 import { isTablet } from 'react-native-device-info';
 import routes from '../../../common/routes';
+import StoreService from './store/StoreService';
 import ModalSelector from '../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -288,7 +289,10 @@ class MarketPlace extends PureComponent {
 	};
 
 	onSearch = text => (this.searchText = text);
-	handleSearch = () => (this.query = this.searchText);
+	handleSearch = () => {
+		this.query = this.searchText.toLowerCase();
+		StoreService.searchProduct(this.query, this.category.uuid);
+	};
 
 	renderNavBar() {
 		return (

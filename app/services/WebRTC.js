@@ -103,8 +103,12 @@ export default class WebRTC {
 			...payload
 		});
 
+		this.sendWebSocketMessage(message);
+	};
+
+	sendWebSocketMessage = (message) => {
 		if (useSocketIO) {
-			this.socketRef.emit(WSEvent.message, message);
+			this.socketRef.emit(message.action, message);
 		} else {
 			this.messaging.send(message);
 		}
