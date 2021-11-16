@@ -85,8 +85,7 @@ import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
 import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
 import store from '../../Views/MarketPlace/store';
-import StoreService from '../../Views/MarketPlace/store/StoreService';
-import StoreMessaging from '../../Views/MarketPlace/store/StoreMessaging';
+import StoreService, { setStoreService } from '../../Views/MarketPlace/store/StoreService';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -664,12 +663,8 @@ const Main = props => {
 		const marketApp = apps.find(app => app.instance.name == 'Liquimart');
 		if (marketApp) {
 			await store.load();
-			const storeMessaging = new StoreMessaging(address, refWebRTC());
-			storeMessaging.addListener('message', (data, peerId) => {
-				console.log(data, peerId)
-			})
-
 			const storeService = new StoreService(address);
+			setStoreService(storeService);
 			storeService.announceToTracker();
 		}
 	}

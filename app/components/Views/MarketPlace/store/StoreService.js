@@ -48,3 +48,7 @@ export default class StoreService {
     })
   }
 }
+
+const state = { storeService: null };
+export const setStoreService = ref => (state.storeService = ref);
+export const refStoreService = () => state.storeService;
