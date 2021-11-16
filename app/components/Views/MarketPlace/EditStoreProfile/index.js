@@ -22,6 +22,7 @@ import styles from './styles/index';
 import { OutlinedTextField } from 'react-native-material-textfield';
 import { inject, observer } from 'mobx-react';
 import store from '../store';
+import validator from 'validator';
 
 const showNotice = (message, type) => {
 	Toast.show({
@@ -95,28 +96,10 @@ class EditStoreProfile extends Component {
 		const storeName = this.storeName?.trim() || '';
 		const phone = this.phone?.trim();
 		const email = this.email?.trim();
-		const about = this.about?.trim();
+		const about = this.about;
 
-		if (!this.logoStore) {
-			showNotice('Missing photo');
-			return;
-		}
-		if (!storeName) {
-			showNotice('Missing store name');
-			return;
-		}
-		if (!phone) {
-			showNotice('Missing phone of store');
-			return;
-		}
-		if (!email) {
-			showNotice('Missing email of store');
-			return;
-		}
-		if (!about) {
-			showNotice('Missing description of store');
-			return;
-		}
+		var isValid = this.isDataValid();
+		if (!isValid) return;
 
 		var fileName = '';
 		if (this.logoStore.length > 0) fileName = this.logoStore.substring(this.logoStore.lastIndexOf('/') + 1);
@@ -126,6 +109,7 @@ class EditStoreProfile extends Component {
 		if ((await RNFS.exists(path)) && this.isChangedAvatar) await RNFS.unlink(path); //remove existing file
 		await RNFS.moveFile(this.logoStore, path); // copy temporary file to persist
 
+		this.isChangedAvatar = false;
 		store
 			.saveProfile({
 				storeName,
@@ -136,6 +120,45 @@ class EditStoreProfile extends Component {
 			})
 			.then(value => showNotice('Update successfully', 'success'));
 	};
+
+	isDataValid() {
+		const storeName = this.storeName?.trim() || '';
+		const phone = this.phone?.trim();
+		const email = this.email?.trim();
+		const about = this.about?.trim();
+
+		if (!this.logoStore) {
+			showNotice(strings('market.missing_logo'));
+			return;
+		}
+		if (!storeName) {
+			showNotice(strings('market.missing_store_name'));
+			return;
+		}
+		if (!phone) {
+			showNotice(strings('market.invalid_phone'));
+			return;
+		}
+		if (!validator.isMobilePhone(phone)) {
+			showNotice(strings('market.missing_phone'));
+			return;
+		}
+		if (!email) {
+			showNotice(strings('market.missing_email'));
+			return;
+		}
+		if (!validator.isEmail(email)) {
+			showNotice(strings('market.invalid_email'));
+			return;
+		}
+
+		if (!about) {
+			showNotice(strings('market.missing_description'));
+			return;
+		}
+
+		return true;
+	}
 
 	onBack = () => {
 		this.props.navigation.goBack();

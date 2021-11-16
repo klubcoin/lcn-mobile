@@ -1809,6 +1809,12 @@
 		"address": "Address",
 		"edit": "Edit",
 		"in_category": "in category",
-		"update": "Update"
+		"update": "Update",
+		"missing_logo": "Missing logo store",
+		"missing_store_name": "Missing store name",
+		"missing_phone": "Missing phone number",
+		"missing_email": "Missing email",
+		"invalid_phone": "Invalid phone number",
+		"invalid_email": "Invalid email"
 	}
 }
