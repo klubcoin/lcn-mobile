@@ -53,12 +53,6 @@ const styles = StyleSheet.create({
 		marginTop: isTablet() ? 0 : 20,
 		marginLeft: isTablet() ? 20 : 10
 	},
-	title: {
-		marginTop: 5,
-		fontSize: RFValue(16),
-		color: colors.blue,
-		fontWeight: '600'
-	},
 	category: {
 		fontSize: RFValue(12)
 	},
@@ -79,11 +73,6 @@ const styles = StyleSheet.create({
 	},
 	pricing: {
 		marginTop: 10
-	},
-	price: {
-		fontSize: RFValue(15),
-		fontWeight: '600',
-		color: '#1588C8'
 	},
 	actions: {
 		flexDirection: 'row',
@@ -194,6 +183,30 @@ const styles = StyleSheet.create({
 	},
 	chatBubble: {
 		color: colors.white
+	},
+	slide: {
+		paddingVertical: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	title: {
+		marginTop: 10,
+		textAlign: 'center',
+		color: colors.blue,
+		fontSize: RFValue(12)
+	},
+	finalPrice: {
+		marginTop: 5,
+		textAlign: 'center',
+		color: '#f84880',
+		fontWeight: 'bold',
+		fontSize: RFValue(10)
+	},
+	price: {
+		textAlign: 'center',
+		textDecorationLine: 'line-through',
+		color: colors.grey500,
+		fontSize: RFValue(10)
 	}
 });
 

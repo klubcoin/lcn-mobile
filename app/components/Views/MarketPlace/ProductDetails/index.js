@@ -17,6 +17,7 @@ import store from '../store';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
+const rowSize = isTablet() ? 4 : 3;
 
 class MarketProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -240,10 +241,68 @@ class MarketProduct extends PureComponent {
 	};
 
 	renderRecentlyViewedProducts = () => {
+		const slideCount = Math.ceil(store.marketRecentProducts.length / rowSize);
+		const data = Array(slideCount)
+			.fill(0)
+			.map((e, index) => ({ index }));
+
+		console.log('data123', data);
+
 		return (
 			<View>
 				<Text style={styles.heading}>{strings('market.recently_viewed')}</Text>
-				<Text>....</Text>
+				<View style={styles.section}>
+					<Carousel
+						ref={e => (this.viewedProductSlider = e)}
+						data={data}
+						renderItem={this.renderRecentProductSlide}
+						autoplay={true}
+						loop={true}
+						autoplayInterval={3000}
+						sliderWidth={screenWidth - 20}
+						itemWidth={screenWidth - 20}
+					/>
+				</View>
+			</View>
+		);
+	};
+
+	renderRecentProductSlide = ({ item }) => {
+		const { index } = item;
+		const start = index * rowSize;
+		const items = store.marketRecentProducts.slice(start, start + rowSize);
+		if (items.length != rowSize) {
+			Array(rowSize - items.length)
+				.fill(false)
+				.map(() => items.push(false));
+		}
+		const width = (screenWidth - 40) / rowSize - 20;
+
+		return (
+			<View style={styles.slide}>
+				{items.map((e, i) => {
+					if (!e) return <View style={{ width }} />;
+
+					const { price, discountPrice, title, images } = e;
+					return (
+						<TouchableOpacity
+							activeOpacity={0.6}
+							style={{ width, alignItems: 'center' }}
+							onPress={() => (this.product = e)}
+						>
+							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
+							<Text numberOfLines={2} style={styles.title}>
+								{title}
+							</Text>
+							<Text numberOfLines={1} style={styles.finalPrice}>
+								{discountPrice ?? price} {routes.mainNetWork.ticker}
+							</Text>
+							<Text numberOfLines={1} style={styles.price}>
+								{price} {routes.mainNetWork.ticker}
+							</Text>
+						</TouchableOpacity>
+					);
+				})}
 			</View>
 		);
 	};
