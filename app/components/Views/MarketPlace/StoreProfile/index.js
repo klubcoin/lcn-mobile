@@ -90,11 +90,15 @@ class StoreProfile extends PureComponent {
 							</TouchableOpacity>
 							<Text style={styles.storeName}>{this.profile.storeName}</Text>
 							<View style={styles.content}>
-								<Text style={styles.header}>About</Text>
+								<Text style={styles.header}>{strings('market.about')}</Text>
 								<Text style={styles.desc}>{this.profile.about || 'No description'}</Text>
-								<Text style={styles.header}>Contacts</Text>
-								<Text style={styles.contact}>Phone: {this.profile.phone || 'No phone'}</Text>
-								<Text style={styles.contact}>Email: {this.profile.email || 'No email'}</Text>
+								<Text style={styles.header}>{strings('market.contacts')}</Text>
+								<Text style={styles.contact}>
+									{strings('market.phone')}: {this.profile.phone || 'No phone'}
+								</Text>
+								<Text style={styles.contact}>
+									{strings('market.email')}: {this.profile.email || 'No email'}
+								</Text>
 							</View>
 						</View>
 					</ScrollView>
