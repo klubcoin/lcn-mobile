@@ -158,11 +158,11 @@ class EditStoreProfile extends Component {
 			return;
 		}
 		if (!phone) {
-			showNotice(strings('market.invalid_phone'));
+			showNotice(strings('market.missing_phone'));
 			return;
 		}
 		if (!validator.isMobilePhone(phone)) {
-			showNotice(strings('market.missing_phone'));
+			showNotice(strings('market.invalid_phone'));
 			return;
 		}
 		if (!email) {
