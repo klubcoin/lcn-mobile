@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { color } from 'react-native-reanimated';
 import { RFValue, RFPercentage } from 'react-native-responsive-fontsize';
 import { colors } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
@@ -85,6 +86,9 @@ const styles = StyleSheet.create({
 		height: 32,
 		alignItems: 'center',
 		justifyContent: 'center'
+	},
+	explainText: {
+		color: colors.grey500
 	}
 });
 

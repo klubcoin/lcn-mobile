@@ -96,9 +96,19 @@ class StoreProfile extends PureComponent {
 								<Text style={styles.contact}>
 									{strings('market.phone')}: {this.profile.phone || 'No phone'}
 								</Text>
-								<Text style={styles.contact}>
+								<Text style={[styles.contact, styles.desc]}>
 									{strings('market.email')}: {this.profile.email || 'No email'}
 								</Text>
+								<Text style={styles.header}>{strings('market.payment_term')}</Text>
+								<Text style={styles.contact}>
+									{strings('market.first_payment')}:{' '}
+									{(this.profile.firstPaymentPercent * 100).toFixed(0)}%
+								</Text>
+								<Text style={styles.contact}>
+									{strings('market.second_payment')}:{' '}
+									{(this.profile.secondPaymentPercent * 100).toFixed(0)}%
+								</Text>
+								<Text style={styles.explainText}>{strings('market.payment_explain')}</Text>
 							</View>
 						</View>
 					</ScrollView>

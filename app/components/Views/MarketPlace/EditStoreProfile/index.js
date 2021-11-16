@@ -1,5 +1,14 @@
 import React, { Component, PureComponent } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, SafeAreaView, Text } from 'react-native';
+import {
+	KeyboardAvoidingView,
+	ScrollView,
+	StyleSheet,
+	TouchableOpacity,
+	View,
+	SafeAreaView,
+	Text,
+	Slider
+} from 'react-native';
 import { action, makeObservable, observable, ObservableMap } from 'mobx';
 import preferences from '../../../../store/preferences';
 import { getOnboardingNavbarOptions } from '../../../UI/Navbar';
@@ -39,6 +48,8 @@ class EditStoreProfile extends Component {
 	phone = '';
 	email = '';
 	about = '';
+	firstPaymentPercent = 0;
+	secondPaymentPercent = 1;
 	isChangedAvatar = false;
 
 	constructor(props) {
@@ -49,6 +60,8 @@ class EditStoreProfile extends Component {
 			phone: observable,
 			email: observable,
 			about: observable,
+			firstPaymentPercent: observable,
+			secondPaymentPercent: observable,
 			isChangedAvatar: observable
 		});
 	}
@@ -64,7 +77,7 @@ class EditStoreProfile extends Component {
 	};
 
 	updateInfo = () => {
-		const { storeName, phone, email, about, logoStore } = this.profile;
+		const { storeName, phone, email, about, logoStore, firstPaymentPercent, secondPaymentPercent } = this.profile;
 
 		this.storeName = storeName;
 		this.storeNameRef.setValue(storeName);
@@ -77,6 +90,11 @@ class EditStoreProfile extends Component {
 
 		this.about = about;
 		this.aboutRef.setValue(about);
+		this.firstPaymentPercent = firstPaymentPercent;
+		this.firstPaymentRef.setValue((firstPaymentPercent * 100).toFixed(0));
+
+		this.secondPaymentPercent = secondPaymentPercent;
+		this.secondPaymentRef.setValue((secondPaymentPercent * 100).toFixed(0));
 
 		this.logoStore = logoStore;
 	};
@@ -97,6 +115,8 @@ class EditStoreProfile extends Component {
 		const phone = this.phone?.trim();
 		const email = this.email?.trim();
 		const about = this.about;
+		const firstPaymentPercent = this.firstPaymentPercent;
+		const secondPaymentPercent = this.secondPaymentPercent;
 
 		var isValid = this.isDataValid();
 		if (!isValid) return;
@@ -116,7 +136,9 @@ class EditStoreProfile extends Component {
 				logoStore: path,
 				phone,
 				email,
-				about
+				about,
+				firstPaymentPercent,
+				secondPaymentPercent
 			})
 			.then(value => showNotice('Update successfully', 'success'));
 	};
@@ -164,6 +186,14 @@ class EditStoreProfile extends Component {
 		this.props.navigation.goBack();
 	};
 
+	onChangeSlider = value => {
+		this.firstPaymentPercent = parseFloat(value.toFixed(2));
+		this.secondPaymentPercent = parseFloat((1 - value).toFixed(2));
+
+		this.firstPaymentRef.setValue((this.firstPaymentPercent * 100).toFixed(0));
+		this.secondPaymentRef.setValue((this.secondPaymentPercent * 100).toFixed(0));
+	};
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
@@ -194,7 +224,7 @@ class EditStoreProfile extends Component {
 						<View style={styles.form}>
 							<OutlinedTextField
 								ref={ref => (this.storeNameRef = ref)}
-								placeholder={'Enter your store name'}
+								placeholder={strings('market.store_name_placeholder')}
 								returnKeyType="next"
 								label={strings('market.store_name')}
 								onChangeText={text => (this.storeName = text)}
@@ -205,7 +235,7 @@ class EditStoreProfile extends Component {
 							/>
 							<OutlinedTextField
 								ref={ref => (this.phoneRef = ref)}
-								placeholder={'Enter your business phone'}
+								placeholder={strings('market.phone_placeholder')}
 								returnKeyType="next"
 								onChangeText={text => (this.phone = text)}
 								value={this.phone}
@@ -217,7 +247,7 @@ class EditStoreProfile extends Component {
 							/>
 							<OutlinedTextField
 								ref={ref => (this.emailRef = ref)}
-								placeholder={'Enter your business email'}
+								placeholder={strings('market.email_placeholder')}
 								returnKeyType="next"
 								label={strings('market.email')}
 								onChangeText={text => (this.email = text)}
@@ -229,7 +259,7 @@ class EditStoreProfile extends Component {
 							/>
 							<OutlinedTextField
 								ref={ref => (this.aboutRef = ref)}
-								placeholder={'Enter your business description'}
+								placeholder={strings('market.desc_placeholder')}
 								returnKeyType="next"
 								label={strings('market.about')}
 								onChangeText={text => (this.about = text)}
@@ -242,6 +272,40 @@ class EditStoreProfile extends Component {
 								style={styles.outline}
 								containerStyle={[styles.containerOutline, styles.input]}
 								inputContainerStyle={styles.inputOutline}
+							/>
+							<View style={{ flexDirection: 'row', marginVertical: 10 }}>
+								<OutlinedTextField
+									disabled
+									ref={ref => (this.firstPaymentRef = ref)}
+									placeholder={strings('market.percentage')}
+									label={strings('market.first_payment')}
+									value={this.firstPaymentPercent * 100}
+									baseColor={colors.black}
+									containerStyle={{ flex: 1, marginRight: 10 }}
+									keyboardType="phone-pad"
+									suffix={'%'}
+								/>
+								<OutlinedTextField
+									disabled
+									ref={ref => (this.secondPaymentRef = ref)}
+									placeholder={strings('market.percentage')}
+									label={strings('market.second_payment')}
+									value={this.secondPaymentPercent * 100}
+									baseColor={colors.black}
+									containerStyle={{ flex: 1, marginLeft: 10 }}
+									keyboardType="phone-pad"
+									suffix={'%'}
+								/>
+							</View>
+
+							<Slider
+								style={{ height: 40 }}
+								minimumValue={0}
+								maximumValue={1}
+								minimumTrackTintColor={colors.primaryFox}
+								maximumTrackTintColor={colors.black}
+								value={this.firstPaymentPercent}
+								onValueChange={this.onChangeSlider}
 							/>
 						</View>
 

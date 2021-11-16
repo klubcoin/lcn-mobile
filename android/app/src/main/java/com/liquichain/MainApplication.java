@@ -1,6 +1,8 @@
 package com.liquichain;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.slider.ReactSliderPackage;
+import com.reactnativecommunity.slider.ReactSliderPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import android.content.Context;
 import com.facebook.react.PackageList;

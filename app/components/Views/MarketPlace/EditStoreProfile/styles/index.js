@@ -54,16 +54,9 @@ const styles = StyleSheet.create({
 	textInput: {
 		borderBottomColor: colors.primaryFox,
 		borderBottomWidth: 2,
-		// height: 45,
-		// ...fontStyles.normal,
-		// borderWidth: StyleSheet.hairlineWidth,
-		// borderRadius: 25,
 		paddingHorizontal: 10,
 		marginBottom: 20,
 		maxHeight: 50
-		// fontSize: 18,
-		// alignItems: 'center',
-		// textAlign: 'center',
 	},
 	outline: {
 		maxHeight: 100,
