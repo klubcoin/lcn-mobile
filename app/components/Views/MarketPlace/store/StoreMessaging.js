@@ -1,4 +1,4 @@
-import { StoreMessage } from './StoreMessages';
+import { StoreLookUp, StoreMessage } from './StoreMessages';
 
 export default class StoreMessaging {
 	webrtc = null;
@@ -30,7 +30,8 @@ export default class StoreMessaging {
 
 	_onMessage = (data, peerId) => {
 		if (data.action) {
-			if (data.action == StoreMessage().action) {
+			if (data.action == StoreLookUp().action
+				|| data.action == StoreMessage().action) {
 				if (this.evtMessage) this.evtMessage(data, peerId);
 			}
 		}
