@@ -64,7 +64,7 @@ export class MarketDrawer extends Component {
 		this.toggleDrawer();
 		if (key == store.marketMenuKey) return;
 
-		store.marketMenuKey = key;
+		if (key !== 'settings') store.marketMenuKey = key;
 		navigation.navigate(screen);
 	}
 
