@@ -1825,6 +1825,7 @@
 		"desc_placeholder": "Enter your business description",
 		"email_placeholder": "Enter your business email",
 		"phone_placeholder": "Enter your business phone",
-		"store_name_placeholder": "Enter your store name"
+		"store_name_placeholder": "Enter your store name",
+		"current_currency": "Current currency"
 	}
 }

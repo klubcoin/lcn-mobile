@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	},
 	explainText: {
-		color: colors.grey500
+		color: colors.grey500,
+		marginBottom: 20
 	}
 });
 

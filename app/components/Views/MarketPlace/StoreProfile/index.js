@@ -31,6 +31,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
 import store from '../store';
+import Engine from '../../../../core/Engine';
+import infuraCurrencies from '../../../../util/infura-conversion.json';
 
 class StoreProfile extends PureComponent {
 	profile = {};
@@ -53,14 +55,22 @@ class StoreProfile extends PureComponent {
 	fetchStoreProfile = async () => {
 		await store.load();
 		this.profile = store.storeProfile;
+
+		(this.selectedCurrency = Engine.state.CurrencyRateController.currentCurrency),
+			(this.profile.currentCurrency = infuraCurrencies.objects.find(
+				({ quote: { code, name } }) => code === this.selectedCurrency
+			));
 	};
 
 	componentDidMount() {
 		this.fetchStoreProfile();
+		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+			this.fetchStoreProfile();
+		});
 	}
 
-	componentDidUpdate() {
-		this.fetchStoreProfile();
+	componentWillUnmount() {
+		if (this.willFocusSubscription) this.willFocusSubscription.remove();
 	}
 
 	renderNavBar() {
@@ -109,6 +119,11 @@ class StoreProfile extends PureComponent {
 									{(this.profile.secondPaymentPercent * 100).toFixed(0)}%
 								</Text>
 								<Text style={styles.explainText}>{strings('market.payment_explain')}</Text>
+								<Text style={styles.header}>{strings('market.current_currency')}</Text>
+								<Text style={styles.desc}>
+									{this.profile?.currentCurrency?.quote.code.toUpperCase()} -{' '}
+									{this.profile?.currentCurrency?.quote.name}
+								</Text>
 							</View>
 						</View>
 					</ScrollView>
@@ -122,5 +137,8 @@ class StoreProfile extends PureComponent {
 		);
 	}
 }
+// const mapStateToProps = state => ({
+// 	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency
+// });
 
 export default inject('store')(observer(StoreProfile));
