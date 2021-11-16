@@ -30,7 +30,6 @@ class MarketPlace extends PureComponent {
 	category = '';
 	categories = [];
 	showCategories = false;
-	recentProducts = [];
 	recentProviders = [];
 
 	constructor(props) {
@@ -41,7 +40,6 @@ class MarketPlace extends PureComponent {
 			category: observable,
 			categories: observable,
 			showCategories: observable,
-			recentProducts: observable,
 			recentProviders: observable
 		});
 	}
@@ -49,7 +47,6 @@ class MarketPlace extends PureComponent {
 	componentDidMount() {
 		store.marketMenuKey = menuKeys().shopping;
 		this.fetchCategories();
-		this.fetchStore();
 	}
 
 	async fetchCategories() {
@@ -70,11 +67,6 @@ class MarketPlace extends PureComponent {
 				}
 			}
 		});
-	}
-
-	async fetchStore() {
-		await store.load();
-		this.recentProducts = [...store.marketRecentProducts];
 	}
 
 	renderCategoryTabs() {
@@ -101,7 +93,7 @@ class MarketPlace extends PureComponent {
 	renderRecentProductSlide = ({ item }) => {
 		const { index } = item;
 		const start = index * rowSize;
-		const items = this.recentProducts.slice(start, start + rowSize);
+		const items = store.marketRecentProducts.slice(start, start + rowSize);
 		if (items.length != rowSize) {
 			Array(rowSize - items.length)
 				.fill(false)
@@ -139,7 +131,7 @@ class MarketPlace extends PureComponent {
 	};
 
 	renderRecentlyViewedProducts = () => {
-		const slideCount = Math.ceil(this.recentProducts.length / rowSize);
+		const slideCount = Math.ceil(store.marketRecentProducts.length / rowSize);
 		const data = Array(slideCount)
 			.fill(0)
 			.map((e, index) => ({ index }));

@@ -90,8 +90,16 @@ class Store {
 	}
 
 	async addRecentlyViewedProduct(product) {
-		this.marketRecentProducts.unshift(product);
-		await this.save(kMarketRecentProducts, this.marketRecentProducts);
+		const isProductContained = this.marketRecentProducts.some(e => e.uuid == product.uuid);
+
+		if (!isProductContained) {
+			this.marketRecentProducts.unshift(product);
+			if (this.marketRecentProducts.length > 10) {
+				//10 is limit of recently products
+				this.marketRecentProducts.pop();
+			}
+			await this.save(kMarketRecentProducts, this.marketRecentProducts);
+		}
 	}
 
 	async removeRecentlyViewedProduct(uuid) {
