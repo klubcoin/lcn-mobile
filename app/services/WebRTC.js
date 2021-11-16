@@ -79,7 +79,7 @@ export default class WebRTC {
 
 	handleWebRtcSignal = message => {
 		try {
-			const data = JSON.parse(message);
+			const data = (message.action || message.payload) ? message : JSON.parse(message);
 			if (data.webrtc) {
 				switch (data.signal) {
 					case 'offer':
@@ -92,9 +92,18 @@ export default class WebRTC {
 						this.handleNewICECandidateMsg(data);
 						break;
 				}
+			} else if (data.action && data.from) {
+				this.handleWebSocketMessage(message, data.from)
 			}
 		} catch (e) {}
 	};
+
+	handleWebSocketMessage = (data, peerId) => {
+		try {
+			this.events.message.map(callback => callback(data, peerId));
+			this.signalOnce(data, peerId);
+		} catch (e) { }
+	}
 
 	sendSignal = (signal, payload) => {
 		const message = Message(payload.target, {
@@ -188,11 +197,11 @@ export default class WebRTC {
 	handleWebRtcMessage = async (json, peerId) => {
 		try {
 			let data = JSON.parse(json);
-			if (`${peerId}`.toLowerCase() != this.parseSignature(data)) return;
+			if (data.signature && `${peerId}`.toLowerCase() != this.parseSignature(data)) return;
 
 			if (data.encrypted) {
 				data = this.decryptPayload(data);
-			} else {
+			} else if (data.payload) {
 				data = JSON.parse(data.payload);
 			}
 
