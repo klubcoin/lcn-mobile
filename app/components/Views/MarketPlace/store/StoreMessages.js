@@ -1,9 +1,10 @@
 import { sha256 } from '../../../../core/CryptoSignature';
 
-export const StoreAnnounce = (from, hashes) => ({
+export const StoreAnnounce = (from, hashes, info) => ({
   action: 'store_announce',
   from,
   hashes,
+  info,
   checksum: sha256(JSON.stringify({ from, hashes })),
 });
 
