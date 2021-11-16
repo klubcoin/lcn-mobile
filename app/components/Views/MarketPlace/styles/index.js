@@ -91,12 +91,35 @@ const styles = StyleSheet.create({
 		height: 2,
 		backgroundColor: colors.blue
 	},
-	products: {
+	vendors: {
 		marginHorizontal: 10,
 		marginTop: 20,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		justifyContent: 'space-between'
+	},
+	vendor: {
+		fontSize: 14,
+		fontWeight: '600',
+		marginTop: 5,
+	},
+	distance: {
+		fontSize: 12,
+		color: colors.grey700,
+	},
+	rating: {
+		fontSize: 12,
+	},
+	score: {
+		fontSize: 12,
+	},
+	priceRange: {
+		fontSize: 12,
+		color: '#f84880',
+	},
+	tags: {
+		fontSize: 12,
+		color: colors.grey600,
 	},
 	sectionHead: {
 		flexDirection: 'row',

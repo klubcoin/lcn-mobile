@@ -13,9 +13,11 @@ import { strings } from '../../../../locales/i18n';
 import Carousel from 'react-native-snap-carousel';
 import { isTablet } from 'react-native-device-info';
 import routes from '../../../common/routes';
-import StoreService from './store/StoreService';
+import { refStoreService } from './store/StoreService';
 import ModalSelector from '../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { StoreAnnounce } from './store/StoreMessages';
+import { sha256 } from '../../../core/CryptoSignature';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -30,6 +32,7 @@ class MarketPlace extends PureComponent {
 	category = '';
 	categories = [];
 	showCategories = false;
+	vendors = [];
 	recentProviders = [];
 
 	constructor(props) {
@@ -40,6 +43,7 @@ class MarketPlace extends PureComponent {
 			category: observable,
 			categories: observable,
 			showCategories: observable,
+			vendors: observable,
 			recentProviders: observable
 		});
 	}
@@ -197,7 +201,7 @@ class MarketPlace extends PureComponent {
 
 		return (
 			<View style={styles.section}>
-				{this.renderHeading({ title: strings('market.recently_viewed_products') })}
+				{this.renderHeading({ title: strings('market.recently_visited_providers') })}
 				<Carousel
 					ref={e => (this.viewedProductSlider = e)}
 					data={data}
@@ -236,34 +240,35 @@ class MarketPlace extends PureComponent {
 		const width = (screenWidth - 40) / rowSize - 20;
 
 		return (
-			<View style={styles.providers}>
-				{this.providers &&
-					this.providers.map((e, index) => {
-						const { images } = e;
+			<View style={styles.vendors}>
+				{this.vendors &&
+					this.vendors.map((e, index) => {
+						const { profile, rating, score, priceRange, tags } = e;
+						const { storeName } = profile || {};
 						return (
 							<TouchableOpacity
-								style={styles.provider}
+								style={styles.vendorView}
 								activeOpacity={0.6}
 								onPress={() => this.showProvider(e)}
 							>
-								<Image style={{ width, height: width }} source={{ uri: images[0] }} />
+								<Image style={{ width, height: width }} source={{ uri: profile?.logoStore }} />
 								<Text numberOfLines={2} style={styles.vendor}>
-									{'Vendor name'}
+									{storeName}
 								</Text>
 								<Text numberOfLines={1} style={styles.distance}>
 									{'1km'}
 								</Text>
 								<Text numberOfLines={1} style={styles.rating}>
-									{'4.2'}
+									{strings('market.rating')} {rating}
 								</Text>
 								<Text numberOfLines={1} style={styles.score}>
-									{'score 1/8'}
+									{strings('market.score')} {score}
 								</Text>
 								<Text numberOfLines={1} style={styles.priceRange}>
-									{'$12 - 20$'}
+									${`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to}`}
 								</Text>
 								<Text numberOfLines={1} style={styles.tags}>
-									{'tagA, tagB, ...'}
+									{tags?.join(', ')}
 								</Text>
 							</TouchableOpacity>
 						);
@@ -282,8 +287,25 @@ class MarketPlace extends PureComponent {
 
 	onSearch = text => (this.searchText = text);
 	handleSearch = () => {
+		this.vendors = [];
+		const hash = sha256(this.category.uuid);
 		this.query = this.searchText.toLowerCase();
-		StoreService.searchProduct(this.query, this.category.uuid);
+
+		const storeService = refStoreService();
+		storeService.searchProduct({ query: this.query }, hash);
+
+		storeService.addListener((data) => {
+			if (data.action == StoreAnnounce().action && data.hashes[0] == hash) {
+				const { info } = data;
+				const { query } = info;
+				if (query?.query == this.query) {
+					this.vendors.push({
+						...info,
+						wallet: data.from
+					})
+				}
+			}
+		})
 	};
 
 	renderNavBar() {
