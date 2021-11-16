@@ -56,10 +56,10 @@ class StoreProfile extends PureComponent {
 		await store.load();
 		this.profile = store.storeProfile;
 
-		(this.selectedCurrency = Engine.state.CurrencyRateController.currentCurrency),
-			(this.profile.currentCurrency = infuraCurrencies.objects.find(
-				({ quote: { code, name } }) => code === this.selectedCurrency
-			));
+		this.selectedCurrency = Engine.state.CurrencyRateController.currentCurrency;
+		this.profile.currentCurrency = infuraCurrencies.objects.find(
+			({ quote: { code, name } }) => code === this.selectedCurrency
+		);
 	};
 
 	componentDidMount() {
@@ -137,8 +137,5 @@ class StoreProfile extends PureComponent {
 		);
 	}
 }
-// const mapStateToProps = state => ({
-// 	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency
-// });
 
 export default inject('store')(observer(StoreProfile));
