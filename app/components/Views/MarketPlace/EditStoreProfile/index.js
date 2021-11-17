@@ -176,7 +176,7 @@ class EditStoreProfile extends Component {
 				deliveryPayment,
 				defaultCurrency
 			})
-			.then(value => showNotice('market.update_success', 'success'));
+			.then(value => showNotice(strings('market.update_success'), 'success'));
 	};
 
 	isDataValid() {
