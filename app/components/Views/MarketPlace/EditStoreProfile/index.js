@@ -56,7 +56,7 @@ class EditStoreProfile extends Component {
 	about = '';
 	orderPayment = 1;
 	deliveryPayment = 0;
-	isChangedAvatar = false;
+	isAvatarChanged = false;
 	tokenOpts = [];
 	defaultCurrency = {};
 	selectingToken = false;
@@ -71,7 +71,7 @@ class EditStoreProfile extends Component {
 			about: observable,
 			orderPayment: observable,
 			deliveryPayment: observable,
-			isChangedAvatar: observable,
+			isAvatarChanged: observable,
 			tokenOpts: observable,
 			defaultCurrency: observable,
 			selectingToken: observable
@@ -140,7 +140,7 @@ class EditStoreProfile extends Component {
 			cropping: true
 		}).then(image => {
 			this.logoStore = image.path;
-			this.isChangedAvatar = true;
+			this.isAvatarChanged = true;
 		});
 	}
 
@@ -161,10 +161,12 @@ class EditStoreProfile extends Component {
 
 		const path = `${RNFS.DocumentDirectoryPath}/${fileName || 'logo_store.png'}`;
 
-		if ((await RNFS.exists(path)) && this.isChangedAvatar) await RNFS.unlink(path); //remove existing file
-		await RNFS.moveFile(this.logoStore, path); // copy temporary file to persist
+		if (this.isAvatarChanged) {
+			if ((await RNFS.exists(path))) await RNFS.unlink(path); //remove existing file
+			await RNFS.moveFile(this.logoStore, path); // copy temporary file to persist
+		}
 
-		this.isChangedAvatar = false;
+		this.isAvatarChanged = false;
 		store
 			.saveProfile({
 				storeName,
