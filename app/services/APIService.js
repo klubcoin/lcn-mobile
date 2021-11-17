@@ -35,6 +35,19 @@ export default class APIService {
       peer_id: peerId,
       info_hash: '843D620DC0F14CEA05BC72120CC2CDC8A8929B93',
       port: 0,
+      wallet_id: peerId,
+    }
+    WebService.sendGet(this.apiPeerAnnounce(), data, callback);
+  }
+
+  static announceInfoHash(hash, peerId, coord, callback) {
+    const data = {
+      peer_id: peerId,
+      info_hash: hash,
+      port: 0,
+      wallet_id: peerId,
+      latitude: coord.latitude,
+      longitude: coord.longitude,
     }
     WebService.sendGet(this.apiPeerAnnounce(), data, callback);
   }
