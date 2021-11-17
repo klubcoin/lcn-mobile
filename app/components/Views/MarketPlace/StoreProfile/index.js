@@ -56,11 +56,6 @@ class StoreProfile extends PureComponent {
 	fetchStoreProfile = async () => {
 		await store.load();
 		this.profile = store.storeProfile;
-
-		this.selectedCurrency = Engine.state.CurrencyRateController.currentCurrency;
-		this.profile.currentCurrency = infuraCurrencies.objects.find(
-			({ quote: { code, name } }) => code === this.selectedCurrency
-		);
 	};
 
 	componentDidMount() {
@@ -120,16 +115,18 @@ class StoreProfile extends PureComponent {
 									{((this.profile.deliveryPayment ?? 0) * 100).toFixed(0)}%
 								</Text>
 								<Text style={styles.header}>{strings('market.default_currency')}</Text>
-								<View style={styles.tokenRow}>
-									<AssetIcon
-										logo={this.profile?.defaultCurrency?.logo}
-										customStyle={styles.tokenLogo}
-									/>
-									<Text style={[styles.desc, styles.tokenName]}>
-										{this.profile?.defaultCurrency?.symbol + ' '}(
-										{this.profile?.defaultCurrency?.name})
-									</Text>
-								</View>
+								{this.profile?.defaultCurrency &&
+									<View style={styles.tokenRow}>
+										<AssetIcon
+											logo={this.profile.defaultCurrency.logo}
+											customStyle={styles.tokenLogo}
+										/>
+										<Text style={[styles.desc, styles.tokenName]}>
+											{this.profile.defaultCurrency.symbol + ' '}(
+											{this.profile.defaultCurrency.name})
+										</Text>
+									</View>
+								}
 							</View>
 						</View>
 					</ScrollView>
