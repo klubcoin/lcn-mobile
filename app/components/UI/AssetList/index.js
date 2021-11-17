@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import StyledButton from '../StyledButton';
@@ -64,36 +64,38 @@ export default class AssetList extends PureComponent {
 		const { searchResults = [], handleSelectAsset, selectedAsset, isHideLabel } = this.props;
 
 		return (
-			<View style={styles.rowWrapper} testID={'add-searched-token-screen'}>
-				{searchResults.length > 0 && !isHideLabel ? (
-					<Text style={styles.normalText} testID={'select-token-title'}>
-						{strings('token.select_token')}
-					</Text>
-				) : null}
-				{searchResults.length === 0 && this.props.searchQuery.length ? (
-					<Text style={styles.normalText}>{strings('token.no_tokens_found')}</Text>
-				) : null}
-				{searchResults.slice(0, 6).map((_, i) => {
-					const { symbol, name, address, logo } = searchResults[i] || {};
-					const isSelected = selectedAsset && selectedAsset.address === address;
-					return (
-						<StyledButton
-							type={isSelected ? 'normal' : 'transparent'}
-							containerStyle={styles.item}
-							onPress={() => handleSelectAsset(searchResults[i])} // eslint-disable-line
-							key={i}
-							testID={'searched-token-result'}
-						>
-							<View style={styles.assetListElement}>
-								<AssetIcon logo={logo} />
-								<Text style={styles.text}>
-									{name} ({symbol})
-								</Text>
-							</View>
-						</StyledButton>
-					);
-				})}
-			</View>
+			<ScrollView>
+				<View style={styles.rowWrapper} testID={'add-searched-token-screen'}>
+					{searchResults.length > 0 && !isHideLabel ? (
+						<Text style={styles.normalText} testID={'select-token-title'}>
+							{strings('token.select_token')}
+						</Text>
+					) : null}
+					{searchResults.length === 0 && this.props.searchQuery.length ? (
+						<Text style={styles.normalText}>{strings('token.no_tokens_found')}</Text>
+					) : null}
+					{searchResults.slice(0, 6).map((_, i) => {
+						const { symbol, name, address, logo } = searchResults[i] || {};
+						const isSelected = selectedAsset && selectedAsset.address === address;
+						return (
+							<StyledButton
+								type={isSelected ? 'normal' : 'transparent'}
+								containerStyle={styles.item}
+								onPress={() => handleSelectAsset(searchResults[i])} // eslint-disable-line
+								key={i}
+								testID={'searched-token-result'}
+							>
+								<View style={styles.assetListElement}>
+									<AssetIcon logo={logo} />
+									<Text style={styles.text}>
+										{name} ({symbol})
+									</Text>
+								</View>
+							</StyledButton>
+						);
+					})}
+				</View>
+			</ScrollView>
 		);
 	};
 }

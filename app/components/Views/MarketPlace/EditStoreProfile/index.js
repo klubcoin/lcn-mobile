@@ -333,13 +333,15 @@ class EditStoreProfile extends Component {
 									/>
 								</TouchableOpacity>
 								{this.selectingToken && (
-									<AssetList
-										searchResults={this.tokenOpts}
-										handleSelectAsset={this.selectToken}
-										selectedAsset={this.defaultCurrency}
-										searchQuery={''}
-										isHideLabel={true}
-									/>
+									<View style={{ maxHeight: 300 }}>
+										<AssetList
+											searchResults={this.tokenOpts}
+											handleSelectAsset={this.selectToken}
+											selectedAsset={this.defaultCurrency}
+											searchQuery={''}
+											isHideLabel={true}
+										/>
+									</View>
 								)}
 							</View>
 
