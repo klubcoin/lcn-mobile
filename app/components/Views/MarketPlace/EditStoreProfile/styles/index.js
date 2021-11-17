@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { colors, fontStyles } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
 import { assignNestedObj } from '../../../../../util/object';
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 		overflow: 'hidden'
 	},
 	input: {
-		marginVertical: 10
+		marginVertical: 5
 	},
 	next: {
 		width: 240
@@ -94,6 +94,24 @@ const styles = StyleSheet.create({
 	explainText: {
 		color: colors.grey500,
 		marginBottom: 10
+	},
+	optionButton: {
+		padding: 15,
+		flexDirection: 'row',
+		borderWidth: 1,
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		borderRadius: 5
+	},
+	optionLabel: {
+		fontSize: RFValue(12)
+	},
+	section: {
+		marginTop: 0,
+		marginBottom: 20
+	},
+	selected: {
+		borderColor: colors.primaryFox
 	}
 });
 

@@ -1828,6 +1828,11 @@
 		"store_name_placeholder": "Enter your store name",
 		"current_currency": "Current currency",
 		"score": "Score",
-		"rating": "Rating"
+		"rating": "Rating",
+		"update_success": "Update successfully",
+		"default_currency": "Default currency",
+		"default_currency_holder": "Choose your default currency",
+		"default_currency_explain": "Your products will sell in this unit",
+		"invalid_currency": "Lack of currency"
 	}
 }

@@ -7,7 +7,8 @@ import {
 	View,
 	SafeAreaView,
 	Text,
-	Slider
+	Slider,
+	Modal
 } from 'react-native';
 import { action, makeObservable, observable, ObservableMap } from 'mobx';
 import preferences from '../../../../store/preferences';
@@ -26,12 +27,17 @@ import { TextInput } from 'react-native-gesture-handler';
 import Device from '../../../../util/Device';
 import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
 import { OutlinedTextField } from 'react-native-material-textfield';
 import { inject, observer } from 'mobx-react';
 import store from '../store';
 import validator from 'validator';
+import SelectComponent from '../../../UI/SelectComponent';
+import Engine from '../../../../core/Engine';
+import contractMap from '@metamask/contract-metadata';
+import TokenImage from '../../../UI/TokenImage';
+import AssetList from '../../../UI/AssetList';
 
 const showNotice = (message, type) => {
 	Toast.show({
@@ -51,6 +57,9 @@ class EditStoreProfile extends Component {
 	orderPayment = 1;
 	deliveryPayment = 0;
 	isChangedAvatar = false;
+	tokenOpts = [];
+	defaultCurrency = {};
+	selectingToken = false;
 
 	constructor(props) {
 		super(props);
@@ -62,7 +71,10 @@ class EditStoreProfile extends Component {
 			about: observable,
 			orderPayment: observable,
 			deliveryPayment: observable,
-			isChangedAvatar: observable
+			isChangedAvatar: observable,
+			tokenOpts: observable,
+			defaultCurrency: observable,
+			selectingToken: observable
 		});
 	}
 
@@ -74,10 +86,30 @@ class EditStoreProfile extends Component {
 		await store.load();
 		this.profile = store.storeProfile;
 		this.updateInfo();
+		this.updateTokenOpts();
+	};
+
+	updateTokenOpts = async () => {
+		const savedApps = await preferences.getSavedAppList();
+		const savedAppAddresses = savedApps.map(e => e.address);
+		const userTokens =
+			Engine.state.AssetsController.tokens?.filter(e => !savedAppAddresses.includes(e.address.toLowerCase())) ||
+			[];
+
+		this.tokenOpts = userTokens.map(e => contractMap[e.address]) || [];
 	};
 
 	updateInfo = () => {
-		const { storeName, phone, email, about, logoStore, orderPayment, deliveryPayment } = this.profile;
+		const {
+			storeName,
+			phone,
+			email,
+			about,
+			logoStore,
+			orderPayment,
+			deliveryPayment,
+			defaultCurrency
+		} = this.profile;
 
 		this.storeName = storeName;
 		this.storeNameRef.setValue(storeName);
@@ -98,6 +130,7 @@ class EditStoreProfile extends Component {
 		this.deliveryPaymentRef.setValue((this.deliveryPayment * 100).toFixed(0));
 
 		this.logoStore = logoStore;
+		this.defaultCurrency = defaultCurrency;
 	};
 
 	onPickImage() {
@@ -118,6 +151,7 @@ class EditStoreProfile extends Component {
 		const about = this.about;
 		const orderPayment = this.orderPayment;
 		const deliveryPayment = this.deliveryPayment;
+		const defaultCurrency = this.defaultCurrency;
 
 		var isValid = this.isDataValid();
 		if (!isValid) return;
@@ -139,9 +173,10 @@ class EditStoreProfile extends Component {
 				email,
 				about,
 				orderPayment,
-				deliveryPayment
+				deliveryPayment,
+				defaultCurrency
 			})
-			.then(value => showNotice('Update successfully', 'success'));
+			.then(value => showNotice('market.update_success', 'success'));
 	};
 
 	isDataValid() {
@@ -156,6 +191,10 @@ class EditStoreProfile extends Component {
 		}
 		if (!storeName) {
 			showNotice(strings('market.missing_store_name'));
+			return;
+		}
+		if (!about) {
+			showNotice(strings('market.missing_description'));
 			return;
 		}
 		if (!phone) {
@@ -174,9 +213,8 @@ class EditStoreProfile extends Component {
 			showNotice(strings('market.invalid_email'));
 			return;
 		}
-
-		if (!about) {
-			showNotice(strings('market.missing_description'));
+		if (Object.keys(this.defaultCurrency).length <= 0) {
+			showNotice(strings('market.invalid_currency'));
 			return;
 		}
 
@@ -193,6 +231,10 @@ class EditStoreProfile extends Component {
 
 		this.orderPaymentRef.setValue((this.orderPayment * 100).toFixed(0));
 		this.deliveryPaymentRef.setValue((this.deliveryPayment * 100).toFixed(0));
+	};
+
+	selectToken = value => {
+		this.defaultCurrency = value;
 	};
 
 	renderNavBar() {
@@ -223,6 +265,22 @@ class EditStoreProfile extends Component {
 						</TouchableOpacity>
 
 						<View style={styles.form}>
+							<OutlinedTextField
+								ref={ref => (this.aboutRef = ref)}
+								placeholder={strings('market.desc_placeholder')}
+								returnKeyType="next"
+								label={strings('market.about')}
+								onChangeText={text => (this.about = text)}
+								value={this.about}
+								labelOffset={{ y1: -4 }}
+								baseColor={colors.grey500}
+								tintColor={colors.blue}
+								multiline
+								scrollEnabled={true}
+								style={styles.outline}
+								containerStyle={[styles.containerOutline, styles.input]}
+								inputContainerStyle={styles.inputOutline}
+							/>
 							<OutlinedTextField
 								ref={ref => (this.storeNameRef = ref)}
 								placeholder={strings('market.store_name_placeholder')}
@@ -258,22 +316,33 @@ class EditStoreProfile extends Component {
 								tintColor={colors.blue}
 								containerStyle={styles.input}
 							/>
-							<OutlinedTextField
-								ref={ref => (this.aboutRef = ref)}
-								placeholder={strings('market.desc_placeholder')}
-								returnKeyType="next"
-								label={strings('market.about')}
-								onChangeText={text => (this.about = text)}
-								value={this.about}
-								labelOffset={{ y1: -4 }}
-								baseColor={colors.grey500}
-								tintColor={colors.blue}
-								multiline
-								scrollEnabled={true}
-								style={styles.outline}
-								containerStyle={[styles.containerOutline, styles.input]}
-								inputContainerStyle={styles.inputOutline}
-							/>
+
+							<View style={styles.section}>
+								<Text style={styles.header}>{strings('market.default_currency')}</Text>
+								<Text style={styles.explainText}>{strings('market.default_currency_explain')}</Text>
+								<TouchableOpacity
+									onPress={() => (this.selectingToken = !this.selectingToken)}
+									style={[styles.optionButton, this.selectingToken && styles.selected]}
+								>
+									<Text style={styles.optionLabel} numberOfLines={1}>
+										{this.defaultCurrency.name || strings('market.default_currency_holder')}
+									</Text>
+									<Icon
+										name={`chevron-${this.selectingToken ? 'up' : 'down'}`}
+										size={RFPercentage(2)}
+									/>
+								</TouchableOpacity>
+								{this.selectingToken && (
+									<AssetList
+										searchResults={this.tokenOpts}
+										handleSelectAsset={this.selectToken}
+										selectedAsset={this.defaultCurrency}
+										searchQuery={''}
+										isHideLabel={true}
+									/>
+								)}
+							</View>
+
 							<Text style={styles.header}>{strings('market.payment_term')}</Text>
 							<Text style={styles.explainText}>{strings('market.payment_explain')}</Text>
 							<View style={styles.paymentSection}>
