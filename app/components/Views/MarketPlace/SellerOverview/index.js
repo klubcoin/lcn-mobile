@@ -11,6 +11,7 @@ import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
+import AssetIcon from '../../../UI/AssetIcon';
 
 class MarketSellerOverview extends PureComponent {
 	activeTab = 0;
@@ -169,7 +170,7 @@ class MarketSellerOverview extends PureComponent {
 						</View>
 					)}
 					{items.map((e, index) => {
-						const { title, price, description, images } = e;
+						const { title, price, description, images, currency } = e;
 						const photo = images[0];
 						return (
 							<TouchableOpacity
@@ -182,7 +183,15 @@ class MarketSellerOverview extends PureComponent {
 								<Text numberOfLines={1} style={styles.desc}>
 									{description}
 								</Text>
-								<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+								<View style={styles.priceContainer}>
+									<Text numberOfLines={1} style={styles.price}>
+										{`${price} `}
+									</Text>
+									<Text numberOfLines={1} style={styles.price}>
+										{currency?.symbol || '$'}
+									</Text>
+									<AssetIcon logo={currency?.logo} customStyle={styles.tokenLogo} />
+								</View>
 							</TouchableOpacity>
 						);
 					})}

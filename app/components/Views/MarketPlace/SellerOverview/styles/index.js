@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 
 const screenWidth = Dimensions.get('window').width;
@@ -137,6 +137,17 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(15),
 		color: colors.primaryFox,
 		paddingVertical: 20
+	},
+	priceContainer: {
+		flexDirection: 'row',
+		maxWidth: photoWidth / 2,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	tokenLogo: {
+		width: RFPercentage(3),
+		height: RFPercentage(3),
+		marginLeft: 2
 	}
 });
 

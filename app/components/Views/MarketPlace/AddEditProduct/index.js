@@ -123,6 +123,7 @@ export class MarketAddEditProduct extends PureComponent {
 			description,
 			tags,
 			images,
+			currency: this.storeProfile?.defaultCurrency,
 			wallet: selectedAddress
 		};
 		data.signature = await CryptoSignature.signMessage(selectedAddress, data.uuid + data.title + data.wallet);
