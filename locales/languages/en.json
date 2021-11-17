@@ -1820,7 +1820,7 @@
 		"payment_term": "Payment term",
 		"first_payment": "Payment at order",
 		"second_payment": "Payment at delivery",
-		"payment_explain": "The transaction is processed two times. It has percentages to describe how much that customers need to pay at the order and delivery.",
+		"payment_explain": "Payment is split into two. The percentages indicates how much customer needs to pay at order time and delivery.",
 		"percentage": "Percentage",
 		"desc_placeholder": "Enter your business description",
 		"email_placeholder": "Enter your business email",
@@ -1832,7 +1832,7 @@
 		"update_success": "Update successfully",
 		"default_currency": "Default currency",
 		"default_currency_holder": "Choose your default currency",
-		"default_currency_explain": "Your products will sell in this unit",
+		"default_currency_explain": "Product pricing uses this currency unit",
 		"invalid_currency": "Lack of currency"
 	}
 }
