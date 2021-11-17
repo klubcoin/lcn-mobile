@@ -18,23 +18,24 @@ import ErrorBoundary from '../ErrorBoundary';
 import { Provider as ProviderMobX } from 'mobx-react'
 import TrackPlayer from 'react-native-track-player';
 import preferences from '../../../../app/store/preferences'
+import marketStore from '../../../../app/components/Views/MarketPlace/store';
 
 preferences.load();
 
 TrackPlayer.setupPlayer().then(async () => {
-  TrackPlayer.updateOptions({
-    stopWithApp: true,
-    capabilities: [
-      TrackPlayer.CAPABILITY_PLAY,
-      TrackPlayer.CAPABILITY_PAUSE,
-      TrackPlayer.CAPABILITY_STOP,
-    ],
-    compactCapabilities: [
-      TrackPlayer.CAPABILITY_PLAY,
-      TrackPlayer.CAPABILITY_PAUSE,
-      TrackPlayer.CAPABILITY_STOP,
-    ],
-  });
+	TrackPlayer.updateOptions({
+		stopWithApp: true,
+		capabilities: [
+			TrackPlayer.CAPABILITY_PLAY,
+			TrackPlayer.CAPABILITY_PAUSE,
+			TrackPlayer.CAPABILITY_STOP,
+		],
+		compactCapabilities: [
+			TrackPlayer.CAPABILITY_PLAY,
+			TrackPlayer.CAPABILITY_PAUSE,
+			TrackPlayer.CAPABILITY_STOP,
+		],
+	});
 });
 
 /**
@@ -77,7 +78,7 @@ export default class Root extends PureComponent {
 			}}
 		>
 			<Provider store={store}>
-				<ProviderMobX store={preferences}>
+				<ProviderMobX store={preferences} market={marketStore}>
 					<PersistGate persistor={persistor}>
 						<ErrorBoundary onError={this.errorHandler} view="Root">
 							<App />
