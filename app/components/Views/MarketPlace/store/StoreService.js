@@ -1,7 +1,7 @@
 import store from ".";
 import { sha256 } from "../../../../core/CryptoSignature";
 import { refWebRTC } from "../../../../services/WebRTC";
-import { StoreAnnounce, StoreLookUp, StoreMessage } from "./StoreMessages";
+import { StoreAnnounce, StoreLookUp, StoreMessage, StoreQuery } from "./StoreMessages";
 import StoreMessaging from "./StoreMessaging";
 
 export default class StoreService {
@@ -82,7 +82,43 @@ export default class StoreService {
     const { message } = data;
     if (message.action == StoreAnnounce().action) {
       if (this.evtMessage) this.evtMessage(message);
+    } else if (message.action == StoreQuery().action) {
+      this.handleStoreQuery(message, peerId);
     }
+  }
+
+  handleStoreQuery = (data, peerId) => {
+    if (typeof data.data?.result != 'undefined') {
+      if (this.evtMessage) this.evtMessage(data);
+      return;
+    }
+
+    const { query } = data.data;
+    const products = store.marketProducts;
+    let total = 0;
+
+    const results = products.filter(product => {
+      const { title, description, category } = product;
+
+      const hash = sha256(category.uuid);
+      if (hash == data.hash) {
+        const titleHit = title.toLowerCase().includes(query);
+        const descHit = description.toLowerCase().includes(query);
+
+        const found = titleHit || descHit;
+        if (found) total++;
+
+        return found;
+      }
+    });
+
+    const result = {
+      query: data.data,
+      result: results,
+      total,
+    }
+    const response = StoreQuery(this.from, data.hash, result);
+    this.storeMessaging.send(response, peerId);
   }
 
   searchProduct(query, hash) {
@@ -90,6 +126,11 @@ export default class StoreService {
 
     const webrtc = refWebRTC();
     webrtc.sendWebSocketMessage(data);
+  }
+
+  queryProductOnVendorStore(vendorAddr, query, hash) {
+    const data = StoreQuery(this.from, hash, query);
+    this.storeMessaging.send(data, vendorAddr);
   }
 
   collectCategoryHashes() {
