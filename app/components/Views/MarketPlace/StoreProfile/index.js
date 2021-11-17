@@ -111,12 +111,12 @@ class StoreProfile extends PureComponent {
 								</Text>
 								<Text style={styles.header}>{strings('market.payment_term')}</Text>
 								<Text style={styles.contact}>
-									{strings('market.first_payment')}:{' '}
-									{(this.profile.firstPaymentPercent * 100).toFixed(0)}%
+									{strings('market.first_payment') + ': '}
+									{((this.profile.orderPayment ?? 0) * 100).toFixed(0)}%
 								</Text>
 								<Text style={styles.contact}>
-									{strings('market.second_payment')}:{' '}
-									{(this.profile.secondPaymentPercent * 100).toFixed(0)}%
+									{strings('market.second_payment') + ': '}
+									{((this.profile.deliveryPayment ?? 0) * 100).toFixed(0)}%
 								</Text>
 								<Text style={styles.explainText}>{strings('market.payment_explain')}</Text>
 								<Text style={styles.header}>{strings('market.current_currency')}</Text>

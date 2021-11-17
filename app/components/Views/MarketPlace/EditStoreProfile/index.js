@@ -48,8 +48,8 @@ class EditStoreProfile extends Component {
 	phone = '';
 	email = '';
 	about = '';
-	firstPaymentPercent = 0;
-	secondPaymentPercent = 1;
+	orderPayment = 1;
+	deliveryPayment = 0;
 	isChangedAvatar = false;
 
 	constructor(props) {
@@ -60,8 +60,8 @@ class EditStoreProfile extends Component {
 			phone: observable,
 			email: observable,
 			about: observable,
-			firstPaymentPercent: observable,
-			secondPaymentPercent: observable,
+			orderPayment: observable,
+			deliveryPayment: observable,
 			isChangedAvatar: observable
 		});
 	}
@@ -77,7 +77,7 @@ class EditStoreProfile extends Component {
 	};
 
 	updateInfo = () => {
-		const { storeName, phone, email, about, logoStore, firstPaymentPercent, secondPaymentPercent } = this.profile;
+		const { storeName, phone, email, about, logoStore, orderPayment, deliveryPayment } = this.profile;
 
 		this.storeName = storeName;
 		this.storeNameRef.setValue(storeName);
@@ -90,11 +90,12 @@ class EditStoreProfile extends Component {
 
 		this.about = about;
 		this.aboutRef.setValue(about);
-		this.firstPaymentPercent = firstPaymentPercent;
-		this.firstPaymentRef.setValue((firstPaymentPercent * 100).toFixed(0));
 
-		this.secondPaymentPercent = secondPaymentPercent;
-		this.secondPaymentRef.setValue((secondPaymentPercent * 100).toFixed(0));
+		this.orderPayment = orderPayment ?? 0.5;
+		this.orderPaymentRef.setValue((this.orderPayment * 100).toFixed(0));
+
+		this.deliveryPayment = deliveryPayment ?? 0.5;
+		this.deliveryPaymentRef.setValue((this.deliveryPayment * 100).toFixed(0));
 
 		this.logoStore = logoStore;
 	};
@@ -115,8 +116,8 @@ class EditStoreProfile extends Component {
 		const phone = this.phone?.trim();
 		const email = this.email?.trim();
 		const about = this.about;
-		const firstPaymentPercent = this.firstPaymentPercent;
-		const secondPaymentPercent = this.secondPaymentPercent;
+		const orderPayment = this.orderPayment;
+		const deliveryPayment = this.deliveryPayment;
 
 		var isValid = this.isDataValid();
 		if (!isValid) return;
@@ -137,8 +138,8 @@ class EditStoreProfile extends Component {
 				phone,
 				email,
 				about,
-				firstPaymentPercent,
-				secondPaymentPercent
+				orderPayment,
+				deliveryPayment
 			})
 			.then(value => showNotice('Update successfully', 'success'));
 	};
@@ -187,11 +188,11 @@ class EditStoreProfile extends Component {
 	};
 
 	onChangeSlider = value => {
-		this.firstPaymentPercent = parseFloat(value.toFixed(2));
-		this.secondPaymentPercent = parseFloat((1 - value).toFixed(2));
+		this.orderPayment = parseFloat((1 - value).toFixed(2));
+		this.deliveryPayment = parseFloat(value.toFixed(2));
 
-		this.firstPaymentRef.setValue((this.firstPaymentPercent * 100).toFixed(0));
-		this.secondPaymentRef.setValue((this.secondPaymentPercent * 100).toFixed(0));
+		this.orderPaymentRef.setValue((this.orderPayment * 100).toFixed(0));
+		this.deliveryPaymentRef.setValue((this.deliveryPayment * 100).toFixed(0));
 	};
 
 	renderNavBar() {
@@ -276,10 +277,10 @@ class EditStoreProfile extends Component {
 							<View style={{ flexDirection: 'row', marginVertical: 10 }}>
 								<OutlinedTextField
 									disabled
-									ref={ref => (this.firstPaymentRef = ref)}
+									ref={ref => (this.orderPaymentRef = ref)}
 									placeholder={strings('market.percentage')}
 									label={strings('market.first_payment')}
-									value={this.firstPaymentPercent * 100}
+									value={this.orderPayment * 100}
 									baseColor={colors.black}
 									containerStyle={{ flex: 1, marginRight: 10 }}
 									keyboardType="phone-pad"
@@ -287,10 +288,10 @@ class EditStoreProfile extends Component {
 								/>
 								<OutlinedTextField
 									disabled
-									ref={ref => (this.secondPaymentRef = ref)}
+									ref={ref => (this.deliveryPaymentRef = ref)}
 									placeholder={strings('market.percentage')}
 									label={strings('market.second_payment')}
-									value={this.secondPaymentPercent * 100}
+									value={this.deliveryPayment * 100}
 									baseColor={colors.black}
 									containerStyle={{ flex: 1, marginLeft: 10 }}
 									keyboardType="phone-pad"
@@ -304,7 +305,7 @@ class EditStoreProfile extends Component {
 								maximumValue={1}
 								minimumTrackTintColor={colors.primaryFox}
 								maximumTrackTintColor={colors.black}
-								value={this.firstPaymentPercent}
+								value={this.deliveryPayment}
 								onValueChange={this.onChangeSlider}
 							/>
 						</View>
