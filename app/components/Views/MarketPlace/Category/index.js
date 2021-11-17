@@ -17,6 +17,7 @@ class MarketCategory extends PureComponent {
 	vendor = {};
 	activeTab = 0;
 	query = '';
+	searchText = '';
 	categories = [];
 	products = [];
 	selectedCategory = {};
@@ -27,12 +28,17 @@ class MarketCategory extends PureComponent {
 			vendor: observable,
 			activeTab: observable,
 			query: observable,
+			searchText: observable,
 			categories: observable,
 			products: observable,
 			selectedCategory: observable,
 			onGoBack: action
 		});
-		this.vendor = props.navigation.getParam('vendor') || {};
+		const params = props.navigation.state.params;
+		const { vendor, query, category } = params || {};
+		this.vendor = vendor || {};
+		this.query = query || '';
+		this.searchText = this.query;
 	}
 
 	componentDidMount() {
@@ -217,7 +223,7 @@ class MarketCategory extends PureComponent {
 			<View style={styles.root}>
 				{this.renderNavBar()}
 				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-					<Search onChange={this.onSearch} onSearch={this.handleSearch} />
+					<Search value={this.searchText} onChange={this.onSearch} onSearch={this.handleSearch} />
 					<Icon
 						name="filter"
 						size={20}
