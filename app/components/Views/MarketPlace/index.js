@@ -216,8 +216,8 @@ class MarketPlace extends PureComponent {
 		);
 	};
 
-	showVendor = provider => {
-		this.props.navigation.navigate('MarketCategory', { provider });
+	showVendor = vendor => {
+		this.props.navigation.navigate('MarketCategory', { vendor, query: this.query, category: this.category });
 	};
 
 	showProduct = product => {

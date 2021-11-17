@@ -11,8 +11,10 @@ import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
+import Cart from '../components /Cart';
 
 class MarketCategory extends PureComponent {
+	vendor = {};
 	activeTab = 0;
 	query = '';
 	categories = [];
@@ -22,6 +24,7 @@ class MarketCategory extends PureComponent {
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
+			vendor: observable,
 			activeTab: observable,
 			query: observable,
 			categories: observable,
@@ -29,6 +32,7 @@ class MarketCategory extends PureComponent {
 			selectedCategory: observable,
 			onGoBack: action
 		});
+		this.vendor = props.navigation.getParam('vendor') || {};
 	}
 
 	componentDidMount() {
@@ -70,18 +74,24 @@ class MarketCategory extends PureComponent {
 		});
 	};
 
+	goBack = () => {
+		this.props.navigation.goBack();
+	}
+
+	openCart = () => {
+		this.props.navigation.navigate('MarketCart');
+	};
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
-					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
-						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
+					<TouchableOpacity onPress={this.goBack.bind(this)} style={styles.navButton}>
+						<Icon style={styles.backIcon} name={'arrow-left'} size={RFValue(15)} />
 					</TouchableOpacity>
-					<Text style={styles.titleNavBar}>{strings('market.my_store')}</Text>
+					<Text style={styles.titleNavBar}>{this.vendor?.profile?.storeName}</Text>
 					<View style={styles.navButton} />
-					<TouchableOpacity onPress={this.onAddProduct.bind(this)} style={styles.navButton}>
-						<Icon style={styles.backIcon} name={'plus'} size={RFValue(15)} />
-					</TouchableOpacity>
+					<Cart onPress={this.openCart} color={colors.white} />
 				</View>
 			</SafeAreaView>
 		);
@@ -143,16 +153,16 @@ class MarketCategory extends PureComponent {
 		const items =
 			search && search.length > 0
 				? products.filter(
-						e =>
-							e.title?.toLowerCase().indexOf(search) >= 0 ||
-							e.description?.toLowerCase().indexOf(search) >= 0 ||
-							`${e.price}`.indexOf(search) >= 0
-				  )
+					e =>
+						e.title?.toLowerCase().indexOf(search) >= 0 ||
+						e.description?.toLowerCase().indexOf(search) >= 0 ||
+						`${e.price}`.indexOf(search) >= 0
+				)
 				: products.filter(e =>
-						Object.keys(this.selectedCategory).length > 0
-							? e.category?.uuid == this.selectedCategory.uuid
-							: true
-				  );
+					Object.keys(this.selectedCategory).length > 0
+						? e.category?.uuid == this.selectedCategory.uuid
+						: true
+				);
 		const countInRow = isTablet() ? 4 : 2;
 		const placeholder = countInRow - (items.length % countInRow);
 
@@ -162,9 +172,7 @@ class MarketCategory extends PureComponent {
 					{items.length <= 0 && (
 						<View style={styles.notFoundWrapper}>
 							<Text style={styles.notFoundText}>
-								{products.length <= 0
-									? strings('market.not_have_products')
-									: strings('market.not_found_product')}
+								{strings('market.not_found_product')}
 							</Text>
 						</View>
 					)}
