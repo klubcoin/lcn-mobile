@@ -33,6 +33,7 @@ import styles from './styles/index';
 import store from '../store';
 import Engine from '../../../../core/Engine';
 import infuraCurrencies from '../../../../util/infura-conversion.json';
+import AssetIcon from '../../../UI/AssetIcon';
 
 class StoreProfile extends PureComponent {
 	profile = {};
@@ -118,11 +119,16 @@ class StoreProfile extends PureComponent {
 									{strings('market.second_payment') + ': '}
 									{((this.profile.deliveryPayment ?? 0) * 100).toFixed(0)}%
 								</Text>
-								<Text style={styles.header}>{strings('market.current_currency')}</Text>
-								<Text style={styles.desc}>
-									{this.profile?.currentCurrency?.quote.code.toUpperCase()} -{' '}
-									{this.profile?.currentCurrency?.quote.name}
-								</Text>
+								<Text style={styles.header}>{strings('market.default_currency')}</Text>
+								<View style={styles.tokenRow}>
+									<AssetIcon
+										logo={this.profile?.defaultCurrency?.logo}
+										customStyle={styles.tokenLogo}
+									/>
+									<Text style={[styles.desc, styles.tokenName]}>
+										{this.profile?.defaultCurrency?.name}
+									</Text>
+								</View>
 							</View>
 						</View>
 					</ScrollView>

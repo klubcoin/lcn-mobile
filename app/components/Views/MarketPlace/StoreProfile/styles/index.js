@@ -90,6 +90,19 @@ const styles = StyleSheet.create({
 	explainText: {
 		color: colors.grey500,
 		marginBottom: 20
+	},
+	tokenRow: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingVertical: 5
+	},
+	tokenName: {
+		marginBottom: 0,
+		marginLeft: 5
+	},
+	tokenLogo: {
+		width: 30,
+		height: 30
 	}
 });
 
