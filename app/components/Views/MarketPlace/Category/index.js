@@ -12,6 +12,9 @@ import { inject, observer } from 'mobx-react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 import Cart from '../components /Cart';
+import { refStoreService } from '../store/StoreService';
+import { StoreQuery } from '../store/StoreMessages';
+import { sha256 } from '../../../../core/CryptoSignature';
 
 class MarketCategory extends PureComponent {
 	vendor = {};
@@ -37,6 +40,7 @@ class MarketCategory extends PureComponent {
 		const params = props.navigation.state.params;
 		const { vendor, query, category } = params || {};
 		this.vendor = vendor || {};
+		this.category = category;
 		this.query = query || '';
 		this.searchText = this.query;
 	}
@@ -47,13 +51,7 @@ class MarketCategory extends PureComponent {
 	}
 
 	async fetchProducts() {
-		await store.load();
-		const products = await store.marketProducts;
-		const categories = await store.marketCategories;
-
-		const categoryIds = products.map(e => e.category?.uuid);
-		this.categories = categories.filter(e => categoryIds.includes(e.uuid));
-		this.products = [...products];
+		this.handleSearch();
 	}
 
 	toggleDrawer = () => {
@@ -216,7 +214,19 @@ class MarketCategory extends PureComponent {
 	};
 
 	onSearch = text => (this.searchText = text);
-	handleSearch = () => (this.query = this.searchText);
+	handleSearch = () => {
+		this.query = this.searchText;
+		const hash = sha256(this.category.uuid);
+
+		const storeService = refStoreService();
+		storeService.queryProductOnVendorStore(this.vendor.wallet, { query: this.query }, hash);
+
+		storeService.addListener((data) => {
+			if (data.action == StoreQuery().action && data.hash == hash) {
+				alert(JSON.stringify(data.data))
+			}
+		})
+	}
 
 	render() {
 		return (
