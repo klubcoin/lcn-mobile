@@ -92,18 +92,31 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.blue
 	},
 	vendors: {
-		marginHorizontal: 10,
-		marginTop: 20,
+	},
+	vendorView: {
 		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-between'
+	},
+	headerLogo: {
+		width: 50,
+		height: 20,
+	},
+	vendorLogo: {
+		width: 50,
+		height: 50,
+	},
+	vendorInfo: {
+		flex: 1,
+		flexDirection: 'row',
+		paddingHorizontal: 10,
 	},
 	vendor: {
 		fontSize: 14,
 		fontWeight: '600',
-		marginTop: 5,
+		flex: 3,
 	},
 	distance: {
+		width: 60,
+		textAlign: 'center',
 		fontSize: 12,
 		color: colors.grey700,
 	},
@@ -111,9 +124,14 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 	},
 	score: {
+		width: 80,
+		textAlign: 'center',
 		fontSize: 12,
 	},
 	priceRange: {
+		flex: 1,
+		minWidth: 20,
+		textAlign: 'center',
 		fontSize: 12,
 		color: '#f84880',
 	},

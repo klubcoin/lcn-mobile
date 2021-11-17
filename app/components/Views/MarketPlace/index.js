@@ -216,8 +216,8 @@ class MarketPlace extends PureComponent {
 		);
 	};
 
-	showProvider = provider => {
-		this.props.navigation.navigate('MarketProduct', { provider });
+	showVendor = provider => {
+		this.props.navigation.navigate('MarketCategory', { provider });
 	};
 
 	showProduct = product => {
@@ -241,6 +241,18 @@ class MarketPlace extends PureComponent {
 
 		return (
 			<View style={styles.vendors}>
+				{this.renderHeading({ title: strings('market.vendors') })}
+				{this.vendors?.length > 0 &&
+					<View style={styles.vendorView}>
+						<View style={styles.headerLogo} />
+						<View style={styles.vendorInfo}>
+							<Text style={styles.vendor}>{strings('market.name')}</Text>
+							<Text style={styles.distance}>{strings('market.distance')}</Text>
+							<Text style={styles.score}>#{strings('market.product')}</Text>
+							<Text style={styles.priceRange}>{strings('market.price')}</Text>
+						</View>
+					</View>
+				}
 				{this.vendors &&
 					this.vendors.map((e, index) => {
 						const { profile, rating, score, priceRange, tags } = e;
@@ -249,27 +261,33 @@ class MarketPlace extends PureComponent {
 							<TouchableOpacity
 								style={styles.vendorView}
 								activeOpacity={0.6}
-								onPress={() => this.showProvider(e)}
+								onPress={() => this.showVendor(e)}
 							>
-								<Image style={{ width, height: width }} source={{ uri: profile?.logoStore }} />
-								<Text numberOfLines={2} style={styles.vendor}>
-									{storeName}
-								</Text>
-								<Text numberOfLines={1} style={styles.distance}>
-									{'1km'}
-								</Text>
-								<Text numberOfLines={1} style={styles.rating}>
-									{strings('market.rating')} {rating}
-								</Text>
-								<Text numberOfLines={1} style={styles.score}>
-									{strings('market.score')} {score}
-								</Text>
-								<Text numberOfLines={1} style={styles.priceRange}>
-									${`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to}`}
-								</Text>
-								<Text numberOfLines={1} style={styles.tags}>
-									{tags?.join(', ')}
-								</Text>
+								<Image style={styles.vendorLogo} source={{ uri: profile?.logoStore }} />
+								<View style={styles.vendorInfo}>
+									<Text numberOfLines={2} style={styles.vendor}>
+										{storeName}
+									</Text>
+									<Text numberOfLines={1} style={styles.distance}>
+										{'1km'}
+									</Text>
+									{/* 
+									<Text numberOfLines={1} style={styles.rating}>
+										{strings('market.rating')} {rating}
+									</Text> 
+									*/}
+									<Text numberOfLines={1} style={styles.score}>
+										{score.split('/').reverse()[0]}
+									</Text>
+									<Text numberOfLines={1} style={styles.priceRange}>
+										${`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to}`}
+									</Text>
+									{/* 
+									<Text numberOfLines={1} style={styles.tags}>
+										{tags?.join(', ')}
+									</Text>
+									*/}
+								</View>
 							</TouchableOpacity>
 						);
 					})}

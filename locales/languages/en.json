@@ -1833,6 +1833,10 @@
 		"default_currency": "Default currency",
 		"default_currency_holder": "Choose your default currency",
 		"default_currency_explain": "Product pricing uses this currency unit",
-		"invalid_currency": "Lack of currency"
+		"invalid_currency": "Lack of currency",
+		"vendors": "Vendors",
+		"name": "Name",
+		"distance": "Distance",
+		"product": "Product"
 	}
 }
