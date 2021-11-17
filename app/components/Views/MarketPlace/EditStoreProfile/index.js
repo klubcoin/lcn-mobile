@@ -201,7 +201,7 @@ class EditStoreProfile extends Component {
 			showNotice(strings('market.missing_phone'));
 			return;
 		}
-		if (!validator.isMobilePhone(phone)) {
+		if (!/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phone)) {
 			showNotice(strings('market.invalid_phone'));
 			return;
 		}
