@@ -38,6 +38,7 @@ import Engine from '../../../../core/Engine';
 import contractMap from '@metamask/contract-metadata';
 import TokenImage from '../../../UI/TokenImage';
 import AssetList from '../../../UI/AssetList';
+import routes from '../../../../common/routes';
 
 const showNotice = (message, type) => {
 	Toast.show({
@@ -92,11 +93,15 @@ class EditStoreProfile extends Component {
 	updateTokenOpts = async () => {
 		const savedApps = await preferences.getSavedAppList();
 		const savedAppAddresses = savedApps.map(e => e.address);
-		const userTokens =
-			Engine.state.AssetsController.tokens?.filter(e => !savedAppAddresses.includes(e.address.toLowerCase())) ||
-			[];
+		const tokens = [...Engine.state.AssetsController.tokens];
+		const userTokens = tokens.filter(e => !savedAppAddresses.includes(e.address.toLowerCase()));
 
-		this.tokenOpts = userTokens.map(e => contractMap[e.address]) || [];
+		this.tokenOpts = userTokens.map(e => contractMap[e.address]).filter(e => !!e);
+		this.tokenOpts.unshift({
+			name: routes.mainNetWork.name,
+			symbol: routes.mainNetWork.ticker,
+			logo: '../images/logo.png'
+		});
 	};
 
 	updateInfo = () => {
