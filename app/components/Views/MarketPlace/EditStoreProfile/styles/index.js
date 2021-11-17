@@ -74,6 +74,26 @@ const styles = StyleSheet.create({
 	},
 	next: {
 		width: 240
+	},
+	paymentSection: {
+		flexDirection: 'row',
+		marginVertical: 10
+	},
+	orderPayment: {
+		flex: 1,
+		marginRight: 10
+	},
+	deliveryPayment: {
+		flex: 1,
+		marginLeft: 10
+	},
+	header: {
+		fontSize: RFValue(12),
+		fontWeight: 'bold'
+	},
+	explainText: {
+		color: colors.grey500,
+		marginBottom: 10
 	}
 });
 

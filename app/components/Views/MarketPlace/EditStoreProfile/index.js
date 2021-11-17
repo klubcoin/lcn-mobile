@@ -274,7 +274,9 @@ class EditStoreProfile extends Component {
 								containerStyle={[styles.containerOutline, styles.input]}
 								inputContainerStyle={styles.inputOutline}
 							/>
-							<View style={{ flexDirection: 'row', marginVertical: 10 }}>
+							<Text style={styles.header}>{strings('market.payment_term')}</Text>
+							<Text style={styles.explainText}>{strings('market.payment_explain')}</Text>
+							<View style={styles.paymentSection}>
 								<OutlinedTextField
 									disabled
 									ref={ref => (this.orderPaymentRef = ref)}
@@ -282,7 +284,7 @@ class EditStoreProfile extends Component {
 									label={strings('market.first_payment')}
 									value={this.orderPayment * 100}
 									baseColor={colors.black}
-									containerStyle={{ flex: 1, marginRight: 10 }}
+									containerStyle={styles.orderPayment}
 									keyboardType="phone-pad"
 									suffix={'%'}
 								/>
@@ -293,7 +295,7 @@ class EditStoreProfile extends Component {
 									label={strings('market.second_payment')}
 									value={this.deliveryPayment * 100}
 									baseColor={colors.black}
-									containerStyle={{ flex: 1, marginLeft: 10 }}
+									containerStyle={styles.deliveryPayment}
 									keyboardType="phone-pad"
 									suffix={'%'}
 								/>
