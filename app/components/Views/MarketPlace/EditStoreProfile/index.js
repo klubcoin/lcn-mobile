@@ -325,7 +325,7 @@ class EditStoreProfile extends Component {
 									style={[styles.optionButton, this.selectingToken && styles.selected]}
 								>
 									<Text style={styles.optionLabel} numberOfLines={1}>
-										{this.defaultCurrency.name || strings('market.default_currency_holder')}
+										{this.defaultCurrency.symbol || strings('market.default_currency_holder')}
 									</Text>
 									<Icon
 										name={`chevron-${this.selectingToken ? 'up' : 'down'}`}

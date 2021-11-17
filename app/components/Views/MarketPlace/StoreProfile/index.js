@@ -126,7 +126,8 @@ class StoreProfile extends PureComponent {
 										customStyle={styles.tokenLogo}
 									/>
 									<Text style={[styles.desc, styles.tokenName]}>
-										{this.profile?.defaultCurrency?.name}
+										{this.profile?.defaultCurrency?.symbol + ' '}(
+										{this.profile?.defaultCurrency?.name})
 									</Text>
 								</View>
 							</View>

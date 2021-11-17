@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, observe } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import {
@@ -9,7 +9,7 @@ import {
 	TouchableOpacity,
 	ActivityIndicator,
 	Image,
-	TextInput,
+	TextInput
 } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors, fontStyles } from '../../../../styles/common';
@@ -31,6 +31,7 @@ import drawables from '../../../../common/drawables';
 import store from '../store';
 import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';
+import AssetIcon from '../../../UI/AssetIcon';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -47,6 +48,7 @@ export class MarketAddEditProduct extends PureComponent {
 	images = [];
 	confirmDeleteVisible = false;
 	processing = false;
+	storeProfile = {};
 
 	constructor(props) {
 		super(props);
@@ -63,6 +65,7 @@ export class MarketAddEditProduct extends PureComponent {
 			images: observable,
 			confirmDeleteVisible: observable,
 			processing: observable,
+			storeProfile: observable
 		});
 
 		this.prefs = props.store;
@@ -81,6 +84,7 @@ export class MarketAddEditProduct extends PureComponent {
 
 	componentDidMount() {
 		this.fetchCategories();
+		this.fetchProfile();
 	}
 
 	async fetchCategories() {
@@ -100,9 +104,12 @@ export class MarketAddEditProduct extends PureComponent {
 					this.category = categories[0];
 				}
 			}
-		})
+		});
 	}
 
+	async fetchProfile() {
+		this.storeProfile = store.storeProfile;
+	}
 
 	async addProduct() {
 		const { selectedAddress } = Engine.state.PreferencesController;
@@ -116,7 +123,7 @@ export class MarketAddEditProduct extends PureComponent {
 			description,
 			tags,
 			images,
-			wallet: selectedAddress,
+			wallet: selectedAddress
 		};
 		data.signature = await CryptoSignature.signMessage(selectedAddress, data.uuid + data.title + data.wallet);
 
@@ -188,7 +195,7 @@ export class MarketAddEditProduct extends PureComponent {
 			height: 300,
 			cropping: true
 		}).then(image => {
-			console.log('this images', this.images)
+			console.log('this images', this.images);
 			this.images.push(image.path);
 		});
 	}
@@ -196,7 +203,7 @@ export class MarketAddEditProduct extends PureComponent {
 	renderCategoryModal = () => {
 		const options = this.categories.map(e => ({
 			key: e.uuid,
-			value: e.name,
+			value: e.name
 		}));
 
 		return (
@@ -262,9 +269,9 @@ export class MarketAddEditProduct extends PureComponent {
 				confirmLabel={strings('market.save')}
 				cancelLabel={strings('market.cancel')}
 				onConfirm={text => this.tags.push(text)}
-				hideModal={() => this.showAddTag = false}
+				hideModal={() => (this.showAddTag = false)}
 			/>
-		)
+		);
 	}
 
 	onAddTag = () => {
@@ -279,25 +286,27 @@ export class MarketAddEditProduct extends PureComponent {
 				{this.renderNavBar()}
 				<ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
 					<Text style={styles.heading}>{strings('market.product_title')}</Text>
-					<TextInput
-						value={this.title}
-						onChangeText={text => (this.title = text)}
-						style={styles.input}
-					/>
+					<TextInput value={this.title} onChangeText={text => (this.title = text)} style={styles.input} />
 
 					<Text style={styles.heading}>{strings('market.category')}</Text>
 					{this.renderSelector({
 						selected: this.category,
-						onTap: () => (this.showCategories = true),
+						onTap: () => (this.showCategories = true)
 					})}
 
 					<Text style={styles.heading}>{strings('market.price')}</Text>
-					<TextInput
-						value={this.price}
-						onChangeText={text => (this.price = text)}
-						style={styles.input}
-						keyboardType={'numeric'}
-					/>
+					<View style={[styles.input, styles.containerPrice]}>
+						<TextInput
+							value={this.price}
+							onChangeText={text => (this.price = text)}
+							style={styles.price}
+							keyboardType={'numeric'}
+						/>
+						<View style={styles.stickerContainer}>
+							<AssetIcon logo={this.storeProfile?.defaultCurrency?.logo} customStyle={styles.tokenLogo} />
+							<Text style={styles.tokenName}>{this.storeProfile?.defaultCurrency?.symbol}</Text>
+						</View>
+					</View>
 
 					<Text style={styles.heading}>{strings('market.quantity')}</Text>
 					<TextInput
@@ -329,7 +338,7 @@ export class MarketAddEditProduct extends PureComponent {
 					</View>
 
 					<Text style={styles.heading}>{strings('market.images')}</Text>
-					<View style={styles.photos} >
+					<View style={styles.photos}>
 						{this.images.map(e => (
 							<View style={styles.photo}>
 								<Image style={styles.image} source={{ uri: e }} />
