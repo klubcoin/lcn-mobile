@@ -197,7 +197,7 @@ class MarketProduct extends PureComponent {
 
 	renderAdditionalInfo = () => {
 		const vendor = this.props.navigation.getParam('vendor');
-		const { profile } = vendor;
+		const { profile } = vendor || {};
 
 		return (
 			<View>
