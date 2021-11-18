@@ -6,6 +6,8 @@ import StyledButton from '../StyledButton';
 import AssetIcon from '../AssetIcon';
 import { fontStyles } from '../../../styles/common';
 import Text from '../../Base/Text';
+import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
+import routes from '../../../common/routes';
 
 const styles = StyleSheet.create({
 	rowWrapper: {
@@ -86,7 +88,11 @@ export default class AssetList extends PureComponent {
 								testID={'searched-token-result'}
 							>
 								<View style={styles.assetListElement}>
-									<AssetIcon logo={logo} />
+									{name === routes.mainNetWork.name ? (
+										<NetworkMainAssetLogo big />
+									) : (
+										<AssetIcon logo={logo} />
+									)}
 									<Text style={styles.text}>
 										{name} ({symbol})
 									</Text>

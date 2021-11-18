@@ -34,6 +34,8 @@ import store from '../store';
 import Engine from '../../../../core/Engine';
 import infuraCurrencies from '../../../../util/infura-conversion.json';
 import AssetIcon from '../../../UI/AssetIcon';
+import routes from '../../../../common/routes';
+import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 
 class StoreProfile extends PureComponent {
 	profile = {};
@@ -84,6 +86,17 @@ class StoreProfile extends PureComponent {
 	}
 
 	render() {
+		const {
+			logoStore,
+			storeName,
+			about,
+			phone,
+			email,
+			orderPayment,
+			deliveryPayment,
+			defaultCurrency
+		} = this.profile;
+
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
@@ -94,47 +107,43 @@ class StoreProfile extends PureComponent {
 							<TouchableOpacity onPress={this.onEdit} style={styles.editIcon}>
 								<Icon name={'edit'} size={RFPercentage(2)} />
 							</TouchableOpacity>
-							<Text style={styles.storeName}>{this.profile.storeName}</Text>
+							<Text style={styles.storeName}>{storeName}</Text>
 							<View style={styles.content}>
 								<Text style={styles.header}>{strings('market.about')}</Text>
-								<Text style={styles.desc}>{this.profile.about || 'No description'}</Text>
+								<Text style={styles.desc}>{about || 'No description'}</Text>
 								<Text style={styles.header}>{strings('market.contacts')}</Text>
 								<Text style={styles.contact}>
-									{strings('market.phone')}: {this.profile.phone || 'No phone'}
+									{strings('market.phone')}: {phone || 'No phone'}
 								</Text>
 								<Text style={[styles.contact, styles.desc]}>
-									{strings('market.email')}: {this.profile.email || 'No email'}
+									{strings('market.email')}: {email || 'No email'}
 								</Text>
 								<Text style={styles.header}>{strings('market.payment_term')}</Text>
 								<Text style={styles.contact}>
 									{strings('market.first_payment') + ': '}
-									{((this.profile.orderPayment ?? 0) * 100).toFixed(0)}%
+									{((orderPayment ?? 0) * 100).toFixed(0)}%
 								</Text>
 								<Text style={[styles.contact, styles.desc]}>
 									{strings('market.second_payment') + ': '}
-									{((this.profile.deliveryPayment ?? 0) * 100).toFixed(0)}%
+									{((deliveryPayment ?? 0) * 100).toFixed(0)}%
 								</Text>
 								<Text style={styles.header}>{strings('market.default_currency')}</Text>
-								{this.profile?.defaultCurrency &&
+								{defaultCurrency && (
 									<View style={styles.tokenRow}>
-										<AssetIcon
-											logo={this.profile.defaultCurrency.logo}
-											customStyle={styles.tokenLogo}
-										/>
+										{defaultCurrency?.name === routes.mainNetWork.name ? (
+											<NetworkMainAssetLogo style={styles.tokenLogo} />
+										) : (
+											<AssetIcon logo={defaultCurrency?.logo} customStyle={styles.tokenLogo} />
+										)}
 										<Text style={[styles.desc, styles.tokenName]}>
-											{this.profile.defaultCurrency.symbol + ' '}(
-											{this.profile.defaultCurrency.name})
+											{defaultCurrency?.symbol + ' '}({defaultCurrency?.name})
 										</Text>
 									</View>
-								}
+								)}
 							</View>
 						</View>
 					</ScrollView>
-					<Image
-						source={{ uri: this.profile.logoStore || drawables.noImage }}
-						style={styles.logo}
-						resizeMode={'cover'}
-					/>
+					<Image source={{ uri: logoStore || drawables.noImage }} style={styles.logo} resizeMode={'cover'} />
 				</View>
 			</KeyboardAvoidingView>
 		);

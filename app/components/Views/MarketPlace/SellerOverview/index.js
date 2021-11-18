@@ -12,6 +12,8 @@ import { inject, observer } from 'mobx-react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 import AssetIcon from '../../../UI/AssetIcon';
+import routes from '../../../../common/routes';
+import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 
 class MarketSellerOverview extends PureComponent {
 	activeTab = 0;
@@ -190,7 +192,11 @@ class MarketSellerOverview extends PureComponent {
 									<Text numberOfLines={1} style={styles.price}>
 										{currency?.symbol || '$'}
 									</Text>
-									<AssetIcon logo={currency?.logo} customStyle={styles.tokenLogo} />
+									{currency?.name === routes.mainNetWork.name ? (
+										<NetworkMainAssetLogo style={styles.tokenLogo} />
+									) : (
+										<AssetIcon logo={currency?.logo} customStyle={styles.tokenLogo} />
+									)}
 								</View>
 							</TouchableOpacity>
 						);

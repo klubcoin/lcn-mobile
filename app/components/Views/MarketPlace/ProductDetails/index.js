@@ -283,7 +283,8 @@ class MarketProduct extends PureComponent {
 				{items.map((e, i) => {
 					if (!e) return <View style={{ width }} />;
 
-					const { price, discountPrice, title, images } = e;
+					const { price, discountPrice, title, images, currency } = e;
+
 					return (
 						<TouchableOpacity
 							activeOpacity={0.6}
@@ -295,10 +296,10 @@ class MarketProduct extends PureComponent {
 								{title}
 							</Text>
 							<Text numberOfLines={1} style={styles.finalPrice}>
-								{discountPrice ?? price} {routes.mainNetWork.ticker}
+								{discountPrice ?? price} {currency?.symbol || routes.mainNetWork.ticker}
 							</Text>
 							<Text numberOfLines={1} style={styles.price}>
-								{price} {routes.mainNetWork.ticker}
+								{price} {currency?.symbol || routes.mainNetWork.ticker}
 							</Text>
 						</TouchableOpacity>
 					);
@@ -354,7 +355,8 @@ class MarketProduct extends PureComponent {
 							<Text style={styles.title}>{product.title}</Text>
 							<Text style={styles.category}>{product.category?.name}</Text>
 							<View style={styles.pricing}>
-								<Text style={styles.price}>{`${product.price} ${routes.mainNetWork.ticker}`}</Text>
+								<Text style={styles.price}>{`${product.price} ${product.currency?.symbol ||
+									routes.mainNetWork.ticker}`}</Text>
 							</View>
 							<View style={styles.actions}>
 								{this.renderQuantity()}

@@ -32,6 +32,8 @@ import store from '../store';
 import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import AssetIcon from '../../../UI/AssetIcon';
+import routes from '../../../../common/routes';
+import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -281,6 +283,7 @@ export class MarketAddEditProduct extends PureComponent {
 
 	render() {
 		const editing = !!this.uuid;
+		const { defaultCurrency } = this.storeProfile;
 
 		return (
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
@@ -304,8 +307,12 @@ export class MarketAddEditProduct extends PureComponent {
 							keyboardType={'numeric'}
 						/>
 						<View style={styles.stickerContainer}>
-							<AssetIcon logo={this.storeProfile?.defaultCurrency?.logo} customStyle={styles.tokenLogo} />
-							<Text style={styles.tokenName}>{this.storeProfile?.defaultCurrency?.symbol}</Text>
+							{defaultCurrency?.name === routes.mainNetWork.name ? (
+								<NetworkMainAssetLogo style={styles.tokenLogo} />
+							) : (
+								<AssetIcon logo={defaultCurrency?.logo} customStyle={styles.tokenLogo} />
+							)}
+							<Text style={styles.tokenName}>{defaultCurrency?.symbol}</Text>
 						</View>
 					</View>
 
