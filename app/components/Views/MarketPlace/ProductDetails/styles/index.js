@@ -53,6 +53,12 @@ const styles = StyleSheet.create({
 		marginTop: isTablet() ? 0 : 20,
 		marginLeft: isTablet() ? 20 : 10
 	},
+	title: {
+		marginTop: 5,
+		fontSize: RFValue(16),
+		color: colors.blue,
+		fontWeight: '600'
+	},
 	category: {
 		fontSize: RFValue(12)
 	},
@@ -73,6 +79,11 @@ const styles = StyleSheet.create({
 	},
 	pricing: {
 		marginTop: 10
+	},
+	price: {
+		fontSize: RFValue(15),
+		fontWeight: '600',
+		color: '#1588C8'
 	},
 	actions: {
 		flexDirection: 'row',
@@ -189,20 +200,20 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between'
 	},
-	title: {
+	rpTitle: {
 		marginTop: 10,
 		textAlign: 'center',
 		color: colors.blue,
 		fontSize: RFValue(12)
 	},
-	finalPrice: {
+	rpFinalPrice: {
 		marginTop: 5,
 		textAlign: 'center',
 		color: '#f84880',
 		fontWeight: 'bold',
 		fontSize: RFValue(10)
 	},
-	price: {
+	rpPrice: {
 		textAlign: 'center',
 		textDecorationLine: 'line-through',
 		color: colors.grey500,

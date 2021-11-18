@@ -293,13 +293,13 @@ class MarketProduct extends PureComponent {
 							onPress={() => (this.product = e)}
 						>
 							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
-							<Text numberOfLines={2} style={styles.title}>
+							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
-							<Text numberOfLines={1} style={styles.finalPrice}>
+							<Text numberOfLines={1} style={styles.rpFinalPrice}>
 								{discountPrice ?? price} {currency?.symbol || routes.mainNetWork.ticker}
 							</Text>
-							<Text numberOfLines={1} style={styles.price}>
+							<Text numberOfLines={1} style={styles.rpPrice}>
 								{price} {currency?.symbol || routes.mainNetWork.ticker}
 							</Text>
 						</TouchableOpacity>
