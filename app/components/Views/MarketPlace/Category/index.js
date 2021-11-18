@@ -9,19 +9,18 @@ import { colors } from '../../../../styles/common';
 import Search from '../components /Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 import Cart from '../components /Cart';
 import { refStoreService } from '../store/StoreService';
 import { StoreQuery } from '../store/StoreMessages';
 import { sha256 } from '../../../../core/CryptoSignature';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 class MarketCategory extends PureComponent {
 	vendor = {};
-	activeTab = 0;
 	query = '';
 	searchText = '';
-	categories = [];
 	products = [];
 	selectedCategory = {};
 
@@ -29,10 +28,8 @@ class MarketCategory extends PureComponent {
 		super(props);
 		makeObservable(this, {
 			vendor: observable,
-			activeTab: observable,
 			query: observable,
 			searchText: observable,
-			categories: observable,
 			products: observable,
 			selectedCategory: observable,
 			onGoBack: action
@@ -54,26 +51,16 @@ class MarketCategory extends PureComponent {
 		this.handleSearch();
 	}
 
-	toggleDrawer = () => {
-		this.props.navigation.toggleDrawer();
-	};
-
 	onViewFilter = () => {
 		this.props.navigation.navigate('MarketSellerCategory', {
 			onGoBack: selectedCategory => this.onGoBack(selectedCategory)
 		});
 	};
 
-	onAddProduct = () => {
-		this.props.navigation.navigate('MarketAddEditProduct', {
-			onUpdate: () => this.fetchProducts(),
-			onDelete: () => this.fetchProducts()
-		});
-	};
-
 	showProduct = product => {
 		this.props.navigation.navigate('MarketProduct', {
 			product,
+			vendor: this.vendor,
 			onUpdate: () => this.fetchProducts()
 		});
 	};
@@ -110,32 +97,16 @@ class MarketCategory extends PureComponent {
 		this.query = '';
 	}
 
-	renderCategoryTabs() {
-		const { query, activeTab, categories } = this;
-		const search = query.toLowerCase();
-		const searchMode = search && search.length > 0;
-		if (searchMode) return;
-
-		return (
-			<ScrollView style={styles.tabs} horizontal>
-				{categories.map((e, index) => {
-					const active = index == activeTab;
-					return (
-						<TouchableOpacity
-							style={styles.tab}
-							activeOpacity={0.6}
-							onPress={() => (this.activeTab = index)}
-						>
-							<Text style={[styles.tabTitle, active && styles.activeTab]}>{e.name}</Text>
-							{active && <View style={styles.tabActive} />}
-						</TouchableOpacity>
-					);
-				})}
-			</ScrollView>
-		);
+	onAddToCart = (product) => {
+		store.cartBadge++;
+		store.addToCart({
+			uuid: product.uuid,
+			product,
+			quantity: 1,
+		})
 	}
 
-	renderItemCategory = item => {
+	renderProduct = item => {
 		const { title, price, description, images } = item;
 		const photo = images[0];
 		return (
@@ -146,27 +117,17 @@ class MarketCategory extends PureComponent {
 					{description}
 				</Text>
 				<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+				<TouchableOpacity style={styles.addProduct} activeOpacity={0.6} onPress={this.onAddToCart}>
+					<Icon style={styles.plus} name={'plus'} size={14} color={colors.white} />
+					<IonIcon style={styles.cartIcon} name={'cart-outline'} size={22} color={colors.white} />
+				</TouchableOpacity>
 			</TouchableOpacity>
 		);
 	};
 
 	renderCategory = () => {
-		const { activeTab, categories, products, query } = this;
-		const category = categories[activeTab];
-		const search = query?.toLowerCase() ?? '';
-		const items =
-			search && search.length > 0
-				? products.filter(
-					e =>
-						e.title?.toLowerCase().indexOf(search) >= 0 ||
-						e.description?.toLowerCase().indexOf(search) >= 0 ||
-						`${e.price}`.indexOf(search) >= 0
-				)
-				: products.filter(e =>
-					Object.keys(this.selectedCategory).length > 0
-						? e.category?.uuid == this.selectedCategory.uuid
-						: true
-				);
+		const { products } = this;
+		const items = products;
 		const countInRow = isTablet() ? 4 : 2;
 		const placeholder = countInRow - (items.length % countInRow);
 
@@ -180,24 +141,7 @@ class MarketCategory extends PureComponent {
 							</Text>
 						</View>
 					)}
-					{items.map((e, index) => {
-						const { title, price, description, images } = e;
-						const photo = images[0];
-						return (
-							<TouchableOpacity
-								style={styles.product}
-								activeOpacity={0.6}
-								onPress={() => this.showProduct(e)}
-							>
-								<Image source={{ uri: photo }} style={styles.photo} />
-								<Text style={styles.title}>{title}</Text>
-								<Text numberOfLines={1} style={styles.desc}>
-									{description}
-								</Text>
-								<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
-							</TouchableOpacity>
-						);
-					})}
+					{items.map((e, index) => this.renderProduct(e))}
 					{placeholder > 0 &&
 						placeholder < countInRow &&
 						Array(placeholder)
@@ -223,7 +167,7 @@ class MarketCategory extends PureComponent {
 
 		storeService.addListener((data) => {
 			if (data.action == StoreQuery().action && data.hash == hash) {
-				alert(JSON.stringify(data.data))
+				this.products = [...data.data.result];
 			}
 		})
 	}
@@ -232,7 +176,7 @@ class MarketCategory extends PureComponent {
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
-				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+				<View style={styles.header}>
 					<Search value={this.searchText} onChange={this.onSearch} onSearch={this.handleSearch} />
 					<Icon
 						name="filter"

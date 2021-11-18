@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 
 const screenWidth = Dimensions.get('window').width;
@@ -36,6 +36,10 @@ const styles = StyleSheet.create({
 	logo: {
 		width: 60,
 		height: 60
+	},
+	header: {
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	searchBox: {
 		marginHorizontal: 20
@@ -137,7 +141,17 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(15),
 		color: colors.primaryFox,
 		paddingVertical: 20
-	}
+	},
+	addProduct: {
+		width: 60,
+		height: 32,
+		marginTop: 10,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: 8,
+		backgroundColor: colors.green500,
+	},
 });
 
 export default assignNestedObj(styles, brandStyles);
