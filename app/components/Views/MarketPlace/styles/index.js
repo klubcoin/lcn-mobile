@@ -91,53 +91,51 @@ const styles = StyleSheet.create({
 		height: 2,
 		backgroundColor: colors.blue
 	},
-	vendors: {
-	},
 	vendorView: {
-		flexDirection: 'row',
+		flexDirection: 'row'
 	},
 	headerLogo: {
 		width: 50,
-		height: 20,
+		height: 20
 	},
 	vendorLogo: {
 		width: 50,
-		height: 50,
+		height: 50
 	},
 	vendorInfo: {
 		flex: 1,
 		flexDirection: 'row',
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
 	},
 	vendor: {
 		fontSize: 14,
 		fontWeight: '600',
-		flex: 3,
+		flex: 3
 	},
 	distance: {
 		width: 60,
 		textAlign: 'center',
 		fontSize: 12,
-		color: colors.grey700,
+		color: colors.grey700
 	},
 	rating: {
-		fontSize: 12,
+		fontSize: 12
 	},
 	score: {
 		width: 80,
 		textAlign: 'center',
-		fontSize: 12,
+		fontSize: 12
 	},
 	priceRange: {
 		flex: 1,
 		minWidth: 20,
 		textAlign: 'center',
 		fontSize: 12,
-		color: '#f84880',
+		color: '#f84880'
 	},
 	tags: {
 		fontSize: 12,
-		color: colors.grey600,
+		color: colors.grey600
 	},
 	sectionHead: {
 		flexDirection: 'row',
@@ -194,6 +192,10 @@ const styles = StyleSheet.create({
 		textDecorationLine: 'line-through',
 		color: colors.grey500,
 		fontSize: RFValue(10)
+	},
+	nullDataDesc: {
+		color: colors.grey300,
+		fontSize: RFValue(12)
 	}
 });
 

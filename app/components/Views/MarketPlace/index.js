@@ -143,6 +143,7 @@ class MarketPlace extends PureComponent {
 		return (
 			<View style={styles.section}>
 				{this.renderHeading({ title: strings('market.recently_viewed_products') })}
+				{data.length <= 0 && <Text style={styles.nullDataDesc}>{strings('market.not_view_products')}</Text>}
 				<Carousel
 					ref={e => (this.viewedProductSlider = e)}
 					data={data}
@@ -202,6 +203,7 @@ class MarketPlace extends PureComponent {
 		return (
 			<View style={styles.section}>
 				{this.renderHeading({ title: strings('market.recently_visited_providers') })}
+				{data.length <= 0 && <Text style={styles.nullDataDesc}>{strings('market.not_visit_providers')}</Text>}
 				<Carousel
 					ref={e => (this.viewedProductSlider = e)}
 					data={data}
@@ -240,9 +242,12 @@ class MarketPlace extends PureComponent {
 		const width = (screenWidth - 40) / rowSize - 20;
 
 		return (
-			<View style={styles.vendors}>
+			<View style={styles.section}>
 				{this.renderHeading({ title: strings('market.vendors') })}
-				{this.vendors?.length > 0 &&
+				{this.vendors.length <= 0 && (
+					<Text style={styles.nullDataDesc}>{strings('market.not_visit_vendors')}</Text>
+				)}
+				{this.vendors?.length > 0 && (
 					<View style={styles.vendorView}>
 						<View style={styles.headerLogo} />
 						<View style={styles.vendorInfo}>
@@ -252,7 +257,7 @@ class MarketPlace extends PureComponent {
 							<Text style={styles.priceRange}>{strings('market.price')}</Text>
 						</View>
 					</View>
-				}
+				)}
 				{this.vendors &&
 					this.vendors.map((e, index) => {
 						const { profile, rating, score, priceRange, tags } = e;
@@ -280,7 +285,10 @@ class MarketPlace extends PureComponent {
 										{score.split('/').reverse()[0]}
 									</Text>
 									<Text numberOfLines={1} style={styles.priceRange}>
-										${`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to}`}
+										$
+										{`${priceRange.from}${
+											priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
+										}`}
 									</Text>
 									{/* 
 									<Text numberOfLines={1} style={styles.tags}>
@@ -312,7 +320,7 @@ class MarketPlace extends PureComponent {
 		const storeService = refStoreService();
 		storeService.searchProduct({ query: this.query }, hash);
 
-		storeService.addListener((data) => {
+		storeService.addListener(data => {
 			if (data.action == StoreAnnounce().action && data.hashes[0] == hash) {
 				const { info } = data;
 				const { query } = info;
@@ -320,10 +328,10 @@ class MarketPlace extends PureComponent {
 					this.vendors.push({
 						...info,
 						wallet: data.from
-					})
+					});
 				}
 			}
-		})
+		});
 	};
 
 	renderNavBar() {
