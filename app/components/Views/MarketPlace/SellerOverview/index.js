@@ -159,16 +159,16 @@ class MarketSellerOverview extends PureComponent {
 		const items =
 			search && search.length > 0
 				? products.filter(
-						e =>
-							e.title?.toLowerCase().indexOf(search) >= 0 ||
-							e.description?.toLowerCase().indexOf(search) >= 0 ||
-							`${e.price}`.indexOf(search) >= 0
-				  )
+					e =>
+						e.title?.toLowerCase().indexOf(search) >= 0 ||
+						e.description?.toLowerCase().indexOf(search) >= 0 ||
+						`${e.price}`.indexOf(search) >= 0
+				)
 				: products.filter(e =>
-						Object.keys(this.selectedCategory).length > 0
-							? e.category?.uuid == this.selectedCategory.uuid
-							: true
-				  );
+					Object.keys(this.selectedCategory).length > 0
+						? e.category?.uuid == this.selectedCategory.uuid
+						: true
+				);
 		const countInRow = isTablet() ? 4 : 2;
 		const placeholder = countInRow - (items.length % countInRow);
 
@@ -210,6 +210,8 @@ class MarketSellerOverview extends PureComponent {
 									<Text numberOfLines={1} style={styles.price}>
 										{currency?.symbol || '$'}
 									</Text>
+								</View>
+								<View style={styles.ticker}>
 									{currency?.name === routes.mainNetWork.name ? (
 										<NetworkMainAssetLogo style={styles.tokenLogo} />
 									) : (

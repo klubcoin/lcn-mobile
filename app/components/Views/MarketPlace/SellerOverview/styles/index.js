@@ -144,10 +144,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
+	ticker: {
+		position: 'absolute',
+		bottom: 40,
+		right: 20,
+	},
 	tokenLogo: {
 		width: RFPercentage(3),
 		height: RFPercentage(3),
-		marginLeft: 2
 	}
 });
 
