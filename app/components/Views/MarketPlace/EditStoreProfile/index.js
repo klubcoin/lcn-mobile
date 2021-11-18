@@ -317,6 +317,11 @@ class EditStoreProfile extends Component {
 							/>
 
 							<View style={styles.section}>
+								<Text style={styles.header}>{strings('market.store_location')}</Text>
+								<Text style={styles.explainText}>{strings('market.store_location_desc')}</Text>
+							</View>
+
+							<View style={styles.section}>
 								<Text style={styles.header}>{strings('market.default_currency')}</Text>
 								<Text style={styles.explainText}>{strings('market.default_currency_explain')}</Text>
 								<TouchableOpacity
