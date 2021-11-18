@@ -311,11 +311,11 @@ class MarketPlace extends PureComponent {
 		this.props.navigation.toggleDrawer();
 	};
 
-	onSearch = text => (this.searchText = text);
+	onSearch = text => (this.searchQuery = text);
 	handleSearch = () => {
 		this.vendors = [];
 		const hash = sha256(this.category.uuid);
-		this.query = this.searchText.toLowerCase();
+		this.query = this.searchQuery.toLowerCase();
 
 		const storeService = refStoreService();
 		storeService.searchProduct({ query: this.query }, hash);
@@ -385,7 +385,7 @@ class MarketPlace extends PureComponent {
 			<View style={styles.root}>
 				{this.renderNavBar()}
 				<View style={styles.searchBox}>
-					<Search onChange={this.onSearch} onSearch={this.handleSearch} />
+					<Search value={this.searchQuery} onChange={this.onSearch} onSearch={this.handleSearch} />
 				</View>
 				<View style={styles.categorySelector}>
 					<Text style={styles.labelCategory}>{strings('market.in_category')} :</Text>
