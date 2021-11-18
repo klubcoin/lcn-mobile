@@ -1843,6 +1843,7 @@
 		"not_view_products": "You did not view any products",
 		"not_visit_providers": "You did not visit any provider",
 		"store_location": "Store location",
-		"store_location_desc": "Your current store location"
+		"store_location_desc": "Your current store location",
+		"untrusted_vendor": "Untrusted vendor"
 	}
 }

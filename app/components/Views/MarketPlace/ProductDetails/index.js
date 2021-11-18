@@ -14,6 +14,7 @@ import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import store from '../store';
+import { showError } from '../../../../util/notify';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -320,6 +321,9 @@ class MarketProduct extends PureComponent {
 	openChat = async () => {
 		const { uuid, title, wallet, signature } = this.product || {};
 		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
+		if (address.toLocaleLowerCase() != wallet.toLocaleLowerCase()) {
+			showError(strings('market.insecure_vendor'));
+		}
 		this.props.navigation.navigate('Chat', { selectedContact: { address } });
 	};
 
