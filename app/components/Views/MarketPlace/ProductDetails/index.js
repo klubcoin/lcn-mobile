@@ -40,9 +40,9 @@ class MarketProduct extends PureComponent {
 		});
 
 		this.product = props.navigation.getParam('product');
-		this.favorite = true; //TODO: check if product was added to favorite list
-		this.cartBadge = 0; //TODO: get product count from cart
 
+		const { selectedAddress } = Engine.state.PreferencesController;
+		this.isOwner = selectedAddress == this.product.wallet;
 		store.addRecentlyViewedProduct(this.product);
 	}
 
@@ -318,6 +318,34 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
+	editProduct = () => {
+		this.props.navigation.navigate('MarketAddEditProduct', {
+			product: this.product,
+			onUpdate: (data) => {
+				Object.assign(this.product, data);
+
+				const onUpdate = this.props.navigation.getParam('onUpdate');
+				onUpdate && onUpdate(this.product);
+			},
+			onDelete: () => {
+				const onUpdate = this.props.navigation.getParam('onUpdate');
+				onUpdate && onUpdate(this.product);
+
+				this.onBack();
+			}
+		});
+	}
+
+	renderEditButton = () => {
+		if (!this.isOwner) return;
+
+		return (
+			<TouchableOpacity style={styles.edit} activeOpacity={0.6} onPress={this.editProduct}>
+				<Icon style={styles.editIcon} name={'pencil'} size={20} />
+			</TouchableOpacity>
+		);
+	};
+
 	openChat = async () => {
 		const { uuid, title, wallet, signature } = this.product || {};
 		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
@@ -379,6 +407,7 @@ class MarketProduct extends PureComponent {
 						{this.renderOtherProducts()}
 					</View>
 				</ScrollView>
+				{this.renderEditButton()}
 				{this.renderChatButton()}
 			</View>
 		);

@@ -181,6 +181,20 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		width: '50%'
 	},
+	edit: {
+		backgroundColor: colors.orange300,
+		width: 45,
+		height: 45,
+		borderRadius: 25,
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'absolute',
+		bottom: 90,
+		right: 20
+	},
+	editIcon: {
+		color: colors.white
+	},
 	chat: {
 		backgroundColor: colors.green400,
 		width: 45,
