@@ -8,6 +8,7 @@ export const kMarketRecentProviders = 'MarketRecentProviders';
 export const kMarketFavoriteProducts = 'MarketFavoriteProducts';
 export const kStoreProfile = 'StoreProfile';
 export const kMarketCartBadge = "MarketCartBadge";
+export const kMarketCart = "MarketCart";
 
 const keys = [
 	kMarketCategories,
@@ -17,6 +18,7 @@ const keys = [
 	kMarketFavoriteProducts,
 	kStoreProfile,
 	kMarketCartBadge,
+	kMarketCart
 ];
 
 class Store {
@@ -29,6 +31,7 @@ class Store {
 	marketFavoriteProducts = [];
 	storeProfile = {};
 	cartBadge = 0;
+	marketCart = [];
 
 	constructor() {
 		makeAutoObservable(this);
@@ -70,6 +73,9 @@ class Store {
 				break;
 			case kMarketCartBadge:
 				this.cartBadge = data || 0;
+				break;
+			case kMarketCart:
+				this.marketCart = data || [];
 				break;
 		}
 	}
@@ -144,6 +150,23 @@ class Store {
 	async setCartBadge(count) {
 		this.cartBadge = count;
 		await this.save(kMarketCartBadge, this.cartBadge);
+	}
+
+	async addToCart({ uuid, product, quantity, attributes }) {
+		const orderItem = this.marketCart.find(e => (e.uuid = uuid));
+		if (orderItem) {
+			orderItem.quantity += quantity;
+			Object.assign(orderItem.product, product);
+		} else {
+			this.marketCart.push({ uuid, product, quantity, attributes });
+		}
+		await this.save(kMarketCart, this.marketCart);
+	}
+
+	async removeProductInCart(uuid) {
+		const index = this.marketCart.findIndex(e => (e.uuid = uuid));
+		if (index >= 0) this.marketCart.splice(index, 1);
+		await this.save(kMarketCart, this.marketCart);
 	}
 }
 
