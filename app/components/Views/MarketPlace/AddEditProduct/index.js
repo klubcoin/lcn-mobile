@@ -1,4 +1,4 @@
-import { makeObservable, observable, observe } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import {
@@ -114,6 +114,34 @@ export class MarketAddEditProduct extends PureComponent {
 		this.storeProfile = store.storeProfile;
 	}
 
+	async editProduct() {
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { title, category, price, quantity, description, tags, images } = this;
+		const data = {
+			title,
+			category,
+			price,
+			quantity,
+			description,
+			tags,
+			images,
+			currency: this.storeProfile?.defaultCurrency,
+			wallet: selectedAddress,
+			updatedAt: new Date(),
+		};
+		data.signature = await CryptoSignature.signMessage(selectedAddress, this.uuid + data.title + data.wallet);
+
+		const update = Object.assign({}, this.product, data);
+		store.deleteProduct(this.uuid);
+		store.addProduct(update);
+
+		const onUpdate = this.props.navigation.getParam('onUpdate');
+		onUpdate && onUpdate(update);
+
+		showSuccess(strings('market.saved_successfully'));
+		this.onBack();
+	}
+
 	async addProduct() {
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const { title, category, price, quantity, description, tags, images } = this;
@@ -127,7 +155,8 @@ export class MarketAddEditProduct extends PureComponent {
 			tags,
 			images,
 			currency: this.storeProfile?.defaultCurrency,
-			wallet: selectedAddress
+			wallet: selectedAddress,
+			createdAt: new Date(),
 		};
 		data.signature = await CryptoSignature.signMessage(selectedAddress, data.uuid + data.title + data.wallet);
 
@@ -141,6 +170,8 @@ export class MarketAddEditProduct extends PureComponent {
 	}
 
 	resetInputs() {
+		this.uuid = null;
+		this.product = null;
 		this.title = '';
 		this.category = this.categories[0];
 		this.price = '';
@@ -170,7 +201,11 @@ export class MarketAddEditProduct extends PureComponent {
 			return showError(strings('market.missing_photo'));
 		}
 
-		this.addProduct();
+		if (this.uuid && this.product) {
+			this.editProduct();
+		} else {
+			this.addProduct();
+		}
 	}
 
 	async onDelete() {
@@ -274,7 +309,7 @@ export class MarketAddEditProduct extends PureComponent {
 	};
 
 	render() {
-		const editing = !!this.uuid;
+		const editing = !!this.uuid && this.product;
 		const { defaultCurrency } = this.storeProfile;
 
 		return (
