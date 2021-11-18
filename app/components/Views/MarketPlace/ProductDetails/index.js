@@ -199,7 +199,8 @@ class MarketProduct extends PureComponent {
 	};
 
 	renderAdditionalInfo = () => {
-		const { provider } = this.product || {};
+		const vendor = this.props.navigation.getParam('vendor');
+		const { profile } = vendor;
 
 		return (
 			<View>
@@ -207,11 +208,11 @@ class MarketProduct extends PureComponent {
 				<View style={styles.info}>
 					<View style={styles.infoColumn}>
 						<Text style={styles.infoTitle}>{strings('market.provided_by')}</Text>
-						<Text style={styles.infoDesc}>{provider?.name || '_'}</Text>
+						<Text style={styles.infoDesc}>{profile?.storeName || '_'}</Text>
 					</View>
 					<View style={styles.infoColumn}>
 						<Text style={styles.infoTitle}>{strings('market.contact_phone')}</Text>
-						<Text style={styles.infoDesc}>{provider?.phone || '_'}</Text>
+						<Text style={styles.infoDesc}>{profile?.phone || '_'}</Text>
 					</View>
 				</View>
 			</View>
