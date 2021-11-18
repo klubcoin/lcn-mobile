@@ -14,6 +14,7 @@ import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import store from '../store';
+import Cart from '../components /Cart';
 import { showError } from '../../../../util/notify';
 
 const window = Dimensions.get('window');
@@ -71,22 +72,13 @@ class MarketProduct extends PureComponent {
 
 	renderNavBar() {
 		return (
-			<SafeAreaView>
+			<SafeAreaView style={{ zIndex: 100 }}>
 				<View style={styles.navBar}>
 					<TouchableOpacity onPress={this.onBack} style={styles.navButton}>
 						<Icon style={styles.backIcon} name={'arrow-left'} size={RFValue(12)} />
 					</TouchableOpacity>
 					<NavbarTitle title={this.product?.title} disableNetwork translate={false} />
-					<View style={styles.cart}>
-						<TouchableOpacity onPress={this.openCart} style={styles.navButton}>
-							<IonIcon style={styles.cartIcon} name={'cart-outline'} size={RFValue(18)} />
-							{this.cartBadge > 0 && (
-								<View style={styles.badge}>
-									<Text style={styles.counter}>{this.cartBadge}</Text>
-								</View>
-							)}
-						</TouchableOpacity>
-					</View>
+					<Cart onPress={this.openCart} />
 				</View>
 			</SafeAreaView>
 		);
