@@ -40,6 +40,7 @@ import TokenImage from '../../../UI/TokenImage';
 import AssetList from '../../../UI/AssetList';
 import routes from '../../../../common/routes';
 import { showError, showSuccess } from '../../../../util/notify';
+import LocationSearchBar from '../../../UI/LocationSearch';
 
 class EditStoreProfile extends Component {
 	logoStore = '';
@@ -319,6 +320,7 @@ class EditStoreProfile extends Component {
 							<View style={styles.section}>
 								<Text style={styles.header}>{strings('market.store_location')}</Text>
 								<Text style={styles.explainText}>{strings('market.store_location_desc')}</Text>
+								<LocationSearchBar />
 							</View>
 
 							<View style={styles.section}>
