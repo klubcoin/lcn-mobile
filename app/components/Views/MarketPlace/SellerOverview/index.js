@@ -14,6 +14,7 @@ import { isTablet } from 'react-native-device-info';
 import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
+import { showError } from '../../../../util/notify';
 
 class MarketSellerOverview extends PureComponent {
 	activeTab = 0;
@@ -21,6 +22,7 @@ class MarketSellerOverview extends PureComponent {
 	categories = [];
 	products = [];
 	selectedCategory = {};
+	storeProfile = {};
 
 	constructor(props) {
 		super(props);
@@ -30,6 +32,7 @@ class MarketSellerOverview extends PureComponent {
 			categories: observable,
 			products: observable,
 			selectedCategory: observable,
+			storeProfile: observable,
 			onGoBack: action
 		});
 	}
@@ -37,6 +40,7 @@ class MarketSellerOverview extends PureComponent {
 	componentDidMount() {
 		store.marketMenuKey = menuKeys().store;
 		this.fetchProducts();
+		this.fetchStoreProfile();
 	}
 
 	async fetchProducts() {
@@ -49,6 +53,11 @@ class MarketSellerOverview extends PureComponent {
 		this.products = [...products];
 	}
 
+	fetchStoreProfile = async () => {
+		await store.load();
+		this.storeProfile = store.storeProfile;
+	};
+
 	toggleDrawer = () => {
 		this.props.navigation.toggleDrawer();
 	};
@@ -60,6 +69,10 @@ class MarketSellerOverview extends PureComponent {
 	};
 
 	onAddProduct = () => {
+		if (Object.keys(this.storeProfile).length <= 0) {
+			return showError(strings('market.not_found_profile'));
+		}
+
 		this.props.navigation.navigate('MarketAddEditProduct', {
 			onUpdate: () => this.fetchProducts(),
 			onDelete: () => this.fetchProducts()
@@ -162,7 +175,12 @@ class MarketSellerOverview extends PureComponent {
 		return (
 			<SafeAreaView>
 				<View style={styles.category}>
-					{items.length <= 0 && (
+					{Object.keys(this.storeProfile).length <= 0 && (
+						<View style={styles.notFoundWrapper}>
+							<Text style={styles.notFoundText}>{strings('market.not_found_profile')}</Text>
+						</View>
+					)}
+					{items.length <= 0 && Object.keys(this.storeProfile).length > 0 && (
 						<View style={styles.notFoundWrapper}>
 							<Text style={styles.notFoundText}>
 								{products.length <= 0

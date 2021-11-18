@@ -34,6 +34,7 @@ import CryptoSignature from '../../../../core/CryptoSignature';
 import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
+import { showError, showSuccess } from '../../../../util/notify';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -135,7 +136,7 @@ export class MarketAddEditProduct extends PureComponent {
 		const onUpdate = this.props.navigation.getParam('onUpdate');
 		onUpdate && onUpdate(data);
 
-		this.showNotice(strings('market.saved_successfully'), 'success');
+		showSuccess(strings('market.saved_successfully'));
 		this.onBack();
 	}
 
@@ -155,27 +156,18 @@ export class MarketAddEditProduct extends PureComponent {
 		this.props.navigation.goBack();
 	};
 
-	showNotice(message, type) {
-		Toast.show({
-			type: type || 'error',
-			text1: message,
-			text2: strings('profile.notice'),
-			visibilityTime: 1000
-		});
-	}
-
 	onSave() {
 		if (!this.title) {
-			return this.showNotice(strings('market.missing_title'));
+			return showError(strings('market.missing_title'));
 		}
 		if (!this.price) {
-			return this.showNotice(strings('market.missing_price'));
+			return showError(strings('market.missing_price'));
 		}
 		if (!this.description) {
-			return this.showNotice(strings('market.missing_description'));
+			return showError(strings('market.missing_description'));
 		}
 		if (!this.images || this.images.length == 0) {
-			return this.showNotice(strings('market.missing_photo'));
+			return showError(strings('market.missing_photo'));
 		}
 
 		this.addProduct();

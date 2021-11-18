@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	notFoundText: {
-		fontSize: RFValue(20),
+		fontSize: RFValue(15),
 		color: colors.grey300,
 		textAlign: 'center'
 	},

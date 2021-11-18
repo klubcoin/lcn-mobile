@@ -1837,6 +1837,7 @@
 		"vendors": "Vendors",
 		"name": "Name",
 		"distance": "Distance",
-		"product": "Product"
+		"product": "Product",
+		"not_found_profile": "Please add your store info at store profile"
 	}
 }

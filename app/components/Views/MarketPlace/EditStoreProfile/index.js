@@ -39,15 +39,7 @@ import contractMap from '@metamask/contract-metadata';
 import TokenImage from '../../../UI/TokenImage';
 import AssetList from '../../../UI/AssetList';
 import routes from '../../../../common/routes';
-
-const showNotice = (message, type) => {
-	Toast.show({
-		type: type || 'error',
-		text1: message,
-		text2: strings('profile.notice'),
-		visibilityTime: 1000
-	});
-};
+import { showError, showSuccess } from '../../../../util/notify';
 
 class EditStoreProfile extends Component {
 	logoStore = '';
@@ -167,7 +159,7 @@ class EditStoreProfile extends Component {
 		const path = `${RNFS.DocumentDirectoryPath}/${fileName || 'logo_store.png'}`;
 
 		if (this.isAvatarChanged) {
-			if ((await RNFS.exists(path))) await RNFS.unlink(path); //remove existing file
+			if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
 			await RNFS.moveFile(this.logoStore, path); // copy temporary file to persist
 		}
 
@@ -183,7 +175,7 @@ class EditStoreProfile extends Component {
 				deliveryPayment,
 				defaultCurrency
 			})
-			.then(value => showNotice(strings('market.update_success'), 'success'));
+			.then(value => showSuccess(strings('market.update_success')));
 	};
 
 	isDataValid() {
@@ -193,35 +185,35 @@ class EditStoreProfile extends Component {
 		const about = this.about?.trim();
 
 		if (!this.logoStore) {
-			showNotice(strings('market.missing_logo'));
+			showError(strings('market.missing_logo'));
 			return;
 		}
 		if (!storeName) {
-			showNotice(strings('market.missing_store_name'));
+			showError(strings('market.missing_store_name'));
 			return;
 		}
 		if (!about) {
-			showNotice(strings('market.missing_description'));
+			showError(strings('market.missing_description'));
 			return;
 		}
 		if (!phone) {
-			showNotice(strings('market.missing_phone'));
+			showError(strings('market.missing_phone'));
 			return;
 		}
 		if (!/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phone)) {
-			showNotice(strings('market.invalid_phone'));
+			showError(strings('market.invalid_phone'));
 			return;
 		}
 		if (!email) {
-			showNotice(strings('market.missing_email'));
+			showError(strings('market.missing_email'));
 			return;
 		}
 		if (!validator.isEmail(email)) {
-			showNotice(strings('market.invalid_email'));
+			showError(strings('market.invalid_email'));
 			return;
 		}
 		if (!this.defaultCurrency || Object.keys(this.defaultCurrency).length <= 0) {
-			showNotice(strings('market.invalid_currency'));
+			showError(strings('market.invalid_currency'));
 			return;
 		}
 
