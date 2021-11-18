@@ -673,15 +673,16 @@ const Main = props => {
 	useEffect(
 		() => {
 			const { selectedAddress } = props;
+			const address = selectedAddress.toLowerCase();
 			props.removeNotVisibleNotifications();
 
-			const webrtc = new WebRTC(selectedAddress);
+			const webrtc = new WebRTC(address);
 			setWebRTC(webrtc);
-			const encryptor = new EncryptionWebRTC(selectedAddress);
+			const encryptor = new EncryptionWebRTC(address);
 			webrtc.addEncryptor(encryptor);
 			encryptor.setKeyPairHandler(bindPrivateKey);
 			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
-			initializeStore(selectedAddress);
+			initializeStore(address);
 
 			return () => {
 				revokeWebRTC();
@@ -840,7 +841,7 @@ const Main = props => {
 						const addresses = addressBook[network] || {};
 						const sender = addresses[from];
 
-						if (sender) showNotice(sender.name, message.text);
+						showNotice(sender?.name || from, message.text);
 					}
 					break;
 				case LiquichainNameCard().action:
