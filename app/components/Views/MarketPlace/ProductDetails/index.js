@@ -126,7 +126,12 @@ class MarketProduct extends PureComponent {
 	};
 
 	onPurchase = () => {
-		this.cartBadge += this.quantity;
+		store.setCartBadge(store.cartBadge + this.quantity);
+		store.addToCart({
+			uuid: this.product.uuid,
+			product: this.product,
+			quantity: this.quantity,
+		})
 	};
 
 	renderAddToCart = () => {
