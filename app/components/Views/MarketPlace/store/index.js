@@ -102,6 +102,7 @@ class Store {
 	}
 
 	async addRecentlyViewedProduct(product) {
+		if(!product) return;
 		const isProductContained = this.marketRecentProducts.some(e => e.uuid == product.uuid);
 
 		if (!isProductContained) {
