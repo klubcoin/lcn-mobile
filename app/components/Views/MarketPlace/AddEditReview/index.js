@@ -40,8 +40,14 @@ import { Rating } from 'react-native-ratings';
 export class MarketAddEditReview extends PureComponent {
 	static navigationOptions = () => ({ header: null });
 
+	maxRatingScore = 5;
+	ratingScore = 2.5;
+
 	constructor(props) {
 		super(props);
+		makeObservable(this, {
+			ratingScore: observable
+		});
 	}
 
 	componentDidMount() {}
@@ -56,16 +62,9 @@ export class MarketAddEditReview extends PureComponent {
 		this.onBack();
 	}
 
-	onPickImage() {
-		ImagePicker.openPicker({
-			width: 300,
-			height: 300,
-			cropping: true
-		}).then(image => {
-			console.log('this images', this.images);
-			this.images.push(image.path);
-		});
-	}
+	onRating = value => {
+		this.ratingScore = value;
+	};
 
 	renderNavBar() {
 		return (
@@ -116,7 +115,18 @@ export class MarketAddEditReview extends PureComponent {
 					</View>
 					<View style={styles.ratingWrapper}>
 						<Text style={styles.header}>{strings('market.rating_header')}</Text>
-						<Rating onFinishRating={this.ratingCompleted} style={styles.ratings} fractions={1} />
+						<View style={styles.ratingSection}>
+							<Rating
+								onFinishRating={this.ratingCompleted}
+								style={styles.ratings}
+								fractions={1}
+								ratingCount={this.maxRatingScore}
+								onSwipeRating={this.onRating}
+							/>
+							<Text style={styles.ratingText}>
+								{this.ratingScore}/{this.maxRatingScore}
+							</Text>
+						</View>
 						<Text style={styles.header}>{strings('market.comment_header')}</Text>
 						<TextInput
 							value={this.title}

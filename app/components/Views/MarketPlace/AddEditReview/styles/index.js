@@ -54,10 +54,20 @@ const styles = StyleSheet.create({
 		flex: 5,
 		marginTop: 30
 	},
+	ratingSection: {
+		flexDirection: 'row',
+		alignItems: 'flex-end',
+		marginBottom: 20
+	},
 	ratings: {
 		marginTop: 10,
-		marginBottom: 20,
 		alignSelf: 'flex-start'
+	},
+	ratingText: {
+		fontSize: RFValue(18),
+		color: colors.yellow,
+		fontWeight: '500',
+		marginLeft: 15
 	},
 	backIcon: {
 		color: colors.blue
