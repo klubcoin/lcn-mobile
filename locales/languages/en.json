@@ -1851,6 +1851,7 @@
 		"vendor": "Vendor",
 		"rating_header": "What is your rate?",
 		"comment_header": "Do you have any comments?",
-		"type_something": "Type something..."
+		"type_something": "Type something...",
+		"store_reviews": "Store reviews"
 	}
 }
