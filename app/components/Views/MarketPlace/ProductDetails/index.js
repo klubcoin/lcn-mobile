@@ -153,6 +153,11 @@ class MarketProduct extends PureComponent {
 		});
 	};
 
+	//TODO: remove addReview function (because it's just for testing)
+	addReview = () => {
+		this.props.navigation.navigate('MarketAddEditReview', { product: this.product });
+	};
+
 	renderAddToCart = () => {
 		return (
 			<View style={{ flexDirection: 'row' }}>
@@ -161,6 +166,10 @@ class MarketProduct extends PureComponent {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.addFavorite} activeOpacity={0.6} onPress={this.addFavorite}>
 					<Icon style={styles.favorite} name={this.favorite ? 'heart' : 'heart-o'} size={RFPercentage(2)} />
+				</TouchableOpacity>
+				{/*TODO: please remove review button, because it just for testing*/}
+				<TouchableOpacity style={styles.purchase} activeOpacity={0.6} onPress={this.addReview}>
+					<Text style={styles.addToCart}>{strings('market.add_review')}</Text>
 				</TouchableOpacity>
 			</View>
 		);

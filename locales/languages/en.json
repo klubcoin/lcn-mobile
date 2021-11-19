@@ -1847,6 +1847,8 @@
 		"untrusted_vendor": "Untrusted vendor",
 		"product_reviews": "Product reviews",
 		"add_review": "Add review",
+		"add_review_success": "Add review successfully",
+		"add_review_failed": "Failed to add review",
 		"edit_review": "Edit review",
 		"code": "Code",
 		"vendor": "Vendor",

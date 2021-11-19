@@ -192,4 +192,24 @@ export default class APIService {
 			callback
 		);
 	}
+
+	static createReview(
+		{ purchaseDate, sellerWalletAddress, buyerWalletAddress, productCode, rating, comments },
+		callback
+	) {
+		const formattedSellerAddress = sellerWalletAddress.replace('0x', '');
+		const formattedBuyerAddress = buyerWalletAddress.replace('0x', '');
+
+		const entity = {
+			reviewDate: moment().format(dateFormatMeveo),
+			cetCode: 'LiquimartProductReview',
+			purchaseDate: purchaseDate.format(dateFormatMeveo),
+			sellerWalletAddress: formattedSellerAddress,
+			buyerWalletAddress: formattedBuyerAddress,
+			productCode,
+			rating,
+			comments
+		};
+		APIService.postPersistence(this.routePersistenceAPI(), entity, callback);
+	}
 }

@@ -201,6 +201,9 @@ export default createStackNavigator(
 						MarketProduct: {
 							screen: MarketProduct
 						},
+						MarketAddEditReview: {
+							screen: MarketAddEditReview
+						},
 						Chat: {
 							screen: Chat
 						}
@@ -242,18 +245,6 @@ export default createStackNavigator(
 						},
 						EditStoreProfile: {
 							screen: EditStoreProfile
-						}
-					},
-					{
-						defaultNavigationOptions: {
-							header: null
-						}
-					}
-				),
-				ProductReview: createStackNavigator(
-					{
-						MarketAddEditReview: {
-							screen: MarketAddEditReview
 						}
 					},
 					{

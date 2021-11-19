@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
 	input: {
 		height: Device.getDeviceHeight() / 3,
 		marginTop: 10,
-		paddingHorizontal: 10,
+		paddingHorizontal: 16,
 		borderRadius: 4,
 		backgroundColor: colors.grey000,
-		paddingVertical: 20
+		paddingTop: 16
 	}
 });
 

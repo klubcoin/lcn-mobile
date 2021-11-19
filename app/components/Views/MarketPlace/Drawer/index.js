@@ -44,12 +44,6 @@ const menuItems = () => [
 		screen: 'StoreProfile'
 	},
 	{
-		key: 'product_review',
-		title: strings('market.product_reviews') + '(test only)',
-		icon: 'star',
-		screen: 'MarketAddEditReview'
-	},
-	{
 		key: 'store_reviews',
 		title: strings('market.store_reviews'),
 		icon: 'store',
