@@ -202,8 +202,8 @@ class MarketPlace extends PureComponent {
 
 		return (
 			<View style={styles.section}>
-				{this.renderHeading({ title: strings('market.recently_visited_providers') })}
-				{data.length <= 0 && <Text style={styles.nullDataDesc}>{strings('market.not_visit_providers')}</Text>}
+				{this.renderHeading({ title: strings('market.recently_visited_vendors') })}
+				{data.length <= 0 && <Text style={styles.nullDataDesc}>{strings('market.not_visit_vendors')}</Text>}
 				<Carousel
 					ref={e => (this.viewedProductSlider = e)}
 					data={data}

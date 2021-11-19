@@ -11,11 +11,13 @@ import { strings } from '../../../../../locales/i18n';
 import Carousel from 'react-native-snap-carousel';
 import { isTablet } from 'react-native-device-info';
 import Engine from '../../../../core/Engine';
-import CryptoSignature from '../../../../core/CryptoSignature';
+import CryptoSignature, { sha256 } from '../../../../core/CryptoSignature';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import store from '../store';
 import Cart from '../components /Cart';
 import { showError } from '../../../../util/notify';
+import { StoreQuery } from '../store/StoreMessages';
+import { refStoreService } from '../store/StoreService';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -29,6 +31,7 @@ class MarketProduct extends PureComponent {
 	readMore = false;
 	quantity = 1;
 	cartBadge = 0;
+	otherProducts = [];
 
 	constructor(props) {
 		super(props);
@@ -37,7 +40,8 @@ class MarketProduct extends PureComponent {
 			favorite: observable,
 			readMore: observable,
 			quantity: observable,
-			cartBadge: observable
+			cartBadge: observable,
+			otherProducts: observable,
 		});
 
 		this.product = props.navigation.getParam('product');
@@ -49,6 +53,7 @@ class MarketProduct extends PureComponent {
 
 	componentDidMount() {
 		this.fetchData();
+		this.fetchOtherProducts();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -60,6 +65,20 @@ class MarketProduct extends PureComponent {
 
 	async fetchData() {
 		this.favorite = store.marketFavoriteProducts.find(e => e.uuid == this.product.uuid);
+	}
+
+	fetchOtherProducts = () => {
+		const { category, wallet } = this.product;
+		const hash = sha256(category.uuid);
+
+		const storeService = refStoreService();
+		storeService.queryProductOnVendorStore(wallet, { query: '' }, hash);
+
+		storeService.addListener((data) => {
+			if (data.action == StoreQuery().action && data.hash == hash) {
+				this.otherProducts = [...data.data.result];
+			}
+		})
 	}
 
 	onBack = () => {
@@ -307,11 +326,67 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
+
+	renderOtherProductSlide = ({ item }) => {
+		const { index } = item;
+		const start = index * rowSize;
+		const items = this.otherProducts.slice(start, start + rowSize);
+		if (items.length != rowSize) {
+			Array(rowSize - items.length)
+				.fill(false)
+				.map(() => items.push(false));
+		}
+		const width = (screenWidth - 40) / rowSize - 20;
+
+		return (
+			<View style={styles.slide}>
+				{items.map((e, i) => {
+					if (!e) return <View style={{ width }} />;
+
+					const { price, discountPrice, title, images, currency } = e;
+
+					return (
+						<TouchableOpacity
+							activeOpacity={0.6}
+							style={{ width, alignItems: 'center' }}
+							onPress={() => (this.product = e)}
+						>
+							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
+							<Text numberOfLines={2} style={styles.rpTitle}>
+								{title}
+							</Text>
+							<Text numberOfLines={1} style={styles.rpFinalPrice}>
+								{discountPrice ?? price} {currency?.symbol || routes.mainNetWork.ticker}
+							</Text>
+							<Text numberOfLines={1} style={styles.rpPrice}>
+								{price} {currency?.symbol || routes.mainNetWork.ticker}
+							</Text>
+						</TouchableOpacity>
+					);
+				})}
+			</View>
+		);
+	};
+
 	renderOtherProducts = () => {
+		const slideCount = Math.ceil(this.otherProducts.length / rowSize);
+		const data = Array(slideCount).fill(0).map((e, index) => ({ index }));
+
 		return (
 			<View>
-				<Text style={styles.heading}>{strings('market.products_same_provider')}</Text>
-				<Text>....</Text>
+				<Text style={styles.heading}>{strings('market.products_same_vendor')}</Text>
+				<View style={styles.section}>
+					<Carousel
+						ref={e => (this.otherProductSlider = e)}
+						data={data}
+						renderItem={this.renderOtherProductSlide}
+						autoplay={true}
+						loop={true}
+						autoplayInterval={3000}
+						sliderWidth={screenWidth - 20}
+						itemWidth={screenWidth - 20}
+					/>
+				</View>
 			</View>
 		);
 	};
