@@ -127,7 +127,7 @@ export class MarketAddEditProduct extends PureComponent {
 			images,
 			currency: this.storeProfile?.defaultCurrency,
 			wallet: selectedAddress,
-			updatedAt: new Date(),
+			updatedAt: new Date()
 		};
 		data.signature = await CryptoSignature.signMessage(selectedAddress, this.uuid + data.title + data.wallet);
 
@@ -156,7 +156,7 @@ export class MarketAddEditProduct extends PureComponent {
 			images,
 			currency: this.storeProfile?.defaultCurrency,
 			wallet: selectedAddress,
-			createdAt: new Date(),
+			createdAt: new Date()
 		};
 		data.signature = await CryptoSignature.signMessage(selectedAddress, data.uuid + data.title + data.wallet);
 
@@ -251,13 +251,15 @@ export class MarketAddEditProduct extends PureComponent {
 	};
 
 	renderNavBar() {
+		const isEditing = this.props.navigation.getParam('isEditing');
+
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
 					<TouchableOpacity onPress={this.onBack.bind(this)} style={styles.navButton}>
 						<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 					</TouchableOpacity>
-					<NavbarTitle title={'market.add_product'} disableNetwork />
+					<NavbarTitle title={!isEditing ? 'market.add_product' : 'market.edit_product'} disableNetwork />
 					<View style={styles.navButton} />
 				</View>
 			</SafeAreaView>

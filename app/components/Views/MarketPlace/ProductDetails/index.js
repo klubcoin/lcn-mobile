@@ -41,7 +41,7 @@ class MarketProduct extends PureComponent {
 			readMore: observable,
 			quantity: observable,
 			cartBadge: observable,
-			otherProducts: observable,
+			otherProducts: observable
 		});
 
 		this.product = props.navigation.getParam('product');
@@ -74,12 +74,12 @@ class MarketProduct extends PureComponent {
 		const storeService = refStoreService();
 		storeService.queryProductOnVendorStore(wallet, { query: '' }, hash);
 
-		storeService.addListener((data) => {
+		storeService.addListener(data => {
 			if (data.action == StoreQuery().action && data.hash == hash) {
 				this.otherProducts = [...data.data.result];
 			}
-		})
-	}
+		});
+	};
 
 	onBack = () => {
 		this.props.navigation.goBack();
@@ -149,8 +149,8 @@ class MarketProduct extends PureComponent {
 		store.addToCart({
 			uuid: this.product.uuid,
 			product: this.product,
-			quantity: this.quantity,
-		})
+			quantity: this.quantity
+		});
 	};
 
 	renderAddToCart = () => {
@@ -326,7 +326,6 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
-
 	renderOtherProductSlide = ({ item }) => {
 		const { index } = item;
 		const start = index * rowSize;
@@ -370,7 +369,9 @@ class MarketProduct extends PureComponent {
 
 	renderOtherProducts = () => {
 		const slideCount = Math.ceil(this.otherProducts.length / rowSize);
-		const data = Array(slideCount).fill(0).map((e, index) => ({ index }));
+		const data = Array(slideCount)
+			.fill(0)
+			.map((e, index) => ({ index }));
 
 		return (
 			<View>
@@ -394,7 +395,7 @@ class MarketProduct extends PureComponent {
 	editProduct = () => {
 		this.props.navigation.navigate('MarketAddEditProduct', {
 			product: this.product,
-			onUpdate: (data) => {
+			onUpdate: data => {
 				Object.assign(this.product, data);
 
 				const onUpdate = this.props.navigation.getParam('onUpdate');
@@ -405,9 +406,10 @@ class MarketProduct extends PureComponent {
 				onUpdate && onUpdate(this.product);
 
 				this.onBack();
-			}
+			},
+			isEditing: true
 		});
-	}
+	};
 
 	renderEditButton = () => {
 		if (!this.isOwner) return;
