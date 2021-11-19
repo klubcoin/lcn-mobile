@@ -145,7 +145,7 @@ export class MarketStoreReviews extends PureComponent {
 								startingValue={e.ratingScore}
 							/>
 							<Text style={styles.productName} numberOfLines={1} ellipsizeMode={'middle'}>
-								Product: {e.productName}
+								{strings('market.purchased')}: {e.productName}
 							</Text>
 							<Text style={styles.reviewText}>{e.review}</Text>
 						</View>

@@ -51,7 +51,7 @@ const menuItems = () => [
 	},
 	{
 		key: 'store_reviews',
-		title: strings('market.store_reviews') + ' (test only)',
+		title: strings('market.store_reviews'),
 		icon: 'store',
 		screen: 'StoreReviews'
 	}
