@@ -79,6 +79,7 @@ import MarketSellerCategory from '../../Views/MarketPlace/SellerCategory';
 import MarketProduct from '../../Views/MarketPlace/ProductDetails';
 import StoreProfile from '../../Views/MarketPlace/StoreProfile';
 import EditStoreProfile from '../../Views/MarketPlace/EditStoreProfile';
+import MarketAddEditReview from '../../Views/MarketPlace/AddEditReview';
 const styles = StyleSheet.create({
 	headerLogo: {
 		width: 125,
@@ -240,6 +241,18 @@ export default createStackNavigator(
 						},
 						EditStoreProfile: {
 							screen: EditStoreProfile
+						}
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
+				ProductReview: createStackNavigator(
+					{
+						MarketAddEditReview: {
+							screen: MarketAddEditReview
 						}
 					},
 					{

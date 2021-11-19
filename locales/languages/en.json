@@ -1844,6 +1844,14 @@
 		"not_visit_providers": "You did not visit any provider",
 		"store_location": "Store location",
 		"store_location_desc": "Your current store location",
-		"untrusted_vendor": "Untrusted vendor"
+		"untrusted_vendor": "Untrusted vendor",
+		"product_reviews": "Product reviews",
+		"add_review": "Add review",
+		"edit_review": "Edit review",
+		"code": "Code",
+		"vendor": "Vendor",
+		"rating_header": "What is your rate?",
+		"comment_header": "Do you have any comments?",
+		"type_something": "Type something..."
 	}
 }

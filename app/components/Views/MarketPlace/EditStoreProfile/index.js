@@ -317,11 +317,11 @@ class EditStoreProfile extends Component {
 								containerStyle={styles.input}
 							/>
 
-							{/* <View style={styles.section}>
+							<View style={styles.section}>
 								<Text style={styles.header}>{strings('market.store_location')}</Text>
 								<Text style={styles.explainText}>{strings('market.store_location_desc')}</Text>
 								<LocationSearchBar />
-							</View> */}
+							</View>
 
 							<View style={styles.section}>
 								<Text style={styles.header}>{strings('market.default_currency')}</Text>
