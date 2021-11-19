@@ -9,9 +9,9 @@ export default class StoreService {
   evtMessage = null;
 
   constructor(address) {
-    this.from = address;
+    this.from = address.toLowerCase();
 
-    this.storeMessaging = new StoreMessaging(address, refWebRTC());
+    this.storeMessaging = new StoreMessaging(this.from, refWebRTC());
     this.storeMessaging.addListener('message', this._onStoreMessage)
   }
 
@@ -130,7 +130,7 @@ export default class StoreService {
 
   queryProductOnVendorStore(vendorAddr, query, hash) {
     const data = StoreQuery(this.from, hash, query);
-    this.storeMessaging.send(data, vendorAddr);
+    this.storeMessaging.send(data, vendorAddr.toLowerCase());
   }
 
   collectCategoryHashes() {
@@ -159,7 +159,7 @@ export default class StoreService {
 
     const webrtc = refWebRTC();
     addresses.map(address => {
-      webrtc.sendToPeer(address, data);
+      webrtc.sendToPeer(address.toLowerCase(), data);
     })
   }
 }
