@@ -86,7 +86,7 @@ class MarketProduct extends PureComponent {
 	};
 
 	openCart = () => {
-		this.props.navigation.navigate('MarketCart');
+		this.props.navigation.navigate('ShoppingCart');
 	};
 
 	renderNavBar() {
