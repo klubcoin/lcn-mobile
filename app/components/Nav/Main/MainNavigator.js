@@ -77,6 +77,9 @@ import MarketAddEditProduct from '../../Views/MarketPlace/AddEditProduct';
 import MarketDrawer from '../../Views/MarketPlace/Drawer';
 import MarketSellerCategory from '../../Views/MarketPlace/SellerCategory';
 import MarketProduct from '../../Views/MarketPlace/ProductDetails';
+import ShoppingCart from '../../Views/MarketPlace/ShoppingCart';
+import MarketCheckout from '../../Views/MarketPlace/Checkout';
+import ShippingInfo from '../../Views/MarketPlace/ShippingInfo';
 import StoreProfile from '../../Views/MarketPlace/StoreProfile';
 import EditStoreProfile from '../../Views/MarketPlace/EditStoreProfile';
 import MarketAddEditReview from '../../Views/MarketPlace/AddEditReview';
@@ -203,6 +206,15 @@ export default createStackNavigator(
 						},
 						MarketAddEditReview: {
 							screen: MarketAddEditReview
+						},
+						ShoppingCart: {
+							screen: ShoppingCart
+						},
+						MarketCheckout: {
+							screen: MarketCheckout
+						},
+						ShippingInfo: {
+							screen: ShippingInfo
 						},
 						Chat: {
 							screen: Chat
