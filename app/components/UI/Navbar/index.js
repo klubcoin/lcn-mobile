@@ -20,7 +20,6 @@ import Device from '../../../util/Device';
 import { isGatewayUrl } from '../../../lib/ens-ipfs/resolver';
 import { getHost } from '../../../util/browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Colors from 'common/colors';
 
 const { HOMEPAGE_URL } = AppConstants;
 

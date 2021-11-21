@@ -4,7 +4,7 @@ import { createStore }  from 'redux';
 import rootReducer from '@redux';
 import { createAppContainer }  from 'react-navigation';
 import AppNavigation from 'navigation';
-import Colors from 'common/Colors';
+import Colors from 'common/colors';
 import {
   View
 } from 'react-native';

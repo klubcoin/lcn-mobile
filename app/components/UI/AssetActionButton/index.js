@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colors } from '../../../styles/common';
 import Device from '../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';
-import Colors from 'common/colors';
 
 const styles = StyleSheet.create({
 	button: {
