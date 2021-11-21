@@ -18,6 +18,8 @@ import ModalSelector from '../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { StoreAnnounce } from './store/StoreMessages';
 import { sha256 } from '../../../core/CryptoSignature';
+import Cart from './components /Cart';
+import { colors } from '../../../styles/common';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -51,6 +53,7 @@ class MarketPlace extends PureComponent {
 	componentDidMount() {
 		store.marketMenuKey = menuKeys().shopping;
 		this.fetchCategories();
+		this.fetchCart();
 	}
 
 	async fetchCategories() {
@@ -71,6 +74,14 @@ class MarketPlace extends PureComponent {
 				}
 			}
 		});
+	}
+
+	async fetchCart() {
+		let quantity = 0;
+		store.marketCart.map(e => {
+			quantity += e.quantity;
+		});
+		store.setCartBadge(quantity);
 	}
 
 	renderCategoryTabs() {
@@ -334,6 +345,10 @@ class MarketPlace extends PureComponent {
 		});
 	};
 
+	openCart = () => {
+		this.props.navigation.navigate('ShoppingCart');
+	};
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
@@ -342,7 +357,7 @@ class MarketPlace extends PureComponent {
 						<Icon style={styles.backIcon} name={'bars'} size={16} />
 					</TouchableOpacity>
 					<Text style={styles.titleNavBar}>{strings('market.title')}</Text>
-					<View style={styles.navButton} />
+					<Cart onPress={this.openCart} color={colors.white} />
 				</View>
 			</SafeAreaView>
 		);

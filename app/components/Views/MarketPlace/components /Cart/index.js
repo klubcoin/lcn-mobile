@@ -5,10 +5,10 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles';
 
-const Cart = ({ market, color, onClick }) => {
+const Cart = ({ market, color, onPress }) => {
 	return (
 		<View style={styles.cart}>
-			<TouchableOpacity onPress={() => onClick && onClick()} style={styles.button}>
+			<TouchableOpacity onPress={() => onPress && onPress()} style={styles.button}>
 				<IonIcon style={styles.cartIcon} name={'cart-outline'} size={RFValue(18)} color={color} />
 				{market.cartBadge > 0 && (
 					<View style={styles.badge}>
