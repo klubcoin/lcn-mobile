@@ -1855,6 +1855,14 @@
 		"rating_header": "What is your rate?",
 		"comment_header": "Do you have any comments?",
 		"type_something": "Type something...",
-		"store_reviews": "Store reviews"
+		"store_reviews": "Store reviews",
+		"your_cart": "Your Cart",
+		"select_all": "Select all",
+		"total": "Total",
+		"checkout": "Checkout",
+		"shipping_info": "Shipping information",
+		"please_provide_contact_information": "Please provide your contact information",
+		"shipping_info_desc": "Your information for delivery service to contact",
+		"place_order": "Place order"
 	}
 }

@@ -2,10 +2,13 @@
  * Common styles and variables
  */
 
+import ccolors from "../common/colors";
+
 /**
  * Map of color names to HEX values
  */
-export const colors = {
+
+export const colors = Object.assign({}, ccolors, {
 	fontPrimary: '#000000',
 	fontSecondary: '#777777',
 	fontTertiary: '#AAAAAA',
@@ -65,7 +68,7 @@ export const colors = {
 	pdfColor: '#b30d02',
 	pptColor: '#d04523',
 	mediaIcColor: '#28afea'
-};
+});
 
 /**
  * Map of reusable base styles
