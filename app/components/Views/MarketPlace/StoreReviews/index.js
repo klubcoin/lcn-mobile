@@ -124,7 +124,7 @@ export class MarketStoreReviews extends PureComponent {
 					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
 						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
 					</TouchableOpacity>
-					<Text style={styles.titleNavBar}>Store Reviews</Text>
+					<Text style={styles.titleNavBar}>{strings('market.store_reviews')}</Text>
 					<View style={styles.navButton} />
 				</View>
 			</SafeAreaView>
@@ -143,7 +143,9 @@ export class MarketStoreReviews extends PureComponent {
 						imageSize={25}
 						startingValue={this.averageRating}
 					/>
-					<Text style={styles.totalReview}>Total {this.reviews.length} reviews</Text>
+					<Text style={styles.totalReview}>
+						Total {this.reviews.length + ' ' + strings('market.reviews').toLowerCase()}
+					</Text>
 				</View>
 			</View>
 		);
@@ -158,7 +160,7 @@ export class MarketStoreReviews extends PureComponent {
 							<View style={styles.reviewHeader}>
 								<Text style={styles.userName} numberOfLines={1} ellipsizeMode={'middle'}>
 									{/* {'0x' + e.buyerWalletAddress} */}
-									{e?.info?.name || 'anonymous'}
+									{e?.info?.name || strings('market.anonymous')}
 								</Text>
 								<Text style={styles.scoreReviewItem}> ({e.rating?.toFixed(1) ?? 0}) </Text>
 							</View>
