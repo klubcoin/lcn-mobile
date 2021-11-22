@@ -93,12 +93,41 @@ const fakeReviews = [
 export class MarketStoreReviews extends PureComponent {
 	static navigationOptions = () => ({ header: null });
 
+	reviews = [];
+	averageRating = 0;
+
 	constructor(props) {
 		super(props);
+		makeObservable(this, {
+			reviews: observable,
+			averageRating: observable
+		});
+	}
+
+	componentDidMount() {
+		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+			this.fetchReviews();
+		});
+	}
+
+	componentWillUnmount() {
+		this.willFocusSubscription.remove();
 	}
 
 	toggleDrawer = () => {
 		this.props.navigation.toggleDrawer();
+	};
+
+	fetchReviews = async () => {
+		await APIService.getStoreReviews((success, json) => {
+			if (success) {
+				this.reviews = json;
+				this.reviews.reverse();
+				this.averageRating =
+					this.reviews.reduce((sum, current) => sum + (current.rating ?? 0), 0) / this.reviews.length;
+				this.averageRating = this.averageRating.toFixed(1);
+			}
+		});
 	};
 
 	renderNavBar() {
@@ -118,10 +147,16 @@ export class MarketStoreReviews extends PureComponent {
 	renderOverview() {
 		return (
 			<View style={styles.overviewContainer}>
-				<Text style={styles.ratingScore}>4.5</Text>
+				<Text style={styles.ratingScore}>{this.averageRating}</Text>
 				<View style={styles.ratingContainer}>
-					<Rating readonly style={styles.ratings} fractions={1} imageSize={25} startingValue={4.5} />
-					<Text style={styles.totalReview}>From {fakeReviews.length} users</Text>
+					<Rating
+						readonly
+						style={styles.ratings}
+						fractions={1}
+						imageSize={25}
+						startingValue={this.averageRating}
+					/>
+					<Text style={styles.totalReview}>Total {this.reviews.length} reviews</Text>
 				</View>
 			</View>
 		);
@@ -131,23 +166,26 @@ export class MarketStoreReviews extends PureComponent {
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
 				<ScrollView style={styles.reviewsBody}>
-					{fakeReviews.map(e => (
+					{this.reviews.map(e => (
 						<View style={styles.reviewItem}>
-							<Text style={styles.userName} numberOfLines={1} ellipsizeMode={'middle'}>
-								{e.user}
-								<Text style={styles.scoreReviewItem}> ({e.ratingScore}) </Text>
-							</Text>
+							<View style={styles.reviewHeader}>
+								<Text style={styles.userName} numberOfLines={1} ellipsizeMode={'middle'}>
+									{'0x' + e.buyerWalletAddress}
+								</Text>
+								<Text style={styles.scoreReviewItem}> ({e.rating?.toFixed(1) ?? 0}) </Text>
+							</View>
+
 							<Rating
 								readonly
 								style={styles.ratingReviewItem}
 								fractions={1}
 								imageSize={16}
-								startingValue={e.ratingScore}
+								startingValue={e.rating ?? 0}
 							/>
 							<Text style={styles.productName} numberOfLines={1} ellipsizeMode={'middle'}>
-								{strings('market.purchased')}: {e.productName}
+								{strings('market.purchased')}: {e.productCode}
 							</Text>
-							<Text style={styles.reviewText}>{e.review}</Text>
+							<Text style={styles.reviewText}>{e.comments}</Text>
 						</View>
 					))}
 				</ScrollView>

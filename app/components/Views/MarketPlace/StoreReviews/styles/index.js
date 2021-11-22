@@ -59,11 +59,13 @@ const styles = StyleSheet.create({
 	},
 	userName: {
 		fontSize: RFValue(15),
-		fontWeight: '600'
+		fontWeight: '600',
+		flex: 1
 	},
 	scoreReviewItem: {
 		fontWeight: '400',
-		fontSize: RFValue(13)
+		fontSize: RFValue(13),
+		flex: 1
 	},
 	reviewItem: {
 		paddingVertical: 16
@@ -79,6 +81,9 @@ const styles = StyleSheet.create({
 	},
 	reviewText: {
 		fontSize: RFValue(12)
+	},
+	reviewHeader: {
+		flexDirection: 'row'
 	}
 });
 

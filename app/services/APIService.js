@@ -30,6 +30,8 @@ export default class APIService {
 
 	static apiMarketCategories = () => APIService.routePersistenceAPI() + `LiquimartProductCategory/list`;
 
+	static apiStoreReviews = () => APIService.routePersistenceAPI() + `LiquimartProductReview/list`;
+
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
 	}`;
@@ -211,5 +213,10 @@ export default class APIService {
 			comments
 		};
 		APIService.postPersistence(this.routePersistenceAPI(), entity, callback);
+	}
+
+	static getStoreReviews(callback) {
+		const data = { basicAuth };
+		WebService.sendPostDirect(this.apiStoreReviews(), data, callback);
 	}
 }

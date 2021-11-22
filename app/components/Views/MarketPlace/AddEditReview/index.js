@@ -68,7 +68,6 @@ export class MarketAddEditReview extends PureComponent {
 		const comments = this.comment.trim();
 		const rating = this.ratingScore;
 		const purchaseDate = moment(); //TODO: update purchased date
-
 		const { images, title, uuid, wallet } = this.product;
 
 		APIService.createReview(
