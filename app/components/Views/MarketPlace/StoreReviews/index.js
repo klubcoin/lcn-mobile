@@ -60,7 +60,6 @@ export class MarketStoreReviews extends PureComponent {
 	componentDidMount() {
 		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
 			this.fetchReviews();
-			console.log('this.reviews', this.reviews);
 		});
 	}
 

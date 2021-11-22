@@ -1,27 +1,26 @@
-import React, { PureComponent } from "react";
-import { inject, observer } from "mobx-react";
-import { FlatList, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import IonIcon from "react-native-vector-icons/Ionicons";
-import styles from "./styles";
-import { strings } from "../../../../../locales/i18n";
-import store from "../store";
-import { RFPercentage } from "react-native-responsive-fontsize";
-import colors from "../../../../common/colors";
-import routes from "../../../../common/routes";
-import { makeObservable, observable } from "mobx";
+import React, { PureComponent } from 'react';
+import { inject, observer } from 'mobx-react';
+import { FlatList, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import styles from './styles';
+import { strings } from '../../../../../locales/i18n';
+import store from '../store';
+import { RFPercentage } from 'react-native-responsive-fontsize';
+import colors from '../../../../common/colors';
+import routes from '../../../../common/routes';
+import { makeObservable, observable } from 'mobx';
 
 class ShoppingCart extends PureComponent {
-
 	totalAmount = 0;
 	totalQuantity = 0;
 
 	constructor(props) {
-		super(props)
+		super(props);
 		makeObservable(this, {
 			totalAmount: observable,
-			totalQuantity: observable,
-		})
+			totalQuantity: observable
+		});
 	}
 
 	componentDidMount() {
@@ -39,24 +38,24 @@ class ShoppingCart extends PureComponent {
 			if (product.excluded) return;
 			totalQuantity += quantity;
 			total += quantity * product.price;
-		})
+		});
 		this.totalAmount = total;
 		this.totalQuantity = totalQuantity;
-	}
+	};
 
-	decreaseQuantity = (product) => {
+	decreaseQuantity = product => {
 		if (product.quantity <= 1) return;
 
 		product.quantity -= 1;
 		this.calculateTotal();
-	}
+	};
 
-	increaseQuantity = (product) => {
+	increaseQuantity = product => {
 		product.quantity += 1;
 		this.calculateTotal();
-	}
+	};
 
-	renderQuantity = (product) => {
+	renderQuantity = product => {
 		const { quantity } = product;
 
 		return (
@@ -72,7 +71,7 @@ class ShoppingCart extends PureComponent {
 					value={`${quantity}`}
 					onChangeText={text => {
 						product.quantity = text;
-						this.setState({ update: new Date() })
+						this.setState({ update: new Date() });
 					}}
 					style={styles.quantity}
 					keyboardType={'numeric'}
@@ -88,15 +87,15 @@ class ShoppingCart extends PureComponent {
 		);
 	};
 
-	toggleItem = (product) => {
+	toggleItem = product => {
 		product.excluded = !product.excluded;
 		this.calculateTotal();
-	}
+	};
 
-	removeItem = (uuid) => {
+	removeItem = uuid => {
 		store.removeProductInCart(uuid);
 		this.calculateTotal();
-	}
+	};
 
 	renderItem = ({ index, item }) => {
 		const { uuid, product, vendor } = item;
@@ -106,13 +105,14 @@ class ShoppingCart extends PureComponent {
 		return (
 			<View style={styles.orderItem}>
 				<View style={styles.product}>
-					<TouchableOpacity style={styles.remove}
+					<TouchableOpacity
+						style={styles.remove}
 						activeOpacity={0.6}
 						onPress={() => this.toggleItem(product)}
 					>
 						<IonIcon name={excluded ? 'square-outline' : 'checkbox-outline'} size={22} />
 					</TouchableOpacity>
-					<Image style={styles.image} source={{ uri: images[0] }} />
+					<Image style={styles.image} source={{ uri: images && images[0] }} />
 					<View style={styles.productInfo}>
 						<Text numberOfLines={1} style={styles.title}>
 							{title}
@@ -123,68 +123,61 @@ class ShoppingCart extends PureComponent {
 						{this.renderQuantity(item)}
 					</View>
 
-					<TouchableOpacity style={styles.remove}
-						activeOpacity={0.6}
-						onPress={() => this.removeItem(uuid)}
-					>
+					<TouchableOpacity style={styles.remove} activeOpacity={0.6} onPress={() => this.removeItem(uuid)}>
 						<IonIcon name={'trash-outline'} size={22} color={colors.danger} />
 					</TouchableOpacity>
 				</View>
 			</View>
-		)
-	}
+		);
+	};
 
 	renderOrderItems = () => {
 		return (
 			<View style={styles.body}>
 				<FlatList
 					data={store.marketCart}
-					keyExtractor={(item) => item.uuid}
+					keyExtractor={item => item.uuid}
 					renderItem={this.renderItem.bind(this)}
 				/>
 			</View>
-		)
-	}
+		);
+	};
 
 	selectAll = () => {
-		store.marketCart.map(({ product }) => product.excluded = false);
+		store.marketCart.map(({ product }) => (product.excluded = false));
 		this.calculateTotal();
-	}
+	};
 
 	gotoCheckout = () => {
 		this.props.navigation.navigate('MarketCheckout');
-	}
+	};
 
 	renderFooter = () => {
 		const currency = routes.mainNetWork.ticker;
 		return (
 			<View style={styles.footer}>
-				<TouchableOpacity style={styles.selectAll}
-					activeOpacity={0.6}
-					onPress={this.selectAll}
-				>
+				<TouchableOpacity style={styles.selectAll} activeOpacity={0.6} onPress={this.selectAll}>
 					<IonIcon name={'checkbox-outline'} size={22} />
 					<Text style={styles.textAll}>{strings('market.select_all')}</Text>
 				</TouchableOpacity>
 				<View style={styles.summary}>
 					<Text style={styles.summaryTitle}>
 						{strings('market.total')}:
-						<Text style={styles.totalAmount}> {this.totalAmount} {currency}</Text>
+						<Text style={styles.totalAmount}>
+							{' '}
+							{this.totalAmount} {currency}
+						</Text>
 					</Text>
 					<Text style={styles.summaryTitle}>
-						{strings('market.quantity')}:
-						<Text style={styles.totalQuantity}> {this.totalQuantity}</Text>
+						{strings('market.quantity')}:<Text style={styles.totalQuantity}> {this.totalQuantity}</Text>
 					</Text>
 				</View>
-				<TouchableOpacity style={styles.checkout}
-					activeOpacity={0.6}
-					onPress={this.gotoCheckout}
-				>
+				<TouchableOpacity style={styles.checkout} activeOpacity={0.6} onPress={this.gotoCheckout}>
 					<Text style={styles.textCheckout}>{strings('market.checkout')}</Text>
 				</TouchableOpacity>
 			</View>
-		)
-	}
+		);
+	};
 
 	renderNavBar() {
 		return (
@@ -207,8 +200,8 @@ class ShoppingCart extends PureComponent {
 				{this.renderOrderItems()}
 				{this.renderFooter()}
 			</View>
-		)
+		);
 	}
 }
 
-export default inject('store')(observer(ShoppingCart))
+export default inject('store')(observer(ShoppingCart));
