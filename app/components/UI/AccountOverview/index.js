@@ -377,7 +377,7 @@ class AccountOverview extends PureComponent {
 										numberOfLines={1}
 										testID={'edit-account-label'}
 									>
-										{`${name}` || ''}
+										{`${name?.name}` || ''}
 									</Text>
 								</TouchableOpacity>
 							)}
