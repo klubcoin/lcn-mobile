@@ -37,64 +37,17 @@ import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { showError, showSuccess } from '../../../../util/notify';
 import { Rating } from 'react-native-ratings';
 import { RFValue } from 'react-native-responsive-fontsize';
-
-const fakeReviews = [
-	{
-		user: 'John Henry',
-		ratingScore: 4.5,
-		productName: 'Liqui products',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	},
-	{
-		user: 'Tom Carter',
-		ratingScore: 4.2,
-		productName: 'Vacuum cleaner',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	},
-	{
-		user: 'John Wick',
-		ratingScore: 3.5,
-		productName: 'Mobile phone',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	},
-	{
-		user: 'Thomas Shelby',
-		ratingScore: 5.0,
-		productName: 'Car',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	},
-	{
-		user: 'Tom Carter',
-		ratingScore: 3.3,
-		productName: 'Bicycle',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	},
-	{
-		user: 'Scar Hilton',
-		ratingScore: 3.8,
-		productName: 'superlonggggggggggggggggggggggggggggggggggggggggggggggggggggggggggname',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	},
-	{
-		user: 'Michael Edison',
-		ratingScore: 4.5,
-		productName: 'Birthday gifts',
-		review:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-	}
-];
+import API from '../../../../services/api';
+import ScrollViewMore from '../../../UI/ScrollMore/ScrollViewMore';
 
 export class MarketStoreReviews extends PureComponent {
 	static navigationOptions = () => ({ header: null });
 
 	reviews = [];
+	addressDic = {};
 	averageRating = 0;
+	maxIndex = 10;
+	pageSize = 0;
 
 	constructor(props) {
 		super(props);
@@ -107,6 +60,7 @@ export class MarketStoreReviews extends PureComponent {
 	componentDidMount() {
 		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
 			this.fetchReviews();
+			console.log('this.reviews', this.reviews);
 		});
 	}
 
@@ -121,13 +75,46 @@ export class MarketStoreReviews extends PureComponent {
 	fetchReviews = async () => {
 		await APIService.getStoreReviews((success, json) => {
 			if (success) {
-				this.reviews = json;
-				this.reviews.reverse();
+				this.reviews = json.reverse();
 				this.averageRating =
 					this.reviews.reduce((sum, current) => sum + (current.rating ?? 0), 0) / this.reviews.length;
 				this.averageRating = this.averageRating.toFixed(1);
+				this.fetchWalletInfos();
 			}
 		});
+	};
+
+	fetchWalletInfos = async () => {
+		if (this.pageSize >= this.reviews.length) return;
+
+		const maxItem =
+			this.maxIndex > this.reviews.length ? this.reviews.length - this.pageSize : this.maxIndex - this.pageSize;
+		for (var i = 0; i < maxItem; i++) {
+			this.getWalletInfo(this.reviews[i]?.buyerWalletAddress, i);
+		}
+		this.maxIndex += 10;
+		this.pageSize += maxItem;
+	};
+
+	getWalletInfo = async (address, index) => {
+		if (address in this.addressDic) {
+			this.reviews[index].info = this.addressDic[address];
+			return;
+		}
+
+		API.postRequest(
+			routes.walletInfo,
+			[address],
+			response => {
+				if (response.result) {
+					this.addressDic[address] = response.result;
+					this.reviews[index].info = response.result;
+				}
+			},
+			error => {
+				console.log('error', error);
+			}
+		);
 	};
 
 	renderNavBar() {
@@ -165,12 +152,13 @@ export class MarketStoreReviews extends PureComponent {
 	renderReviews() {
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<ScrollView style={styles.reviewsBody}>
-					{this.reviews.map(e => (
+				<ScrollViewMore customStyle={styles.reviewsBody} onScroll={this.fetchWalletInfos}>
+					{this.reviews.slice(0, this.pageSize).map(e => (
 						<View style={styles.reviewItem}>
 							<View style={styles.reviewHeader}>
 								<Text style={styles.userName} numberOfLines={1} ellipsizeMode={'middle'}>
-									{'0x' + e.buyerWalletAddress}
+									{/* {'0x' + e.buyerWalletAddress} */}
+									{e?.info?.name || 'anonymous'}
 								</Text>
 								<Text style={styles.scoreReviewItem}> ({e.rating?.toFixed(1) ?? 0}) </Text>
 							</View>
@@ -188,7 +176,7 @@ export class MarketStoreReviews extends PureComponent {
 							<Text style={styles.reviewText}>{e.comments}</Text>
 						</View>
 					))}
-				</ScrollView>
+				</ScrollViewMore>
 			</SafeAreaView>
 		);
 	}
