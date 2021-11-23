@@ -20,7 +20,7 @@ import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
 import MessagingWebRTC from './store/MessagingWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
-import { Chat } from '../../../services/Messages';
+import { Chat } from './store/Messages';
 
 const swipeOffset = Device.getDeviceWidth() / 4;
 

@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../store/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { ChatFile, ChatProfile, RequestPayment, TransactionSync, Typing } from '../../../../services/Messages';
+import { ChatFile, ChatProfile, RequestPayment, TransactionSync, Typing } from '../store/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
 import { format } from 'date-fns';
-import { TransactionSync, RequestPayment, ChatFile } from '../../../../services/Messages';
+import { TransactionSync, RequestPayment, ChatFile } from '../store/Messages';
 import { strings } from '../../../../../locales/i18n';
 
 export default class MessageItem extends Component {
