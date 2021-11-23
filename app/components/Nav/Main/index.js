@@ -80,7 +80,8 @@ import { FriendRequestTypes, LiquichainNameCard, WalletProfile } from '../../Vie
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { refWebRTC, setWebRTC } from '../../../services/WebRTC';
 import CryptoSignature from '../../../core/CryptoSignature';
-import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
+import { Chat } from '../../Views/Message/store/Messages';
+import { ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
 import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
