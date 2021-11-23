@@ -129,6 +129,9 @@ const styles = StyleSheet.create({
 		fontWeight: '600',
 		paddingHorizontal: 15,
 	},
+	orderItem: {
+		marginBottom: 20
+	},
 	storeNameContainer:{
 		flexDirection: 'row',
 		borderBottomWidth: 1,

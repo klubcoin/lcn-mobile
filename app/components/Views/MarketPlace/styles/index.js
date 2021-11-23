@@ -92,7 +92,9 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.blue
 	},
 	vendorView: {
-		flexDirection: 'row'
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 20
 	},
 	headerLogo: {
 		width: 50,
