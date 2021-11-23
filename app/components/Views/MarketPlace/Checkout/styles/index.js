@@ -75,8 +75,7 @@ const styles = StyleSheet.create({
 	product: {
 		flex: 1,
 		flexDirection: 'row',
-		marginVertical: 10,
-		borderBottomWidth: StyleSheet.hairlineWidth,
+		marginTop: 10,
 		paddingBottom: 15,
 	},
 	productInfo: {
@@ -96,6 +95,7 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(12),
 		color: '#f84880',
 		fontWeight: 'bold',
+		alignSelf: 'flex-end',
 	},
 	footer: {
 		height: 60,
@@ -120,6 +120,12 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		color: colors.red,
 	},
+	quantityWrapper:{
+		alignItems:'flex-end',
+	},
+	quantity: {
+		fontWeight: '500',
+	},
 	totalQuantity: {
 		fontSize: 14,
 		fontWeight: '600',
@@ -141,8 +147,8 @@ const styles = StyleSheet.create({
 	},
 	storeNameContainer: {
 		flexDirection: 'row',
-		borderBottomWidth: 1,
-		borderBottomColor: colors.grey300,
+		borderBottomWidth: StyleSheet.hairlineWidth,
+		borderBottomColor: colors.grey400,
 		paddingBottom: 10
 	},
 	storeName: {
@@ -151,6 +157,21 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.grey300
+	},
+	storeTotalAmount: {
+		flexDirection: 'row',
+		alignItems:'center',
+		justifyContent: 'flex-end',
+		borderTopWidth: StyleSheet.hairlineWidth,
+		borderBottomWidth: StyleSheet.hairlineWidth,
+		borderColor: colors.grey400,
+		paddingVertical: 10,
+	},
+	confirmBtn: {
+		width: 100, 
+		borderRadius: 5,
+		alignSelf: 'flex-end',
+		marginTop: 10
 	}
 });
 

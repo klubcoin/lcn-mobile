@@ -9,6 +9,7 @@ import { strings } from "../../../../../locales/i18n";
 import store from "../store";
 import colors from "../../../../common/colors";
 import routes from "../../../../common/routes";
+import StyledButton from "../../../UI/StyledButton";
 
 class MarketCheckout extends PureComponent {
 
@@ -60,42 +61,61 @@ class MarketCheckout extends PureComponent {
 		this.totalQuantity = totalQuantity;
 	}
 
+	onPurchase = () => {
+		
+	}
+
 	renderItem = ({ index, item }) => {
 		const { products, profile } = this.productGroups[item];
+		var amount = 0;
+		var currencyUnit = 'LCN';
 
 		return (
 			products.length > 0 && <View style={styles.itemWrapper}>
 				<View style={styles.storeNameContainer}>
-					<MaterialIcons name={'store'} size={20}/>
+					<MaterialIcons name={'store'} size={20} />
 					<Text style={styles.storeName}>{profile?.storeName}</Text>
 				</View>
 				{
-					
 					products.map(e => {
 						const { product, quantity } = e;
-						const {	title, price, currency, images } = product;
-						const currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
+						const { title, price, currency, images } = product;
+						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
+						amount += quantity * price;
 
 						return (
-							<View style={styles.orderItem}>
-								<View style={styles.product}>
-									<Image style={styles.image} source={{ uri: images[0] }} />
-									<View style={styles.productInfo}>
-										<Text numberOfLines={1} style={styles.title}>
-											{title}
-										</Text>
-										<Text numberOfLines={2} style={styles.price}>
-											{price} {currencyUnit}
-										</Text>
-									</View>
-									<Text>x  <Text style={styles.quantity}>{quantity}</Text></Text>
+							<View style={styles.product}>
+								<Image style={styles.image} source={{ uri: images[0] }} />
+								<View style={styles.productInfo}>
+									<Text numberOfLines={1} style={styles.title}>
+										{title}
+									</Text>
+
+								</View>
+								<View style={styles.quantityWrapper}>
+									<Text>x  <Text style={styles.quantity}>{quantity} </Text></Text>
+									<Text numberOfLines={2} style={styles.quantity}>
+										{price} {currencyUnit}
+									</Text>
 								</View>
 							</View>
 						);
 					})
 				}
+				<View style={styles.storeTotalAmount}>
+					<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
+					<Text style={styles.price}>{amount} {currencyUnit}</Text>
+				</View>
+				<StyledButton
+					type={'confirm'}
+					onPress={this.onPurchase}
+					containerStyle={styles.confirmBtn}
+					testID={'connect-cancel-button'}
+				>
+					{strings('market.purchase')}
+				</StyledButton>
 			</View>
-			
+
 		)
 	}
 
@@ -178,7 +198,7 @@ class MarketCheckout extends PureComponent {
 				{this.renderNavBar()}
 				{this.renderShippingInfo()}
 				{this.renderOrderItems()}
-				{this.renderFooter()}
+				{/* {this.renderFooter()} */}
 			</View>
 		)
 	}
