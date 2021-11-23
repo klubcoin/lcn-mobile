@@ -330,9 +330,9 @@ class MarketPlace extends PureComponent {
 		this.query = this.searchQuery.toLowerCase();
 
 		const storeService = refStoreService();
-		storeService.searchProduct({ query: this.query }, hash);
+		storeService?.searchProduct({ query: this.query }, hash);
 
-		storeService.addListener(data => {
+		storeService?.addListener(data => {
 			if (data.action == StoreAnnounce().action && data.hashes[0] == hash) {
 				const { info } = data;
 				const { query } = info;
