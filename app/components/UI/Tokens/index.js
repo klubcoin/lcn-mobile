@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
 });
 
 const TokenRoutes = {
-	Liquichat: 'Message',
+	Liquichat: 'MessageApp',
 	LiquiShare: 'FilesManager',
 	Liquimart: 'MarketPlaceApp'
 };

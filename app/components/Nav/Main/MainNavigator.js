@@ -131,12 +131,6 @@ export default createStackNavigator(
 						StorageStatistic: {
 							screen: StorageStatistic
 						},
-						Message: {
-							screen: Message
-						},
-						Chat: {
-							screen: Chat
-						},
 						ContactForm: {
 							screen: ContactForm
 						},
@@ -191,6 +185,14 @@ export default createStackNavigator(
 				}
 			)
 		},
+		MessageApp: createStackNavigator({
+			Message: {
+				screen: Message
+			},
+			Chat: {
+				screen: Chat
+			},
+		}),
 		MarketPlaceApp: createDrawerNavigator(
 			{
 				MarketPlace: createStackNavigator(
