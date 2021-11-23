@@ -57,14 +57,18 @@ class Message extends Component {
 		const records = await store.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
-		const users = Object.keys(records).map(e => addresses[e]).filter(e => !!e);
+		const users = Object.keys(records).filter(address =>
+			Object.keys(addresses).find(a => a?.toLocaleLowerCase() == address?.toLowerCase()))
+			.map(address => ({ address, ...records[address] }));
 		const profiles = preferences.peerProfiles;
 
 		users.forEach(e => {
-			if (!records[e.address]) return;
-			e.lastMessage = records[e.address].messages[0];
-			e.isRead = records[e.address].isRead;
-			if (profiles[e.address]) Object.assign(e, profiles[e.address]);
+			const address = e.address;
+			if (!records[address]) return;
+			e.lastMessage = records[address].messages[0];
+			e.isRead = records[address].isRead;
+			const pAddr = Object.keys(profiles).find(a => a?.toLocaleLowerCase() == address?.toLowerCase())
+			if (pAddr) Object.assign(e, profiles[pAddr]);
 		});
 
 		this.setState(prevState => ({
