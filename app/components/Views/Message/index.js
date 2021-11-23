@@ -82,7 +82,7 @@ class Message extends Component {
 		const query = searchQuery.toLocaleLowerCase();
 
 		return conversations.filter(e => {
-			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
+			return (e.name?.name || `${e.name}`).toLocaleLowerCase().includes(query) || e.address?.toLocaleLowerCase().includes(query);
 		})
 			.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
 	};
