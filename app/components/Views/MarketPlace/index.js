@@ -325,7 +325,7 @@ class MarketPlace extends PureComponent {
 	onSearch = text => (this.searchQuery = text);
 	handleSearch = () => {
 		this.vendors = [];
-		const hash = sha256(this.category.uuid);
+		const hash = sha256(this.category?.uuid);
 		this.query = this.searchQuery.toLowerCase();
 
 		const storeService = refStoreService();
