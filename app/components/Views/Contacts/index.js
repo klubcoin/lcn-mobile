@@ -391,7 +391,7 @@ class Contacts extends PureComponent {
 		contacts.filter(e => {
 			const { searchQuery } = this.state;
 			const query = searchQuery.toLocaleLowerCase();
-			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
+			return (e.name?.name ?? e.name).toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
 		});
 
 	render() {

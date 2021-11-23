@@ -90,7 +90,7 @@ class AddressElement extends PureComponent {
 	render = () => {
 		const { onAccountPress, onAccountLongPress } = this.props;
 		const { name, address, profile: { avatar } } = this.state;
-		const primaryLabel = name && name[0] !== ' ' ? name : renderShortAddress(address);
+		const primaryLabel = name && name[0] !== ' ' ? (name?.name || name) : renderShortAddress(address);
 		const secondaryLabel = name && name[0] !== ' ' && renderShortAddress(address);
 		return (
 			<TouchableOpacity
