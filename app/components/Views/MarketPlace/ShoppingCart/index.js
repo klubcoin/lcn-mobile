@@ -194,15 +194,15 @@ class ShoppingCart extends PureComponent {
 					<Text style={styles.textAll}>{strings('market.select_all')}</Text>
 				</TouchableOpacity>
 				<View style={styles.summary}>
-					<Text style={styles.summaryTitle}>
+					{/* <Text style={styles.summaryTitle}>
 						{strings('market.total')}:
 						<Text style={styles.totalAmount}>
 							{' '}
 							{this.totalAmount} {currency}
 						</Text>
-					</Text>
+					</Text> */}
 					<Text style={styles.summaryTitle}>
-						{strings('market.quantity')}:<Text style={styles.totalQuantity}> {this.totalQuantity}</Text>
+						{strings('market.quantity')}:<Text style={styles.totalAmount}> {this.totalQuantity}</Text>
 					</Text>
 				</View>
 				<TouchableOpacity style={styles.checkout} activeOpacity={0.6} onPress={this.gotoCheckout}>
