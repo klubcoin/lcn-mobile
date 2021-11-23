@@ -36,8 +36,13 @@ class ShoppingCart extends PureComponent {
 	groupProducts = () => {
 		store.marketCart.forEach(e => {
 			var address = e.product?.wallet?.toLowerCase();
-			this.productGroups[address] = { profile: store.storeVendors[address]?.profile };
-			this.productGroups[address].products = this.productGroups[address].products?.unshift(e) || [e];
+			this.productGroups[address] = Object.assign(this.productGroups[address] || {}, { profile : store.storeVendors[address]?.profile });
+
+			if (this.productGroups[address].products) {
+				this.productGroups[address].products?.unshift(e);
+			} else {
+				this.productGroups[address].products = [e];
+			}
 		})
 	};
 
@@ -120,7 +125,7 @@ class ShoppingCart extends PureComponent {
 			products.length > 0 && <View style={styles.orderItem}>
 				<View style={styles.storeNameContainer}>
 					<MaterialIcons name={'store'} size={20}/>
-					<Text style={styles.storeName}>{profile.storeName}</Text>
+					<Text style={styles.storeName}>{profile?.storeName}</Text>
 				</View>
 				{
 					products.map(e => {
