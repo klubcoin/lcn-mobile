@@ -154,7 +154,7 @@ class AccountElement extends PureComponent {
 					<View style={styles.accountInfo}>
 						<View style={styles.accountMain}>
 							<Text numberOfLines={1} style={[styles.accountLabel]}>
-								{name}
+								{name?.name ?? `${name}`}
 							</Text>
 							<View style={styles.accountBalanceWrapper}>
 								<Text style={styles.accountBalance}>
