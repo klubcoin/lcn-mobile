@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
-import MessagingWebRTC from '../../../services/MessagingWebRTC';
+import MessagingWebRTC from './store/MessagingWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 import { Chat } from '../../../services/Messages';
 

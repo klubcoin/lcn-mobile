@@ -20,7 +20,7 @@ import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
-import MessagingWebRTC from '../../../../services/MessagingWebRTC';
+import MessagingWebRTC from '../store/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
 import { ChatFile, ChatProfile, RequestPayment, TransactionSync, Typing } from '../../../../services/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
