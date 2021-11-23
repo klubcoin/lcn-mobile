@@ -87,6 +87,8 @@ import * as base64 from 'base-64';
 import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
 import store from '../../Views/MarketPlace/store';
 import StoreService, { setStoreService } from '../../Views/MarketPlace/store/StoreService';
+import ChatService, { setChatService } from '../../Views/Message/store/ChatService';
+import messageStore from '../../Views/Message/store'
 
 const styles = StyleSheet.create({
 	flex: {
@@ -667,6 +669,13 @@ const Main = props => {
 			const storeService = new StoreService(address);
 			setStoreService(storeService);
 			storeService.announceToTracker();
+		}
+
+		const chatApp = apps.find(app => app.instance.name == 'Liquichat');
+		if (chatApp) {
+			await messageStore.load();
+			const chatService = new ChatService(address);
+			setChatService(chatService);
 		}
 	}
 

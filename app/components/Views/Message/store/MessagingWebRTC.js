@@ -1,5 +1,6 @@
 import { DeviceEventEmitter } from 'react-native';
-import { Chat } from './Messages';
+import { JoinFile } from '../../../../services/FileStore';
+import { Chat, ChatProfile } from './Messages';
 
 export default class MessagingWebRTC {
 	webrtc = null;
@@ -36,8 +37,12 @@ export default class MessagingWebRTC {
 			if (data.action == 'ping') {
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			}
-
-			if (data.action == Chat().action) {
+			const actions = [
+				Chat().action,
+				ChatProfile().action,
+				JoinFile().action
+			];
+			if (actions.includes(data.action)) {
 				if (this.evtMessage) this.evtMessage(data, peerId);
 			}
 		}

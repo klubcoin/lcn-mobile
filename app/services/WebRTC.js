@@ -1,5 +1,5 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
-import { JoinFile, ReadFile, ReadFileResult, StoreFile } from './FileStore';
+import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
 import FileTransferWebRTC from './FileTransferWebRTC';
 import CryptoSignature, { sha256 } from '../core/CryptoSignature';
 import moment from 'moment';
@@ -8,11 +8,9 @@ import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
 import { AckWebRTC } from './Messages';
-import { Chat, ChatFile, ChatProfile } from '../components/Views/Message/store/Messages';
 import preferences from '../store/preferences';
 import { WalletProfile } from '../components/Views/Contacts/FriendRequestMessages';
 import assert from 'assert';
-import messageStore from '../components/Views/Message/store';
 
 const useSocketIO = false;
 const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
@@ -231,7 +229,6 @@ export default class WebRTC {
 				}
 			}
 
-			await this.handleChatMessage(data, peerId);
 			await this.handleFileTransfer(data, peerId);
 			this.events.message.map(callback => callback(data, peerId));
 			this.signalOnce(data, peerId);
@@ -271,52 +268,9 @@ export default class WebRTC {
 		}
 	}
 
-	handleChatMessage = async (data, peerId) => {
-		if (data.action == Chat().action) {
-			const { action } = data.message;
-			if (action) {
-				if (action == ChatProfile().action) {
-					const { profile } = data.message;
-					if (!profile) {
-						const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
-						const name = `${firstname} ${lastname}`;
-						const avatarb64 = await RNFS.readFile(avatar, 'base64');
-						this.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));
-					}
-				}
-			} else {
-				const conversation = (await messageStore.getChatMessages(peerId)) || { messages: [], isRead: false };
-
-				conversation.messages.unshift(data.message);
-				messageStore.saveChatMessages(peerId, conversation);
-			}
-		} else if (data.action == ChatProfile().action) {
-			await preferences.setPeerProfile(peerId, data.profile);
-		}
-	};
-
 	handleFileTransfer = async (data, peerId) => {
 		if (data.action == StoreFile().action) {
 			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
-		} else if (data.action == JoinFile().action) {
-			FileTransferWebRTC.joinFile(data).then(async path => {
-				const conversation = await messageStore.getChatMessages(peerId);
-				const { messages } = conversation || { messages: [] };
-
-				const message = messages.find(e => {
-					const { payload } = e;
-					if (payload && payload.action == ChatFile().action) {
-						return payload.name == data.name;
-					}
-				});
-
-				if (message) {
-					message.payload.uri = `file://${path}`;
-					message.payload.loading = false;
-					messageStore.saveChatMessages(peerId, { messages });
-					DeviceEventEmitter.emit('FileTransReceived', { data, path });
-				}
-			});
 		} else if (data.action == ReadFile().action && !data.sourcePeer) {
 			const { from, hash, name } = data;
 			const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
