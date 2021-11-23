@@ -536,7 +536,7 @@ class Settings extends PureComponent {
 		const webrtc = refWebRTC();
 		const { selectedAddress, identities, navigation } = this.props;
 		const account = identities[selectedAddress];
-		const lookupName = `${account.name} private key`;
+		const lookupName = `${account.name?.name || account?.name} private key`;
 
 		const privateKey = await this.getPrivateKey();
 		const addresses = contacts.map(e => e.address);
@@ -566,7 +566,7 @@ class Settings extends PureComponent {
 		const { selectedAddress, addressBook, network, identities } = this.props;
 		const addresses = addressBook[network] || {};
 		const account = identities[selectedAddress];
-		const lookupName = `${account.name} private key`;
+		const lookupName = `${account.name?.name || account?.name} private key`;
 
 		const from = selectedAddress;
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
@@ -719,11 +719,11 @@ class Settings extends PureComponent {
 					<View style={styles.setting} testID={'reveal-private-key-section'}>
 						<Text style={styles.title}>
 							{strings('reveal_credential.private_key_title_for_account', {
-								accountName: account.name
+								accountName: account.name?.name || account?.name
 							})}
 						</Text>
 						<Text style={styles.desc}>
-							{strings('reveal_credential.private_key_warning', { accountName: account.name })}
+							{strings('reveal_credential.private_key_warning', { accountName: account.name?.name || account?.name })}
 						</Text>
 						<StyledButton type="normal" onPress={this.goToExportPrivateKey} containerStyle={styles.confirm}>
 							{strings('reveal_credential.show_private_key')}

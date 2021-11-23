@@ -40,7 +40,7 @@ export function renderShortAddress(address, chars = 4) {
 export function renderAccountName(address, identities) {
 	address = safeToChecksumAddress(address);
 	if (identities && address && address in identities) {
-		return identities[address].name;
+		return identities[address]?.name?.name || identities[address]?.name;
 	}
 	return renderShortAddress(address);
 }
