@@ -84,6 +84,8 @@ import StoreProfile from '../../Views/MarketPlace/StoreProfile';
 import EditStoreProfile from '../../Views/MarketPlace/EditStoreProfile';
 import MarketAddEditReview from '../../Views/MarketPlace/AddEditReview';
 import StoreReviews from '../../Views/MarketPlace/StoreReviews';
+import MarketPurchase from '../../Views/MarketPlace/Purchase';
+
 const styles = StyleSheet.create({
 	headerLogo: {
 		width: 125,
@@ -220,6 +222,9 @@ export default createStackNavigator(
 						},
 						Chat: {
 							screen: Chat
+						},
+						MarketPurchase: {
+							screen: MarketPurchase
 						}
 					},
 					{

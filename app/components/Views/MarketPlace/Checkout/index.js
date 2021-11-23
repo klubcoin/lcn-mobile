@@ -62,7 +62,7 @@ class MarketCheckout extends PureComponent {
 	}
 
 	onPurchase = () => {
-		
+		this.props.navigation.navigate('MarketPurchase');
 	}
 
 	renderItem = ({ index, item }) => {
