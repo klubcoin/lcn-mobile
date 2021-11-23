@@ -1816,6 +1816,8 @@
 		"missing_store_name": "Missing store name",
 		"missing_phone": "Missing phone number",
 		"missing_email": "Missing email",
+		"missing_name": "Name is missing",
+		"missing_address": "Address is missing",
 		"invalid_phone": "Invalid phone number",
 		"invalid_email": "Invalid email",
 		"payment_term": "Payment term",
