@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import { FlatList, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { strings } from '../../../../../locales/i18n';
@@ -10,22 +11,35 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import colors from '../../../../common/colors';
 import routes from '../../../../common/routes';
 import { makeObservable, observable } from 'mobx';
+import { sha256 } from '../../../../core/CryptoSignature';
+import { refStoreService } from '../store/StoreService';
 
 class ShoppingCart extends PureComponent {
 	totalAmount = 0;
 	totalQuantity = 0;
+	productGroups = {};
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			totalAmount: observable,
-			totalQuantity: observable
+			totalQuantity: observable,
+			productGroups: observable
 		});
 	}
 
 	componentDidMount() {
 		this.calculateTotal();
+		this.groupProducts();
 	}
+
+	groupProducts = () => {
+		store.marketCart.forEach(e => {
+			var address = e.product?.wallet?.toLowerCase();
+			this.productGroups[address] = { profile: store.storeVendors[address]?.profile };
+			this.productGroups[address].products = this.productGroups[address].products?.unshift(e) || [e];
+		})
+	};
 
 	onBack = () => {
 		this.props.navigation.goBack();
@@ -92,41 +106,54 @@ class ShoppingCart extends PureComponent {
 		this.calculateTotal();
 	};
 
-	removeItem = uuid => {
+	removeItem = (uuid, address) => {
+		this.productGroups[address].products = this.productGroups[address]?.products.filter(e => e.uuid !== uuid);
 		store.removeProductInCart(uuid);
 		this.calculateTotal();
 	};
 
 	renderItem = ({ index, item }) => {
-		const { uuid, product, vendor } = item;
-		const { excluded, title, price, currency, images } = product;
-		const currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
+		const {	products, profile } = this.productGroups[item];
 
 		return (
-			<View style={styles.orderItem}>
-				<View style={styles.product}>
-					<TouchableOpacity
-						style={styles.remove}
-						activeOpacity={0.6}
-						onPress={() => this.toggleItem(product)}
-					>
-						<IonIcon name={excluded ? 'square-outline' : 'checkbox-outline'} size={22} />
-					</TouchableOpacity>
-					<Image style={styles.image} source={{ uri: images && images[0] }} />
-					<View style={styles.productInfo}>
-						<Text numberOfLines={1} style={styles.title}>
-							{title}
-						</Text>
-						<Text numberOfLines={2} style={styles.price}>
-							{price} {currencyUnit}
-						</Text>
-						{this.renderQuantity(item)}
-					</View>
-
-					<TouchableOpacity style={styles.remove} activeOpacity={0.6} onPress={() => this.removeItem(uuid)}>
-						<IonIcon name={'trash-outline'} size={22} color={colors.danger} />
-					</TouchableOpacity>
+			products.length > 0 && <View style={styles.orderItem}>
+				<View style={styles.storeNameContainer}>
+					<MaterialIcons name={'store'} size={20}/>
+					<Text style={styles.storeName}>{profile.storeName}</Text>
 				</View>
+				{
+					products.map(e => {
+						const { uuid, product, vendor } = e;
+						const { excluded, title, price, currency, images } = product;
+						const currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
+
+						return (
+							<View style={styles.product}>
+								<TouchableOpacity
+									style={styles.remove}
+									activeOpacity={0.6}
+									onPress={() => this.toggleItem(product)}
+								>
+									<IonIcon name={excluded ? 'square-outline' : 'checkbox-outline'} size={22} />
+								</TouchableOpacity>
+								<Image style={styles.image} source={{ uri: images && images[0] }} />
+								<View style={styles.productInfo}>
+									<Text numberOfLines={1} style={styles.title}>
+										{title}
+									</Text>
+									<Text numberOfLines={2} style={styles.price}>
+										{price} {currencyUnit}
+									</Text>
+									{this.renderQuantity(e)}
+								</View>
+
+								<TouchableOpacity style={styles.remove} activeOpacity={0.6} onPress={() => this.removeItem(uuid, item)}>
+									<IonIcon name={'trash-outline'} size={22} color={colors.danger} />
+								</TouchableOpacity>
+							</View>
+						);
+					})
+				}
 			</View>
 		);
 	};
@@ -135,8 +162,8 @@ class ShoppingCart extends PureComponent {
 		return (
 			<View style={styles.body}>
 				<FlatList
-					data={store.marketCart}
-					keyExtractor={item => item.uuid}
+					data={Object.keys(this.productGroups)}
+					keyExtractor={item => item}
 					renderItem={this.renderItem.bind(this)}
 				/>
 			</View>

@@ -229,7 +229,8 @@ class MarketPlace extends PureComponent {
 		);
 	};
 
-	showVendor = vendor => {
+	onPressVendor = vendor => {
+		store.addStoreVendors(vendor.wallet, vendor);
 		this.props.navigation.navigate('MarketCategory', { vendor, query: this.query, category: this.category });
 	};
 
@@ -277,7 +278,7 @@ class MarketPlace extends PureComponent {
 							<TouchableOpacity
 								style={styles.vendorView}
 								activeOpacity={0.6}
-								onPress={() => this.showVendor(e)}
+								onPress={() => this.onPressVendor(e)}
 							>
 								<Image style={styles.vendorLogo} source={{ uri: profile?.logoStore }} />
 								<View style={styles.vendorInfo}>

@@ -10,6 +10,7 @@ export const kStoreProfile = 'StoreProfile';
 export const kMarketCartBadge = "MarketCartBadge";
 export const kMarketCart = "MarketCart";
 export const kMarketShippingInfo = "MarketShippingInfo";
+export const kStoreVendors = "StoreVendors";
 
 const keys = [
 	kMarketCategories,
@@ -21,6 +22,7 @@ const keys = [
 	kMarketCartBadge,
 	kMarketCart,
 	kMarketShippingInfo,
+	kStoreVendors
 ];
 
 class Store {
@@ -35,6 +37,7 @@ class Store {
 	cartBadge = 0;
 	marketCart = [];
 	shippingInfo = {};
+	storeVendors = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -82,6 +85,9 @@ class Store {
 				break;
 			case kMarketShippingInfo:
 				this.shippingInfo = data || {};
+				break;
+			case kStoreVendors:
+				this.storeVendors = data || {};
 				break;
 		}
 	}
@@ -179,6 +185,11 @@ class Store {
 	async setShippingInfo({ name, phone, address }) {
 		this.shippingInfo = { name, phone, address };
 		await this.save(kMarketShippingInfo, this.shippingInfo);
+	}
+
+	async addStoreVendors(address, data) {
+		this.storeVendors[address] = data;
+		await this.save(kStoreVendors, this.storeVendors);
 	}
 }
 

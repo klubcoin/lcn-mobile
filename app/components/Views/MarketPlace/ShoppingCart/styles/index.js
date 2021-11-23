@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	image: {
-		width: 50,
-		height: 50,
+		maxWidth: 100,
+		flex: 1,
 		marginHorizontal: 10
 	},
 	title: {
@@ -128,6 +128,19 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: '600',
 		paddingHorizontal: 15,
+	},
+	storeNameContainer:{
+		flexDirection: 'row',
+		borderBottomWidth: 1,
+		borderBottomColor: colors.grey300,
+		paddingBottom: 10
+	},
+	storeName: {
+		fontSize: RFValue(15),
+		fontWeight: '600',
+		marginLeft: 10,
+		borderBottomWidth: 1,
+		borderBottomColor: colors.grey300
 	}
 });
 
