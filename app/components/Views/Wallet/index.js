@@ -23,7 +23,7 @@ import API from 'services/api';
 import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
-import preferences from '../../../store/preferences';
+import messageStore from '../Message/store';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -109,7 +109,7 @@ class Wallet extends PureComponent {
 	mounted = false;
 
 	componentDidMount = () => {
-		preferences.setActiveChatPeerId(null);
+		messageStore.setActiveChatPeerId(null);
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 			AssetsDetectionController.detectAssets();

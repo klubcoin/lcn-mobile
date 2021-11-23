@@ -215,52 +215,6 @@ class Preferences {
 		const peerProfiles = this.storage[kPeerProfiles] || {};
 		return peerProfiles[address];
 	}
-
-	async saveChatMessages(address, messages) {
-		if (!this.storage[kChatMessages]) {
-			this.storage[kChatMessages] = {};
-		}
-		this.storage[kChatMessages][address] = messages;
-		await this.saveStorage(kChatMessages);
-	}
-
-	async getChatMessages(address) {
-		const chatMessages = this.storage[kChatMessages];
-		if (address) return chatMessages[address];
-		return chatMessages;
-	}
-
-	async setConversationIsRead(address, isRead) {
-		const chatMessages = this.storage[kChatMessages] || {};
-		if (!address) return;
-		let foundConversation;
-		const keys = Object.keys(chatMessages);
-
-		keys.forEach(e => {
-			if (e.toLocaleLowerCase() == address.toLocaleLowerCase()) {
-				foundConversation = chatMessages[e];
-				if (!foundConversation) return;
-				foundConversation.isRead = isRead;
-				this.storage[kChatMessages][e] = foundConversation;
-				this.saveStorage(kChatMessages);
-			}
-		});
-		await this.saveStorage(kChatMessages);
-	}
-
-	async deleteChatMessage(address) {
-		delete this.storage[kChatMessages][address];
-		await this.saveStorage(kChatMessages);
-	}
-
-	async deleteChatMessages() {
-		this.storage[kChatMessages] = {};
-		await this.saveStorage(kChatMessages);
-	}
-
-	setActiveChatPeerId(address) {
-		this.activeChatPeerId = address;
-	}
 }
 
 export default new Preferences();

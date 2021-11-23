@@ -21,6 +21,7 @@ import Device from '../../../util/Device';
 import MessagingWebRTC from './store/MessagingWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
 import { Chat } from './store/Messages';
+import store from './store';
 
 const swipeOffset = Device.getDeviceWidth() / 4;
 
@@ -34,7 +35,7 @@ class Message extends Component {
 
 	componentDidMount() {
 		this.initConnection();
-		preferences.setActiveChatPeerId(null);
+		store.setActiveChatPeerId(null);
 		this.fetchHistoryMessages();
 	}
 
@@ -46,14 +47,14 @@ class Message extends Component {
 		this.messaging = new MessagingWebRTC(null, null, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			if (data.action == Chat().action && data.message._id) {
-				preferences.setConversationIsRead(data.from, false);
+				store.setConversationIsRead(data.from, false);
 				this.fetchHistoryMessages();
 			}
 		});
 	};
 
 	fetchHistoryMessages = async () => {
-		const records = await preferences.getChatMessages();
+		const records = await store.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
 		const users = Object.keys(records).map(e => addresses[e]).filter(e => !!e);
@@ -87,7 +88,7 @@ class Message extends Component {
 	};
 
 	gotoChatRoom = recipient => {
-		preferences.setConversationIsRead(recipient.address, true);
+		store.setConversationIsRead(recipient.address, true);
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
 
@@ -103,7 +104,7 @@ class Message extends Component {
 			{
 				text: 'Yes',
 				onPress: async () => {
-					await preferences.deleteChatMessage(user.address);
+					await store.deleteChatMessage(user.address);
 					await this.fetchHistoryMessages();
 				}
 			},

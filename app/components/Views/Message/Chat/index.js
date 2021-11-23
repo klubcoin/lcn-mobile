@@ -39,6 +39,7 @@ import { sha256 } from '../../../../core/CryptoSignature';
 import AudioMessage from '../components/AudioMessage';
 import FileMessage from '../components/FileMessage';
 import ImageMessage from '../components/ImageMessage';
+import store from '../store';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -52,7 +53,7 @@ class Chat extends Component {
 
 	componentDidMount() {
 		const selectedContact = this.state.contact;
-		preferences.setActiveChatPeerId(selectedContact.address.toLowerCase());
+		store.setActiveChatPeerId(selectedContact.address.toLowerCase());
 		this.bindContactForAddress();
 		this.initConnection();
 		this.fetchConversation();
@@ -76,7 +77,7 @@ class Chat extends Component {
 		if (this.fileReceivedEvt) this.fileReceivedEvt.remove();
 		if (this.transactionListener) this.transactionListener.remove();
 		this.messaging.removeListeners();
-		preferences.setActiveChatPeerId(null);
+		store.setActiveChatPeerId(null);
 	}
 
 	initConnection = () => {
@@ -170,7 +171,7 @@ class Chat extends Component {
 		const address = selectedAddress.toLowerCase();
 		const peerAddr = selectedContact.address.toLowerCase();
 
-		const data = await preferences.getChatMessages(peerAddr);
+		const data = await store.getChatMessages(peerAddr);
 		if (!data) return Promise.resolve([]);
 		const messages = data.messages.filter(e => {
 			const senderAddr = e.user._id.toLowerCase();
@@ -220,7 +221,7 @@ class Chat extends Component {
 
 	onSend = message => {
 		this.addNewMessage(message);
-		preferences.setConversationIsRead(this.state.contact.address.toLowerCase(), true);
+		store.setConversationIsRead(this.state.contact.address.toLowerCase(), true);
 		this.messaging.send(message[0]);
 	};
 
@@ -234,9 +235,9 @@ class Chat extends Component {
 			typing: false
 		}));
 
-		if (!incoming) await preferences.saveChatMessages(this.state.contact.address.toLowerCase(), { messages: newMessages });
+		if (!incoming) await store.saveChatMessages(this.state.contact.address.toLowerCase(), { messages: newMessages });
 		else {
-			preferences.setConversationIsRead(this.state.contact.address.toLowerCase(), true);
+			store.setConversationIsRead(this.state.contact.address.toLowerCase(), true);
 		}
 	};
 
@@ -342,7 +343,7 @@ class Chat extends Component {
 	onSendError = async (message) => {
 		const selectedContact = this.state.contact;
 		const peerId = selectedContact.address.toLowerCase();
-		const conversation = await preferences.getChatMessages(peerId);
+		const conversation = await store.getChatMessages(peerId);
 		const { messages } = conversation || { messages: [] };
 
 		if (message.payload) {
@@ -352,13 +353,13 @@ class Chat extends Component {
 			Object.assign(m, message);
 			this.setState({ messages });
 
-			preferences.saveChatMessages(peerId, { messages });
+			store.saveChatMessages(peerId, { messages });
 		}
 	}
 
 	onFileReceived = async ({ data, path }) => {
 		const peerId = data.from;
-		const conversation = await preferences.getChatMessages(peerId);
+		const conversation = await store.getChatMessages(peerId);
 		const { messages } = conversation || { messages: [] };
 
 		const message = messages.find(e => {

@@ -12,6 +12,7 @@ import { Chat, ChatFile, ChatProfile } from '../components/Views/Message/store/M
 import preferences from '../store/preferences';
 import { WalletProfile } from '../components/Views/Contacts/FriendRequestMessages';
 import assert from 'assert';
+import messageStore from '../components/Views/Message/store';
 
 const useSocketIO = false;
 const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
@@ -284,10 +285,10 @@ export default class WebRTC {
 					}
 				}
 			} else {
-				const conversation = (await preferences.getChatMessages(peerId)) || { messages: [], isRead: false };
+				const conversation = (await messageStore.getChatMessages(peerId)) || { messages: [], isRead: false };
 
 				conversation.messages.unshift(data.message);
-				preferences.saveChatMessages(peerId, conversation);
+				messageStore.saveChatMessages(peerId, conversation);
 			}
 		} else if (data.action == ChatProfile().action) {
 			await preferences.setPeerProfile(peerId, data.profile);
@@ -299,7 +300,7 @@ export default class WebRTC {
 			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
 		} else if (data.action == JoinFile().action) {
 			FileTransferWebRTC.joinFile(data).then(async path => {
-				const conversation = await preferences.getChatMessages(peerId);
+				const conversation = await messageStore.getChatMessages(peerId);
 				const { messages } = conversation || { messages: [] };
 
 				const message = messages.find(e => {
@@ -312,7 +313,7 @@ export default class WebRTC {
 				if (message) {
 					message.payload.uri = `file://${path}`;
 					message.payload.loading = false;
-					preferences.saveChatMessages(peerId, { messages });
+					messageStore.saveChatMessages(peerId, { messages });
 					DeviceEventEmitter.emit('FileTransReceived', { data, path });
 				}
 			});
