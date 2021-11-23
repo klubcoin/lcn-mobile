@@ -150,11 +150,19 @@ export default class FileTransferWebRTC {
 
 		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
+		if (!(await RNFS.exists(folder))) {
+			try {
+				await RNFS.mkdir(folder);
+			} catch (e) {
+				console.warn(e)
+			}
+		}
 
 		const part = parts[0];
 		const content = part?.v;
 		const fileName = `${/*hash ||*/ name}.${totalPart}.${part?.i}`;
 		const path = `${folder}/${fileName}`;
+		if (await RNFS.exists(path)) await RNFS.unlink(path);
 
 		return new Promise((resolve, reject) => {
 			RNFS.writeFile(path, content, 'utf8')
