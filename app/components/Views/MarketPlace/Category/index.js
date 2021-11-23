@@ -67,7 +67,7 @@ class MarketCategory extends PureComponent {
 
 	goBack = () => {
 		this.props.navigation.goBack();
-	}
+	};
 
 	openCart = () => {
 		this.props.navigation.navigate('ShoppingCart');
@@ -97,14 +97,14 @@ class MarketCategory extends PureComponent {
 		this.query = '';
 	}
 
-	onAddToCart = (product) => {
+	onAddToCart = product => {
 		store.cartBadge++;
 		store.addToCart({
 			uuid: product.uuid,
 			product,
-			quantity: 1,
-		})
-	}
+			quantity: 1
+		});
+	};
 
 	renderProduct = item => {
 		const { title, price, description, images } = item;
@@ -117,7 +117,7 @@ class MarketCategory extends PureComponent {
 					{description}
 				</Text>
 				<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
-				<TouchableOpacity style={styles.addProduct} activeOpacity={0.6} onPress={this.onAddToCart}>
+				<TouchableOpacity style={styles.addProduct} activeOpacity={0.6} onPress={() => this.onAddToCart(item)}>
 					<Icon style={styles.plus} name={'plus'} size={14} color={colors.white} />
 					<IonIcon style={styles.cartIcon} name={'cart-outline'} size={22} color={colors.white} />
 				</TouchableOpacity>
@@ -136,9 +136,7 @@ class MarketCategory extends PureComponent {
 				<View style={styles.category}>
 					{items.length <= 0 && (
 						<View style={styles.notFoundWrapper}>
-							<Text style={styles.notFoundText}>
-								{strings('market.not_found_product')}
-							</Text>
+							<Text style={styles.notFoundText}>{strings('market.not_found_product')}</Text>
 						</View>
 					)}
 					{items.map((e, index) => this.renderProduct(e))}
@@ -165,12 +163,12 @@ class MarketCategory extends PureComponent {
 		const storeService = refStoreService();
 		storeService.queryProductOnVendorStore(this.vendor.wallet, { query: this.query }, hash);
 
-		storeService.addListener((data) => {
+		storeService.addListener(data => {
 			if (data.action == StoreQuery().action && data.hash == hash) {
 				this.products = [...data.data.result];
 			}
-		})
-	}
+		});
+	};
 
 	render() {
 		return (
