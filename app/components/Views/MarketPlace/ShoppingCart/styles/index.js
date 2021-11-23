@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
 		fontWeight: '600',
 		paddingHorizontal: 15,
 	},
-	orderItem: {
+	itemWrapper: {
 		marginBottom: 20
 	},
 	storeNameContainer:{

@@ -122,14 +122,14 @@ class ShoppingCart extends PureComponent {
 		const {	products, profile } = this.productGroups[item];
 
 		return (
-			products.length > 0 && <View style={styles.orderItem}>
+			products.length > 0 && <View style={styles.itemWrapper}>
 				<View style={styles.storeNameContainer}>
 					<MaterialIcons name={'store'} size={20}/>
 					<Text style={styles.storeName}>{profile?.storeName}</Text>
 				</View>
 				{
 					products.map(e => {
-						const { uuid, product, vendor } = e;
+						const { uuid, product } = e;
 						const { excluded, title, price, currency, images } = product;
 						const currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
 

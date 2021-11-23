@@ -3,6 +3,7 @@ import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "rea
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
 import { strings } from "../../../../../locales/i18n";
 import store from "../store";
@@ -13,18 +14,35 @@ class MarketCheckout extends PureComponent {
 
 	totalAmount = 0;
 	totalQuantity = 0;
+	productGroups = {};
+
 
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
 			totalAmount: observable,
 			totalQuantity: observable,
+			productGroups: observable,
 		})
 	}
 
 	componentDidMount() {
 		this.calculateTotal();
+		this.groupProducts();
 	}
+
+	groupProducts = () => {
+		store.marketCart.forEach(e => {
+			var address = e.product?.wallet?.toLowerCase();
+			this.productGroups[address] = Object.assign(this.productGroups[address] || {}, { profile: store.storeVendors[address]?.profile });
+
+			if (this.productGroups[address].products) {
+				this.productGroups[address].products?.unshift(e);
+			} else {
+				this.productGroups[address].products = [e];
+			}
+		})
+	};
 
 	onBack = () => {
 		this.props.navigation.goBack();
@@ -43,25 +61,41 @@ class MarketCheckout extends PureComponent {
 	}
 
 	renderItem = ({ index, item }) => {
-		const { quantity, product, vendor } = item;
-		const { title, price, currency, images } = product;
-		const currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
+		const { products, profile } = this.productGroups[item];
 
 		return (
-			<View style={styles.orderItem}>
-				<View style={styles.product}>
-					<Image style={styles.image} source={{ uri: images[0] }} />
-					<View style={styles.productInfo}>
-						<Text numberOfLines={1} style={styles.title}>
-							{title}
-						</Text>
-						<Text numberOfLines={2} style={styles.price}>
-							{price} {currencyUnit}
-						</Text>
-					</View>
-					<Text>x  <Text style={styles.quantity}>{quantity}</Text></Text>
+			products.length > 0 && <View style={styles.itemWrapper}>
+				<View style={styles.storeNameContainer}>
+					<MaterialIcons name={'store'} size={20}/>
+					<Text style={styles.storeName}>{profile?.storeName}</Text>
 				</View>
+				{
+					
+					products.map(e => {
+						const { product, quantity } = e;
+						const {	title, price, currency, images } = product;
+						const currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
+
+						return (
+							<View style={styles.orderItem}>
+								<View style={styles.product}>
+									<Image style={styles.image} source={{ uri: images[0] }} />
+									<View style={styles.productInfo}>
+										<Text numberOfLines={1} style={styles.title}>
+											{title}
+										</Text>
+										<Text numberOfLines={2} style={styles.price}>
+											{price} {currencyUnit}
+										</Text>
+									</View>
+									<Text>x  <Text style={styles.quantity}>{quantity}</Text></Text>
+								</View>
+							</View>
+						);
+					})
+				}
 			</View>
+			
 		)
 	}
 
@@ -69,7 +103,7 @@ class MarketCheckout extends PureComponent {
 		return (
 			<View style={styles.body}>
 				<FlatList
-					data={store.marketCart}
+					data={Object.keys(this.productGroups)}
 					keyExtractor={(item) => item.uuid}
 					renderItem={this.renderItem.bind(this)}
 				/>
