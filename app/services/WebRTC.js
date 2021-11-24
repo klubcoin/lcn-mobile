@@ -34,7 +34,7 @@ export default class WebRTC {
 	onceListeners = [];
 
 	constructor(from) {
-		this.fromUserId = from;
+		this.fromUserId = from.toLowerCase();
 		this.initSocket();
 	}
 
@@ -93,7 +93,7 @@ export default class WebRTC {
 						break;
 				}
 			} else if (data.action && data.from) {
-				this.handleWebSocketMessage(message, data.from)
+				this.handleWebSocketMessage(message, data.from?.toLowerCase())
 			}
 		} catch (e) {}
 	};
@@ -123,7 +123,8 @@ export default class WebRTC {
 		}
 	};
 
-	connectTo = address => {
+	connectTo = addr => {
+		const address = addr.toLowerCase();
 		this.peerRefs[address] = this.Peer(address);
 		this.sendChannels[address] = this.peerRefs[address].createDataChannel('sendChannel');
 
@@ -364,7 +365,8 @@ export default class WebRTC {
 			.catch(err => this.onError && this.onError(err));
 	};
 
-	hasChannel(address) {
+	hasChannel(addr) {
+		const address = addr.toLowerCase();
 		return this.sendChannels && this.sendChannels[address];
 	}
 
@@ -397,7 +399,8 @@ export default class WebRTC {
 		});
 	};
 
-	sendToPeer = async (address, data) => {
+	sendToPeer = async (addr, data) => {
+		const address = addr.toLowerCase();
 		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
