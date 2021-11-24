@@ -85,6 +85,7 @@ class MarketPurchase extends PureComponent {
 	processing = false;
 	addressToInputRef = React.createRef();
 
+
 	state = {
 		balanceIsZero: false,
 		fromAccountModalVisible: false,
@@ -96,7 +97,7 @@ class MarketPurchase extends PureComponent {
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
-			processing: observable,
+			processing: observable
 		})
 	}
 
@@ -113,6 +114,7 @@ class MarketPurchase extends PureComponent {
 			fromAccountBalance,
 			balanceIsZero: hexToBN(accounts[selectedAddress].balance).isZero(),
 		});
+
 	};
 
 	toggleFromAccountModal = () => {
@@ -213,14 +215,14 @@ class MarketPurchase extends PureComponent {
 
 	render = () => {
 		const { ticker, navigation } = this.props;
-		const order = navigation.getParam('order');
-
 		const {
 			fromSelectedAddress,
 			fromAccountName,
 			fromAccountBalance,
 			balanceIsZero,
 		} = this.state;
+
+		const { products, profile, to, amount, currencyUnit } = navigation.getParam('order');
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'send-screen'}>
@@ -231,18 +233,18 @@ class MarketPurchase extends PureComponent {
 						fromAccountName={fromAccountName}
 						fromAccountBalance={fromAccountBalance}
 					/>
-					<AddressTo 
+					<AddressTo
 						addressToReady
+						toAddressName={profile.storeName}
+						toSelectedAddress={to}
 					/>
 				</View>
 				<ScrollView>
-					<MarketOrderSummary />
-					{/* <OrderSummary
-						amount={order?.amount}
-						orderNumber={order?.orderNumber}
-						currency={order?.currency}
-						billingAddress={order?.billingAddress}
-					/> */}
+					<MarketOrderSummary 
+						products={products}
+						amount={amount}
+						currency={currencyUnit}
+					/>
 					{balanceIsZero && (
 						<View style={styles.warningContainer}>
 							<WarningMessage

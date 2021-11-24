@@ -61,8 +61,8 @@ class MarketCheckout extends PureComponent {
 		this.totalQuantity = totalQuantity;
 	}
 
-	onPurchase = () => {
-		this.props.navigation.navigate('MarketPurchase');
+	onPurchase = (order) => {
+		this.props.navigation.navigate('MarketPurchase', {order: order});
 	}
 
 	renderItem = ({ index, item }) => {
@@ -108,7 +108,9 @@ class MarketCheckout extends PureComponent {
 				</View>
 				<StyledButton
 					type={'confirm'}
-					onPress={this.onPurchase}
+					onPress={() => {
+						this.onPurchase({ ...this.productGroups[item], to: item, amount, currencyUnit});
+					}}
 					containerStyle={styles.confirmBtn}
 					testID={'connect-cancel-button'}
 				>
