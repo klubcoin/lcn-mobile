@@ -9,6 +9,7 @@ const keys = [
 
 class Storage {
 	storage = {};
+	chatConversations = {};
 
 	// session variables
 	activeChatPeerId = null;
@@ -32,7 +33,11 @@ class Storage {
 	}
 
 	bindProps(key, data) {
-
+		switch (key) {
+			case kChatMessages:
+				this.chatConversations = data || {};
+				break;
+		}
 	}
 
 	async save(key, value) {
@@ -45,11 +50,8 @@ class Storage {
 	}
 
 	async saveChatMessages(address, messages) {
-		if (!this.storage[kChatMessages]) {
-			this.storage[kChatMessages] = {};
-		}
-		this.storage[kChatMessages][address] = messages;
-		await this.saveStorage(kChatMessages);
+		this.chatConversations[address] = messages;
+		await this.save(kChatMessages, this.chatConversations);
 	}
 
 	async getChatMessages(address) {
@@ -59,7 +61,7 @@ class Storage {
 	}
 
 	async setConversationIsRead(address, isRead) {
-		const chatMessages = this.storage[kChatMessages] || {};
+		const chatMessages = this.chatConversations || {};
 		if (!address) return;
 		let foundConversation;
 		const keys = Object.keys(chatMessages);
@@ -69,21 +71,19 @@ class Storage {
 				foundConversation = chatMessages[e];
 				if (!foundConversation) return;
 				foundConversation.isRead = isRead;
-				this.storage[kChatMessages][e] = foundConversation;
-				this.saveStorage(kChatMessages);
 			}
 		});
-		await this.saveStorage(kChatMessages);
+		await this.save(kChatMessages, this.chatConversations);
 	}
 
 	async deleteChatMessage(address) {
-		delete this.storage[kChatMessages][address];
-		await this.saveStorage(kChatMessages);
+		delete this.chatConversations[address];
+		await this.save(kChatMessages, this.chatConversations);
 	}
 
 	async deleteChatMessages() {
-		this.storage[kChatMessages] = {};
-		await this.saveStorage(kChatMessages);
+		this.chatConversations = {};
+		await this.save(kChatMessages, this.chatConversations);
 	}
 
 	setActiveChatPeerId(address) {
