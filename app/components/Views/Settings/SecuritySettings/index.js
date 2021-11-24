@@ -48,8 +48,8 @@ import HintModal from '../../../UI/HintModal';
 import { trackErrorAsAnalytics } from '../../../../util/analyticsV2';
 import SeedPhraseVideo from '../../../UI/SeedPhraseVideo';
 import preferences from '../../../../store/preferences';
-import { ReadFile } from '../../../../services/FileStore';
-import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
+import { ReadFile } from '../../FilesManager/store/FileStore';
+import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import { refWebRTC } from '../../../../services/WebRTC';
 
 const isIos = Device.isIos();

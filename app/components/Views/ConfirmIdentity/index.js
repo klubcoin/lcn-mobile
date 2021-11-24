@@ -16,7 +16,7 @@ import ConfirmInputModal from '../../UI/ConfirmInputModal';
 import ConfirmModal from '../../UI/ConfirmModal';
 import { refWebRTC } from '../../../services/WebRTC';
 import Engine from '../../../core/Engine';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import FileTransferWebRTC from '../FilesManager/store/FileTransferWebRTC';
 import { ConfirmProfileBlock, ConfirmProfileRejected } from '../../../services/Messages';
 import CryptoSignature from '../../../core/CryptoSignature';
 import API from '../../../services/api';

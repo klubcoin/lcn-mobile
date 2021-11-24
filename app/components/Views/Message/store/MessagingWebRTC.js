@@ -1,5 +1,5 @@
 import { DeviceEventEmitter } from 'react-native';
-import { JoinFile } from '../../../../services/FileStore';
+import { JoinFile } from '../../FilesManager/store/FileStore';
 import { Chat, ChatProfile } from './Messages';
 
 export default class MessagingWebRTC {

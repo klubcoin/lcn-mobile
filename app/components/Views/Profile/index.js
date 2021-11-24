@@ -16,7 +16,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { colors } from '../../../styles/common';
 import AccountList from '../../UI/AccountList';
 import StyledButton from '../../UI/StyledButton';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import FileTransferWebRTC from '../FilesManager/store/FileTransferWebRTC';
 import { ConfirmProfileRequest } from '../../../services/Messages';
 
 const styles = StyleSheet.create({

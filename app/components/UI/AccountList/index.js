@@ -28,7 +28,7 @@ import Routes from 'common/routes'
 import * as sha3JS from 'js-sha3';
 import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import FileTransferWebRTC from '../../Views/FilesManager/store/FileTransferWebRTC';
 import { RestoreSecretRequest } from '../../../services/Messages';
 
 const styles = StyleSheet.create({

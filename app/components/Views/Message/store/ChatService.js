@@ -5,8 +5,8 @@ import preferences from '../../../../store/preferences';
 import { refWebRTC } from '../../../../services/WebRTC';
 import { Chat, ChatFile, ChatProfile } from './Messages';
 import MessagingWebRTC from './MessagingWebRTC';
-import { JoinFile } from '../../../../services/FileStore';
-import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
+import { JoinFile } from '../../FilesManager/store/FileStore';
+import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 
 export default class ChatService {
 	from = ''; // wallet address

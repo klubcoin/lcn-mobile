@@ -3,7 +3,7 @@ import { statuses } from './FileDetails';
 import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
 import * as RNFS from 'react-native-fs';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import FileTransferWebRTC from './store/FileTransferWebRTC';
 
 export default class FileTransfer {
 	static instance;

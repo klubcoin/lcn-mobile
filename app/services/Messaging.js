@@ -37,7 +37,7 @@ export default class Messaging {
   _events = {};
 
   constructor(address) {
-    this._walletAddress = address;
+    this._walletAddress = address.toLowerCase();
   }
 
   on = (evt, callback) => {

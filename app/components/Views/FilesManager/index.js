@@ -1,25 +1,17 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
 	StyleSheet,
 	View,
-	TextInput,
 	Text,
-	Image,
-	TouchableHighlight,
-	Button,
 	ScrollView,
-	DeviceEventEmitter,
 	TouchableWithoutFeedback,
 	Alert,
 	KeyboardAvoidingView
 } from 'react-native';
-import { getFileManagerNavbar, getNavigationOptionsTitle } from '../../UI/Navbar';
+import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors, fontStyles } from '../../../styles/common';
 import CustomButton from '../../Base/CustomButton';
-import { color } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import * as FilesReader from '../../../util/files-reader';
 import TransferFileModal from './components/TransferFileModal';
@@ -29,9 +21,6 @@ import FileItem from './components/FileItem';
 import uuid from 'react-native-uuid';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
-import * as RNFS from 'react-native-fs';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
-import { refWebRTC } from '../../../services/WebRTC';
 import { statuses } from './FileDetails';
 import FileTransfer from './Transfer.service';
 import SearchBar from '../../Base/SearchBar';

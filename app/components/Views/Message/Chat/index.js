@@ -33,8 +33,7 @@ import { setRecipient, setSelectedAsset } from '../../../../actions/transaction'
 import { getEther } from '../../../../util/transactions';
 import { map3rdPartyTransaction } from '../../../UI/Transactions';
 import ChatTransaction from '../components/ChatTransaction';
-import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
-import { StoreFile } from '../../../../services/FileStore';
+import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import { sha256 } from '../../../../core/CryptoSignature';
 import AudioMessage from '../components/AudioMessage';
 import FileMessage from '../components/FileMessage';
