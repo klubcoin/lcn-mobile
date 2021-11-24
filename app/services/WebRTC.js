@@ -1,6 +1,6 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
-import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
-import FileTransferWebRTC from './FileTransferWebRTC';
+import { ReadFile, ReadFileResult, StoreFile } from '../components/Views/FilesManager/store/FileStore';
+import FileTransferWebRTC from '../components/Views/FilesManager/store/FileTransferWebRTC';
 import CryptoSignature, { sha256 } from '../core/CryptoSignature';
 import moment from 'moment';
 import io from 'socket.io-client';
@@ -274,7 +274,7 @@ export default class WebRTC {
 			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
 		} else if (data.action == ReadFile().action && !data.sourcePeer) {
 			const { from, hash, name } = data;
-			const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+			const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 			if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 			const files = await RNFS.readDir(folder);

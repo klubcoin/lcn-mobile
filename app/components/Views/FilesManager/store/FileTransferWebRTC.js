@@ -1,9 +1,9 @@
 import moment from 'moment';
-import { sha256 } from '../core/CryptoSignature';
+import { sha256 } from '../../../../core/CryptoSignature';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import { ContainFiles, FilePart, JoinFile, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
-import { AckWebRTC } from './Messages';
+import { AckWebRTC } from '../../../../services/Messages';
 
 export default class FileTransferWebRTC {
 	_ready = false;
@@ -87,7 +87,7 @@ export default class FileTransferWebRTC {
 	static async joinFile(data) {
 		const { from, hash, name, totalPart } = data;
 
-		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 		const fileName = `${/*hash ||*/ name}`;
@@ -125,7 +125,7 @@ export default class FileTransferWebRTC {
 		const keys = Object.keys(this.partCollector).sort();
 		const { from, hash, name, created } = this.partCollector[keys[0]];
 
-		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 		const fileName = `${/*hash ||*/ name}`;
@@ -148,15 +148,8 @@ export default class FileTransferWebRTC {
 	static async storeFile(data) {
 		const { from, hash, name, created, totalPart, parts } = data;
 
-		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
-		if (!(await RNFS.exists(folder))) {
-			try {
-				await RNFS.mkdir(folder);
-			} catch (e) {
-				console.warn(e)
-			}
-		}
 
 		const part = parts[0];
 		const content = part?.v;
