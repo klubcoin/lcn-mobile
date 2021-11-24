@@ -28,7 +28,7 @@ export default class MarketOrderSummary extends PureComponent {
 					<DetailsModal.Section >
 						<Summary style={styles.section}>
 							<Summary.Row>
-								<Text big primary>
+								<Text small primary bold>
 									{strings('payQR.order_number')}
 								</Text>
 								<Text small primary>
@@ -36,7 +36,7 @@ export default class MarketOrderSummary extends PureComponent {
 								</Text>
 							</Summary.Row>
 							<View style={styles.productSection}>
-								<Text big primary>
+								<Text small primary bold>
 									{strings('market.products')}
 								</Text>
 								{
@@ -65,7 +65,7 @@ export default class MarketOrderSummary extends PureComponent {
 								}
 							</View>
 							<Summary.Row>
-								<Text big primary>
+								<Text small primary bold>
 									{strings('transaction.amount')}
 								</Text>
 								<Text small primary bold>
@@ -87,7 +87,7 @@ export default class MarketOrderSummary extends PureComponent {
 										return (
 											<Summary.Row>
 												<View style={styles.addressTitle}>
-													<Text small primary>
+													<Text small primary bold>
 														{strings(`market.${k}`)}
 													</Text>
 												</View>
