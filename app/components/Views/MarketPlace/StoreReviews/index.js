@@ -72,9 +72,14 @@ export class MarketStoreReviews extends PureComponent {
 	};
 
 	fetchReviews = async () => {
+		const { PreferencesController } = Engine.state;
+		const { identities, selectedAddress } = PreferencesController;
+		const account = identities[selectedAddress];
+
 		await APIService.getStoreReviews((success, json) => {
 			if (success) {
-				this.reviews = json.reverse();
+				this.reviews = json.filter(e => `0x${e?.sellerWalletAddress}` === selectedAddress);
+				if  (this.reviews.length <= 0) return;
 				this.averageRating =
 					this.reviews.reduce((sum, current) => sum + (current.rating ?? 0), 0) / this.reviews.length;
 				this.averageRating = this.averageRating.toFixed(1);
