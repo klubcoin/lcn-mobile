@@ -215,9 +215,8 @@ export default class WebRTC {
 			} else if (data.checksum) {
 				this._sendToPeer(peerId, AckWebRTC(data.checksum));
 			} else if (data.action == AckWebRTC().action && data.hash) {
-				if (this.monitors[peerId]) {
-					clearTimeout(this.monitors[peerId]);
-					this.monitors[peerId] = null;
+				if (this.monitors[data.hash]) {
+					clearTimeout(this.monitors[data.hash]);
 				}
 			} else if (data.action == WalletProfile().action) {
 				if (data.profile) {
@@ -405,7 +404,7 @@ export default class WebRTC {
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
 		} else {
-			this.monitors[address] = setTimeout(() => this.connectAndSend(address, data), 5000);
+			this.monitors[data.checksum] = setTimeout(() => this.connectAndSend(address, data), 5000);
 			this._sendToPeer(address, data);
 		}
 	}
