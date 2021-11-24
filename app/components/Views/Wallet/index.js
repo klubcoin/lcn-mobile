@@ -143,7 +143,7 @@ class Wallet extends PureComponent {
 			response => {
 				if (response.result) {
 					const name = response.result;
-					PreferencesController.setAccountLabel(selectedAddress, name);
+					PreferencesController.setAccountLabel(selectedAddress, name.name);
 				}
 			},
 			error => {
