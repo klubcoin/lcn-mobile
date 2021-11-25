@@ -841,7 +841,7 @@ const Main = props => {
 				case Chat().action:
 					const { from, message } = data;
 					const senderId = `${from}`.toLowerCase();
-					const activeChatPeerId = `${preferences.activeChatPeerId}`.toLowerCase();
+					const activeChatPeerId = `${messageStore.activeChatPeerId}`.toLowerCase();
 
 					const { action } = message;
 					if (action) break;

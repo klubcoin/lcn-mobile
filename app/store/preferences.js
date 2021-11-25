@@ -13,7 +13,6 @@ export const kTransferredFiles = 'TransferredFiles';
 export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 export const kNotifications = 'Notifications';
 export const kPublicKeys = 'PublicKeys';
-export const kChatMessages = 'ChatMessages';
 export const kPeerProfiles = 'PeerProfiles';
 
 const keys = [
@@ -27,7 +26,6 @@ const keys = [
 	kBlockedIdentityReqPeers,
 	kNotifications,
 	kPublicKeys,
-	kChatMessages,
 	kPeerProfiles
 ];
 
@@ -38,9 +36,6 @@ class Preferences {
 	notifications = {};
 	publicKeys = {};
 	peerProfiles = {};
-
-	// session variables
-	activeChatPeerId = null;
 
 	constructor() {
 		makeAutoObservable(this);
