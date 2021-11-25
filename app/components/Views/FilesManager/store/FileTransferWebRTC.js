@@ -324,7 +324,7 @@ export default class FileTransferWebRTC {
 
 	static sendAsParts(data, lookupName, from, addresses, webrtc, params) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, params);
-		ft.checksum = sha256(data);
+		ft.checksum = sha256(JSON.stringify(data));
 		ft.name = lookupName;
 		ft.timestamp = moment().unix();
 		ft._sendQueue();
@@ -333,7 +333,7 @@ export default class FileTransferWebRTC {
 
 	static sendAsOne(data, from, addresses, webrtc) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, { fullSend: true });
-		ft.checksum = sha256(data);
+		ft.checksum = sha256(JSON.stringify(data));
 		ft._sendAsOne();
 		return ft;
 	}
