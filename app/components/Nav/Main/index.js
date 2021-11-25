@@ -89,6 +89,7 @@ import store from '../../Views/MarketPlace/store';
 import StoreService, { setStoreService } from '../../Views/MarketPlace/store/StoreService';
 import ChatService, { setChatService } from '../../Views/Message/store/ChatService';
 import messageStore from '../../Views/Message/store'
+import FileTransferService, { setFileTransferService } from '../../Views/FilesManager/store/FileTransferService';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -661,7 +662,7 @@ const Main = props => {
 		return { privateKey, publicKey };
 	};
 
-	initializeStore = async (address) => {
+	initializeServices = async (address) => {
 		const apps = await preferences.getSavedAppList();
 		const marketApp = apps.find(app => app.instance.name == 'Liquimart');
 		if (marketApp) {
@@ -677,6 +678,9 @@ const Main = props => {
 			const chatService = new ChatService(address);
 			setChatService(chatService);
 		}
+
+		const fileService = new FileTransferService(address);
+		setFileTransferService(fileService);
 	}
 
 	// Remove all notifications that aren't visible
@@ -692,7 +696,7 @@ const Main = props => {
 			webrtc.addEncryptor(encryptor);
 			encryptor.setKeyPairHandler(bindPrivateKey);
 			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
-			initializeStore(address);
+			initializeServices(address);
 
 			return () => {
 				revokeWebRTC();

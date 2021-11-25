@@ -1,6 +1,4 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
-import { ReadFile, ReadFileResult, StoreFile } from '../components/Views/FilesManager/store/FileStore';
-import FileTransferWebRTC from '../components/Views/FilesManager/store/FileTransferWebRTC';
 import CryptoSignature, { sha256 } from '../core/CryptoSignature';
 import moment from 'moment';
 import io from 'socket.io-client';
@@ -229,7 +227,6 @@ export default class WebRTC {
 				}
 			}
 
-			await this.handleFileTransfer(data, peerId);
 			this.events.message.map(callback => callback(data, peerId));
 			this.signalOnce(data, peerId);
 		} catch (e) {}
@@ -267,40 +264,6 @@ export default class WebRTC {
 			return json;
 		}
 	}
-
-	handleFileTransfer = async (data, peerId) => {
-		if (data.action == StoreFile().action) {
-			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
-		} else if (data.action == ReadFile().action && !data.sourcePeer) {
-			const { from, hash, name } = data;
-			const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
-			if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
-
-			const files = await RNFS.readDir(folder);
-
-			const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
-			foundFiles.map(async e => {
-				const content = await RNFS.readFile(e.path, 'utf8');
-				const partId = e.name.split('.').reverse()[0];
-				const totalPart = e.name.split('.').reverse()[1];
-				const message = ReadFileResult(from, hash, name, moment(e.mtime).unix(), totalPart, [
-					{ i: partId, v: content }
-				]);
-				message.sourcePeer = this.fromUserId;
-				this.sendToPeer(peerId, message);
-			});
-		} else if (data.action == ReadFileResult().action) {
-			//responded file
-			const { name, parts } = data;
-			const hash = sha256(name);
-			parts.map(e => {
-				const index = e.i;
-				FileTransferWebRTC.storeFile(data).then(() =>
-					DeviceEventEmitter.emit(`FileTransPart:${hash}:${index}`, data)
-				);
-			});
-		}
-	};
 
 	handleNewICECandidateMsg = incoming => {
 		const peerId = incoming.caller;
