@@ -68,7 +68,6 @@ export default class FileTransfer {
 
 	startTransfer = async (selectedAddress, callback) => {
 		try {
-			const webrtc = refWebRTC();
 
 			const file = this.queueFiles[0];
 			const addresses = file.contacts.map(e => e.address);
@@ -104,7 +103,7 @@ export default class FileTransfer {
 					this.sendToNextFile(selectedAddress, callback); // remove if done
 				}
 			});
-			FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
+			FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, refWebRTC());
 		} catch (error) {
 			const file = this.queueFiles[0];
 			this.updatePreference(file, statuses.failed, 0);

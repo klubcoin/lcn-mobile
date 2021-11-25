@@ -28,7 +28,7 @@ export default class FileTransferWebRTC {
 	evtError = null;
 
 	constructor(data, from, addresses, webrtc, params) {
-		this.from = from;
+		this.from = from.toLowerCase();
 		this.data = data;
 		this.addresses = addresses;
 		this.webrtc = webrtc;
@@ -192,7 +192,7 @@ export default class FileTransferWebRTC {
 			.map((e, index) => {
 				return {
 					index: index + 1,
-					address: addresses[index % addresses.length],
+					address: addresses[index % addresses.length].toLowerCase(),
 					status: 0
 				};
 			});
