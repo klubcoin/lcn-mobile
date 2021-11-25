@@ -1,5 +1,6 @@
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
+import moment from 'moment';
 import { sha256 } from '../../../../core/CryptoSignature';
 import { refWebRTC } from '../../../../services/WebRTC';
 import { ReadFile, ReadFileResult, StoreFile } from './FileStore';
