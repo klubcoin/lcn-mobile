@@ -17,6 +17,7 @@ import * as FilesReader from '../../../util/files-reader';
 import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
 import preferences from '../../../store/preferences';
+import fileShareStore from '../FilesManager/store'
 import FileItem from './components/FileItem';
 import uuid from 'react-native-uuid';
 import { SwipeRow } from 'react-native-swipe-list-view';
@@ -61,8 +62,7 @@ class FilesManager extends Component {
 	}
 
 	async fetchLocalFiles() {
-		// await preferences.deleteTransferredFiles();
-		var results = await preferences.getTransferredFiles();
+		var results = await fileShareStore.getTransferredFiles();
 
 		if (results) {
 			this.setState(prevState => ({
@@ -112,7 +112,7 @@ class FilesManager extends Component {
 				contacts: selectedContacts
 			};
 			this.FileTransferIns.queueFiles.push(record);
-			await preferences.saveTransferredFiles(record);
+			await fileShareStore.saveTransferredFiles(record);
 		}
 		this.fetchLocalFiles();
 		this.FileTransferIns.startTransfer(selectedAddress, () => this.fetchLocalFiles());
@@ -155,7 +155,7 @@ class FilesManager extends Component {
 				text: 'Yes',
 				onPress: async () => {
 					if (!file) return;
-					await preferences.deleteTransferredFile(file.id);
+					await fileShareStore.deleteTransferredFile(file.id);
 					await this.fetchLocalFiles();
 				}
 			},

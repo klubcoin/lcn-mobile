@@ -9,7 +9,6 @@ export const kTokenKeycloak = 'KeycloakToken';
 export const kAccountKeycloak = 'KeycloakAccount';
 export const kCurrentAppId = 'CurrentAppId';
 export const kOnboardProfile = 'OnboardProfile';
-export const kTransferredFiles = 'TransferredFiles';
 export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 export const kNotifications = 'Notifications';
 export const kPublicKeys = 'PublicKeys';
@@ -22,7 +21,6 @@ const keys = [
 	kAccountKeycloak,
 	kCurrentAppId,
 	kOnboardProfile,
-	kTransferredFiles,
 	kBlockedIdentityReqPeers,
 	kNotifications,
 	kPublicKeys,
@@ -144,29 +142,6 @@ class Preferences {
 	async getOnboardProfile() {
 		this.onboardProfile = await this.fetch(kOnboardProfile);
 		return this.onboardProfile;
-	}
-
-	async saveTransferredFiles(files) {
-		if (!this.storage[kTransferredFiles]) {
-			this.storage[kTransferredFiles] = {};
-		}
-		this.storage[kTransferredFiles][files.id] = files;
-		await this.saveStorage(kTransferredFiles);
-	}
-
-	async getTransferredFiles() {
-		const transferredFiles = this.storage[kTransferredFiles] || {};
-		return Object.keys(transferredFiles).map(key => transferredFiles[key]);
-	}
-
-	async deleteTransferredFile(id) {
-		delete this.storage[kTransferredFiles][id];
-		await this.saveStorage(kTransferredFiles);
-	}
-
-	async deleteTransferredFiles() {
-		this.storage[kTransferredFiles] = {};
-		await this.saveStorage(kTransferredFiles);
 	}
 
 	async blockIdentityReqPeer(address) {

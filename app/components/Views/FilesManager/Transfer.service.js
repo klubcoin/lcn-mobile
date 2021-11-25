@@ -1,6 +1,7 @@
 import { DeviceEventEmitter } from 'react-native';
 import { statuses } from './FileDetails';
 import preferences from '../../../store/preferences';
+import fileShareStore from './store';
 import { refWebRTC } from '../../../services/WebRTC';
 import * as RNFS from 'react-native-fs';
 import FileTransferWebRTC from './store/FileTransferWebRTC';
@@ -19,7 +20,7 @@ export default class FileTransfer {
 	updatePreference = async (selectedFile, status, percent, detailPart, partCount) => {
 		if (!selectedFile) return;
 
-		var localFiles = await preferences.getTransferredFiles();
+		var localFiles = await fileShareStore.getTransferredFiles();
 		var file = localFiles.find(e => e.id === selectedFile.id);
 
 		if (percent) file.percent = percent;
@@ -55,7 +56,7 @@ export default class FileTransfer {
 				break;
 		}
 
-		localFiles.forEach(e => preferences.saveTransferredFiles(e));
+		localFiles.forEach(e => fileShareStore.saveTransferredFiles(e));
 	};
 
 	sendToNextFile = (selectedAddress, callback) => {
