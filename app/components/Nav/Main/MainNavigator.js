@@ -287,7 +287,7 @@ export default createStackNavigator(
 			},
 			{
 				contentComponent: MarketDrawer,
-				drawerWidth: 200,
+				drawerWidth: 240,
 				overlayColor: 'rgba(0, 0, 0, 0.5)'
 			}
 		),

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 	},
 	body: {
 		flex: 1,
-		width: 200,
+		width: 240,
 		shadowColor: colors.black,
 		shadowOffset: {
 			width: 1,

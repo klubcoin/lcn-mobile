@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from 'react-native-button';
@@ -15,36 +16,80 @@ import store from '../store';
 export const menuKeys = () => ({
 	home: 'home',
 	shopping: 'buyer',
-	store: 'seller'
+	store: 'seller',
+	orders: 'orders',
+	shippingInfo: 'shippingInfo',
+	messages: 'messages',
+	profile: 'profile',
+	reviews: 'reviews',
 });
 
 const menuItems = () => [
 	{
-		key: 'home',
+		key: menuKeys().home,
 		title: strings('market.home'),
 		icon: 'home',
 		screen: 'WalletView'
 	},
 	{
-		key: 'buyer',
-		title: strings('market.shopping'),
-		icon: 'cart',
-		screen: 'MarketPlace'
-	},
-	{
-		key: 'seller',
+		key: menuKeys().store,
 		title: strings('market.my_store'),
 		icon: 'widgets-outline',
 		screen: 'MarketSeller'
 	},
 	{
-		key: 'store_profile',
+		key: menuKeys().shippingInfo,
+		title: strings('market.shipping_info'),
+		icon: 'truck-delivery-outline',
+		screen: 'ShippingInfo'
+	},
+	{
+		key: menuKeys().orders,
+		title: strings('market.orders'),
+		icon: 'inbox-full',
+		screen: 'PurchasedOrders'
+	},
+	{
+		key: menuKeys().messages,
+		title: strings('market.messages'),
+		icon: 'chat',
+		screen: 'MarketMessages'
+	}
+];
+
+const menuItemsVendor = () => [
+	{
+		key: menuKeys().home,
+		title: strings('market.home'),
+		icon: 'home',
+		screen: 'WalletView'
+	},
+	{
+		key: menuKeys().shopping,
+		title: strings('market.shopping'),
+		icon: 'cart',
+		screen: 'MarketPlace'
+	},
+	{
+		key: menuKeys().orders,
+		title: strings('market.orders'),
+		icon: 'inbox-full',
+		screen: 'MarketOrders'
+	},
+	{
+		key: menuKeys().messages,
+		title: strings('market.messages'),
+		icon: 'chat',
+		screen: 'MarketMessages'
+	},
+	{
+		key: menuKeys().profile,
 		title: strings('market.store_profile'),
 		icon: 'account',
 		screen: 'StoreProfile'
 	},
 	{
-		key: 'store_reviews',
+		key: menuKeys().reviews,
 		title: strings('market.store_reviews'),
 		icon: 'store',
 		screen: 'StoreReviews'
@@ -58,7 +103,21 @@ const menuSettings = {
 	screen: 'Settings'
 };
 
+const Roles = {
+	customer: 'customer',
+	vendor: 'vendor',
+}
+
 export class MarketDrawer extends Component {
+	role = Roles.customer;
+
+	constructor(props) {
+		super(props)
+		makeObservable(this, {
+			role: observable,
+		})
+	}
+
 	toggleDrawer = () => {
 		this.props.navigation.toggleDrawer();
 	};
@@ -71,6 +130,12 @@ export class MarketDrawer extends Component {
 		if (key == store.marketMenuKey) return;
 
 		if (key !== 'settings') store.marketMenuKey = key;
+
+		if (key == menuKeys().shopping) {
+			this.role = Roles.customer;
+		} else if (key == menuKeys().store) {
+			this.role = Roles.vendor;
+		}
 		navigation.navigate(screen);
 	}
 
@@ -132,7 +197,7 @@ export class MarketDrawer extends Component {
 						{account && <EthereumAddress type={'short'} address={account.address} style={styles.address} />}
 					</View>
 					<FlatList
-						data={menuItems()}
+						data={this.role == Roles.customer ? menuItems() : menuItemsVendor()}
 						keyExtractor={item => item.key}
 						renderItem={this.renderItem.bind(this)}
 						style={{ marginTop: 40 }}

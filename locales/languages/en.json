@@ -1867,6 +1867,8 @@
 		"shipping_info_desc": "Your information for delivery service to contact",
 		"place_order": "Place order",
 		"anonymous": "Anonymous",
-		"products": "Products"
+		"products": "Products",
+		"orders": "Orders",
+		"messages": "Messages"
 	}
 }
