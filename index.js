@@ -2,6 +2,7 @@ import './shim.js';
 
 import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
+import codePush from "react-native-code-push";
 import TrackPlayer from 'react-native-track-player'
 
 import crypto from 'crypto'; // eslint-disable-line import/no-nodejs-modules, no-unused-vars
@@ -62,6 +63,6 @@ LogBox.ignoreLogs([
 /**
  * Application entry point responsible for registering root component
  */
-AppRegistry.registerComponent(name, () => Root);
+AppRegistry.registerComponent(name, () => codePush(Root));
 
 TrackPlayer.registerPlaybackService(() => require('./service.js'));
