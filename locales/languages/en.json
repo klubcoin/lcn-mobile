@@ -1870,6 +1870,9 @@
 		"products": "Products",
 		"orders": "Orders",
 		"messages": "Messages",
-		"payment": "Payment"
+		"payment": "Payment",
+		"order_details": "Order details",
+		"shop_info": "Shop information",
+		"total_payment": "Total payment"
 	}
 }

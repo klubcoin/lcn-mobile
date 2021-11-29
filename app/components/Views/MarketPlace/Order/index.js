@@ -16,7 +16,7 @@ class PurchasedOrders extends PureComponent {
 
 	productGroups = {};
 
-	orderStatus = ['pending payment', 'processing' , 'shipping', 'completed', 'canceled', 'refunded']
+	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
 
 
 	constructor(props) {
@@ -43,9 +43,10 @@ class PurchasedOrders extends PureComponent {
 		})
 	};
 
-	onBack = () => {
-		this.props.navigation.goBack();
-	};
+	onViewDetails = (orderDetails) => {
+		const { navigation } = this.props;
+		navigation.navigate('OrderDetails', { orderDetails })
+	}
 
 	renderItem = ({ index, item }) => {
 		const { products, profile } = this.productGroups[item];
@@ -53,13 +54,13 @@ class PurchasedOrders extends PureComponent {
 		var currencyUnit = 'LCN';
 
 		return (
-			products.length > 0 && <View style={styles.itemWrapper}>
+			products.length > 0 && <TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: {total: amount, currencyUnit} })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
 						<MaterialIcons name={'store'} size={20} />
 						<Text style={styles.storeName}>{profile?.storeName}</Text>
 					</View>
-					<Text style={styles.orderStatus}>processing</Text>
+					<Text style={styles.orderStatus}>Processing</Text>
 				</View>
 				{
 					products.map(e => {
@@ -90,14 +91,14 @@ class PurchasedOrders extends PureComponent {
 					})
 				}
 				<View style={styles.storeTotalAmount}>
-					<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'product' : 'products'}</Text> 
+					<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
 					<View style={styles.amount}>
 						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
 						<Text style={styles.price}>{amount} {currencyUnit}</Text>
 					</View>
 				</View>
-				
-			</View>
+
+			</TouchableOpacity>
 
 		)
 	}
