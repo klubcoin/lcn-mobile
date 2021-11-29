@@ -10,13 +10,14 @@ import {
 	InteractionManager,
 	ScrollView,
 	ActivityIndicator,
-	Alert
+	Alert,
+	DeviceEventEmitter
 } from 'react-native';
 import { AddressFrom, AddressTo } from '../../SendFlow/AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
 import { connect } from 'react-redux';
-import { renderFromWei } from '../../../../util/number';
+import { isDecimal, renderFromWei, toTokenMinimalUnit, toWei } from '../../../../util/number';
 import Engine from '../../../../core/Engine';
 import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { setSelectedAsset } from '../../../../actions/transaction';
@@ -33,7 +34,14 @@ import MarketOrderSummary from '../OrderSummary';
 import StyledButton from '../../../UI/StyledButton';
 import APIService from '../../../../services/APIService';
 import NotificationManager from '../../../../core/NotificationManager';
+import { getGasPriceByChainId } from '../../../../util/custom-gas';
 import styles from './styles/index';
+import { BNToHex } from '@metamask/controllers/dist/util';
+import TransactionTypes from '../../../../core/TransactionTypes';
+import { WalletDevice } from '@metamask/swaps-controller/node_modules/@metamask/controllers';
+import { showError, showSuccess } from '../../../../util/notify';
+import analyticsV2 from '../../../../util/analyticsV2';
+import * as sha3JS from 'js-sha3';
 
 const { hexToBN } = util;
 /**
@@ -166,32 +174,94 @@ class MarketPurchase extends PureComponent {
 		);
 	};
 
-	onPay() {
+	prepareTransactionToSend = () => {
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const order = this.props.navigation.getParam('order');
+
+		const orderString = JSON.stringify(order);
+		const bufferText = Buffer.from(orderString, 'utf8');
+		const hexData = bufferText.toString('hex');
+
+		//TODO: need to add order data into transaction
+
+		return {
+			// data: hexData,
+			from: selectedAddress,
+			gas: BNToHex(0),
+			gasPrice: BNToHex(0),
+			to: order.to,
+			value: BNToHex(toWei(order.amount))
+		};
+	};
+
+	amountErrorMessage = () => {
+		//TODO: add gas price to check valid
+		const { accounts, contractBalances, selectedAddress, ticker } = this.props;
+		const { amount } = this.props.navigation.getParam('order');
+		const selectedAsset = getEther(ticker)
+
+		let weiBalance, weiInput, amountError;
+		if (isDecimal(amount)) {
+			if (selectedAsset.isETH) {
+				weiBalance = hexToBN(accounts[selectedAddress].balance);
+				weiInput = toWei(amount);
+			} else {
+				weiBalance = contractBalances[selectedAsset.address];
+				weiInput = toTokenMinimalUnit(amount, selectedAsset.decimals);
+			}
+			amountError = weiBalance?.gte(weiInput) ? undefined : strings('transaction.insufficient');
+		}
+		else {
+			amountError = weiBalance?.gte(weiInput) ? undefined : strings('transaction.invalid_amount');
+		}
+		return amountError;
+	};
+
+	onPay = async () => {
 		if (this.processing) return;
 		this.processing = true;
 
-		const { fromSelectedAddress } = this.state;
-		const { navigation } = this.props;
-		const orderId = navigation.getParam('orderId');
+		const { TransactionController } = Engine.context;
+		const { fromAccountBalance } = this.state;
+		const { selectedAddress, accounts } = this.props;
 
-		APIService.proceedOrder(orderId, fromSelectedAddress, 'sig', (success, response) => {
+		const transaction = this.prepareTransactionToSend();
+		const errorMessage = this.amountErrorMessage();
+		
+		if (errorMessage) {
 			this.processing = false;
-			if (success && response.status) {
-				NotificationManager.showSimpleNotification({
-					title: strings('payQR.success'),
-					description: strings('payQR.payment_complete'),
-					status: response.status
-				});
-				navigation && navigation.dismiss();
-			} else {
-				const { error } = response;
-				Alert.alert(
-					strings('wallet.error'), error,
-					[
-						{ text: strings('navigation.ok') }
-					]);
+			return showError(errorMessage);
+		}
+
+		try {
+			const transaction = this.prepareTransactionToSend();
+
+			const { result, transactionMeta } = await TransactionController.addTransaction(
+				transaction,
+				TransactionTypes.MMM,
+				WalletDevice.MM_MOBILE
+			);
+			await TransactionController.approveTransaction(transactionMeta.id);
+			await new Promise(resolve => resolve(result));
+
+			if (transactionMeta.error) {
+				throw transactionMeta.error;
 			}
-		})
+
+			InteractionManager.runAfterInteractions(() => {
+				DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
+				NotificationManager.watchSubmittedTransaction({
+					...transactionMeta,
+				});
+			});
+			this.processing = false;
+
+		} catch (error) {
+			this.processing = false;
+			Alert.alert(strings('transactions.transaction_error'), error && error.message, [
+				{ text: strings('navigation.ok') }
+			]);
+		}
 	}
 
 	goToBuy = () => {
@@ -240,7 +310,7 @@ class MarketPurchase extends PureComponent {
 					/>
 				</View>
 				<ScrollView>
-					<MarketOrderSummary 
+					<MarketOrderSummary
 						products={products}
 						amount={amount}
 						currency={currencyUnit}
@@ -262,6 +332,7 @@ class MarketPurchase extends PureComponent {
 				</ScrollView>
 
 				<View style={styles.buttonNextWrapper}>
+
 					<StyledButton
 						type={'confirm'}
 						disabled={balanceIsZero}
@@ -284,6 +355,7 @@ class MarketPurchase extends PureComponent {
 
 const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
+	contractBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	selectedAsset: state.transaction.selectedAsset,
 	identities: state.engine.backgroundState.PreferencesController.identities,

@@ -96,8 +96,6 @@ export default class MarketOrderSummary extends PureComponent {
 														{info}
 													</Text>
 												</View>
-
-												
 											</Summary.Row>
 										)
 									})
