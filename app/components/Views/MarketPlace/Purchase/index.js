@@ -225,16 +225,6 @@ class MarketPurchase extends PureComponent {
 		this.processing = true;
 
 		const { TransactionController } = Engine.context;
-		const { fromAccountBalance } = this.state;
-		const { selectedAddress, accounts } = this.props;
-
-		const transaction = this.prepareTransactionToSend();
-		const errorMessage = this.amountErrorMessage();
-
-		if (errorMessage) {
-			this.processing = false;
-			return showError(errorMessage);
-		}
 
 		try {
 			const transaction = this.prepareTransactionToSend();
