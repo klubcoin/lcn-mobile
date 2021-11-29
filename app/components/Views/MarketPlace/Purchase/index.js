@@ -22,7 +22,9 @@ import { isDecimal, renderFromWei, toTokenMinimalUnit, toWei } from '../../../..
 import Engine from '../../../../core/Engine';
 import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { setSelectedAsset } from '../../../../actions/transaction';
-import { getTicker, getEther } from '../../../../util/transactions';
+import { rawEncode } from 'ethereumjs-abi';
+import { addHexPrefix } from 'ethereumjs-util';
+import { getTicker, getEther, TRANSFER_FUNCTION_SIGNATURE } from '../../../../util/transactions';
 import { strings } from '../../../../../locales/i18n';
 import WarningMessage from '../../SendFlow/WarningMessage';
 import { util } from '@metamask/controllers';
@@ -180,15 +182,22 @@ class MarketPurchase extends PureComponent {
 	prepareTransactionToSend = () => {
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const order = this.props.navigation.getParam('order');
+		const amount = BNToHex(toWei(order.amount));
 
-		const orderString = JSON.stringify(order);
-		const bufferText = Buffer.from(orderString, 'utf8');
-		const hexData = bufferText.toString('hex');
-
-		//TODO: need to add order data into transaction
+		const hexData = TRANSFER_FUNCTION_SIGNATURE + Array.prototype.map
+			.call(rawEncode(
+				['address', 'uint256', 'string'],
+				[
+					order.to,
+					addHexPrefix(amount),
+					JSON.stringify(order),
+				]),
+				x => ('00' + x.toString(16)).slice(-2)
+			)
+			.join('');
 
 		return {
-			// data: hexData,
+			data: hexData,
 			from: selectedAddress,
 			gas: BNToHex(0),
 			gasPrice: BNToHex(0),
