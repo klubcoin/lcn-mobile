@@ -229,6 +229,7 @@ class Transactions extends PureComponent {
 
 						return Transactions.map3rdPartyTransaction(e);
 					});
+					this.transactions.sort((a, b) => b.time - a.time);
 					resolve(response);
 				} else {
 					reject(response);
