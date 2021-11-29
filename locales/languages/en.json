@@ -1869,6 +1869,7 @@
 		"anonymous": "Anonymous",
 		"products": "Products",
 		"orders": "Orders",
-		"messages": "Messages"
+		"messages": "Messages",
+		"payment": "Payment"
 	}
 }

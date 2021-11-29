@@ -1,15 +1,37 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors } from '../../../../../styles/common';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
-import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
-import { isTablet } from 'react-native-device-info';
-
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const styles = StyleSheet.create({
+	root: {
+		flex: 1,
+		backgroundColor: colors.storeBg
+	},
 	wrapper: {
 		flex: 1,
 		backgroundColor: colors.white
+	},
+	navBar: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	navButton: {
+		width: 32,
+		height: 32,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	backIcon: {
+		color: colors.white
+	},
+	titleNavBar: {
+		flex: 1,
+		textAlign: 'center',
+		fontSize: RFValue(14),
+		color: colors.white,
+		marginVertical: 5
 	},
 	inputWrapper: {
 		flex: 0,

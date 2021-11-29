@@ -11,7 +11,8 @@ import {
 	ScrollView,
 	ActivityIndicator,
 	Alert,
-	DeviceEventEmitter
+	DeviceEventEmitter,
+	TouchableOpacity
 } from 'react-native';
 import { AddressFrom, AddressTo } from '../../SendFlow/AddressInputs';
 import Modal from 'react-native-modal';
@@ -42,6 +43,8 @@ import { WalletDevice } from '@metamask/swaps-controller/node_modules/@metamask/
 import { showError, showSuccess } from '../../../../util/notify';
 import analyticsV2 from '../../../../util/analyticsV2';
 import * as sha3JS from 'js-sha3';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const { hexToBN } = util;
 /**
@@ -227,7 +230,7 @@ class MarketPurchase extends PureComponent {
 
 		const transaction = this.prepareTransactionToSend();
 		const errorMessage = this.amountErrorMessage();
-		
+
 		if (errorMessage) {
 			this.processing = false;
 			return showError(errorMessage);
@@ -283,6 +286,24 @@ class MarketPurchase extends PureComponent {
 		);
 	};
 
+	goBack = () => {
+		this.props.navigation.goBack();
+	};
+
+	renderNavBar() {
+		return (
+			<SafeAreaView>
+				<View style={styles.navBar}>
+					<TouchableOpacity onPress={this.goBack.bind(this)} style={styles.navButton}>
+						<Icon style={styles.backIcon} name={'arrow-left'} size={RFValue(15)} />
+					</TouchableOpacity>
+					<Text style={styles.titleNavBar}>{strings('market.payment')}</Text>
+					<View style={styles.navButton} />
+				</View>
+			</SafeAreaView>
+		);
+	}
+
 	render = () => {
 		const { ticker, navigation } = this.props;
 		const {
@@ -295,60 +316,63 @@ class MarketPurchase extends PureComponent {
 		const { products, profile, to, amount, currencyUnit } = navigation.getParam('order');
 
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'send-screen'}>
-				<View style={styles.inputWrapper}>
-					<AddressFrom
-						onPressIcon={this.toggleFromAccountModal}
-						fromAccountAddress={fromSelectedAddress}
-						fromAccountName={fromAccountName}
-						fromAccountBalance={fromAccountBalance}
-					/>
-					<AddressTo
-						addressToReady
-						toAddressName={profile.storeName}
-						toSelectedAddress={to}
-					/>
-				</View>
-				<ScrollView>
-					<MarketOrderSummary
-						products={products}
-						amount={amount}
-						currency={currencyUnit}
-					/>
-					{balanceIsZero && (
-						<View style={styles.warningContainer}>
-							<WarningMessage
-								warningMessage={
-									<>
-										{strings('transaction.not_enough_for_gas', {
-											ticker: getTicker(ticker)
-										})}
-										{this.renderBuyEth()}
-									</>
-								}
-							/>
-						</View>
-					)}
-				</ScrollView>
-
-				<View style={styles.buttonNextWrapper}>
-
-					<StyledButton
-						type={'confirm'}
-						disabled={balanceIsZero}
-						containerStyle={styles.buttonNext}
-						onPress={this.onPay.bind(this)}
-					>
-						{this.processing ? (
-							<ActivityIndicator size="small" color="white" />
-						) : (
-							strings('asset_overview.pay_button')
+			<View style={styles.root}>
+				{this.renderNavBar()}
+				<View style={styles.wrapper}>
+					<View style={styles.inputWrapper}>
+						<AddressFrom
+							onPressIcon={this.toggleFromAccountModal}
+							fromAccountAddress={fromSelectedAddress}
+							fromAccountName={fromAccountName}
+							fromAccountBalance={fromAccountBalance}
+						/>
+						<AddressTo
+							addressToReady
+							toAddressName={profile.storeName}
+							toSelectedAddress={to}
+						/>
+					</View>
+					<ScrollView>
+						<MarketOrderSummary
+							products={products}
+							amount={amount}
+							currency={currencyUnit}
+						/>
+						{balanceIsZero && (
+							<View style={styles.warningContainer}>
+								<WarningMessage
+									warningMessage={
+										<>
+											{strings('transaction.not_enough_for_gas', {
+												ticker: getTicker(ticker)
+											})}
+											{this.renderBuyEth()}
+										</>
+									}
+								/>
+							</View>
 						)}
-					</StyledButton>
-				</View>
+					</ScrollView>
 
-				{this.renderFromAccountModal()}
-			</SafeAreaView>
+					<View style={styles.buttonNextWrapper}>
+
+						<StyledButton
+							type={'confirm'}
+							disabled={balanceIsZero}
+							containerStyle={styles.buttonNext}
+							onPress={this.onPay.bind(this)}
+						>
+							{this.processing ? (
+								<ActivityIndicator size="small" color="white" />
+							) : (
+								strings('asset_overview.pay_button')
+							)}
+						</StyledButton>
+					</View>
+
+					{this.renderFromAccountModal()}
+				</View>
+			</View>
 		);
 	};
 }
