@@ -96,7 +96,7 @@ class Store {
 		this.storage[key] = value;
 		await AsyncStorage.setItem(key, JSON.stringify(value));
 	}
-	
+
 	async saveProductCategories(categories) {
 		this.marketCategories = categories || [];
 		await this.save(kMarketCategories, categories);
@@ -177,7 +177,7 @@ class Store {
 	}
 
 	async removeProductInCart(uuid) {
-		const index = this.marketCart.findIndex(e => (e.uuid = uuid));
+		const index = this.marketCart.findIndex(e => (e.uuid == uuid));
 		if (index >= 0) this.marketCart.splice(index, 1);
 		await this.save(kMarketCart, this.marketCart);
 	}
