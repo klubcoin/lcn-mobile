@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -12,6 +12,8 @@ import routes from "../../../../common/routes";
 import StyledButton from "../../../UI/StyledButton";
 import { RFValue } from "react-native-responsive-fontsize";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import uuid from 'react-native-uuid';
+import CryptoSignature, { sha256 } from '../../../../core/CryptoSignature';
 
 class OrderDetails extends PureComponent {
 
@@ -57,15 +59,15 @@ class OrderDetails extends PureComponent {
 					</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="store" size={18} color={colors.storeBg} />
+					<MaterialIcons name="store" size={18} color={colors.storeBg} style={styles.icon}/>
 					<Text style={styles.infoText}>{profile.storeName}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="phone" size={18} color={colors.storeBg} />
+					<MaterialIcons name="phone" size={18} color={colors.storeBg} style={styles.icon}/>
 					<Text style={styles.infoText}>{profile.phone}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="email" size={18} color={colors.storeBg} />
+					<MaterialIcons name="email" size={18} color={colors.storeBg} style={styles.icon}/>
 					<Text style={styles.infoText}>{profile.email}</Text>
 				</View>
 			</View>
@@ -87,15 +89,15 @@ class OrderDetails extends PureComponent {
 					</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="phone" size={18} color={colors.storeBg} />
+					<MaterialIcons name="phone" size={18} color={colors.storeBg} style={styles.icon}/>
 					<Text style={styles.infoText}>{phone}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="map" size={18} color={colors.storeBg} />
+					<MaterialIcons name="map" size={18} color={colors.storeBg} style={styles.icon}/>
 					<Text style={styles.infoText}>{address}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="truck-delivery-outline" size={18} color={colors.storeBg} />
+					<MaterialIcons name="truck-delivery-outline" size={18} color={colors.storeBg} style={styles.icon}/>
 					<Text style={styles.infoText}>Standard delivery</Text>
 				</View>
 			</View>
@@ -115,7 +117,7 @@ class OrderDetails extends PureComponent {
 					</Text>
 					<View style={{ flexDirection: 'row' }}>
 						<Text style={styles.titleInfoText}>{amount.total} {amount.currencyUnit}</Text>
-						<MaterialIcons name={this.viewPayment ? "chevron-up" : "chevron-down"} size={20} />
+						<MaterialIcons name={this.viewPayment ? "chevron-up" : "chevron-down"} size={20} style={styles.icon}/>
 					</View>
 				</View>
 				{
@@ -142,6 +144,65 @@ class OrderDetails extends PureComponent {
 		);
 	}
 
+	renderDates = () => {
+		const { name, phone, address } = store.shippingInfo || {};
+
+		return (
+			<View style={styles.section}>
+				<View style={[styles.infoSection, styles.titleWrapper]}>
+					<Text style={styles.titleInfoText}>
+						{strings('market.order_code')}
+					</Text>
+					<Text style={styles.infoText} numberOfLines={1}>21112H6GBO1AAB</Text>
+				</View>
+				<View style={[styles.infoSection, styles.titleWrapper]}>
+					<Text style={styles.infoText}>{strings('market.order_time')}</Text>
+					<Text style={styles.infoText}>Oct 29, 2021</Text>
+				</View>
+				<View style={[styles.infoSection, styles.titleWrapper]}>
+					<Text style={styles.infoText}>{strings('market.payment_time')}</Text>
+					<Text style={styles.infoText}>Oct 29, 2021</Text>
+				</View>
+			</View>
+		);
+	}
+
+	onReturn = () => {
+		//TODO: on return and refund func
+	}
+
+	onVendorContact = async () => {
+		const orderDetails = this.props.navigation.getParam('orderDetails');
+		const {products} = orderDetails.info;
+		const { uuid, title, wallet, signature } = products[0]?.product || {};
+
+		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
+		if (address.toLocaleLowerCase() != wallet.toLocaleLowerCase()) {
+			showError(strings('market.insecure_vendor'));
+		}
+		this.props.navigation.navigate('Chat', { selectedContact: { address } });
+	};
+
+	renderFooter = () => {
+		return (
+			<View style={styles.buttonsWrapper}>
+				<StyledButton 
+					type={'blue'} 
+					containerStyle={styles.actionButton}
+					onPress={this.onReturn}
+				>
+					{strings('market.return_refund')}
+				</StyledButton>
+				<StyledButton
+					type={'normal'}
+					onPress={this.onVendorContact}
+					containerStyle={styles.actionButton}
+				>
+					{strings('market.contact_vendor')}
+				</StyledButton>
+			</View>
+		);
+	}
 
 	render() {
 		return (
@@ -149,7 +210,7 @@ class OrderDetails extends PureComponent {
 				{this.renderNavBar()}
 				<View style={styles.body}>
 					<View style={styles.statusWrapper}>
-						<MaterialIcons name="check-circle-outline" size={20} style={styles.statusIc} color="green" />
+						<MaterialIcons name="check-circle-outline" size={20} color="green" style={styles.icon}/>
 						<Text style={styles.statusText}>Completed</Text>
 					</View>
 					<ScrollView>
@@ -157,9 +218,11 @@ class OrderDetails extends PureComponent {
 							{this.renderShopInfo()}
 							{this.renderShippingInfo()}
 							{this.renderProducts()}
+							{this.renderDates()}
 						</View>
 					</ScrollView>
 				</View>
+				{this.renderFooter()}
 			</View>
 		)
 	}

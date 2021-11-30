@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	statusIc: {
-		marginRight: 5
-	},
 	statusText: {
 		fontSize: RFValue(12),
 		fontWeight: '500',
@@ -72,7 +69,9 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10
 	},
 	titleWrapper: {
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		overflow: 'hidden'
 	},
 	infoSection: {
 		flexDirection: 'row',
@@ -80,8 +79,10 @@ const styles = StyleSheet.create({
 	},
 	infoText: {
 		fontSize: RFValue(12),
-		marginLeft: 10, 
 		color: colors.grey400
+	},
+	icon: {
+		marginRight: 10
 	},
 	imageWrapper: {
 		flex: 1,
@@ -94,6 +95,15 @@ const styles = StyleSheet.create({
 	quantity: {
 		fontWeight: '500',
 	},
+	buttonsWrapper: {
+		flexDirection:'row',
+		position: 'absolute',
+		bottom: 30
+	},
+	actionButton: {
+		flex: 1,
+		margin: 10
+	}
 });
 
 export default assignNestedObj(styles, brandStyles);

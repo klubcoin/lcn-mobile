@@ -1873,6 +1873,11 @@
 		"payment": "Payment",
 		"order_details": "Order details",
 		"shop_info": "Shop information",
-		"total_payment": "Total payment"
+		"total_payment": "Total payment",
+		"return_refund": "Return & Refund",
+		"contact_vendor": "Contact vendor",
+		"order_code": "Order code",
+		"order_time": "Order time",
+		"payment_time": "Payment time"
 	}
 }
