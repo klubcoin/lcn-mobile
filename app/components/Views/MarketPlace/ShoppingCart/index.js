@@ -55,7 +55,7 @@ class ShoppingCart extends PureComponent {
 		let total = 0;
 		store.marketCart.map(({ product, quantity }) => {
 			if (product.excluded) return;
-			totalQuantity += quantity;
+			totalQuantity += Number(quantity);
 			total += quantity * product.price;
 		});
 		this.totalAmount = total;
@@ -77,7 +77,7 @@ class ShoppingCart extends PureComponent {
 
 	renderQuantity = product => {
 		const { quantity } = product;
-
+		
 		return (
 			<View style={styles.quantityView}>
 				<TouchableOpacity
@@ -91,6 +91,7 @@ class ShoppingCart extends PureComponent {
 					value={`${quantity}`}
 					onChangeText={text => {
 						product.quantity = text;
+						this.calculateTotal();
 						this.setState({ update: new Date() });
 					}}
 					style={styles.quantity}
