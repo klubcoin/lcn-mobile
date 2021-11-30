@@ -67,13 +67,22 @@ class ShoppingCart extends PureComponent {
 		if (product.quantity <= 1) return;
 
 		product.quantity -= 1;
+		this.updateCart(product);
 		this.calculateTotal();
 	};
 
 	increaseQuantity = product => {
 		product.quantity += 1;
+		this.updateCart(product);
 		this.calculateTotal();
 	};
+
+	updateCart = product => {
+		store.addToCart({
+			uuid: product.uuid,
+			product: product.product,
+		});
+	}
 
 	renderQuantity = product => {
 		const { quantity } = product;
@@ -90,7 +99,8 @@ class ShoppingCart extends PureComponent {
 				<TextInput
 					value={`${quantity}`}
 					onChangeText={text => {
-						product.quantity = text;
+						product.quantity = Number(text);
+						this.updateCart(product);
 						this.calculateTotal();
 						this.setState({ update: new Date() });
 					}}

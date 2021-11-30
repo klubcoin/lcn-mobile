@@ -168,7 +168,7 @@ class Store {
 	async addToCart({ uuid, product, quantity, attributes }) {
 		const orderItem = this.marketCart.find(e => (e.uuid == uuid));
 		if (orderItem) {
-			orderItem.quantity += quantity;
+			orderItem.quantity += quantity || 0;
 			Object.assign(orderItem.product, product);
 		} else {
 			this.marketCart.push({ uuid, product, quantity, attributes });
