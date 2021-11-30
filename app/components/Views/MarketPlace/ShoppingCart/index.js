@@ -60,7 +60,7 @@ class ShoppingCart extends PureComponent {
 		});
 		this.totalAmount = total;
 		this.totalQuantity = totalQuantity;
-		store.setCartBadge(total);
+		store.setCartBadge(totalQuantity);
 	};
 
 	decreaseQuantity = product => {
