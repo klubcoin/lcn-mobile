@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { colors } from '../../../../../../styles/common';
 import { assignNestedObj } from '../../../../../../util/object';
 import brandStyles from './brand';
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
 	},
 	counter: {
 		color: colors.white,
-		fontSize: 14
+		fontSize: RFValue(10)
 	},
 });
 

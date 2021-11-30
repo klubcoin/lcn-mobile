@@ -12,7 +12,7 @@ const Cart = ({ market, color, onPress }) => {
 				<IonIcon style={styles.cartIcon} name={'cart-outline'} size={RFValue(18)} color={color} />
 				{market.cartBadge > 0 && (
 					<View style={styles.badge}>
-						<Text style={styles.counter}>{market.cartBadge}</Text>
+						<Text style={styles.counter}>{market.cartBadge > 99 ? '99+' : market.cartBadge}</Text>
 					</View>
 				)}
 			</TouchableOpacity>
