@@ -96,7 +96,7 @@ class Store {
 		this.storage[key] = value;
 		await AsyncStorage.setItem(key, JSON.stringify(value));
 	}
-
+	
 	async saveProductCategories(categories) {
 		this.marketCategories = categories || [];
 		await this.save(kMarketCategories, categories);
