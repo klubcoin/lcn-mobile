@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
 	},
 	titleInfoText: {	
 		fontSize: RFValue(15),
-		fontWeight: '500'
+		fontWeight: '500',
+		flex: 1
 	},
 	orderDate: {
 		color: colors.grey400,

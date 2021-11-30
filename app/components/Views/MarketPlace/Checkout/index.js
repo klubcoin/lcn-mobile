@@ -10,6 +10,8 @@ import store from "../store";
 import colors from "../../../../common/colors";
 import routes from "../../../../common/routes";
 import StyledButton from "../../../UI/StyledButton";
+import { precise } from "../../../../util/number";
+import BigNumber from "bignumber.js";
 
 class MarketCheckout extends PureComponent {
 
@@ -67,7 +69,7 @@ class MarketCheckout extends PureComponent {
 
 	renderItem = ({ index, item }) => {
 		const { products, profile } = this.productGroups[item];
-		var amount = 0;
+		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
 
 		return (
@@ -81,8 +83,8 @@ class MarketCheckout extends PureComponent {
 						const { product, quantity } = e;
 						const { title, price, currency, images } = product;
 						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
-						amount += quantity * price;
-
+						amount = amount.plus(BigNumber(price).times(quantity));
+						
 						return (
 							<View style={styles.product}>
 								<Image style={styles.image} source={{ uri: images[0] }} />
@@ -103,13 +105,15 @@ class MarketCheckout extends PureComponent {
 					})
 				}
 				<View style={styles.storeTotalAmount}>
-					<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
-					<Text style={styles.price}>{amount} {currencyUnit}</Text>
+					<View style={styles.totalTextWrapper}>
+						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
+					</View>
+					<Text style={styles.price}>{amount.toFixed()} {currencyUnit}</Text>
 				</View>
 				<StyledButton
 					type={'confirm'}
 					onPress={() => {
-						this.onPurchase({ ...this.productGroups[item], to: item, amount, currencyUnit});
+						this.onPurchase({ ...this.productGroups[item], to: item, amount: amount.toFixed(), currencyUnit});
 					}}
 					containerStyle={styles.confirmBtn}
 					testID={'connect-cancel-button'}

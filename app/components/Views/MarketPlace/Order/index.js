@@ -11,6 +11,7 @@ import colors from "../../../../common/colors";
 import routes from "../../../../common/routes";
 import StyledButton from "../../../UI/StyledButton";
 import { RFValue } from "react-native-responsive-fontsize";
+import BigNumber from "bignumber.js";
 
 class PurchasedOrders extends PureComponent {
 
@@ -50,7 +51,7 @@ class PurchasedOrders extends PureComponent {
 
 	renderItem = ({ index, item }) => {
 		const { products, profile } = this.productGroups[item];
-		var amount = 0;
+		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
 
 		return (
@@ -67,7 +68,7 @@ class PurchasedOrders extends PureComponent {
 						const { product, quantity } = e;
 						const { title, price, currency, images } = product;
 						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
-						amount += quantity * price;
+						amount = amount.plus(BigNumber(price).times(quantity));
 
 						if (products.indexOf(e) !== 0) return;
 
@@ -91,10 +92,12 @@ class PurchasedOrders extends PureComponent {
 					})
 				}
 				<View style={styles.storeTotalAmount}>
-					<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
+					<View style={{flex: 5}}>
+						<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
+					</View>
 					<View style={styles.amount}>
 						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
-						<Text style={styles.price}>{amount} {currencyUnit}</Text>
+						<Text style={styles.price}>{amount.toFixed()} {currencyUnit}</Text>
 					</View>
 				</View>
 

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(12),
 		color: '#f84880',
 		fontWeight: 'bold',
-		alignSelf: 'flex-end',
+		alignSelf: 'flex-end'
 	},
 	summary: {
 		flex: 1,
@@ -116,18 +116,21 @@ const styles = StyleSheet.create({
 	},
 	storeTotalAmount: {
 		flexDirection: 'row',
-		alignItems:'center',
+		alignItems:'flex-start',
 		justifyContent: 'space-between',
 		borderTopWidth: StyleSheet.hairlineWidth,
 		borderColor: colors.grey400,
-		paddingVertical: 10,
+		paddingVertical: 10
 	}, 
 	productAmount: {
 		fontSize: RFValue(12),
 		color: colors.grey500,
 	},
 	amount: {
-		flexDirection: 'row'
+		flexDirection: 'row',
+		flex: 5,
+		overflow: 'visible',
+		justifyContent:'flex-end',
 	}
 });
 

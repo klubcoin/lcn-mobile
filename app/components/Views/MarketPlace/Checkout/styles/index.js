@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
 		color: '#f84880',
 		fontWeight: 'bold',
 		alignSelf: 'flex-end',
+		flex: 1
 	},
 	footer: {
 		height: 60,
@@ -111,9 +112,14 @@ const styles = StyleSheet.create({
 		alignItems: 'flex-end',
 		paddingHorizontal: 10,
 	},
+	totalTextWrapper: {
+		flex: 4,
+		height: '100%'
+	},
 	summaryTitle: {
 		fontSize: 14,
 		color: colors.black,
+		alignSelf:'flex-end'
 	},
 	totalAmount: {
 		fontSize: 18,

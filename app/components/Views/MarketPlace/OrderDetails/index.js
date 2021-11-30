@@ -112,12 +112,15 @@ class OrderDetails extends PureComponent {
 		return (
 			<TouchableWithoutFeedback style={styles.section} onPress={this.onViewPayment}>
 				<View style={[styles.infoSection, styles.titleWrapper]}>
-					<Text style={styles.titleInfoText}>
-						{strings('market.total_payment')}
-					</Text>
-					<View style={{ flexDirection: 'row' }}>
-						<Text style={styles.titleInfoText}>{amount.total} {amount.currencyUnit}</Text>
-						<MaterialIcons name={this.viewPayment ? "chevron-up" : "chevron-down"} size={20} style={styles.icon}/>
+					<View style={{flex: 2}}>
+						<Text style={styles.titleInfoText}>
+							{strings('market.total_payment')}
+						</Text>
+					</View>
+
+					<View style={{ flexDirection: 'row', flex: 1 }}>
+						<Text style={styles.titleInfoText}>{amount.total.toFixed()} {amount.currencyUnit}</Text>
+						<MaterialIcons name={this.viewPayment ? "chevron-up" : "chevron-down"} size={20} />
 					</View>
 				</View>
 				{
