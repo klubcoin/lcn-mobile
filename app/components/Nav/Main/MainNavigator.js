@@ -87,6 +87,7 @@ import StoreReviews from '../../Views/MarketPlace/StoreReviews';
 import MarketPurchase from '../../Views/MarketPlace/Purchase';
 import PurchasedOrders from '../../Views/MarketPlace/Order';
 import OrderDetails from '../../Views/MarketPlace/OrderDetails';
+import VendorOrders from '../../Views/MarketPlace/VendorOrder';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -290,6 +291,9 @@ export default createStackNavigator(
 					{
 						PurchasedOrders: {
 							screen: PurchasedOrders
+						},
+						VendorOrders: {
+							screen: VendorOrders
 						},
 						OrderDetails: {
 							screen: OrderDetails

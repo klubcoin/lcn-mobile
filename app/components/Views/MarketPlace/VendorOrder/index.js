@@ -12,10 +12,14 @@ import routes from "../../../../common/routes";
 import StyledButton from "../../../UI/StyledButton";
 import { RFValue } from "react-native-responsive-fontsize";
 import BigNumber from "bignumber.js";
+import ScrollableTabView from "react-native-scrollable-tab-view";
+import ScrollableTabBar from "react-native-scrollable-tab-view/ScrollableTabBar";
+import APIService from "../../../../services/APIService";
 
-class PurchasedOrders extends PureComponent {
+class VendorOrders extends PureComponent {
 
 	productGroups = {};
+	categories = []
 
 	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
 
@@ -23,12 +27,14 @@ class PurchasedOrders extends PureComponent {
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
-			productGroups: observable
+			productGroups: observable,
+			categories: observable,
 		})
 	}
 
 	componentDidMount() {
 		this.groupProducts();
+		this.fetchCategories();
 	}
 
 	groupProducts = () => {
@@ -44,9 +50,26 @@ class PurchasedOrders extends PureComponent {
 		})
 	};
 
+	async fetchCategories() {
+		const categories = store.marketCategories;
+		const rootTab = { id: 'root', name: 'All' };
+		this.categories = [rootTab, ...categories];
+
+		APIService.getMarketCategories((success, json) => {
+			if (success && json) {
+				store.saveProductCategories(json);
+				this.categories = [rootTab, ...json];
+			}
+		});
+	}
+
 	onViewDetails = (orderDetails) => {
 		const { navigation } = this.props;
 		navigation.navigate('OrderDetails', { orderDetails })
+	}
+
+	toggleItem = (product) => {
+		console.log('product', product);
 	}
 
 	renderItem = ({ index, item }) => {
@@ -55,11 +78,10 @@ class PurchasedOrders extends PureComponent {
 		var currencyUnit = 'LCN';
 
 		return (
-			products.length > 0 && <TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: {total: amount, currencyUnit} })}>
+			products.length > 0 && <TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
-						<MaterialIcons name={'store'} size={20} />
-						<Text style={styles.storeName}>{profile?.storeName}</Text>
+						<Text style={styles.storeName}>#ORDER21112</Text>
 					</View>
 					<Text style={styles.orderStatus}>Processing</Text>
 				</View>
@@ -74,6 +96,13 @@ class PurchasedOrders extends PureComponent {
 
 						return (
 							<View style={styles.product}>
+								<TouchableOpacity
+									style={styles.tickIcon}
+									activeOpacity={0.6}
+									onPress={() => this.toggleItem(product)}
+								>
+									<MaterialIcons name={false ? 'checkbox-blank-outline' : 'check-box-outline'} size={22} />
+								</TouchableOpacity>
 								<Image style={styles.image} source={{ uri: images[0] }} />
 								<View style={styles.productInfo}>
 									<Text numberOfLines={1} style={styles.title}>
@@ -92,7 +121,7 @@ class PurchasedOrders extends PureComponent {
 					})
 				}
 				<View style={styles.storeTotalAmount}>
-					<View style={{flex: 5}}>
+					<View style={{ flex: 5 }}>
 						<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
 					</View>
 					<View style={styles.amount}>
@@ -106,9 +135,9 @@ class PurchasedOrders extends PureComponent {
 		)
 	}
 
-	renderOrderItems = () => {
+	renderOrderItems = (tabLabel) => {
 		return (
-			<View style={styles.body}>
+			<View style={styles.body} tabLabel={tabLabel}>
 				<FlatList
 					data={Object.keys(this.productGroups)}
 					keyExtractor={(item) => item.uuid}
@@ -122,6 +151,7 @@ class PurchasedOrders extends PureComponent {
 		this.props.navigation.toggleDrawer();
 	};
 
+
 	renderNavBar() {
 		return (
 			<SafeAreaView>
@@ -129,10 +159,49 @@ class PurchasedOrders extends PureComponent {
 					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
 						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
 					</TouchableOpacity>
-					<Text style={styles.titleNavBar}>{strings('market.my_orders')}</Text>
-					<View style={styles.navButton} />
+					<Text style={styles.titleNavBar}>{strings('market.orders')}</Text>
+					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
+						<Icon style={styles.backIcon} name={'filter'} size={RFValue(15)} />
+					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
+		);
+	}
+
+	renderFooter = () => {
+		return (
+			<View style={styles.footer}>
+				<TouchableOpacity style={styles.selectAll} activeOpacity={0.6} onPress={this.selectAll}>
+					<MaterialIcons name={'check-box-outline'} size={22} />
+					<Text style={styles.textAll}>{strings('market.select_all')}</Text>
+				</TouchableOpacity>
+				<View style={{ flexDirection: 'row', height: '100%' }}>
+					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn]} activeOpacity={0.6} onPress={this.gotoCheckout}>
+						<Text style={styles.textActionBtn}>Refund</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.actionBtn} activeOpacity={0.6} onPress={this.gotoCheckout}>
+						<Text style={styles.textActionBtn}>Change status</Text>
+					</TouchableOpacity>
+				</View>
+
+			</View>
+		);
+	};
+
+	onChangeTab = (obj) => {
+		console.log('obj', obj);
+	}
+
+	renderTabBar = () => {
+		return (
+			<ScrollableTabBar
+				underlineStyle={styles.tabUnderlineStyle}
+				activeTextColor={colors.blue}
+				inactiveTextColor={colors.fontTertiary}
+				backgroundColor={colors.white}
+				tabStyle={styles.tabStyle}
+				textStyle={styles.textStyle}
+			/>
 		);
 	}
 
@@ -140,10 +209,18 @@ class PurchasedOrders extends PureComponent {
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
-				{this.renderOrderItems()}
+				<ScrollableTabView
+					renderTabBar={this.renderTabBar}
+					onChangeTab={obj => this.onChangeTab(obj)}
+				>
+					{
+						this.categories.length > 0 ? this.categories.map(e => this.renderOrderItems(e.name)) : <View style={styles.body} />
+					}
+				</ScrollableTabView>
+				{this.renderFooter()}
 			</View>
 		)
 	}
 }
 
-export default inject('store')(observer(PurchasedOrders))
+export default inject('store')(observer(VendorOrders))

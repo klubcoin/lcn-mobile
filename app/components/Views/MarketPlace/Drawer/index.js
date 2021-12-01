@@ -45,7 +45,7 @@ const menuItems = () => [
 	},
 	{
 		key: menuKeys().orders,
-		title: strings('market.orders'),
+		title: strings('market.my_orders'),
 		icon: 'inbox-full',
 		screen: 'PurchasedOrders'
 	},
@@ -74,7 +74,7 @@ const menuItemsVendor = () => [
 		key: menuKeys().orders,
 		title: strings('market.orders'),
 		icon: 'inbox-full',
-		screen: 'MarketOrders'
+		screen: 'VendorOrders'
 	},
 	{
 		key: menuKeys().messages,

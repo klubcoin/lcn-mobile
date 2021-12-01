@@ -1878,6 +1878,7 @@
 		"contact_vendor": "Contact vendor",
 		"order_code": "Order code",
 		"order_time": "Order time",
-		"payment_time": "Payment time"
+		"payment_time": "Payment time",
+		"my_orders": "My orders"
 	}
 }
