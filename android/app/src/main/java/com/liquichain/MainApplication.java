@@ -43,7 +43,7 @@ public class MainApplication extends MultiDexApplication implements ShareApplica
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new LottiePackage());
       // packages.add(new RNGestureHandlerPackage());
-//      packages.add(new CodePush(getString(R.string.CodePushDeploymentKey), MainApplication.this, BuildConfig.DEBUG));
+      packages.add(new CodePush(getString(R.string.CodePushDeploymentKey), MainApplication.this, BuildConfig.DEBUG, getString(R.string.CodePushServerURL)));
       packages.add(new RCTAnalyticsPackage());
       packages.add(new PreventScreenshotPackage());
 
