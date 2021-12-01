@@ -36,7 +36,9 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
-	<string>4Z7iDrA6Imq8Z_RtE-rFFaevuZiZ7SCk6V1Ka</string>
+	<string>123456</string>
+	<key>CodePushServerURL</key>
+	<string>https://account.liquichain.io/meveo/rest/codepush</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>

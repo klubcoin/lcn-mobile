@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Liquichain</string>
-    <string moduleConfig="true" name="CodePushDeploymentKey">bmuDdKQhAUH1J5yxD23WO0rGBLvzJ2B50G2M0</string>
+    <string moduleConfig="true" name="CodePushServerURL">https://account.liquichain.io/meveo/rest/codepush</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">123456</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
 </resources>
