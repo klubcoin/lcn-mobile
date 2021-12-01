@@ -39,7 +39,6 @@ export default class StoreService {
 		const results = products.filter(product => {
 			const { title, description, category, price, tags, comments } = product;
 			comments?.map(e => ratings.push(e.rating));
-
 			const hash = sha256(category.uuid);
 			if (hash == data.hash) {
 				const { query } = data.data;
@@ -57,7 +56,6 @@ export default class StoreService {
 				if (found) {
 					priceMin = Math.min(priceMin, price);
 					priceMax = Math.max(priceMax, price);
-					tags?.map(tag => tags.push(tag));
 				}
 				return found;
 			}
