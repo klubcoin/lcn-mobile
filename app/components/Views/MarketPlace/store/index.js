@@ -11,6 +11,7 @@ export const kMarketCartBadge = "MarketCartBadge";
 export const kMarketCart = "MarketCart";
 export const kMarketShippingInfo = "MarketShippingInfo";
 export const kStoreVendors = "StoreVendors";
+export const kPeerAnnounces = "PeerAnnounces";
 
 const keys = [
 	kMarketCategories,
@@ -22,7 +23,8 @@ const keys = [
 	kMarketCartBadge,
 	kMarketCart,
 	kMarketShippingInfo,
-	kStoreVendors
+	kStoreVendors,
+	kPeerAnnounces,
 ];
 
 class Store {
@@ -38,6 +40,7 @@ class Store {
 	marketCart = [];
 	shippingInfo = {};
 	storeVendors = {};
+	peerAnnounces = {};
 
 	constructor() {
 		makeAutoObservable(this);
@@ -88,6 +91,9 @@ class Store {
 				break;
 			case kStoreVendors:
 				this.storeVendors = data || {};
+				break;
+			case kPeerAnnounces:
+				this.peerAnnounces = data || {};
 				break;
 		}
 	}
@@ -190,6 +196,11 @@ class Store {
 	async addStoreVendors(address, data) {
 		this.storeVendors[address] = data;
 		await this.save(kStoreVendors, this.storeVendors);
+	}
+
+	async addPeerAnnounce(hash, data) {
+		this.peerAnnounces[hash] = data;
+		await this.save(kPeerAnnounces, this.peerAnnounces);
 	}
 }
 
