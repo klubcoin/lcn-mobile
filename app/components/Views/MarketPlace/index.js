@@ -333,7 +333,7 @@ class MarketPlace extends PureComponent {
 		storeService?.searchProduct({ query: this.query }, hash);
 
 		storeService?.addListener(data => {
-			if (data.action == StoreAnnounce().action && data.hash == hash) {
+			if (data.action == StoreAnnounce().action && data.hashes[0] == hash) {
 				const { info } = data;
 				const { query } = info;
 				if (query?.query == this.query) {

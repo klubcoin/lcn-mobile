@@ -42,8 +42,7 @@ export default class StoreService {
 		const results = products.filter(product => {
 			const { title, description, category, price, tags, comments } = product;
 			comments?.map(e => ratings.push(e.rating));
-			const hash = sha256(category.uuid);
-			if (hash == data.hash) {
+			if (category.hash == data.hash) {
 				const { query } = data.data;
 				const titleHit = title.toLowerCase().includes(query);
 				const descHit = description.toLowerCase().includes(query);
@@ -84,7 +83,9 @@ export default class StoreService {
 
 	handleStoreMessage = (data, peerId) => {
 		const { message } = data;
-		if (message.action == StoreAnnounce().action) {
+		if (message.action == StoreLookUp().action) {
+			this.handleStoreAnnounce(message, peerId);
+		} else if (message.action == StoreAnnounce().action) {
 			if (this.evtMessage) this.evtMessage(message);
 		} else if (message.action == StoreQuery().action) {
 			this.handleStoreQuery(message, peerId);
@@ -152,12 +153,14 @@ export default class StoreService {
 	}
 
 	sendSearchQuery(query, categoryHash, peers) {
+		const data = StoreLookUp(this.from, categoryHash, query);
+
 		for (let k in peers) {
 			const peer = peers[k];
 			if (peer.uploaded == 0) continue;
 
 			const address = addHexPrefix(peer.peer_id);
-			this.queryProductOnVendorStore(address, query, categoryHash);
+			this.storeMessaging.send(data, address?.toLowerCase());
 		}
 	}
 
