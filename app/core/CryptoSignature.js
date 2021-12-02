@@ -11,7 +11,7 @@ export default class CryptoSignature {
 	 */
 	static async signMessage(from, data) {
 		const { KeyringController } = Engine.context;
-		const hash = sha3JS.keccak_256(data);
+		const hash = sha3JS.keccak_256(JSON.stringify(data));
 		const params = { from, data: hash };
 		return await KeyringController.signMessage(params);
 	}
@@ -22,7 +22,7 @@ export default class CryptoSignature {
 	 * @returns address of sender
 	 */
 	static recoverMessageSignature(data, signature) {
-		const hash = Buffer.from(sha3JS.keccak_256(data), 'hex');
+		const hash = Buffer.from(sha3JS.keccak_256(JSON.stringify(data)), 'hex');
 		const sigParams = ethUtil.fromRpcSig(ethUtil.toBuffer(signature));
 		const publicKey = ethUtil.ecrecover(hash, sigParams.v, sigParams.r, sigParams.s);
 
