@@ -1,0 +1,24 @@
+--- a/node_modules/react-native-track-player/android/src/main/java/com/guichaguri/trackplayer/service/metadata/MetadataManager.java	2021-11-30 00:50:13.000000000 +0700
++++ b/node_modules/react-native-track-player/android/src/main/java/com/guichaguri/trackplayer/service/metadata/MetadataManager.java	2021-11-30 00:48:35.000000000 +0700
+@@ -111,7 +111,9 @@
+ 
+         if(capabilities != null) {
+             // Create the actions mask
+-            for(int cap : capabilities) actions |= cap;
++            for(Integer cap : capabilities) {
++                if(cap != null) actions |= cap;
++            }
+ 
+             // If there is no notification capabilities defined, we'll show all capabilities available
+             if(notification == null) notification = capabilities;
+@@ -135,7 +137,9 @@
+ 
+             // Update the action mask for the compact view
+             if(compact != null) {
+-                for(int cap : compact) compactActions |= cap;
++                for(Integer cap : compact) {
++                    if(cap != null) compactActions |= cap;
++                }
+             }
+         }
+ 

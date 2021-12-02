@@ -1,0 +1,109 @@
+--- a/node_modules/code-push/script/acquisition-sdk.js	2021-11-26 11:40:38.000000000 +0700
++++ b/node_modules/code-push/script/acquisition-sdk.js	2021-12-02 01:17:39.000000000 +0700
+@@ -29,14 +29,14 @@
+             throw new code_push_error_1.CodePushPackageError("Calling common acquisition SDK with incorrect package"); // Unexpected; indicates error in our implementation
+         }
+         var updateRequest = {
+-            deployment_key: this._deploymentKey,
+-            app_version: currentPackage.appVersion,
+-            package_hash: currentPackage.packageHash,
+-            is_companion: this._ignoreAppVersion,
++            deploymentKey: this._deploymentKey,
++            appVersion: currentPackage.appVersion,
++            packageHash: currentPackage.packageHash,
++            isCompanion: this._ignoreAppVersion,
+             label: currentPackage.label,
+-            client_unique_id: this._clientUniqueId
++            clientUniqueId: this._clientUniqueId
+         };
+-        var requestUrl = this._serverUrl + this._publicPrefixUrl + "update_check?" + queryStringify(updateRequest);
++        var requestUrl = this._serverUrl + "updateCheck?" + queryStringify(updateRequest);
+         this._httpRequester.request(0 /* GET */, requestUrl, function (error, response) {
+             if (error) {
+                 callback(error, /*remotePackage=*/ null);
+@@ -55,7 +55,7 @@
+             }
+             try {
+-                var responseObject = JSON.parse(response.body);
+-                var updateInfo = responseObject.update_info;
++                var responseObject = JSON.parse(response.body.replace(/"appVersion":\s?([^,]+),/, `"appVersion": "$1",`));
++                var updateInfo = responseObject;
+             }
+             catch (error) {
+                 callback(error, /*remotePackage=*/ null);
+@@ -65,11 +65,11 @@
+                 callback(error, /*remotePackage=*/ null);
+                 return;
+             }
+-            else if (updateInfo.update_app_version) {
+-                callback(/*error=*/ null, { updateAppVersion: true, appVersion: updateInfo.target_binary_range });
++            else if (updateInfo.updateAppVersion) {
++                callback(/*error=*/ null, { updateAppVersion: true, appVersion: updateInfo.targetBinaryRange });
+                 return;
+             }
+-            else if (!updateInfo.is_available) {
++            else if (!updateInfo.isAvailable) {
+                 callback(/*error=*/ null, /*remotePackage=*/ null);
+                 return;
+             }
+@@ -77,11 +77,11 @@
+                 deploymentKey: _this._deploymentKey,
+                 description: updateInfo.description,
+                 label: updateInfo.label,
+-                appVersion: updateInfo.target_binary_range,
+-                isMandatory: updateInfo.is_mandatory,
+-                packageHash: updateInfo.package_hash,
+-                packageSize: updateInfo.package_size,
+-                downloadUrl: updateInfo.download_url
++                appVersion: updateInfo.targetBinaryRange,
++                isMandatory: updateInfo.isMandatory,
++                packageHash: updateInfo.packageHash,
++                packageSize: updateInfo.packageSize,
++                downloadUrl: updateInfo.downloadUrl ?? updateInfo.downloadURL
+             };
+             callback(/*error=*/ null, remotePackage);
+         });
+@@ -89,15 +89,15 @@
+     AcquisitionManager.prototype.reportStatusDeploy = function (deployedPackage, status, previousLabelOrAppVersion, previousDeploymentKey, callback) {
+         var url = this._serverUrl + this._publicPrefixUrl + "report_status/deploy";
+         var body = {
+-            app_version: this._appVersion,
+-            deployment_key: this._deploymentKey
++            appVersion: this._appVersion,
++            deploymentKey: this._deploymentKey
+         };
+         if (this._clientUniqueId) {
+-            body.client_unique_id = this._clientUniqueId;
++            body.clientUniqueId = this._clientUniqueId;
+         }
+         if (deployedPackage) {
+             body.label = deployedPackage.label;
+-            body.app_version = deployedPackage.appVersion;
++            body.appVersion = deployedPackage.appVersion;
+             switch (status) {
+                 case AcquisitionStatus.DeploymentSucceeded:
+                 case AcquisitionStatus.DeploymentFailed:
+@@ -116,10 +116,10 @@
+             }
+         }
+         if (previousLabelOrAppVersion) {
+-            body.previous_label_or_app_version = previousLabelOrAppVersion;
++            body.previousLabelOrAppVersion = previousLabelOrAppVersion;
+         }
+         if (previousDeploymentKey) {
+-            body.previous_deployment_key = previousDeploymentKey;
++            body.previousDeploymentKey = previousDeploymentKey;
+         }
+         callback = typeof arguments[arguments.length - 1] === "function" && arguments[arguments.length - 1];
+         this._httpRequester.request(2 /* POST */, url, JSON.stringify(body), function (error, response) {
+@@ -139,8 +139,8 @@
+     AcquisitionManager.prototype.reportStatusDownload = function (downloadedPackage, callback) {
+         var url = this._serverUrl + this._publicPrefixUrl + "report_status/download";
+         var body = {
+-            client_unique_id: this._clientUniqueId,
+-            deployment_key: this._deploymentKey,
++            clientUniqueId: this._clientUniqueId,
++            deploymentKey: this._deploymentKey,
+             label: downloadedPackage.label
+         };
+         this._httpRequester.request(2 /* POST */, url, JSON.stringify(body), function (error, response) {
