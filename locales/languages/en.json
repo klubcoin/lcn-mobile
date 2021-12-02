@@ -193,7 +193,8 @@
 		"notice": "Notice",
 		"missing_photo": "Photo is missing",
 		"missing_name": "Name is missing",
-		"request_profile_confirmation": "Request Profile Confirmation"
+		"request_profile_confirmation": "Request Profile Confirmation",
+		"change_shipping_info": "Change shipping info"
 	},
 	"confirm_profile": {
 		"confirm_profile_message": "Identity Confirmation",

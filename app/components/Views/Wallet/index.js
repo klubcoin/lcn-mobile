@@ -24,6 +24,7 @@ import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import messageStore from '../Message/store';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -142,8 +143,11 @@ class Wallet extends PureComponent {
 			[selectedAddress],
 			response => {
 				if (response.result) {
-					const name = response.result;
-					PreferencesController.setAccountLabel(selectedAddress, name.name);
+					const { name, publicInfo } = response.result;
+					PreferencesController.setAccountLabel(selectedAddress, name);
+					preferences.getOnboardProfile()
+						.then(value => preferences.setOnboardProfile(Object.assign(value, {"publicInfo": publicInfo})))
+						.catch(e => console.log('profile onboarding error', e));
 				}
 			},
 			error => {

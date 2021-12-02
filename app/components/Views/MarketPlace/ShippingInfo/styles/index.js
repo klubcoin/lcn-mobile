@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
 	scroll: {
 		paddingBottom: 80,
 		backgroundColor: colors.white,
-		flex: 1
 	},
 	desc: {
 		marginTop: 20,

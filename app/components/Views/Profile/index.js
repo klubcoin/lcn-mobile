@@ -18,6 +18,7 @@ import AccountList from '../../UI/AccountList';
 import StyledButton from '../../UI/StyledButton';
 import FileTransferWebRTC from '../FilesManager/store/FileTransferWebRTC';
 import { ConfirmProfileRequest } from '../../../services/Messages';
+import CryptoSignature from '../../../core/CryptoSignature';
 
 const styles = StyleSheet.create({
 	container: {
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	actions: {
-		flexDirection: 'row',
+		flexDirection: 'column',
 		width: 300,
 		marginTop: 20
 	}
@@ -128,6 +129,10 @@ class Profile extends PureComponent {
 		});
 	}
 
+	onChangeShippingInfo() {
+		this.props.navigation.navigate('ShippingInfo');
+	}
+
 	render() {
 		const { email, name } = this.account ?? {};
 		const { avatar } = this.onboardProfile ?? {};
@@ -146,8 +151,11 @@ class Profile extends PureComponent {
 					<Text style={styles.name}>{name}</Text>
 					<Text style={styles.email}>{email}</Text>
 					<View style={styles.actions}>
-						<StyledButton type={'normal'} onPress={this.onRequest.bind(this)} containerStyle={{ flex: 1 }}>
+						<StyledButton type={'normal'} onPress={this.onRequest.bind(this)}>
 							{strings('profile.request_profile_confirmation')}
+						</StyledButton>
+						<StyledButton type={'normal'} onPress={this.onChangeShippingInfo.bind(this)} containerStyle={{ marginTop: 10  }}>
+							{strings('profile.change_shipping_info')}
 						</StyledButton>
 					</View>
 					<View style={styles.accounts}>

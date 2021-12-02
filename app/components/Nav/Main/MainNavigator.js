@@ -141,7 +141,10 @@ export default createStackNavigator(
 						},
 						Profile: {
 							screen: Profile
-						}
+						},
+						ShippingInfo: {
+							screen: ShippingInfo
+						},
 					}),
 					VotingAppHome: createDrawerNavigator({
 						VotingApp: {
