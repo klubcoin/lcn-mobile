@@ -1819,6 +1819,10 @@
 		"missing_email": "Missing email",
 		"missing_name": "Name is missing",
 		"missing_address": "Address is missing",
+		"missing_street": "Street is missing",
+		"missing_zip_code": "Zip code is missing",
+		"missing_city": "City is missing",
+		"missing_country": "Country is missing",
 		"invalid_phone": "Invalid phone number",
 		"invalid_email": "Invalid email",
 		"payment_term": "Payment term",
@@ -1880,6 +1884,9 @@
 		"order_code": "Order code",
 		"order_time": "Order time",
 		"payment_time": "Payment time",
-		"my_orders": "My orders"
+		"my_orders": "My orders",
+		"address_name": "Address name",
+		"street": "Street",
+		"zip_code": "Zip code"
 	}
 }

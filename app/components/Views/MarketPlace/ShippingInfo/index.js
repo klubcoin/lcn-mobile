@@ -25,7 +25,7 @@ import Api from '../../../../services/api';
 import Routes from '../../../../common/routes';
 import preferences from '../../../../store/preferences';
 
-export class MarketAddEditProduct extends PureComponent {
+export class ShippingInfo extends PureComponent {
 	static navigationOptions = () => ({ header: null });
 
 	account = '';
@@ -90,16 +90,16 @@ export class MarketAddEditProduct extends PureComponent {
 			return showError(strings('market.missing_address'));
 		}
 		if (!street) {
-			return showError('Missing street');
+			return showError(strings('market.missing_street'));
 		}
 		if (!zipCode) {
-			return showError('Missing zip code');
+			return showError(strings('market.missing_zip_code'));
 		}
 		if (!city) {
-			return showError('Missing city');
+			return showError(strings('market.missing_city'));
 		}
 		if (!country) {
-			return showError('Missing country');
+			return showError(strings('market.missing_country'));
 		}
 		this.updateShippingInfo();
 	}
@@ -173,7 +173,7 @@ export class MarketAddEditProduct extends PureComponent {
 						keyboardType={'numeric'}
 					/>
 
-					<Text style={styles.heading}>Address name</Text>
+					<Text style={styles.heading}>{strings('market.address_name')}</Text>
 					<TextInput
 						numberOfLines={1}
 						value={this.shippingAddress.addressName}
@@ -181,7 +181,7 @@ export class MarketAddEditProduct extends PureComponent {
 						style={styles.input}
 					/>
 
-					<Text style={styles.heading}>Street</Text>
+					<Text style={styles.heading}>{strings('market.street')}</Text>
 					<TextInput
 						numberOfLines={1}
 						value={this.shippingAddress.street}
@@ -189,7 +189,7 @@ export class MarketAddEditProduct extends PureComponent {
 						style={styles.input}
 					/>
 
-					<Text style={styles.heading}>Zip code</Text>
+					<Text style={styles.heading}>{strings('market.zip_code')}</Text>
 					<TextInput
 						numberOfLines={1}
 						value={this.shippingAddress.zipCode}
@@ -198,7 +198,7 @@ export class MarketAddEditProduct extends PureComponent {
 						keyboardType={'numeric'}
 					/>
 
-					<Text style={styles.heading}>City</Text>
+					<Text style={styles.heading}>{strings('payQR.city')}</Text>
 					<TextInput
 						numberOfLines={1}
 						value={this.shippingAddress.city}
@@ -206,7 +206,7 @@ export class MarketAddEditProduct extends PureComponent {
 						style={styles.input}
 					/>
 
-					<Text style={styles.heading}>Country</Text>
+					<Text style={styles.heading}>{strings('payQR.country')}</Text>
 					<TextInput
 						numberOfLines={1}
 						value={this.shippingAddress.country}
@@ -237,4 +237,4 @@ export class MarketAddEditProduct extends PureComponent {
 	}
 }
 
-export default inject('store')(observer(MarketAddEditProduct));
+export default inject('store')(observer(ShippingInfo));
