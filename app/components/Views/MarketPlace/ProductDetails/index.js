@@ -69,7 +69,7 @@ class MarketProduct extends PureComponent {
 
 	fetchOtherProducts = () => {
 		const { category, wallet } = this.product;
-		const hash = sha256(category.uuid);
+		const hash = category?.hash;
 
 		const storeService = refStoreService();
 		storeService.queryProductOnVendorStore(wallet, { query: '' }, hash);

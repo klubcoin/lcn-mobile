@@ -158,7 +158,7 @@ class MarketCategory extends PureComponent {
 	onSearch = text => (this.searchText = text);
 	handleSearch = () => {
 		this.query = this.searchText;
-		const hash = sha256(this.category.uuid);
+		const hash = this.category?.hash;
 
 		const storeService = refStoreService();
 		storeService.queryProductOnVendorStore(this.vendor.wallet, { query: this.query }, hash);

@@ -1,4 +1,5 @@
 import store from '.';
+import { addHexPrefix } from 'ethereumjs-util';
 import { sha256 } from '../../../../core/CryptoSignature';
 import APIService from '../../../../services/APIService';
 import { refWebRTC } from '../../../../services/WebRTC';
@@ -103,7 +104,7 @@ export default class StoreService {
 		const results = products.filter(product => {
 			const { title, description, category } = product;
 
-			const hash = sha256(category.uuid);
+			const hash = category?.hash;
 			if (hash == data.hash) {
 				const titleHit = title.toLowerCase().includes(query);
 				const descHit = description.toLowerCase().includes(query);
@@ -124,11 +125,40 @@ export default class StoreService {
 		this.storeMessaging.send(response, peerId);
 	};
 
-	searchProduct(query, hash) {
-		const data = StoreLookUp(this.from, hash, query);
+	async searchProduct(query, hash) {
+		if (useAnnounceAPI) {
+			const coord = {
+				latitude: 0,
+				longitude: 0,
+			}
+			await new Promise((resolve, reject) =>
+				APIService.announceInfoHash(
+					hash, this.from, 0, coord,
+					(success, json) => {
+						store.addPeerAnnounce(hash, json);
+						if (json?.peers) {
+							this.sendSearchQuery(query, hash, json.peers);
+						}
+						resolve(json);
+					}
+				)
+			)
+		} else {
+			const data = StoreLookUp(this.from, hash, query);
 
-		const webrtc = refWebRTC();
-		webrtc.sendWebSocketMessage(data);
+			const webrtc = refWebRTC();
+			webrtc.sendWebSocketMessage(data);
+		}
+	}
+
+	sendSearchQuery(query, categoryHash, peers) {
+		for (let k in peers) {
+			const peer = peers[k];
+			if (peer.uploaded == 0) continue;
+
+			const address = addHexPrefix(peer.peer_id);
+			this.queryProductOnVendorStore(address, query, categoryHash);
+		}
 	}
 
 	queryProductOnVendorStore(vendorAddr, query, hash) {

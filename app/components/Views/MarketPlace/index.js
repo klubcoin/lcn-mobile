@@ -326,14 +326,14 @@ class MarketPlace extends PureComponent {
 	onSearch = text => (this.searchQuery = text);
 	handleSearch = () => {
 		this.vendors = [];
-		const hash = sha256(this.category?.uuid);
+		const hash = this.category?.hash;
 		this.query = this.searchQuery.toLowerCase();
 
 		const storeService = refStoreService();
 		storeService?.searchProduct({ query: this.query }, hash);
 
 		storeService?.addListener(data => {
-			if (data.action == StoreAnnounce().action && data.hashes[0] == hash) {
+			if (data.action == StoreAnnounce().action && data.hash == hash) {
 				const { info } = data;
 				const { query } = info;
 				if (query?.query == this.query) {
