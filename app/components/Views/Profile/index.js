@@ -135,7 +135,7 @@ class Profile extends PureComponent {
 
 	render() {
 		const { email, name } = this.account ?? {};
-		const { avatar } = this.onboardProfile ?? {};
+		const { avatar, lastname, firstname } = this.onboardProfile ?? {};
 		const { identities } = Engine.state.PreferencesController;
 
 		return (
@@ -148,7 +148,7 @@ class Profile extends PureComponent {
 							<Identicon diameter={96} address={this.selectedAddress} />
 						)}
 					</TouchableOpacity>
-					<Text style={styles.name}>{name}</Text>
+					<Text style={styles.name}>{name ?? firstname + ' ' + lastname}</Text>
 					<Text style={styles.email}>{email}</Text>
 					<View style={styles.actions}>
 						<StyledButton type={'normal'} onPress={this.onRequest.bind(this)}>
