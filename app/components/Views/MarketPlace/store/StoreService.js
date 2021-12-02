@@ -137,9 +137,17 @@ export default class StoreService {
 	collectCategoryHashes() {
 		const products = store.marketProducts || [];
 		const categories = products.map(e => e.category);
-		const categoryIds = categories.map(e => e.uuid);
+		const categoryHashes = categories.map(e => e.hash);
+		const hashes = [...new Set(categoryHashes)];
 
-		return [...new Set(categoryIds)].map(e => sha256(e));
+		const data = [];
+		hashes.map(hash => {
+			data.push({
+				hash,
+				total: categoryHashes.filter(id => id == hash).length
+			})
+		})
+		return data;
 	}
 
 	announceToTracker() {
