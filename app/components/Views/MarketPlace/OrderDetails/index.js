@@ -14,18 +14,27 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import uuid from 'react-native-uuid';
 import CryptoSignature, { sha256 } from '../../../../core/CryptoSignature';
+import preferences from '../../../../store/preferences'
 
 class OrderDetails extends PureComponent {
 
 	viewPayment = false;
+	shippingInfo = {}
 	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
 
 
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
-			viewPayment: observable
+			viewPayment: observable,
+			shippingInfo: observable
 		})
+		this.fetchShippingInfo();
+	}
+
+	fetchShippingInfo = async () => {
+		const onboardProfile = await preferences.getOnboardProfile();
+		this.shippingInfo = onboardProfile?.publicInfo?.shippingAddress || {};
 	}
 
 	onBack = () => {
@@ -79,7 +88,8 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderShippingInfo = () => {
-		const { name, phone, address } = store.shippingInfo || {};
+		const { phone, addressName, street, city, country, zipCode } = this.shippingInfo || {};
+		const shippingAddress = [addressName, street, city, country, zipCode];
 
 		return (
 			<View style={styles.section}>
@@ -94,7 +104,7 @@ class OrderDetails extends PureComponent {
 				</View>
 				<View style={styles.infoSection}>
 					<MaterialIcons name="map" size={18} color={colors.storeBg} style={styles.icon}/>
-					<Text style={styles.infoText}>{address}</Text>
+					<Text style={styles.infoText}>{shippingAddress.join(', ')}</Text>
 				</View>
 				<View style={styles.infoSection}>
 					<MaterialIcons name="truck-delivery-outline" size={18} color={colors.storeBg} style={styles.icon}/>
