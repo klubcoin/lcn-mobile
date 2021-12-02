@@ -1,7 +1,8 @@
 import React, { PureComponent } from "react";
 import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import { makeObservable, observable } from "mobx";
+import { autorun, makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
+import { Observer } from "mobx-react-lite";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
@@ -19,7 +20,9 @@ import APIService from "../../../../services/APIService";
 class VendorOrders extends PureComponent {
 
 	productGroups = {};
-	categories = []
+	categories = [];
+	selectedOrders = [];
+	currentTabIndex = 0;
 
 	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
 
@@ -29,6 +32,8 @@ class VendorOrders extends PureComponent {
 		makeObservable(this, {
 			productGroups: observable,
 			categories: observable,
+			selectedOrders: observable,
+			currentTabIndex: observable
 		})
 	}
 
@@ -52,7 +57,7 @@ class VendorOrders extends PureComponent {
 
 	async fetchCategories() {
 		const categories = store.marketCategories;
-		const rootTab = { id: 'root', name: 'All' };
+		const rootTab = { name: 'All', uuid: 'root_tab' };
 		this.categories = [rootTab, ...categories];
 
 		APIService.getMarketCategories((success, json) => {
@@ -69,16 +74,22 @@ class VendorOrders extends PureComponent {
 	}
 
 	toggleItem = (product) => {
-		console.log('product', product);
+		if (this.selectedOrders.includes(product.uuid)) {
+			this.selectedOrders = this.selectedOrders.filter(e => e !== product.uuid)
+		}
+		else this.selectedOrders.push(product.uuid);
+		this.setState({ update: new Date() })
 	}
 
-	renderItem = ({ index, item }) => {
+	renderItem = ({ item }) => {
 		const { products, profile } = this.productGroups[item];
+		const { currentTabIndex, categories } = this;
+
 		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
-
 		return (
-			products.length > 0 && <TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: { total: amount, currencyUnit } })}>
+			products.length > 0 && (currentTabIndex === 0 || products[0].product.category.uuid === categories[currentTabIndex].uuid) &&
+			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
 						<Text style={styles.storeName}>#ORDER21112</Text>
@@ -87,6 +98,7 @@ class VendorOrders extends PureComponent {
 				</View>
 				{
 					products.map(e => {
+
 						const { product, quantity } = e;
 						const { title, price, currency, images } = product;
 						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
@@ -101,7 +113,7 @@ class VendorOrders extends PureComponent {
 									activeOpacity={0.6}
 									onPress={() => this.toggleItem(product)}
 								>
-									<MaterialIcons name={false ? 'checkbox-blank-outline' : 'check-box-outline'} size={22} />
+									<MaterialIcons name={this.selectedOrders.includes(product.uuid) ? 'check-box-outline' : 'checkbox-blank-outline'}  size={22} />
 								</TouchableOpacity>
 								<Image style={styles.image} source={{ uri: images[0] }} />
 								<View style={styles.productInfo}>
@@ -131,13 +143,13 @@ class VendorOrders extends PureComponent {
 				</View>
 
 			</TouchableOpacity>
-
 		)
 	}
 
 	renderOrderItems = (tabLabel) => {
 		return (
 			<View style={styles.body} tabLabel={tabLabel}>
+			
 				<FlatList
 					data={Object.keys(this.productGroups)}
 					keyExtractor={(item) => item.uuid}
@@ -189,7 +201,7 @@ class VendorOrders extends PureComponent {
 	};
 
 	onChangeTab = (obj) => {
-		console.log('obj', obj);
+		this.currentTabIndex = obj.i;
 	}
 
 	renderTabBar = () => {
@@ -209,8 +221,10 @@ class VendorOrders extends PureComponent {
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
+				
 				<ScrollableTabView
 					renderTabBar={this.renderTabBar}
+					initialPage={this.currentTabIndex}
 					onChangeTab={obj => this.onChangeTab(obj)}
 				>
 					{
