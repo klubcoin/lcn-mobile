@@ -46,11 +46,12 @@ export default class APIService {
 		WebService.sendGet(this.apiPeerAnnounce(), data, callback);
 	}
 
-	static announceInfoHash(hash, peerId, coord, callback) {
+	static announceInfoHash(hash, peerId, quantity, coord, callback) {
 		const data = {
 			peer_id: peerId,
 			info_hash: hash,
 			port: 0,
+			uploaded: quantity,
 			wallet_id: peerId,
 			latitude: coord.latitude,
 			longitude: coord.longitude
