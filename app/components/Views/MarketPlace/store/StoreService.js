@@ -1,9 +1,11 @@
 import store from '.';
 import { sha256 } from '../../../../core/CryptoSignature';
+import APIService from '../../../../services/APIService';
 import { refWebRTC } from '../../../../services/WebRTC';
 import { StoreAnnounce, StoreLookUp, StoreMessage, StoreQuery } from './StoreMessages';
 import StoreMessaging from './StoreMessaging';
 
+const useAnnounceAPI = true;
 export default class StoreService {
 	from = ''; // wallet address
 	evtMessage = null;
@@ -150,14 +152,36 @@ export default class StoreService {
 		return data;
 	}
 
-	announceToTracker() {
+	async announceToTracker() {
 		const categories = this.collectCategoryHashes();
 		if (!categories || categories.length == 0) return;
 
-		const data = StoreAnnounce(this.from, categories);
+		if (useAnnounceAPI) {
+			const coord = {
+				latitude: 0,
+				longitude: 0,
+			}
 
-		const webrtc = refWebRTC();
-		webrtc.sendWebSocketMessage(data);
+			for (let index in categories) {
+				const category = categories[index];
+				const { hash, total } = category;
+
+				await new Promise((resolve, reject) =>
+					APIService.announceInfoHash(
+						hash, this.from, total, coord,
+						(success, json) => {
+							store.addPeerAnnounce(hash, json);
+							resolve(json)
+						}
+					)
+				)
+			}
+		} else {
+			const data = StoreAnnounce(this.from, categories);
+
+			const webrtc = refWebRTC();
+			webrtc.sendWebSocketMessage(data);
+		}
 	}
 
 	announceToNodes(addresses) {
