@@ -220,7 +220,16 @@ const styles = StyleSheet.create({
 		top: 20,
 		right: 25,
 		color: colors.orange
-	}
+	},
+	deleteImage: {
+		width: 24,
+		height: 24,
+		position: 'absolute',
+		top: -8,
+		right: -8,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
 });
 
 export default assignNestedObj(styles, brandStyles);

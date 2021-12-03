@@ -310,6 +310,10 @@ export class MarketAddEditProduct extends PureComponent {
 		this.showAddTag = true;
 	};
 
+	deleteImage = (image) => {
+		this.images.splice(this.images.indexOf(image));
+	}
+
 	render() {
 		const editing = !!this.uuid && this.product;
 		const { defaultCurrency } = this.storeProfile;
@@ -379,6 +383,9 @@ export class MarketAddEditProduct extends PureComponent {
 						{this.images.map(e => (
 							<View style={styles.photo}>
 								<Image style={styles.image} source={{ uri: e }} />
+								<TouchableOpacity style={styles.deleteImage} onPress={() => this.deleteImage(e)}>
+									<Icon name={'close'} color={colors.red} size={20} />
+								</TouchableOpacity>
 							</View>
 						))}
 						<TouchableOpacity onPress={() => this.onPickImage()} style={styles.photo}>
