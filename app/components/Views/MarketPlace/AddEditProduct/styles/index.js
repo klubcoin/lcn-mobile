@@ -221,6 +221,15 @@ const styles = StyleSheet.create({
 		right: 25,
 		color: colors.orange
 	},
+	deleteTag: {
+		width: 24,
+		height: 24,
+		position: 'absolute',
+		bottom: -8,
+		right: -8,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
 	deleteImage: {
 		width: 24,
 		height: 24,

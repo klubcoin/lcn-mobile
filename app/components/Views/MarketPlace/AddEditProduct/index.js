@@ -310,8 +310,12 @@ export class MarketAddEditProduct extends PureComponent {
 		this.showAddTag = true;
 	};
 
+	deleteTag = (tag) => {
+		this.tags.splice(this.tags.indexOf(tag), 1);
+	}
+
 	deleteImage = (image) => {
-		this.images.splice(this.images.indexOf(image));
+		this.images.splice(this.images.indexOf(image), 1);
 	}
 
 	render() {
@@ -371,6 +375,9 @@ export class MarketAddEditProduct extends PureComponent {
 						{this.tags.map(e => (
 							<View style={styles.chip}>
 								<Text>{e}</Text>
+								<TouchableOpacity style={styles.deleteTag} onPress={() => this.deleteTag(e)}>
+									<Icon name={'close'} color={colors.red} size={20} />
+								</TouchableOpacity>
 							</View>
 						))}
 						<TouchableOpacity onPress={this.onAddTag} style={styles.addChip}>
