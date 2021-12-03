@@ -233,6 +233,10 @@ class VendorOrders extends PureComponent {
 		);
 	}
 
+	onRefund = () => {
+		this.props.navigation.navigate('SendFlowView');
+	}
+
 	renderFooter = () => {
 		return (
 			<View style={styles.footer}>
@@ -241,7 +245,7 @@ class VendorOrders extends PureComponent {
 					<Text style={styles.textAll}>{strings('market.select_all')}</Text>
 				</TouchableOpacity>
 				<View style={{ flexDirection: 'row', height: '100%' }}>
-					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn]} activeOpacity={0.6} onPress={this.gotoCheckout}>
+					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn]} activeOpacity={0.6} onPress={this.onRefund}>
 						<Text style={styles.textActionBtn}>{strings('market.refund')}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.actionBtn} activeOpacity={0.6} onPress={() => this.viewStatuesModal = true}>
@@ -376,7 +380,6 @@ class VendorOrders extends PureComponent {
 
 				<ScrollableTabView
 					renderTabBar={this.renderTabBar}
-					initialPage={this.currentTabIndex}
 					onChangeTab={obj => this.onChangeTab(obj)}
 				>
 					{
