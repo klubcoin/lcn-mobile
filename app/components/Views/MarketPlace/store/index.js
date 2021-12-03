@@ -114,7 +114,7 @@ class Store {
 	}
 
 	async deleteProduct(uuid) {
-		const index = this.marketProducts.findIndex(e => (e.uuid = uuid));
+		const index = this.marketProducts.findIndex(e => (e.uuid == uuid));
 		if (index >= 0) this.marketProducts.splice(index, 1);
 		await this.save(kMarketStoreProducts, this.marketProducts);
 	}
@@ -134,7 +134,7 @@ class Store {
 	}
 
 	async removeRecentlyViewedProduct(uuid) {
-		const index = this.marketRecentProducts.findIndex(e => (e.uuid = uuid));
+		const index = this.marketRecentProducts.findIndex(e => (e.uuid == uuid));
 		if (index >= 0) this.marketRecentProducts.splice(index, 1);
 		await this.save(kMarketRecentProducts, this.marketRecentProducts);
 	}
@@ -145,7 +145,7 @@ class Store {
 	}
 
 	async removeRecentProvider(uuid) {
-		const index = this.marketRecentProviders.findIndex(e => (e.uuid = uuid));
+		const index = this.marketRecentProviders.findIndex(e => (e.uuid == uuid));
 		if (index >= 0) this.marketRecentProviders.splice(index, 1);
 		await this.save(kMarketRecentProviders, this.marketRecentProviders);
 	}
@@ -156,7 +156,7 @@ class Store {
 	}
 
 	async removeFavoriteProduct(uuid) {
-		const index = this.marketFavoriteProducts.findIndex(e => (e.uuid = uuid));
+		const index = this.marketFavoriteProducts.findIndex(e => (e.uuid == uuid));
 		if (index >= 0) this.marketFavoriteProducts.splice(index, 1);
 		await this.save(kMarketFavoriteProducts, this.marketFavoriteProducts);
 	}
