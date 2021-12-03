@@ -1,4 +1,4 @@
-import store from '.';
+import store from './index';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import preferences from '../../../../store/preferences';
@@ -56,8 +56,8 @@ export default class ChatService {
 					message.payload.uri = `file://${path}`;
 					message.payload.loading = false;
 					store.saveChatMessages(peerId, { messages });
-					DeviceEventEmitter.emit('FileTransReceived', { data, path });
 				}
+				DeviceEventEmitter.emit('FileTransReceived', { data, path });
 			});
 		}
 	};
