@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../store';
 import { menuKeys } from '../Drawer';
@@ -9,13 +9,16 @@ import { colors } from '../../../../styles/common';
 import Search from '../components /Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
-import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
 import Cart from '../components /Cart';
 import { refStoreService } from '../store/StoreService';
 import { StoreQuery } from '../store/StoreMessages';
 import { sha256 } from '../../../../core/CryptoSignature';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import Engline from '../../../../core/Engine';
+import { ReadFile } from '../../FilesManager/store/FileStore';
+import StoreImage from '../components /StoreImage';
 
 class MarketCategory extends PureComponent {
 	vendor = {};
@@ -109,9 +112,12 @@ class MarketCategory extends PureComponent {
 	renderProduct = item => {
 		const { title, price, description, images } = item;
 		const photo = images[0];
+		const { selectedAddress } = Engline.state.PreferencesController;
+		const source = ReadFile(selectedAddress, this.vendor.wallet, sha256(photo), photo);
+
 		return (
 			<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(item)}>
-				<Image source={{ uri: photo }} style={styles.photo} />
+				<StoreImage style={styles.photo} source={source} />
 				<Text style={styles.title}>{title}</Text>
 				<Text numberOfLines={1} style={styles.desc}>
 					{description}
