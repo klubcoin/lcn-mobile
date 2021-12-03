@@ -19,6 +19,7 @@ import APIService from "../../../../services/APIService";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Device from "../../../../util/Device";
 import CheckBox from "@react-native-community/checkbox";
+import ModalSelector from "../../../UI/AddCustomTokenOrApp/ModalSelector";
 
 class VendorOrders extends PureComponent {
 	orderStatuses = [
@@ -74,6 +75,7 @@ class VendorOrders extends PureComponent {
 	categories = [];
 	selectedOrders = [];
 	currentTabIndex = 0;
+	viewStatuesModal = false;
 
 	constructor(props) {
 		super(props)
@@ -83,7 +85,8 @@ class VendorOrders extends PureComponent {
 			selectedOrders: observable,
 			currentTabIndex: observable,
 			orderStatuses: observable,
-			sortOptions: observable
+			sortOptions: observable,
+			viewStatuesModal: observable
 		})
 	}
 
@@ -241,7 +244,7 @@ class VendorOrders extends PureComponent {
 					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn]} activeOpacity={0.6} onPress={this.gotoCheckout}>
 						<Text style={styles.textActionBtn}>{strings('market.refund')}</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.actionBtn} activeOpacity={0.6} onPress={this.gotoCheckout}>
+					<TouchableOpacity style={styles.actionBtn} activeOpacity={0.6} onPress={() => this.viewStatuesModal = true}>
 						<Text style={styles.textActionBtn}>{strings('market.change_status')}</Text>
 					</TouchableOpacity>
 				</View>
@@ -279,6 +282,26 @@ class VendorOrders extends PureComponent {
 	onSelectSortOption = (label) => {
 		this.sortOptions.forEach(e => e.label == label ? e.isSelected = true : e.isSelected = false)
 	}
+
+
+	renderStatuesModal = () => {
+		const options = this.orderStatuses.map(e => ({
+			key: e.label,
+			value: e.label
+		}));
+
+		return (
+			<ModalSelector
+				visible={this.viewStatuesModal}
+				options={options}
+				hideKey={true}
+				onSelect={item =>	{
+					this.viewStatuesModal = false
+				}}
+				onClose={() => {this.viewStatuesModal = false}}
+			/>
+		);
+	};
 
 	renderFilter = () => {
 		return (
@@ -361,6 +384,7 @@ class VendorOrders extends PureComponent {
 					}
 				</ScrollableTabView>
 				{this.renderFilter()}
+				{this.renderStatuesModal()}
 				{this.renderFooter()}
 			</View>
 		)
