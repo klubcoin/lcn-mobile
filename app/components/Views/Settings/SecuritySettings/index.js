@@ -572,7 +572,7 @@ class Settings extends PureComponent {
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 
 		const webrtc = refWebRTC();
-		const command = ReadFile(from, null, lookupName);
+		const command = ReadFile(from, null, null, lookupName);
 		FileTransferWebRTC.readFile(command, contacts.map(e => e.address), webrtc);
 		DeviceEventEmitter.once('FileTransFetched', async ({ path }) => {
 			const content = await RNFS.readFile(path, 'utf8');

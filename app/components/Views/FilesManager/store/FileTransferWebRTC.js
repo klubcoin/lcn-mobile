@@ -313,6 +313,7 @@ export default class FileTransferWebRTC {
 		});
 	};
 
+	// read file parts from peers
 	static readFile(readFileAction, addresses, webrtc) {
 		const data = readFileAction;
 		const { from, name } = data;
@@ -322,6 +323,7 @@ export default class FileTransferWebRTC {
 		return ft;
 	}
 
+	// send parts to different peers
 	static sendAsParts(data, lookupName, from, addresses, webrtc, params) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, params);
 		ft.checksum = sha256(JSON.stringify(data));
@@ -331,6 +333,7 @@ export default class FileTransferWebRTC {
 		return ft;
 	}
 
+	// send a complete file to peer
 	static sendAsOne(data, from, addresses, webrtc) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, { fullSend: true });
 		ft.checksum = sha256(JSON.stringify(data));

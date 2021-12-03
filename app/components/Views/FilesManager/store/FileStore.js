@@ -47,10 +47,11 @@ export const ContainFiles = (from, savedFiled) => ({
    files: [savedFiled]
 });
 
-export const ReadFile = (from, hash, name) => (
+export const ReadFile = (from, to, hash, name) => (
    {
       action: 'read_file',
       from,
+      to,
       hash,
       name,
    }
