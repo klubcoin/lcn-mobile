@@ -176,9 +176,52 @@ const styles = StyleSheet.create({
 		paddingBottom: 0,
 	},
 	textStyle: {
-		fontSize: 12,
+		fontSize: RFValue(12),
 		letterSpacing: 0.5,
 	},
+	bottomModal: {
+		backgroundColor: 'transparent',
+		alignItems:'center',
+		justifyContent: 'center',
+	},
+	filterHeaderWrapper: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		borderBottomWidth: 1,
+		borderBottomColor: colors.grey050,
+		paddingHorizontal: 16,
+		paddingVertical: 8
+	},
+	filterBodyWrapper: {
+		paddingHorizontal: 16, 
+		paddingVertical: 10
+	},
+	sectionHeader: {
+		fontSize: RFValue(14),
+		fontWeight: '600'
+	},
+	statusItem: { 
+		flexDirection: 'row', 
+		justifyContent: "space-between", 
+		marginVertical: 5 
+	},
+	sortOptionsWrapper: {
+		marginTop: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	sortOption: {
+		alignItems: 'center',
+		flex: 1
+	},
+	middleOption: {
+		borderRightWidth: 1,
+		borderLeftWidth: 1,
+		borderColor: colors.grey050
+	},
+	resetBtnText: {
+		color: colors.red
+	}
 });
 
 export default assignNestedObj(styles, brandStyles);

@@ -1887,6 +1887,9 @@
 		"my_orders": "My orders",
 		"address_name": "Address name",
 		"street": "Street",
-		"zip_code": "Zip code"
+		"zip_code": "Zip code",
+		"filter": "Filter",
+		"order_status": "Order status"
+
 	}
 }

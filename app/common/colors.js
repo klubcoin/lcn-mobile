@@ -11,5 +11,7 @@ export default {
   gray: '#555',
   lightPurple: '#748cfb',
   storeBg: '#748cfb',
-  pink: '#f84880'
+  pink: '#f84880',
+  greytransparent100: 'rgba(115, 115, 115, 0.5)',
+
 }
