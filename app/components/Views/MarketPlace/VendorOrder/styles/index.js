@@ -212,12 +212,17 @@ const styles = StyleSheet.create({
 	},
 	sortOption: {
 		alignItems: 'center',
-		flex: 1
+		flex: 1,
+		paddingVertical: 8
 	},
 	middleOption: {
 		borderRightWidth: 1,
 		borderLeftWidth: 1,
 		borderColor: colors.grey050
+	},
+	selectedOption: {
+		backgroundColor: colors.grey050,
+		borderRadius: 5
 	},
 	resetBtnText: {
 		color: colors.red

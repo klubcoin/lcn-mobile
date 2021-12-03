@@ -1889,7 +1889,10 @@
 		"street": "Street",
 		"zip_code": "Zip code",
 		"filter": "Filter",
-		"order_status": "Order status"
+		"order_statuses": "Order statuses",
+		"refund": "Refund",
+		"change_status": "Change status",
+		"sort_by": "Sort by"
 
 	}
 }

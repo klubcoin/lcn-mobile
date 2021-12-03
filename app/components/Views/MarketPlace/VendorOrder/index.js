@@ -21,28 +21,59 @@ import Device from "../../../../util/Device";
 import CheckBox from "@react-native-community/checkbox";
 
 class VendorOrders extends PureComponent {
+	orderStatuses = [
+		{
+			"label": "Pending payment",
+			"value": false
+		},
+		{
+			"label": "Processing",
+			"value": false
+		},
+		{
+			"label": "Shipping",
+			"value": false
+		},
+		{
+			"label": "Completed",
+			"value": false
+		},
+		{
+			"label": "Canceled",
+			"value": false
+		},
+		{
+			"label": "Refunded",
+			"value": false
+		},
+		{
+			"label": "On hold",
+			"value": false
+		}
+	]
+	sortOptions = [
+		{
+			"label": "Alphabetical",
+			"icon": "sort-alphabetical-ascending",
+			"isSelected": true
+		},
+		{
+			"label": "Date",
+			"icon": "calendar-month",
+			"isSelected": false
+
+		},
+		{
+			"label": "Total amount",
+			"icon": "currency-usd",
+			"isSelected": false
+		}
+	]
 
 	productGroups = {};
 	categories = [];
 	selectedOrders = [];
 	currentTabIndex = 0;
-
-	orderStatus = ['Pending payment', 'Processing', 'Shipping', 'Completed', 'Canceled', 'Refunded']
-	sortOptions = [
-		{
-			"label": "Alphabetical",
-			"icon": "sort-alphabetical-ascending"
-		},
-		{
-			"label": "Date",
-			"icon": "calendar-month"
-		},
-		{
-			"label": "Total amount",
-			"icon": "currency-usd"
-		}
-	]
-
 
 	constructor(props) {
 		super(props)
@@ -51,6 +82,8 @@ class VendorOrders extends PureComponent {
 			categories: observable,
 			selectedOrders: observable,
 			currentTabIndex: observable,
+			orderStatuses: observable,
+			sortOptions: observable
 		})
 	}
 
@@ -189,7 +222,7 @@ class VendorOrders extends PureComponent {
 						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
 					</TouchableOpacity>
 					<Text style={styles.titleNavBar}>{strings('market.orders')}</Text>
-					<TouchableOpacity onPress={this.toggleFilter} style={styles.navButton}>
+					<TouchableOpacity onPress={()=> this.filterRef.open()} style={styles.navButton}>
 						<Icon style={styles.backIcon} name={'filter'} size={RFValue(15)} />
 					</TouchableOpacity>
 				</View>
@@ -206,10 +239,10 @@ class VendorOrders extends PureComponent {
 				</TouchableOpacity>
 				<View style={{ flexDirection: 'row', height: '100%' }}>
 					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn]} activeOpacity={0.6} onPress={this.gotoCheckout}>
-						<Text style={styles.textActionBtn}>Refund</Text>
+						<Text style={styles.textActionBtn}>{strings('market.refund')}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.actionBtn} activeOpacity={0.6} onPress={this.gotoCheckout}>
-						<Text style={styles.textActionBtn}>Change status</Text>
+						<Text style={styles.textActionBtn}>{strings('market.change_status')}</Text>
 					</TouchableOpacity>
 				</View>
 
@@ -234,8 +267,17 @@ class VendorOrders extends PureComponent {
 		);
 	}
 
-	toggleFilter = () => {
-		this.filterRef.open()
+	onResetFilter = () => {
+		this.orderStatuses.forEach(e => e.value = false);
+		this.sortOptions.forEach((e, index) => index == 0 ? e.isSelected = true : e.isSelected = false)
+	}
+
+	onSelectStatus = (label, value) => {
+		this.orderStatuses.forEach(e => e.label == label ? e.value = value : null);
+ 	}
+
+	onSelectSortOption = (label) => {
+		this.sortOptions.forEach(e => e.label == label ? e.isSelected = true : e.isSelected = false)
 	}
 
 	renderFilter = () => {
@@ -251,24 +293,28 @@ class VendorOrders extends PureComponent {
 				}}
 			>
 				<View style={styles.filterHeaderWrapper}>
-					<Text style={styles.resetBtnText}>{strings('payment_request.reset')}</Text>
+					<TouchableOpacity onPress={this.onResetFilter}>
+						<Text style={styles.resetBtnText}>{strings('payment_request.reset')}</Text>
+					</TouchableOpacity>
 					<Text style={styles.title}>{strings('market.filter')}</Text>
-					<Text>{strings('navigation.close')}</Text>
+					<TouchableOpacity onPress={() => this.filterRef.close()}>
+						<Text>{strings('navigation.close')}</Text>
+					</TouchableOpacity>
 
 				</View>
 				<ScrollView style={{ flex: 1, marginBottom: 20 }}>
 					<TouchableOpacity activeOpacity={1}>
 						<View style={styles.filterBodyWrapper}>
 							<View style={{ marginTop: 5, marginBottom: 15 }}>
-								<Text style={styles.sectionHeader}>{strings('market.order_status')}</Text>
+								<Text style={styles.sectionHeader}>{strings('market.order_statuses')}</Text>
 								{
-									this.orderStatus.map(e => (
+									this.orderStatuses.map(e => (
 										<View style={styles.statusItem}>
-											<Text>{e}</Text>
+											<Text>{e.label}</Text>
 											<CheckBox
 												disabled={false}
-												value={true}
-												onValueChange={(newValue) => console.log(newValue)}
+												value={e.value}
+												onValueChange={(value) => this.onSelectStatus(e.label, value)}
 												boxType={'square'}
 												style={{ width: 15, height: 15 }}
 												onTintColor={colors.primary}
@@ -279,12 +325,12 @@ class VendorOrders extends PureComponent {
 								}
 							</View>
 
-							<Text style={styles.sectionHeader}>Sort by</Text>
+							<Text style={styles.sectionHeader}>{strings('market.sort_by')}</Text>
 							<View>
 								<View style={styles.sortOptionsWrapper}>
 									{
 										this.sortOptions.map((e, index) => (
-											<TouchableOpacity style={[styles.sortOption, index == 1 && styles.middleOption]}>
+											<TouchableOpacity style={[styles.sortOption, index == 1 && styles.middleOption, e.isSelected && styles.selectedOption]} onPress={()=>this.onSelectSortOption((e.label))}>
 												<MaterialIcons name={e.icon} size={20} />
 												<Text>{e.label}</Text>
 											</TouchableOpacity>
