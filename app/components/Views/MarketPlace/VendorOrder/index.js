@@ -233,8 +233,18 @@ class VendorOrders extends PureComponent {
 		);
 	}
 
+	selectAll = () => {
+	
+	}
+
 	onRefund = () => {
+		if (this.selectedOrders.length == 0) return;
 		this.props.navigation.navigate('SendFlowView');
+	}
+
+	onChangeStatus = () => {
+		if (this.selectedOrders.length == 0) return;
+		this.viewStatuesModal = true;
 	}
 
 	renderFooter = () => {
@@ -245,10 +255,10 @@ class VendorOrders extends PureComponent {
 					<Text style={styles.textAll}>{strings('market.select_all')}</Text>
 				</TouchableOpacity>
 				<View style={{ flexDirection: 'row', height: '100%' }}>
-					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn]} activeOpacity={0.6} onPress={this.onRefund}>
+					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn, this.selectedOrders.length == 0 && styles.disabled]} activeOpacity={0.6} onPress={this.onRefund}>
 						<Text style={styles.textActionBtn}>{strings('market.refund')}</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.actionBtn} activeOpacity={0.6} onPress={() => this.viewStatuesModal = true}>
+					<TouchableOpacity style={[styles.actionBtn, this.selectedOrders.length == 0 && styles.disabled]} activeOpacity={0.6} onPress={this.onChangeStatus}>
 						<Text style={styles.textActionBtn}>{strings('market.change_status')}</Text>
 					</TouchableOpacity>
 				</View>

@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	refundBtn: {
-		backgroundColor: colors.red
+		backgroundColor: colors.red, 
+		borderRightWidth: StyleSheet.hairlineWidth,
 	},
 	textActionBtn: {
 		color: colors.white,
@@ -226,6 +227,9 @@ const styles = StyleSheet.create({
 	},
 	resetBtnText: {
 		color: colors.red
+	},
+	disabled: {
+		backgroundColor: colors.grey200
 	}
 });
 
