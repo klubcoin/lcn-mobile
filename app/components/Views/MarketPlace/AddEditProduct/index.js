@@ -80,8 +80,8 @@ export class MarketAddEditProduct extends PureComponent {
 		this.price = price || '';
 		this.quantity = quantity || '';
 		this.description = description || '';
-		this.tags = tags || [];
-		this.images = images || [];
+		this.tags = tags ? [...tags] : [];
+		this.images = images ? [...images] : [];
 		this.uuid = uuid;
 	}
 
