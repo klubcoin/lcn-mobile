@@ -212,11 +212,13 @@ export default class WebRTC {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			} else if (data.checksum) {
 				this._sendToPeer(peerId, AckWebRTC(data.checksum));
-			} else if (data.action == AckWebRTC().action && data.hash) {
+			}
+			if (data.action == AckWebRTC().action && data.hash) {
 				if (this.monitors[data.hash]) {
 					clearTimeout(this.monitors[data.hash]);
 				}
-			} else if (data.action == WalletProfile().action) {
+			}
+			if (data.action == WalletProfile().action) {
 				if (data.profile) {
 					await preferences.setPeerProfile(peerId, data.profile);
 				} else {
