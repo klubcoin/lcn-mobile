@@ -3,7 +3,7 @@ import { addHexPrefix } from 'ethereumjs-util';
 import { sha256 } from '../../../../core/CryptoSignature';
 import APIService from '../../../../services/APIService';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { StoreAnnounce, StoreLookUp, StoreMessage, StoreQuery } from './StoreMessages';
+import { StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreQuery } from './StoreMessages';
 import StoreMessaging from './StoreMessaging';
 
 const useAnnounceAPI = true;
@@ -89,6 +89,8 @@ export default class StoreService {
 			if (this.evtMessage) this.evtMessage(message);
 		} else if (message.action == StoreQuery().action) {
 			this.handleStoreQuery(message, peerId);
+		} else if (message.action == StoreOrder().action) {
+			this.handleStoreOrder(message, peerId);
 		}
 	};
 
@@ -227,6 +229,31 @@ export default class StoreService {
 		addresses.map(address => {
 			webrtc.sendToPeer(address.toLowerCase(), data);
 		});
+	}
+
+	sendOrder(order) {
+		const { products } = order;
+
+		const orderItems = products.map(e => {
+			const { uuid, product, quantity } = e;
+			return {
+				uuid,
+				price: product.price,
+				currency: product.currency?.symbol,
+				quantity,
+			}
+		});
+
+		const to = order.to.toLowerCase();
+		const data = StoreOrder(this.from, to, store.shippingInfo, orderItems);
+		const hash = sha256(JSON.stringify(data));
+
+		this.storeMessaging.send(data, to);
+		return hash;
+	}
+
+	handleStoreOrder = (data, peerId) => {
+
 	}
 }
 

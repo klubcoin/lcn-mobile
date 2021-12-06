@@ -47,6 +47,8 @@ import analyticsV2 from '../../../../util/analyticsV2';
 import * as sha3JS from 'js-sha3';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { refStoreService } from '../store/StoreService';
+import { StoreOrder } from '../store/StoreMessages';
 
 const { hexToBN } = util;
 /**
@@ -233,6 +235,21 @@ class MarketPurchase extends PureComponent {
 		if (this.processing) return;
 		this.processing = true;
 
+		const { navigation } = this.props;
+		const order = navigation.getParam('order');
+
+		const storeService = refStoreService();
+		const hash = storeService?.sendOrder(order);
+
+		storeService.addListener(data => {
+			if (data.action == StoreOrder().action && data.hash == hash) {
+				this.pendingOrder = data;
+				this.sendTransaction();
+			}
+		});
+	}
+
+	sendTransaction = async () => {
 		const { TransactionController } = Engine.context;
 
 		try {
