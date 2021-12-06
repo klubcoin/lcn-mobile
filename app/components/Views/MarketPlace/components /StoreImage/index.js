@@ -20,10 +20,11 @@ class StoreImage extends Component {
 
 	componentDidMount() {
 		FileTransferWebRTC.readFile(this.source, [this.source?.to], refWebRTC());
-		DeviceEventEmitter.once('FileTransReceived', async ({ path, data }) => {
+		const listener = DeviceEventEmitter.addListener('FileTransReceived', async ({ path, data }) => {
 			if (data?.name == this.source.hash) {
 				const content = await RNFS.readFile(path, 'base64');
 				this.image = `data:image/png;base64,${content}`;
+				listener.remove();
 			}
 		});
 	}
