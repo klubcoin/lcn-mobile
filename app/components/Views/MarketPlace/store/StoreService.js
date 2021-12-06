@@ -3,8 +3,9 @@ import { addHexPrefix } from 'ethereumjs-util';
 import { sha256 } from '../../../../core/CryptoSignature';
 import APIService from '../../../../services/APIService';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreQuery } from './StoreMessages';
+import { OrderStatus, StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreOrderStats, StoreQuery } from './StoreMessages';
 import StoreMessaging from './StoreMessaging';
+import { randomHex, stripHexPrefix } from 'web3-utils';
 
 const useAnnounceAPI = true;
 export default class StoreService {
@@ -246,14 +247,20 @@ export default class StoreService {
 
 		const to = order.to.toLowerCase();
 		const data = StoreOrder(this.from, to, store.shippingInfo, orderItems);
-		const hash = sha256(JSON.stringify(data));
+		data.hash = sha256(JSON.stringify(data));
 
 		this.storeMessaging.send(data, to);
-		return hash;
+		return data.hash;
 	}
 
 	handleStoreOrder = (data, peerId) => {
+		const clone = { ...data };
+		delete clone.hash;
+		const hash = sha256(JSON.stringify(clone));
+		const orderId = `ORD${stripHexPrefix(randomHex(6)).toUpperCase()}`;
 
+		const message = StoreOrderStats(this.from, peerId, hash, orderId, OrderStatus.processing);
+		this.storeMessaging.send(message, peerId);
 	}
 }
 

@@ -1,5 +1,9 @@
 import { sha256 } from '../../../../core/CryptoSignature';
 
+export const OrderStatus = {
+  processing: 'processing',
+}
+
 export const StoreAnnounce = (from, hashes, info) => ({
   action: 'store_announce',
   from,
@@ -41,4 +45,13 @@ export const StoreOrder = (from, to, shipping, data) => ({
   shipping,
   data,
   checksum: sha256(JSON.stringify({ from, data })),
+});
+
+export const StoreOrderStats = (from, to, hash, orderId, status) => ({
+  action: 'order_stats',
+  from,
+  to,
+  hash,
+  orderId,
+  status,
 });
