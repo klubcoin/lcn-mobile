@@ -258,6 +258,7 @@ class MarketPurchase extends PureComponent {
 			});
 			this.processing = false;
 
+			this.goBack();
 		} catch (error) {
 			this.processing = false;
 			Alert.alert(strings('transactions.transaction_error'), error && error.message, [

@@ -665,19 +665,19 @@ const Main = props => {
 	initializeServices = async (address) => {
 		const apps = await preferences.getSavedAppList();
 		const marketApp = apps.find(app => app.instance.name == 'Liquimart');
-		if (marketApp) {
+		// if (marketApp) {
 			await store.load();
 			const storeService = new StoreService(address);
 			setStoreService(storeService);
 			storeService.announceToTracker();
-		}
+		// }
 
 		const chatApp = apps.find(app => app.instance.name == 'Liquichat');
-		if (chatApp) {
+		// if (chatApp) {
 			await messageStore.load();
 			const chatService = new ChatService(address);
 			setChatService(chatService);
-		}
+		// }
 
 		const fileService = new FileTransferService(address);
 		setFileTransferService(fileService);
