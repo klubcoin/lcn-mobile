@@ -211,6 +211,9 @@ export default createStackNavigator(
 						MarketCategory: {
 							screen: MarketCategory
 						},
+						MarketSellerCategory: {
+							screen: MarketSellerCategory
+						},
 						MarketProduct: {
 							screen: MarketProduct
 						},
