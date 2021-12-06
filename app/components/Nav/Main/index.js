@@ -634,7 +634,7 @@ const Main = props => {
 		}
 		// request if not yet exists
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
+		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, (data) => {
 			if (!data.profile) return true;
 			Object.assign(message.data, data.profile, { address });
 			setFriendMessage(message);

@@ -212,7 +212,7 @@ class Contacts extends PureComponent {
 
 	getPeerInfo = (address) => {
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address}`, (data) => {
+		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, (data) => {
 			if (!data.profile) return true;
 			Object.assign(this.data.data, data.profile);
 			this.setState({ data: data.profile });
