@@ -33,3 +33,12 @@ export const StoreMessage = (message, from, to) => ({
   checksum: sha256(JSON.stringify({ message, from, to })),
   createdAt: new Date().getTime()
 });
+
+export const StoreOrder = (from, to, shipping, data) => ({
+  action: 'store_order',
+  from,
+  to,
+  shipping,
+  data,
+  checksum: sha256(JSON.stringify({ from, data })),
+});
