@@ -68,9 +68,11 @@ class MarketCheckout extends PureComponent {
 	}
 
 	renderItem = ({ index, item }) => {
+		const {  phone, address } = store.shippingInfo || {};
 		const { products, profile } = this.productGroups[item];
 		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
+		const shipping = phone && address;
 
 		return (
 			products.length > 0 && <View style={styles.itemWrapper}>
@@ -112,6 +114,7 @@ class MarketCheckout extends PureComponent {
 				</View>
 				<StyledButton
 					type={'confirm'}
+					disabled={!shipping}
 					onPress={() => {
 						this.onPurchase({ ...this.productGroups[item], to: item, amount: amount.toFixed(), currencyUnit});
 					}}
