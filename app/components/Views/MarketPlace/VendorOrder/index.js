@@ -1,8 +1,7 @@
 import React, { PureComponent } from "react";
 import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { autorun, makeObservable, observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
-import { Observer } from "mobx-react-lite";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
@@ -10,11 +9,8 @@ import { strings } from "../../../../../locales/i18n";
 import store from "../store";
 import colors from "../../../../common/colors";
 import routes from "../../../../common/routes";
-import StyledButton from "../../../UI/StyledButton";
 import { RFValue } from "react-native-responsive-fontsize";
 import BigNumber from "bignumber.js";
-import ScrollableTabView from "react-native-scrollable-tab-view";
-import ScrollableTabBar from "react-native-scrollable-tab-view/ScrollableTabBar";
 import APIService from "../../../../services/APIService";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Device from "../../../../util/Device";
@@ -71,7 +67,7 @@ class VendorOrders extends PureComponent {
 		}
 	]
 
-	productGroups = {};
+	orders = [];
 	categories = [];
 	selectedOrders = [];
 	currentTabIndex = 0;
@@ -80,7 +76,7 @@ class VendorOrders extends PureComponent {
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
-			productGroups: observable,
+			orders: observable,
 			categories: observable,
 			selectedOrders: observable,
 			currentTabIndex: observable,
@@ -91,21 +87,12 @@ class VendorOrders extends PureComponent {
 	}
 
 	componentDidMount() {
-		this.groupProducts();
+		this.fetchOrders();
 		this.fetchCategories();
 	}
 
-	groupProducts = () => {
-		store.marketCart.forEach(e => {
-			var address = e.product?.wallet?.toLowerCase();
-			this.productGroups[address] = Object.assign(this.productGroups[address] || {}, { profile: store.storeVendors[address]?.profile });
+	fetchOrders = () => {
 
-			if (this.productGroups[address].products) {
-				this.productGroups[address].products?.unshift(e);
-			} else {
-				this.productGroups[address].products = [e];
-			}
-		})
 	};
 
 	async fetchCategories() {
@@ -135,14 +122,14 @@ class VendorOrders extends PureComponent {
 	}
 
 	renderItem = ({ item }) => {
-		const { products, profile } = this.productGroups[item];
+		const { products, profile } = item;
 		const { currentTabIndex, categories } = this;
 
 		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
 		return (
 			products.length > 0 && (currentTabIndex === 0 || products[0].product.category.uuid === categories[currentTabIndex].uuid) &&
-			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: { total: amount, currencyUnit } })}>
+			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: item, amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
 						<Text style={styles.storeName}>#ORDER21112</Text>
@@ -199,12 +186,11 @@ class VendorOrders extends PureComponent {
 		)
 	}
 
-	renderOrderItems = (tabLabel) => {
+	renderOrderItems = () => {
 		return (
-			<View style={styles.body} tabLabel={tabLabel}>
-
+			<View style={styles.body}>
 				<FlatList
-					data={Object.keys(this.productGroups)}
+					data={this.orders}
 					keyExtractor={(item) => item.uuid}
 					renderItem={this.renderItem.bind(this)}
 				/>
@@ -216,7 +202,6 @@ class VendorOrders extends PureComponent {
 		this.props.navigation.toggleDrawer();
 	};
 
-
 	renderNavBar() {
 		return (
 			<SafeAreaView>
@@ -225,7 +210,7 @@ class VendorOrders extends PureComponent {
 						<Icon style={styles.backIcon} name={'bars'} size={RFValue(15)} />
 					</TouchableOpacity>
 					<Text style={styles.titleNavBar}>{strings('market.orders')}</Text>
-					<TouchableOpacity onPress={()=> this.filterRef.open()} style={styles.navButton}>
+					<TouchableOpacity onPress={() => this.filterRef.open()} style={styles.navButton}>
 						<Icon style={styles.backIcon} name={'filter'} size={RFValue(15)} />
 					</TouchableOpacity>
 				</View>
@@ -234,7 +219,7 @@ class VendorOrders extends PureComponent {
 	}
 
 	selectAll = () => {
-	
+
 	}
 
 	onRefund = () => {
@@ -267,23 +252,6 @@ class VendorOrders extends PureComponent {
 		);
 	};
 
-	onChangeTab = (obj) => {
-		this.currentTabIndex = obj.i;
-	}
-
-	renderTabBar = () => {
-		return (
-			<ScrollableTabBar
-				underlineStyle={styles.tabUnderlineStyle}
-				activeTextColor={colors.blue}
-				inactiveTextColor={colors.fontTertiary}
-				backgroundColor={colors.white}
-				tabStyle={styles.tabStyle}
-				textStyle={styles.textStyle}
-			/>
-		);
-	}
-
 	onResetFilter = () => {
 		this.orderStatuses.forEach(e => e.value = false);
 		this.sortOptions.forEach((e, index) => index == 0 ? e.isSelected = true : e.isSelected = false)
@@ -291,7 +259,7 @@ class VendorOrders extends PureComponent {
 
 	onSelectStatus = (label, value) => {
 		this.orderStatuses.forEach(e => e.label == label ? e.value = value : null);
- 	}
+	}
 
 	onSelectSortOption = (label) => {
 		this.sortOptions.forEach(e => e.label == label ? e.isSelected = true : e.isSelected = false)
@@ -309,10 +277,10 @@ class VendorOrders extends PureComponent {
 				visible={this.viewStatuesModal}
 				options={options}
 				hideKey={true}
-				onSelect={item =>	{
+				onSelect={item => {
 					this.viewStatuesModal = false
 				}}
-				onClose={() => {this.viewStatuesModal = false}}
+				onClose={() => { this.viewStatuesModal = false }}
 			/>
 		);
 	};
@@ -367,7 +335,7 @@ class VendorOrders extends PureComponent {
 								<View style={styles.sortOptionsWrapper}>
 									{
 										this.sortOptions.map((e, index) => (
-											<TouchableOpacity style={[styles.sortOption, index == 1 && styles.middleOption, e.isSelected && styles.selectedOption]} onPress={()=>this.onSelectSortOption((e.label))}>
+											<TouchableOpacity style={[styles.sortOption, index == 1 && styles.middleOption, e.isSelected && styles.selectedOption]} onPress={() => this.onSelectSortOption((e.label))}>
 												<MaterialIcons name={e.icon} size={20} />
 												<Text>{e.label}</Text>
 											</TouchableOpacity>
@@ -387,15 +355,7 @@ class VendorOrders extends PureComponent {
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
-
-				<ScrollableTabView
-					renderTabBar={this.renderTabBar}
-					onChangeTab={obj => this.onChangeTab(obj)}
-				>
-					{
-						this.categories.length > 0 ? this.categories.map(e => this.renderOrderItems(e.name)) : <View style={styles.body} />
-					}
-				</ScrollableTabView>
+				{this.renderOrderItems()}
 				{this.renderFilter()}
 				{this.renderStatuesModal()}
 				{this.renderFooter()}
