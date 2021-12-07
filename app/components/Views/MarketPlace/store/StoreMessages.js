@@ -1,3 +1,4 @@
+import { randomHex, stripHexPrefix } from 'web3-utils';
 import { sha256 } from '../../../../core/CryptoSignature';
 
 export const OrderStatus = {
@@ -40,6 +41,7 @@ export const StoreMessage = (message, from, to) => ({
 
 export const StoreOrder = (from, to, shipping, data) => ({
   action: 'store_order',
+  id: `${stripHexPrefix(randomHex(10)).toUpperCase()}`,
   from,
   to,
   shipping,

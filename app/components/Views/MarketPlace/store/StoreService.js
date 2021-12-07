@@ -92,6 +92,9 @@ export default class StoreService {
 			this.handleStoreQuery(message, peerId);
 		} else if (message.action == StoreOrder().action) {
 			this.handleStoreOrder(message, peerId);
+		} else if (message.action == StoreOrderStats().action) {
+			this.handleOrderStats(message, peerId);
+			if (this.evtMessage) this.evtMessage(message);
 		}
 	};
 
@@ -239,6 +242,8 @@ export default class StoreService {
 			const { uuid, product, quantity } = e;
 			return {
 				uuid,
+				title: product.title,
+				images: product.images,
 				price: product.price,
 				currency: product.currency?.symbol,
 				quantity,
@@ -249,8 +254,16 @@ export default class StoreService {
 		const data = StoreOrder(this.from, to, store.shippingInfo, orderItems);
 		data.hash = sha256(JSON.stringify(data));
 
+		store.addPurchasedOrder({
+			id: data.id,
+			vendor: to,
+			shipping: data.shipping,
+			items: orderItems,
+			createdAt: new Date(),
+		})
+
 		this.storeMessaging.send(data, to);
-		return data.hash;
+		return data.id;
 	}
 
 	handleStoreOrder = (data, peerId) => {
@@ -259,8 +272,22 @@ export default class StoreService {
 		const hash = sha256(JSON.stringify(clone));
 		const orderId = `ORD${stripHexPrefix(randomHex(6)).toUpperCase()}`;
 
-		const message = StoreOrderStats(this.from, peerId, hash, orderId, OrderStatus.processing);
+		if (hash != data.hash) return;
+
+		store.addVendorOrder({
+			orderId,
+			from: peerId,
+			shipping: data.shipping,
+			items: data.data,
+			createdAt: new Date(),
+		});
+
+		const message = StoreOrderStats(this.from, peerId, data.id, orderId, OrderStatus.processing);
 		this.storeMessaging.send(message, peerId);
+	}
+
+	handleOrderStats = (data, peerId) => {
+		store.updatePurchasedOrder(data);
 	}
 }
 
