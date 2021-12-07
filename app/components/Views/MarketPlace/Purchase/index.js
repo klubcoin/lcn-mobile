@@ -48,7 +48,7 @@ import * as sha3JS from 'js-sha3';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { refStoreService } from '../store/StoreService';
-import { StoreOrder } from '../store/StoreMessages';
+import { StoreOrder, StoreOrderStats } from '../store/StoreMessages';
 
 const { hexToBN } = util;
 /**
@@ -242,7 +242,7 @@ class MarketPurchase extends PureComponent {
 		const hash = storeService?.sendOrder(order);
 
 		storeService.addListener(data => {
-			if (data.action == StoreOrder().action && data.hash == hash) {
+			if (data.action == StoreOrderStats().action && data.hash == hash) {
 				this.pendingOrder = data;
 				this.sendTransaction();
 			}
