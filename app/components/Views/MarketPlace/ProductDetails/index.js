@@ -14,7 +14,7 @@ import Engine from '../../../../core/Engine';
 import CryptoSignature, { sha256 } from '../../../../core/CryptoSignature';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import store from '../store';
-import Cart from '../components /Cart';
+import Cart from '../components/Cart';
 import { showError } from '../../../../util/notify';
 import { StoreQuery } from '../store/StoreMessages';
 import { refStoreService } from '../store/StoreService';

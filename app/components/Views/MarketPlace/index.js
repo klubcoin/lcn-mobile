@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import APIService from '../../../services/APIService';
 import { menuKeys } from './Drawer';
-import Search from './components /Search';
+import Search from './components/Search';
 import { strings } from '../../../../locales/i18n';
 import Carousel from 'react-native-snap-carousel';
 import { isTablet } from 'react-native-device-info';
@@ -18,7 +18,7 @@ import ModalSelector from '../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { StoreAnnounce } from './store/StoreMessages';
 import { sha256 } from '../../../core/CryptoSignature';
-import Cart from './components /Cart';
+import Cart from './components/Cart';
 import { colors } from '../../../styles/common';
 
 const window = Dimensions.get('window');

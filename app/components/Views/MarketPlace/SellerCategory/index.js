@@ -6,7 +6,7 @@ import store from '../store';
 import { menuKeys } from '../Drawer';
 import styles from './styles';
 import { colors } from '../../../../styles/common';
-import Search from '../components /Search';
+import Search from '../components/Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
 

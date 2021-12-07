@@ -6,19 +6,19 @@ import store from '../store';
 import { menuKeys } from '../Drawer';
 import styles from './styles';
 import { colors } from '../../../../styles/common';
-import Search from '../components /Search';
+import Search from '../components/Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { isTablet } from 'react-native-device-info';
-import Cart from '../components /Cart';
+import Cart from '../components/Cart';
 import { refStoreService } from '../store/StoreService';
 import { StoreQuery } from '../store/StoreMessages';
 import { sha256 } from '../../../../core/CryptoSignature';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Engline from '../../../../core/Engine';
 import { ReadFile } from '../../FilesManager/store/FileStore';
-import StoreImage from '../components /StoreImage';
+import StoreImage from '../components/StoreImage';
 
 class MarketCategory extends PureComponent {
 	vendor = {};
