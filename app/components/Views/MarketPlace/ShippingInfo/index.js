@@ -62,7 +62,7 @@ export class ShippingInfo extends PureComponent {
 		const { shippingAddress } = publicInfo || {};
 
 		this.shippingAddress.phone = shippingAddress.phone || '';
-		this.shippingAddress.addressName = shippingAddress.addressName || '';
+		this.shippingAddress.address = shippingAddress.address || '';
 		this.shippingAddress.street = shippingAddress.street || '';
 		this.shippingAddress.zipCode = shippingAddress.zipCode || '';
 		this.shippingAddress.city = shippingAddress.city || '';
@@ -75,7 +75,7 @@ export class ShippingInfo extends PureComponent {
 	};
 
 	onSave() {
-		const { phone, addressName, street, zipCode, city, country } = this.shippingAddress;
+		const { phone, address, street, zipCode, city, country } = this.shippingAddress;
 
 		if (!this.name) {
 			return showError(strings('market.missing_name'));
@@ -86,7 +86,7 @@ export class ShippingInfo extends PureComponent {
 		if (!/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phone)) {
 			return showError(strings('market.invalid_phone'));
 		}
-		if (!addressName) {
+		if (!address) {
 			return showError(strings('market.missing_address'));
 		}
 		if (!street) {
@@ -108,7 +108,7 @@ export class ShippingInfo extends PureComponent {
 		const { identities } = Engine.state.PreferencesController;
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const account = identities[selectedAddress];
-		const shippingAddress = { "shippingAddress": this.shippingAddress };
+		const shippingAddress = { shippingAddress: this.shippingAddress };
 		const addressString = JSON.stringify(shippingAddress);
 		const signature = await CryptoSignature.signMessage(selectedAddress, addressString);
 		const params = [account.name, selectedAddress, addressString, signature];
@@ -120,10 +120,17 @@ export class ShippingInfo extends PureComponent {
 				if (response.error) {
 					alert(`${response.error.message}`);
 				} else {
+					const { phone, address, street, zipCode, city, country } = this.shippingAddress || {};
+					store.shippingInfo = {
+						name: account.name,
+						phone,
+						address: `${address}, ${street}, ${city} ${zipCode}, ${country}`
+					}
+					store.setShippingInfo(store.shippingInfo);
 					showSuccess(strings('market.saved_successfully'));
 					this.onBack();
 					preferences.getOnboardProfile()
-						.then(value => preferences.setOnboardProfile(Object.assign(value, { "publicInfo": shippingAddress })))
+						.then(value => preferences.setOnboardProfile(Object.assign(value, { publicInfo: shippingAddress })))
 				}
 			},
 			error => {
@@ -176,8 +183,8 @@ export class ShippingInfo extends PureComponent {
 					<Text style={styles.heading}>{strings('market.address_name')}</Text>
 					<TextInput
 						numberOfLines={1}
-						value={this.shippingAddress.addressName}
-						onChangeText={text => (this.shippingAddress.addressName = text)}
+						value={this.shippingAddress.address}
+						onChangeText={text => (this.shippingAddress.address = text)}
 						style={styles.input}
 					/>
 
