@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { makeAutoObservable } from 'mobx';
+import * as RNFS from 'react-native-fs';
 
 export const kMarketCategories = 'MarketCategories';
 export const kMarketStoreProducts = 'MarketStoreProducts';
@@ -12,6 +13,8 @@ export const kMarketCart = "MarketCart";
 export const kMarketShippingInfo = "MarketShippingInfo";
 export const kStoreVendors = "StoreVendors";
 export const kPeerAnnounces = "PeerAnnounces";
+export const kPurchasedOrders = "PurchasedOrders";
+export const kVendorOrders = "VendorOrders";
 
 const keys = [
 	kMarketCategories,
@@ -25,6 +28,8 @@ const keys = [
 	kMarketShippingInfo,
 	kStoreVendors,
 	kPeerAnnounces,
+	kPurchasedOrders,
+	kVendorOrders,
 ];
 
 class Store {
@@ -41,6 +46,8 @@ class Store {
 	shippingInfo = {};
 	storeVendors = {};
 	peerAnnounces = {};
+	purchasedOrders = [];
+	vendorOrders = [];
 
 	constructor() {
 		makeAutoObservable(this);
@@ -56,11 +63,11 @@ class Store {
 		const data = await AsyncStorage.getItem(key);
 		this.storage[key] = data ? JSON.parse(data) : data;
 
-		this.bindProps(key, this.storage[key]);
+		await this.bindProps(key, this.storage[key]);
 		return this.storage[key];
 	}
 
-	bindProps(key, data) {
+	async bindProps(key, data) {
 		switch (key) {
 			case kMarketCategories:
 				this.marketCategories = data || [];
@@ -95,7 +102,31 @@ class Store {
 			case kPeerAnnounces:
 				this.peerAnnounces = data || {};
 				break;
+			case kPurchasedOrders:
+				this.purchasedOrders = await this.readFile(kPurchasedOrders) || [];
+				break;
+			case kVendorOrders:
+				this.vendorOrders = await this.readFile(kVendorOrders) || [];
+				break;
 		}
+	}
+
+	async readFile(name) {
+		const path = `${RNFS.DocumentDirectoryPath}/${name}`;
+		if (!await RNFS.exists(path)) {
+			return null;
+		} else {
+			const content = await RNFS.readFile(path, 'utf8');
+			return JSON.parse(content);
+		}
+	}
+
+	async saveFile(data, name) {
+		const path = `${RNFS.DocumentDirectoryPath}/${name}`;
+		if (await RNFS.exists(path)) {
+			await RNFS.unlink(path);
+		}
+		await RNFS.writeFile(path, JSON.stringify(data), 'utf8');
 	}
 
 	async save(key, value) {
@@ -201,6 +232,57 @@ class Store {
 	async addPeerAnnounce(hash, data) {
 		this.peerAnnounces[hash] = data;
 		await this.save(kPeerAnnounces, this.peerAnnounces);
+	}
+
+	async addPurchasedOrder(order) {
+		this.purchasedOrders.push(order);
+		await this.saveFile(this.purchasedOrders, kPurchasedOrders);
+	}
+
+	async updatePurchasedOrder(order) {
+		const pOrder = this.purchasedOrders.find(e => e.orderId == order.orderId || e.id == order.hash);
+		if (pOrder) {
+			const update = {
+				orderId: order.orderId,
+				status: order.status,
+				updatedAt: new Date(),
+			}
+			Object.assign(pOrder, update);
+			await this.saveFile(this.purchasedOrders, kPurchasedOrders);
+		}
+	}
+
+	async deletePurchasedOrder(orderId) {
+		const index = this.purchasedOrders.findIndex(e => e.orderId == orderId);
+		if (index >= 0) {
+			this.purchasedOrders.splice(index, 1);
+			await this.saveFile(this.purchasedOrders, kPurchasedOrders);
+		}
+	}
+
+	async addVendorOrder(order) {
+		this.vendorOrders.push(order);
+		await this.saveFile(this.vendorOrders, kVendorOrders);
+	}
+
+	async updateVendorOrder(order) {
+		const vOrder = this.vendorOrders.find(e => e.orderId == order.orderId);
+		if (vOrder) {
+			const update = {
+				status: order.status,
+				updatedAt: new Date(),
+			}
+			Object.assign(vOrder, update);
+			await this.saveFile(this.vendorOrders, kVendorOrders);
+		}
+	}
+
+	async deleteVendorOrder(orderId) {
+		const index = this.vendorOrders.findIndex(e => e.orderId == orderId);
+		if (index >= 0) {
+			this.vendorOrders.splice(index, 1);
+			await this.saveFile(this.vendorOrders, kVendorOrders);
+		}
 	}
 }
 
