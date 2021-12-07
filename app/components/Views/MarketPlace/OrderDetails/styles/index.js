@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15,
 		marginBottom: 10
 	},
-	titleInfoText: {	
+	titleInfoText: {
 		fontSize: RFValue(15),
 		fontWeight: '500',
 		flex: 1
@@ -97,9 +97,8 @@ const styles = StyleSheet.create({
 		fontWeight: '500',
 	},
 	buttonsWrapper: {
-		flexDirection:'row',
-		position: 'absolute',
-		bottom: 30
+		flexDirection: 'row',
+		backgroundColor: colors.white,
 	},
 	actionButton: {
 		flex: 1,
