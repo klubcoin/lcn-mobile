@@ -32,6 +32,12 @@ const menuItems = () => [
 		screen: 'WalletView'
 	},
 	{
+		key: menuKeys().shopping,
+		title: strings('market.shopping'),
+		icon: 'cart',
+		screen: 'MarketPlace'
+	},
+	{
 		key: menuKeys().store,
 		title: strings('market.my_store'),
 		icon: 'widgets-outline',
@@ -69,6 +75,12 @@ const menuItemsVendor = () => [
 		title: strings('market.shopping'),
 		icon: 'cart',
 		screen: 'MarketPlace'
+	},
+	{
+		key: menuKeys().store,
+		title: strings('market.my_store'),
+		icon: 'widgets-outline',
+		screen: 'MarketSeller'
 	},
 	{
 		key: menuKeys().orders,
