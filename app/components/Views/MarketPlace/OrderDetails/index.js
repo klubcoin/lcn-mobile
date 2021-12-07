@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -15,6 +15,7 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import uuid from 'react-native-uuid';
 import CryptoSignature, { sha256 } from '../../../../core/CryptoSignature';
 import preferences from '../../../../store/preferences'
+import moment from "moment";
 
 class OrderDetails extends PureComponent {
 
@@ -56,9 +57,8 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderShopInfo = () => {
-		const { name, phone, address } = store.shippingInfo || {};
 		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { profile } = orderDetails.info;
+		const { vendor } = orderDetails;
 
 		return (
 			<View style={styles.section}>
@@ -68,16 +68,16 @@ class OrderDetails extends PureComponent {
 					</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="store" size={18} color={colors.storeBg} style={styles.icon}/>
-					<Text style={styles.infoText}>{profile.storeName}</Text>
+					<MaterialIcons name="store" size={18} color={colors.storeBg} style={styles.icon} />
+					<Text style={styles.infoText}>{vendor?.name}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="phone" size={18} color={colors.storeBg} style={styles.icon}/>
-					<Text style={styles.infoText}>{profile.phone}</Text>
+					<MaterialIcons name="phone" size={18} color={colors.storeBg} style={styles.icon} />
+					<Text style={styles.infoText}>{vendor?.publicInfo?.shippingAddress?.phone}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="email" size={18} color={colors.storeBg} style={styles.icon}/>
-					<Text style={styles.infoText}>{profile.email}</Text>
+					<MaterialIcons name="email" size={18} color={colors.storeBg} style={styles.icon} />
+					<Text style={styles.infoText}>{vendor?.publicInfo?.shippingAddress?.email}</Text>
 				</View>
 			</View>
 		);
@@ -88,9 +88,10 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderShippingInfo = () => {
-		const { phone, addressName, street, city, country, zipCode } = this.shippingInfo || {};
-		const shippingAddress = [addressName, street, city, country, zipCode];
-
+		const orderDetails = this.props.navigation.getParam('orderDetails');
+		const { order } = orderDetails;
+		const { shipping } = order;
+		const { phone, address } = shipping;
 		return (
 			<View style={styles.section}>
 				<View style={[styles.infoSection, styles.titleWrapper]}>
@@ -99,15 +100,15 @@ class OrderDetails extends PureComponent {
 					</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="phone" size={18} color={colors.storeBg} style={styles.icon}/>
+					<MaterialIcons name="phone" size={18} color={colors.storeBg} style={styles.icon} />
 					<Text style={styles.infoText}>{phone}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="map" size={18} color={colors.storeBg} style={styles.icon}/>
-					<Text style={styles.infoText}>{shippingAddress.join(', ')}</Text>
+					<MaterialIcons name="map" size={18} color={colors.storeBg} style={styles.icon} />
+					<Text style={styles.infoText}>{address}</Text>
 				</View>
 				<View style={styles.infoSection}>
-					<MaterialIcons name="truck-delivery-outline" size={18} color={colors.storeBg} style={styles.icon}/>
+					<MaterialIcons name="truck-delivery-outline" size={18} color={colors.storeBg} style={styles.icon} />
 					<Text style={styles.infoText}>Standard delivery</Text>
 				</View>
 			</View>
@@ -116,13 +117,13 @@ class OrderDetails extends PureComponent {
 
 	renderProducts = () => {
 		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { info, amount } = orderDetails;
-		const { products, profile } = info;
+		const { order, amount } = orderDetails;
+		const products = order.items;
 
 		return (
 			<TouchableWithoutFeedback style={styles.section} onPress={this.onViewPayment}>
 				<View style={[styles.infoSection, styles.titleWrapper]}>
-					<View style={{flex: 2}}>
+					<View style={{ flex: 2 }}>
 						<Text style={styles.titleInfoText}>
 							{strings('market.total_payment')}
 						</Text>
@@ -135,30 +136,31 @@ class OrderDetails extends PureComponent {
 				</View>
 				{
 					!this.viewPayment ?
-					<View style={[styles.infoSection, styles.titleWrapper]}>
-						<Text style={styles.infoText}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
-					</View> : products.map(e => (
+						<View style={[styles.infoSection, styles.titleWrapper]}>
+							<Text style={styles.infoText}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
+						</View> : products.map(e => (
 							<View style={[styles.infoSection, styles.titleWrapper]}>
 								<View style={styles.imageWrapper}>
-									<Image style={styles.image} source={{ uri: e.product.images[0] }} />
-								<Text style={styles.infoText} numberOfLines={2}>{e.product.title}</Text>
+									<Image style={styles.image} source={{ uri: e.images[0] }} />
+									<Text style={styles.infoText} numberOfLines={2}>{e.title}</Text>
 								</View>
 								<View style={styles.quantityWrapper}>
 									<Text style={styles.infoText}>x  <Text style={styles.infoText}>{e.quantity} </Text></Text>
 									<Text numberOfLines={2} style={styles.infoText}>
-										{e.product.price} {amount.currencyUnit}
+										{e.price} {e.currency}
 									</Text>
 								</View>
 							</View>
 						)
-					)
+						)
 				}
 			</TouchableWithoutFeedback>
 		);
 	}
 
 	renderDates = () => {
-		const { name, phone, address } = store.shippingInfo || {};
+		const orderDetails = this.props.navigation.getParam('orderDetails');
+		const { order } = orderDetails;
 
 		return (
 			<View style={styles.section}>
@@ -166,15 +168,15 @@ class OrderDetails extends PureComponent {
 					<Text style={styles.titleInfoText}>
 						{strings('market.order_code')}
 					</Text>
-					<Text style={styles.infoText} numberOfLines={1}>21112H6GBO1AAB</Text>
+					<Text style={styles.infoText} numberOfLines={1}>{order.orderId || order.id}</Text>
 				</View>
 				<View style={[styles.infoSection, styles.titleWrapper]}>
 					<Text style={styles.infoText}>{strings('market.order_time')}</Text>
-					<Text style={styles.infoText}>Oct 29, 2021</Text>
+					<Text style={styles.infoText}>{moment(order.createdAt).format('MMM DD, YYYY')}</Text>
 				</View>
 				<View style={[styles.infoSection, styles.titleWrapper]}>
 					<Text style={styles.infoText}>{strings('market.payment_time')}</Text>
-					<Text style={styles.infoText}>Oct 29, 2021</Text>
+					<Text style={styles.infoText}>{moment(order.createdAt).format('MMM DD, YYYY')}</Text>
 				</View>
 			</View>
 		);
@@ -186,7 +188,8 @@ class OrderDetails extends PureComponent {
 
 	onVendorContact = async () => {
 		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const {products} = orderDetails.info;
+		const { order } = orderDetails;
+		const products = order.items;
 		const { uuid, title, wallet, signature } = products[0]?.product || {};
 
 		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
@@ -199,8 +202,8 @@ class OrderDetails extends PureComponent {
 	renderFooter = () => {
 		return (
 			<View style={styles.buttonsWrapper}>
-				<StyledButton 
-					type={'blue'} 
+				<StyledButton
+					type={'blue'}
 					containerStyle={styles.actionButton}
 					onPress={this.onReturn}
 				>
@@ -223,7 +226,7 @@ class OrderDetails extends PureComponent {
 				{this.renderNavBar()}
 				<View style={styles.body}>
 					<View style={styles.statusWrapper}>
-						<MaterialIcons name="check-circle-outline" size={20} color="green" style={styles.icon}/>
+						<MaterialIcons name="check-circle-outline" size={20} color="green" style={styles.icon} />
 						<Text style={styles.statusText}>Completed</Text>
 					</View>
 					<ScrollView>
