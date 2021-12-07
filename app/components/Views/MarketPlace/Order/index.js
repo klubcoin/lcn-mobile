@@ -12,36 +12,54 @@ import routes from "../../../../common/routes";
 import StyledButton from "../../../UI/StyledButton";
 import { RFValue } from "react-native-responsive-fontsize";
 import BigNumber from "bignumber.js";
+import Engine from "../../../../core/Engine";
+import Api from "../../../../services/api";
+import { sha256 } from "../../../../core/CryptoSignature";
+import { ReadFile } from "../../FilesManager/store/FileStore";
+import StoreImage from '../components/StoreImage';
 
 class PurchasedOrders extends PureComponent {
 
-	productGroups = {};
-
+	orders = [];
 	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
-
+	vendors = [];
 
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
-			productGroups: observable
+			orders: observable,
+			vendors: observable,
 		})
 	}
 
 	componentDidMount() {
-		this.groupProducts();
+		this.fetchVendors();
 	}
 
-	groupProducts = () => {
-		store.marketCart.forEach(e => {
-			var address = e.product?.wallet?.toLowerCase();
-			this.productGroups[address] = Object.assign(this.productGroups[address] || {}, { profile: store.storeVendors[address]?.profile });
+	fetchVendors = () => {
+		const vendorAddresses = store.purchasedOrders.map(e => e.vendor);
+		const addresses = [...new Set(vendorAddresses)];
+		Promise.all(addresses.map(addr => this.getWalletInfo(addr)))
+			.then(vendors => {
+				this.vendors = vendors;
+				this.setState({ update: new Date() })
+			});
+	};
 
-			if (this.productGroups[address].products) {
-				this.productGroups[address].products?.unshift(e);
-			} else {
-				this.productGroups[address].products = [e];
-			}
-		})
+	getWalletInfo = async (address) => {
+		return new Promise((resolve, reject) =>
+			Api.postRequest(
+				routes.walletInfo,
+				[address],
+				response => {
+					if (response.result) {
+						resolve({ address, ...response.result });
+					} else {
+						reject(response);
+					}
+				},
+				error => reject(error)
+			));
 	};
 
 	onViewDetails = (orderDetails) => {
@@ -50,31 +68,32 @@ class PurchasedOrders extends PureComponent {
 	}
 
 	renderItem = ({ index, item }) => {
-		const { products, profile } = this.productGroups[item];
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { items, vendor } = item;
+		const profile = this.vendors.find(e => vendor.toLowerCase() == e.address.toLowerCase());
 		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
 
 		return (
-			products.length > 0 && <TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: this.productGroups[item], amount: {total: amount, currencyUnit} })}>
+			items?.length > 0 &&
+			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ order: item, vendor: profile, amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
 						<MaterialIcons name={'store'} size={20} />
-						<Text style={styles.storeName}>{profile?.storeName}</Text>
+						<Text style={styles.storeName}>{profile?.name}</Text>
 					</View>
 					<Text style={styles.orderStatus}>Processing</Text>
 				</View>
 				{
-					products.map(e => {
-						const { product, quantity } = e;
-						const { title, price, currency, images } = product;
+					items.map(product => {
+						const { title, price, currency, images, quantity } = product;
 						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
 						amount = amount.plus(BigNumber(price).times(quantity));
-
-						if (products.indexOf(e) !== 0) return;
-
+						const photo = images[0];
+						const source = ReadFile(selectedAddress, vendor, sha256(photo), photo);
 						return (
 							<View style={styles.product}>
-								<Image style={styles.image} source={{ uri: images[0] }} />
+								<StoreImage style={styles.image} source={source} />
 								<View style={styles.productInfo}>
 									<Text numberOfLines={1} style={styles.title}>
 										{title}
@@ -92,8 +111,8 @@ class PurchasedOrders extends PureComponent {
 					})
 				}
 				<View style={styles.storeTotalAmount}>
-					<View style={{flex: 5}}>
-						<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
+					<View style={{ flex: 5 }}>
+						<Text style={styles.productAmount}>{items?.length} {items?.length == 1 ? 'item' : 'items'}</Text>
 					</View>
 					<View style={styles.amount}>
 						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
@@ -110,7 +129,7 @@ class PurchasedOrders extends PureComponent {
 		return (
 			<View style={styles.body}>
 				<FlatList
-					data={Object.keys(this.productGroups)}
+					data={store.purchasedOrders}
 					keyExtractor={(item) => item.uuid}
 					renderItem={this.renderItem.bind(this)}
 				/>
