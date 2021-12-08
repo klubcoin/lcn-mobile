@@ -49,10 +49,17 @@ const styles = StyleSheet.create({
 	productInfo: {
 		flex: 1,
 	},
+	customer: {
+		marginVertical: 10,
+	},
+	images: {
+		flexDirection: 'row',
+	},
 	image: {
 		width: 50,
 		height: 50,
-		marginHorizontal: 10
+		marginTop: 10,
+		marginRight: 10,
 	},
 	title: {
 		color: colors.blue,
@@ -79,8 +86,8 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		color: colors.red,
 	},
-	quantityWrapper:{
-		alignItems:'flex-end',
+	quantityWrapper: {
+		alignItems: 'flex-end',
 	},
 	quantity: {
 		fontWeight: '500',
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
 	storeNameContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		alignItems:'center',
+		alignItems: 'center',
 		borderBottomWidth: StyleSheet.hairlineWidth,
 		borderBottomColor: colors.grey400,
 		paddingBottom: 10
@@ -103,10 +110,9 @@ const styles = StyleSheet.create({
 	storeNameAndIcon: {
 		flexDirection: 'row'
 	},
-	storeName: {
-		fontSize: RFValue(15),
+	orderId: {
+		fontSize: RFValue(12),
 		fontWeight: '600',
-		marginLeft: 10,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.grey300
 	},
@@ -116,12 +122,12 @@ const styles = StyleSheet.create({
 	},
 	storeTotalAmount: {
 		flexDirection: 'row',
-		alignItems:'flex-start',
+		alignItems: 'flex-start',
 		justifyContent: 'space-between',
 		borderTopWidth: StyleSheet.hairlineWidth,
 		borderColor: colors.grey400,
 		paddingVertical: 10
-	}, 
+	},
 	productAmount: {
 		fontSize: RFValue(12),
 		color: colors.grey500,
@@ -130,14 +136,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flex: 5,
 		overflow: 'visible',
-		justifyContent:'flex-end',
+		justifyContent: 'flex-end',
 	},
 	footer: {
 		height: 60,
 		width: '100%',
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent:  'space-between',
+		justifyContent: 'space-between',
 		backgroundColor: colors.white,
 		borderTopWidth: StyleSheet.hairlineWidth,
 		borderTopColor: colors.green400
@@ -157,7 +163,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	refundBtn: {
-		backgroundColor: colors.red, 
+		backgroundColor: colors.red,
 		borderRightWidth: StyleSheet.hairlineWidth,
 	},
 	textActionBtn: {
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
 	},
 	bottomModal: {
 		backgroundColor: 'transparent',
-		alignItems:'center',
+		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	filterHeaderWrapper: {
@@ -194,17 +200,17 @@ const styles = StyleSheet.create({
 		paddingVertical: 8
 	},
 	filterBodyWrapper: {
-		paddingHorizontal: 16, 
+		paddingHorizontal: 16,
 		paddingVertical: 10
 	},
 	sectionHeader: {
 		fontSize: RFValue(14),
 		fontWeight: '600'
 	},
-	statusItem: { 
-		flexDirection: 'row', 
-		justifyContent: "space-between", 
-		marginVertical: 5 
+	statusItem: {
+		flexDirection: 'row',
+		justifyContent: "space-between",
+		marginVertical: 5
 	},
 	sortOptionsWrapper: {
 		marginTop: 10,

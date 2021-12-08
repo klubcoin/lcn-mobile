@@ -8,14 +8,11 @@ import styles from "./styles";
 import { strings } from "../../../../../locales/i18n";
 import store from "../store";
 import colors from "../../../../common/colors";
-import routes from "../../../../common/routes";
 import { RFValue } from "react-native-responsive-fontsize";
 import BigNumber from "bignumber.js";
-import APIService from "../../../../services/APIService";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Device from "../../../../util/Device";
 import CheckBox from "@react-native-community/checkbox";
-import ModalSelector from "../../../UI/AddCustomTokenOrApp/ModalSelector";
 
 class VendorOrders extends PureComponent {
 	orderStatuses = [
@@ -88,97 +85,53 @@ class VendorOrders extends PureComponent {
 
 	componentDidMount() {
 		this.fetchOrders();
-		this.fetchCategories();
 	}
 
 	fetchOrders = () => {
-
+		this.orders = store.vendorOrders;
 	};
-
-	async fetchCategories() {
-		const categories = store.marketCategories;
-		const rootTab = { name: 'All', uuid: 'root_tab' };
-		this.categories = [rootTab, ...categories];
-
-		APIService.getMarketCategories((success, json) => {
-			if (success && json) {
-				store.saveProductCategories(json);
-				this.categories = [rootTab, ...json];
-			}
-		});
-	}
 
 	onViewDetails = (orderDetails) => {
 		const { navigation } = this.props;
 		navigation.navigate('OrderDetails', { orderDetails })
 	}
 
-	toggleItem = (product) => {
-		if (this.selectedOrders.includes(product.uuid)) {
-			this.selectedOrders = this.selectedOrders.filter(e => e !== product.uuid)
-		}
-		else this.selectedOrders.push(product.uuid);
-		this.setState({ update: new Date() })
-	}
-
 	renderItem = ({ item }) => {
-		const { products, profile } = item;
-		const { currentTabIndex, categories } = this;
+		const { orderId, items, shipping } = item;
 
-		var amount = BigNumber(0);
+		var amount =  0;
 		var currencyUnit = 'LCN';
+		items.map(({ quantity, price }) => {
+			amount += quantity * BigNumber( price) ;
+		});
+
 		return (
-			products.length > 0 && (currentTabIndex === 0 || products[0].product.category.uuid === categories[currentTabIndex].uuid) &&
 			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: item, amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
-						<Text style={styles.storeName}>#ORDER21112</Text>
+						<Text style={styles.orderId}>#{orderId}</Text>
 					</View>
 					<Text style={styles.orderStatus}>Processing</Text>
 				</View>
-				{
-					products.map(e => {
-
-						const { product, quantity } = e;
-						const { title, price, currency, images } = product;
-						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
-						amount = amount.plus(BigNumber(price).times(quantity));
-
-						if (products.indexOf(e) !== 0) return;
-
-						return (
-							<View style={styles.product}>
-								<TouchableOpacity
-									style={styles.tickIcon}
-									activeOpacity={0.6}
-									onPress={() => this.toggleItem(product)}
-								>
-									<MaterialIcons name={this.selectedOrders.includes(product.uuid) ? 'check-box-outline' : 'checkbox-blank-outline'} size={22} />
-								</TouchableOpacity>
-								<Image style={styles.image} source={{ uri: images[0] }} />
-								<View style={styles.productInfo}>
-									<Text numberOfLines={1} style={styles.title}>
-										{title}
-									</Text>
-
-								</View>
-								<View style={styles.quantityWrapper}>
-									<Text>x  <Text style={styles.quantity}>{quantity} </Text></Text>
-									<Text numberOfLines={2} style={styles.quantity}>
-										{price} {currencyUnit}
-									</Text>
-								</View>
-							</View>
-						);
-					})
-				}
+				<View style={styles.customer}>
+					<Text style={styles.name}>{shipping.name}</Text>
+					<Text style={styles.phone}>{strings('market.phone')}: {shipping.phone}</Text>
+					<Text style={styles.address}>{strings('market.address')}: {shipping.address}</Text>
+				</View>
+				<View style={styles.images}>
+					{
+						items.map(e => (
+							<Image style={styles.image} source={{ uri: e.images[0] }} />
+						))
+					}
+				</View>
 				<View style={styles.storeTotalAmount}>
 					<View style={{ flex: 5 }}>
-						<Text style={styles.productAmount}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
+						<Text style={styles.productAmount}>{items.length} {items.length == 1 ? 'item' : 'items'}</Text>
 					</View>
 					<View style={styles.amount}>
 						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
-						<Text style={styles.price}>{amount.toFixed()} {currencyUnit}</Text>
+						<Text style={styles.price}>{amount} {currencyUnit}</Text>
 					</View>
 				</View>
 
@@ -218,40 +171,6 @@ class VendorOrders extends PureComponent {
 		);
 	}
 
-	selectAll = () => {
-
-	}
-
-	onRefund = () => {
-		if (this.selectedOrders.length == 0) return;
-		this.props.navigation.navigate('SendFlowView');
-	}
-
-	onChangeStatus = () => {
-		if (this.selectedOrders.length == 0) return;
-		this.viewStatuesModal = true;
-	}
-
-	renderFooter = () => {
-		return (
-			<View style={styles.footer}>
-				<TouchableOpacity style={styles.selectAll} activeOpacity={0.6} onPress={this.selectAll}>
-					<MaterialIcons name={'check-box-outline'} size={22} />
-					<Text style={styles.textAll}>{strings('market.select_all')}</Text>
-				</TouchableOpacity>
-				<View style={{ flexDirection: 'row', height: '100%' }}>
-					<TouchableOpacity style={[styles.actionBtn, styles.refundBtn, this.selectedOrders.length == 0 && styles.disabled]} activeOpacity={0.6} onPress={this.onRefund}>
-						<Text style={styles.textActionBtn}>{strings('market.refund')}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={[styles.actionBtn, this.selectedOrders.length == 0 && styles.disabled]} activeOpacity={0.6} onPress={this.onChangeStatus}>
-						<Text style={styles.textActionBtn}>{strings('market.change_status')}</Text>
-					</TouchableOpacity>
-				</View>
-
-			</View>
-		);
-	};
-
 	onResetFilter = () => {
 		this.orderStatuses.forEach(e => e.value = false);
 		this.sortOptions.forEach((e, index) => index == 0 ? e.isSelected = true : e.isSelected = false)
@@ -264,26 +183,6 @@ class VendorOrders extends PureComponent {
 	onSelectSortOption = (label) => {
 		this.sortOptions.forEach(e => e.label == label ? e.isSelected = true : e.isSelected = false)
 	}
-
-
-	renderStatuesModal = () => {
-		const options = this.orderStatuses.map(e => ({
-			key: e.label,
-			value: e.label
-		}));
-
-		return (
-			<ModalSelector
-				visible={this.viewStatuesModal}
-				options={options}
-				hideKey={true}
-				onSelect={item => {
-					this.viewStatuesModal = false
-				}}
-				onClose={() => { this.viewStatuesModal = false }}
-			/>
-		);
-	};
 
 	renderFilter = () => {
 		return (
@@ -357,8 +256,6 @@ class VendorOrders extends PureComponent {
 				{this.renderNavBar()}
 				{this.renderOrderItems()}
 				{this.renderFilter()}
-				{this.renderStatuesModal()}
-				{this.renderFooter()}
 			</View>
 		)
 	}
