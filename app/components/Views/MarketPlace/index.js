@@ -296,7 +296,7 @@ class MarketPlace extends PureComponent {
 									<Text numberOfLines={1} style={styles.score}>
 										{score.split('/').reverse()[0]}
 									</Text>
-									<Text numberOfLines={1} style={styles.priceRange}>
+									<Text numberOfLines={2} style={styles.priceRange}>
 										$
 										{`${priceRange.from}${
 											priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
