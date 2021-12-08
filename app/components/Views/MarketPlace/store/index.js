@@ -219,8 +219,8 @@ class Store {
 		await this.save(kMarketCart, this.marketCart);
 	}
 
-	async setShippingInfo({ name, phone, address }) {
-		this.shippingInfo = { name, phone, address };
+	async setShippingInfo({ name, phone, address, ...rest }) {
+		this.shippingInfo = { name, phone, address, ...rest };
 		await this.save(kMarketShippingInfo, this.shippingInfo);
 	}
 
