@@ -2,37 +2,21 @@ import React, { PureComponent } from 'react';
 import {
 	KeyboardAvoidingView,
 	ScrollView,
-	StyleSheet,
 	TouchableOpacity,
 	View,
 	Image,
 	Text,
 	SafeAreaView,
-	Dimensions
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
-import preferences from '../../../../store/preferences';
-import { getOnboardingNavbarOptions } from '../../../UI/Navbar';
-import RemoteImage from '../../../Base/RemoteImage';
 import drawables from '../../../../common/drawables';
-import * as RNFS from 'react-native-fs';
-import ImagePicker from 'react-native-image-crop-picker';
-import { colors, fontStyles } from '../../../../styles/common';
-import OnboardingProgress from '../../../UI/OnboardingProgress';
-import { CHOOSE_PASSWORD_STEPS } from '../../../../constants/onboarding';
-import { ONBOARDING, PREVIOUS_SCREEN } from '../../../../constants/navigation';
-import StyledButton from '../../../UI/StyledButton';
 import { strings } from '../../../../../locales/i18n';
-import { TextInput } from 'react-native-gesture-handler';
 import Device from '../../../../util/Device';
-import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
 import store from '../store';
-import Engine from '../../../../core/Engine';
-import infuraCurrencies from '../../../../util/infura-conversion.json';
 import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
@@ -94,7 +78,8 @@ class StoreProfile extends PureComponent {
 			email,
 			orderPayment,
 			deliveryPayment,
-			defaultCurrency
+			defaultCurrency,
+			coords,
 		} = this.profile;
 
 		return (
@@ -117,6 +102,10 @@ class StoreProfile extends PureComponent {
 								</Text>
 								<Text style={[styles.contact, styles.desc]}>
 									{strings('market.email')}: {email || 'No email'}
+								</Text>
+								<Text style={styles.header}>{strings('market.store_location')}</Text>
+								<Text style={styles.location}>
+									{strings('market.coordinate')}: { coords ??  ''}
 								</Text>
 								<Text style={styles.header}>{strings('market.payment_term')}</Text>
 								<Text style={styles.contact}>

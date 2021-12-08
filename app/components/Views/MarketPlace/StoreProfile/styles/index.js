@@ -66,6 +66,9 @@ const styles = StyleSheet.create({
 	contact: {
 		fontSize: RFValue(12)
 	},
+	location: {
+		marginBottom: 20,
+	},
 	navBar: {
 		flexDirection: 'row',
 		alignItems: 'center',
