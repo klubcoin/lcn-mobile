@@ -62,7 +62,7 @@ export class ShippingInfo extends PureComponent {
 		this.name = name;
 		const profileOnboard = await preferences.getOnboardProfile();
 		const { publicInfo } = profileOnboard;
-		const { shippingAddress } = publicInfo || {};
+		const { shippingAddress, coords } = publicInfo || {};
 
 		this.shippingAddress.phone = shippingAddress.phone || '';
 		this.shippingAddress.address = shippingAddress.address || '';
@@ -70,7 +70,7 @@ export class ShippingInfo extends PureComponent {
 		this.shippingAddress.zipCode = shippingAddress.zipCode || '';
 		this.shippingAddress.city = shippingAddress.city || '';
 		this.shippingAddress.country = shippingAddress.country || ''
-		this.coords = shippingAddress?.coords || null;
+		this.coords = coords || null;
 	}
 
 	onBack = () => {
@@ -111,7 +111,7 @@ export class ShippingInfo extends PureComponent {
 		const { identities } = Engine.state.PreferencesController;
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const account = identities[selectedAddress];
-		const shippingAddress = { shippingAddress: this.shippingAddress };
+		const shippingAddress = { shippingAddress: this.shippingAddress, coords: this.coords };
 		const addressString = JSON.stringify(shippingAddress);
 		const signature = await CryptoSignature.signMessage(selectedAddress, addressString);
 		const params = [account.name, selectedAddress, addressString, signature];
@@ -124,7 +124,6 @@ export class ShippingInfo extends PureComponent {
 					alert(`${response.error.message}`);
 				} else {
 					const { phone, address, street, zipCode, city, country } = this.shippingAddress || {};
-					shippingAddress.shippingAddress.coords = this.coords;
 					store.shippingInfo = {
 						name: account.name,
 						phone,
