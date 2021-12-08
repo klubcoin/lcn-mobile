@@ -90,10 +90,9 @@ class PurchasedOrders extends PureComponent {
 						currencyUnit = currency?.symbol || routes.mainNetWork.ticker;
 						amount = amount.plus(BigNumber(price).times(quantity));
 						const photo = images[0];
-						const source = ReadFile(selectedAddress, vendor, sha256(photo), photo);
 						return (
 							<View style={styles.product}>
-								<StoreImage style={styles.image} source={source} />
+								<StoreImage style={styles.image} address={vendor} path={photo} />
 								<View style={styles.productInfo}>
 									<Text numberOfLines={1} style={styles.title}>
 										{title}

@@ -112,12 +112,10 @@ class MarketCategory extends PureComponent {
 	renderProduct = item => {
 		const { title, price, description, images } = item;
 		const photo = images[0];
-		const { selectedAddress } = Engline.state.PreferencesController;
-		const source = ReadFile(selectedAddress, this.vendor.wallet, sha256(photo), photo);
 
 		return (
 			<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(item)}>
-				<StoreImage style={styles.photo} source={source} />
+				<StoreImage style={styles.photo} address={this.vendor.wallet} path={photo} />
 				<Text style={styles.title}>{title}</Text>
 				<Text numberOfLines={1} style={styles.desc}>
 					{description}
