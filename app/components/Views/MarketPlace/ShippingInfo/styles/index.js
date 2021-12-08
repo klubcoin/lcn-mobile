@@ -73,6 +73,15 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginTop: 30
 	},
+	location: {
+		marginHorizontal: 20,
+		marginTop: 10,
+		flexDirection: 'row',
+		alignItems: 'flex-end'
+	},
+	coords: {
+		marginLeft: 10,
+	},
 	save: {
 		width: 140
 	},

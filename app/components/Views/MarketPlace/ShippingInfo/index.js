@@ -24,6 +24,7 @@ import APIService from '../../../../services/APIService';
 import Api from '../../../../services/api';
 import Routes from '../../../../common/routes';
 import preferences from '../../../../store/preferences';
+import Geolocation from '@react-native-community/geolocation';
 
 export class ShippingInfo extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -32,6 +33,7 @@ export class ShippingInfo extends PureComponent {
 	name = '';
 	shippingAddress = {};
 	processing = false;
+	coords = null;
 
 	constructor(props) {
 		super(props);
@@ -39,6 +41,7 @@ export class ShippingInfo extends PureComponent {
 			account: observable,
 			name: observable,
 			shippingAddress: observable,
+			coords: observable,
 			processing: observable,
 		});
 
@@ -67,7 +70,7 @@ export class ShippingInfo extends PureComponent {
 		this.shippingAddress.zipCode = shippingAddress.zipCode || '';
 		this.shippingAddress.city = shippingAddress.city || '';
 		this.shippingAddress.country = shippingAddress.country || ''
-
+		this.coords = shippingAddress?.coords || null;
 	}
 
 	onBack = () => {
@@ -121,10 +124,12 @@ export class ShippingInfo extends PureComponent {
 					alert(`${response.error.message}`);
 				} else {
 					const { phone, address, street, zipCode, city, country } = this.shippingAddress || {};
+					shippingAddress.shippingAddress.coords = this.coords;
 					store.shippingInfo = {
 						name: account.name,
 						phone,
-						address: `${address}, ${street}, ${city} ${zipCode}, ${country}`
+						address: `${address}, ${street}, ${city} ${zipCode}, ${country}`,
+						coords: this.coords,
 					}
 					store.setShippingInfo(store.shippingInfo);
 					showSuccess(strings('market.saved_successfully'));
@@ -138,6 +143,23 @@ export class ShippingInfo extends PureComponent {
 			}
 		);
 	};
+
+	getCurrentLocation() {
+		if (this.readingGPS) return;
+		this.readingGPS = true;
+
+		Geolocation.getCurrentPosition(
+			info => {
+				this.readingGPS = false;
+				const { latitude, longitude } = info.coords;
+				this.coords = { latitude, longitude };
+			},
+			err => {
+				this.readingGPS = false;
+				alert(err.message);
+			},
+		);
+	}
 
 	onCancel() {
 		this.onBack();
@@ -220,6 +242,14 @@ export class ShippingInfo extends PureComponent {
 						onChangeText={text => (this.shippingAddress.country = text)}
 						style={styles.input}
 					/>
+
+					<Text style={styles.heading}>{strings('market.coordinate')}</Text>
+					<View style={styles.location}>
+						<TouchableOpacity activeOpacity={0.6} onPress={() => this.getCurrentLocation()}>
+							<Icon name={'map-marker-alt'} size={22} />
+						</TouchableOpacity>
+						<Text style={styles.coords}>{this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''}</Text>
+					</View>
 
 					<View style={styles.buttons}>
 						<StyledButton
