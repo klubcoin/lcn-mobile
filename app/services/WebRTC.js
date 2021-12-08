@@ -36,6 +36,8 @@ export default class WebRTC {
 		this.initSocket();
 	}
 
+	address = () => this.fromUserId;
+
 	addEncryptor = (encryptionLayer) => {
 		this.encryptor = encryptionLayer;
 	}

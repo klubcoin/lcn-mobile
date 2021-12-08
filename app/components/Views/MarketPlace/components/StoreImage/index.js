@@ -5,6 +5,8 @@ import { observer } from 'mobx-react';
 import * as RNFS from 'react-native-fs';
 import { refWebRTC } from '../../../../../services/WebRTC';
 import FileTransferWebRTC from '../../../FilesManager/store/FileTransferWebRTC';
+import { ReadFile } from '../../../FilesManager/store/FileStore';
+import { sha256 } from '../../../../../core/CryptoSignature';
 
 class StoreImage extends Component {
 	image = '';
@@ -14,8 +16,8 @@ class StoreImage extends Component {
 		makeObservable(this, {
 			image: observable,
 		})
-		const { source } = props;
-		this.source = source;
+		const { address, path } = props;
+		this.source = ReadFile(refWebRTC().address(), address, sha256(path), path);
 	}
 
 	componentDidMount() {

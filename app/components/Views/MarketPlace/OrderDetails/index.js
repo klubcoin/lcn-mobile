@@ -1,21 +1,18 @@
 import React, { PureComponent } from "react";
-import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
 import { strings } from "../../../../../locales/i18n";
-import store from "../store";
 import colors from "../../../../common/colors";
-import routes from "../../../../common/routes";
 import StyledButton from "../../../UI/StyledButton";
-import { RFValue } from "react-native-responsive-fontsize";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import uuid from 'react-native-uuid';
-import CryptoSignature, { sha256 } from '../../../../core/CryptoSignature';
+import CryptoSignature from '../../../../core/CryptoSignature';
 import preferences from '../../../../store/preferences'
 import moment from "moment";
+import StoreImage from "../components/StoreImage";
 
 class OrderDetails extends PureComponent {
 
@@ -141,7 +138,7 @@ class OrderDetails extends PureComponent {
 						</View> : products.map(e => (
 							<View style={[styles.infoSection, styles.titleWrapper]}>
 								<View style={styles.imageWrapper}>
-									<Image style={styles.image} source={{ uri: e.images[0] }} />
+									<StoreImage style={styles.image} address={order.vendor} path={e.images[0]} />
 									<Text style={styles.infoText} numberOfLines={2}>{e.title}</Text>
 								</View>
 								<View style={styles.quantityWrapper}>
