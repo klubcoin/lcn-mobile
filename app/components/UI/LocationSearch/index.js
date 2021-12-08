@@ -6,7 +6,7 @@ import APIService from '../../../services/APIService';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
 
-export default function LocationSearchBar() {
+export default function LocationSearchBar({ value }) {
 	const [searchTask, setSearchTask] = useState(null);
 
 	const onSearch = text => {
@@ -30,6 +30,7 @@ export default function LocationSearchBar() {
 				ref={ref => (this.inputRef = ref)}
 				placeholder={strings('market.search')}
 				returnKeyType="next"
+				value={value || ''}//TODO: bug - value not applied
 				onChangeText={text => onSearch(text)}
 				baseColor={colors.grey500}
 				tintColor={colors.blue}

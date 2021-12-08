@@ -91,6 +91,12 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(12),
 		fontWeight: 'bold'
 	},
+	location: {
+		flexDirection: 'row'
+	},
+	locationHead: {
+		flex: 1,
+	},
 	explainText: {
 		color: colors.grey500,
 		marginBottom: 10

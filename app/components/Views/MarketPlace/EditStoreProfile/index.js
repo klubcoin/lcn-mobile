@@ -41,6 +41,7 @@ import AssetList from '../../../UI/AssetList';
 import routes from '../../../../common/routes';
 import { showError, showSuccess } from '../../../../util/notify';
 import LocationSearchBar from '../../../UI/LocationSearch';
+import Geolocation from '@react-native-community/geolocation';
 
 class EditStoreProfile extends Component {
 	logoStore = '';
@@ -54,6 +55,7 @@ class EditStoreProfile extends Component {
 	tokenOpts = [];
 	defaultCurrency = {};
 	selectingToken = false;
+	location = '';
 
 	constructor(props) {
 		super(props);
@@ -63,6 +65,7 @@ class EditStoreProfile extends Component {
 			phone: observable,
 			email: observable,
 			about: observable,
+			location: observable,
 			orderPayment: observable,
 			deliveryPayment: observable,
 			isAvatarChanged: observable,
@@ -74,6 +77,23 @@ class EditStoreProfile extends Component {
 
 	componentDidMount() {
 		this.fetchStoreProfile();
+	}
+
+	getCurrentLocation() {
+		if (this.readingGPS) return;
+		this.readingGPS = true;
+
+		Geolocation.getCurrentPosition(
+			info => {
+				this.readingGPS = false;
+				const { latitude, longitude } = info.coords;
+				this.location = `${latitude}, ${longitude}`;
+			},
+			err => {
+				this.readingGPS = false;
+				alert(err.message);
+			},
+		);
 	}
 
 	fetchStoreProfile = async () => {
@@ -174,7 +194,8 @@ class EditStoreProfile extends Component {
 				about,
 				orderPayment,
 				deliveryPayment,
-				defaultCurrency
+				defaultCurrency,
+				coords: this.location,
 			})
 			.then(value => showSuccess(strings('market.update_success')));
 	};
@@ -318,9 +339,16 @@ class EditStoreProfile extends Component {
 							/>
 
 							<View style={styles.section}>
-								<Text style={styles.header}>{strings('market.store_location')}</Text>
-								<Text style={styles.explainText}>{strings('market.store_location_desc')}</Text>
-								<LocationSearchBar />
+								<View style={styles.location}>
+									<View style={styles.locationHead}>
+										<Text style={styles.header}>{strings('market.store_location')}</Text>
+										<Text style={styles.explainText}>{strings('market.store_location_desc')}</Text>
+									</View>
+									<TouchableOpacity activeOpacity={0.6} onPress={() => this.getCurrentLocation()}>
+										<Icon name={'map-marker-alt'} size={22} />
+									</TouchableOpacity>
+								</View>
+								<LocationSearchBar value={this.location} />
 							</View>
 
 							<View style={styles.section}>
