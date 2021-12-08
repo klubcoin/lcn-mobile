@@ -55,7 +55,7 @@ class EditStoreProfile extends Component {
 	tokenOpts = [];
 	defaultCurrency = {};
 	selectingToken = false;
-	location = '';
+	coords = null;
 
 	constructor(props) {
 		super(props);
@@ -65,7 +65,7 @@ class EditStoreProfile extends Component {
 			phone: observable,
 			email: observable,
 			about: observable,
-			location: observable,
+			coords: observable,
 			orderPayment: observable,
 			deliveryPayment: observable,
 			isAvatarChanged: observable,
@@ -87,7 +87,7 @@ class EditStoreProfile extends Component {
 			info => {
 				this.readingGPS = false;
 				const { latitude, longitude } = info.coords;
-				this.location = `${latitude}, ${longitude}`;
+				this.coords = { latitude, longitude };
 			},
 			err => {
 				this.readingGPS = false;
@@ -195,7 +195,7 @@ class EditStoreProfile extends Component {
 				orderPayment,
 				deliveryPayment,
 				defaultCurrency,
-				coords: this.location,
+				coords: this.coords,
 			})
 			.then(value => showSuccess(strings('market.update_success')));
 	};
@@ -348,7 +348,7 @@ class EditStoreProfile extends Component {
 										<Icon name={'map-marker-alt'} size={22} />
 									</TouchableOpacity>
 								</View>
-								<LocationSearchBar value={this.location} />
+								<LocationSearchBar value={this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''} />
 							</View>
 
 							<View style={styles.section}>

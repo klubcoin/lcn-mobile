@@ -105,7 +105,7 @@ class StoreProfile extends PureComponent {
 								</Text>
 								<Text style={styles.header}>{strings('market.store_location')}</Text>
 								<Text style={styles.location}>
-									{strings('market.coordinate')}: { coords ??  ''}
+									{strings('market.coordinate')}: {coords ? `${coords.latitude}, ${coords.longitude}` : ''}
 								</Text>
 								<Text style={styles.header}>{strings('market.payment_term')}</Text>
 								<Text style={styles.contact}>
