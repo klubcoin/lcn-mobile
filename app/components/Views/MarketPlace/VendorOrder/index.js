@@ -93,7 +93,7 @@ class VendorOrders extends PureComponent {
 
 	onViewDetails = (orderDetails) => {
 		const { navigation } = this.props;
-		navigation.navigate('OrderDetails', { orderDetails })
+		navigation.navigate('StoreOrderDetails', { orderDetails })
 	}
 
 	renderItem = ({ item }) => {
@@ -106,7 +106,7 @@ class VendorOrders extends PureComponent {
 		});
 
 		return (
-			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ info: item, amount: { total: amount, currencyUnit } })}>
+			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ order: item, amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
 						<Text style={styles.orderId}>#{orderId}</Text>

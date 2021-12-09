@@ -87,6 +87,7 @@ import StoreReviews from '../../Views/MarketPlace/StoreReviews';
 import MarketPurchase from '../../Views/MarketPlace/Purchase';
 import PurchasedOrders from '../../Views/MarketPlace/Order';
 import OrderDetails from '../../Views/MarketPlace/OrderDetails';
+import StoreOrderDetails from '../../Views/MarketPlace/StoreOrderDetails';
 import VendorOrders from '../../Views/MarketPlace/VendorOrder';
 
 const styles = StyleSheet.create({
@@ -303,6 +304,12 @@ export default createStackNavigator(
 						},
 						OrderDetails: {
 							screen: OrderDetails
+						},
+						Chat: {
+							screen: Chat
+						},
+						StoreOrderDetails: {
+							screen: StoreOrderDetails
 						}
 					},
 					{

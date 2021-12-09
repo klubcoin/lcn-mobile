@@ -1894,5 +1894,13 @@
 		"change_status": "Change status",
 		"sort_by": "Sort by",
 		"coordinate": "Coordinate"
+	},
+	"order": {
+		"pending": "Pending",
+		"processing": "Processing",
+		"shipping": "Shipping",
+		"completed": "Completed",
+		"canceled": "Canceled",
+		"refunded": "Refuned"
 	}
 }
