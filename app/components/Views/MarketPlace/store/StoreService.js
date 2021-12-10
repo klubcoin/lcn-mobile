@@ -286,6 +286,12 @@ export default class StoreService {
 		this.storeMessaging.send(message, peerId);
 	}
 
+	updateOrderStatus = (order, status) => {
+		const peerId = order.from;
+		const message = StoreOrderStats(this.from, peerId, order.id, order.orderId, status);
+		this.storeMessaging.send(message, peerId);
+	}
+
 	handleOrderStats = (data, peerId) => {
 		store.updatePurchasedOrder(data);
 	}

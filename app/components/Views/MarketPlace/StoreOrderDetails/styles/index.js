@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		right: 10,
 	},
+	editIcon: {
+		color: colors.orange300
+	},
 	body: {
 		flex: 1,
 		backgroundColor: colors.grey100,
@@ -53,6 +56,9 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 20,
 		right: 10,
+	},
+	chatBubble: {
+		color: colors.green600
 	},
 	sectionsWrapper: {
 		padding: 10

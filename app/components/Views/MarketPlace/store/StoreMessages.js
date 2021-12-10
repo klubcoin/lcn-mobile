@@ -2,7 +2,12 @@ import { randomHex, stripHexPrefix } from 'web3-utils';
 import { sha256 } from '../../../../core/CryptoSignature';
 
 export const OrderStatus = {
+  pending: 'pending',
   processing: 'processing',
+  shipping: 'shipping',
+  completed: 'completed',
+  canceled: 'canceled',
+  refunded: 'refunded',
 }
 
 export const StoreAnnounce = (from, hashes, info) => ({

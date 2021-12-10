@@ -13,6 +13,8 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import preferences from '../../../../store/preferences'
 import moment from "moment";
 import ModalSelector from "../../../UI/AddCustomTokenOrApp/ModalSelector";
+import { refStoreService } from "../store/StoreService";
+import store from "../store";
 
 
 export const OrderStatus = () => ({
@@ -194,6 +196,15 @@ class OrderDetails extends PureComponent {
 		);
 	}
 
+	updateStatus = (status) => {
+		const { order } = this.orderDetails;
+		order.status = status;
+		store.updateVendorOrder(order);
+
+		const storeService = refStoreService();
+		storeService.updateOrderStatus(order, status);
+	}
+
 	renderStatusOptions = () => {
 		const statuses = OrderStatus();
 		const options = Object.keys(statuses).map(k => ({
@@ -209,6 +220,7 @@ class OrderDetails extends PureComponent {
 				onSelect={(item) => {
 					this.status = statuses[item.key];
 					this.showStatus = false;
+					this.updateStatus(item.key);
 				}}
 				onClose={() => this.showStatus = false}
 			/>
