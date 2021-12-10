@@ -3,7 +3,7 @@ import { addHexPrefix } from 'ethereumjs-util';
 import { sha256 } from '../../../../core/CryptoSignature';
 import APIService from '../../../../services/APIService';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { OrderStatus, StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreOrderStats, StoreQuery } from './StoreMessages';
+import { OrderStatuses, StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreOrderStats, StoreQuery } from './StoreMessages';
 import StoreMessaging from './StoreMessaging';
 import { randomHex, stripHexPrefix } from 'web3-utils';
 
@@ -282,7 +282,7 @@ export default class StoreService {
 			createdAt: new Date(),
 		});
 
-		const message = StoreOrderStats(this.from, peerId, data.id, orderId, OrderStatus.processing);
+		const message = StoreOrderStats(this.from, peerId, data.id, orderId, OrderStatuses.processing);
 		this.storeMessaging.send(message, peerId);
 	}
 

@@ -15,6 +15,7 @@ import moment from "moment";
 import ModalSelector from "../../../UI/AddCustomTokenOrApp/ModalSelector";
 import { refStoreService } from "../store/StoreService";
 import store from "../store";
+import { OrderStatuses } from "../store/StoreMessages";
 
 
 export const OrderStatus = () => ({
@@ -169,10 +170,11 @@ class OrderDetails extends PureComponent {
 
 	onRefund = () => {
 		//TODO: send transaction to refund or request central server
+		this.updateStatus(OrderStatuses.refunded);
 	}
 
 	cancelOrder = () => {
-
+		this.updateStatus(OrderStatuses.canceled);
 	}
 
 	renderFooter = () => {

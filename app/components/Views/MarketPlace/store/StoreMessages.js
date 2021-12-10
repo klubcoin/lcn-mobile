@@ -1,7 +1,7 @@
 import { randomHex, stripHexPrefix } from 'web3-utils';
 import { sha256 } from '../../../../core/CryptoSignature';
 
-export const OrderStatus = {
+export const OrderStatuses = {
   pending: 'pending',
   processing: 'processing',
   shipping: 'shipping',
