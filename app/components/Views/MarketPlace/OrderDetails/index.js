@@ -13,20 +13,25 @@ import CryptoSignature from '../../../../core/CryptoSignature';
 import preferences from '../../../../store/preferences'
 import moment from "moment";
 import StoreImage from "../components/StoreImage";
+import { OrderStatus } from "../StoreOrderDetails";
 
 class OrderDetails extends PureComponent {
 
+	status = OrderStatus().processing;
 	viewPayment = false;
 	shippingInfo = {}
-	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
-
 
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
+			status: observable,
 			viewPayment: observable,
 			shippingInfo: observable
 		})
+		this.orderDetails = this.props.navigation.getParam('orderDetails');
+		const { order } = this.orderDetails || {};
+		this.status = OrderStatus()[order.status || 'processing'];
+
 		this.fetchShippingInfo();
 	}
 
@@ -224,7 +229,7 @@ class OrderDetails extends PureComponent {
 				<View style={styles.body}>
 					<View style={styles.statusWrapper}>
 						<MaterialIcons name="check-circle-outline" size={20} color="green" style={styles.icon} />
-						<Text style={styles.statusText}>Completed</Text>
+						<Text style={styles.statusText}>{this.status}</Text>
 					</View>
 					<ScrollView>
 						<View style={styles.sectionsWrapper}>

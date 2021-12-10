@@ -17,6 +17,7 @@ import Api from "../../../../services/api";
 import { sha256 } from "../../../../core/CryptoSignature";
 import { ReadFile } from "../../FilesManager/store/FileStore";
 import StoreImage from '../components/StoreImage';
+import { OrderStatus } from "../StoreOrderDetails";
 
 class PurchasedOrders extends PureComponent {
 
@@ -73,6 +74,7 @@ class PurchasedOrders extends PureComponent {
 		const profile = this.vendors.find(e => vendor.toLowerCase() == e.address.toLowerCase());
 		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
+		const status = OrderStatus()[item.status || 'processing'];
 
 		return (
 			items?.length > 0 &&
@@ -82,7 +84,7 @@ class PurchasedOrders extends PureComponent {
 						<MaterialIcons name={'store'} size={20} />
 						<Text style={styles.storeName}>{profile?.name}</Text>
 					</View>
-					<Text style={styles.orderStatus}>Processing</Text>
+					<Text style={styles.orderStatus}>{status}</Text>
 				</View>
 				{
 					items.map(product => {
