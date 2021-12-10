@@ -13,6 +13,7 @@ import BigNumber from "bignumber.js";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Device from "../../../../util/Device";
 import CheckBox from "@react-native-community/checkbox";
+import { OrderStatus } from "../StoreOrderDetails";
 
 class VendorOrders extends PureComponent {
 	orderStatuses = [
@@ -98,11 +99,12 @@ class VendorOrders extends PureComponent {
 
 	renderItem = ({ item }) => {
 		const { orderId, items, shipping } = item;
+		const status = OrderStatus()[item.status || 'processing'];
 
-		var amount =  0;
+		var amount = 0;
 		var currencyUnit = 'LCN';
 		items.map(({ quantity, price }) => {
-			amount += quantity * BigNumber( price) ;
+			amount += quantity * BigNumber(price);
 		});
 
 		return (
@@ -111,7 +113,7 @@ class VendorOrders extends PureComponent {
 					<View style={styles.storeNameAndIcon}>
 						<Text style={styles.orderId}>#{orderId}</Text>
 					</View>
-					<Text style={styles.orderStatus}>Processing</Text>
+					<Text style={styles.orderStatus}>{status}</Text>
 				</View>
 				<View style={styles.customer}>
 					<Text style={styles.name}>{shipping.name}</Text>
