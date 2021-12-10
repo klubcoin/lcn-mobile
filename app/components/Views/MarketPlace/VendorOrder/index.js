@@ -126,9 +126,7 @@ class VendorOrders extends PureComponent {
 					}
 				</View>
 				<View style={styles.storeTotalAmount}>
-					<View style={{ flex: 5 }}>
-						<Text style={styles.productAmount}>{items.length} {items.length == 1 ? 'item' : 'items'}</Text>
-					</View>
+					<Text style={styles.productAmount}>{items.length} {items.length == 1 ? 'item' : 'items'}</Text>
 					<View style={styles.amount}>
 						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
 						<Text style={styles.price}>{amount} {currencyUnit}</Text>
