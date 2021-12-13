@@ -110,6 +110,9 @@ const styles = StyleSheet.create({
 	storeNameAndIcon: {
 		flexDirection: 'row'
 	},
+	date: {
+		color: colors.grey500,
+	},
 	orderId: {
 		fontSize: RFValue(12),
 		fontWeight: '600',

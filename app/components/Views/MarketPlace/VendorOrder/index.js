@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
+import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
@@ -89,7 +90,7 @@ class VendorOrders extends PureComponent {
 	}
 
 	fetchOrders = () => {
-		this.orders = store.vendorOrders;
+		this.orders = store.vendorOrders.sort((a, b) => moment(b.createdAt) - moment(a.createdAt));
 	};
 
 	onViewDetails = (orderDetails) => {
@@ -98,7 +99,7 @@ class VendorOrders extends PureComponent {
 	}
 
 	renderItem = ({ item }) => {
-		const { orderId, items, shipping } = item;
+		const { orderId, items, shipping, createdAt } = item;
 		const status = OrderStatus()[item.status || 'processing'];
 
 		var amount = 0;
@@ -111,7 +112,7 @@ class VendorOrders extends PureComponent {
 			<TouchableOpacity style={styles.itemWrapper} onPress={() => this.onViewDetails({ order: item, amount: { total: amount, currencyUnit } })}>
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
-						<Text style={styles.orderId}>#{orderId}</Text>
+						<Text style={styles.orderId}>#{orderId} - <Text style={styles.date}>{moment(createdAt).format('DD/MM/YY')}</Text></Text>
 					</View>
 					<Text style={styles.orderStatus}>{status}</Text>
 				</View>
