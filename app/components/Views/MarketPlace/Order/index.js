@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
+import moment from 'moment';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
@@ -38,6 +39,7 @@ class PurchasedOrders extends PureComponent {
 	}
 
 	fetchVendors = () => {
+		store.purchasedOrders.sort((a, b) => moment(b.createdAt) - moment(a.createdAt));
 		const vendorAddresses = store.purchasedOrders.map(e => e.vendor);
 		const addresses = [...new Set(vendorAddresses)];
 		Promise.all(addresses.map(addr => this.getWalletInfo(addr)))
@@ -70,7 +72,7 @@ class PurchasedOrders extends PureComponent {
 
 	renderItem = ({ index, item }) => {
 		const { selectedAddress } = Engine.state.PreferencesController;
-		const { items, vendor } = item;
+		const { items, vendor, createdAt } = item;
 		const profile = this.vendors.find(e => vendor.toLowerCase() == e.address.toLowerCase());
 		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
@@ -82,7 +84,7 @@ class PurchasedOrders extends PureComponent {
 				<View style={styles.storeNameContainer}>
 					<View style={styles.storeNameAndIcon}>
 						<MaterialIcons name={'store'} size={20} />
-						<Text style={styles.storeName}>{profile?.name}</Text>
+						<Text style={styles.storeName}>{profile?.name} - <Text style={styles.date}>{moment(createdAt).format('DD/MM/YY')}</Text></Text>
 					</View>
 					<Text style={styles.orderStatus}>{status}</Text>
 				</View>

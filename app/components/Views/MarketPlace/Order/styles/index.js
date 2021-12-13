@@ -35,6 +35,9 @@ const styles = StyleSheet.create({
 		paddingTop: 10,
 		paddingHorizontal: 10
 	},
+	date: {
+		color: colors.grey500,
+	},
 	name: {
 		fontSize: 16,
 		fontWeight: '600',
