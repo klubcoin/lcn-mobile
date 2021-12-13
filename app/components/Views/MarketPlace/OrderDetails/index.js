@@ -59,8 +59,7 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderShopInfo = () => {
-		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { vendor } = orderDetails;
+		const { vendor } = this.orderDetails;
 
 		return (
 			<View style={styles.section}>
@@ -90,8 +89,7 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderShippingInfo = () => {
-		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { order } = orderDetails;
+		const { order } = this.orderDetails;
 		const { shipping } = order;
 		const { phone, address } = shipping;
 		return (
@@ -118,8 +116,7 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderProducts = () => {
-		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { order, amount } = orderDetails;
+		const { order, amount } = this.orderDetails;
 		const products = order.items;
 
 		return (
@@ -161,8 +158,7 @@ class OrderDetails extends PureComponent {
 	}
 
 	renderDates = () => {
-		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { order } = orderDetails;
+		const { order } = this.orderDetails;
 
 		return (
 			<View style={styles.section}>
@@ -189,8 +185,7 @@ class OrderDetails extends PureComponent {
 	}
 
 	onVendorContact = async () => {
-		const orderDetails = this.props.navigation.getParam('orderDetails');
-		const { order } = orderDetails;
+		const { order } = this.orderDetails;
 		const products = order.items;
 		const { uuid, title, wallet, signature } = products[0]?.product || {};
 
