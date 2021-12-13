@@ -14,6 +14,7 @@ import preferences from '../../../../store/preferences'
 import moment from "moment";
 import StoreImage from "../components/StoreImage";
 import { OrderStatus } from "../StoreOrderDetails";
+import { refStoreService } from "../store/StoreService";
 
 class OrderDetails extends PureComponent {
 
@@ -33,6 +34,32 @@ class OrderDetails extends PureComponent {
 		this.status = OrderStatus()[order.status || 'processing'];
 
 		this.fetchShippingInfo();
+	}
+
+	componentDidMount() {
+		this.syncProduct();
+	}
+
+	async syncProduct() {
+		const { order, vendor } = this.orderDetails;
+		const products = order.items || [];
+
+		const storeService = refStoreService();
+		storeService.addListener((message) => {
+			if (message && message.uuid && message.data != 1) {
+				const { uuid, data } = message;
+				const product = products.find(e => e.uuid == uuid);
+				if (product) {
+					product.images = [...data.images];
+					this.setState({ update: new Date() });
+				}
+			}
+		});
+
+		for (let k in products) {
+			const product = products[k];
+			await storeService.fetchProduct(product.uuid, vendor.address);
+		}
 	}
 
 	fetchShippingInfo = async () => {

@@ -3,7 +3,7 @@ import { addHexPrefix } from 'ethereumjs-util';
 import { sha256 } from '../../../../core/CryptoSignature';
 import APIService from '../../../../services/APIService';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { OrderStatuses, StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreOrderStats, StoreQuery } from './StoreMessages';
+import { OrderStatuses, StoreAnnounce, StoreLookUp, StoreMessage, StoreOrder, StoreOrderStats, StoreProductGet, StoreQuery } from './StoreMessages';
 import StoreMessaging from './StoreMessaging';
 import { randomHex, stripHexPrefix } from 'web3-utils';
 
@@ -95,8 +95,21 @@ export default class StoreService {
 		} else if (message.action == StoreOrderStats().action) {
 			this.handleOrderStats(message, peerId);
 			if (this.evtMessage) this.evtMessage(message);
+		} else if (message.action == StoreProductGet().action) {
+			this.handleProductQuery(message, peerId);
 		}
 	};
+
+	handleProductQuery = (data, peerId) => {
+		if (data.data) {
+			if (this.evtMessage) this.evtMessage(data);
+		} else {
+			const products = store.marketProducts;
+			const result = products.find(product => product.uuid == data.uuid);
+			const message = StoreProductGet(this.from, data.uuid, result || 1);
+			this.storeMessaging.send(message, peerId);
+		}
+	}
 
 	handleStoreQuery = (data, peerId) => {
 		if (typeof data.data?.result != 'undefined') {
@@ -294,6 +307,11 @@ export default class StoreService {
 
 	handleOrderStats = (data, peerId) => {
 		store.updatePurchasedOrder(data);
+	}
+
+	fetchProduct = (uuid, peerId) => {
+		const message = StoreProductGet(this.from, uuid);
+		this.storeMessaging.send(message, peerId);
 	}
 }
 

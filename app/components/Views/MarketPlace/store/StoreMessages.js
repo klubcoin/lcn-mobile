@@ -35,6 +35,16 @@ export const StoreQuery = (from, hash, data) => ({
   checksum: sha256(JSON.stringify({ from, hash, data })),
 });
 
+// used to fetch a known product from a vendor's store
+// data is not null when responding
+export const StoreProductGet = (from, uuid, data) => ({
+  action: 'product_fetch',
+  from,
+  uuid,
+  data,
+  checksum: sha256(JSON.stringify({ from, uuid })),
+});
+
 export const StoreMessage = (message, from, to) => ({
   action: 'store_message',
   message,
