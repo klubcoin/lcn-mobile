@@ -146,6 +146,7 @@ export default class WebRTC {
 		this.peerRefs[peerId].ondatachannel = event => {
 			this.sendChannels[peerId] = event.channel;
 			this.sendChannels[peerId].onmessage = message => this.handleReceiveMessage(message, peerId);
+			this.sendChannels[peerId].ready = true;
 			console.log('[SUCCESS] Connection established');
 			this._sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
 			// if (this.onReady) this.onReady(this.sendChannels[peerId]);
@@ -208,6 +209,7 @@ export default class WebRTC {
 
 			if (data.action == 'ping') {
 				this.peerPublicKeys[peerId] = data.publicKey;
+				this.sendChannels[peerId].ready = true;
 				this._sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			} else if (data.action == 'pong') {
@@ -336,6 +338,11 @@ export default class WebRTC {
 		return this.sendChannels && this.sendChannels[address];
 	}
 
+	channelReady = (addr) => {
+		const address = addr.toLowerCase();
+		return this.hasChannel(address) && this.sendChannels[address].ready;
+	}
+
 	async _sendToPeer(peerId, message) {
 		const json = JSON.stringify(message);
 		const channel = this.sendChannels[peerId];
@@ -370,6 +377,8 @@ export default class WebRTC {
 		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
+		} else if (!this.channelReady(address)) {
+			setTimeout(() => this.sendToPeer(address, data), 1000);
 		} else {
 			this.monitors[data.checksum] = setTimeout(() => this.connectAndSend(address, data), 5000);
 			this._sendToPeer(address, data);
