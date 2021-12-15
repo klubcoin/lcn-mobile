@@ -212,14 +212,8 @@ class OrderDetails extends PureComponent {
 	}
 
 	onVendorContact = async () => {
-		const { order } = this.orderDetails;
-		const products = order.items;
-		const { uuid, title, wallet, signature } = products[0]?.product || {};
-
-		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
-		if (address.toLocaleLowerCase() != wallet.toLocaleLowerCase()) {
-			showError(strings('market.insecure_vendor'));
-		}
+		const { vendor } = this.orderDetails;
+		const address = vendor.address.toLocaleLowerCase();
 		this.props.navigation.navigate('Chat', { selectedContact: { address } });
 	};
 
