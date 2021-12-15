@@ -93,7 +93,11 @@ export default class FileTransferWebRTC {
 		const fileName = `${/*hash ||*/ name}`;
 		const path = `${folder}/${fileName}`;
 
-		if (await RNFS.exists(path)) await RNFS.unlink(path);
+		if (await RNFS.exists(path)) try {
+			await RNFS.unlink(path);
+		} catch (e) {
+			console.log(e);
+		}
 
 		const files = await RNFS.readDir(folder);
 		const foundFiles = files.filter(e =>
@@ -130,7 +134,11 @@ export default class FileTransferWebRTC {
 
 		const fileName = `${/*hash ||*/ name}`;
 		const path = `${folder}/${fileName}`;
-		if (await RNFS.exists(path)) await RNFS.unlink(path);
+		if (await RNFS.exists(path)) try {
+			await RNFS.unlink(path);
+		} catch (e) {
+			console.log(e);
+		}
 
 		for (var k in keys) {
 			const data = this.partCollector[keys[k]];
@@ -155,7 +163,11 @@ export default class FileTransferWebRTC {
 		const content = part?.v;
 		const fileName = `${/*hash ||*/ name}.${totalPart}.${part?.i}`;
 		const path = `${folder}/${fileName}`;
-		if (await RNFS.exists(path)) await RNFS.unlink(path);
+		if (await RNFS.exists(path)) try {
+			await RNFS.unlink(path);
+		} catch (e) {
+			console.log(e);
+		}
 
 		return new Promise((resolve, reject) => {
 			RNFS.writeFile(path, content, 'utf8')
