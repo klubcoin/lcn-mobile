@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { DeviceEventEmitter, Image, StyleSheet, View } from 'react-native';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import * as RNFS from 'react-native-fs';
 import { refWebRTC } from '../../../../../services/WebRTC';
@@ -15,17 +15,38 @@ class StoreImage extends Component {
 		super(props)
 		makeObservable(this, {
 			image: observable,
+			setImage: action,
 		})
 		const { address, path } = props;
 		this.source = ReadFile(refWebRTC().address(), address, sha256(path), path);
 	}
 
 	componentDidMount() {
+		this.fetchImage();
+	}
+
+	setImage(image) {
+		this.image = image;
+	}
+
+	fetchImage = async () => {
+		const { address } = this.props;
+		const { hash } = this.source;
+
+		const folder = `${RNFS.DocumentDirectoryPath}/${address.toLowerCase()}`;
+		const path = `${folder}/${hash}`;
+
+		if (await RNFS.exists(path)) {
+			const content = await RNFS.readFile(path, 'base64');
+			this.setImage(`data:image/png;base64,${content}`);
+			return;
+		}
+
 		FileTransferWebRTC.readFile(this.source, [this.source?.to], refWebRTC());
 		const listener = DeviceEventEmitter.addListener('FileTransReceived', async ({ path, data }) => {
 			if (data?.name == this.source.hash) {
 				const content = await RNFS.readFile(path, 'base64');
-				this.image = `data:image/png;base64,${content}`;
+				this.setImage(`data:image/png;base64,${content}`);
 				listener.remove();
 			}
 		});
