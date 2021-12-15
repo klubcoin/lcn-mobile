@@ -214,8 +214,8 @@ export default class WebRTC {
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
-			} else if (data.checksum) {
-				this._sendToPeer(peerId, AckWebRTC(data.checksum));
+			} else if (data.reqId || data.checksum) {
+				this._sendToPeer(peerId, AckWebRTC(data.reqId || data.checksum));
 			}
 			if (data.action == AckWebRTC().action && data.hash) {
 				if (this.monitors[data.hash]) {
@@ -375,12 +375,13 @@ export default class WebRTC {
 	sendToPeer = async (addr, data) => {
 		const address = addr.toLowerCase();
 		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
+		if (!data.reqId) data.reqId = Math.random() * new Date().getTime() + data.checksum;
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
 		} else if (!this.channelReady(address)) {
 			setTimeout(() => this.sendToPeer(address, data), 1000);
 		} else {
-			this.monitors[data.checksum] = setTimeout(() => this.connectAndSend(address, data), 5000);
+			this.monitors[data.reqId] = setTimeout(() => this.connectAndSend(address, data), 5000);
 			this._sendToPeer(address, data);
 		}
 	}
