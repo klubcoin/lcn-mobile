@@ -22,6 +22,7 @@ export const menuKeys = () => ({
 	messages: 'messages',
 	profile: 'profile',
 	reviews: 'reviews',
+	settings: 'settings',
 });
 
 const menuItems = () => [
@@ -109,7 +110,7 @@ const menuItemsVendor = () => [
 ];
 
 const menuSettings = {
-	key: 'settings',
+	key: menuKeys().settings,
 	title: strings('drawer.settings'),
 	icon: 'cog',
 	screen: 'Settings'
@@ -141,14 +142,14 @@ export class MarketDrawer extends Component {
 		this.toggleDrawer();
 		if (key == store.marketMenuKey) return;
 
-		if (key !== 'settings') store.marketMenuKey = key;
+		if (key != menuKeys().settings) store.marketMenuKey = key;
 
 		if (key == menuKeys().shopping) {
 			this.role = Roles.customer;
 		} else if (key == menuKeys().store) {
 			this.role = Roles.vendor;
 		}
-		navigation.navigate(screen);
+		navigation.navigate(screen, { drawer: true });
 	}
 
 	renderItem({ item }) {

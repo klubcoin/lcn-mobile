@@ -74,7 +74,12 @@ export class ShippingInfo extends PureComponent {
 	}
 
 	onBack = () => {
-		this.props.navigation.goBack();
+		const drawer = this.props.navigation.getParam('drawer');
+		if (drawer) {
+			this.props.navigation.toggleDrawer();
+		} else {
+			this.props.navigation.goBack();
+		}
 	};
 
 	onSave() {
@@ -165,11 +170,12 @@ export class ShippingInfo extends PureComponent {
 	}
 
 	renderNavBar() {
+		const drawer = this.props.navigation.getParam('drawer');
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
 					<TouchableOpacity onPress={this.onBack.bind(this)} style={styles.navButton}>
-						<Icon name={'arrow-left'} size={16} style={styles.backIcon} color={colors.white} />
+						<Icon name={drawer ? 'bars' : 'arrow-left'} size={16} style={styles.backIcon} color={colors.white} />
 					</TouchableOpacity>
 					<Text style={styles.titleNavBar}>{strings('market.shipping_info')}</Text>
 					<View style={styles.navButton} />
