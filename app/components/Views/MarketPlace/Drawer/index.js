@@ -36,7 +36,7 @@ const menuItems = () => [
 		key: menuKeys().shopping,
 		title: strings('market.shopping'),
 		icon: 'cart',
-		screen: 'MarketPlace'
+		screen: 'MarketPlaceSearch'
 	},
 	{
 		key: menuKeys().store,
