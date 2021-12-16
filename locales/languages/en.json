@@ -1902,5 +1902,8 @@
 		"completed": "Completed",
 		"canceled": "Canceled",
 		"refunded": "Refuned"
+	},
+	"tipper": {
+		"tipper": "Tipper"
 	}
 }

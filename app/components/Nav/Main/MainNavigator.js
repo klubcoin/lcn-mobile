@@ -89,6 +89,7 @@ import PurchasedOrders from '../../Views/MarketPlace/Order';
 import OrderDetails from '../../Views/MarketPlace/OrderDetails';
 import StoreOrderDetails from '../../Views/MarketPlace/StoreOrderDetails';
 import VendorOrders from '../../Views/MarketPlace/VendorOrder';
+import TipperAmount from '../../Views/Tipper/TipperAmount';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -325,6 +326,11 @@ export default createStackNavigator(
 				overlayColor: 'rgba(0, 0, 0, 0.5)'
 			}
 		),
+		TipperApp: createStackNavigator({
+			TipperAmount: {
+				screen: TipperAmount
+			},
+		}),
 		Webview: {
 			screen: createStackNavigator(
 				{
