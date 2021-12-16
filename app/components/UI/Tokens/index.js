@@ -249,8 +249,11 @@ class Tokens extends PureComponent {
 		balance = Helper.demosToLiquichain(balance || 0);
 
 		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
-		const app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
-
+		//TODO: remove this condition
+		if (asset.name == "Tipper")
+			var app = asset;
+		else
+			var app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;
 		if (app && app.name) {
@@ -279,30 +282,31 @@ class Tokens extends PureComponent {
 				onLongPress={asset.isETH ? null : this.showRemoveMenu}
 				asset={asset}
 			>
-				{app ? (
-					<View style={styles.row}>
-						<TokenImage asset={asset} containerStyle={styles.ethLogo} />
-						<View style={styles.app}>
-							<Text style={styles.name}>{mainBalance}</Text>
-							<Text style={styles.desc}>{secondaryBalance}</Text>
-						</View>
-					</View>
-				) : (
-					<View style={styles.row}>
-						{asset.isETH ? (
-							<NetworkMainAssetLogo big style={styles.ethLogo} testID={'eth-logo'} />
-						) : (
+				{
+					app ? (
+						<View style={styles.row}>
 							<TokenImage asset={asset} containerStyle={styles.ethLogo} />
-						)}
-
-						<View style={styles.balances} testID={'balance'}>
-							<Text style={styles.balance}>{mainBalance}</Text>
-							<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
-								{secondaryBalance}
-							</Text>
+							<View style={styles.app}>
+								<Text style={styles.name}>{mainBalance}</Text>
+								<Text style={styles.desc}>{secondaryBalance}</Text>
+							</View>
 						</View>
-					</View>
-				)}
+					) : (
+						<View style={styles.row}>
+							{asset.isETH ? (
+								<NetworkMainAssetLogo big style={styles.ethLogo} testID={'eth-logo'} />
+							) : (
+								<TokenImage asset={asset} containerStyle={styles.ethLogo} />
+							)}
+
+							<View style={styles.balances} testID={'balance'}>
+								<Text style={styles.balance}>{mainBalance}</Text>
+								<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
+									{secondaryBalance}
+								</Text>
+							</View>
+						</View>
+					)}
 			</AssetElement>
 		);
 	};
@@ -344,10 +348,10 @@ class Tokens extends PureComponent {
 		const { tokens, hideZeroBalanceTokens, tokenBalances } = this.props;
 		const tokensToDisplay = hideZeroBalanceTokens
 			? tokens.filter(token => {
-					const { address, isETH } = token;
-					return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
-					// eslint-disable-next-line no-mixed-spaces-and-tabs
-			  })
+				const { address, isETH } = token;
+				return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+			})
 			: tokens;
 
 		return (
