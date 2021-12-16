@@ -1,4 +1,4 @@
-import store from '.';
+import store from './index';
 import { addHexPrefix } from 'ethereumjs-util';
 import { sha256 } from '../../../../core/CryptoSignature';
 import APIService from '../../../../services/APIService';
