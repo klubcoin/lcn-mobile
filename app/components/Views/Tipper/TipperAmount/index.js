@@ -42,6 +42,7 @@ import { toLowerCaseCompare } from '../../../../util/general';
 import styles from './styles/index';
 import { baseStyles } from '../../../../styles/common';
 import { colors, fontStyles } from '../../../../styles/common';
+import TipperModal from '../TipperModal';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -141,7 +142,14 @@ class TipperAmount extends PureComponent {
         secondaryAmount: undefined,
         symbol: undefined,
         showError: false,
-        inputWidth: { width: '99%' }
+        inputWidth: { width: '99%' },
+        viewTipModal: true,
+        tipData: {
+            to: '0x2575F3caD077863A66C93Fc24785a920a9E6cC81',
+            name: 'Neirt Vo',
+            symbol: 'LCN',
+            amount: 12,
+        },
     };
 
     /**
@@ -545,14 +553,22 @@ class TipperAmount extends PureComponent {
     };
 
     render() {
-        const { mode } = this.state;
+        const { mode, tipData, viewTipModal } = this.state;
         return (
             <SafeAreaView style={styles.wrapper}>
                 <KeyboardAwareScrollView
                     style={styles.contentWrapper}
                     contentContainerStyle={styles.scrollViewContainer}
                 >
-                    {mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount()}
+                    {!viewTipModal && (mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount())}
+                    <TipperModal 
+                        visible={viewTipModal}
+                        hideModal={()=> this.setState({viewTipModal: false})}
+                        title={strings('contacts.friend_request')}
+                        confirmLabel={strings('tipper.tip')}
+                        cancelLabel={strings('contacts.reject')}
+                        data={tipData}
+                    />
                 </KeyboardAwareScrollView>
             </SafeAreaView>
         );

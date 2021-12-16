@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import Modal from 'react-native-modal';
@@ -9,21 +9,16 @@ import RemoteImage from '../../../Base/RemoteImage';
 import EthereumAddress from '../../../UI/EthereumAddress';
 import StyledButton from '../../../UI/StyledButton';
 import styles from './styles/index'
-import { TextInput } from 'react-native-gesture-handler';
 import { strings } from '../../../../../locales/i18n';
-/**
- * Component that renders friend message overview
- */
+import { makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+
 export default class TipperModal extends PureComponent {
     static propTypes = {
         /**
          * flag to toggle modal's visibility
          */
         visible: PropTypes.bool,
-        /**
-         * message to show
-         */
-        message: PropTypes.string,
         /**
          * react-navigation object used for switching between screens
          */
@@ -46,9 +41,22 @@ export default class TipperModal extends PureComponent {
         networkInfo: PropTypes.object
     };
 
-    state = {
-        toggleFullAddress: false,
-    };
+    toggleFullAddress = false;
+    tipData = {};
+
+    constructor(props) {
+        super(props);
+        makeObservable(this, {
+            toggleFullAddress: observable,
+            tipData: observable
+        })
+    }
+
+
+    componentDidMount() {
+        const { data } = this.props;
+        this.tipData = data
+    }
 
     onCancel = () => {
         this.props.hideModal();
@@ -60,11 +68,17 @@ export default class TipperModal extends PureComponent {
     };
 
     toggleAddress = () => {
-        this.setState({ toggleFullAddress: !this.state.toggleFullAddress });
+        this.toggleFullAddress = !this.toggleFullAddress;
+    }
+
+    updateAmount = (value) => {
+      this.tipData.amount = value;
     }
 
     renderBody() {
-        const { message, networkInfo } = this.props;
+        const { networkInfo } = this.props;
+        const { tipData } = this;
+        const message = `${strings('tipper.tip_for', { "amount": tipData.amount || 0, "symbol": tipData.symbol, "account": tipData.to })}?`
 
         return (
             <View style={styles.root}>
@@ -85,8 +99,7 @@ export default class TipperModal extends PureComponent {
         const { data } = this.props;
         const { address, avatar, name, email } = data || {};
 
-        const { toggleFullAddress } = this.state;
-        const addressType = toggleFullAddress ? 'full' : 'short';
+        const addressType = this.toggleFullAddress ? 'full' : 'short';
 
         return (
             <View style={styles.profile}>
@@ -103,7 +116,9 @@ export default class TipperModal extends PureComponent {
     }
 
     renderInput() {
-        const { symbol, amount } = this.props;
+        const { tipData } = this;
+        const { symbol, amount } = tipData;
+        const { data } = this.props;
 
         return (
             <View style={styles.amountInput}>
@@ -118,6 +133,7 @@ export default class TipperModal extends PureComponent {
                     spellCheck={false}
                     style={styles.input}
                     value={amount}
+                    defaultValue={data.amount.toString()}
                     ref={this.amountInput}
                     testID={'request-amount-input'}
                 />
@@ -157,7 +173,7 @@ export default class TipperModal extends PureComponent {
 
         return (
             <Modal
-                isVisible={!!visible}
+                isVisible={visible}
                 animationIn="slideInUp"
                 animationOut="slideOutDown"
                 style={styles.bottomModal}
@@ -175,3 +191,5 @@ export default class TipperModal extends PureComponent {
         );
     }
 }
+
+observer(TipperModal);

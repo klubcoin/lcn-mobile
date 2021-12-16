@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
 	},
 	heading: {
 		alignItems: 'center',
-		marginVertical: 24
+		marginVertical: 24,
+		paddingHorizontal: 16
 	},
 	message: {
 		...fontStyles.bold,
