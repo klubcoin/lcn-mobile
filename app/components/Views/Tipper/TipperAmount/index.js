@@ -423,7 +423,7 @@ class TipperAmount extends PureComponent {
                 onRequest(request);
                 navigation.pop();
             } else {
-                navigation && navigation.replace('PaymentRequestSuccess', request);
+                navigation && navigation.replace('TipperDetails', request);
             }
         } catch (e) {
             this.setState({ showError: true });

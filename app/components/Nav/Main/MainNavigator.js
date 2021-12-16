@@ -90,6 +90,7 @@ import OrderDetails from '../../Views/MarketPlace/OrderDetails';
 import StoreOrderDetails from '../../Views/MarketPlace/StoreOrderDetails';
 import VendorOrders from '../../Views/MarketPlace/VendorOrder';
 import TipperAmount from '../../Views/Tipper/TipperAmount';
+import TipperDetails from '../../Views/Tipper/TipperDetails';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -330,6 +331,9 @@ export default createStackNavigator(
 			TipperAmount: {
 				screen: TipperAmount
 			},
+			TipperDetails: {
+				screen: TipperDetails
+			}
 		}),
 		Webview: {
 			screen: createStackNavigator(
