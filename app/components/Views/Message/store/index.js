@@ -55,7 +55,7 @@ class Storage {
 	}
 
 	async getChatMessages(address) {
-		const chatMessages = this.storage[kChatMessages];
+		const chatMessages = this.storage[kChatMessages] || {};
 		if (address) return chatMessages[address];
 		return chatMessages;
 	}
