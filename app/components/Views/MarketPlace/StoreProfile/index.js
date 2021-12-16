@@ -132,7 +132,7 @@ class StoreProfile extends PureComponent {
 							</View>
 						</View>
 					</ScrollView>
-					<Image source={{ uri: logoStore || drawables.noImage }} style={styles.logo} resizeMode={'cover'} />
+					<Image source={{ uri: 'file://' + logoStore || drawables.noImage }} style={styles.logo} resizeMode={'cover'} />
 				</View>
 			</KeyboardAvoidingView>
 		);
