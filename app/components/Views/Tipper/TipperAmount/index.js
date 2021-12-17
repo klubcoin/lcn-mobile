@@ -161,11 +161,9 @@ class TipperAmount extends PureComponent {
         const tipData = navigation && navigation.getParam('tipData');
 
         if (tipData) {
-            const parsedTipData = JSON.parse(base64.decode(tipData))
-            const viewModal = Object.keys(parsedTipData).length > 0;
             this.setState({
-                tipData: parsedTipData,
-                viewTipModal: viewModal
+                tipData,
+                viewTipModal: true
             })
         }
 
@@ -422,40 +420,50 @@ class TipperAmount extends PureComponent {
         const account = identities[selectedAddress] || {};
 
         try {
-            // let eth_link;
-            // if (selectedAsset.isETH) {
-            //     const amount = toWei(cryptoAmount).toString();
-            //     eth_link = generateETHLink(selectedAddress, amount, chainId);
-            // } else {
-            //     const amount = toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString();
-            //     eth_link = generateERC20Link(selectedAddress, selectedAsset.address, amount, chainId);
-            // }
-
-            // // Convert to universal link / app link
-            // const link = generateUniversalLinkRequest(eth_link);
+            let eth_link;
+            let amount;
+            if (selectedAsset.isETH) {
+                amount = toWei(cryptoAmount).toString();
+                // eth_link = generateETHLink(selectedAddress, amount, chainId);
+            } else {
+                amount = toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString();
+                // eth_link = generateERC20Link(selectedAddress, selectedAsset.address, amount, chainId);
+            }
+            // Convert to universal link / app link
+            // let link = generateUniversalLinkRequest(eth_link);
             const { MM_UNIVERSAL_LINK_HOST } = AppConstants;
-            const data = {
-                recipient: account,
-                amount: cryptoAmount,
-                symbol: selectedAsset.symbol,
-                meta: {
-                    title: routes.mainNetWork.name,
-                    chainId: routes.mainNetWork.chainId,
-                    url: routes.mainNetWork.blockExploreUrl,
-                    icon: 'logo.png',
-                },
-            };
-            data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data));
+            const link = new URL(`http://${MM_UNIVERSAL_LINK_HOST}/tip/${selectedAddress}`);
 
-            const base64Content = base64.encode(JSON.stringify(data));
-            const qrLink = `liquichain://tip?q=${base64Content}`
-            const link = `http://${MM_UNIVERSAL_LINK_HOST}/tip/?q=${base64Content}`
+            link.searchParams.set('value', amount);
+            link.searchParams.set('symbol', selectedAsset.symbol);
+            if (selectedAsset.isETH) 
+                link.searchParams.set('isETH', selectedAsset.isETH);
+            if (selectedAsset.decimals) 
+                link.searchParams.set('decimals', selectedAsset.decimals);
+
+            // const { MM_UNIVERSAL_LINK_HOST } = AppConstants;
+            // const data = {
+            //     recipient: account,
+            //     amount: cryptoAmount,
+            //     symbol: selectedAsset.symbol,
+            //     meta: {
+            //         title: routes.mainNetWork.name,
+            //         chainId: routes.mainNetWork.chainId,
+            //         url: routes.mainNetWork.blockExploreUrl,
+            //         icon: 'logo.png',
+            //     },
+            // };
+            // data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data));
+
+            // const base64Content = base64.encode(JSON.stringify(data));
+            // const qrLink = `liquichain://tip?q=${base64Content}`
+            // const link = `http://${MM_UNIVERSAL_LINK_HOST}/tip/?q=${base64Content}`
 
             const request = {
-                link,
-                qrLink,
-                amount: cryptoAmount,
-                symbol: selectedAsset.symbol
+                link: link.toString(),
+                qrLink: link.toString(),
+                // amount: cryptoAmount,
+                // symbol: selectedAsset.symbol
             };
 
             if (onRequest) {
@@ -465,6 +473,7 @@ class TipperAmount extends PureComponent {
                 navigation && navigation.replace('TipperDetails', request);
             }
         } catch (e) {
+            console.log('error123', e)
             this.setState({ showError: true });
         }
     };
@@ -585,7 +594,7 @@ class TipperAmount extends PureComponent {
 
     render() {
         const { mode, tipData, viewTipModal } = this.state;
-        
+
         return (
             <SafeAreaView style={styles.wrapper}>
                 <KeyboardAwareScrollView
@@ -593,14 +602,14 @@ class TipperAmount extends PureComponent {
                     contentContainerStyle={styles.scrollViewContainer}
                 >
                     {!viewTipModal && (mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount())}
-                    <TipperModal 
+                    {viewTipModal && <TipperModal
                         visible={viewTipModal}
-                        hideModal={()=> this.setState({viewTipModal: false})}
+                        hideModal={() => this.setState({ viewTipModal: false })}
                         title={strings('contacts.friend_request')}
                         confirmLabel={strings('tipper.tip')}
                         cancelLabel={strings('contacts.reject')}
                         data={tipData}
-                    />
+                    />}
                 </KeyboardAwareScrollView>
             </SafeAreaView>
         );

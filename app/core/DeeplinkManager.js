@@ -142,7 +142,19 @@ class DeeplinkManager {
 						case '':
 							break;
 						case 'tip':
-							this.handleNavigateTip({ tipData: params['q'] })
+							const receiverAddress = urlObj.pathname.split('/')[2];
+							const value = params['value']
+							const symbol = params['symbol']
+							const isETH = params['isETH'];
+							const decimals = params['decimals'];
+
+							this.handleNavigateTip({ tipData: {
+								receiverAddress,
+								value,
+								symbol,
+								isETH,
+								decimals
+							}})
 							break;
 						default:
 							Alert.alert(strings('deeplink.not_supported'));
@@ -197,9 +209,6 @@ class DeeplinkManager {
 			case 'liquichain':
 				if (url.includes('://namecard') && params['q']) {
 					this.navigation.navigate('Contacts', { data: params['q'], key: moment().unix() });
-				}
-				else if (url.includes('://tip') && params['q']) {
-					this.handleNavigateTip({ tipData: params['q'] })
 				}
 				break;
 			default:

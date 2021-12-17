@@ -13,6 +13,9 @@ import { strings } from '../../../../../locales/i18n';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import base64 from 'base-64';
+import routes from '../../../../common/routes';
+import Api from '../../../../services/api';
+import { renderFromWei, toWei, toTokenMinimalUnit } from '../../../../util/number';
 
 export default class TipperModal extends PureComponent {
     static propTypes = {
@@ -58,14 +61,28 @@ export default class TipperModal extends PureComponent {
         this.updateTipData();
     }
 
-    shouldComponentUpdate() {
-        this.updateTipData();
-        return true;
-    }
-
     updateTipData = () => {
         const { data } = this.props;
+        const { receiverAddress } = data;
+        this.getWalletInfo(receiverAddress);
         this.tipData = data;
+    }
+
+    getWalletInfo(address) {
+        if (!address) return;
+        Api.postRequest(
+            routes.walletInfo,
+            [address],
+            response => {
+                if (response.result) {
+                    const { name } = response.result;
+                    this.tipData.name = name;
+                }
+            },
+            error => {
+                console.warn('error', error);
+            }
+        );
     }
 
     onCancel = () => {
@@ -82,23 +99,34 @@ export default class TipperModal extends PureComponent {
     }
 
     updateAmount = (value) => {
-      this.tipData.amount = value;
+        if (!value) value = 0;
+        const { isETH } = this.tipData;
+        if (isETH) {
+            this.tipData.value = toWei(value).toString();
+        } else {
+            this.tipData.value = toTokenMinimalUnit(value, this.tipData.decimals).toString();
+        }
     }
 
     renderBody() {
-        const { recipient, meta } = this.tipData;
+        const { tipData } = this;
+        const meta = {
+            title: routes.mainNetWork.name,
+            chainId: routes.mainNetWork.chainId,
+            url: routes.mainNetWork.blockExploreUrl,
+            icon: 'logo.png',
+        };
 
-        const message = `${strings('tipper.tip_for', { "amount": this.tipData.amount || 0, "symbol": this.tipData.symbol, "account": recipient?.name })}?`
+        const message = `${strings('tipper.tip_for', { "amount": renderFromWei(tipData.value) || 0, "symbol": tipData.symbol, "account": tipData?.name })}?`
 
         return (
             <View style={styles.root}>
-               {
-                    meta && (<TransactionHeader currentPageInformation={meta} />)
-               } 
+            
+                <TransactionHeader currentPageInformation={meta} />
                 <View style={styles.heading}>
                     <Text style={styles.message}>{message}</Text>
                 </View>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                     {this.renderProfile()}
                     {this.renderInput()}
                 </View>
@@ -110,16 +138,15 @@ export default class TipperModal extends PureComponent {
     renderProfile() {
         const { data } = this.props;
         const { tipData } = this;
-        const { recipient } = tipData;
         const addressType = this.toggleFullAddress ? 'full' : 'short';
 
         return (
             <View style={styles.profile}>
                 <View style={styles.avatarView}>
-                    <RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${recipient?.avatar}` }} />
+                    <RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${tipData?.avatar}` }} />
                 </View>
                 <TouchableOpacity activeOpacity={0.6} onPress={this.toggleAddress}>
-                    <EthereumAddress key={addressType} style={styles.address} address={recipient?.address} type={addressType} />
+                    <EthereumAddress key={addressType} style={styles.address} address={tipData?.receiverAddress} type={addressType} />
                 </TouchableOpacity>
             </View>
         )
@@ -127,7 +154,8 @@ export default class TipperModal extends PureComponent {
 
     renderInput() {
         const { tipData } = this;
-        const { symbol, amount } = tipData;
+        const { symbol, value } = tipData;
+        const renderValue = renderFromWei(tipData.value);
 
         return (
             <View style={styles.amountInput}>
@@ -141,8 +169,7 @@ export default class TipperModal extends PureComponent {
                     placeholderTextColor={colors.grey100}
                     spellCheck={false}
                     style={styles.input}
-                    value={amount}
-                    defaultValue={amount?.toString()}
+                    value={renderFromWei(value)}
                     ref={this.amountInput}
                     testID={'request-amount-input'}
                 />
