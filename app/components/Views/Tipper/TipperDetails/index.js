@@ -133,7 +133,7 @@ class TipperDetails extends PureComponent {
                         </Text>
                     </View>
                     <View style={styles.linkWrapper}>
-                        <Text style={styles.linkText}>{link}</Text>
+                        <Text style={styles.linkText} numberOfLines={5}>{link}</Text>
                     </View>
 
                     <View style={styles.buttonsWrapper}>

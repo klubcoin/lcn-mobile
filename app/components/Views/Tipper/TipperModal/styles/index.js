@@ -44,9 +44,10 @@ const styles = StyleSheet.create({
 		overflow: 'hidden',
 		alignSelf: 'center'
 	},
-	name: {
+	address: {
 		marginTop: 10,
-		fontSize: 20,
+		paddingHorizontal: 16,
+		fontSize: RFValue(12),
 		fontWeight: '600',
 		color: colors.black,
 		textAlign: 'center'
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 		paddingHorizontal: 16,
+		marginTop: 16,
 	},
 	input: {
 		...fontStyles.normal,

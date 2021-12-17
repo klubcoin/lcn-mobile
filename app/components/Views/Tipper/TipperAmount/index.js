@@ -45,6 +45,8 @@ import { colors, fontStyles } from '../../../../styles/common';
 import TipperModal from '../TipperModal';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import base64 from 'base-64';
+import RNFS from 'react-native-fs';
+import routes from '../../../../common/routes';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -413,9 +415,10 @@ class TipperAmount extends PureComponent {
      * If there is an error, an error message will be set to display on the view
      */
     onNext = async () => {
-        const { selectedAddress, navigation, chainId } = this.props;
+        const { selectedAddress, identities, navigation, chainId } = this.props;
         const { cryptoAmount, selectedAsset } = this.state;
         const onRequest = navigation && navigation.getParam('onRequest', false);
+        const account = identities[selectedAddress] || {};
 
         try {
             // let eth_link;
@@ -430,9 +433,15 @@ class TipperAmount extends PureComponent {
             // // Convert to universal link / app link
             // const link = generateUniversalLinkRequest(eth_link);
             const data = {
-                "recipient": selectedAddress,
-                "amount": cryptoAmount,
-                "symbol": selectedAsset.symbol
+                recipient: account,
+                amount: cryptoAmount,
+                symbol: selectedAsset.symbol,
+                meta: {
+                    title: routes.mainNetWork.name,
+                    chainId: routes.mainNetWork.chainId,
+                    url: routes.mainNetWork.blockExploreUrl,
+                    icon: 'logo.png',
+                },
             };
             data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data));
 
@@ -601,6 +610,8 @@ const mapStateToProps = state => ({
     contractExchangeRates: state.engine.backgroundState.TokenRatesController.contractExchangeRates,
     searchEngine: state.settings.searchEngine,
     selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+    identities: state.engine.backgroundState.PreferencesController.identities,
+    onboardProfile: state.user.onboardProfile,
     tokens: state.engine.backgroundState.AssetsController.tokens,
     primaryCurrency: state.settings.primaryCurrency,
     ticker: state.engine.backgroundState.NetworkController.provider.ticker,

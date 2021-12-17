@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
@@ -60,6 +60,7 @@ export default class TipperModal extends PureComponent {
 
     shouldComponentUpdate() {
         this.updateTipData();
+        return true;
     }
 
     updateTipData = () => {
@@ -85,13 +86,15 @@ export default class TipperModal extends PureComponent {
     }
 
     renderBody() {
-        const { networkInfo } = this.props;
-        const { tipData } = this;
-        const message = `${strings('tipper.tip_for', { "amount": tipData.amount || 0, "symbol": tipData.symbol, "account": tipData.recipient })}?`
+        const { recipient, meta } = this.tipData;
+
+        const message = `${strings('tipper.tip_for', { "amount": this.tipData.amount || 0, "symbol": this.tipData.symbol, "account": recipient?.name })}?`
 
         return (
             <View style={styles.root}>
-                {/* <TransactionHeader currentPageInformation={networkInfo} /> */}
+               {
+                    meta && (<TransactionHeader currentPageInformation={meta} />)
+               } 
                 <View style={styles.heading}>
                     <Text style={styles.message}>{message}</Text>
                 </View>
@@ -107,19 +110,17 @@ export default class TipperModal extends PureComponent {
     renderProfile() {
         const { data } = this.props;
         const { tipData } = this;
-        const { address, avatar, name, email } = data || {};
+        const { recipient } = tipData;
         const addressType = this.toggleFullAddress ? 'full' : 'short';
 
         return (
             <View style={styles.profile}>
                 <View style={styles.avatarView}>
-                    <RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${avatar}` }} />
+                    <RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${recipient?.avatar}` }} />
                 </View>
-                <Text style={styles.name}>{name?.name || `${name}`}</Text>
                 <TouchableOpacity activeOpacity={0.6} onPress={this.toggleAddress}>
-                    <EthereumAddress key={addressType} style={styles.address} address={address} type={addressType} />
+                    <EthereumAddress key={addressType} style={styles.address} address={recipient?.address} type={addressType} />
                 </TouchableOpacity>
-                <Text style={styles.email}>{email}</Text>
             </View>
         )
     }
