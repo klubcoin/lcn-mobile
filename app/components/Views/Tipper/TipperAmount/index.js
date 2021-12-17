@@ -43,6 +43,8 @@ import styles from './styles/index';
 import { baseStyles } from '../../../../styles/common';
 import { colors, fontStyles } from '../../../../styles/common';
 import TipperModal from '../TipperModal';
+import CryptoSignature from '../../../../core/CryptoSignature';
+import base64 from 'base-64';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -143,13 +145,8 @@ class TipperAmount extends PureComponent {
         symbol: undefined,
         showError: false,
         inputWidth: { width: '99%' },
-        viewTipModal: true,
-        tipData: {
-            to: '0x2575F3caD077863A66C93Fc24785a920a9E6cC81',
-            name: 'Neirt Vo',
-            symbol: 'LCN',
-            amount: 12,
-        },
+        viewTipModal: false,
+        tipData: {},
     };
 
     /**
@@ -158,10 +155,22 @@ class TipperAmount extends PureComponent {
     componentDidMount = () => {
         const { primaryCurrency, navigation } = this.props;
         const receiveAsset = navigation && navigation.getParam('receiveAsset', undefined);
+        const tipData = navigation && navigation.getParam('tipData');
+
+        if (tipData) {
+            const parsedTipData = JSON.parse(base64.decode(tipData))
+            const viewModal = Object.keys(parsedTipData).length > 0;
+            this.setState({
+                tipData: parsedTipData,
+                viewTipModal: viewModal
+            })
+        }
+
         this.setState({
             internalPrimaryCurrency: primaryCurrency,
-            inputWidth: { width: '100%' }
+            inputWidth: { width: '100%' },
         });
+
         if (receiveAsset) {
             this.goToAmountInput(receiveAsset);
         }
@@ -403,26 +412,36 @@ class TipperAmount extends PureComponent {
      * Generates payment request link and redirects to PaymentRequestSuccess view with it
      * If there is an error, an error message will be set to display on the view
      */
-    onNext = () => {
+    onNext = async () => {
         const { selectedAddress, navigation, chainId } = this.props;
         const { cryptoAmount, selectedAsset } = this.state;
         const onRequest = navigation && navigation.getParam('onRequest', false);
 
         try {
-            let eth_link;
-            if (selectedAsset.isETH) {
-                const amount = toWei(cryptoAmount).toString();
-                eth_link = generateETHLink(selectedAddress, amount, chainId);
-            } else {
-                const amount = toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString();
-                eth_link = generateERC20Link(selectedAddress, selectedAsset.address, amount, chainId);
-            }
+            // let eth_link;
+            // if (selectedAsset.isETH) {
+            //     const amount = toWei(cryptoAmount).toString();
+            //     eth_link = generateETHLink(selectedAddress, amount, chainId);
+            // } else {
+            //     const amount = toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString();
+            //     eth_link = generateERC20Link(selectedAddress, selectedAsset.address, amount, chainId);
+            // }
 
-            // Convert to universal link / app link
-            const link = generateUniversalLinkRequest(eth_link);
+            // // Convert to universal link / app link
+            // const link = generateUniversalLinkRequest(eth_link);
+            const data = {
+                "recipient": selectedAddress,
+                "amount": cryptoAmount,
+                "symbol": selectedAsset.symbol
+            };
+            data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data));
+
+            const base64Content = base64.encode(JSON.stringify(data));
+            const link = `liquichain://tip?q=${base64Content}`
+
             const request = {
                 link,
-                qrLink: eth_link,
+                qrLink: link,
                 amount: cryptoAmount,
                 symbol: selectedAsset.symbol
             };
@@ -554,6 +573,7 @@ class TipperAmount extends PureComponent {
 
     render() {
         const { mode, tipData, viewTipModal } = this.state;
+        
         return (
             <SafeAreaView style={styles.wrapper}>
                 <KeyboardAwareScrollView

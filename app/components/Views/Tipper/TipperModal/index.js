@@ -10,8 +10,9 @@ import EthereumAddress from '../../../UI/EthereumAddress';
 import StyledButton from '../../../UI/StyledButton';
 import styles from './styles/index'
 import { strings } from '../../../../../locales/i18n';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import base64 from 'base-64';
 
 export default class TipperModal extends PureComponent {
     static propTypes = {
@@ -48,14 +49,22 @@ export default class TipperModal extends PureComponent {
         super(props);
         makeObservable(this, {
             toggleFullAddress: observable,
-            tipData: observable
+            tipData: observable,
+            updateTipData: action
         })
     }
 
-
     componentDidMount() {
+        this.updateTipData();
+    }
+
+    shouldComponentUpdate() {
+        this.updateTipData();
+    }
+
+    updateTipData = () => {
         const { data } = this.props;
-        this.tipData = data
+        this.tipData = data;
     }
 
     onCancel = () => {
@@ -78,7 +87,7 @@ export default class TipperModal extends PureComponent {
     renderBody() {
         const { networkInfo } = this.props;
         const { tipData } = this;
-        const message = `${strings('tipper.tip_for', { "amount": tipData.amount || 0, "symbol": tipData.symbol, "account": tipData.to })}?`
+        const message = `${strings('tipper.tip_for', { "amount": tipData.amount || 0, "symbol": tipData.symbol, "account": tipData.recipient })}?`
 
         return (
             <View style={styles.root}>
@@ -97,8 +106,8 @@ export default class TipperModal extends PureComponent {
 
     renderProfile() {
         const { data } = this.props;
+        const { tipData } = this;
         const { address, avatar, name, email } = data || {};
-
         const addressType = this.toggleFullAddress ? 'full' : 'short';
 
         return (
@@ -118,7 +127,6 @@ export default class TipperModal extends PureComponent {
     renderInput() {
         const { tipData } = this;
         const { symbol, amount } = tipData;
-        const { data } = this.props;
 
         return (
             <View style={styles.amountInput}>
@@ -133,7 +141,7 @@ export default class TipperModal extends PureComponent {
                     spellCheck={false}
                     style={styles.input}
                     value={amount}
-                    defaultValue={data.amount.toString()}
+                    defaultValue={amount?.toString()}
                     ref={this.amountInput}
                     testID={'request-amount-input'}
                 />

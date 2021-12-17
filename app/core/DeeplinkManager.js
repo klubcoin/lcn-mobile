@@ -192,6 +192,9 @@ class DeeplinkManager {
 				if (url.includes('://namecard') && params['q']) {
 					this.navigation.navigate('Contacts', { data: params['q'], key: moment().unix() });
 				}
+				else if (url.includes('://tip')  && params['q']) {
+					this.navigation.navigate('TipperAmount', { tipData: params['q'] });
+				}
 				break;
 			default:
 				return false;
