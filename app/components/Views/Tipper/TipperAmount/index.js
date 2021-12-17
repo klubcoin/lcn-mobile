@@ -47,6 +47,7 @@ import CryptoSignature from '../../../../core/CryptoSignature';
 import base64 from 'base-64';
 import RNFS from 'react-native-fs';
 import routes from '../../../../common/routes';
+import AppConstants from '../../../../core/AppConstants';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -432,6 +433,7 @@ class TipperAmount extends PureComponent {
 
             // // Convert to universal link / app link
             // const link = generateUniversalLinkRequest(eth_link);
+            const { MM_UNIVERSAL_LINK_HOST } = AppConstants;
             const data = {
                 recipient: account,
                 amount: cryptoAmount,
@@ -446,11 +448,12 @@ class TipperAmount extends PureComponent {
             data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data));
 
             const base64Content = base64.encode(JSON.stringify(data));
-            const link = `liquichain://tip?q=${base64Content}`
+            const qrLink = `liquichain://tip?q=${base64Content}`
+            const link = `http://${MM_UNIVERSAL_LINK_HOST}/tip/?q=${base64Content}`
 
             const request = {
                 link,
-                qrLink: link,
+                qrLink,
                 amount: cryptoAmount,
                 symbol: selectedAsset.symbol
             };

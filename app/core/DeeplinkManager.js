@@ -87,6 +87,10 @@ class DeeplinkManager {
 		});
 	}
 
+	handleNavigateTip(data) {
+		this.navigation.navigate('TipperAmount', data);
+	}
+
 	parse(url, { browserCallBack, origin, onHandled }) {
 		const urlObj = new URL(url);
 		let params;
@@ -137,7 +141,9 @@ class DeeplinkManager {
 						case 'focus':
 						case '':
 							break;
-
+						case 'tip':
+							this.handleNavigateTip({ tipData: params['q'] })
+							break;
 						default:
 							Alert.alert(strings('deeplink.not_supported'));
 					}
@@ -192,8 +198,8 @@ class DeeplinkManager {
 				if (url.includes('://namecard') && params['q']) {
 					this.navigation.navigate('Contacts', { data: params['q'], key: moment().unix() });
 				}
-				else if (url.includes('://tip')  && params['q']) {
-					this.navigation.navigate('TipperAmount', { tipData: params['q'] });
+				else if (url.includes('://tip') && params['q']) {
+					this.handleNavigateTip({ tipData: params['q'] })
 				}
 				break;
 			default:
