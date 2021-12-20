@@ -233,7 +233,7 @@ class MarketPlace extends PureComponent {
 	onPressVendor = vendor => {
 		store.addStoreVendors(vendor.wallet, vendor);
 		store.addRecentProvider(vendor);
-		this.props.navigation.navigate('MarketCategory', { vendor, query: this.query, category: this.category });
+		this.props.navigation.navigate('MarketCategory', { vendor, query: this.query || '', category: this.category });
 	};
 
 	showProduct = product => {

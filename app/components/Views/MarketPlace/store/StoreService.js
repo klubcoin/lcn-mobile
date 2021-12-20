@@ -45,8 +45,9 @@ export default class StoreService {
 			comments?.map(e => ratings.push(e.rating));
 			if (category.hash == data.hash) {
 				const { query } = data.data;
-				const titleHit = title.toLowerCase().includes(query);
-				const descHit = description.toLowerCase().includes(query);
+				const queryStr = query.toLowerCase();
+				const titleHit = title.toLowerCase().includes(queryStr);
+				const descHit = description.toLowerCase().includes(queryStr);
 
 				if (titleHit) {
 					titleHits++;
@@ -126,8 +127,9 @@ export default class StoreService {
 
 			const hash = category?.hash;
 			if (hash == data.hash) {
-				const titleHit = title.toLowerCase().includes(query);
-				const descHit = description.toLowerCase().includes(query);
+				const queryStr = query.toLowerCase();
+				const titleHit = title.toLowerCase().includes(queryStr);
+				const descHit = description.toLowerCase().includes(queryStr);
 
 				const found = titleHit || descHit;
 				if (found) total++;
