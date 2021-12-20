@@ -64,12 +64,12 @@ export class ShippingInfo extends PureComponent {
 		const { publicInfo } = profileOnboard;
 		const { shippingAddress, coords } = publicInfo || {};
 
-		this.shippingAddress.phone = shippingAddress.phone || '';
-		this.shippingAddress.address = shippingAddress.address || '';
-		this.shippingAddress.street = shippingAddress.street || '';
-		this.shippingAddress.zipCode = shippingAddress.zipCode || '';
-		this.shippingAddress.city = shippingAddress.city || '';
-		this.shippingAddress.country = shippingAddress.country || ''
+		this.shippingAddress.phone = shippingAddress?.phone || '';
+		this.shippingAddress.address = shippingAddress?.address || '';
+		this.shippingAddress.street = shippingAddress?.street || '';
+		this.shippingAddress.zipCode = shippingAddress?.zipCode || '';
+		this.shippingAddress.city = shippingAddress?.city || '';
+		this.shippingAddress.country = shippingAddress?.country || ''
 		this.coords = coords || null;
 	}
 
