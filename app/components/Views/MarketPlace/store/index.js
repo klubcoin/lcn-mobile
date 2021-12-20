@@ -171,6 +171,7 @@ class Store {
 	}
 
 	async addRecentProvider(provider) {
+		this.removeRecentProvider(provider.uuid);
 		this.marketRecentProviders.unshift(provider);
 		await this.save(kMarketRecentProviders, this.marketRecentProviders);
 	}
