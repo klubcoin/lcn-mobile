@@ -35,6 +35,7 @@ import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { showError, showSuccess } from '../../../../util/notify';
+import { refStoreService } from '../store/StoreService';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -135,6 +136,9 @@ export class MarketAddEditProduct extends PureComponent {
 		store.deleteProduct(this.uuid);
 		store.addProduct(update);
 
+		const storeService = refStoreService();
+		storeService.announceCategoryHash(category.hash);
+
 		const onUpdate = this.props.navigation.getParam('onUpdate');
 		onUpdate && onUpdate(update);
 
@@ -161,6 +165,9 @@ export class MarketAddEditProduct extends PureComponent {
 		data.signature = await CryptoSignature.signMessage(selectedAddress, data.uuid + data.title + data.wallet);
 
 		store.addProduct(data);
+
+		const storeService = refStoreService();
+		storeService.announceCategoryHash(category.hash);
 
 		const onUpdate = this.props.navigation.getParam('onUpdate');
 		onUpdate && onUpdate(data);

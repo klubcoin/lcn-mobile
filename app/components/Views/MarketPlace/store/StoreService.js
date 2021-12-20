@@ -236,6 +236,25 @@ export default class StoreService {
 		}
 	}
 
+	announceCategoryHash = (categoryHash) => {
+		const categories = this.collectCategoryHashes();
+		if (!categories || categories.length == 0) return;
+
+		const coord = {
+			latitude: 0,
+			longitude: 0,
+		}
+		const category = categories.find(e => e.hash == categoryHash);
+		const { hash, total } = category;
+
+		APIService.announceInfoHash(
+			hash, this.from, total, coord,
+			(success, json) => {
+				store.addPeerAnnounce(hash, json);
+			}
+		)
+	}
+
 	announceToNodes(addresses) {
 		const categories = this.collectCategoryHashes();
 		if (!categories || categories.length == 0) return;
