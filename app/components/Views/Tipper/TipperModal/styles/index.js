@@ -90,6 +90,27 @@ const styles = StyleSheet.create({
 		textTransform: 'uppercase',
 		textAlign: 'center'
 	},
+	errorWrapper: {
+		alignItems: 'center',
+		borderWidth: 1,
+		borderRadius: 5,
+		borderColor: 'red',
+		padding: 16,
+		width: '70%',
+		alignSelf: 'center',
+		marginTop: 10
+	},
+	errorHeader: {
+		...fontStyles.bold,
+		fontSize: RFValue(15),
+		color: colors.red
+	},
+	errorMessage: {
+		...fontStyles.normal,
+		fontSize: RFValue(12),
+		color: colors.red,
+		textAlign: 'center'
+	}
 });
 
 export default assignNestedObj(styles, brandStyles);

@@ -15,7 +15,9 @@ import { observer } from 'mobx-react';
 import base64 from 'base-64';
 import routes from '../../../../common/routes';
 import Api from '../../../../services/api';
-import { renderFromWei, toWei, toTokenMinimalUnit } from '../../../../util/number';
+import { renderFromWei, toWei, toTokenMinimalUnit, fromWei } from '../../../../util/number';
+import Engine from '../../../../core/Engine';
+import { getTicker } from '../../../../util/transactions';
 
 export default class TipperModal extends PureComponent {
     static propTypes = {
@@ -117,7 +119,7 @@ export default class TipperModal extends PureComponent {
             icon: 'logo.png',
         };
 
-        const message = `${strings('tipper.tip_for', { "amount": renderFromWei(tipData.value) || 0, "symbol": tipData.symbol, "account": tipData?.name })}?`
+        const message = `${strings('tipper.tip_for', { "amount": renderFromWei(tipData.value) || 0, "symbol": tipData.symbol, "account": tipData?.name || strings('market.anonymous') })}?`
 
         return (
             <View style={styles.root}>
@@ -129,6 +131,7 @@ export default class TipperModal extends PureComponent {
                 <View style={{ flex: 1 }}>
                     {this.renderProfile()}
                     {this.renderInput()}
+                    {this.renderBalance()}
                 </View>
                 {this.renderActions()}
             </View >
@@ -178,6 +181,20 @@ export default class TipperModal extends PureComponent {
                 </Text>
             </View>
 
+        )
+    }
+
+    renderBalance() {
+        const { accounts } = Engine.state.AccountTrackerController;
+        const { selectedAddress } = Engine.state.PreferencesController;
+        const { ticker } = Engine.state.NetworkController.provider;
+        const balance = fromWei(accounts[selectedAddress].balance);
+   
+        return (
+            <View style={styles.errorWrapper}>
+                <Text style={styles.errorHeader}>{strings('transaction.insufficient')}</Text>
+                <Text style={styles.errorMessage}>{strings('tipper.current_balance', { "balance": `${balance} ${getTicker(ticker)}` })}</Text>
+            </View>
         )
     }
 
