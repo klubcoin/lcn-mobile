@@ -18,6 +18,7 @@ import Api from '../../../../services/api';
 import { renderFromWei, toWei, toTokenMinimalUnit, fromWei } from '../../../../util/number';
 import Engine from '../../../../core/Engine';
 import { getTicker } from '../../../../util/transactions';
+import BigNumber from 'bignumber.js';
 
 export default class TipperModal extends PureComponent {
     static propTypes = {
@@ -49,12 +50,14 @@ export default class TipperModal extends PureComponent {
 
     toggleFullAddress = false;
     tipData = {};
+    errorMessage = '';
 
     constructor(props) {
         super(props);
         makeObservable(this, {
             toggleFullAddress: observable,
             tipData: observable,
+            errorMessage: observable,
             updateTipData: action
         })
     }
@@ -92,8 +95,7 @@ export default class TipperModal extends PureComponent {
     };
 
     onConfirm = () => {
-        this.props.onConfirm();
-        this.props.hideModal();
+        
     };
 
     toggleAddress = () => {
@@ -110,6 +112,28 @@ export default class TipperModal extends PureComponent {
         }
     }
 
+    validateAmount = () => {
+        const { value } = this.tipData;
+        const { accounts } = Engine.state.AccountTrackerController;
+        const { selectedAddress } = Engine.state.PreferencesController;
+        const balance = fromWei(accounts[selectedAddress].balance);
+
+        try {
+            if (!value || !balance) return;
+            
+            const isValid = BigNumber(balance).gte(BigNumber(value));
+
+            if (!isValid) {
+                this.errorMessage = strings('transaction.insufficient')
+            }
+            else if (isValid){
+                this.errorMessage = '';
+            }
+        } catch (error) {
+            this.errorMessage = strings('sync_with_extension.something_wrong');
+        }
+    }
+
     renderBody() {
         const { tipData } = this;
         const meta = {
@@ -119,7 +143,7 @@ export default class TipperModal extends PureComponent {
             icon: 'logo.png',
         };
 
-        const message = `${strings('tipper.tip_for', { "amount": renderFromWei(tipData.value) || 0, "symbol": tipData.symbol, "account": tipData?.name || strings('market.anonymous') })}?`
+        const message = `${strings('tipper.tip_for', { "amount": fromWei(tipData.value) || 0, "symbol": tipData.symbol, "account": tipData?.name || strings('market.anonymous') })}?`
 
         return (
             <View style={styles.root}>
@@ -158,7 +182,6 @@ export default class TipperModal extends PureComponent {
     renderInput() {
         const { tipData } = this;
         const { symbol, value } = tipData;
-        const renderValue = renderFromWei(tipData.value);
 
         return (
             <View style={styles.amountInput}>
@@ -172,7 +195,7 @@ export default class TipperModal extends PureComponent {
                     placeholderTextColor={colors.grey100}
                     spellCheck={false}
                     style={styles.input}
-                    value={renderFromWei(value)}
+                    value={fromWei(value)}
                     ref={this.amountInput}
                     testID={'request-amount-input'}
                 />
@@ -189,10 +212,12 @@ export default class TipperModal extends PureComponent {
         const { selectedAddress } = Engine.state.PreferencesController;
         const { ticker } = Engine.state.NetworkController.provider;
         const balance = fromWei(accounts[selectedAddress].balance);
-   
+
+        this.validateAmount();
+
         return (
-            <View style={styles.errorWrapper}>
-                <Text style={styles.errorHeader}>{strings('transaction.insufficient')}</Text>
+            !!this.errorMessage && <View style={styles.errorWrapper}>
+                <Text style={styles.errorHeader}>{this.errorMessage}</Text>
                 <Text style={styles.errorMessage}>{strings('tipper.current_balance', { "balance": `${balance} ${getTicker(ticker)}` })}</Text>
             </View>
         )
@@ -200,13 +225,14 @@ export default class TipperModal extends PureComponent {
 
     renderActions() {
         const { confirmLabel, cancelLabel } = this.props;
-
+        const { value } = this.tipData;
+        
         return (
             <View style={styles.buttons}>
                 <StyledButton
-                    type={'confirm'}
+                    type={!!this.errorMessage || value == 0 ? 'cancel' : 'confirm'}
                     containerStyle={styles.accept}
-                    onPress={this.onConfirm.bind(this)}
+                    onPress={!this.errorMessage ? this.onConfirm() : null}
                 >
                     {confirmLabel}
                 </StyledButton>
