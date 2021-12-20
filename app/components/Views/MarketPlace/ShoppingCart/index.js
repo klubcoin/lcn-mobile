@@ -13,6 +13,7 @@ import routes from '../../../../common/routes';
 import { makeObservable, observable } from 'mobx';
 import { sha256 } from '../../../../core/CryptoSignature';
 import { refStoreService } from '../store/StoreService';
+import StoreImage from '../components/StoreImage';
 
 class ShoppingCart extends PureComponent {
 	totalAmount = 0;
@@ -36,7 +37,7 @@ class ShoppingCart extends PureComponent {
 	groupProducts = () => {
 		store.marketCart.forEach(e => {
 			var address = e.product?.wallet?.toLowerCase();
-			this.productGroups[address] = Object.assign(this.productGroups[address] || {}, { profile : store.storeVendors[address]?.profile });
+			this.productGroups[address] = Object.assign(this.productGroups[address] || {}, { profile: store.storeVendors[address]?.profile });
 
 			if (this.productGroups[address].products) {
 				this.productGroups[address].products?.unshift(e);
@@ -86,7 +87,7 @@ class ShoppingCart extends PureComponent {
 
 	renderQuantity = product => {
 		const { quantity } = product;
-		
+
 		return (
 			<View style={styles.quantityView}>
 				<TouchableOpacity
@@ -130,12 +131,12 @@ class ShoppingCart extends PureComponent {
 	};
 
 	renderItem = ({ index, item }) => {
-		const {	products, profile } = this.productGroups[item];
+		const { products, profile } = this.productGroups[item];
 
 		return (
 			products.length > 0 && <View style={styles.itemWrapper}>
 				<View style={styles.storeNameContainer}>
-					<MaterialIcons name={'store'} size={20}/>
+					<MaterialIcons name={'store'} size={20} />
 					<Text style={styles.storeName}>{profile?.storeName}</Text>
 				</View>
 				{
@@ -153,7 +154,7 @@ class ShoppingCart extends PureComponent {
 								>
 									<IonIcon name={excluded ? 'square-outline' : 'checkbox-outline'} size={22} />
 								</TouchableOpacity>
-								<Image style={styles.image} source={{ uri: images && images[0] }} />
+								<StoreImage style={styles.image} address={product.wallet} path={images[0]} />
 								<View style={styles.productInfo}>
 									<Text numberOfLines={1} style={styles.title}>
 										{title}
