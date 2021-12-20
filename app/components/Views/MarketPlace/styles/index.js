@@ -198,6 +198,12 @@ const styles = StyleSheet.create({
 	nullDataDesc: {
 		color: colors.grey300,
 		fontSize: RFValue(12)
+	},
+	storeName: {
+		marginTop: 5,
+		fontWeight: '600',
+		fontSize: RFValue(10),
+		color: colors.blue,
 	}
 });
 

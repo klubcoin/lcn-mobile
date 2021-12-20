@@ -36,7 +36,6 @@ class MarketPlace extends PureComponent {
 	categories = [];
 	showCategories = false;
 	vendors = [];
-	recentProviders = [];
 
 	constructor(props) {
 		super(props);
@@ -47,7 +46,6 @@ class MarketPlace extends PureComponent {
 			categories: observable,
 			showCategories: observable,
 			vendors: observable,
-			recentProviders: observable
 		});
 	}
 
@@ -171,9 +169,10 @@ class MarketPlace extends PureComponent {
 	};
 
 	renderRecentProviderSlide = ({ item }) => {
+		const rowSize = 4;
 		const { index } = item;
 		const start = index * rowSize;
-		const items = this.recentProviders.slice(start, start + rowSize);
+		const items = store.marketRecentProviders.slice(start, start + rowSize);
 		if (items.length != rowSize) {
 			Array(rowSize - items.length)
 				.fill(false)
@@ -186,20 +185,21 @@ class MarketPlace extends PureComponent {
 				{items.map((e, i) => {
 					if (!e) return <View style={{ width }} />;
 
-					const { price, discountPrice, title, images } = e;
+					const { wallet, profile } = e;
 					return (
-						<View style={{ width, alignItems: 'center' }}>
-							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
-							<Text numberOfLines={2} style={styles.title}>
-								{title}
+						<TouchableOpacity
+							style={{ width, alignItems: 'center' }}
+							activeOpacity={0.6}
+							onPress={() => this.onPressVendor(e)}
+						>
+							<StoreImage style={{ width, height: width }} address={wallet} path={profile.logoStore} />
+							<Text numberOfLines={2} style={styles.storeName}>
+								{profile?.storeName}
 							</Text>
-							<Text numberOfLines={1} style={styles.finalPrice}>
-								{discountPrice ?? price} {routes.mainNetWork.ticker}
+							<Text numberOfLines={1} style={styles.distance}>
+								{this.calculateDistance(profile.coords)} km
 							</Text>
-							<Text numberOfLines={1} style={styles.price}>
-								{price} {routes.mainNetWork.ticker}
-							</Text>
-						</View>
+						</TouchableOpacity>
 					);
 				})}
 			</View>
@@ -207,7 +207,7 @@ class MarketPlace extends PureComponent {
 	};
 
 	renderRecentlyVisitedProviders = () => {
-		const slideCount = Math.ceil(this.recentProviders.length / rowSize);
+		const slideCount = Math.ceil(store.marketRecentProviders.length / rowSize);
 		const data = Array(slideCount)
 			.fill(0)
 			.map((e, index) => ({ index }));
@@ -232,6 +232,7 @@ class MarketPlace extends PureComponent {
 
 	onPressVendor = vendor => {
 		store.addStoreVendors(vendor.wallet, vendor);
+		store.addRecentProvider(vendor);
 		this.props.navigation.navigate('MarketCategory', { vendor, query: this.query, category: this.category });
 	};
 
