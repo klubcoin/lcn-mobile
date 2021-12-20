@@ -247,8 +247,8 @@ class EditStoreProfile extends Component {
 	};
 
 	onChangeSlider = value => {
-		this.orderPayment = parseFloat((1 - value).toFixed(2));
-		this.deliveryPayment = parseFloat(value.toFixed(2));
+		this.orderPayment = parseFloat(value.toFixed(2));
+		this.deliveryPayment = parseFloat((1 - value).toFixed(2));
 
 		this.orderPaymentRef.setValue((this.orderPayment * 100).toFixed(0));
 		this.deliveryPaymentRef.setValue((this.deliveryPayment * 100).toFixed(0));
@@ -413,7 +413,7 @@ class EditStoreProfile extends Component {
 								maximumValue={1}
 								minimumTrackTintColor={colors.primaryFox}
 								maximumTrackTintColor={colors.black}
-								value={this.deliveryPayment}
+								value={this.orderPayment}
 								onValueChange={this.onChangeSlider}
 							/>
 						</View>
