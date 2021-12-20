@@ -363,6 +363,7 @@ class MarketPlace extends PureComponent {
 				const { info } = data;
 				const { query } = info;
 				if (query?.query == this.query) {
+					if (this.vendors.find(e => e.wallet == data.from)) return;
 					this.vendors.push({
 						...info,
 						wallet: data.from
