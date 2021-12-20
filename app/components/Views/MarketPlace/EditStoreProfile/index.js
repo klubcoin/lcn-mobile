@@ -348,7 +348,8 @@ class EditStoreProfile extends Component {
 										<Icon name={'map-marker-alt'} size={22} />
 									</TouchableOpacity>
 								</View>
-								<LocationSearchBar value={this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''} />
+								{!!this.coords && <Text>{this.coords.latitude}, {this.coords.longitude}</Text>}
+								{/* <LocationSearchBar value={this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''} /> */}
 							</View>
 
 							<View style={styles.section}>
