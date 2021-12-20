@@ -18,6 +18,7 @@ import Cart from '../components/Cart';
 import { showError } from '../../../../util/notify';
 import { StoreQuery } from '../store/StoreMessages';
 import { refStoreService } from '../store/StoreService';
+import StoreImage from './../components/StoreImage';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -104,7 +105,7 @@ class MarketProduct extends PureComponent {
 	}
 
 	renderImage = ({ item }) => {
-		return <Image style={styles.image} source={{ uri: item }} />;
+		return <StoreImage style={styles.image} address={this.product.wallet} path={item} />
 	};
 
 	decreaseQuantity = () => {
@@ -318,7 +319,7 @@ class MarketProduct extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => (this.product = e)}
 						>
-							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
+							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} />
 							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
@@ -359,7 +360,7 @@ class MarketProduct extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => (this.product = e)}
 						>
-							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
+							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} />
 							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
