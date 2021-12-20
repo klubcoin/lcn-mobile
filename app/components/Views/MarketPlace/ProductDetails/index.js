@@ -19,6 +19,7 @@ import { showError } from '../../../../util/notify';
 import { StoreQuery } from '../store/StoreMessages';
 import { refStoreService } from '../store/StoreService';
 import StoreImage from './../components/StoreImage';
+import Api from '../../../../services/api';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -33,6 +34,7 @@ class MarketProduct extends PureComponent {
 	quantity = 1;
 	cartBadge = 0;
 	otherProducts = [];
+	vendorProfile = {};
 
 	constructor(props) {
 		super(props);
@@ -42,7 +44,8 @@ class MarketProduct extends PureComponent {
 			readMore: observable,
 			quantity: observable,
 			cartBadge: observable,
-			otherProducts: observable
+			otherProducts: observable,
+			vendorProfile: observable,
 		});
 
 		this.product = props.navigation.getParam('product');
@@ -65,8 +68,31 @@ class MarketProduct extends PureComponent {
 	}
 
 	async fetchData() {
+		const vendor = this.props.navigation.getParam('vendor');
+		if (!vendor) {
+			const response = await this.getWalletInfo(this.product.wallet);
+			if (response && response.address) {
+				this.vendorProfile = response;
+			}
+		}
 		this.favorite = store.marketFavoriteProducts.find(e => e.uuid == this.product.uuid);
 	}
+
+	getWalletInfo = async (address) => {
+		return new Promise((resolve, reject) =>
+			Api.postRequest(
+				routes.walletInfo,
+				[address],
+				response => {
+					if (response.result) {
+						resolve({ address, ...response.result });
+					} else {
+						reject(response);
+					}
+				},
+				error => reject(error)
+			));
+	};
 
 	fetchOtherProducts = () => {
 		const { category, wallet } = this.product;
@@ -226,7 +252,12 @@ class MarketProduct extends PureComponent {
 
 	renderAdditionalInfo = () => {
 		const vendor = this.props.navigation.getParam('vendor');
-		const { profile } = vendor || {};
+		const { profile } = vendor || {
+			profile: {
+				storeName: this.vendorProfile?.name,
+				phone: this.vendorProfile?.publicInfo?.shippingAddress?.phone,
+			}
+		};
 
 		return (
 			<View>
