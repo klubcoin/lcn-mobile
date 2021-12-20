@@ -18,6 +18,7 @@ class StoreImage extends Component {
 			setImage: action,
 		})
 		const { address, path } = props;
+		this.setImage(path);
 		this.source = ReadFile(refWebRTC().address(), address, sha256(path), path);
 	}
 
@@ -30,8 +31,10 @@ class StoreImage extends Component {
 	}
 
 	fetchImage = async () => {
-		const { address } = this.props;
+		const { address, local } = this.props;
 		const { hash } = this.source;
+
+		if (local) return;
 
 		const folder = `${RNFS.DocumentDirectoryPath}/${address.toLowerCase()}`;
 		const path = `${folder}/${hash}`;

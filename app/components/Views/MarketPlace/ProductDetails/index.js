@@ -105,7 +105,7 @@ class MarketProduct extends PureComponent {
 	}
 
 	renderImage = ({ item }) => {
-		return <StoreImage style={styles.image} address={this.product.wallet} path={item} />
+		return <StoreImage style={styles.image} address={this.product.wallet} path={item} local={this.isOwner} />
 	};
 
 	decreaseQuantity = () => {
@@ -319,7 +319,7 @@ class MarketProduct extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => (this.product = e)}
 						>
-							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} />
+							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} local={this.isOwner} />
 							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
@@ -360,7 +360,7 @@ class MarketProduct extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => (this.product = e)}
 						>
-							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} />
+							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} local={this.isOwner} />
 							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
