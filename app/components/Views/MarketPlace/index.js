@@ -20,6 +20,7 @@ import { StoreAnnounce } from './store/StoreMessages';
 import { sha256 } from '../../../core/CryptoSignature';
 import Cart from './components/Cart';
 import { colors } from '../../../styles/common';
+import StoreImage from './components/StoreImage';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -128,7 +129,7 @@ class MarketPlace extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => this.showProduct(e)}
 						>
-							<Image style={{ width, height: width }} source={{ uri: images[0] }} />
+							<StoreImage style={{ width, height: width }} address={e.wallet} path={images[0]} />
 							<Text numberOfLines={2} style={styles.title}>
 								{title}
 							</Text>
@@ -306,7 +307,7 @@ class MarketPlace extends PureComponent {
 								activeOpacity={0.6}
 								onPress={() => this.onPressVendor(e)}
 							>
-								<Image style={styles.vendorLogo} source={{ uri: profile?.logoStore }} />
+								<StoreImage style={styles.vendorLogo} address={e.wallet} path={profile?.logoStore} />
 								<View style={styles.vendorInfo}>
 									<Text numberOfLines={2} style={styles.vendor}>
 										{storeName}
@@ -324,9 +325,8 @@ class MarketPlace extends PureComponent {
 									</Text>
 									<Text numberOfLines={2} style={styles.priceRange}>
 										$
-										{`${priceRange.from}${
-											priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
-										}`}
+										{`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
+											}`}
 									</Text>
 									{/* 
 									<Text numberOfLines={1} style={styles.tags}>
