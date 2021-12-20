@@ -22,7 +22,6 @@ class MarketSellerOverview extends PureComponent {
 	categories = [];
 	products = [];
 	selectedCategory = {};
-	storeProfile = {};
 
 	constructor(props) {
 		super(props);
@@ -32,7 +31,6 @@ class MarketSellerOverview extends PureComponent {
 			categories: observable,
 			products: observable,
 			selectedCategory: observable,
-			storeProfile: observable,
 			onGoBack: action
 		});
 	}
@@ -55,7 +53,6 @@ class MarketSellerOverview extends PureComponent {
 
 	fetchStoreProfile = async () => {
 		await store.load();
-		this.storeProfile = store.storeProfile;
 	};
 
 	toggleDrawer = () => {
@@ -69,7 +66,7 @@ class MarketSellerOverview extends PureComponent {
 	};
 
 	onAddProduct = () => {
-		if (Object.keys(this.storeProfile).length <= 0) {
+		if (Object.keys(store.storeProfile).length <= 0) {
 			return showError(strings('market.not_found_profile'));
 		}
 
@@ -175,12 +172,12 @@ class MarketSellerOverview extends PureComponent {
 		return (
 			<SafeAreaView>
 				<View style={styles.category}>
-					{Object.keys(this.storeProfile).length <= 0 && (
+					{Object.keys(store.storeProfile).length <= 0 && (
 						<View style={styles.notFoundWrapper}>
 							<Text style={styles.notFoundText}>{strings('market.not_found_profile')}</Text>
 						</View>
 					)}
-					{items.length <= 0 && Object.keys(this.storeProfile).length > 0 && (
+					{items.length <= 0 && Object.keys(store.storeProfile).length > 0 && (
 						<View style={styles.notFoundWrapper}>
 							<Text style={styles.notFoundText}>
 								{products.length <= 0
