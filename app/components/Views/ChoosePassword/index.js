@@ -318,7 +318,7 @@ class ChoosePassword extends PureComponent {
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + avatarb64);
 
 		API.postRequest(Routes.walletCreation, [
-			name, selectedAddress, hash
+			name, selectedAddress, hash, JSON.stringify({})
 		], response => {
 			console.log('account creation', response)
 		}, error => {

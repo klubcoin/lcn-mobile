@@ -146,7 +146,7 @@ class Wallet extends PureComponent {
 					const { name, publicInfo } = response.result;
 					PreferencesController.setAccountLabel(selectedAddress, name);
 					preferences.getOnboardProfile()
-						.then(value => preferences.setOnboardProfile(Object.assign(value, {"publicInfo": publicInfo})))
+						.then(value => preferences.setOnboardProfile(Object.assign(value, { publicInfo })))
 						.catch(e => console.log('profile onboarding error', e));
 				}
 			},

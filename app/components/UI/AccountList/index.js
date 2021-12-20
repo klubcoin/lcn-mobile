@@ -267,7 +267,7 @@ class AccountList extends PureComponent {
 		const hash = sha3JS.keccak_256(firstname + lastname + account.address + avatarb64);
 
 		API.postRequest(Routes.walletCreation, [
-			name, account.address, hash
+			name, account.address, hash, JSON.stringify({})
 		], response => {
 			console.log('account creation', response)
 			this.getBalance(account.address)
