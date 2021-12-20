@@ -91,7 +91,7 @@ export class ShippingInfo extends PureComponent {
 		if (!phone) {
 			return showError(strings('market.missing_phone'));
 		}
-		if (!/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phone)) {
+		if (!/^\+?[\d\s]{8,15}$/.test(phone)) {
 			return showError(strings('market.invalid_phone'));
 		}
 		if (!address) {

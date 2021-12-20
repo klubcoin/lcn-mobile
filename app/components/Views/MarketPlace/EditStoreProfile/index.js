@@ -222,7 +222,7 @@ class EditStoreProfile extends Component {
 			showError(strings('market.missing_phone'));
 			return;
 		}
-		if (!/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phone)) {
+		if (!/^\+?[\d\s]{8,15}$/.test(phone)) {
 			showError(strings('market.invalid_phone'));
 			return;
 		}
