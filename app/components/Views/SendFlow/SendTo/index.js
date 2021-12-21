@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { colors, fontStyles, baseStyles } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
-import AddressList from './../AddressList';
+import AddressList from '../AddressList';
 import PropTypes from 'prop-types';
 import {
 	StyleSheet,
@@ -12,7 +12,7 @@ import {
 	InteractionManager,
 	ScrollView
 } from 'react-native';
-import { AddressFrom, AddressTo } from './../AddressInputs';
+import { AddressFrom, AddressTo } from '../AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
 import { connect } from 'react-redux';

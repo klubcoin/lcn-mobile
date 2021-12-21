@@ -18,7 +18,7 @@ import Cart from '../components/Cart';
 import { showError } from '../../../../util/notify';
 import { StoreQuery } from '../store/StoreMessages';
 import { refStoreService } from '../store/StoreService';
-import StoreImage from './../components/StoreImage';
+import StoreImage from '../components/StoreImage';
 import Api from '../../../../services/api';
 
 const window = Dimensions.get('window');

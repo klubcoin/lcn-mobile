@@ -13,7 +13,7 @@ import TransactionActionContent from '../../TransactionActionModal/TransactionAc
 import ActionContent from '../../ActionModal/ActionContent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TransactionDetails from '../../TransactionElement/TransactionDetails';
-import BaseNotification from './../BaseNotification';
+import BaseNotification from '../BaseNotification';
 import Device from '../../../../util/Device';
 import ElevatedView from 'react-native-elevated-view';
 import { CANCEL_RATE, SPEED_UP_RATE } from '@metamask/controllers';
