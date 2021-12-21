@@ -62,7 +62,8 @@ import {
 	toggleDappTransactionModal,
 	toggleApproveModal,
 	showConfirmOtherIdentityPrompt,
-	toggleFriendRequestQR
+	toggleFriendRequestQR,
+	showTipperModal
 } from '../../../actions/modals';
 import { setOnboardProfile } from '../../../actions/user';
 import AccountApproval from '../../UI/AccountApproval';
@@ -90,6 +91,7 @@ import StoreService, { setStoreService } from '../../Views/MarketPlace/store/Sto
 import ChatService, { setChatService } from '../../Views/Message/store/ChatService';
 import messageStore from '../../Views/Message/store'
 import FileTransferService, { setFileTransferService } from '../../Views/FilesManager/store/FileTransferService';
+import TipperModal from '../../Views/Tipper/TipperModal';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -880,6 +882,21 @@ const Main = props => {
 		);
 	};
 
+	const renderTipperModal = () => {
+		const { tipperModalData, showTipperModal } = props;
+
+		return (
+			tipperModalData && <TipperModal
+				visible={!!tipperModalData}
+				hideModal={() => showTipperModal(null)}
+				title={strings('contacts.friend_request')}
+				confirmLabel={strings('tipper.tip')}
+				cancelLabel={strings('contacts.reject')}
+				data={tipperModalData}
+			/>
+		);
+	};
+
 	return (
 		<React.Fragment>
 			<View style={styles.flex}>
@@ -915,6 +932,7 @@ const Main = props => {
 			{renderApproveModal()}
 			{renderAcceptedFriendNameCard()}
 			{renderConfirmOtherIdentity()}
+			{renderTipperModal()}
 		</React.Fragment>
 	);
 };
@@ -1020,7 +1038,8 @@ const mapStateToProps = state => ({
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
 	network: state.engine.backgroundState.NetworkController.network,
 	identities: state.engine.backgroundState.PreferencesController.identities,
-	otherIdentityToConfirm: state.modals.otherIdentityToConfirm
+	otherIdentityToConfirm: state.modals.otherIdentityToConfirm,
+	tipperModalData: state.modals.tipperModalData
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1038,6 +1057,7 @@ const mapDispatchToProps = dispatch => ({
 	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
 	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data)),
 	toggleFriendRequestQR: (visible) => dispatch(toggleFriendRequestQR(visible)),
+	showTipperModal: (data) => dispatch(showTipperModal(data)),
 });
 
 export default connect(

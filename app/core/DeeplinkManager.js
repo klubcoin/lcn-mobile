@@ -12,6 +12,8 @@ import { strings } from '../../locales/i18n';
 import { getNetworkTypeById } from '../util/networks';
 import { WalletDevice } from '@metamask/controllers/';
 import moment from 'moment';
+import { showTipperModal } from '../actions/modals';
+import { store } from '../store';
 
 class DeeplinkManager {
 	constructor(_navigation) {
@@ -147,14 +149,15 @@ class DeeplinkManager {
 							const symbol = params['symbol']
 							const isETH = params['isETH'];
 							const decimals = params['decimals'];
-
-							this.handleNavigateTip({ tipData: {
+							const tipData = {
 								receiverAddress,
 								value,
 								symbol,
 								isETH,
 								decimals
-							}})
+							};
+
+							store.dispatch(showTipperModal(tipData))
 							break;
 						default:
 							Alert.alert(strings('deeplink.not_supported'));

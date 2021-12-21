@@ -9,6 +9,7 @@ const initialState = {
 	approveModalVisible: false,
 	otherIdentityToConfirm: null,
 	friendRequestQRVisible: false,
+	tipperModalData: null,
 };
 
 const modalsReducer = (state = initialState, action) => {
@@ -60,6 +61,11 @@ const modalsReducer = (state = initialState, action) => {
 			return {
 				...state,
 				friendRequestQRVisible: action.visible
+			};
+		case 'SHOW_TIPPER_MODAL':
+			return {
+				...state,
+				tipperModalData: action.data
 			};
 		default:
 			return state;

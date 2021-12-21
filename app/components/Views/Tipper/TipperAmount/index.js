@@ -42,7 +42,6 @@ import { toLowerCaseCompare } from '../../../../util/general';
 import styles from './styles/index';
 import { baseStyles } from '../../../../styles/common';
 import { colors, fontStyles } from '../../../../styles/common';
-import TipperModal from '../TipperModal';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import base64 from 'base-64';
 import RNFS from 'react-native-fs';
@@ -158,14 +157,6 @@ class TipperAmount extends PureComponent {
     componentDidMount = () => {
         const { primaryCurrency, navigation } = this.props;
         const receiveAsset = navigation && navigation.getParam('receiveAsset', undefined);
-        const tipData = navigation && navigation.getParam('tipData');
-
-        if (tipData) {
-            this.setState({
-                tipData,
-                viewTipModal: true
-            })
-        }
 
         this.setState({
             internalPrimaryCurrency: primaryCurrency,
@@ -601,15 +592,7 @@ class TipperAmount extends PureComponent {
                     style={styles.contentWrapper}
                     contentContainerStyle={styles.scrollViewContainer}
                 >
-                    {!viewTipModal && (mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount())}
-                    {viewTipModal && <TipperModal
-                        visible={viewTipModal}
-                        hideModal={() => this.setState({ viewTipModal: false })}
-                        title={strings('contacts.friend_request')}
-                        confirmLabel={strings('tipper.tip')}
-                        cancelLabel={strings('contacts.reject')}
-                        data={tipData}
-                    />}
+                    {mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount()}
                 </KeyboardAwareScrollView>
             </SafeAreaView>
         );

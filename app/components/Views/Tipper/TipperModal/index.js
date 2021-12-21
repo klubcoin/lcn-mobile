@@ -1,6 +1,15 @@
 import React, { Component, PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    Alert,
+    InteractionManager,
+    DeviceEventEmitter,
+} from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import Modal from 'react-native-modal';
@@ -15,10 +24,14 @@ import { observer } from 'mobx-react';
 import base64 from 'base-64';
 import routes from '../../../../common/routes';
 import Api from '../../../../services/api';
-import { renderFromWei, toWei, toTokenMinimalUnit, fromWei } from '../../../../util/number';
+import { renderFromWei, toWei, toTokenMinimalUnit, fromWei, BNToHex } from '../../../../util/number';
 import Engine from '../../../../core/Engine';
 import { getTicker } from '../../../../util/transactions';
 import BigNumber from 'bignumber.js';
+import * as sha3JS from 'js-sha3';
+import { WalletDevice } from '@metamask/controllers';
+import TransactionTypes from '../../../../core/TransactionTypes';
+import NotificationManager from '../../../../core/NotificationManager';
 
 export default class TipperModal extends PureComponent {
     static propTypes = {
@@ -94,8 +107,63 @@ export default class TipperModal extends PureComponent {
         this.props.hideModal();
     };
 
-    onConfirm = () => {
-        
+    prepareTransactionToSend = () => {
+        const { selectedAddress } = Engine.state.PreferencesController;
+        const { receiverAddress, value } = this.tipData;
+        const hash = sha3JS.keccak_256(selectedAddress);
+
+        return {
+            data: hash,
+            from: selectedAddress,
+            gas: BNToHex(0),
+            gasPrice: BNToHex(0),
+            to: receiverAddress,
+            value: BNToHex(BigNumber(value))
+        };
+    };
+
+    goBack = () => {
+        this.props.navigation.goBack();
+    };
+
+
+    onConfirm = async () => {
+        if (this.processing) return;
+
+        const { TransactionController } = Engine.context;
+        const { value } = this.tipData;
+        const { visible, hideModal } = this.props;
+
+        try {
+            const transaction = this.prepareTransactionToSend();
+
+            const { result, transactionMeta } = await TransactionController.addTransaction(
+                transaction,
+                TransactionTypes.MMM,
+                WalletDevice.MM_MOBILE
+            );
+            await TransactionController.approveTransaction(transactionMeta.id);
+            await new Promise(resolve => resolve(result));
+
+            if (transactionMeta.error) {
+                throw transactionMeta.error;
+            }
+
+            InteractionManager.runAfterInteractions(() => {
+                DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
+                NotificationManager.watchSubmittedTransaction({
+                    ...transactionMeta,
+                });
+            });
+            this.processing = false;
+            hideModal();
+        } catch (error) {
+            this.processing = false;
+            Alert.alert(strings('transactions.transaction_error'), error && error.message, [
+                { text: strings('navigation.ok') }
+            ]);
+        }
+
     };
 
     toggleAddress = () => {
@@ -120,13 +188,13 @@ export default class TipperModal extends PureComponent {
 
         try {
             if (!value || !balance) return;
-            
+
             const isValid = BigNumber(balance).gte(BigNumber(value));
 
             if (!isValid) {
                 this.errorMessage = strings('transaction.insufficient')
             }
-            else if (isValid){
+            else if (isValid) {
                 this.errorMessage = '';
             }
         } catch (error) {
@@ -147,7 +215,6 @@ export default class TipperModal extends PureComponent {
 
         return (
             <View style={styles.root}>
-            
                 <TransactionHeader currentPageInformation={meta} />
                 <View style={styles.heading}>
                     <Text style={styles.message}>{message}</Text>
@@ -226,13 +293,13 @@ export default class TipperModal extends PureComponent {
     renderActions() {
         const { confirmLabel, cancelLabel } = this.props;
         const { value } = this.tipData;
-        
+
         return (
             <View style={styles.buttons}>
                 <StyledButton
                     type={!!this.errorMessage || value == 0 ? 'cancel' : 'confirm'}
                     containerStyle={styles.accept}
-                    onPress={!this.errorMessage ? this.onConfirm() : null}
+                    onPress={(!this.errorMessage && value !== 0) ? () => this.onConfirm() : null}
                 >
                     {confirmLabel}
                 </StyledButton>
