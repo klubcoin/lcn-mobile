@@ -24,7 +24,7 @@ import { observer } from 'mobx-react';
 import base64 from 'base-64';
 import routes from '../../../../common/routes';
 import Api from '../../../../services/api';
-import { renderFromWei, toWei, toTokenMinimalUnit, fromWei, BNToHex } from '../../../../util/number';
+import { renderFromWei, toWei, toTokenMinimalUnit, fromWei, BNToHex, isDecimal } from '../../../../util/number';
 import Engine from '../../../../core/Engine';
 import { getTicker } from '../../../../util/transactions';
 import BigNumber from 'bignumber.js';
@@ -32,6 +32,7 @@ import * as sha3JS from 'js-sha3';
 import { WalletDevice } from '@metamask/controllers';
 import TransactionTypes from '../../../../core/TransactionTypes';
 import NotificationManager from '../../../../core/NotificationManager';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class TipperModal extends PureComponent {
     static propTypes = {
@@ -63,6 +64,7 @@ export default class TipperModal extends PureComponent {
 
     toggleFullAddress = false;
     tipData = {};
+    amount = 0;
     errorMessage = '';
 
     constructor(props) {
@@ -70,20 +72,23 @@ export default class TipperModal extends PureComponent {
         makeObservable(this, {
             toggleFullAddress: observable,
             tipData: observable,
+            amount: observable,
             errorMessage: observable,
-            updateTipData: action
+            initData: action,
+            updateAmount: action
         })
     }
 
     componentDidMount() {
-        this.updateTipData();
+        this.initData();
     }
 
-    updateTipData = () => {
+    initData = () => {
         const { data } = this.props;
         const { receiverAddress } = data;
         this.getWalletInfo(receiverAddress);
         this.tipData = data;
+        this.amount = fromWei(data.value);
     }
 
     getWalletInfo(address) {
@@ -142,6 +147,7 @@ export default class TipperModal extends PureComponent {
                 TransactionTypes.MMM,
                 WalletDevice.MM_MOBILE
             );
+
             await TransactionController.approveTransaction(transactionMeta.id);
             await new Promise(resolve => resolve(result));
 
@@ -172,6 +178,8 @@ export default class TipperModal extends PureComponent {
 
     updateAmount = (value) => {
         if (!value) value = 0;
+        this.amount = value;
+
         const { isETH } = this.tipData;
         if (isETH) {
             this.tipData.value = toWei(value).toString();
@@ -212,19 +220,20 @@ export default class TipperModal extends PureComponent {
         };
 
         const message = `${strings('tipper.tip_for', { "amount": fromWei(tipData.value) || 0, "symbol": tipData.symbol, "account": tipData?.name || strings('market.anonymous') })}?`
-
         return (
             <View style={styles.root}>
-                <TransactionHeader currentPageInformation={meta} />
-                <View style={styles.heading}>
-                    <Text style={styles.message}>{message}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                    {this.renderProfile()}
-                    {this.renderInput()}
-                    {this.renderBalance()}
-                </View>
-                {this.renderActions()}
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                    <TransactionHeader currentPageInformation={meta} />
+                    <View style={styles.heading}>
+                        <Text style={styles.message}>{message}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        {this.renderProfile()}
+                        {this.renderInput()}
+                        {this.renderBalance()}
+                    </View>
+                    {this.renderActions()}
+                </ScrollView>
             </View >
         );
     }
@@ -257,15 +266,16 @@ export default class TipperModal extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     multiline={true}
-                    onChangeText={this.updateAmount}
+                    onChangeText={(value) => this.updateAmount(value.replace(',', '.'))}
                     placeholder={strings('payment_request.amount_placeholder')}
                     placeholderTextColor={colors.grey100}
                     spellCheck={false}
                     style={styles.input}
-                    value={fromWei(value)}
+                    value={this.amount}
                     ref={this.amountInput}
                     testID={'request-amount-input'}
                 />
+
                 <Text style={styles.eth}>
                     {symbol}
                 </Text>
@@ -299,7 +309,7 @@ export default class TipperModal extends PureComponent {
                 <StyledButton
                     type={!!this.errorMessage || value == 0 ? 'cancel' : 'confirm'}
                     containerStyle={styles.accept}
-                    onPress={(!this.errorMessage && value !== 0) ? () => this.onConfirm() : null}
+                    onPress={(!this.errorMessage && value !== 0 && !this.processing) ? () => this.onConfirm() : null}
                 >
                     {confirmLabel}
                 </StyledButton>
