@@ -160,9 +160,14 @@ class MarketProduct extends PureComponent {
 				</TouchableOpacity>
 				<TextInput
 					value={`${this.quantity}`}
-					onChangeText={text => (this.quantity = parseInt(text))}
-					style={styles.quantity}
-					keyboardType={'numeric'}
+					onChangeText={text => {
+						const cleanNumber = text?.replace(/[^0-9]/g, "") || 0;
+						this.quantity = parseInt(cleanNumber)
+					}
+
+					}
+				style={styles.quantity}
+				keyboardType={'numeric'}
 				/>
 				<TouchableOpacity style={styles.adjustQuantity} activeOpacity={0.6} onPress={this.increaseQuantity}>
 					<Icon style={styles.quantityIcon} name={'plus'} size={RFPercentage(2)} />
