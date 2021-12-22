@@ -281,6 +281,9 @@ class MarketPlace extends PureComponent {
 	renderProviders = () => {
 		const width = (screenWidth - 40) / rowSize - 20;
 
+		const { defaultCurrency } = store.storeProfile || {};
+		const currency = defaultCurrency?.symbol || routes.mainNetWork.ticker;
+
 		return (
 			<View style={styles.section}>
 				{this.renderHeading({ title: strings('market.vendors') })}
@@ -325,9 +328,8 @@ class MarketPlace extends PureComponent {
 										{score.split('/').reverse()[0]}
 									</Text>
 									<Text numberOfLines={2} style={styles.priceRange}>
-										$
 										{`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
-											}`}
+											} ${currency}`}
 									</Text>
 									{/* 
 									<Text numberOfLines={1} style={styles.tags}>
