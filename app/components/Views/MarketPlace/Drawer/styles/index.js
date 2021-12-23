@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 30
 	},
+	avatar:{
+		width: 48,
+		height: 48,
+		borderRadius: 24
+	},
 	name: {
 		marginTop: 10,
 		fontSize: 16,

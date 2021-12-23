@@ -12,6 +12,8 @@ import EthereumAddress from '../../../UI/EthereumAddress';
 import { strings } from '../../../../../locales/i18n';
 import styles from './styles';
 import store from '../store';
+import RemoteImage from '../../../Base/RemoteImage';
+import preferences from '../../../../store/preferences';
 
 export const menuKeys = () => ({
 	home: 'home',
@@ -195,6 +197,7 @@ export class MarketDrawer extends Component {
 		const { PreferencesController } = Engine.state;
 		const { identities, selectedAddress } = PreferencesController;
 		const account = identities[selectedAddress];
+		const { avatar } = preferences.onboardProfile || {};
 
 		return (
 			<View style={styles.root}>
@@ -205,7 +208,10 @@ export class MarketDrawer extends Component {
 						</Button>
 					</SafeAreaView>
 					<View style={styles.profile}>
-						<Identicon diameter={48} address={selectedAddress} />
+						{!!avatar
+							? <RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+							: <Identicon diameter={48} address={selectedAddress} />
+						}
 						<Text style={styles.name}>{account?.name?.name || account?.name}</Text>
 						{account && <EthereumAddress type={'short'} address={account.address} style={styles.address} />}
 					</View>
