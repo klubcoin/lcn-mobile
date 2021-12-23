@@ -366,6 +366,7 @@ class Login extends PureComponent {
 	deleteExistingUser = async () => {
 		try {
 			this.props.keycloakAuthUnset();
+			preferences.setOnboardProfile(null);
 			await AsyncStorage.removeItem(EXISTING_USER);
 			this.props.navigation.navigate('Onboarding', { delete: true });
 		} catch (error) {
