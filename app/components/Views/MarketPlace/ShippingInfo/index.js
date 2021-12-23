@@ -25,6 +25,7 @@ import Api from '../../../../services/api';
 import Routes from '../../../../common/routes';
 import preferences from '../../../../store/preferences';
 import Geolocation from '@react-native-community/geolocation';
+import isEmail from 'validator/lib/isEmail';
 
 export class ShippingInfo extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -64,6 +65,7 @@ export class ShippingInfo extends PureComponent {
 		const { publicInfo } = profileOnboard;
 		const { shippingAddress, coords } = publicInfo || {};
 
+		this.shippingAddress.email = shippingAddress?.email || '';
 		this.shippingAddress.phone = shippingAddress?.phone || '';
 		this.shippingAddress.address = shippingAddress?.address || '';
 		this.shippingAddress.street = shippingAddress?.street || '';
@@ -83,10 +85,16 @@ export class ShippingInfo extends PureComponent {
 	};
 
 	onSave() {
-		const { phone, address, street, zipCode, city, country } = this.shippingAddress;
+		const {email, phone, address, street, zipCode, city, country } = this.shippingAddress;
 
 		if (!this.name) {
 			return showError(strings('market.missing_name'));
+		}
+		if (!email) {
+			return showError(strings('market.missing_email'));
+		}
+		if (!isEmail(email)) {
+			return showError(strings('market.invalid_email'));
 		}
 		if (!phone) {
 			return showError(strings('market.missing_phone'));
@@ -197,6 +205,15 @@ export class ShippingInfo extends PureComponent {
 						style={styles.input}
 						value={this.name}
 						onChangeText={text => (this.name = text)}
+					/>
+
+					<Text style={styles.heading}>{strings('market.email')}</Text>
+					<TextInput
+						value={this.shippingAddress.email}
+						onChangeText={text => (this.shippingAddress.email = text)}
+						style={styles.input}
+						keyboardType={'email-address'}
+						autoCapitalize={'none'}
 					/>
 
 					<Text style={styles.heading}>{strings('market.phone')}</Text>
