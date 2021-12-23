@@ -345,7 +345,7 @@ class MarketPurchase extends PureComponent {
 						/>
 						<AddressTo
 							addressToReady
-							toAddressName={profile.storeName}
+							toAddressName={profile?.storeName}
 							toSelectedAddress={to}
 						/>
 					</View>
