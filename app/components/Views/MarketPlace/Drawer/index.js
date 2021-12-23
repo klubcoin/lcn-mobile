@@ -197,7 +197,8 @@ export class MarketDrawer extends Component {
 		const { PreferencesController } = Engine.state;
 		const { identities, selectedAddress } = PreferencesController;
 		const account = identities[selectedAddress];
-		const { avatar } = preferences.onboardProfile || {};
+		const { avatar, firstname, lastname } = preferences.onboardProfile || {};
+		const name = `${firstname} ${lastname}`.trim();
 
 		return (
 			<View style={styles.root}>
@@ -212,7 +213,7 @@ export class MarketDrawer extends Component {
 							? <RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
 							: <Identicon diameter={48} address={selectedAddress} />
 						}
-						<Text style={styles.name}>{account?.name?.name || account?.name}</Text>
+						<Text style={styles.name}>{name || account?.name?.name || account?.name}</Text>
 						{account && <EthereumAddress type={'short'} address={account.address} style={styles.address} />}
 					</View>
 					<FlatList
