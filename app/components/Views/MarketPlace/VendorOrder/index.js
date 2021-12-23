@@ -102,10 +102,11 @@ class VendorOrders extends PureComponent {
 		const { orderId, items, shipping, createdAt } = item;
 		const status = OrderStatus()[item.status || 'processing'];
 
-		var amount = 0;
+		var amount = BigNumber(0);
 		var currencyUnit = 'LCN';
 		items.map(({ quantity, price }) => {
-			amount += quantity * BigNumber(price);
+			price = parseFloat(price);
+			amount = amount.plus(BigNumber(price).times(quantity));
 		});
 
 		return (
@@ -132,7 +133,7 @@ class VendorOrders extends PureComponent {
 					<Text style={styles.productAmount}>{items.length} {items.length == 1 ? 'item' : 'items'}</Text>
 					<View style={styles.amount}>
 						<Text style={styles.summaryTitle}>{strings('market.total')}: </Text>
-						<Text style={styles.price}>{amount} {currencyUnit}</Text>
+						<Text style={styles.price}>{amount.toFixed()} {currencyUnit}</Text>
 					</View>
 				</View>
 
