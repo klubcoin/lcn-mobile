@@ -19,6 +19,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import Engline from '../../../../core/Engine';
 import { ReadFile } from '../../FilesManager/store/FileStore';
 import StoreImage from '../components/StoreImage';
+import routes from '../../../../common/routes';
 
 class MarketCategory extends PureComponent {
 	vendor = {};
@@ -112,6 +113,8 @@ class MarketCategory extends PureComponent {
 	renderProduct = item => {
 		const { title, price, description, images } = item;
 		const photo = images[0];
+		const { defaultCurrency } = store.storeProfile || {};
+		const currency = defaultCurrency?.symbol || routes.mainNetWork.ticker;
 
 		return (
 			<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(item)}>
@@ -120,7 +123,7 @@ class MarketCategory extends PureComponent {
 				<Text numberOfLines={1} style={styles.desc}>
 					{description}
 				</Text>
-				<Text numberOfLines={1} style={styles.price}>{`$${price}`}</Text>
+				<Text numberOfLines={1} style={styles.price}>{`${price} ${currency}`}</Text>
 				<TouchableOpacity style={styles.addProduct} activeOpacity={0.6} onPress={() => this.onAddToCart(item)}>
 					<Icon style={styles.plus} name={'plus'} size={14} color={colors.white} />
 					<IonIcon style={styles.cartIcon} name={'cart-outline'} size={22} color={colors.white} />
