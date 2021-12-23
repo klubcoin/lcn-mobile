@@ -38,7 +38,13 @@ class MarketSellerOverview extends PureComponent {
 	componentDidMount() {
 		store.marketMenuKey = menuKeys().store;
 		this.fetchProducts();
-		this.fetchStoreProfile();
+		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+			this.fetchStoreProfile();
+		});
+	}
+
+	componentWillUnmount() {
+		if (this.willFocusSubscription) this.willFocusSubscription.remove();
 	}
 
 	async fetchProducts() {
