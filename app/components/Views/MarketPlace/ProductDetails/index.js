@@ -27,6 +27,7 @@ import { Rating } from 'react-native-ratings';
 const window = Dimensions.get('window');
 const screenWidth = window.width;
 const rowSize = isTablet() ? 4 : 3;
+const maxReviews = 5;
 
 class MarketProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -97,27 +98,12 @@ class MarketProduct extends PureComponent {
 
 				if (this.reviews.length > 0) {
 					this.rating = this.calRating();
-					this.reviews.sort((a,b) => b.reviewDate - a.reviewDate);
+					this.reviews.sort((a, b) => b.reviewDate - a.reviewDate);
 					this.getReviewProfiles();
 				}
 			}
 		});
 	};
-
-	getReviewProfiles = () => {
-		const addressSet = new Set(this.reviews.map(e => e?.buyerWalletAddress));
-		const buyerAddresses = [...addressSet];
-
-		this.buyerWalletAddressDict = buyerAddresses.reduce((prev, current, index) => {
-			prev[current] = null;
-			return prev;
-		}, {})
-
-		buyerAddresses.slice(0, 5).forEach(e => this.getWalletInfo(e)
-			.then(res => this.buyerWalletAddressDict[res.address] = res )
-			.catch(e => console.log('error:', e))
-		)
-	}
 
 	calRating = () => {
 		var totalScore = BigNumber(0);
@@ -129,6 +115,21 @@ class MarketProduct extends PureComponent {
 		});
 		return totalScore.dividedBy(totalReview);
 
+	}
+
+	getReviewProfiles = () => {
+		const addressSet = new Set(this.reviews.map(e => e?.buyerWalletAddress));
+		const buyerAddresses = [...addressSet];
+
+		this.buyerWalletAddressDict = buyerAddresses.reduce((prev, current, index) => {
+			prev[current] = null;
+			return prev;
+		}, {})
+
+		buyerAddresses.slice(0, maxReviews).forEach(e => this.getWalletInfo(e)
+			.then(res => this.buyerWalletAddressDict[res.address] = res)
+			.catch(e => console.log('error:', e))
+		)
 	}
 
 	getWalletInfo = async (address) => {
@@ -332,6 +333,10 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
+	onSeeAllReviews = () => {
+		this.props.navigation.navigate('MarketProductReview', { "reviews": this.reviews })
+	}
+
 	renderReviews = () => {
 		return (
 			<View>
@@ -339,13 +344,13 @@ class MarketProduct extends PureComponent {
 				{!this.reviews || this.reviews.length == 0 ? (
 					<Text style={styles.desc}>{strings('market.no_review_yet')}</Text>
 				) : (
-					this.reviews?.map(e => (
+					this.reviews?.slice(0, maxReviews).map(e => (
 						<View>
 							<View style={styles.reviewRow}>
 								<Text style={styles.user}>
 									{this.buyerWalletAddressDict[e.buyerWalletAddress]?.name}
 								</Text>
-								<View style={{ flexDirection: 'row'}}>
+								<View style={{ flexDirection: 'row' }}>
 									<Rating
 										readonly
 										style={styles.ratings}
@@ -361,10 +366,10 @@ class MarketProduct extends PureComponent {
 					))
 				)}
 				{
-					this.reviews.length > 5 && <View style={styles.seeAllWrapper}>
-						<Text style={styles.seeAll}>{strings('market.see_all_reviews', {"amount": this.reviews.length})} </Text>
-						<Icon name={"chevron-right"} style={styles.seeAll} size={RFPercentage(2)}/>
-					</View>
+					this.reviews.length > maxReviews && <TouchableOpacity style={styles.seeAllWrapper} onPress={this.onSeeAllReviews}>
+						<Text style={styles.seeAll}>{strings('market.see_all_reviews', { "amount": this.reviews.length })} </Text>
+						<Icon name={"chevron-right"} style={styles.seeAll} size={RFPercentage(2)} />
+					</TouchableOpacity>
 				}
 			</View>
 		);
@@ -375,8 +380,6 @@ class MarketProduct extends PureComponent {
 		const data = Array(slideCount)
 			.fill(0)
 			.map((e, index) => ({ index }));
-
-		console.log('data123', data);
 
 		return (
 			<View>

@@ -91,6 +91,7 @@ import StoreOrderDetails from '../../Views/MarketPlace/StoreOrderDetails';
 import VendorOrders from '../../Views/MarketPlace/VendorOrder';
 import TipperAmount from '../../Views/Tipper/TipperAmount';
 import TipperDetails from '../../Views/Tipper/TipperDetails';
+import MarketProductReview from '../../Views/MarketPlace/ProductReview';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -222,6 +223,9 @@ export default createStackNavigator(
 						},
 						MarketAddEditReview: {
 							screen: MarketAddEditReview
+						},
+						MarketProductReview: {
+							screen: MarketProductReview
 						},
 						ShoppingCart: {
 							screen: ShoppingCart
