@@ -20,6 +20,9 @@ import { StoreQuery } from '../store/StoreMessages';
 import { refStoreService } from '../store/StoreService';
 import StoreImage from '../components/StoreImage';
 import Api from '../../../../services/api';
+import APIService from '../../../../services/APIService';
+import BigNumber from 'bignumber.js';
+import { Rating } from 'react-native-ratings';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -34,6 +37,9 @@ class MarketProduct extends PureComponent {
 	quantity = 1;
 	cartBadge = 0;
 	otherProducts = [];
+	reviews = [];
+	rating = BigNumber(0);
+	buyerWalletAddressDict = {};
 	vendorProfile = {};
 
 	constructor(props) {
@@ -46,6 +52,9 @@ class MarketProduct extends PureComponent {
 			cartBadge: observable,
 			otherProducts: observable,
 			vendorProfile: observable,
+			reviews: observable,
+			rating: observable,
+			buyerWalletAddressDict: observable,
 		});
 
 		this.product = props.navigation.getParam('product');
@@ -58,6 +67,7 @@ class MarketProduct extends PureComponent {
 	componentDidMount() {
 		this.fetchData();
 		this.fetchOtherProducts();
+		this.fetchReviews();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -76,6 +86,49 @@ class MarketProduct extends PureComponent {
 			}
 		}
 		this.favorite = store.marketFavoriteProducts.find(e => e.uuid == this.product.uuid);
+	}
+
+	fetchReviews = async () => {
+		const { uuid } = this.product;
+
+		await APIService.getStoreReviews((success, json) => {
+			if (success) {
+				this.reviews = json.filter(e => e.productCode === uuid);
+
+				if (this.reviews.length > 0) {
+					this.rating = this.calRating();
+					this.reviews.sort((a,b) => b.reviewDate - a.reviewDate);
+					this.getReviewProfiles();
+				}
+			}
+		});
+	};
+
+	getReviewProfiles = () => {
+		const addressSet = new Set(this.reviews.map(e => e?.buyerWalletAddress));
+		const buyerAddresses = [...addressSet];
+
+		this.buyerWalletAddressDict = buyerAddresses.reduce((prev, current, index) => {
+			prev[current] = null;
+			return prev;
+		}, {})
+
+		buyerAddresses.slice(0, 5).forEach(e => this.getWalletInfo(e)
+			.then(res => this.buyerWalletAddressDict[res.address] = res )
+			.catch(e => console.log('error:', e))
+		)
+	}
+
+	calRating = () => {
+		var totalScore = BigNumber(0);
+		var totalReview = BigNumber(this.reviews.length);
+
+		this.reviews.forEach(e => {
+			if (e.rating)
+				totalScore = totalScore.plus(BigNumber(e.rating))
+		});
+		return totalScore.dividedBy(totalReview);
+
 	}
 
 	getWalletInfo = async (address) => {
@@ -163,11 +216,9 @@ class MarketProduct extends PureComponent {
 					onChangeText={text => {
 						const cleanNumber = text?.replace(/[^0-9]/g, "") || 0;
 						this.quantity = parseInt(cleanNumber)
-					}
-
-					}
-				style={styles.quantity}
-				keyboardType={'numeric'}
+					}}
+					style={styles.quantity}
+					keyboardType={'numeric'}
 				/>
 				<TouchableOpacity style={styles.adjustQuantity} activeOpacity={0.6} onPress={this.increaseQuantity}>
 					<Icon style={styles.quantityIcon} name={'plus'} size={RFPercentage(2)} />
@@ -185,10 +236,10 @@ class MarketProduct extends PureComponent {
 		});
 	};
 
-	//TODO: remove addReview function (because it's just for testing)
-	addReview = () => {
-		this.props.navigation.navigate('MarketAddEditReview', { product: this.product });
-	};
+	// //TODO: remove addReview function (because it's just for testing)
+	// addReview = () => {
+	// 	this.props.navigation.navigate('MarketAddEditReview', { product: this.product });
+	// };
 
 	renderAddToCart = () => {
 		return (
@@ -200,9 +251,9 @@ class MarketProduct extends PureComponent {
 					<Icon style={styles.favorite} name={this.favorite ? 'heart' : 'heart-o'} size={RFPercentage(2)} />
 				</TouchableOpacity>
 				{/*TODO: please remove review button, because it just for testing*/}
-				<TouchableOpacity style={styles.purchase} activeOpacity={0.6} onPress={this.addReview}>
+				{/* <TouchableOpacity style={styles.purchase} activeOpacity={0.6} onPress={this.addReview}>
 					<Text style={styles.addToCart}>{strings('market.add_review')}</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 		);
 	};
@@ -223,7 +274,7 @@ class MarketProduct extends PureComponent {
 			<View style={styles.columns}>
 				<View>
 					<Text style={styles.infoTitle}>{strings('market.review')}</Text>
-					<Text style={styles.infoDesc}>{'4.2'}</Text>
+					<Text style={styles.infoDesc}>{this.rating.toPrecision(2)}</Text>
 				</View>
 				<View style={styles.spacing}>
 					<Text style={styles.infoTitle}>{strings('market.purchased')}</Text>
@@ -282,21 +333,30 @@ class MarketProduct extends PureComponent {
 	};
 
 	renderReviews = () => {
-		const { product } = this;
-
 		return (
 			<View>
 				<Text style={styles.heading}>{strings('market.reviews')}</Text>
-				{!product.reviews || product.reviews.length == 0 ? (
+				{!this.reviews || this.reviews.length == 0 ? (
 					<Text style={styles.desc}>{strings('market.no_review_yet')}</Text>
 				) : (
-					product.reviews?.map(e => (
+					this.reviews?.map(e => (
 						<View>
-							<Text style={styles.user}>
-								{e.name}
-								<Text style={styles.rating}> ({e.rating})</Text>
-							</Text>
-							<Text style={styles.comment}>{e.comment}</Text>
+							<View style={styles.reviewRow}>
+								<Text style={styles.user}>
+									{this.buyerWalletAddressDict[e.buyerWalletAddress]?.name}
+								</Text>
+								<View style={{ flexDirection: 'row'}}>
+									<Rating
+										readonly
+										style={styles.ratings}
+										fractions={1}
+										imageSize={16}
+										startingValue={e.rating ?? 0}
+									/>
+									<Text style={styles.rating}> ({e.rating})</Text>
+								</View>
+							</View>
+							<Text style={styles.comment}>{e.comments}</Text>
 						</View>
 					))
 				)}

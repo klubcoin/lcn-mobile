@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
 		marginTop: 15
 	},
 	user: {
-		marginTop: 10,
-		fontWeight: '600'
+		fontWeight: '600',
+		width: 70
 	},
 	rating: {
 		fontWeight: 'normal'
@@ -232,6 +232,14 @@ const styles = StyleSheet.create({
 		textDecorationLine: 'line-through',
 		color: colors.grey500,
 		fontSize: RFValue(10)
+	},
+	ratings: {
+		marginLeft: 10
+	},
+	reviewRow: {
+		flexDirection: 'row',
+		alignItems: 'flex-start',
+		marginTop: 10
 	}
 });
 
