@@ -23,7 +23,6 @@ import { OrderStatus } from "../StoreOrderDetails";
 class PurchasedOrders extends PureComponent {
 
 	orders = [];
-	orderStatus = ['pending payment', 'processing', 'shipping', 'completed', 'canceled', 'refunded']
 	vendors = [];
 
 	constructor(props) {

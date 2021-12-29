@@ -92,6 +92,7 @@ class Message extends Component {
 	};
 
 	gotoChatRoom = recipient => {
+		if (!recipient) return;
 		store.setConversationIsRead(recipient.address, true);
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
