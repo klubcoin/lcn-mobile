@@ -80,6 +80,7 @@ export class MarketStoreReviews extends PureComponent {
 			if (success) {
 				this.reviews = json.filter(e => `0x${e?.sellerWalletAddress}` === selectedAddress);
 				if  (this.reviews.length <= 0) return;
+				this.reviews.sort((a, b) => b.reviewDate - a.reviewDate);
 				this.averageRating =
 					this.reviews.reduce((sum, current) => sum + (current.rating ?? 0), 0) / this.reviews.length;
 				this.averageRating = this.averageRating.toFixed(1);
