@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
 	},
 	imageWrapper: {
 		flex: 1,
-		flexDirection: 'row'
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	quantityWrapper: {
 		flex: 1,
@@ -99,11 +100,35 @@ const styles = StyleSheet.create({
 	buttonsWrapper: {
 		flexDirection: 'row',
 		backgroundColor: colors.white,
+		paddingVertical: 15
 	},
 	actionButton: {
 		flex: 1,
 		margin: 10
-	}
+	},
+	
+	buttonNext: {
+		width: 100,
+		borderRadius: 5,
+		alignSelf: 'flex-end'
+	},
+	bottomModal: {
+		margin: 0,
+		justifyContent: 'flex-end',
+	},
+	modalWrapper: {
+		height: 500,
+		alignItems: 'center',
+		backgroundColor: 'white',
+		paddingVertical: 15
+	},
+	modalItem: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingVertical: 12,
+		marginHorizontal: 20,
+		borderBottomWidth: StyleSheet.hairlineWidth
+	},
 });
 
 export default assignNestedObj(styles, brandStyles);

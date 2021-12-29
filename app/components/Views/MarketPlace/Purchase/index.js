@@ -372,7 +372,6 @@ class MarketPurchase extends PureComponent {
 					</ScrollView>
 
 					<View style={styles.buttonNextWrapper}>
-
 						<StyledButton
 							type={'confirm'}
 							disabled={balanceIsZero}

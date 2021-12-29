@@ -221,9 +221,6 @@ export default createStackNavigator(
 						MarketProduct: {
 							screen: MarketProduct
 						},
-						MarketAddEditReview: {
-							screen: MarketAddEditReview
-						},
 						MarketProductReview: {
 							screen: MarketProductReview
 						},
@@ -310,6 +307,9 @@ export default createStackNavigator(
 						},
 						OrderDetails: {
 							screen: OrderDetails
+						},
+						MarketAddEditReview: {
+							screen: MarketAddEditReview
 						},
 						Chat: {
 							screen: Chat

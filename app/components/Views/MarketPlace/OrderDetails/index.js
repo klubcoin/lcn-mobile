@@ -8,26 +8,29 @@ import styles from "./styles";
 import { strings } from "../../../../../locales/i18n";
 import colors from "../../../../common/colors";
 import StyledButton from "../../../UI/StyledButton";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import CryptoSignature from '../../../../core/CryptoSignature';
 import preferences from '../../../../store/preferences'
 import moment from "moment";
 import StoreImage from "../components/StoreImage";
 import { OrderStatus } from "../StoreOrderDetails";
 import { refStoreService } from "../store/StoreService";
+import Modal from 'react-native-modal';
 
 class OrderDetails extends PureComponent {
 
 	status = OrderStatus().processing;
 	viewPayment = false;
-	shippingInfo = {}
+	shippingInfo = {};
+	viewProductModal = false;
 
 	constructor(props) {
 		super(props)
 		makeObservable(this, {
 			status: observable,
 			viewPayment: observable,
-			shippingInfo: observable
+			shippingInfo: observable,
+			viewProductModal: observable
 		})
 		this.orderDetails = this.props.navigation.getParam('orderDetails');
 		const { order } = this.orderDetails || {};
@@ -207,6 +210,27 @@ class OrderDetails extends PureComponent {
 		);
 	}
 
+	openProductsModal = () => {
+		this.viewProductModal = true;
+	}
+
+	closeProductsModal = () => {
+		this.viewProductModal = false;
+	}
+
+	renderReviewButton = () => {
+		return (
+			<StyledButton
+				type={'confirm'}
+				disabled={false}
+				containerStyle={styles.buttonNext}
+				onPress={this.openProductsModal}
+			>
+				{strings('market.review')}
+			</StyledButton>
+		);
+	}
+
 	onReturn = () => {
 		//TODO: on return and refund func
 	}
@@ -216,6 +240,66 @@ class OrderDetails extends PureComponent {
 		const address = vendor.address.toLocaleLowerCase();
 		this.props.navigation.navigate('Chat', { selectedContact: { address } });
 	};
+
+	addReview = (product) => {
+		const { vendor } = this.orderDetails;
+
+		product.vendor = vendor;
+		this.closeProductsModal();
+		this.props.navigation.navigate('MarketAddEditReview', { product: product });
+	};
+
+	renderModalItem = ({ item }) => {
+		const { order } = this.orderDetails;
+
+		return (
+			<TouchableOpacity style={styles.modalItem} activeOpacity={0.55} onPress={() => this.addReview(item)}>
+				<View style={[styles.infoSection, styles.titleWrapper]}>
+					<View style={styles.imageWrapper}>
+						<StoreImage style={styles.image} address={order.vendor} path={item.images[0]} />
+						<Text style={styles.infoText} numberOfLines={2}>{item.title}</Text>
+					</View>
+					<View style={styles.quantityWrapper}>
+						<Text style={styles.infoText}>x  <Text style={styles.infoText}>{item.quantity} </Text></Text>
+						<Text numberOfLines={2} style={styles.infoText}>
+							{item.price} {item.currency}
+						</Text>
+					</View>
+				</View>
+			</TouchableOpacity>
+		);
+	}
+
+	renderProductModal = () => {
+		const { order, amount } = this.orderDetails;
+		const products = order.items;
+
+		return (
+			<Modal
+				isVisible={this.viewProductModal}
+				animationIn="slideInUp"
+				animationOut="slideOutDown"
+				style={styles.bottomModal}
+				backdropOpacity={0.5}
+				animationInTiming={300}
+				animationOutTiming={300}
+				onBackButtonPress={this.closeProductsModal}
+				onBackdropPress={this.closeProductsModal}
+			>
+				<View style={styles.modalWrapper}>
+					<Text style={[styles.titleInfoText, {flex: 0}]}>
+						{strings('market.products')}
+					</Text>
+					<FlatList
+						data={products}
+						keyExtractor={item => item.uuid}
+						renderItem={this.renderModalItem}
+						style={{ flex: 1 }}
+					/>
+				</View>
+			</Modal>
+		)
+	}
 
 	renderFooter = () => {
 		return (
@@ -253,9 +337,11 @@ class OrderDetails extends PureComponent {
 							{this.renderShippingInfo()}
 							{this.renderProducts()}
 							{this.renderDates()}
+							{this.status == OrderStatus()['completed'] && this.renderReviewButton()}
 						</View>
 					</ScrollView>
 				</View>
+				{this.renderProductModal()}
 				{this.renderFooter()}
 			</View>
 		)
