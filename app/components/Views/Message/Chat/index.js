@@ -194,7 +194,7 @@ class Chat extends Component {
 		const selectedContact = this.state.contact;
 		const profile = await preferences.peerProfile(selectedContact.address.toLowerCase());
 		if (profile) {
-			selectedContact.avatar = profile.avatar;
+			this.state.contact = {...selectedContact, ...profile}
 		}
 	};
 
