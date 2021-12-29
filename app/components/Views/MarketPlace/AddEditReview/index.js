@@ -68,13 +68,14 @@ export class MarketAddEditReview extends PureComponent {
 		const comments = this.comment.trim();
 		const rating = this.ratingScore;
 		const purchaseDate = moment(); //TODO: update purchased date
-		const { images, title, uuid, wallet } = this.product;
+		const { images, title, uuid, vendor } = this.product;
+		const { selectedAddress } = Engine.state.PreferencesController;
 
 		APIService.createReview(
 			{
 				purchaseDate, //TODO: update purchased date
-				sellerWalletAddress: wallet,
-				buyerWalletAddress: wallet, //TODO: update buyerWalletAddress
+				sellerWalletAddress: vendor.address,
+				buyerWalletAddress: selectedAddress,
 				productCode: uuid,
 				rating,
 				comments
@@ -84,6 +85,7 @@ export class MarketAddEditReview extends PureComponent {
 				else showError(strings('market.add_review_failed'));
 			}
 		);
+		this.onBack();
 	};
 
 	onCancel() {
@@ -110,7 +112,7 @@ export class MarketAddEditReview extends PureComponent {
 
 	render() {
 		const editing = !!this.uuid;
-		const { images, title, uuid, wallet } = this.product;
+		const { images, title, uuid, vendor } = this.product;
 
 		return (
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
@@ -138,7 +140,7 @@ export class MarketAddEditReview extends PureComponent {
 							<Text numberOfLines={1} ellipsizeMode={'middle'} style={styles.productName}>
 								{`${strings('market.vendor')}: `}
 								<Text numberOfLines={1} ellipsizeMode={'middle'} style={styles.productContent}>
-									{wallet}
+									{vendor?.address}
 								</Text>
 							</Text>
 						</View>
