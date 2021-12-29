@@ -360,6 +360,12 @@ class MarketProduct extends PureComponent {
 						</View>
 					))
 				)}
+				{
+					this.reviews.length > 5 && <View style={styles.seeAllWrapper}>
+						<Text style={styles.seeAll}>{strings('market.see_all_reviews', {"amount": this.reviews.length})} </Text>
+						<Icon name={"chevron-right"} style={styles.seeAll} size={RFPercentage(2)}/>
+					</View>
+				}
 			</View>
 		);
 	};

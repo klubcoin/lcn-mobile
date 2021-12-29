@@ -240,6 +240,17 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'flex-start',
 		marginTop: 10
+	},
+	seeAllWrapper: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'row',
+		paddingVertical: 8
+	},
+	seeAll: {
+		color: colors.primaryFox,
+		fontSize: RFValue(12),
 	}
 });
 

@@ -1795,6 +1795,7 @@
 		"read_more": "Read more",
 		"recently_viewed": "Recently viewed",
 		"no_review_yet": "No review yet",
+		"see_all_reviews": "See all reviews ({{amount}})",
 		"products_same_vendor": "Products from same vendor",
 		"contact_phone": "Contact Phone",
 		"not_found_product": "Can not find suitable products",
