@@ -124,6 +124,13 @@ const styles = StyleSheet.create({
 	favorite: {
 		color: colors.red
 	},
+	shareProduct: {
+		marginTop: 4,
+		marginLeft: 8
+	},
+	share: {
+		color: colors.blue700,
+	},
 	addToCart: {
 		color: colors.white,
 		fontSize: RFValue(12),

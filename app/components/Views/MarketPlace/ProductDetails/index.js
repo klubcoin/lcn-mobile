@@ -23,6 +23,8 @@ import Api from '../../../../services/api';
 import APIService from '../../../../services/APIService';
 import BigNumber from 'bignumber.js';
 import { Rating } from 'react-native-ratings';
+import Share from 'react-native-share';
+import Logger from '../../../../util/Logger';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -101,7 +103,7 @@ class MarketProduct extends PureComponent {
 				}
 			});
 		}
-		else 
+		else
 			this.handleReviewState();
 	};
 
@@ -256,6 +258,18 @@ class MarketProduct extends PureComponent {
 		});
 	};
 
+	shareProduct = () => {
+		const vendor = this.props.navigation.getParam('vendor');
+		const address = vendor?.wallet || this.vendorProfile?.address;
+		const productId = this.product?.uuid;
+
+		Share.open({
+			url: `http://meetthrufriends.com/product/${address}/${productId}`
+		}).catch(err => {
+			Logger.log('Error while trying to share product', err);
+		});
+	}
+
 	// //TODO: remove addReview function (because it's just for testing)
 	// addReview = () => {
 	// 	this.props.navigation.navigate('MarketAddEditReview', { product: this.product });
@@ -269,6 +283,9 @@ class MarketProduct extends PureComponent {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.addFavorite} activeOpacity={0.6} onPress={this.addFavorite}>
 					<Icon style={styles.favorite} name={this.favorite ? 'heart' : 'heart-o'} size={RFPercentage(2)} />
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.shareProduct} activeOpacity={0.6} onPress={this.shareProduct}>
+					<IonIcon style={styles.share} name={'share-social-outline'} size={RFPercentage(3)} />
 				</TouchableOpacity>
 				{/*TODO: please remove review button, because it just for testing*/}
 				{/* <TouchableOpacity style={styles.purchase} activeOpacity={0.6} onPress={this.addReview}>
