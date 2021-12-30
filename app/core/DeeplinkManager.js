@@ -231,6 +231,10 @@ class DeeplinkManager {
 		const productId = parts[3];
 
 		const storeService = refStoreService();
+		if (!storeService) {
+			setTimeout(() => this.handleProductLink(path), 1000);
+			return;
+		}
 		storeService.addListener((message) => {
 			if (message && message.uuid && message.data != 1) {
 				const { uuid, data } = message;
