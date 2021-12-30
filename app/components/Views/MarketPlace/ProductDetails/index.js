@@ -71,6 +71,7 @@ class MarketProduct extends PureComponent {
 		this.fetchData();
 		this.fetchOtherProducts();
 		this.fetchReviews();
+		this.handleGroupShare();
 	}
 
 	// componentDidUpdate(prevProps) {
@@ -89,6 +90,11 @@ class MarketProduct extends PureComponent {
 			}
 		}
 		this.favorite = store.marketFavoriteProducts.find(e => e.uuid == this.product.uuid);
+	}
+
+	handleGroupShare = async () => {
+		const group = this.props.navigation.getParam('group');
+		if (group) this.openChat(group);
 	}
 
 	fetchReviews = async () => {
@@ -583,13 +589,13 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
-	openChat = async () => {
+	openChat = async (group) => {
 		const { uuid, title, wallet, signature } = this.product || {};
 		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
 		if (address.toLocaleLowerCase() != wallet.toLocaleLowerCase()) {
 			showError(strings('market.insecure_vendor'));
 		}
-		this.props.navigation.navigate('Chat', { selectedContact: { address } });
+		this.props.navigation.navigate('Chat', { selectedContact: { address }, group });
 	};
 
 	renderChatButton = () => {

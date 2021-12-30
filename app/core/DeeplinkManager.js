@@ -229,6 +229,7 @@ class DeeplinkManager {
 		const parts = path.split('/');
 		const vendorAddr = parts[2];
 		const productId = parts[3];
+		const chatGroup = parts.length >= 5 ? parts[4] : '';
 
 		const storeService = refStoreService();
 		if (!storeService) {
@@ -240,7 +241,7 @@ class DeeplinkManager {
 				const { uuid, data } = message;
 				if (productId == uuid) {
 					const product = { ...data };
-					this.navigation.navigate('MarketProduct', { product });
+					this.navigation.navigate('MarketProduct', { product, group: chatGroup });
 				}
 			}
 		});
