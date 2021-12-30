@@ -14,6 +14,7 @@ import { WalletDevice } from '@metamask/controllers/';
 import moment from 'moment';
 import { showTipperModal } from '../actions/modals';
 import { store } from '../store';
+import { refStoreService } from '../components/Views/MarketPlace/store/StoreService';
 
 class DeeplinkManager {
 	constructor(_navigation) {
@@ -159,6 +160,9 @@ class DeeplinkManager {
 
 							store.dispatch(showTipperModal(tipData))
 							break;
+						case 'product':
+							this.handleProductLink(urlObj.pathname);
+							break;
 						default:
 							Alert.alert(strings('deeplink.not_supported'));
 					}
@@ -219,6 +223,24 @@ class DeeplinkManager {
 		}
 
 		return true;
+	}
+
+	handleProductLink = async (path) => {
+		const parts = path.split('/');
+		const vendorAddr = parts[2];
+		const productId = parts[3];
+
+		const storeService = refStoreService();
+		storeService.addListener((message) => {
+			if (message && message.uuid && message.data != 1) {
+				const { uuid, data } = message;
+				if (productId == uuid) {
+					const product = { ...data };
+					this.navigation.navigate('MarketProduct', { product });
+				}
+			}
+		});
+		storeService.fetchProduct(productId, vendorAddr);
 	}
 }
 
