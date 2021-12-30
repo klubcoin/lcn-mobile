@@ -197,7 +197,7 @@ export default class TipperModal extends PureComponent {
         try {
             if (!value || !balance) return;
 
-            const isValid = BigNumber(balance).gte(BigNumber(value));
+            const isValid = BigNumber(balance).gte(BigNumber(fromWei(value)));
 
             if (!isValid) {
                 this.errorMessage = strings('transaction.insufficient')
