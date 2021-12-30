@@ -71,12 +71,12 @@ class MarketProduct extends PureComponent {
 		this.fetchReviews();
 	}
 
-	componentDidUpdate(prevProps) {
-		if (this.props != prevProps) {
-			this.product = this.props.navigation.getParam('product');
-			this.fetchData();
-		}
-	}
+	// componentDidUpdate(prevProps) {
+	// 	if (this.props != prevProps) {
+	// 		this.product = this.props.navigation.getParam('product');
+	// 		this.fetchData();
+	// 	}
+	// }
 
 	async fetchData() {
 		const vendor = this.props.navigation.getParam('vendor');
