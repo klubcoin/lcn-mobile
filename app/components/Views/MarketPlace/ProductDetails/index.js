@@ -90,26 +90,39 @@ class MarketProduct extends PureComponent {
 	}
 
 	fetchReviews = async () => {
-		const { uuid } = this.product;
-
-		await APIService.getStoreReviews((success, json) => {
-			if (success) {
-				this.reviews = json.filter(e => e.productCode === uuid);
-
-				if (this.reviews.length > 0) {
-					this.rating = this.calRating();
-					this.reviews.sort((a, b) => b.reviewDate - a.reviewDate);
-					this.getReviewProfiles();
+		if (this.reviews.length == 0) {
+			await APIService.getStoreReviews((success, json) => {
+				if (success) {
+					this.reviews = json;
+					if (this.reviews.length > 0) {
+						this.reviews.sort((a, b) => b.reviewDate - a.reviewDate);
+						this.handleReviewState();
+					}
 				}
-			}
-		});
+			});
+		}
+		else 
+			this.handleReviewState();
 	};
 
-	calRating = () => {
-		var totalScore = BigNumber(0);
-		var totalReview = BigNumber(this.reviews.length);
+	handleReviewState = () => {
+		const { uuid } = this.product;
 
-		this.reviews.forEach(e => {
+		if (this.reviews.length > 0) {
+			this.rating = this.calRating();
+			this.product.reviews = this.reviews.filter(e => e.productCode === uuid);
+			this.getReviewProfiles();
+		}
+	}
+
+	calRating = () => {
+		const { reviews } = this.product;
+		if (!reviews || reviews.length == 0) return BigNumber(0.0);
+
+		var totalScore = BigNumber(0);
+		var totalReview = BigNumber(reviews.length);
+
+		reviews.forEach(e => {
 			if (e.rating)
 				totalScore = totalScore.plus(BigNumber(e.rating))
 		});
@@ -118,15 +131,21 @@ class MarketProduct extends PureComponent {
 	}
 
 	getReviewProfiles = () => {
-		const addressSet = new Set(this.reviews.map(e => e?.buyerWalletAddress));
+		const { reviews } = this.product;
+		if (!reviews || reviews.length == 0) return;
+
+		const addressSet = new Set(reviews.map(e => e?.buyerWalletAddress));
 		const buyerAddresses = [...addressSet];
 
 		this.buyerWalletAddressDict = buyerAddresses.reduce((prev, current, index) => {
-			prev[current] = null;
-			return prev;
+			if (!this.buyerWalletAddressDict[current]) {
+				prev[current] = null
+				return prev;
+			}
+			return this.buyerWalletAddressDict;
 		}, {})
 
-		buyerAddresses.slice(0, maxReviews).forEach(e => this.getWalletInfo(e)
+		buyerAddresses.slice(0, maxReviews).forEach(e => !this.buyerWalletAddressDict[e] && this.getWalletInfo(e)
 			.then(res => this.buyerWalletAddressDict[res.address] = res)
 			.catch(e => console.log('error:', e))
 		)
@@ -334,21 +353,25 @@ class MarketProduct extends PureComponent {
 	};
 
 	onSeeAllReviews = () => {
-		this.props.navigation.navigate('MarketProductReview', { "reviews": this.reviews })
+		const { reviews } = this.product;
+
+		this.props.navigation.navigate('MarketProductReview', { "reviews": reviews })
 	}
 
 	renderReviews = () => {
+		const { reviews } = this.product;
+
 		return (
 			<View>
 				<Text style={styles.heading}>{strings('market.reviews')}</Text>
-				{!this.reviews || this.reviews.length == 0 ? (
+				{!reviews || reviews == 0 ? (
 					<Text style={styles.desc}>{strings('market.no_review_yet')}</Text>
 				) : (
-					this.reviews?.slice(0, maxReviews).map(e => (
+					reviews?.slice(0, maxReviews).map(e => (
 						<View>
 							<View style={styles.reviewRow}>
 								<Text style={styles.user}>
-									{this.buyerWalletAddressDict[e.buyerWalletAddress]?.name}
+									{this.buyerWalletAddressDict[e.buyerWalletAddress]?.name || strings('market.anonymous')}
 								</Text>
 								<View style={{ flexDirection: 'row' }}>
 									<Rating
@@ -366,8 +389,8 @@ class MarketProduct extends PureComponent {
 					))
 				)}
 				{
-					this.reviews.length > maxReviews && <TouchableOpacity style={styles.seeAllWrapper} onPress={this.onSeeAllReviews}>
-						<Text style={styles.seeAll}>{strings('market.see_all_reviews', { "amount": this.reviews.length })} </Text>
+					reviews?.length > maxReviews && <TouchableOpacity style={styles.seeAllWrapper} onPress={this.onSeeAllReviews}>
+						<Text style={styles.seeAll}>{strings('market.see_all_reviews', { "amount": reviews.length })} </Text>
 						<Icon name={"chevron-right"} style={styles.seeAll} size={RFPercentage(2)} />
 					</TouchableOpacity>
 				}
@@ -400,6 +423,13 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
+	onPressProduct = (item) => {
+		if (item.uuid === this.product.uuid) return;
+
+		this.product = item;
+		this.handleReviewState();
+	}
+
 	renderRecentProductSlide = ({ item }) => {
 		const { index } = item;
 		const start = index * rowSize;
@@ -422,7 +452,7 @@ class MarketProduct extends PureComponent {
 						<TouchableOpacity
 							activeOpacity={0.6}
 							style={{ width, alignItems: 'center' }}
-							onPress={() => (this.product = e)}
+							onPress={() => this.onPressProduct(e)}
 						>
 							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} local={this.isOwner} />
 							<Text numberOfLines={2} style={styles.rpTitle}>
@@ -463,7 +493,7 @@ class MarketProduct extends PureComponent {
 						<TouchableOpacity
 							activeOpacity={0.6}
 							style={{ width, alignItems: 'center' }}
-							onPress={() => (this.product = e)}
+							onPress={() => this.onPressProduct(e)}
 						>
 							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} local={this.isOwner} />
 							<Text numberOfLines={2} style={styles.rpTitle}>
