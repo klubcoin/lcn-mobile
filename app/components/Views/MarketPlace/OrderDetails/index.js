@@ -13,7 +13,7 @@ import CryptoSignature from '../../../../core/CryptoSignature';
 import preferences from '../../../../store/preferences'
 import moment from "moment";
 import StoreImage from "../../MarketPlace/components/StoreImage";
-import { OrderStatus } from "../StoreOrderDetails";
+import { OrderStatus } from "../../MarketPlace/StoreOrderDetails";
 import { refStoreService } from "../../MarketPlace/store/StoreService";
 import Modal from 'react-native-modal';
 
@@ -287,7 +287,7 @@ class OrderDetails extends PureComponent {
 				onBackdropPress={this.closeProductsModal}
 			>
 				<View style={styles.modalWrapper}>
-					<Text style={[styles.titleInfoText, {flex: 0}]}>
+					<Text style={[styles.titleInfoText, { flex: 0 }]}>
 						{strings('market.products')}
 					</Text>
 					<FlatList

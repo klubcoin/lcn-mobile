@@ -14,7 +14,7 @@ import BigNumber from "bignumber.js";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Device from "../../../../util/Device";
 import CheckBox from "@react-native-community/checkbox";
-import { OrderStatus } from "../StoreOrderDetails";
+import { OrderStatus } from "../../MarketPlace/StoreOrderDetails";
 
 class VendorOrders extends PureComponent {
 	orderStatuses = [
