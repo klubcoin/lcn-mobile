@@ -18,7 +18,7 @@ import { sha256 } from '../../../../core/CryptoSignature';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Engline from '../../../../core/Engine';
 import { ReadFile } from '../../FilesManager/store/FileStore';
-import StoreImage from '../components/StoreImage';
+import StoreImage from '../../MarketPlace/components/StoreImage';
 import routes from '../../../../common/routes';
 
 class MarketCategory extends PureComponent {

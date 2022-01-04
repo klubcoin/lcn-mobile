@@ -17,7 +17,7 @@ import Engine from "../../../../core/Engine";
 import Api from "../../../../services/api";
 import { sha256 } from "../../../../core/CryptoSignature";
 import { ReadFile } from "../../FilesManager/store/FileStore";
-import StoreImage from '../components/StoreImage';
+import StoreImage from '../../MarketPlace/components/StoreImage';
 import { OrderStatus } from "../StoreOrderDetails";
 
 class PurchasedOrders extends PureComponent {

@@ -11,7 +11,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import colors from '../../../../common/colors';
 import routes from '../../../../common/routes';
 import { makeObservable, observable } from 'mobx';
-import StoreImage from '../components/StoreImage';
+import StoreImage from '../../MarketPlace/components/StoreImage';
 
 class ShoppingCart extends PureComponent {
 	totalAmount = 0;

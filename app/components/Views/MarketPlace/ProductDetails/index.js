@@ -18,7 +18,7 @@ import Cart from '../components/Cart';
 import { showError } from '../../../../util/notify';
 import { StoreQuery } from '../../MarketPlace/store/StoreMessages';
 import { refStoreService } from '../../MarketPlace/store/StoreService';
-import StoreImage from '../components/StoreImage';
+import StoreImage from '../../MarketPlace/components/StoreImage';
 import Api from '../../../../services/api';
 import APIService from '../../../../services/APIService';
 import BigNumber from 'bignumber.js';
