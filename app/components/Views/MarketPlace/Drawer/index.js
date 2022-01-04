@@ -77,7 +77,7 @@ const menuItemsVendor = () => [
 		key: menuKeys().shopping,
 		title: strings('market.shopping'),
 		icon: 'cart',
-		screen: 'MarketPlace'
+		screen: 'MarketPlaceSearch'
 	},
 	{
 		key: menuKeys().store,
@@ -203,11 +203,10 @@ export class MarketDrawer extends Component {
 		return (
 			<View style={styles.root}>
 				<View style={styles.body}>
-					<SafeAreaView>
-						<Button onPress={this.toggleDrawer}>
-							<Icon name={'close'} size={25} color={colors.orange} style={styles.close} />
-						</Button>
-					</SafeAreaView>
+					<SafeAreaView />
+					<Button onPress={this.toggleDrawer}>
+						<Icon name={'close'} size={25} color={colors.orange} style={styles.close} />
+					</Button>
 					<View style={styles.profile}>
 						{!!avatar
 							? <RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
