@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import StyledButton from '../../../UI/StyledButton';
 import styles from './styles';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import { showError, showSuccess } from '../../../../util/notify';
 import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';

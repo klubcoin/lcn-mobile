@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from "./styles";
 import { strings } from "../../../../../locales/i18n";
-import store from "../store";
+import store from "../../MarketPlace/store";
 import colors from "../../../../common/colors";
 import { RFValue } from "react-native-responsive-fontsize";
 import BigNumber from "bignumber.js";

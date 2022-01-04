@@ -47,8 +47,8 @@ import analyticsV2 from '../../../../util/analyticsV2';
 import * as sha3JS from 'js-sha3';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { refStoreService } from '../store/StoreService';
-import { StoreOrder, StoreOrderStats } from '../store/StoreMessages';
+import { refStoreService } from '../../MarketPlace/store/StoreService';
+import { StoreOrder, StoreOrderStats } from '../../MarketPlace/store/StoreMessages';
 
 const { hexToBN } = util;
 /**

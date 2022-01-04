@@ -11,7 +11,7 @@ import Engine from '../../../../core/Engine';
 import EthereumAddress from '../../../UI/EthereumAddress';
 import { strings } from '../../../../../locales/i18n';
 import styles from './styles';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import RemoteImage from '../../../Base/RemoteImage';
 import preferences from '../../../../store/preferences';
 

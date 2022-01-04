@@ -6,7 +6,7 @@ import Summary from '../..//../Base/Summary';
 import Text from '../../../Base/Text';
 import DetailsModal from '../../../Base/DetailsModal';
 import styles from './styles/index';
-import store from "../store";
+import store from "../../MarketPlace/store";
 
 export default class MarketOrderSummary extends PureComponent {
 	static propTypes = {

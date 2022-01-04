@@ -6,13 +6,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { strings } from '../../../../../locales/i18n';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import colors from '../../../../common/colors';
 import routes from '../../../../common/routes';
 import { makeObservable, observable } from 'mobx';
-import { sha256 } from '../../../../core/CryptoSignature';
-import { refStoreService } from '../store/StoreService';
 import StoreImage from '../components/StoreImage';
 
 class ShoppingCart extends PureComponent {

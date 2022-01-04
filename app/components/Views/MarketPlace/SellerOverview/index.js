@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import { menuKeys } from '../Drawer';
 import styles from './styles';
 import { colors } from '../../../../styles/common';

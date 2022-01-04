@@ -14,7 +14,7 @@ import preferences from '../../../../store/preferences'
 import moment from "moment";
 import StoreImage from "../components/StoreImage";
 import { OrderStatus } from "../StoreOrderDetails";
-import { refStoreService } from "../store/StoreService";
+import { refStoreService } from "../../MarketPlace/store/StoreService";
 import Modal from 'react-native-modal';
 
 class OrderDetails extends PureComponent {

@@ -16,7 +16,7 @@ import Device from '../../../../util/Device';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';

@@ -28,14 +28,14 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { v4 as uuid } from 'uuid';
 import styles from './styles';
 import drawables from '../../../../common/drawables';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import Engine from '../../../../core/Engine';
 import CryptoSignature from '../../../../core/CryptoSignature';
 import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { showError, showSuccess } from '../../../../util/notify';
-import { refStoreService } from '../store/StoreService';
+import { refStoreService } from '../../MarketPlace/store/StoreService';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });

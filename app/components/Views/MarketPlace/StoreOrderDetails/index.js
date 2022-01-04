@@ -10,12 +10,11 @@ import { strings } from "../../../../../locales/i18n";
 import colors from "../../../../common/colors";
 import StyledButton from "../../../UI/StyledButton";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import preferences from '../../../../store/preferences'
 import moment from "moment";
 import ModalSelector from "../../../UI/AddCustomTokenOrApp/ModalSelector";
-import { refStoreService } from "../store/StoreService";
-import store from "../store";
-import { OrderStatuses } from "../store/StoreMessages";
+import { refStoreService } from "../../MarketPlace/store/StoreService";
+import store from "../../MarketPlace/store";
+import { OrderStatuses } from "../../MarketPlace/store/StoreMessages";
 
 
 export const OrderStatus = () => ({

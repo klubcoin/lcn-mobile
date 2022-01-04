@@ -31,7 +31,7 @@ import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styles from './styles/index';
 import { OutlinedTextField } from 'react-native-material-textfield';
 import { inject, observer } from 'mobx-react';
-import store from '../store';
+import store from '../../MarketPlace/store';
 import validator from 'validator';
 import SelectComponent from '../../../UI/SelectComponent';
 import Engine from '../../../../core/Engine';
