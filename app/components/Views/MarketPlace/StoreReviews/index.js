@@ -1,40 +1,20 @@
-import { makeObservable, observable, observe } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import {
 	View,
 	Text,
 	KeyboardAvoidingView,
-	ScrollView,
 	TouchableOpacity,
-	ActivityIndicator,
-	Image,
-	TextInput
 } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
-import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import APIService from '../../../../services/APIService';
-import NavbarTitle from '../../../UI/NavbarTitle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import StyledButton from '../../../UI/StyledButton';
-import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Toast from 'react-native-toast-message';
-import ConfirmModal from '../../../UI/ConfirmModal';
-import ConfirmInputModal from '../../../UI/ConfirmInputModal';
-import ImagePicker from 'react-native-image-crop-picker';
-import { v4 as uuid } from 'uuid';
 import styles from './styles';
-import drawables from '../../../../common/drawables';
-import store from '../store';
 import Engine from '../../../../core/Engine';
-import CryptoSignature from '../../../../core/CryptoSignature';
-import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
-import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
-import { showError, showSuccess } from '../../../../util/notify';
 import { Rating } from 'react-native-ratings';
 import { RFValue } from 'react-native-responsive-fontsize';
 import API from '../../../../services/api';
@@ -79,7 +59,7 @@ export class MarketStoreReviews extends PureComponent {
 		await APIService.getStoreReviews((success, json) => {
 			if (success) {
 				this.reviews = json.filter(e => `0x${e?.sellerWalletAddress}` === selectedAddress);
-				if  (this.reviews.length <= 0) return;
+				if (this.reviews.length <= 0) return;
 				this.reviews.sort((a, b) => b.reviewDate - a.reviewDate);
 				this.averageRating =
 					this.reviews.reduce((sum, current) => sum + (current.rating ?? 0), 0) / this.reviews.length;
