@@ -71,6 +71,9 @@ class MarketPlace extends PureComponent {
 				if (categories && !this.category) {
 					this.category = categories[0];
 				}
+				if (this.categories && !this.category) {
+					this.category = this.categories[0];
+				}
 			}
 		});
 	}
@@ -126,6 +129,8 @@ class MarketPlace extends PureComponent {
 							activeOpacity={0.6}
 							style={{ width, alignItems: 'center' }}
 							onPress={() => this.showProduct(e)}
+							testID={'market-recent-product'}
+							accessibilityLabel={'market-recent-product'}
 						>
 							<StoreImage style={{ width, height: width }} address={e.wallet} path={images[0]} />
 							<Text numberOfLines={2} style={styles.title}>
@@ -191,6 +196,8 @@ class MarketPlace extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							activeOpacity={0.6}
 							onPress={() => this.onPressVendor(e)}
+							testID={'market-recent-vendor'}
+							accessibilityLabel={'market-recent-vendor'}
 						>
 							<StoreImage style={{ width, height: width }} address={wallet} path={profile.logoStore} />
 							<Text numberOfLines={2} style={styles.storeName}>
@@ -310,6 +317,8 @@ class MarketPlace extends PureComponent {
 								style={styles.vendorView}
 								activeOpacity={0.6}
 								onPress={() => this.onPressVendor(e)}
+								testID={'market-vendor-store'}
+								accessibilityLabel={'market-vendor-store'}
 							>
 								<StoreImage style={styles.vendorLogo} address={e.wallet} path={profile?.logoStore} />
 								<View style={styles.vendorInfo}>
@@ -384,7 +393,10 @@ class MarketPlace extends PureComponent {
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
-					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}>
+					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}
+						testID={'nav-menu'}
+						accessibilityLabel={'nav-menu'}
+					>
 						<Icon style={styles.backIcon} name={'bars'} size={16} />
 					</TouchableOpacity>
 					<Text style={styles.titleNavBar}>{strings('market.title')}</Text>
@@ -399,7 +411,13 @@ class MarketPlace extends PureComponent {
 		const value = category?.name || '';
 
 		return (
-			<TouchableOpacity style={styles.category} activeOpacity={0.6} onPress={() => (this.showCategories = true)}>
+			<TouchableOpacity
+				style={styles.category}
+				activeOpacity={0.6}
+				onPress={() => (this.showCategories = true)}
+				testID={'market-category'}
+				accessibilityLabel={'market-category'}
+			>
 				<Text style={styles.option}>{value}</Text>
 				<FontAwesome name={'caret-down'} size={20} style={styles.dropdownIcon} />
 			</TouchableOpacity>
