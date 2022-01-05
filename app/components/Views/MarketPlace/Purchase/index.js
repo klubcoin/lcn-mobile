@@ -49,6 +49,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { refStoreService } from '../../MarketPlace/store/StoreService';
 import { StoreOrder, StoreOrderStats } from '../../MarketPlace/store/StoreMessages';
+import BigNumber from 'bignumber.js';
 
 const { hexToBN } = util;
 /**
@@ -184,27 +185,29 @@ class MarketPurchase extends PureComponent {
 	prepareTransactionToSend = () => {
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const order = this.props.navigation.getParam('order');
-		const amount = BNToHex(toWei(order.amount));
+		const storeProfile = order.profile;
+		const orderPayment = BigNumber(storeProfile.orderPayment || 0).times(BigNumber(order.amount))
+		const amount = BNToHex(toWei(orderPayment.toNumber()));
 
-		const hexData = TRANSFER_FUNCTION_SIGNATURE + Array.prototype.map
-			.call(rawEncode(
-				['address', 'uint256', 'string'],
-				[
-					order.to,
-					addHexPrefix(amount),
-					JSON.stringify(order),
-				]),
-				x => ('00' + x.toString(16)).slice(-2)
-			)
-			.join('');
+		// const hexData = TRANSFER_FUNCTION_SIGNATURE + Array.prototype.map
+		// 	.call(rawEncode(
+		// 		['address', 'uint256', 'string'],
+		// 		[
+		// 			order.to,
+		// 			amount,
+		// 			JSON.stringify(order),
+		// 		]),
+		// 		x => ('00' + x.toString(16)).slice(-2)
+		// 	)
+		// 	.join('');
 
 		return {
-			data: hexData,
+			data: JSON.stringify(order),
 			from: selectedAddress,
 			gas: BNToHex(0),
 			gasPrice: BNToHex(0),
 			to: order.to,
-			value: BNToHex(toWei(order.amount))
+			value: amount
 		};
 	};
 
@@ -332,6 +335,11 @@ class MarketPurchase extends PureComponent {
 
 		const { products, profile, to, amount, currencyUnit } = navigation.getParam('order');
 
+		const payment = {
+			order: BigNumber(profile.orderPayment || 0).times(BigNumber(amount)),
+			delivery: BigNumber(profile.deliveryPayment || 0).times(BigNumber(amount)),
+		}
+
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
@@ -354,6 +362,7 @@ class MarketPurchase extends PureComponent {
 							products={products}
 							amount={amount}
 							currency={currencyUnit}
+							payment={payment}
 						/>
 						{balanceIsZero && (
 							<View style={styles.warningContainer}>

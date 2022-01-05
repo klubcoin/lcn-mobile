@@ -11,13 +11,14 @@ import store from "../../MarketPlace/store";
 export default class MarketOrderSummary extends PureComponent {
 	static propTypes = {
 		amount: PropTypes.string,
+		payment: PropTypes.object,
 		orderNumber: PropTypes.string,
 		currency: PropTypes.string,
 		products: PropTypes.array,
 	};
 
 	render = () => {
-		const { orderNumber, currency, products, amount } = this.props;
+		const { orderNumber, currency, products, payment, amount } = this.props;
 
 		return (
 			<DetailsModal>
@@ -27,14 +28,14 @@ export default class MarketOrderSummary extends PureComponent {
 					</DetailsModal.SectionTitle>
 					<DetailsModal.Section >
 						<Summary style={styles.section}>
-							<Summary.Row>
+							{/* <Summary.Row>
 								<Text small primary bold>
 									{strings('payQR.order_number')}
 								</Text>
 								<Text small primary>
 									{orderNumber}
 								</Text>
-							</Summary.Row>
+							</Summary.Row> */}
 							<View style={styles.productSection}>
 								<Text small primary bold>
 									{strings('market.products')}
@@ -65,11 +66,28 @@ export default class MarketOrderSummary extends PureComponent {
 								}
 							</View>
 							<Summary.Row>
+								<Text small >
+									{strings('fiat_on_ramp.total_amount')}
+								</Text>
+								<Text small >
+									{amount} {currency}
+								</Text>
+							</Summary.Row>
+							
+							<Summary.Row>
+								<Text small>
+									{strings('market.second_payment')}
+								</Text>
+								<Text small >
+									{payment?.delivery.toNumber()} {currency}
+								</Text>
+							</Summary.Row>
+							<Summary.Row>
 								<Text small primary bold>
-									{strings('transaction.amount')}
+									{strings('market.first_payment')}
 								</Text>
 								<Text small primary bold>
-									{amount} {currency}
+									{payment?.order.toNumber()} {currency}
 								</Text>
 							</Summary.Row>
 						</Summary>

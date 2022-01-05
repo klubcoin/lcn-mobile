@@ -85,10 +85,10 @@ export default class TipperModal extends PureComponent {
 
     initData = () => {
         const { data } = this.props;
-        const { receiverAddress } = data;
+        const { receiverAddress, value } = data;
         this.getWalletInfo(receiverAddress);
         this.tipData = data;
-        this.amount = fromWei(data.value);
+        this.amount = fromWei(value);
     }
 
     getWalletInfo(address) {
@@ -179,7 +179,6 @@ export default class TipperModal extends PureComponent {
     updateAmount = (value) => {
         if (!value) value = 0;
         this.amount = value;
-
         const { isETH } = this.tipData;
         if (isETH) {
             this.tipData.value = toWei(value).toString();
