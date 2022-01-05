@@ -5,7 +5,10 @@
 			href="https://www.liquichain.io/"
 			source="https://www.liquichain.io/assets/images/logo-white.svg"
 		/>
-		<h1>A sustainable blockchain for the people.</h1>
+
+		<h1 class="app-slogan">A sustainable blockchain for the people.</h1>
+		<Content />
+
 		<div class="app-links">
 			<ImageLink
 				href="https://play.google.com/store/apps/details?id=com.liquichain"
@@ -16,7 +19,6 @@
 				:source="require('@/assets/apple_store.png')"
 			/>
 		</div>
-		<Content />
 	</div>
 </template>
 
@@ -28,8 +30,8 @@ export default {
 	name: 'App',
 	components: {
 		ImageLink,
-		Content,
-	},
+		Content
+	}
 };
 </script>
 
@@ -53,6 +55,10 @@ body {
 
 .site-logo img {
 	width: 250px;
+}
+
+.app-slogan {
+	margin: 0;
 }
 
 .app-links {
