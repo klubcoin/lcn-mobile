@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build && cp main.js dist",
+    "build": "vue-cli-service build && cp main.js dist && npm run unilink",
+    "unilink": "cp ../{apple-app-site-association,assetlinks.json} dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
