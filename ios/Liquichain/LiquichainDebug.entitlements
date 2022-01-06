@@ -4,8 +4,9 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:meetthrufriends.com</string>
-		<string>applinks:*.meetthrufriends.com</string>
+		<string>applinks:telecelplay.io</string>
+		<string>applinks:*.telecelplay.io</string>
+		<string>applinks:liquichain.io</string>
 		<string>applinks:*.liquichain.io</string>
 	</array>
 </dict>

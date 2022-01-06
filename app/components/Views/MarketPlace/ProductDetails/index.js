@@ -25,11 +25,13 @@ import BigNumber from 'bignumber.js';
 import { Rating } from 'react-native-ratings';
 import Share from 'react-native-share';
 import Logger from '../../../../util/Logger';
+import AppConstants from '../../../../core/AppConstants';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
 const rowSize = isTablet() ? 4 : 3;
 const maxReviews = 5;
+const { MM_UNIVERSAL_LINK_HOST } = AppConstants;
 
 class MarketProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -270,7 +272,7 @@ class MarketProduct extends PureComponent {
 		const productId = this.product?.uuid;
 
 		Share.open({
-			url: `http://meetthrufriends.com/product/${address}/${productId}`
+			url: `http://${MM_UNIVERSAL_LINK_HOST}/product/${address}/${productId}`
 		}).catch(err => {
 			Logger.log('Error while trying to share product', err);
 		});
