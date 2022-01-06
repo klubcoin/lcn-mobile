@@ -8,6 +8,7 @@
 		<string>applinks:*.telecelplay.io</string>
 		<string>applinks:liquichain.io</string>
 		<string>applinks:*.liquichain.io</string>
+		<string>applinks:dev.telecelplay.io</string>
 	</array>
 </dict>
 </plist>
