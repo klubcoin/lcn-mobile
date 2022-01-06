@@ -12,7 +12,7 @@ import qs from 'qs';
 import { fromWei } from 'web3-utils';
 import routes from '../../routes';
 
-const host = 'http://meetthrufriends.com';
+const host = 'http://dev.telecelplay.io';
 var tipLink = '';
 var tipValue = 0;
 var symbol = '';
