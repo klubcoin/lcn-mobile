@@ -1,5 +1,5 @@
 <template>
-	<div class="content-wrapper" align="center">
+	<div v-if="tipLink" class="content-wrapper" align="center">
 		<h1>Tip {{ tipValue }} {{ symbol }} for {{ recipient?.name || 'Anonymous' }}</h1>
 		<p v-on:click="changeAddressType" class="address">{{ renderAddress() }}</p>
 		<QRCode :tipData="tipLink" />
@@ -27,7 +27,7 @@ export default {
 			tipValue,
 			symbol,
 			recipient,
-			addressType
+			addressType,
 		};
 	},
 	methods: {
@@ -39,8 +39,8 @@ export default {
 				body: JSON.stringify({
 					...routes.basicMethod,
 					method: routes.walletInfo,
-					params: [this.recipient.address]
-				})
+					params: [this.recipient.address],
+				}),
 			};
 			try {
 				const response = await fetch(url, requestOpts);
@@ -54,19 +54,19 @@ export default {
 		},
 		initData() {
 			try {
-				var recipientAddress = window.location.pathname.split('/')[2];
-				var queryString = window.location.search.replace('?', '');
-				var params = qs.parse(queryString);
+				const path = window.location.pathname;
+				if (path.indexOf('/tip/') == 0) {
+					var recipientAddress = window.location.pathname.split('/')[2];
+					var queryString = window.location.search.replace('?', '');
+					var params = qs.parse(queryString);
 
-				this.tipValue = fromWei(params.value, 'ether');
-				this.symbol = params.symbol;
-				this.recipient.address = recipientAddress;
+					this.tipValue = fromWei(params.value, 'ether');
+					this.symbol = params.symbol;
+					this.recipient.address = recipientAddress;
 
-				this.tipLink = `${host}/tip/${recipientAddress}?value=${params.value}&symbol=${params.symbol}&isETH=${
-					params.isETH
-				}&decimals=${params.decimals}`;
-				console.log(this.tipLink);
-				this.fetchWalletInfo();
+					this.tipLink = `${host}/tip/${recipientAddress}?value=${params.value}&symbol=${params.symbol}&isETH=${params.isETH}&decimals=${params.decimals}`;
+					this.fetchWalletInfo();
+				}
 			} catch (error) {
 				console.log('error', error);
 			}
@@ -78,14 +78,14 @@ export default {
 		},
 		changeAddressType() {
 			this.addressType == 'short' ? (this.addressType = 'full') : (this.addressType = 'short');
-		}
+		},
 	},
 	created() {
 		this.initData();
 	},
 	components: {
-		QRCode
-	}
+		QRCode,
+	},
 };
 </script>
 

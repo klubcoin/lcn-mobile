@@ -65,6 +65,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin-top: 50px;
 }
 .image-link:last-child {
 	margin-left: 20px;
