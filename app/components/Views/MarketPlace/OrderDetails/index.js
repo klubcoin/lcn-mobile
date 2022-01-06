@@ -100,18 +100,23 @@ class OrderDetails extends PureComponent {
 
 		this.transactionData = [...transactions.map(e => this.parseTransaction(e.transaction))];
 		this.transactionData = this.transactionData.filter(e => e);
-		this.orderTransaction = { ...this.transactionData.find(e => e.data.id == order.id) };
+		this.orderTransaction.transactions = this.transactionData.filter(e => e.data.id == order.id) || [];
+		
 		this.calOrderValue();
 	}
 
 	calOrderValue = () => {
-		const BNValue = hexToBN(this.orderTransaction?.value);
-		const { amount } = this.orderDetails;
-
-		if (BNValue) {
-			this.orderTransaction.value = fromWei(BNValue);
-			this.orderTransaction.remain = BigNumber(amount.total).minus(BigNumber(this.orderTransaction.value)).toNumber();
-		};
+		try {
+			const { amount } = this.orderDetails;
+			var { transactions } = this.orderTransaction;
+			if (transactions.length > 0) {
+				transactions = transactions.map(e => Object.assign(e, { value: fromWei(hexToBN(e.value)) }));
+				this.orderTransaction.value = transactions.reduce((sum, current) => sum.plus(BigNumber(current.value)), BigNumber(0)).toNumber();
+			}
+			this.orderTransaction.remain = BigNumber(amount.total).minus(BigNumber(this.orderTransaction.value || 0)).toNumber();
+		} catch (error) {
+			console.warn(error);
+		}
 	}
 
 	fetchShippingInfo = async () => {
@@ -290,7 +295,17 @@ class OrderDetails extends PureComponent {
 	}
 
 	onPressActionBtn = () => {
-		//TODO: on return and refund func
+		if (this.canPayRest()) {
+			this.payRest();
+		}
+	}
+
+	payRest = () => {
+		const { remain } = this.orderTransaction;
+		const { data } = this.orderTransaction.transactions[0];
+		if (!data) return;
+		if (this.status == OrderStatus()['shipping'] && remain > 0)
+			this.props.navigation.navigate('MarketPurchase', { order: data, isDeliveryPayment: true });
 	}
 
 	onVendorContact = async () => {
@@ -328,6 +343,11 @@ class OrderDetails extends PureComponent {
 		);
 	}
 
+	canPayRest = () => {
+		const { remain } = this.orderTransaction;
+		return this.status == OrderStatus()['shipping'] && remain > 0;
+	}
+
 	renderProductModal = () => {
 		const { order, amount } = this.orderDetails;
 		const products = order.items;
@@ -362,7 +382,7 @@ class OrderDetails extends PureComponent {
 	renderActionMessage = () => {
 		const { remain } = this.orderTransaction;
 
-		if (this.status == OrderStatus()['shipping'] && remain > 0) 
+		if (this.canPayRest()) 
 			return strings('market.pay_rest');
 		return strings('market.return_refund');
 	}

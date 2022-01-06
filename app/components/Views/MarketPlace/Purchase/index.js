@@ -101,7 +101,7 @@ class MarketPurchase extends PureComponent {
 	processing = false;
 	addressToInputRef = React.createRef();
 	orderId = '';
-
+	isDeliveryPayment = false;
 
 	state = {
 		balanceIsZero: false,
@@ -132,6 +132,7 @@ class MarketPurchase extends PureComponent {
 			balanceIsZero: hexToBN(accounts[selectedAddress].balance).isZero(),
 		});
 
+		this.isDeliveryPayment = this.props.navigation.getParam('isDeliveryPayment');
 	};
 
 	toggleFromAccountModal = () => {
@@ -187,10 +188,18 @@ class MarketPurchase extends PureComponent {
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const order = this.props.navigation.getParam('order');
 		const storeProfile = order.profile;
-		const orderPayment = BigNumber(storeProfile.orderPayment || 0).times(BigNumber(order.amount))
-		const amount = BNToHex(toWei(orderPayment.toNumber()));
 
-		order.id = this.orderId;
+		var payment = 0;
+		if (this.isDeliveryPayment) {
+			payment = BigNumber(storeProfile.deliveryPayment || 0).times(BigNumber(order.amount))
+		} else {
+			payment = BigNumber(storeProfile.orderPayment || 0).times(BigNumber(order.amount))
+
+		}
+		const amount = BNToHex(toWei(payment.toNumber()));
+
+		if (!order.id)
+			order.id = this.orderId;
 		// const hexData = TRANSFER_FUNCTION_SIGNATURE + Array.prototype.map
 		// 	.call(rawEncode(
 		// 		['address', 'uint256', 'string'],
@@ -242,17 +251,21 @@ class MarketPurchase extends PureComponent {
 
 		const { navigation } = this.props;
 		const order = navigation.getParam('order');
+		if (this.isDeliveryPayment) {
+			this.sendTransaction();
+		}
+		else {
+			const storeService = refStoreService();
+			const hash = storeService?.sendOrder(order);
 
-		const storeService = refStoreService();
-		const hash = storeService?.sendOrder(order);
-
-		storeService.addListener(data => {
-			if (data.action == StoreOrderStats().action && data.hash == hash) {
-				this.pendingOrder = data;
-				this.orderId = hash;
-				this.sendTransaction();
-			}
-		});
+			storeService.addListener(data => {
+				if (data.action == StoreOrderStats().action && data.hash == hash) {
+					this.pendingOrder = data;
+					this.orderId = hash;
+					this.sendTransaction();
+				}
+			});
+		}
 	}
 
 	sendTransaction = async () => {
@@ -337,10 +350,11 @@ class MarketPurchase extends PureComponent {
 		} = this.state;
 
 		const { products, profile, to, amount, currencyUnit } = navigation.getParam('order');
+		const isDeliveryPayment = navigation.getParam('isDeliveryPayment');
 
 		const payment = {
-			order: BigNumber(profile.orderPayment || 0).times(BigNumber(amount)),
-			delivery: BigNumber(profile.deliveryPayment || 0).times(BigNumber(amount)),
+			order: BigNumber(profile?.orderPayment || 0).times(BigNumber(amount)),
+			delivery: BigNumber(profile?.deliveryPayment || 0).times(BigNumber(amount)),
 		}
 
 		return (
@@ -366,6 +380,7 @@ class MarketPurchase extends PureComponent {
 							amount={amount}
 							currency={currencyUnit}
 							payment={payment}
+							isDeliveryPayment={isDeliveryPayment}
 						/>
 						{balanceIsZero && (
 							<View style={styles.warningContainer}>

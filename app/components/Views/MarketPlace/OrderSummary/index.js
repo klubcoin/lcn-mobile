@@ -15,10 +15,11 @@ export default class MarketOrderSummary extends PureComponent {
 		orderNumber: PropTypes.string,
 		currency: PropTypes.string,
 		products: PropTypes.array,
+		isDeliveryPayment: PropTypes.bool
 	};
 
 	render = () => {
-		const { orderNumber, currency, products, payment, amount } = this.props;
+		const { orderNumber, currency, products, payment, amount, isDeliveryPayment } = this.props;
 
 		return (
 			<DetailsModal>
@@ -76,18 +77,18 @@ export default class MarketOrderSummary extends PureComponent {
 							
 							<Summary.Row>
 								<Text small>
-									{strings('market.second_payment')}
+									{isDeliveryPayment ? strings('market.first_payment') : strings('market.second_payment')}
 								</Text>
 								<Text small >
-									{payment?.delivery.toNumber()} {currency}
+									{isDeliveryPayment ? payment?.order.toNumber() : payment?.delivery.toNumber()} {currency}
 								</Text>
 							</Summary.Row>
 							<Summary.Row>
 								<Text small primary bold>
-									{strings('market.first_payment')}
+									{isDeliveryPayment ? strings('market.second_payment') : strings('market.first_payment')}
 								</Text>
 								<Text small primary bold>
-									{payment?.order.toNumber()} {currency}
+									{isDeliveryPayment ? payment?.delivery.toNumber() : payment?.order.toNumber()} {currency}
 								</Text>
 							</Summary.Row>
 						</Summary>
