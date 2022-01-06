@@ -1894,7 +1894,11 @@
 		"refund": "Refund",
 		"change_status": "Change status",
 		"sort_by": "Sort by",
-		"coordinate": "Coordinate"
+		"coordinate": "Coordinate",
+		"paid": "Paid",
+		"remain": "Remain",
+		"pay_rest": "Pay the rest"
+
 	},
 	"order": {
 		"pending": "Pending",

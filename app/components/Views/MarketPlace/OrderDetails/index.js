@@ -16,6 +16,12 @@ import StoreImage from "../../MarketPlace/components/StoreImage";
 import { OrderStatus } from "../../MarketPlace/StoreOrderDetails";
 import { refStoreService } from "../../MarketPlace/store/StoreService";
 import Modal from 'react-native-modal';
+import TransactionController from "@metamask/controllers/dist/transaction/TransactionController";
+import Engine from "../../../../core/Engine";
+import { stripHexPrefix } from 'ethereumjs-util';
+import { fromWei, toWei } from "../../../../util/number";
+import { hexToBN } from "@metamask/controllers/dist/util";
+import BigNumber from "bignumber.js";
 
 class OrderDetails extends PureComponent {
 
@@ -23,6 +29,8 @@ class OrderDetails extends PureComponent {
 	viewPayment = false;
 	shippingInfo = {};
 	viewProductModal = false;
+	transactionData = [];
+	orderTransaction = {};
 
 	constructor(props) {
 		super(props)
@@ -30,8 +38,11 @@ class OrderDetails extends PureComponent {
 			status: observable,
 			viewPayment: observable,
 			shippingInfo: observable,
-			viewProductModal: observable
+			transactionData: observable,
+			viewProductModal: observable,
+			orderTransaction: observable,
 		})
+
 		this.orderDetails = this.props.navigation.getParam('orderDetails');
 		const { order } = this.orderDetails || {};
 		this.status = OrderStatus()[order.status || 'processing'];
@@ -41,6 +52,7 @@ class OrderDetails extends PureComponent {
 
 	componentDidMount() {
 		this.syncProduct();
+		this.getTransactionsHistory();
 	}
 
 	async syncProduct() {
@@ -63,6 +75,43 @@ class OrderDetails extends PureComponent {
 			const product = products[k];
 			await storeService.fetchProduct(product.uuid, vendor.address);
 		}
+	}
+
+	IsJsonString = (str) => {
+		try {
+			JSON.parse(stripHexPrefix(str));
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
+
+	parseTransaction = (transaction) => {
+		const cloneObject = {...transaction};
+		if (!this.IsJsonString(cloneObject.data)) return;
+
+		cloneObject.data = JSON.parse(stripHexPrefix(cloneObject.data));
+		return cloneObject;
+	}
+
+	getTransactionsHistory = () => {
+		const { transactions } = Engine.state.TransactionController;
+		const { order } = this.orderDetails;
+
+		this.transactionData = [...transactions.map(e => this.parseTransaction(e.transaction))];
+		this.transactionData = this.transactionData.filter(e => e);
+		this.orderTransaction = { ...this.transactionData.find(e => e.data.id == order.id) };
+		this.calOrderValue();
+	}
+
+	calOrderValue = () => {
+		const BNValue = hexToBN(this.orderTransaction?.value);
+		const { amount } = this.orderDetails;
+
+		if (BNValue) {
+			this.orderTransaction.value = fromWei(BNValue);
+			this.orderTransaction.remain = BigNumber(amount.total).minus(BigNumber(this.orderTransaction.value)).toNumber();
+		};
 	}
 
 	fetchShippingInfo = async () => {
@@ -152,13 +201,8 @@ class OrderDetails extends PureComponent {
 		return (
 			<TouchableWithoutFeedback style={styles.section} onPress={this.onViewPayment}>
 				<View style={[styles.infoSection, styles.titleWrapper]}>
-					<View style={{ flex: 2 }}>
-						<Text style={styles.titleInfoText}>
-							{strings('market.total_payment')}
-						</Text>
-					</View>
-
-					<View style={{ flexDirection: 'row', flex: 1 }}>
+					<Text style={styles.titleInfoText}>{strings('market.total_payment')}</Text>
+					<View style={styles.subPaymentSection}>
 						<Text style={styles.titleInfoText}>{amount.total.toFixed()} {amount.currencyUnit}</Text>
 						<MaterialIcons name={this.viewPayment ? "chevron-up" : "chevron-down"} size={20} />
 					</View>
@@ -167,21 +211,35 @@ class OrderDetails extends PureComponent {
 					!this.viewPayment ?
 						<View style={[styles.infoSection, styles.titleWrapper]}>
 							<Text style={styles.infoText}>{products.length} {products.length == 1 ? 'item' : 'items'}</Text>
-						</View> : products.map(e => (
+						</View> : <View>
 							<View style={[styles.infoSection, styles.titleWrapper]}>
-								<View style={styles.imageWrapper}>
-									<StoreImage style={styles.image} address={order.vendor} path={e.images[0]} />
-									<Text style={styles.infoText} numberOfLines={2}>{e.title}</Text>
-								</View>
-								<View style={styles.quantityWrapper}>
-									<Text style={styles.infoText}>x  <Text style={styles.infoText}>{e.quantity} </Text></Text>
-									<Text numberOfLines={2} style={styles.infoText}>
-										{e.price} {e.currency}
-									</Text>
+								<Text style={styles.infoText}>{strings('market.paid')}</Text>
+								<View style={styles.subPaymentSection}>
+									<Text style={styles.infoText}>{this.orderTransaction.value} {amount.currencyUnit}</Text>
 								</View>
 							</View>
-						)
-						)
+							<View style={[styles.infoSection, styles.titleWrapper]}>
+								<Text style={[styles.infoText, styles.remain]}>{strings('market.remain')}</Text>
+								<View style={styles.subPaymentSection}>
+									<Text style={[styles.infoText, this.orderTransaction?.remain > 0 && styles.remain]}>{this.orderTransaction?.remain} {amount.currencyUnit}</Text>
+								</View>
+							</View>
+							{
+								products.map(e => (
+									<View style={[styles.infoSection, styles.titleWrapper]}>
+										<View style={styles.imageWrapper}>
+											<StoreImage style={styles.image} address={order.vendor} path={e.images[0]} />
+											<Text style={styles.infoText} numberOfLines={2}>{e.title}</Text>
+										</View>
+										<View style={styles.quantityWrapper}>
+											<Text style={styles.infoText}>x  <Text style={styles.infoText}>{e.quantity} </Text></Text>
+											<Text numberOfLines={2} style={styles.infoText}>
+												{e.price} {e.currency}
+											</Text>
+										</View>
+									</View>))
+							}
+						</View>
 				}
 			</TouchableWithoutFeedback>
 		);
@@ -231,7 +289,7 @@ class OrderDetails extends PureComponent {
 		);
 	}
 
-	onReturn = () => {
+	onPressActionBtn = () => {
 		//TODO: on return and refund func
 	}
 
@@ -301,15 +359,23 @@ class OrderDetails extends PureComponent {
 		)
 	}
 
+	renderActionMessage = () => {
+		const { remain } = this.orderTransaction;
+
+		if (this.status == OrderStatus()['shipping'] && remain > 0) 
+			return strings('market.pay_rest');
+		return strings('market.return_refund');
+	}
+
 	renderFooter = () => {
 		return (
 			<View style={styles.buttonsWrapper}>
 				<StyledButton
 					type={'blue'}
 					containerStyle={styles.actionButton}
-					onPress={this.onReturn}
+					onPress={this.onPressActionBtn}
 				>
-					{strings('market.return_refund')}
+					{this.renderActionMessage()}
 				</StyledButton>
 				<StyledButton
 					type={'normal'}

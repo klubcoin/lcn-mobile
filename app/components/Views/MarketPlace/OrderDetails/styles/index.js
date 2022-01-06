@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 	titleNavBar: {
 		flex: 1,
 		textAlign: 'center',
-		fontSize: RFValue(14),
+		fontSize: RFValue(13),
 		color: colors.white,
 		marginVertical: 5
 	},
@@ -56,9 +56,8 @@ const styles = StyleSheet.create({
 		marginBottom: 10
 	},
 	titleInfoText: {
-		fontSize: RFValue(15),
-		fontWeight: '500',
-		flex: 1
+		fontSize: RFValue(13),
+		fontWeight: '500'
 	},
 	orderDate: {
 		color: colors.grey400,
@@ -129,6 +128,15 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 		borderBottomWidth: StyleSheet.hairlineWidth
 	},
+	remain: {
+		fontWeight: '500',
+		color: colors.red,
+	},
+	subPaymentSection: {
+		flexDirection: 'row',
+		flex: 2, 
+		justifyContent: 'flex-end'
+	}
 });
 
 export default assignNestedObj(styles, brandStyles);

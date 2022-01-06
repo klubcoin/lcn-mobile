@@ -100,6 +100,7 @@ class MarketPurchase extends PureComponent {
 
 	processing = false;
 	addressToInputRef = React.createRef();
+	orderId = '';
 
 
 	state = {
@@ -189,6 +190,7 @@ class MarketPurchase extends PureComponent {
 		const orderPayment = BigNumber(storeProfile.orderPayment || 0).times(BigNumber(order.amount))
 		const amount = BNToHex(toWei(orderPayment.toNumber()));
 
+		order.id = this.orderId;
 		// const hexData = TRANSFER_FUNCTION_SIGNATURE + Array.prototype.map
 		// 	.call(rawEncode(
 		// 		['address', 'uint256', 'string'],
@@ -247,6 +249,7 @@ class MarketPurchase extends PureComponent {
 		storeService.addListener(data => {
 			if (data.action == StoreOrderStats().action && data.hash == hash) {
 				this.pendingOrder = data;
+				this.orderId = hash;
 				this.sendTransaction();
 			}
 		});
