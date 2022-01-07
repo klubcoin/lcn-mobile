@@ -141,6 +141,10 @@ function getStyles(type) {
 			fontStyle = styles.normalText;
 			containerStyle = styles.normal;
 			break;
+		case 'normal-padding':
+			fontStyle = styles.normalText;
+			containerStyle = styles.normalPadding;
+			break;
 		case 'rounded-normal':
 			fontStyle = styles.roundedNormalText;
 			containerStyle = styles.roundedNormal;
@@ -188,6 +192,18 @@ function getStyles(type) {
 		case 'view':
 			fontStyle = styles.viewText;
 			containerStyle = styles.view;
+			break;
+		case 'pink':
+			fontStyle = styles.pinkText;
+			containerStyle = styles.pink;
+			break;
+		case 'white':
+			fontStyle = styles.whiteText;
+			containerStyle = styles.white;
+			break;
+		case 'white-padding':
+			fontStyle = styles.whiteTextPadding;
+			containerStyle = styles.whitePadding;
 			break;
 		default:
 			throw new Error('Unknown button type');

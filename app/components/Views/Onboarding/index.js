@@ -68,10 +68,10 @@ const createStep = step => ({
  * View that is displayed to first time (new) users
  */
 class Onboarding extends PureComponent {
-	static navigationOptions = ({ navigation }) =>
-		navigation.getParam('delete', null)
-			? getTransparentOnboardingNavbarOptions(navigation)
-			: getTransparentBackOnboardingNavbarOptions(navigation);
+	static navigationOptions = ({ navigation }) => getTransparentOnboardingNavbarOptions(navigation);
+	// navigation.getParam('delete', null)
+	// 	? getTransparentOnboardingNavbarOptions(navigation)
+	// 	: getTransparentBackOnboardingNavbarOptions(navigation);
 
 	static propTypes = {
 		/**
@@ -501,7 +501,17 @@ class Onboarding extends PureComponent {
 				<View style={styles.createWrapper}>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
-							type={'normal'}
+							style={styles.button}
+							type={'pink'}
+							onPress={this.onPressCreate}
+							testID={'create-wallet-button'}
+						>
+							{strings('onboarding.start_exploring_now').toUpperCase()}
+						</StyledButton>
+					</View>
+					<View style={styles.buttonWrapper}>
+						<StyledButton
+							type={'normal-padding'}
 							onPress={this.onPressImport}
 							testID={'import-wallet-import-from-seed-button'}
 						>
@@ -511,7 +521,7 @@ class Onboarding extends PureComponent {
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							style={styles.button}
-							type={'normal'}
+							type={'normal-padding'}
 							onPress={this.onPressSync}
 							testID={'onboarding-import-button'}
 						>
@@ -521,21 +531,11 @@ class Onboarding extends PureComponent {
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							style={styles.button}
-							type={'normal'}
+							type={'white-padding'}
 							onPress={this.onViewPartners}
 							testID={'onboarding-import-button'}
 						>
 							{strings('onboarding.view_partners')}
-						</StyledButton>
-					</View>
-					<View style={styles.buttonWrapper}>
-						<StyledButton
-							style={styles.button}
-							type={'blue'}
-							onPress={this.onPressCreate}
-							testID={'create-wallet-button'}
-						>
-							{strings('onboarding.start_exploring_now').toUpperCase()}
 						</StyledButton>
 					</View>
 				</View>

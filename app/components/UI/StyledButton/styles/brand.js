@@ -67,17 +67,17 @@ const styles = StyleSheet.create({
 	},
 	normal: {
 		backgroundColor: colors.blue,
-		borderWidth: 2,
-		borderColor: colors.blue,
 		borderRadius: 15
-		// shadowColor: colors.blue,
-		// shadowOpacity: 0.7,
-		// shadowRadius: 12,
-		// shadowOffset: {
-		// 	height: 1
-		// }
+	},
+	normalPadding: {
+		backgroundColor: colors.blue,
+		borderRadius: 15,
+		padding: 25
 	},
 	normalText: {
+		color: colors.black
+	},
+	normalPaddingText: {
 		color: colors.black
 	},
 	transparent: {
@@ -148,6 +148,26 @@ const styles = StyleSheet.create({
 	view: {
 		borderWidth: 1,
 		borderColor: colors.white
+	},
+	pink: {
+		backgroundColor: colors.pink,
+		borderRadius: 15,
+		paddingVertical: 25
+	},
+	pinkText: {
+		color: colors.black
+	},
+	white: {
+		backgroundColor: colors.white,
+		borderRadius: 15
+	},
+	whitePadding: {
+		backgroundColor: colors.white,
+		borderRadius: 15,
+		paddingVertical: 25
+	},
+	whitePaddingText: {
+		color: colors.black
 	}
 });
 
