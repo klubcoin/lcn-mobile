@@ -87,17 +87,17 @@ export function getNavigationOptionsTitle(title, navigation) {
 		title,
 		headerTitleStyle: {
 			fontSize: 20,
-			color: colors.fontPrimary,
+			color: colors.black,
 			...fontStyles.normal
 		},
-		headerTintColor: colors.blue,
+		headerTintColor: colors.black,
 		headerLeft: (
 			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'title-back-arrow-button'}>
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
 		headerStyle: {
-			backgroundColor: colors.grey,
+			backgroundColor: colors.white,
 			marginTop: 20
 		}
 	};

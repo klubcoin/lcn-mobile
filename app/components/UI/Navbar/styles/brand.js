@@ -7,7 +7,7 @@ const brandStyles = StyleSheet.create({
 		color: colors.fontPrimary
 	},
 	backIcon: {
-		color: colors.blue
+		color: colors.black
 	},
 	closeButtonText: {
 		color: colors.blue

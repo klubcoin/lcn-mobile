@@ -5,6 +5,8 @@ import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { strings } from '../../../../../locales/i18n';
 import { fontStyles, colors } from '../../../../styles/common';
+import StyledButton from '../../../UI/StyledButton';
+import styles from './styles/index';
 
 class PartnerDetails extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
@@ -13,11 +15,9 @@ class PartnerDetails extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<View style={{ paddingVertical: 20, paddingHorizontal: 15 }}>
-					<Text style={{ color: colors.white, ...fontStyles.bold, fontSize: 30 }}>
-						Get 500 free Klub Coins{'\n'}if you own a DJenerates
-					</Text>
-					<Text style={{ color: colors.white, ...fontStyles.normal, fontSize: 14, marginVertical: 20 }}>
+				<View style={styles.wrapper}>
+					<Text style={styles.title}>Get 500 free Klub Coins{'\n'}if you own a DJenerates</Text>
+					<Text style={styles.desc}>
 						Supported by legends such as Carl Cox, Paul Oakenfold, Paul Van Dyk, Benny Benassi, Sven Väth,
 						Blond:ish, Luciano, Jamie Jones, Adam Beyer, Ricardo Villalobos and many more, the Djenerates
 						NFT collection is the first to immortalize electronic music icons into digital collectibles on
@@ -25,9 +25,18 @@ class PartnerDetails extends PureComponent {
 					</Text>
 					<Image
 						source={require('../../../../images/partner_sample.png')}
-						resizeMode={'contain'}
-						style={{ height: 300, width: '100%' }}
+						resizeMode={'cover'}
+						style={styles.partnerImage}
 					/>
+					<View style={styles.button}>
+						<StyledButton
+							type={'normal-padding'}
+							onPress={this.onViewPartners}
+							testID={'onboarding-import-button'}
+						>
+							{strings('onboarding.website').toUpperCase()}
+						</StyledButton>
+					</View>
 				</View>
 			</OnboardingScreenWithBg>
 		);
