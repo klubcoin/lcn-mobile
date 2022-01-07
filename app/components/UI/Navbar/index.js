@@ -408,7 +408,7 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		headerStyle: {
 			shadowColor: colors.transparent,
 			elevation: 0,
-			backgroundColor: colors.grey,
+			backgroundColor: colors.white,
 			marginTop: Device.isIos() ? 20 : 0,
 			borderBottomWidth: 0
 		},
@@ -689,7 +689,7 @@ export function getWebviewNavbar(navigation, backButtonText) {
 			</TouchableOpacity>
 		),
 		headerStyle: {
-			backgroundColor: colors.grey,
+			backgroundColor: colors.white,
 			marginTop: Device.isIos() ? 5 : 0
 		}
 	};

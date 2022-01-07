@@ -4,15 +4,16 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	header: {
-		color: colors.fontPrimary
+		color: colors.black
 	},
 	backIcon: {
 		color: colors.black
 	},
 	closeButtonText: {
-		color: colors.blue
+		color: colors.black
 	},
 	centeredTitle: {
+		color: colors.black,
 		...fontStyles.bold
 	}
 });
