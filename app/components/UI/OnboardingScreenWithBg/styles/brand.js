@@ -5,7 +5,7 @@ import Device from '../../../../util/Device';
 const brandStyles = StyleSheet.create({
 	wrapper: {
 		borderColor: colors.black,
-		backgroundColor: colors.black,
+		backgroundColor: colors.primaryFox,
 		paddingTop: 0
 	}
 });

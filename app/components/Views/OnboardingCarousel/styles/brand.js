@@ -5,7 +5,7 @@ import { colors, fontStyles, baseStyles } from '../../../../styles/common';
 const IMAGE_1_RATIO = 285 / 203;
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-const IMG_PADDING = Device.isIphoneX() ? 100 : Device.isIphone5S() ? 180 : 220;
+const IMG_PADDING = Device.isIphoneX() ? 150 : Device.isIphone5S() ? 180 : 220;
 
 const brandStyles = StyleSheet.create({
 	title: {
@@ -15,7 +15,7 @@ const brandStyles = StyleSheet.create({
 		color: colors.fontPrimary
 	},
 	carouselImage1: {
-		marginTop: 30,
+		marginTop: 0,
 		width: DEVICE_WIDTH - IMG_PADDING,
 		height: (DEVICE_WIDTH - IMG_PADDING) * IMAGE_1_RATIO
 	},

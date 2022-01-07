@@ -7,9 +7,10 @@ import { styles, images } from './styles/index';
 
 const OnboardingScreenWithBg = props => (
 	<View style={styles.flex}>
-		<ImageBackground source={images[props.screen]} style={styles.wrapper} resizeMode={'cover'}>
+		<View style={styles.wrapper}>{props.children}</View>
+		{/* <ImageBackground source={images[props.screen]} style={styles.wrapper} resizeMode={'cover'}>
 			{props.children}
-		</ImageBackground>
+		</ImageBackground> */}
 	</View>
 );
 

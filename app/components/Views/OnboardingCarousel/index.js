@@ -9,7 +9,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { getTransparentOnboardingNavbarOptions } from '../../UI/Navbar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import Device from '../../../util/Device';
-import { styles, carousel_images } from './styles/index';
+import { styles, carousel_images, klubcoin_text } from './styles/index';
 import { displayName } from '../../../../app.json';
 
 /**
@@ -46,6 +46,12 @@ export default class OnboardingCarousel extends PureComponent {
 				<OnboardingScreenWithBg screen={'carousel'}>
 					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>
+							<Image
+								source={klubcoin_text}
+								style={[styles.logoText]}
+								resizeMethod={'auto'}
+								resizeMode={'contain'}
+							/>
 							<ScrollableTabView
 								style={styles.scrollTabs}
 								renderTabBar={this.renderTabBar}
@@ -73,6 +79,7 @@ export default class OnboardingCarousel extends PureComponent {
 													source={carousel_images[index]}
 													style={[styles.carouselImage, styles[imgStyleKey]]}
 													resizeMethod={'auto'}
+													resizeMode={'contain'}
 													testID={`carousel-${value}-image`}
 												/>
 											</View>
@@ -95,7 +102,7 @@ export default class OnboardingCarousel extends PureComponent {
 								onPress={this.onPresGetStarted}
 								testID={'onboarding-get-started-button'}
 							>
-								{strings('onboarding_carousel.get_started')}
+								{strings('onboarding_carousel.get_started').toUpperCase()}
 							</StyledButton>
 						</View>
 					</View>

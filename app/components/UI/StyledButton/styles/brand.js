@@ -66,18 +66,19 @@ const styles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	normal: {
-		backgroundColor: colors.grey,
+		backgroundColor: colors.blue,
 		borderWidth: 2,
 		borderColor: colors.blue,
-		shadowColor: colors.blue,
-		shadowOpacity: 0.7,
-		shadowRadius: 12,
-		shadowOffset: {
-			height: 1
-		}
+		borderRadius: 15
+		// shadowColor: colors.blue,
+		// shadowOpacity: 0.7,
+		// shadowRadius: 12,
+		// shadowOffset: {
+		// 	height: 1
+		// }
 	},
 	normalText: {
-		color: colors.blue
+		color: colors.black
 	},
 	transparent: {
 		backgroundColor: colors.transparent,

@@ -86,6 +86,11 @@ const index = StyleSheet.create({
 	},
 	tab: {
 		marginHorizontal: 30
+	},
+	logoText: {
+		width: Device.getDeviceWidth() / 2,
+		maxWidth: 200,
+		alignSelf: 'center'
 	}
 });
 
@@ -93,9 +98,10 @@ const onboarding_carousel_1 = require('../../../../images/intro1.png'); // eslin
 const onboarding_carousel_2 = require('../../../../images/intro2.png'); // eslint-disable-line
 const onboarding_carousel_3 = require('../../../../images/intro3.png'); // eslint-disable-line
 const explain_backup_seedphrase = require('../../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
-const onboarding_carousel_klubcoin = require('../../../../images/klubcoin_lighten.png'); // eslint-disable-line
+const onboarding_carousel_klubcoin = require('../../../../images/klubcoin.png'); // eslint-disable-line
+const klubcoin_text = require('../../../../images/klubcoin_text.png');
 
 const carousel_images = [onboarding_carousel_klubcoin, onboarding_carousel_klubcoin, onboarding_carousel_klubcoin];
 const styles = assignNestedObj(index, brandStyles);
 
-export { styles, carousel_images };
+export { styles, carousel_images, klubcoin_text };
