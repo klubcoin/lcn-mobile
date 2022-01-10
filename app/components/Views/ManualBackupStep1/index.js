@@ -192,7 +192,7 @@ export class ManualBackupStep1 extends PureComponent {
 									<View style={styles.buttonWrapper}>
 										<StyledButton
 											containerStyle={styles.button}
-											type={'confirm'}
+											type={'normal'}
 											onPress={this.tryUnlock}
 											testID={'submit-button'}
 										>
@@ -215,11 +215,11 @@ export class ManualBackupStep1 extends PureComponent {
 		return (
 			<ActionView
 				confirmTestID={'manual-backup-step-1-continue-button'}
-				confirmText={strings('manual_backup_step_1.continue')}
+				confirmText={strings('manual_backup_step_1.continue').toUpperCase()}
 				onConfirmPress={this.goNext}
 				confirmDisabled={this.state.seedPhraseHidden}
 				showCancelButton={false}
-				confirmButtonMode={'confirm'}
+				confirmButtonMode={'normal'}
 			>
 				<View style={styles.wrapper} testID={'manual_backup_step_1-screen'}>
 					<Text style={styles.action}>{strings('manual_backup_step_1.action')}</Text>

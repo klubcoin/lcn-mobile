@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
 	},
 	view: {
 		borderWidth: 1,
-		borderColor: colors.white
+		borderColor: colors.white,
+		borderRadius: 15
 	},
 	pink: {
 		backgroundColor: colors.pink,

@@ -96,7 +96,7 @@ const AccountBackupStep1B = props => {
 
 							<StyledButton
 								containerStyle={styles.button}
-								type={'confirm'}
+								type={'normal'}
 								onPress={goNext}
 								testID={'submit-button'}
 							>
