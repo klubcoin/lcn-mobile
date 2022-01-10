@@ -103,7 +103,7 @@ const AccountBackupStep1 = props => {
 						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={2} />
 						<View style={styles.content}>
 							<Text style={styles.title}>{strings('account_backup_step_1.title')}</Text>
-							<SeedPhraseVideo />
+							{/* <SeedPhraseVideo /> */}
 							<View style={styles.text}>
 								<Text style={styles.label}>
 									{strings('account_backup_step_1.info_text_1_1')}{' '}
@@ -117,17 +117,19 @@ const AccountBackupStep1 = props => {
 						</View>
 						<View style={styles.buttonWrapper}>
 							{!hasFunds && (
-								<View style={styles.remindLaterContainer}>
-									<TouchableOpacity
-										style={styles.remindLaterButton}
-										onPress={showRemindLater}
-										hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
-										testID={'remind-me-later-button'}
-									>
-										<Text style={styles.remindLaterText}>
-											{strings('account_backup_step_1.remind_me_later')}
-										</Text>
-									</TouchableOpacity>
+								<View style={styles.ctaContainer}>
+									<View style={styles.remindLaterContainer}>
+										<TouchableOpacity
+											style={styles.remindLaterButton}
+											onPress={showRemindLater}
+											hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
+											testID={'remind-me-later-button'}
+										>
+											<Text style={styles.remindLaterText}>
+												{strings('account_backup_step_1.remind_me_later')}
+											</Text>
+										</TouchableOpacity>
+									</View>
 									<Text style={styles.remindLaterSubText}>
 										{strings('account_backup_step_1.remind_me_later_subtext')}
 									</Text>
@@ -136,11 +138,11 @@ const AccountBackupStep1 = props => {
 							<View style={styles.ctaContainer}>
 								<StyledButton
 									containerStyle={styles.button}
-									type={'confirm'}
+									type={'normal-padding'}
 									onPress={goNext}
 									testID={'submit-button'}
 								>
-									{strings('account_backup_step_1.cta_text')}
+									{strings('account_backup_step_1.cta_text').toUpperCase()}
 								</StyledButton>
 								<Text style={styles.startSubText}>{strings('account_backup_step_1.cta_subText')}</Text>
 							</View>

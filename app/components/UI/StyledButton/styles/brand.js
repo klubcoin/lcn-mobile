@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
 		color: colors.blue
 	},
 	warning: {
-		backgroundColor: colors.red
+		backgroundColor: colors.red,
+		borderRadius: 15
 	},
 	info: {
 		backgroundColor: colors.white,

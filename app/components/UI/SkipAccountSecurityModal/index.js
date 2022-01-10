@@ -12,16 +12,17 @@ const warning_skip_backup = require('../../../images/warning.png'); // eslint-di
 
 const SkipAccountSecurityModal = ({ modalVisible, onConfirm, onCancel, onPress, toggleSkipCheckbox, skipCheckbox }) => (
 	<ActionModal
-		confirmText={strings('account_backup_step_1.skip_button_confirm')}
-		cancelText={strings('account_backup_step_1.skip_button_cancel')}
+		confirmText={strings('account_backup_step_1.skip_button_confirm').toUpperCase()}
+		cancelText={strings('account_backup_step_1.skip_button_cancel').toUpperCase()}
 		confirmButtonMode={'warning'}
-		cancelButtonMode={'neutral'}
+		cancelButtonMode={'normal'}
 		displayCancelButton
 		modalVisible={modalVisible}
 		actionContainerStyle={styles.modalNoBorder}
 		onCancelPress={onCancel}
 		confirmDisabled={!skipCheckbox}
 		onConfirmPress={onConfirm}
+		verticalButtons
 	>
 		<View style={styles.skipModalContainer}>
 			<TouchableOpacity
