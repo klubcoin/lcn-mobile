@@ -9,9 +9,8 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
-	image: {
-		width: Device.isIos() ? 200 : 100,
-		height: Device.isIos() ? 200 : 100
+	foxWrapper: {
+		marginTop: 50
 	},
 	title: {
 		fontSize: 30,
@@ -23,7 +22,6 @@ const brandStyles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	goBack: {
-		color: colors.white,
 		...fontStyles.bold
 	},
 	biometryLabel: {
@@ -38,18 +36,10 @@ const brandStyles = StyleSheet.create({
 	},
 	inputContainer: {
 		color: colors.white,
-		borderWidth: 2,
 		paddingTop: 10,
 		paddingLeft: 15,
-		borderRadius: 50,
-		borderColor: colors.white,
-		backgroundColor: colors.grey,
-		shadowColor: colors.white,
-		shadowOpacity: 0.7,
-		shadowRadius: 12,
-		shadowOffset: {
-			height: 1
-		}
+		borderRadius: 10,
+		backgroundColor: colors.purple
 	},
 	cant: {
 		color: colors.white

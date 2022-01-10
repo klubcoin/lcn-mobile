@@ -129,7 +129,9 @@
 	},
 	"login": {
 		"title": "Welcome Back!",
+		"email": "Email",
 		"password": "Password",
+		"type_here": "Type here",
 		"login_liquichain_with_keycloak": "Log into {{appName}}",
 		"login_button": "LOG IN",
 		"go_back": "Can’t login? You can ERASE your current wallet and setup a new one",
@@ -187,7 +189,8 @@
 		"setup_local_account": "Setup local account (geek)",
 		"or": "Or",
 		"profile": "Profile",
-		"continue": "Continue"
+		"continue": "Continue",
+		"sign_in_biometrics": "Sign in with Biometrics"
 	},
 	"profile": {
 		"firstname": "Firstname",

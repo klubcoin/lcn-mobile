@@ -290,14 +290,14 @@ class Login extends PureComponent {
 
 		return (
 			<View style={styles.biometrics}>
-				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
-				<Switch
+				<Text style={styles.biometryLabel}>{strings(`choose_password.sign_in_biometrics`)}</Text>
+				{/* <Switch
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
 					style={styles.biometrySwitch}
 					trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
 					ios_backgroundColor={colors.grey300}
-				/>
+				/> */}
 			</View>
 		);
 	};
@@ -401,9 +401,10 @@ class Login extends PureComponent {
 									source={require('../../../images/klubcoin_vertical_logo.png')}
 									style={styles.image}
 									resizeMethod={'auto'}
+									resizeMode={'contain'}
 								/>
 							</View>
-							<Text style={styles.title}>{strings('login.title')}</Text>
+							{/* <Text style={styles.title}>{strings('login.title')}</Text> */}
 							{this.props.keycloakAuth ? (
 								<LoginWithKeycloak
 									type={'sign'}
@@ -414,11 +415,43 @@ class Login extends PureComponent {
 							) : (
 								<>
 									<View style={styles.field}>
+										<Text style={styles.label}>{strings('login.email')}</Text>
+										<OutlinedTextField
+											style={styles.input}
+											inputContainerStyle={styles.inputContainer}
+											placeholder={strings('login.type_here') + '...'}
+											placeholderTextColor={'white'}
+											testID={'login-password-input'}
+											returnKeyType={'done'}
+											autoCapitalize="none"
+											secureTextEntry
+											ref={this.fieldRef}
+											onChangeText={this.setPassword}
+											value={this.state.password}
+											baseColor={colors.transparent}
+											tintColor={colors.transparent}
+											onSubmitEditing={this.onLogin}
+											renderRightAccessory={() => (
+												<BiometryButton
+													onPress={this.tryBiometric}
+													hidden={
+														!(
+															this.state.biometryChoice &&
+															this.state.biometryType &&
+															this.state.hasCredentials
+														)
+													}
+													type={this.state.biometryType}
+												/>
+											)}
+										/>
+									</View>
+									<View style={styles.field}>
 										<Text style={styles.label}>{strings('login.password')}</Text>
 										<OutlinedTextField
 											style={styles.input}
 											inputContainerStyle={styles.inputContainer}
-											placeholder={'Password'}
+											placeholder={strings('login.password')}
 											placeholderTextColor={'white'}
 											testID={'login-password-input'}
 											returnKeyType={'done'}
@@ -455,7 +488,7 @@ class Login extends PureComponent {
 									)}
 
 									<View style={styles.ctaWrapper} testID={'log-in-button'}>
-										<StyledButton type={'confirm'} onPress={this.onLogin}>
+										<StyledButton type={'normal-padding'} onPress={this.onLogin}>
 											{this.state.loading ? (
 												<ActivityIndicator size="small" color="white" />
 											) : (
