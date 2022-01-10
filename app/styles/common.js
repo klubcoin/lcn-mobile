@@ -67,7 +67,9 @@ export const colors = {
 	pptColor: '#d04523',
 	mediaIcColor: '#28afea',
 	overlayColor: 'rgba(0, 127, 174, 0.7)',
-	pink: '#eb00f7'
+	pink: '#eb00f7',
+	purple: '#21193d',
+	purple100: '#563fab'
 };
 
 /**

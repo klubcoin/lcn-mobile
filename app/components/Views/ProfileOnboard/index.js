@@ -119,11 +119,7 @@ class ProfileOnboard extends PureComponent {
 								/>
 							</View>
 
-							<StyledButton
-								type={'confirm'}
-								onPress={this.onNext.bind(this)}
-								containerStyle={styles.next}
-							>
+							<StyledButton type={'normal'} onPress={this.onNext.bind(this)} containerStyle={styles.next}>
 								{strings('choose_password.continue')}
 							</StyledButton>
 						</View>

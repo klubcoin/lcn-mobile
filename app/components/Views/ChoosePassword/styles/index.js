@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
 	},
 	wrapper: {
 		flex: 1,
-		marginBottom: 10
+		marginBottom: 10,
+		marginTop: 20
 	},
 	scrollableWrapper: {
 		flex: 1,
@@ -166,7 +167,8 @@ const styles = StyleSheet.create({
 		top: 52,
 		right: 17,
 		alignSelf: 'flex-end'
-	}
+	},
+	newPwdTitle: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

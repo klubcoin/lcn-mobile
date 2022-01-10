@@ -26,6 +26,7 @@ import { strings } from '../../../../locales/i18n';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import SecureKeychain from '../../../core/SecureKeychain';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import AppConstants from '../../../core/AppConstants';
 import OnboardingProgress from '../../UI/OnboardingProgress';
 import zxcvbn from 'zxcvbn';
@@ -98,7 +99,7 @@ class ChoosePassword extends PureComponent {
 		rememberMe: false,
 		loading: false,
 		error: null,
-		usePasswordAuth: false,
+		usePasswordAuth: true,
 		inputWidth: { width: '99%' }
 	};
 
@@ -486,13 +487,13 @@ class ChoosePassword extends PureComponent {
 								contentContainerStyle={styles.keyboardScrollableWrapper}
 								resetScrollToCoords={{ x: 0, y: 0 }}
 							>
-								<LoginWithKeycloak
+								{/* <LoginWithKeycloak
 									label={strings('choose_password.setup_liquichain_account', {
 										appName: displayName
 									})}
 									onSuccess={this.onKeycloakResult}
 									onError={this.onKeycloakResult}
-								/>
+								/> */}
 								{!usePasswordAuth && (
 									<>
 										<Text style={styles.or}>{strings('choose_password.or')}</Text>
@@ -517,12 +518,20 @@ class ChoosePassword extends PureComponent {
 												</View>
 											</View>
 											<View style={styles.field}>
-												<Text style={styles.hintLabel}>
-													{strings('choose_password.password')}
-												</Text>
-												<Text onPress={this.toggleShowHide} style={styles.hintLabel}>
-													{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
-												</Text>
+												<View style={styles.newPwdTitle}>
+													<Text style={styles.hintLabel}>
+														{strings('choose_password.password')}
+													</Text>
+													<FontAwesome5Icon
+														name={'eye'}
+														color={colors.white}
+														size={20}
+														onPress={this.toggleShowHide}
+													/>
+													{/* <Text onPress={this.toggleShowHide} style={styles.hintLabel}>
+															{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
+														</Text> */}
+												</View>
 												<TextInput
 													style={[styles.input, inputWidth]}
 													value={password}
@@ -601,7 +610,7 @@ class ChoosePassword extends PureComponent {
 
 										<View style={styles.ctaWrapper}>
 											<StyledButton
-												type={'blue'}
+												type={'white'}
 												onPress={this.onPressCreate}
 												testID={'submit-button'}
 												disabled={!canSubmit}

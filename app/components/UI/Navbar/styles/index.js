@@ -16,8 +16,9 @@ const styles = StyleSheet.create({
 		marginBottom: 12
 	},
 	metamaskName: {
-		width: 122,
-		height: 15
+		// width: 122,
+		// height: 15,
+		alignSelf: 'flex-start'
 	},
 	metamaskFox: {
 		width: 40,
@@ -33,7 +34,8 @@ const styles = StyleSheet.create({
 	},
 	backIconIOS: {
 		marginHorizontal: 4,
-		marginTop: -4
+		marginTop: -4,
+		backgroundColor: 'red'
 	},
 	shareIconIOS: {
 		marginHorizontal: -5

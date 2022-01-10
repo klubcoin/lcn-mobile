@@ -40,6 +40,7 @@ const trackEventWithParameters = (event, params) => {
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/klubcoin_lighten.png'); // eslint-disable-line
+const klubcoin_text = require('../../../images/klubcoin_text_black.png');
 /**
  * Function that returns the navigation options
  * This is used by views that will show our custom navbar
@@ -404,6 +405,8 @@ export function getModalNavbarOptions(title) {
  */
 export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	const headerLeftHide = headerLeft || navigation.getParam('headerLeft');
+	const navigationPop = () => navigation.pop();
+
 	return {
 		headerStyle: {
 			shadowColor: colors.transparent,
@@ -414,13 +417,23 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 		},
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
-				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				<Text style={styles.header}>{displayName.toUpperCase()}</Text>
+				<Image
+					source={klubcoin_text}
+					style={styles.metamaskName}
+					resizeMethod={'auto'}
+					resizeMode={'contain'}
+				/>
+				{/* <Text style={styles.header}>{displayName.toUpperCase()}</Text> */}
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
 		headerRight: <View />,
-		headerLeft: headerLeftHide
+		// headerLeft: headerLeftHide
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
 	};
 }
 

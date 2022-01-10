@@ -136,10 +136,6 @@ const styles = StyleSheet.create({
 		borderColor: colors.red,
 		borderWidth: 1
 	},
-	whiteText: {
-		...fontStyles.bold,
-		color: colors.white
-	},
 	viewText: {
 		fontSize: 18,
 		...fontStyles.bold,
@@ -160,6 +156,10 @@ const styles = StyleSheet.create({
 	white: {
 		backgroundColor: colors.white,
 		borderRadius: 15
+	},
+	whiteText: {
+		...fontStyles.bold,
+		color: colors.black
 	},
 	whitePadding: {
 		backgroundColor: colors.white,
