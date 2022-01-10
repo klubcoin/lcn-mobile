@@ -184,7 +184,7 @@
 		"i_understand": "I understand that {{appName}} cannot recover this password for me.",
 		"learn_more": "Learn more.",
 		"secure": "Secure wallet",
-		"confirm": "Confirm Secret Recovery Phrase",
+		"confirm": "Confirmation",
 		"setup_liquichain_account": "Setup {{appName}} account",
 		"setup_local_account": "Setup local account (geek)",
 		"or": "Or",
@@ -1289,7 +1289,7 @@
 	"manual_backup": {
 		"progressOne": "Create Password",
 		"progressTwo": "Secure wallet",
-		"progressThree": "Confirm Secret Recovery Phrase"
+		"progressThree": "Confirmation"
 	},
 	"manual_backup_step_1": {
 		"action": "Write down your Secret Recovery Phrase",

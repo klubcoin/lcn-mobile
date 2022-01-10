@@ -6,6 +6,9 @@ const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent
 	},
+	wrapper: {
+		marginTop: 20
+	},
 	card: {
 		backgroundColor: colors.grey
 	},

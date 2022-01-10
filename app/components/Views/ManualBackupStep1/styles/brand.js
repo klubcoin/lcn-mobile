@@ -30,6 +30,9 @@ const brandStyles = StyleSheet.create({
 	info: {
 		fontSize: RFValue(15),
 		textAlign: 'justify'
+	},
+	onBoardingWrapper: {
+		marginTop: 20
 	}
 });
 

@@ -149,7 +149,7 @@ class ManualBackupStep2 extends PureComponent {
 
 	renderSuccess = () => (
 		<View style={styles.successRow}>
-			<MaterialIcon name="check-circle" size={15} color={colors.green500} />
+			<MaterialIcon name="check-circle" size={15} color={colors.blue} />
 			<Text style={styles.successText}>{strings('manual_backup_step_2.success')}</Text>
 		</View>
 	);
@@ -208,7 +208,7 @@ class ManualBackupStep2 extends PureComponent {
 						onConfirmPress={this.goNext}
 						confirmDisabled={!seedPhraseReady || !this.validateWords()}
 						showCancelButton={false}
-						confirmButtonMode={'confirm'}
+						confirmButtonMode={'normal'}
 					>
 						<View style={styles.wrapper} testID={'protect-your-account-screen'}>
 							<Text style={styles.action}>{strings('manual_backup_step_2.action')}</Text>
