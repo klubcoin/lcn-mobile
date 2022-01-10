@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
 	},
 	next: {
 		width: 240
-	}
+	},
+	hintLabel: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

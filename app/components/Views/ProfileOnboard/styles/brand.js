@@ -7,9 +7,18 @@ const brandStyles = StyleSheet.create({
 	},
 	textInput: {
 		color: colors.white,
-		borderColor: colors.white,
-		borderWidth: 1,
-		backgroundColor: colors.grey
+		backgroundColor: colors.purple,
+		borderRadius: 10,
+		textAlign: 'left'
+	},
+	hintLabel: {
+		marginBottom: 10,
+		color: colors.white,
+		...fontStyles.bold
+	},
+	form: {
+		paddingHorizontal: 0,
+		marginTop: 10
 	}
 });
 

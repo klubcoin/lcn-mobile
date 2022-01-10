@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import preferences from '../../../store/preferences';
@@ -19,6 +19,7 @@ import Device from '../../../util/Device';
 import Toast from 'react-native-toast-message';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TextField from '../../UI/TextField';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
@@ -102,20 +103,29 @@ class ProfileOnboard extends PureComponent {
 							</TouchableOpacity>
 
 							<View style={styles.form}>
-								<TextInput
-									style={styles.textInput}
+								<TextField
 									value={this.firstname}
-									placeholder={strings('profile.firstname')}
-									placeholderTextColor={colors.grey300}
+									label={strings('profile.name')}
+									placeholder={strings('profile.name')}
 									onChangeText={text => (this.firstname = text)}
 								/>
-
-								<TextInput
-									style={styles.textInput}
+								<TextField
 									value={this.lastname}
-									placeholder={strings('profile.lastname')}
-									placeholderTextColor={colors.grey300}
-									onChangeText={text => (this.lastname = text)}
+									label={strings('profile.surname')}
+									placeholder={strings('profile.surname')}
+									onChangeText={text => (this.firstname = text)}
+								/>
+								<TextField
+									value={this.lastname}
+									label={strings('login.email')}
+									placeholder={strings('login.email')}
+									onChangeText={text => (this.firstname = text)}
+								/>
+								<TextField
+									value={this.lastname}
+									label={strings('profile.phone')}
+									placeholder={strings('profile.phone')}
+									onChangeText={text => (this.firstname = text)}
 								/>
 							</View>
 
