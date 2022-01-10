@@ -190,7 +190,8 @@
 		"or": "Or",
 		"profile": "Profile",
 		"continue": "Continue",
-		"sign_in_biometrics": "Sign in with Biometrics"
+		"sign_in_biometrics": "Sign in with Biometrics",
+		"username": "Username"
 	},
 	"profile": {
 		"firstname": "Firstname",

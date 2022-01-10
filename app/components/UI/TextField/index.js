@@ -7,9 +7,9 @@ import styles from './styles/index';
 
 export default class TextField extends Component {
 	render() {
-		const { label, placeholder, value, onChangeText } = this.props;
+		const { label, placeholder, value, onChangeText, containerStyle } = this.props;
 		return (
-			<>
+			<View style={containerStyle}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
 				<TextInput
 					style={styles.textInput}
@@ -18,7 +18,7 @@ export default class TextField extends Component {
 					placeholderTextColor={colors.grey300}
 					onChangeText={onChangeText}
 				/>
-			</>
+			</View>
 		);
 	}
 }

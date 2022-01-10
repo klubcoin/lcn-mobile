@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 	hintLabel: {
 		marginBottom: 10,
 		color: colors.white,
+		fontSize: 16,
 		...fontStyles.bold
 	}
 });

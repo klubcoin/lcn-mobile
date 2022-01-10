@@ -7,7 +7,8 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent
 	},
 	biometryLabel: {
-		color: colors.white
+		color: colors.white,
+		fontWeight: 'bold'
 	},
 	or: {
 		color: colors.white
@@ -22,7 +23,8 @@ const brandStyles = StyleSheet.create({
 	input: {
 		color: colors.white,
 		borderWidth: 0,
-		backgroundColor: colors.purple
+		backgroundColor: colors.purple,
+		height: 45
 	},
 	colorText: {
 		color: colors.white
@@ -36,6 +38,12 @@ const brandStyles = StyleSheet.create({
 	newPwdTitle: {
 		flexDirection: 'row',
 		justifyContent: 'space-between'
+	},
+	field: {
+		marginVertical: 0
+	},
+	usernameField: {
+		marginTop: 30
 	}
 });
 

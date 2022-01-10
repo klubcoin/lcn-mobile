@@ -113,7 +113,7 @@ class ProfileOnboard extends PureComponent {
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.lastname = text)}
 								/>
 								<TextField
 									value={this.lastname}

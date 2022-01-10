@@ -168,7 +168,8 @@ const styles = StyleSheet.create({
 		right: 17,
 		alignSelf: 'flex-end'
 	},
-	newPwdTitle: {}
+	newPwdTitle: {},
+	usernameField: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

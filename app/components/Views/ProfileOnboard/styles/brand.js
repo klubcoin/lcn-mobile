@@ -19,6 +19,10 @@ const brandStyles = StyleSheet.create({
 	form: {
 		paddingHorizontal: 0,
 		marginTop: 10
+	},
+	next: {
+		width: '80%',
+		maxWidth: 300
 	}
 });
 

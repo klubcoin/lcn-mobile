@@ -50,6 +50,7 @@ import LoginWithKeycloak from '../LoginWithKeycloak';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
+import TextField from '../../UI/TextField';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -361,14 +362,15 @@ class ChoosePassword extends PureComponent {
 					</>
 				) : (
 					<>
-						<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
-						<Switch
+						{/* <Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text> */}
+						<Text style={styles.biometryLabel}>{strings(`choose_password.sign_in_biometrics`)}</Text>
+						{/* <Switch
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 							value={rememberMe}
 							style={styles.biometrySwitch}
 							trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
 							ios_backgroundColor={colors.grey300}
-						/>
+						/> */}
 					</>
 				)}
 			</View>
@@ -583,6 +585,12 @@ class ChoosePassword extends PureComponent {
 													})}
 												</Text>
 											</View>
+											<TextField
+												value={confirmPassword}
+												label={strings('choose_password.username')}
+												placeholder={strings('login.type_here')}
+												containerStyle={styles.usernameField}
+											/>
 											<View>{this.renderSwitch()}</View>
 											<View style={styles.checkboxContainer}>
 												<CheckBox
@@ -615,7 +623,7 @@ class ChoosePassword extends PureComponent {
 												testID={'submit-button'}
 												disabled={!canSubmit}
 											>
-												{strings('choose_password.create_button')}
+												{strings('choose_password.create_button').toUpperCase()}
 											</StyledButton>
 										</View>
 									</>
