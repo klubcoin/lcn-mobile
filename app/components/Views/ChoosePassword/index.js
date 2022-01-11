@@ -159,14 +159,16 @@ class ChoosePassword extends PureComponent {
 		if (selectedAddress == null) {
 			return;
 		}
-		const { avatar, firstname, lastname } = preferences.onboardProfile;
+		const { avatar, firstname, lastname, email, phone } = preferences.onboardProfile;
 		const name = `${firstname} ${lastname}`;
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + avatarb64);
+		const publicInfo = JSON.stringify({ email, phone });
+		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
+		const params = [name, selectedAddress, publicInfo, hash];
 
 		API.postRequest(
 			Routes.walletCreation,
-			[name, selectedAddress, hash],
+			[name, selectedAddress, publicInfo, hash],
 			response => {
 				console.log('account creation', response);
 			},

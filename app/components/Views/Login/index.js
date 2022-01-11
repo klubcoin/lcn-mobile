@@ -388,7 +388,7 @@ class Login extends PureComponent {
 						<FilledTextField
 							containerStyle={[styles.inputContainer, styles.deleteContainer]}
 							inputContainerStyle={[styles.inputContainerStyle, styles.deleteContainer]}
-							style={[styles.input]}
+							style={[styles.input, styles.inputDelete]}
 							autoFocus
 							returnKeyType={'done'}
 							onChangeText={this.checkDelete}

@@ -27,8 +27,8 @@ class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
 
 	avatar = '';
-	name = '';
-	surname = '';
+	firstname = '';
+	lastname = '';
 	email = '';
 	phone = '';
 
@@ -36,15 +36,15 @@ class ProfileOnboard extends PureComponent {
 		super(props);
 		makeObservable(this, {
 			avatar: observable,
-			name: observable,
-			surname: observable,
+			firstname: observable,
+			lastname: observable,
 			email: observable,
 			phone: observable
 		});
 	}
 
 	onPickImage() {
-		ImagePicker.openCamera({
+		ImagePicker.openPicker({
 			width: 300,
 			height: 300,
 			cropping: true
@@ -63,8 +63,8 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	isDataValid() {
-		const name = this.name.trim();
-		const surname = this.surname.trim();
+		const firstname = this.firstname.trim();
+		const lastname = this.lastname.trim();
 		const email = this.email.trim();
 		const phone = this.phone.trim();
 
@@ -72,7 +72,7 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.missing_photo'));
 			return;
 		}
-		if (!name || !surname) {
+		if (!firstname || !lastname) {
 			showError(strings('profile.missing_name'));
 			return;
 		}
@@ -96,9 +96,9 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	async onNext() {
-		const name = this.name.trim();
-		const surname = this.surname.trim();
-		const email = this.email.trim();
+		const firstname = this.firstname.trim();
+		const lastname = this.lastname.trim();
+		const email = this.email.trim().toLowerCase();
 		const phone = this.phone.trim();
 
 		const isValid = this.isDataValid();
@@ -110,8 +110,8 @@ class ProfileOnboard extends PureComponent {
 
 		preferences.setOnboardProfile({
 			avatar: path,
-			name,
-			surname,
+			firstname,
+			lastname,
 			email,
 			phone
 		});
@@ -141,16 +141,16 @@ class ProfileOnboard extends PureComponent {
 
 							<View style={styles.form}>
 								<TextField
-									value={this.name}
+									value={this.firstname}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.name = text)}
+									onChangeText={text => (this.firstname = text)}
 								/>
 								<TextField
-									value={this.surname}
-									label={strings('profile.surname')}
-									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.surname = text)}
+									value={this.lastname}
+									label={strings('profile.lastname')}
+									placeholder={strings('profile.lastname')}
+									onChangeText={text => (this.lastname = text)}
 								/>
 								<TextField
 									value={this.email}
