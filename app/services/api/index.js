@@ -84,7 +84,15 @@ const Api = {
 			headers
 		};
 		fetch(route, fetchOptions)
-			.then(response => response.json())
+			.then(response => response.text())
+			.then(text => {
+				try {
+					return JSON.parse(text);
+				} catch (e) {
+					console.log('error', route, e)
+					return text;
+				}
+			})
 			.then(json => {
 				callback(json);
 			})
