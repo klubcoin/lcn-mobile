@@ -119,7 +119,9 @@ class ProfileOnboard extends PureComponent {
     if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
     await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
 
+    const phone = this.props.navigation.getParam('phone');
     preferences.setOnboardProfile({
+      phone,
       avatar: path,
       firstname,
       lastname,
@@ -141,6 +143,8 @@ class ProfileOnboard extends PureComponent {
         <ScrollView>
           <View style={styles.body}>
             <TouchableOpacity
+              testID={'onboard-profile-avatar'}
+              accessibilityLabel={'onboard-profile-avatar'}
               activeOpacity={0.5}
               style={styles.avatarView}
               onPress={() => this.onPickImage()}>
@@ -149,6 +153,8 @@ class ProfileOnboard extends PureComponent {
 
             <View style={styles.form}>
               <TextInput
+                testID={'onboard-profile-firstname'}
+                accessibilityLabel={'onboard-profile-firstname'}
                 style={styles.textInput}
                 value={this.firstname}
                 placeholder={strings('profile.firstname')}
@@ -157,6 +163,8 @@ class ProfileOnboard extends PureComponent {
               />
 
               <TextInput
+                testID={'onboard-profile-lastname'}
+                accessibilityLabel={'onboard-profile-lastname'}
                 style={styles.textInput}
                 value={this.lastname}
                 placeholder={strings('profile.lastname')}
@@ -166,6 +174,8 @@ class ProfileOnboard extends PureComponent {
             </View>
 
             <StyledButton
+              testID={'onboard-profile-submit'}
+              accessibilityLabel={'onboard-profile-submit'}
               type={'confirm'}
               onPress={this.onNext.bind(this)}
               containerStyle={styles.next}
