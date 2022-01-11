@@ -23,7 +23,10 @@ const Search = ({ value, placeholder, onSearch, onChange }) => {
 				value={value}
 				onChange={handleChange}
 			/>
-			<TouchableOpacity onPress={handleSearch} style={styles.searchButton} activeOpacity={0.6}>
+			<TouchableOpacity onPress={handleSearch} style={styles.searchButton} activeOpacity={0.6}
+				testID={'search-trigger'}
+				accessibilityLabel={'search-trigger'}
+			>
 				<LinearGrad start={{ x: 0, y: 1 }} end={{ x: 1, y: 1 }} colors={['#e88e0e', '#e83e3e']} />
 				<Icon name="search" size={18} style={styles.searchIcon} />
 			</TouchableOpacity>

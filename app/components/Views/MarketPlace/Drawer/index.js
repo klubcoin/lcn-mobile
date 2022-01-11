@@ -164,6 +164,8 @@ export class MarketDrawer extends Component {
 				style={[styles.menuItem, { backgroundColor }]}
 				activeOpacity={0.8}
 				onPress={() => this.openMenu(item)}
+				testID={`drawer-menu-item-${item.key}`}
+				accessibilityLabel={`drawer-menu-item-${item.key}`}
 			>
 				<Icon name={icon} size={25} color={selected ? colors.orange : colors.grey200} />
 				<Text style={styles.menuTitle}>{title}</Text>
@@ -185,6 +187,8 @@ export class MarketDrawer extends Component {
 					style={styles.setting}
 					activeOpacity={0.6}
 					onPress={() => this.openMenu(menuSettings)}
+					testID={'drawer-menu-item-settings'}
+					accessibilityLabel={'drawer-menu-item-settings'}
 				>
 					<Icon name={icon} size={25} color={colors.grey200} />
 					<Text style={styles.settingText}>{title}</Text>
@@ -204,7 +208,10 @@ export class MarketDrawer extends Component {
 			<View style={styles.root}>
 				<View style={styles.body}>
 					<SafeAreaView />
-					<Button onPress={this.toggleDrawer}>
+					<Button onPress={this.toggleDrawer}
+						testID={'drawer-close'}
+						accessibilityLabel={'drawer-close'}
+					>
 						<Icon name={'close'} size={25} color={colors.orange} style={styles.close} />
 					</Button>
 					<View style={styles.profile}>

@@ -8,7 +8,10 @@ import styles from './styles';
 const Cart = ({ market, color, onPress }) => {
 	return (
 		<View style={styles.cart}>
-			<TouchableOpacity onPress={() => onPress && onPress()} style={styles.button}>
+			<TouchableOpacity onPress={() => onPress && onPress()} style={styles.button}
+				testID={'cart-link'}
+				accessibilityLabel={'cart-link'}
+			>
 				<IonIcon style={styles.cartIcon} name={'cart-outline'} size={RFValue(18)} color={color} />
 				{market.cartBadge > 0 && (
 					<View style={styles.badge}>
