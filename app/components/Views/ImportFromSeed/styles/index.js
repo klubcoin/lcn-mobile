@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.white,
 		...fontStyles.normal
 	},
-	padding: {
+	inputContainerStyle: {
 		paddingRight: 46
 	},
 	biometrics: {

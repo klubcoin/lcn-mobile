@@ -29,7 +29,7 @@ import zxcvbn from 'zxcvbn';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Device from '../../../util/Device';
 import { failedSeedPhraseRequirements, isValidMnemonic, parseSeedPhrase } from '../../../util/validators';
-import { OutlinedTextField } from 'react-native-material-textfield';
+import { FilledTextField } from 'react-native-material-textfield';
 import {
 	SEED_PHRASE_HINTS,
 	BIOMETRY_CHOICE_DISABLED,
@@ -320,10 +320,10 @@ class ImportFromSeed extends PureComponent {
 								</View>
 							</View>
 							{hideSeedPhraseInput ? (
-								<OutlinedTextField
+								<FilledTextField
 									style={styles.input}
 									containerStyle={inputWidth}
-									inputContainerStyle={styles.padding}
+									inputContainerStyle={styles.inputContainerStyle}
 									placeholder={strings('import_from_seed.seed_phrase_placeholder')}
 									testID="input-seed-phrase"
 									returnKeyType="next"
@@ -331,10 +331,12 @@ class ImportFromSeed extends PureComponent {
 									secureTextEntry={hideSeedPhraseInput}
 									onChangeText={this.onSeedWordsChange}
 									value={seed}
-									baseColor={colors.white}
+									baseColor={colors.red}
 									tintColor={colors.blue}
 									placeholderTextColor={colors.grey300}
 									onSubmitEditing={this.jumpToPassword}
+									lineWidth={0}
+									activeLineWidth={0}
 								/>
 							) : (
 								<TextInput
@@ -379,9 +381,10 @@ class ImportFromSeed extends PureComponent {
 										</TouchableOpacity>
 									</View>
 								</View>
-								<OutlinedTextField
+								<FilledTextField
 									style={styles.input}
 									containerStyle={inputWidth}
+									inputContainerStyle={styles.inputContainerStyle}
 									ref={this.passwordInput}
 									placeholder={strings('import_from_seed.new_password')}
 									testID={'input-password-field'}
@@ -392,6 +395,8 @@ class ImportFromSeed extends PureComponent {
 									value={password}
 									baseColor={colors.white}
 									tintColor={colors.blue}
+									lineWidth={0}
+									activeLineWidth={0}
 									placeholderTextColor={colors.grey300}
 									onSubmitEditing={this.jumpToConfirmPassword}
 								/>
@@ -409,9 +414,10 @@ class ImportFromSeed extends PureComponent {
 
 							<View style={styles.field}>
 								<Text style={styles.label}>{strings('import_from_seed.confirm_password')}</Text>
-								<OutlinedTextField
+								<FilledTextField
 									style={styles.input}
 									containerStyle={inputWidth}
+									inputContainerStyle={styles.inputContainerStyle}
 									ref={this.confirmPasswordInput}
 									testID={'input-password-field-confirm'}
 									onChangeText={this.onPasswordConfirmChange}
@@ -424,6 +430,8 @@ class ImportFromSeed extends PureComponent {
 									tintColor={colors.blue}
 									placeholderTextColor={colors.grey300}
 									onSubmitEditing={this.onPressImport}
+									lineWidth={0}
+									activeLineWidth={0}
 								/>
 
 								<View style={styles.showMatchingPasswords}>

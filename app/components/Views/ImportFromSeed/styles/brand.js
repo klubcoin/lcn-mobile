@@ -10,10 +10,15 @@ const brandStyles = StyleSheet.create({
 		color: colors.white
 	},
 	label: {
-		color: colors.white
+		color: colors.white,
+		fontWeight: 'bold'
 	},
 	input: {
-		color: colors.white
+		color: colors.white,
+		alignSelf: 'center'
+	},
+	inputFocused: {
+		borderColor: colors.transparent
 	},
 	seedPhrase: {
 		backgroundColor: colors.grey,
@@ -22,6 +27,11 @@ const brandStyles = StyleSheet.create({
 	},
 	passwordStrengthLabel: {
 		color: colors.white
+	},
+	inputContainerStyle: {
+		backgroundColor: colors.purple,
+		borderRadius: 15,
+		textAlign: 'center'
 	}
 });
 
