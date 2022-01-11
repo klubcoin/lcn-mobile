@@ -140,7 +140,7 @@ class ManualBackupStep3 extends PureComponent {
 						confirmText={strings('manual_backup_step_3.done')}
 						onConfirmPress={this.done}
 						showCancelButton={false}
-						confirmButtonMode={'confirm'}
+						confirmButtonMode={'normal'}
 					>
 						<View style={styles.wrapper} testID={'import-congrats-screen'}>
 							<Emoji name="tada" style={styles.emoji} />
