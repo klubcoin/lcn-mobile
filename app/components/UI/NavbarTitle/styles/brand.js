@@ -5,8 +5,7 @@ import Device from '../../../../util/Device';
 const brandStyles = StyleSheet.create({
 	title: {
 		fontSize: 20,
-		...fontStyles.bold,
-		color: colors.white
+		...fontStyles.bold
 	},
 	networkName: {
 		...fontStyles.bold

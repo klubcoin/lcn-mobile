@@ -89,7 +89,6 @@ import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
 const styles = StyleSheet.create({
 	flex: {
 		flex: 1,
-		backgroundColor: colors.grey,
 		paddingTop: Device.isIos() ? 20 : 0
 	},
 	loader: {

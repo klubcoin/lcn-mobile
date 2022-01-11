@@ -632,7 +632,7 @@ export function getWalletNavbarOptions(title, navigation) {
 			<TouchableOpacity onPress={openDrawer} style={styles.backButton} testID={'hamburger-menu-button-wallet'}>
 				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
-		),
+		)
 		// headerRight: (
 		// 	<TouchableOpacity
 		// 		style={styles.infoButton}
@@ -642,9 +642,6 @@ export function getWalletNavbarOptions(title, navigation) {
 		// 		<AntIcon name="scan1" size={28} style={styles.infoIcon} />
 		// 	</TouchableOpacity>
 		// ),
-		headerStyle: {
-			backgroundColor: colors.grey
-		}
 	};
 }
 
