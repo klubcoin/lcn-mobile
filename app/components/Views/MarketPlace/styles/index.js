@@ -166,12 +166,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between'
 	},
-	product: {
-		width: photoWidth,
-		marginVertical: 10,
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
 	image: {
 		width: photoWidth,
 		height: photoWidth
@@ -204,7 +198,46 @@ const styles = StyleSheet.create({
 		fontWeight: '600',
 		fontSize: RFValue(10),
 		color: colors.blue,
-	}
+	},
+	products: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between',
+		marginTop: 30,
+	},
+	product: {
+		width: photoWidth,
+		maxHeight: photoWidth,
+		marginVertical: 10,
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 10,
+		marginBottom: 60
+	},
+	photo: {
+		resizeMode: 'cover',
+		width: '100%',
+		height: '100%',
+		borderRadius: 4,
+	},
+	title: {
+		marginTop: 5,
+		fontSize: RFValue(12),
+		color: colors.blue,
+		fontWeight: '600'
+	},
+	desc: {
+		marginTop: 5,
+		fontSize: RFValue(10),
+		color: colors.grey500
+	},
+	price: {
+		textAlign: 'center',
+		marginTop: 5,
+		color: '#f84880',
+		fontWeight: 'bold',
+		fontSize: RFValue(10)
+	},
 });
 
 export default assignNestedObj(styles, brandStyles);

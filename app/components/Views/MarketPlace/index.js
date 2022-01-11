@@ -16,11 +16,12 @@ import routes from '../../../common/routes';
 import { refStoreService } from '../MarketPlace/store/StoreService';
 import ModalSelector from '../../UI/AddCustomTokenOrApp/ModalSelector';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { StoreAnnounce } from '../MarketPlace/store/StoreMessages';
+import { StoreAnnounce, StoreQuery } from '../MarketPlace/store/StoreMessages';
 import { sha256 } from '../../../core/CryptoSignature';
 import Cart from './components/Cart';
 import { colors } from '../../../styles/common';
 import StoreImage from '../MarketPlace/components/StoreImage';
+import StripHtml from '../MarketPlace/components/StripHtml';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -36,6 +37,7 @@ class MarketPlace extends PureComponent {
 	categories = [];
 	showCategories = false;
 	vendors = [];
+	products = [];
 
 	constructor(props) {
 		super(props);
@@ -46,6 +48,7 @@ class MarketPlace extends PureComponent {
 			categories: observable,
 			showCategories: observable,
 			vendors: observable,
+			products: observable,
 		});
 	}
 
@@ -74,6 +77,7 @@ class MarketPlace extends PureComponent {
 				if (this.categories && !this.category) {
 					this.category = this.categories[0];
 				}
+				this.handleSearch();
 			}
 		});
 	}
@@ -139,9 +143,9 @@ class MarketPlace extends PureComponent {
 							<Text numberOfLines={1} style={styles.finalPrice}>
 								{discountPrice ?? price} {routes.mainNetWork.ticker}
 							</Text>
-							<Text numberOfLines={1} style={styles.price}>
+							{/* <Text numberOfLines={1} style={styles.price}>
 								{price} {routes.mainNetWork.ticker}
-							</Text>
+							</Text> */}
 						</TouchableOpacity>
 					);
 				})}
@@ -285,6 +289,35 @@ class MarketPlace extends PureComponent {
 		}
 	}
 
+	renderProduct = item => {
+		const vendor = this.vendor;
+		const { title, price, description, images } = item;
+		const photo = images[0];
+		const { defaultCurrency } = store.storeProfile || {};
+		const currency = defaultCurrency?.symbol || routes.mainNetWork.ticker;
+
+		return (
+			<TouchableOpacity style={styles.product} activeOpacity={0.6} onPress={() => this.showProduct(item)}>
+				<StoreImage style={styles.photo} address={vendor.wallet} path={photo} />
+				<Text style={styles.title}>{title}</Text>
+				<StripHtml numberOfLines={1} style={styles.desc}>
+					{description}
+				</StripHtml>
+				<Text numberOfLines={1} style={styles.price}>{`${price} ${currency}`}</Text>
+			</TouchableOpacity>
+		);
+	};
+
+	renderProducts = () => {
+		const { products } = this;
+
+		return (
+			<View style={styles.products}>
+				{products.map((e, index) => this.renderProduct(e))}
+			</View>
+		);
+	};
+
 	renderProviders = () => {
 		const width = (screenWidth - 40) / rowSize - 20;
 
@@ -364,6 +397,7 @@ class MarketPlace extends PureComponent {
 	onSearch = text => (this.searchQuery = text);
 	handleSearch = () => {
 		this.vendors = [];
+		this.products = [];
 		const hash = this.category?.hash;
 		this.query = this.searchQuery.toLowerCase();
 
@@ -380,10 +414,25 @@ class MarketPlace extends PureComponent {
 						...info,
 						wallet: data.from
 					});
+					this.fetchProducts();
 				}
 			}
 		});
 	};
+
+	fetchProducts = async () => {
+		const vendor = this.vendor = this.vendors[0];
+		const hash = this.category?.hash;
+
+		const storeService = refStoreService();
+		storeService.queryProductOnVendorStore(vendor.wallet, { query: this.query }, hash);
+
+		storeService.addListener(data => {
+			if (data.action == StoreQuery().action && data.hash == hash) {
+				this.products = [...data.data.result];
+			}
+		});
+	}
 
 	openCart = () => {
 		this.props.navigation.navigate('ShoppingCart');
@@ -438,6 +487,7 @@ class MarketPlace extends PureComponent {
 				onSelect={item => {
 					this.category = this.categories.find(e => e.uuid == item.key);
 					this.showCategories = false;
+					this.handleSearch();
 				}}
 				onClose={() => (this.showCategories = false)}
 			/>
@@ -456,6 +506,7 @@ class MarketPlace extends PureComponent {
 					{this.renderSelector()}
 				</View>
 				<ScrollView style={styles.body} nestedScrollEnabled>
+					{this.renderProducts()}
 					{this.renderProviders()}
 					{this.renderRecentlyViewedProducts()}
 					{this.renderRecentlyVisitedProviders()}
