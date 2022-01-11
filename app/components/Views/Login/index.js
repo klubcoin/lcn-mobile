@@ -91,6 +91,7 @@ class Login extends PureComponent {
 
 	state = {
 		password: '',
+		email: '',
 		biometryType: null,
 		rememberMe: false,
 		biometryChoice: false,
@@ -150,7 +151,15 @@ class Login extends PureComponent {
 	}
 
 	onLogin = async () => {
-		const { password } = this.state;
+		const onboardEmail = preferences.onboardProfile.email;
+		const { password, email } = this.state;
+
+		const isEmailValid = email.trim().toLowerCase() === onboardEmail;
+		if (!isEmailValid) {
+			this.setState({ error: strings('profile.invalid_email') });
+			return;
+		}
+
 		const locked = !passwordRequirementsMet(password);
 		if (locked) this.setState({ error: strings('login.invalid_password') });
 		if (this.state.loading || locked) return;
@@ -290,19 +299,21 @@ class Login extends PureComponent {
 
 		return (
 			<View style={styles.biometrics}>
-				<Text style={styles.biometryLabel}>{strings(`choose_password.sign_in_biometrics`)}</Text>
-				{/* <Switch
+				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
+				<Switch
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
 					style={styles.biometrySwitch}
 					trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
 					ios_backgroundColor={colors.grey300}
-				/> */}
+				/>
 			</View>
 		);
 	};
 
 	setPassword = val => this.setState({ password: val });
+
+	setEmail = val => this.setState({ email: val });
 
 	onCancelPress = () => {
 		this.toggleWarningModal();
@@ -429,13 +440,15 @@ class Login extends PureComponent {
 											testID={'login-password-input'}
 											returnKeyType={'done'}
 											autoCapitalize="none"
-											secureTextEntry
 											ref={this.fieldRef}
-											onChangeText={this.setPassword}
-											value={this.state.password}
+											keyboardType={'email-address'}
+											onChangeText={this.setEmail}
+											value={this.state.email}
 											baseColor={colors.transparent}
-											tintColor={colors.transparent}
+											tintColor={colors.blue}
 											onSubmitEditing={this.onLogin}
+											lineWidth={0}
+											activeLineWidth={0}
 											renderRightAccessory={() => (
 												<BiometryButton
 													onPress={this.tryBiometric}
@@ -466,8 +479,10 @@ class Login extends PureComponent {
 											onChangeText={this.setPassword}
 											value={this.state.password}
 											baseColor={colors.transparent}
-											tintColor={colors.transparent}
+											tintColor={colors.blue}
 											onSubmitEditing={this.onLogin}
+											lineWidth={0}
+											activeLineWidth={0}
 											renderRightAccessory={() => (
 												<BiometryButton
 													onPress={this.tryBiometric}

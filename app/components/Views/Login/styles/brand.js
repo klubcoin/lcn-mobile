@@ -33,13 +33,13 @@ const brandStyles = StyleSheet.create({
 		color: colors.white
 	},
 	input: {
-		color: colors.black,
+		color: colors.white,
 		alignSelf: 'center',
 		padding: 0
 	},
 	inputContainer: {
 		color: colors.black,
-		// paddingTop: 10,
+		paddingTop: 10,
 		paddingLeft: 15,
 		borderRadius: 15,
 		backgroundColor: colors.purple,
