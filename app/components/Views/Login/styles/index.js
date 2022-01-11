@@ -142,7 +142,8 @@ const styles = StyleSheet.create({
 	placeholder: {
 		color: colors.black
 	},
-	inputContainerStyle: {}
+	inputContainerStyle: {},
+	deleteContainer: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

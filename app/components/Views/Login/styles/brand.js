@@ -42,7 +42,7 @@ const brandStyles = StyleSheet.create({
 		// paddingTop: 10,
 		paddingLeft: 15,
 		borderRadius: 15,
-		backgroundColor: colors.lightPink,
+		backgroundColor: colors.purple,
 		textAlign: 'center'
 	},
 	cant: {
@@ -58,6 +58,9 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent,
 		borderRadius: 15,
 		textAlign: 'center'
+	},
+	deleteContainer: {
+		backgroundColor: colors.lightPink
 	}
 });
 

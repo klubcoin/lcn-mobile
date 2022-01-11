@@ -363,8 +363,7 @@ class Login extends PureComponent {
 			</WarningExistingUserModal>
 
 			<WarningExistingUserModal
-				// warningModalVisible={this.state.deleteModalVisible}
-				warningModalVisible={true}
+				warningModalVisible={this.state.deleteModalVisible}
 				cancelText={strings('login.delete_my').toUpperCase()}
 				cancelButtonDisabled={this.state.disableDelete}
 				onCancelPress={this.submitDelete}
@@ -376,8 +375,8 @@ class Login extends PureComponent {
 					<View style={styles.areYouSure}>
 						<Text style={[styles.heading, styles.delete]}>{strings('login.type_delete')}</Text>
 						<FilledTextField
-							containerStyle={styles.inputContainer}
-							inputContainerStyle={styles.inputContainerStyle}
+							containerStyle={[styles.inputContainer, styles.deleteContainer]}
+							inputContainerStyle={[styles.inputContainerStyle, styles.deleteContainer]}
 							style={[styles.input]}
 							autoFocus
 							returnKeyType={'done'}
