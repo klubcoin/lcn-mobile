@@ -281,13 +281,15 @@ export default class WebRTC {
 	Peer = peerId => {
 		const peer = new RTCPeerConnection({
 			iceServers: [
+				/*
 				{
 					urls: 'stun:stun.stunprotocol.org'
 				},
+				*/
 				{
 					urls: 'turn:numb.viagenie.ca',
-					credential: 'long3232',
-					username: 'dragons3232@gmail.com'
+					credential: 'cWR5rgwNDKtNwR8',
+					username: 'sebastien.michea@manaty.net'
 				}
 			]
 		});
