@@ -44,6 +44,16 @@ const brandStyles = StyleSheet.create({
 	},
 	usernameField: {
 		marginTop: 30
+	},
+	biometricsContainer: {
+		flexDirection: 'row',
+		paddingVertical: 10,
+		paddingHorizontal: 5,
+		alignItems: 'center',
+		justifyContent: 'space-between'
+	},
+	biometrySwitch: {
+		position: 'relative'
 	}
 });
 

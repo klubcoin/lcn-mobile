@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
 		...fontStyles.normal
 	},
 	biometrics: {
-		position: 'relative',
 		marginTop: 20,
-		marginBottom: 30
+		marginBottom: 30,
+		flex: 1
 	},
 	biometryLabel: {
 		flex: 1,
@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
 		alignSelf: 'flex-end'
 	},
 	newPwdTitle: {},
-	usernameField: {}
+	usernameField: {},
+	biometricsContainer: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

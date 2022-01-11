@@ -94,6 +94,7 @@ class ChoosePassword extends PureComponent {
 		isSelected: false,
 		password: '',
 		confirmPassword: '',
+		username: '',
 		secureTextEntry: true,
 		biometryType: null,
 		biometryChoice: false,
@@ -346,32 +347,30 @@ class ChoosePassword extends PureComponent {
 		return (
 			<View style={styles.biometrics}>
 				{biometryType ? (
-					<>
+					<View style={styles.biometricsContainer}>
 						<Text style={styles.biometryLabel}>
 							{strings(`biometrics.enable_${biometryType.toLowerCase()}`)}
 						</Text>
-						<View>
-							<Switch
-								onValueChange={this.updateBiometryChoice} // eslint-disable-line react/jsx-no-bind
-								value={biometryChoice}
-								style={styles.biometrySwitch}
-								trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
-								ios_backgroundColor={colors.grey300}
-							/>
-						</View>
-					</>
+						<Switch
+							onValueChange={this.updateBiometryChoice} // eslint-disable-line react/jsx-no-bind
+							value={biometryChoice}
+							style={styles.biometrySwitch}
+							trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey300 } : null}
+							ios_backgroundColor={colors.grey300}
+						/>
+					</View>
 				) : (
-					<>
-						{/* <Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text> */}
-						<Text style={styles.biometryLabel}>{strings(`choose_password.sign_in_biometrics`)}</Text>
-						{/* <Switch
+					<View style={styles.biometricsContainer}>
+						<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
+						{/* <Text style={styles.biometryLabel}>{strings(`choose_password.sign_in_biometrics`)}</Text> */}
+						<Switch
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 							value={rememberMe}
 							style={styles.biometrySwitch}
-							trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
+							trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey300 } : null}
 							ios_backgroundColor={colors.grey300}
-						/> */}
-					</>
+						/>
+					</View>
 				)}
 			</View>
 		);
@@ -381,6 +380,10 @@ class ChoosePassword extends PureComponent {
 		const passInfo = zxcvbn(val);
 
 		this.setState({ password: val, passwordStrength: passInfo.score });
+	};
+
+	onUsernameChange = val => {
+		this.setState({ username: val });
 	};
 
 	toggleShowHide = () => {
@@ -449,13 +452,14 @@ class ChoosePassword extends PureComponent {
 			password,
 			passwordStrength,
 			confirmPassword,
+			username,
 			secureTextEntry,
 			error,
 			loading,
 			usePasswordAuth
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
-		const canSubmit = passwordsMatch && isSelected;
+		const canSubmit = passwordsMatch && isSelected && username !== '';
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 
@@ -586,10 +590,11 @@ class ChoosePassword extends PureComponent {
 												</Text>
 											</View>
 											<TextField
-												value={confirmPassword}
+												value={username}
 												label={strings('choose_password.username')}
 												placeholder={strings('login.type_here')}
 												containerStyle={styles.usernameField}
+												onChangeText={this.onUsernameChange}
 											/>
 											<View>{this.renderSwitch()}</View>
 											<View style={styles.checkboxContainer}>
@@ -597,6 +602,8 @@ class ChoosePassword extends PureComponent {
 													value={isSelected}
 													onValueChange={this.setSelection}
 													style={styles.checkbox}
+													onCheckColor={colors.blue}
+													onTintColor={colors.blue}
 													tintColors={{ true: colors.blue }}
 													boxType="square"
 													testID={'password-understand-box'}
