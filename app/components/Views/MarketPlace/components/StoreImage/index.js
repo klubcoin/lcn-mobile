@@ -34,7 +34,7 @@ class StoreImage extends Component {
 		const { address, local } = this.props;
 		const { hash } = this.source;
 
-		if (local) return;
+		if (local || !address) return;
 
 		const folder = `${RNFS.DocumentDirectoryPath}/${address.toLowerCase()}`;
 		const path = `${folder}/${hash}`;
@@ -56,11 +56,11 @@ class StoreImage extends Component {
 	}
 
 	render() {
-		const { style } = this.props;
+		const { style, base64 } = this.props;
 
 		return (
 			<View style={style}>
-				<Image style={styles.image} source={{ uri: this.image }} />
+				<Image style={styles.image} source={{ uri: base64 ? `data:image/*;base64,${base64}` : this.image }} />
 			</View>
 		)
 	}
