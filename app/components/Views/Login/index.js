@@ -26,7 +26,7 @@ import FadeOutOverlay from '../../UI/FadeOutOverlay';
 import setOnboardingWizardStep from '../../../actions/wizard';
 import { connect } from 'react-redux';
 import Device from '../../../util/Device';
-import { OutlinedTextField } from 'react-native-material-textfield';
+import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
 import BiometryButton from '../../UI/BiometryButton';
 import { recreateVaultWithSamePassword } from '../../../core/Vault';
 import preferences from '../../../../app/store/preferences';
@@ -341,7 +341,7 @@ class Login extends PureComponent {
 		<ErrorBoundary view="Login">
 			<WarningExistingUserModal
 				warningModalVisible={this.state.warningModalVisible}
-				cancelText={strings('login.i_understand')}
+				cancelText={strings('login.i_understand').toUpperCase()}
 				onCancelPress={this.onCancelPress}
 				onRequestClose={this.toggleWarningModal}
 				onConfirmPress={this.toggleWarningModal}
@@ -363,8 +363,9 @@ class Login extends PureComponent {
 			</WarningExistingUserModal>
 
 			<WarningExistingUserModal
-				warningModalVisible={this.state.deleteModalVisible}
-				cancelText={strings('login.delete_my')}
+				// warningModalVisible={this.state.deleteModalVisible}
+				warningModalVisible={true}
+				cancelText={strings('login.delete_my').toUpperCase()}
 				cancelButtonDisabled={this.state.disableDelete}
 				onCancelPress={this.submitDelete}
 				onRequestClose={this.toggleDeleteModal}
@@ -374,16 +375,21 @@ class Login extends PureComponent {
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View style={styles.areYouSure}>
 						<Text style={[styles.heading, styles.delete]}>{strings('login.type_delete')}</Text>
-						<OutlinedTextField
+						<FilledTextField
+							containerStyle={styles.inputContainer}
+							inputContainerStyle={styles.inputContainerStyle}
 							style={[styles.input]}
 							autoFocus
 							returnKeyType={'done'}
 							onChangeText={this.checkDelete}
+							placeholder={strings('login.type_here') + '...'}
 							autoCapitalize="none"
 							value={this.state.deleteText}
-							baseColor={colors.grey500}
-							tintColor={colors.blue}
+							baseColor={colors.transparent}
+							tintColor={colors.black}
 							onSubmitEditing={this.submitDelete}
+							lineWidth={0}
+							activeLineWidth={0}
 						/>
 						{this.state.showDeleteWarning && (
 							<Text style={styles.deleteWarningMsg}>{strings('login.cant_proceed')}</Text>

@@ -59,13 +59,13 @@ export default function WarningExistingUserModal({
 		<ActionModal
 			modalVisible={warningModalVisible}
 			cancelText={cancelText || strings('onboarding.warning_proceed')}
-			confirmText={confirmText || strings('onboarding.warning_cancel')}
+			confirmText={confirmText || strings('onboarding.warning_cancel').toUpperCase()}
 			onCancelPress={onCancelPress}
 			cancelButtonDisabled={cancelButtonDisabled}
 			onRequestClose={onRequestClose}
 			onConfirmPress={onConfirmPress}
 			cancelButtonMode={'warning'}
-			confirmButtonMode={'neutral'}
+			confirmButtonMode={'normal'}
 			verticalButtons
 		>
 			{(children && children) || <Default />}

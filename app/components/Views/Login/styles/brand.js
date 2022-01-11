@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 
@@ -32,20 +33,31 @@ const brandStyles = StyleSheet.create({
 		color: colors.white
 	},
 	input: {
-		color: colors.white
+		color: colors.black,
+		alignSelf: 'center',
+		padding: 0
 	},
 	inputContainer: {
-		color: colors.white,
-		paddingTop: 10,
+		color: colors.black,
+		// paddingTop: 10,
 		paddingLeft: 15,
-		borderRadius: 10,
-		backgroundColor: colors.purple
+		borderRadius: 15,
+		backgroundColor: colors.lightPink,
+		textAlign: 'center'
 	},
 	cant: {
 		color: colors.white
 	},
 	placeholder: {
 		color: colors.white
+	},
+	delete: {
+		color: colors.red
+	},
+	inputContainerStyle: {
+		backgroundColor: colors.transparent,
+		borderRadius: 15,
+		textAlign: 'center'
 	}
 });
 

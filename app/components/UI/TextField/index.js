@@ -18,6 +18,7 @@ export default class TextField extends Component {
 					placeholderTextColor={colors.grey300}
 					onChangeText={onChangeText}
 					keyboardType={keyboardType}
+					autoCapitalize={'none'}
 				/>
 			</View>
 		);
