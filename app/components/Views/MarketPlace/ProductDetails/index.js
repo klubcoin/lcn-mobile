@@ -26,6 +26,8 @@ import { Rating } from 'react-native-ratings';
 import Share from 'react-native-share';
 import Logger from '../../../../util/Logger';
 import AppConstants from '../../../../core/AppConstants';
+import HtmlView from '../../MarketPlace/components/HtmlView';
+import Lightbox from 'react-native-lightbox';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -214,7 +216,11 @@ class MarketProduct extends PureComponent {
 	}
 
 	renderImage = ({ item }) => {
-		return <StoreImage style={styles.image} address={this.product.wallet} path={item} local={this.isOwner} />
+		return (
+			<Lightbox >
+				<StoreImage style={styles.image} address={this.product.wallet} path={item} local={this.isOwner} />
+			</Lightbox>
+		)
 	};
 
 	decreaseQuantity = () => {
@@ -341,7 +347,7 @@ class MarketProduct extends PureComponent {
 		return (
 			<View>
 				<Text style={styles.heading}>Description</Text>
-				<Text style={styles.desc}>{desc}</Text>
+				<HtmlView style={styles.desc} source={{ html: desc }} />
 				{hasMore && !this.readMore && (
 					<TouchableOpacity style={styles.readMore} activeOpacity={0.6} onPress={this.toggleReadMore}>
 						<Text style={styles.more}>{strings('market.read_more')}</Text>
