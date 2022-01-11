@@ -193,7 +193,7 @@ export default class StoreService {
 
 	collectCategoryHashes() {
 		const products = store?.marketProducts || [];
-		const categories = products.map(e => e.category);
+		const categories = products.map(e => e.category).filter(e => !!e);
 		const categoryHashes = categories.map(e => e.hash);
 		const hashes = [...new Set(categoryHashes)];
 

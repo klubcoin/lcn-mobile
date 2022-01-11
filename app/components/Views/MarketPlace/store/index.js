@@ -140,6 +140,7 @@ class Store {
 	}
 
 	async addProduct(product) {
+		if (!product) return;
 		this.marketProducts.push(product);
 		await this.save(kMarketStoreProducts, this.marketProducts);
 	}
