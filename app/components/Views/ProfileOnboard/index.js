@@ -20,25 +20,31 @@ import Toast from 'react-native-toast-message';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TextField from '../../UI/TextField';
+import validator from 'validator';
+import { showError } from '../../../util/notify';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
 
 	avatar = '';
-	firstname = '';
-	lastname = '';
+	name = '';
+	surname = '';
+	email = '';
+	phone = '';
 
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			avatar: observable,
-			firstname: observable,
-			lastname: observable
+			name: observable,
+			surname: observable,
+			email: observable,
+			phone: observable
 		});
 	}
 
 	onPickImage() {
-		ImagePicker.openCamera({
+		ImagePicker.openPicker({
 			width: 300,
 			height: 300,
 			cropping: true
@@ -56,18 +62,47 @@ class ProfileOnboard extends PureComponent {
 		});
 	}
 
-	async onNext() {
-		const firstname = this.firstname.trim();
-		const lastname = this.lastname.trim();
+	isDataValid() {
+		const name = this.name.trim();
+		const surname = this.surname.trim();
+		const email = this.email.trim();
+		const phone = this.phone.trim();
 
 		if (!this.avatar) {
-			this.showNotice(strings('profile.missing_photo'));
+			showError(strings('profile.missing_photo'));
 			return;
 		}
-		if (!firstname || !lastname) {
-			this.showNotice(strings('profile.missing_name'));
+		if (!name || !surname) {
+			showError(strings('profile.missing_name'));
 			return;
 		}
+		if (!email) {
+			showError(strings('profile.missing_email'));
+			return;
+		}
+		if (!validator.isEmail(email)) {
+			showError(strings('profile.invalid_email'));
+			return;
+		}
+		if (!phone) {
+			showError(strings('profile.missing_phone'));
+			return;
+		}
+		if (!/^\+?[\d\s]{8,15}$/.test(phone)) {
+			showError(strings('profile.invalid_phone'));
+			return;
+		}
+		return true;
+	}
+
+	async onNext() {
+		const name = this.name.trim();
+		const surname = this.surname.trim();
+		const email = this.email.trim();
+		const phone = this.phone.trim();
+
+		const isValid = this.isDataValid();
+		if (!isValid) return;
 
 		const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
 		if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
@@ -75,8 +110,10 @@ class ProfileOnboard extends PureComponent {
 
 		preferences.setOnboardProfile({
 			avatar: path,
-			firstname,
-			lastname
+			name,
+			surname,
+			email,
+			phone
 		});
 
 		this.props.navigation.navigate('ChoosePassword', {
@@ -104,28 +141,30 @@ class ProfileOnboard extends PureComponent {
 
 							<View style={styles.form}>
 								<TextField
-									value={this.firstname}
+									value={this.name}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.name = text)}
 								/>
 								<TextField
-									value={this.lastname}
+									value={this.surname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.lastname = text)}
+									onChangeText={text => (this.surname = text)}
 								/>
 								<TextField
-									value={this.lastname}
+									value={this.email}
 									label={strings('login.email')}
 									placeholder={strings('login.email')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.email = text)}
+									keyboardType="email-address"
 								/>
 								<TextField
-									value={this.lastname}
+									value={this.phone}
 									label={strings('profile.phone')}
 									placeholder={strings('profile.phone')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.phone = text)}
+									keyboardType="number-pad"
 								/>
 							</View>
 
