@@ -44,7 +44,7 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	onPickImage() {
-		ImagePicker.openPicker({
+		ImagePicker.openCamera({
 			width: 300,
 			height: 300,
 			cropping: true
