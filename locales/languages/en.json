@@ -1897,8 +1897,8 @@
 		"coordinate": "Coordinate",
 		"paid": "Paid",
 		"remain": "Remain",
-		"pay_rest": "Pay the rest"
-
+		"pay_rest": "Pay the rest",
+		"no_description": "No description"
 	},
 	"order": {
 		"pending": "Pending",
