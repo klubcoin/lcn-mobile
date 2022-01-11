@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
 		paddingVertical: 10
 	},
 	wrapper: {
-		marginHorizontal: 20
+		marginHorizontal: 20,
+		marginTop: 20
 	},
 	privacyPolicy: {
 		...fontStyles.normal,
@@ -263,7 +264,7 @@ class OptinMetrics extends PureComponent {
 							</StyledButton>
 							<StyledButton
 								containerStyle={[styles.button, styles.confirm]}
-								type={'confirm'}
+								type={'normal'}
 								onPress={this.onConfirm}
 								testID={'agree-button'}
 							>

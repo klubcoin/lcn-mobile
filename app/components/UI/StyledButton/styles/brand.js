@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
 	cancel: {
 		backgroundColor: colors.white,
 		borderWidth: 1,
-		borderColor: colors.grey400
+		borderColor: colors.grey400,
+		borderRadius: 15
 	},
 	cancelText: {
 		color: colors.grey400

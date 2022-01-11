@@ -484,21 +484,26 @@ export function getTransparentBackOnboardingNavbarOptions() {
 export function getOptinMetricsNavbarOptions() {
 	return {
 		headerStyle: {
-			shadowColor: colors.transparent,
+			shadowColor: colors.white,
 			elevation: 0,
-			backgroundColor: colors.grey,
+			backgroundColor: colors.white,
 			borderBottomWidth: 0,
-			height: 100,
+			height: 50,
 			marginTop: 20
 		},
 		headerLeft: (
 			<View style={styles.optinHeaderLeft}>
 				<View style={styles.metamaskNameWrapper}>
-					<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
+					<Image
+						source={klubcoin_text}
+						style={styles.metamaskName}
+						resizeMethod={'auto'}
+						resizeMode={'contain'}
+					/>
 				</View>
 				<View style={styles.metamaskNameWrapper}>
 					{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-					<Text style={styles.header}>{displayName.toUpperCase()}</Text>
+					{/* <Text style={styles.header}>{displayName.toUpperCase()}</Text> */}
 				</View>
 			</View>
 		)
