@@ -178,9 +178,10 @@ export default class StoreService {
 
 		for (let k in peers) {
 			const peer = peers[k];
-			if (peer.uploaded == 0) continue;
+			// if (peer.uploaded == 0) continue;
 
 			const address = addHexPrefix(peer.peer_id);
+			if (address == this.from) return;
 			this.storeMessaging.send(data, address?.toLowerCase());
 		}
 	}
