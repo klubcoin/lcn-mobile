@@ -14,6 +14,8 @@ export default function SearchBar({ value, onChange, hideIcon, placeholder, cont
 				placeholder={placeholder}
 				placeholderTextColor={colors.grey400}
 				onChangeText={onChange}
+				testID={'search-bar-input'}
+				accessibilityLabel={'search-bar-input'}
 			/>
 		</View>
 	);
