@@ -295,7 +295,7 @@ export class ManualBackupStep1 extends PureComponent {
 
 	tryUnlock = (hash) => {
 		const { password } = this.state;
-		this.tryUnlockWithPassword(hash || password);
+		this.tryUnlockWithPassword(password || hash);
 	};
 
 	onKeycloakResult = async (error) => {
