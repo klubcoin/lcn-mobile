@@ -68,10 +68,8 @@ const brandStyles = StyleSheet.create({
 		paddingBottom: 0
 	},
 	buttons: {
-		borderBottomWidth: 0
-	},
-	menu: {
-		marginTop: 12
+		borderBottomWidth: 0,
+		paddingBottom: 5
 	},
 	menuSection: {
 		borderTopWidth: 0,

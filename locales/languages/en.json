@@ -291,8 +291,8 @@
 		"settings": "Settings",
 		"settings_warning": "Wallet unprotected",
 		"settings_warning_short": "Unprotected",
-		"help": "Get Help",
-		"logout": "Log Out",
+		"help": "Help",
+		"logout": "Logout",
 		"logout_title": "Do you really want to log out?",
 		"logout_ok": "YES",
 		"logout_cancel": "NO",
@@ -302,7 +302,12 @@
 		"wallet_account_name": "Wallet account name",
 		"save": "Save",
 		"cancel": "Cancel",
-		"partners": "Partners"
+		"partners": "Partners",
+		"manage_coins": "Manage my Coins",
+		"collect": "Collect",
+		"receive_tips": "Receive tips",
+		"chat": "Chat",
+		"faq": "FAQ"
 	},
 	"contacts": {
 		"search": "Search",

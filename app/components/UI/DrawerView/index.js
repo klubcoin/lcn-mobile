@@ -560,6 +560,11 @@ class DrawerView extends PureComponent {
 				// 	routeNames: ['BrowserView', 'AddBookmark']
 				// },
 				{
+					name: strings('drawer.manage_coins'),
+					icon: this.getIcon('share'),
+					action: this.onShare
+				},
+				{
 					name: strings('drawer.wallet'),
 					icon: this.getImageIcon('wallet'),
 					selectedIcon: this.getSelectedImageIcon('wallet'),
@@ -612,9 +617,24 @@ class DrawerView extends PureComponent {
 					action: this.viewInEtherscan
 				},
 				{
+					name: strings('drawer.collect'),
+					icon: this.getIcon('share'),
+					action: this.onShare
+				},
+				{
+					name: strings('drawer.receive_tips'),
+					icon: this.getIcon('share'),
+					action: this.onShare
+				},
+				{
 					name: strings('drawer.partners'),
 					icon: this.getImageIcon('partners'),
 					action: this.gotoPartners
+				},
+				{
+					name: strings('drawer.chat'),
+					icon: this.getIonIcon('chatbox'),
+					action: this.onShare
 				}
 			],
 			[
@@ -630,10 +650,15 @@ class DrawerView extends PureComponent {
 					action: this.showHelp
 				},
 				{
-					name: strings('drawer.request_feature'),
-					icon: this.getFontAwesome5Icon('comment-alt'),
-					action: this.submitFeedback
+					name: strings('drawer.faq'),
+					icon: this.getAntDesignIcon('question'),
+					action: this.showHelp
 				},
+				// {
+				// 	name: strings('drawer.request_feature'),
+				// 	icon: this.getFontAwesome5Icon('comment-alt'),
+				// 	action: this.submitFeedback
+				// },
 				{
 					name: strings('drawer.logout'),
 					icon: this.getIcon('sign-out'),
