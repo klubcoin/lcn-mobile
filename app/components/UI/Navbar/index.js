@@ -81,26 +81,28 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
  * @returns {Object} - Corresponding navbar options containing title and headerTitleStyle
  */
 export function getNavigationOptionsTitle(title, navigation) {
-	function navigationPop() {
-		navigation.pop();
-	}
+	const navigationPop = () => navigation.pop();
+
 	return {
-		title,
-		headerTitleStyle: {
-			fontSize: 20,
-			color: colors.black,
-			...fontStyles.normal
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			borderBottomWidth: 0
 		},
-		headerTintColor: colors.black,
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Text style={styles.header}>{title}</Text>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		// headerLeft: headerLeftHide
 		headerLeft: (
-			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'title-back-arrow-button'}>
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
-		),
-		headerStyle: {
-			backgroundColor: colors.white,
-			marginTop: 20
-		}
+		)
 	};
 }
 

@@ -8,11 +8,11 @@ import { strings } from '../../../../locales/i18n';
 
 const assetPath = '../../../images';
 const logos = {
-	LiquiChain: require(`${assetPath}/logo_liquichain.png`),
-	DJenerates: require(`${assetPath}/logo_djenerates.png`),
+	AmnesiaIbiza: require(`${assetPath}/logo_amnesia_Ibiza.png`),
 	ClubbingTV: require(`${assetPath}/logo_clubbingtv.png`),
-	Atlanticus: require(`${assetPath}/logo_atlanticus.png`),
-	AmnesiaIbiza: require(`${assetPath}/logo_amnesia_Ibiza.png`)
+	DJenerates: require(`${assetPath}/logo_djenerates.png`),
+	LiquiChain: require(`${assetPath}/logo_liquichain.png`),
+	Atlanticus: require(`${assetPath}/logo_atlanticus.png`)
 };
 
 class Partners extends PureComponent {
