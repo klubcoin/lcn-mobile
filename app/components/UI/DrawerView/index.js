@@ -389,6 +389,12 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_PARTNERS);
 	};
 
+	gotoManageCoin = () => {
+		this.props.navigation.navigate('ManageCoinFlow');
+		this.hideDrawer();
+		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_MANAGE_COIN);
+	};
+
 	showSettings = async () => {
 		this.props.navigation.navigate('SettingsView');
 		this.hideDrawer();
@@ -560,16 +566,17 @@ class DrawerView extends PureComponent {
 				// 	routeNames: ['BrowserView', 'AddBookmark']
 				// },
 				{
-					name: strings('drawer.manage_coins'),
-					icon: this.getIcon('share'),
-					action: this.onShare
-				},
-				{
 					name: strings('drawer.wallet'),
 					icon: this.getImageIcon('wallet'),
 					selectedIcon: this.getSelectedImageIcon('wallet'),
 					action: this.showWallet,
 					routeNames: ['WalletView', 'Asset', 'AddAsset', 'Collectible']
+				},
+				{
+					name: strings('drawer.manage_coins'),
+					icon: this.getIcon('share'),
+					action: this.gotoManageCoin,
+					routeNames: ['ManageCoin']
 				},
 				// {
 				// 	name: strings('drawer.profile'),
@@ -772,7 +779,6 @@ class DrawerView extends PureComponent {
 		let account, balance, conversion;
 		if (accounts && accounts[selectedAddress]) {
 			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
-			console.log('account123123123', identities);
 			balance =
 				typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00';
 			conversion =

@@ -1780,5 +1780,11 @@
 		"additional_info": "Additional information",
 		"provided_by": "Provided by",
 		"developer": "Developer"
+	},
+	"manage_coin": {
+		"scan_qr_to_collect": "Scan QR to collect",
+		"scan_qr_to_pay": "Scan QR to pay",
+		"scan_qr_to_tip": "Scan QR to tip",
+		"send_to_friend": "Send to a friend"
 	}
 }

@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
 	},
 	normal: {
 		backgroundColor: colors.blue,
-		borderRadius: 15,
+		borderRadius: 10,
 		paddingVertical: 12
 	},
 	normalPadding: {
 		backgroundColor: colors.blue,
-		borderRadius: 15,
+		borderRadius: 10,
 		padding: 20
 	},
 	normalText: {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.white,
 		borderWidth: 1,
 		borderColor: colors.grey400,
-		borderRadius: 15
+		borderRadius: 10
 	},
 	cancelText: {
 		color: colors.grey400
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
 	},
 	warning: {
 		backgroundColor: colors.red,
-		borderRadius: 15
+		borderRadius: 10
 	},
 	info: {
 		backgroundColor: colors.white,
@@ -147,26 +147,26 @@ const styles = StyleSheet.create({
 	view: {
 		borderWidth: 1,
 		borderColor: colors.white,
-		borderRadius: 15
+		borderRadius: 10
 	},
 	pink: {
 		backgroundColor: colors.pink,
-		borderRadius: 15
+		borderRadius: 10
 	},
 	pinkText: {
 		color: colors.black
 	},
 	pinkPadding: {
 		backgroundColor: colors.pink,
-		borderRadius: 15,
+		borderRadius: 10,
 		paddingVertical: 20
 	},
-	pinkTextPadding: {
+	pinkPaddingText: {
 		color: colors.black
 	},
 	white: {
 		backgroundColor: colors.white,
-		borderRadius: 15
+		borderRadius: 10
 	},
 	whiteText: {
 		...fontStyles.bold,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
 	},
 	whitePadding: {
 		backgroundColor: colors.white,
-		borderRadius: 15,
+		borderRadius: 10,
 		paddingVertical: 20
 	},
 	whitePaddingText: {

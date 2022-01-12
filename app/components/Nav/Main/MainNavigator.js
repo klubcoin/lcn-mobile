@@ -75,6 +75,7 @@ import MarketCategory from '../../Views/MarketPlace/Category';
 import MarketApp from '../../Views/MarketPlace/Application';
 import Partners from '../../Views/Partners';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';
+import ManageCoin from '../../Views/ManageCoin';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -423,6 +424,11 @@ export default createStackNavigator(
 					}
 				}
 			)
+		},
+		ManageCoinFlow: {
+			screen: createStackNavigator({
+				ManageCoin: ManageCoin
+			})
 		}
 	},
 	{

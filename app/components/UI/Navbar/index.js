@@ -463,7 +463,11 @@ export function getTransparentOnboardingNavbarOptions() {
  *
  * @returns {Object} - Corresponding navbar options containing headerTitle and a back button
  */
-export function getTransparentBackOnboardingNavbarOptions() {
+export function getTransparentBackOnboardingNavbarOptions(navigation) {
+	function navigationPop() {
+		navigation.pop();
+	}
+
 	return {
 		headerTransparent: true,
 		headerTitle: (
@@ -473,7 +477,12 @@ export function getTransparentBackOnboardingNavbarOptions() {
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
-		headerRight: <View />
+		headerRight: <View />,
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={[styles.backIcon, { color: colors.white }]} />
+			</TouchableOpacity>
+		)
 	};
 }
 

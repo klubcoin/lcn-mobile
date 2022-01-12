@@ -40,6 +40,9 @@ const brandStyles = StyleSheet.create({
 	buttonText: {
 		color: colors.black
 	},
+	menu: {
+		marginTop: 10
+	},
 	menuItem: {
 		alignItems: 'center'
 	},
