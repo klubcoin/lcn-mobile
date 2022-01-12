@@ -9,107 +9,8 @@ import Networks, { getAllNetworks, isSafeChainId } from '../../../util/networks'
 import { connect } from 'react-redux';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { MAINNET, RPC } from '../../../constants/network';
-
-const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.grey,
-		borderRadius: 10,
-		minHeight: 450
-	},
-	titleWrapper: {
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100
-	},
-	title: {
-		textAlign: 'center',
-		fontSize: 18,
-		marginVertical: 12,
-		marginHorizontal: 20,
-		color: colors.fontPrimary,
-		...fontStyles.bold
-	},
-	otherNetworksHeader: {
-		marginTop: 0,
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100
-	},
-	otherNetworksText: {
-		textAlign: 'left',
-		fontSize: 13,
-		marginVertical: 12,
-		marginHorizontal: 20,
-		color: colors.fontPrimary,
-		...fontStyles.bold
-	},
-	networksWrapper: {
-		flex: 1
-	},
-	network: {
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100,
-		flexDirection: 'row',
-		paddingHorizontal: 20,
-		paddingVertical: 20,
-		paddingLeft: 45
-	},
-	mainnet: {
-		borderBottomWidth: 0,
-		flexDirection: 'column'
-	},
-	networkInfo: {
-		marginLeft: 15,
-		flex: 1
-	},
-	networkLabel: {
-		fontSize: 16,
-		color: colors.fontPrimary,
-		...fontStyles.normal
-	},
-	footer: {
-		borderTopWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100,
-		height: 60,
-		justifyContent: 'center',
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	footerButton: {
-		flex: 1,
-		alignContent: 'center',
-		alignItems: 'center',
-		justifyContent: 'center',
-		height: 60
-	},
-	closeButton: {
-		fontSize: 16,
-		color: colors.blue,
-		...fontStyles.normal
-	},
-	networkIcon: {
-		width: 15,
-		height: 15,
-		borderRadius: 100,
-		marginTop: 3
-	},
-	networkWrapper: {
-		flex: 0,
-		flexDirection: 'row'
-	},
-	selected: {
-		position: 'absolute',
-		marginLeft: 20,
-		marginTop: 20
-	},
-	mainnetSelected: {
-		marginLeft: -30,
-		marginTop: 3
-	},
-	otherNetworkIcon: {
-		backgroundColor: colors.transparent,
-		borderColor: colors.grey100,
-		borderWidth: 2
-	}
-});
+import styles from './styles/index';
+import StyledButton from '../StyledButton';
 
 /**
  * View that contains the list of all the available networks
@@ -139,6 +40,18 @@ export class NetworkList extends PureComponent {
 	};
 
 	getOtherNetworks = () => getAllNetworks().slice(1);
+
+	hexToRGB = (hex, alpha) => {
+		var r = parseInt(hex.slice(1, 3), 16),
+			g = parseInt(hex.slice(3, 5), 16),
+			b = parseInt(hex.slice(5, 7), 16);
+
+		if (alpha) {
+			return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+		} else {
+			return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+		}
+	};
 
 	onNetworkChange = type => {
 		requestAnimationFrame(() => {
@@ -202,15 +115,15 @@ export class NetworkList extends PureComponent {
 
 	networkElement = (selected, onPress, name, color, i, network) => (
 		<TouchableOpacity
-			style={styles.network}
+			style={[styles.network, color ? { backgroundColor: this.hexToRGB(color, 0.2) } : styles.otherNetworkIcon]}
 			key={`network-${i}`}
 			onPress={() => onPress(network)} // eslint-disable-line
 		>
-			<View style={styles.selected}>{selected}</View>
 			<View style={[styles.networkIcon, color ? { backgroundColor: color } : styles.otherNetworkIcon]} />
 			<View style={styles.networkInfo}>
 				<Text style={styles.networkLabel}>{name}</Text>
 			</View>
+			<View style={styles.selected}>{selected}</View>
 		</TouchableOpacity>
 	);
 
@@ -218,8 +131,7 @@ export class NetworkList extends PureComponent {
 		const { provider } = this.props;
 		return this.getOtherNetworks().map((network, i) => {
 			const { color, name } = Networks[network];
-			const selected =
-				provider.type === network ? <Icon name="check" size={20} color={colors.fontSecondary} /> : null;
+			const selected = provider.type === network ? <Icon name="check" size={20} color={color} /> : null;
 			return this.networkElement(selected, this.onNetworkChange, name, color, i, network);
 		});
 	};
@@ -238,24 +150,23 @@ export class NetworkList extends PureComponent {
 
 	renderMainnet() {
 		const { provider } = this.props;
-		const isMainnet =
-			provider.type === MAINNET ? <Icon name="check" size={15} color={colors.fontSecondary} /> : null;
 		const { color: mainnetColor, name: mainnetName } = Networks.mainnet;
+		const isMainnet = provider.type === MAINNET ? <Icon name="check" size={15} color={mainnetColor} /> : null;
 
 		return (
 			<View style={styles.mainnetHeader}>
 				<TouchableOpacity
-					style={[styles.network, styles.mainnet]}
+					style={[styles.network, styles.mainnet, { backgroundColor: this.hexToRGB(mainnetColor, 0.2) }]}
 					key={`network-mainnet`}
 					onPress={() => this.onNetworkChange(MAINNET)} // eslint-disable-line
 					testID={'network-name'}
 				>
 					<View style={styles.networkWrapper}>
-						<View style={[styles.selected, styles.mainnetSelected]}>{isMainnet}</View>
 						<View style={[styles.networkIcon, { backgroundColor: mainnetColor }]} />
 						<View style={styles.networkInfo}>
 							<Text style={styles.networkLabel}>{mainnetName}</Text>
 						</View>
+						<View style={[styles.selected, styles.mainnetSelected]}>{isMainnet}</View>
 					</View>
 				</TouchableOpacity>
 			</View>
@@ -271,21 +182,22 @@ export class NetworkList extends PureComponent {
 			</View>
 			<ScrollView style={styles.networksWrapper} testID={'other-networks-scroll'}>
 				{this.renderMainnet()}
-				{/*
-						<View style={styles.otherNetworksHeader}>
-							<Text style={styles.otherNetworksText} testID={'other-network-name'}>
-								{strings('networks.other_networks')}
-							</Text>
-						</View>
-						{this.renderOtherNetworks()}
-						{this.renderRpcNetworks()}	
-					
-					*/}
+
+				<View style={styles.otherNetworksHeader}>
+					<Text style={styles.otherNetworksText} testID={'other-network-name'}>
+						{strings('networks.other_networks')}
+					</Text>
+				</View>
+				{this.renderOtherNetworks()}
+				{this.renderRpcNetworks()}
 			</ScrollView>
 			<View style={styles.footer}>
-				<TouchableOpacity style={styles.footerButton} onPress={this.closeModal}>
+				<StyledButton containerStyle={styles.footerButton} type={'normal'} onPress={this.closeModal}>
+					<Text style={styles.closeButton}>{strings('networks.close').toUpperCase()}</Text>
+				</StyledButton>
+				{/* <TouchableOpacity style={styles.footerButton} onPress={this.closeModal}>
 					<Text style={styles.closeButton}>{strings('networks.close')}</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 		</SafeAreaView>
 	);
