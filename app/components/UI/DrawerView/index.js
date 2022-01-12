@@ -488,22 +488,22 @@ class DrawerView extends PureComponent {
 
 	getIcon(name, size, color = null) {
 		return (
-			<View style={{ width: 24, height: 24, alignItems: 'center' }}>
-				<Icon name={name} size={size || 24} color={color ? color : colors.blue} />
+			<View style={{ width: 20, height: 20, alignItems: 'center' }}>
+				<Icon name={name} size={size || 20} color={color ? color : colors.white} />
 			</View>
 		);
 	}
 
 	getFeatherIcon(name, size) {
-		return <FeatherIcon name={name} size={size || 24} color={colors.blue} />;
+		return <FeatherIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getAntDesignIcon(name, size) {
-		return <AntDesignIcon name={name} size={size || 24} color={colors.blue} />;
+		return <AntDesignIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getMaterialIcon(name, size) {
-		return <MaterialIcon name={name} size={size || 24} color={colors.blue} />;
+		return <MaterialIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getImageIcon(name) {
@@ -511,27 +511,27 @@ class DrawerView extends PureComponent {
 	}
 
 	getSelectedIcon(name, size) {
-		return <Icon name={name} size={size || 24} color={colors.blue} />;
+		return <Icon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getSelectedFeatherIcon(name, size) {
-		return <FeatherIcon name={name} size={size || 24} color={colors.blue} />;
+		return <FeatherIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getSelectedMaterialIcon(name, size) {
-		return <MaterialIcon name={name} size={size || 24} color={colors.blue} />;
+		return <MaterialIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getFontAwesomeIcon(name, size) {
-		return <FontAwesomeIcon name={name} size={size || 24} color={colors.blue} />;
+		return <FontAwesomeIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getFontAwesome5Icon(name, size) {
-		return <FontAwesome5Icon name={name} size={size || 24} color={colors.blue} />;
+		return <FontAwesome5Icon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getIonIcon(name, size) {
-		return <IonIcon name={name} size={size || 24} color={colors.blue} />;
+		return <IonIcon name={name} size={size || 20} color={colors.white} />;
 	}
 
 	getSelectedImageIcon(name) {
@@ -747,6 +747,7 @@ class DrawerView extends PureComponent {
 		let account, balance, conversion;
 		if (accounts && accounts[selectedAddress]) {
 			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+			console.log('account123123123', identities);
 			balance =
 				typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00';
 			conversion =
@@ -758,10 +759,10 @@ class DrawerView extends PureComponent {
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
 				<ScrollView>
-					<View style={styles.header}>
+					{/* <View style={styles.header}>
 						<View style={styles.metamaskLogo}>
-							{/*<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
-														<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
+							<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
+							<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />
 							<View
 								style={{
 									marginTop: 10,
@@ -777,7 +778,7 @@ class DrawerView extends PureComponent {
 									}}
 									resizeMode={'contain'}
 								/>
-								{/* <Text
+								<Text
 									style={{
 										fontSize: 20,
 										color: '#370e75',
@@ -785,82 +786,93 @@ class DrawerView extends PureComponent {
 									}}
 								>
 									LIQUICHAIN
-								</Text> */}
+								</Text>
 							</View>
 						</View>
-					</View>
+					</View> */}
 					<View style={styles.account}>
 						<View style={styles.accountBgOverlay}>
-							<TouchableOpacity
-								style={styles.identiconWrapper}
-								onPress={this.toggleEditWalletName}
-								testID={'navbar-account-identicon'}
-							>
-								<View style={styles.identiconBorder}>
-									{!!avatar ? (
-										<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
-									) : (
-										<Identicon diameter={48} address={selectedAddress} />
-									)}
-								</View>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.accountInfo}
-								onPress={this.toggleAccountsModal}
-								testID={'navbar-account-button'}
-							>
-								<View style={styles.accountNameWrapper}>
-									{account && (
-										<Text style={styles.accountName} numberOfLines={1}>
-											{account.name}
-										</Text>
-									)}
-									<Icon name="caret-down" size={24} style={styles.caretDown} />
-								</View>
-								{isMainNet(chainId) && (
-									<Text style={styles.accountBalance}>
-										{Helper.convertToEur(balance, conversion)}
-									</Text>
-								)}
-
-								{account && (
-									<EthereumAddress
-										address={account.address}
-										style={styles.accountAddress}
-										type={'short'}
-									/>
-								)}
-								{this.isCurrentAccountImported() && (
-									<View style={styles.importedWrapper}>
-										<Text numberOfLines={1} style={styles.importedText}>
-											{strings('accounts.imported')}
-										</Text>
+							<View style={styles.accountBalanceWrapper}>
+								<TouchableOpacity
+									style={styles.identiconWrapper}
+									onPress={this.toggleEditWalletName}
+									testID={'navbar-account-identicon'}
+								>
+									<View style={styles.identiconBorder}>
+										{!!avatar ? (
+											<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+										) : (
+											<Identicon diameter={48} address={selectedAddress} />
+										)}
 									</View>
-								)}
-							</TouchableOpacity>
+									<Icon
+										name="gear"
+										size={20}
+										style={{ position: 'absolute', right: -15 }}
+										color={'white'}
+									/>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={styles.accountInfo}
+									onPress={this.toggleAccountsModal}
+									testID={'navbar-account-button'}
+								>
+									<View style={styles.accountNameWrapper}>
+										{account && (
+											<Text style={styles.accountName} numberOfLines={1}>
+												{account.name}
+											</Text>
+										)}
+										{/* <Icon name="caret-down" size={24} style={styles.caretDown} /> */}
+										<Text style={styles.balance}>$0</Text>
+									</View>
+									{isMainNet(chainId) && (
+										<Text style={styles.accountBalance}>
+											{Helper.convertToEur(balance, conversion)}
+										</Text>
+									)}
+
+									{this.isCurrentAccountImported() && (
+										<View style={styles.importedWrapper}>
+											<Text numberOfLines={1} style={styles.importedText}>
+												{strings('accounts.imported')}
+											</Text>
+										</View>
+									)}
+								</TouchableOpacity>
+							</View>
+							{account && (
+								<EthereumAddress
+									address={account.address}
+									style={styles.accountAddress}
+									type={'short'}
+								/>
+							)}
 						</View>
 					</View>
 					<View style={styles.buttons}>
 						<StyledButton
-							type={'rounded-normal'}
+							type={'pink'}
 							onPress={this.onSend}
 							containerStyle={[styles.button, styles.leftButton]}
 							testID={'drawer-send-button'}
 						>
 							<View style={styles.buttonContent}>
 								{/* {this.getIcon('paper-plane', 16, Colors.primary)} */}
-								<Text style={styles.buttonText}>{strings('drawer.send_button')}</Text>
+								<Text style={styles.buttonText}>{strings('drawer.send_button').toUpperCase()}</Text>
 							</View>
 						</StyledButton>
 						<StyledButton
-							type={'rounded-normal'}
+							type={'normal'}
 							onPress={this.onReceive}
 							containerStyle={[styles.button, styles.rightButton]}
 							testID={'drawer-receive-button'}
 						>
 							<View style={styles.buttonContent}>
 								{/* {this.getIcon('dollar', 16, Colors.primary)} */}
-								<Text style={styles.buttonText}>{strings('drawer.receive_button')}</Text>
+								<Text style={styles.buttonText}>
+									{strings('asset_overview.buy_button').toUpperCase()}
+								</Text>
 							</View>
 						</StyledButton>
 					</View>
@@ -897,11 +909,13 @@ class DrawerView extends PureComponent {
 													}
 													onPress={() => item.action()} // eslint-disable-line
 												>
-													{item.icon
-														? item.routeNames && item.routeNames.includes(currentRoute)
-															? item.selectedIcon
-															: item.icon
-														: null}
+													{item.icon ? (
+														item.routeNames && item.routeNames.includes(currentRoute) ? (
+															<View style={styles.iconWrapper}>{item.selectedIcon}</View>
+														) : (
+															<View style={styles.iconWrapper}>{item.icon}</View>
+														)
+													) : null}
 													{item.key == 'notifications' && unreadNotif && (
 														<Text style={styles.unread}>*</Text>
 													)}

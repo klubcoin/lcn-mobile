@@ -197,6 +197,10 @@ function getStyles(type) {
 			fontStyle = styles.pinkText;
 			containerStyle = styles.pink;
 			break;
+		case 'pink-padding':
+			fontStyle = styles.pinkTextPadding;
+			containerStyle = styles.pinkPadding;
+			break;
 		case 'white':
 			fontStyle = styles.whiteText;
 			containerStyle = styles.white;

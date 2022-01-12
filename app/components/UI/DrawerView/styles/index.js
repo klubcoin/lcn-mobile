@@ -226,7 +226,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		...fontStyles.normal
 	},
-	protectWalletButtonWrapper: { marginVertical: 8 }
+	protectWalletButtonWrapper: { marginVertical: 8 },
+	accountBalanceWrapper: {},
+	balance: {},
+	iconWrapper: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

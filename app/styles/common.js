@@ -66,7 +66,7 @@ export const colors = {
 	pdfColor: '#b30d02',
 	pptColor: '#d04523',
 	mediaIcColor: '#28afea',
-	overlayColor: '#21193d',
+	overlayColor: 'rgba(33, 25, 61, 0.6)',
 	pink: '#eb00f7',
 	purple: '#21193d',
 	purple100: '#563fab',

@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
 	},
 	normal: {
 		backgroundColor: colors.blue,
-		borderRadius: 15
+		borderRadius: 15,
+		paddingVertical: 12
 	},
 	normalPadding: {
 		backgroundColor: colors.blue,
@@ -150,10 +151,17 @@ const styles = StyleSheet.create({
 	},
 	pink: {
 		backgroundColor: colors.pink,
+		borderRadius: 15
+	},
+	pinkText: {
+		color: colors.black
+	},
+	pinkPadding: {
+		backgroundColor: colors.pink,
 		borderRadius: 15,
 		paddingVertical: 20
 	},
-	pinkText: {
+	pinkTextPadding: {
 		color: colors.black
 	},
 	white: {

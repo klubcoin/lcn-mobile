@@ -74,14 +74,14 @@ export default class ConfirmInput extends PureComponent {
 						/>
 						<View style={styles.actionRow}>
 							<StyledButton
-								type={'normal'}
+								type={'cancel'}
 								onPress={this.onCancel.bind(this)}
 								containerStyle={styles.actionButton}
 							>
 								{cancelLabel || strings('action_view.cancel')}
 							</StyledButton>
 							<StyledButton
-								type={'confirm'}
+								type={'normal'}
 								onPress={this.onConfirm.bind(this)}
 								containerStyle={styles.actionButton}
 							>
