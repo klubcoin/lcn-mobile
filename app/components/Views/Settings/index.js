@@ -9,12 +9,13 @@ import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { connect } from 'react-redux';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	wrapper: {
 		backgroundColor: colors.transparent,
 		flex: 1,
-		paddingHorizontal: 9,
+		paddingHorizontal: 20,
 		zIndex: 99999999999999
 	}
 });
@@ -94,23 +95,25 @@ class Settings extends PureComponent {
 						onPress={this.onPressAdvanced}
 						title={strings('app_settings.advanced_title')}
 					/>
-					{/*<SettingsDrawer
-					description={strings('app_settings.contacts_desc')}
-					onPress={this.onPressContacts}
-					title={strings('app_settings.contacts_title')}
-				/>
-				<SettingsDrawer
-					title={strings('app_settings.networks_title')}
-					description={strings('app_settings.networks_desc')}
-					onPress={this.onPressNetworks}
-				/>
-				<SettingsDrawer
-					title={strings('app_settings.experimental_title')}
-					description={strings('app_settings.experimental_desc')}
-					onPress={this.onPressExperimental}
-				/>
-				<SettingsDrawer title={strings('app_settings.info_title')} onPress={this.onPressInfo} />
-				*/}
+					{/* <SettingsDrawer
+						description={strings('app_settings.contacts_desc')}
+						onPress={this.onPressContacts}
+						title={strings('app_settings.contacts_title')}
+					/> */}
+					<SettingsDrawer
+						title={strings('app_settings.networks_title')}
+						description={strings('app_settings.networks_desc')}
+						onPress={this.onPressNetworks}
+					/>
+					{/* <SettingsDrawer
+						title={strings('app_settings.experimental_title')}
+						description={strings('app_settings.experimental_desc')}
+						onPress={this.onPressExperimental}
+					/> */}
+					<SettingsDrawer
+						title={strings('app_settings.info_title', { appName: displayName })}
+						onPress={this.onPressInfo}
+					/>
 				</ScrollView>
 			</OnboardingScreenWithBg>
 		);

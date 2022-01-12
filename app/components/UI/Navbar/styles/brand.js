@@ -7,7 +7,8 @@ const brandStyles = StyleSheet.create({
 	header: {
 		color: colors.black,
 		alignSelf: 'flex-start',
-		fontSize: RFValue(20)
+		textAlign: 'left',
+		fontSize: RFValue(18)
 	},
 	backIcon: {
 		color: colors.black

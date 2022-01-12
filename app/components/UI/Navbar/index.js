@@ -522,24 +522,20 @@ export function getClosableNavigationOptions(title, backButtonText, navigation) 
 		navigation.pop();
 	}
 	return {
-		title,
-		headerTitleStyle: {
-			fontSize: 20,
-			color: colors.fontPrimary,
-			...fontStyles.normal
-		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Text style={styles.header}>{title}</Text>
+			</View>
+		),
 		headerLeft: Device.isIos() ? (
-			<TouchableOpacity onPress={navigationPop} style={styles.closeButton} testID={'nav-ios-back'}>
-				<Text style={styles.closeButtonText}>{backButtonText}</Text>
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
 			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
-		),
-		headerStyle: {
-			backgroundColor: colors.grey
-		}
+		)
 	};
 }
 
