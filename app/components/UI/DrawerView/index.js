@@ -278,7 +278,8 @@ class DrawerView extends PureComponent {
 	};
 
 	toggleEditWalletName = () => {
-		this.setState({ editWalletNameVisible: !this.state.editWalletNameVisible });
+		this.props.navigation.navigate('EditProfile');
+		// this.setState({ editWalletNameVisible: !this.state.editWalletNameVisible });
 	};
 
 	saveWalletName = async name => {
