@@ -838,7 +838,10 @@ class DrawerView extends PureComponent {
 								>
 									<View style={styles.identiconBorder}>
 										{!!avatar ? (
-											<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+											<RemoteImage
+												source={{ uri: `file://${avatar}?v=${new Date().getTime()}` }}
+												style={styles.avatar}
+											/>
 										) : (
 											<Identicon diameter={48} address={selectedAddress} />
 										)}

@@ -265,7 +265,10 @@ class AccountOverview extends PureComponent {
 							testID={'wallet-account-identicon'}
 						>
 							{!!avatar ? (
-								<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />
+								<RemoteImage
+									source={{ uri: `file://${avatar}?v=${new Date().getTime()}` }}
+									style={styles.avatar}
+								/>
 							) : (
 								<Identicon address={address} diameter={38} noFadeIn={onboardingWizard} />
 							)}

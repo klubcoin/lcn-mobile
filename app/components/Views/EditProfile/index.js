@@ -25,6 +25,8 @@ import Api from '../../../services/api';
 import routes from '../../../common/routes';
 import Engine from '../../../core/Engine';
 import * as sha3JS from 'js-sha3';
+import { setOnboardProfile } from '../../../actions/user';
+import connect from 'react-redux/lib/connect/connect';
 
 class EditProfile extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
@@ -138,13 +140,16 @@ class EditProfile extends PureComponent {
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
 			const params = [name, selectedAddress, publicInfo, hash];
 
-			preferences.setOnboardProfile({
+			const profile = {
 				avatar: path,
 				firstname,
 				lastname,
 				email,
 				phone
-			});
+			};
+
+			preferences.setOnboardProfile(profile);
+			setOnboardProfile(profile);
 
 			//Update wallet info on server
 			Api.postRequest(

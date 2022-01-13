@@ -271,27 +271,21 @@ class Wallet extends PureComponent {
 
 		return (
 			<View style={styles.wrapper}>
-				<ImageBackground
-					source={require('../../../images/klubcoin_filigram_logo.png')}
-					style={styles.imgBackground}
-					resizeMode={'cover'}
+				{selectedAddress && account && (
+					<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
+				)}
+				<ScrollableTabView
+					renderTabBar={this.renderTabBar}
+					// eslint-disable-next-line react/jsx-no-bind
+					onChangeTab={obj => this.onChangeTab(obj)}
 				>
-					{selectedAddress && account && (
-						<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
-					)}
-					<ScrollableTabView
-						renderTabBar={this.renderTabBar}
-						// eslint-disable-next-line react/jsx-no-bind
-						onChangeTab={obj => this.onChangeTab(obj)}
-					>
-						<Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
-						<CollectibleContracts
-							navigation={navigation}
-							tabLabel={strings('wallet.collectibles')}
-							collectibles={collectibles}
-						/>
-					</ScrollableTabView>
-				</ImageBackground>
+					<Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
+					<CollectibleContracts
+						navigation={navigation}
+						tabLabel={strings('wallet.collectibles')}
+						collectibles={collectibles}
+					/>
+				</ScrollableTabView>
 			</View>
 		);
 	}
