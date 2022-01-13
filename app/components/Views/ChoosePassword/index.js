@@ -230,6 +230,7 @@ class ChoosePassword extends PureComponent {
 	};
 
 	onError = async error => {
+    console.log("🚀 ~ file: index.js ~ line 233 ~ ChoosePassword ~ error", error)
 		await this.recreateVault('');
 		// Set state in app as it was with no password
 		await SecureKeychain.resetGenericPassword();

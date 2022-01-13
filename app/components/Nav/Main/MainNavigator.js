@@ -72,7 +72,6 @@ import Message from '../../Views/Message';
 import Chat from '../../Views/Message/Chat';
 import MarketPlace from '../../Views/MarketPlace';
 import MarketCategory from '../../Views/MarketPlace/Category';
-import MarketApp from '../../Views/MarketPlace/Application';
 import Partners from '../../Views/Partners';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';
 import ManageCoin from '../../Views/ManageCoin';
@@ -159,10 +158,10 @@ export default createStackNavigator(
 						},
 						EditProfile: {
 							screen: EditProfile
-						}
+						},
 						ShippingInfo: {
 							screen: ShippingInfo
-						},
+						}
 					}),
 					VotingAppHome: createDrawerNavigator({
 						VotingApp: {

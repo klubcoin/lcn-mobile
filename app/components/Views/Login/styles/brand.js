@@ -38,12 +38,12 @@ const brandStyles = StyleSheet.create({
 		padding: 0
 	},
 	inputContainer: {
-		color: colors.black,
+		// color: colors.black,
 		paddingTop: 10,
 		paddingLeft: 15,
 		borderRadius: 15,
 		backgroundColor: colors.purple,
-		textAlign: 'center'
+		// textAlign: 'center'
 	},
 	cant: {
 		color: colors.white
@@ -57,7 +57,7 @@ const brandStyles = StyleSheet.create({
 	inputContainerStyle: {
 		backgroundColor: colors.transparent,
 		borderRadius: 15,
-		textAlign: 'center'
+		// textAlign: 'center'
 	},
 	deleteContainer: {
 		backgroundColor: colors.lightPink

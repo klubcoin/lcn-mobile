@@ -172,6 +172,7 @@ class Profile extends PureComponent {
 							/>
 						</View>
 					</View>
+				</View>
 			</OnboardingScreenWithBg>
 
 		);

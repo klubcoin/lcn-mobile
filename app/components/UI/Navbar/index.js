@@ -21,6 +21,7 @@ import { isGatewayUrl } from '../../../lib/ens-ipfs/resolver';
 import { getHost } from '../../../util/browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { displayName } from '../../../../app.json';
+import styles from './styles/index';
 
 const { HOMEPAGE_URL } = AppConstants;
 

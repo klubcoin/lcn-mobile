@@ -749,6 +749,7 @@ class Settings extends PureComponent {
 								/>
 							</View>
 						</View>
+					</View>
 					)}
 					<View style={styles.setting} testID={'reveal-private-key-section'}>
 						<Text style={styles.title}>
@@ -777,8 +778,8 @@ class Settings extends PureComponent {
 										total: privateKeyBackupStats.partCount
 									})}
 								</Text>
-							</View>
-						</ActionModal>
+							</View>)
+						}
 						<ActionModal
 							modalVisible={browserHistoryModalVisible}
 							confirmText={strings('app_settings.clear')}

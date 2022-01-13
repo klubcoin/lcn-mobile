@@ -63,6 +63,6 @@ LogBox.ignoreLogs([
 /**
  * Application entry point responsible for registering root component
  */
-AppRegistry.registerComponent(name, () => codePush(Root));
+AppRegistry.registerComponent(name, () => Root);
 
 TrackPlayer.registerPlaybackService(() => require('./service.js'));
