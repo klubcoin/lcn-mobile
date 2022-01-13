@@ -118,6 +118,8 @@ class TipperDetails extends PureComponent {
 
     render() {
         const { link, amount, symbol, qrModalVisible } = this.state;
+        const appLogo = require('../../../../images/logo.png')
+
         return (
             <SafeAreaView style={styles.wrapper} testID={'send-link-screen'}>
                 <ScrollView style={styles.contentWrapper} contentContainerStyle={styles.scrollViewContainer}>
@@ -195,7 +197,7 @@ class TipperDetails extends PureComponent {
                     <View style={styles.detailsWrapper}>
                         <View style={styles.qrCode} testID={'payment-request-qrcode'}>
                             <View style={styles.titleQr}>
-                                <Text style={styles.addressTitle}>{strings('payment_request.request_qr_code')}</Text>
+                                <Text style={styles.addressTitle}>{strings('tipper.tip_through_qr')}</Text>
 
                                 <TouchableOpacity
                                     style={styles.closeIcon}
@@ -206,7 +208,12 @@ class TipperDetails extends PureComponent {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.qrCodeWrapper}>
-                                <QRCode value={this.state.qrLink} size={Dimensions.get('window').width - 160} />
+                                <QRCode 
+                                    value={this.state.qrLink} 
+                                    size={Dimensions.get('window').width - 160} 
+                                    logo={appLogo} 
+                                    logoSize={50} 
+                                />
                             </View>
                         </View>
                     </View>

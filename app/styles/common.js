@@ -67,7 +67,7 @@ export const colors = Object.assign({}, ccolors, {
 	excelColor: '#237e4c',
 	pdfColor: '#b30d02',
 	pptColor: '#d04523',
-	mediaIcColor: '#28afea'
+	mediaIcColor: '#28afea',
 });
 
 /**

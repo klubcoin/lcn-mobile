@@ -1914,6 +1914,7 @@
 		"tip_link_desc2": "Put this link to your social media to get the tip",
 		"tip_for": "Tip {{amount}} {{symbol}} for {{account}}",
 		"tip": "Tip",
-		"current_balance": "Your current balance: {{balance}}"
+		"current_balance": "Your current balance: {{balance}}",
+		"tip_through_qr": "Get a tip through QR code"
 	}
 }
