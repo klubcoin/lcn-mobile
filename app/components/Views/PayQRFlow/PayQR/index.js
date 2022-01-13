@@ -154,7 +154,7 @@ class PayQR extends PureComponent {
 		const { PreferencesController } = Engine.context;
 		const fromAccountBalance = `${renderFromWei(accounts[accountAddress].balance)} ${getTicker(ticker)}`;
 		const ens = await doENSReverseLookup(accountAddress);
-		const fromAccountName = ens || name;
+		const fromAccountName = ens || name?.name || name;
 		PreferencesController.setSelectedAddress(accountAddress);
 		// If new account doesn't have the asset
 		this.props.setSelectedAsset(getEther(ticker));

@@ -263,7 +263,7 @@ export function calcTokenValueToSend(value, decimals) {
  * @returns {Object} - A BN instance
  */
 export function hexToBN(value) {
-	return util.hexToBN(value);
+	return util.hexToBN(value || 0);
 }
 
 /**

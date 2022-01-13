@@ -194,6 +194,7 @@ class Transactions extends PureComponent {
 		const { selectedAddress } = this.props;
 		const { NetworkController } = Engine.context;
 		const network = NetworkController.state.network;
+		const hashArr = [];
 
 		this.uses3rdPartyAPI = network == '7';
 		if (!selectedAddress || !this.uses3rdPartyAPI) return;
@@ -203,6 +204,9 @@ class Transactions extends PureComponent {
 				this.setState({ ready: true, loading: false });
 				if (success && response) {
 					this.transactions = response.result.map(e => {
+						if (!hashArr.includes(e.hash)) {
+							hashArr.push(e.hash);
+						}
 						const transaction = transactions.find(t => t.transactionHash == e.hash);
 						if (transaction) return transaction;
 
@@ -214,6 +218,8 @@ class Transactions extends PureComponent {
 				}
 			});
 		});
+		this.transactions = [...this.transactions, ...transactions.filter(e => !hashArr.includes(e.transactionHash))];
+		this.transactions.sort((a, b) => b.time - a.time);
 	}
 
 	componentWillUnmount() {
@@ -361,9 +367,11 @@ class Transactions extends PureComponent {
 		if (!this.state.ready || this.props.loading) {
 			return this.renderLoader();
 		}
+
 		if (!this.props.transactions.length) {
 			return this.renderEmpty();
 		}
+		
 		const { submittedTransactions, confirmedTransactions, header } = this.props;
 		const { cancelConfirmDisabled, speedUpConfirmDisabled } = this.state;
 		const transactions = this.uses3rdPartyAPI

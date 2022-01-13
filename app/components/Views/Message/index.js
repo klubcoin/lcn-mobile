@@ -10,11 +10,13 @@ import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
-import MessagingWebRTC from '../../../services/MessagingWebRTC';
+import MessagingWebRTC from './store/MessagingWebRTC';
 import { refWebRTC } from '../../../services/WebRTC';
-import { Chat } from '../../../services/Messages';
+import { Chat } from './store/Messages';
+import store from './store';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+
 
 const swipeOffset = Device.getDeviceWidth() / 4;
 
@@ -28,7 +30,7 @@ class Message extends Component {
 
 	componentDidMount() {
 		this.initConnection();
-		preferences.setActiveChatPeerId(null);
+		store.setActiveChatPeerId(null);
 		this.fetchHistoryMessages();
 	}
 
@@ -40,26 +42,28 @@ class Message extends Component {
 		this.messaging = new MessagingWebRTC(null, null, refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			if (data.action == Chat().action && data.message._id) {
-				preferences.setConversationIsRead(data.from, false);
+				store.setConversationIsRead(data.from, false);
 				this.fetchHistoryMessages();
 			}
 		});
 	};
 
 	fetchHistoryMessages = async () => {
-		const records = await preferences.getChatMessages();
+		const records = await store.getChatMessages();
 		const { addressBook, network } = this.props;
 		const addresses = addressBook[network] || {};
-		const users = Object.keys(records)
-			.map(e => addresses[e])
-			.filter(e => !!e);
+		const users = Object.keys(records).filter(address =>
+			Object.keys(addresses).find(a => a?.toLocaleLowerCase() == address?.toLowerCase()))
+			.map(address => ({ address, ...records[address] }));
 		const profiles = preferences.peerProfiles;
 
 		users.forEach(e => {
-			if (!records[e.address]) return;
-			e.lastMessage = records[e.address].messages[0];
-			e.isRead = records[e.address].isRead;
-			if (profiles[e.address]) Object.assign(e, profiles[e.address]);
+			const address = e.address;
+			if (!records[address]) return;
+			e.lastMessage = records[address].messages[0];
+			e.isRead = records[address].isRead;
+			const pAddr = Object.keys(profiles).find(a => a?.toLocaleLowerCase() == address?.toLowerCase())
+			if (pAddr) Object.assign(e, profiles[pAddr]);
 		});
 
 		this.setState(prevState => ({
@@ -76,15 +80,14 @@ class Message extends Component {
 		const { conversations, searchQuery } = this.state;
 		const query = searchQuery.toLocaleLowerCase();
 
-		return conversations
-			.filter(e => {
-				return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
-			})
-			.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+		return conversations.filter(e => {
+			return (e.name?.name || `${e.name}`).toLocaleLowerCase().includes(query) || e.address?.toLocaleLowerCase().includes(query);
+		}).sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
 	};
 
 	gotoChatRoom = recipient => {
-		preferences.setConversationIsRead(recipient.address, true);
+		if (!recipient) return;
+		store.setConversationIsRead(recipient.address, true);
 		this.props.navigation.navigate('Chat', { selectedContact: recipient });
 	};
 
@@ -100,7 +103,7 @@ class Message extends Component {
 			{
 				text: 'Yes',
 				onPress: async () => {
-					await preferences.deleteChatMessage(user.address);
+					await store.deleteChatMessage(user.address);
 					await this.fetchHistoryMessages();
 				}
 			},

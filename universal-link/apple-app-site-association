@@ -1,0 +1,19 @@
+{
+	"applinks": {
+		"details": [
+			{
+				"appIDs": ["75C9U59DUL.com.liquichain"],
+				"components": [
+					{
+						"/": "/tip/*",
+						"comment": "Matches any URL whose path starts with /tip/"
+					},
+					{
+						"/": "/product/*",
+						"comment": "Matches any URL whose path starts with /product/"
+					}
+				]
+			}
+		]
+	}
+}

@@ -4,7 +4,7 @@ import { Animated, View, Text, StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import StyledButton from '../../StyledButton';
 import { strings } from '../../../../../locales/i18n';
-import onboardingStyles from './../styles';
+import onboardingStyles from '../styles';
 
 const styles = StyleSheet.create({
 	coachmark: {

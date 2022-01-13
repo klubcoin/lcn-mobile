@@ -1,17 +1,14 @@
-import { DeviceEventEmitter } from 'react-native';
-import { Chat } from './Messages';
+import { StoreLookUp, StoreMessage } from './StoreMessages';
 
-export default class MessagingWebRTC {
+export default class StoreMessaging {
 	webrtc = null;
 	evtMessage = null;
 
 	from = null;
-	toPeer = null;
 	data = null;
 
-	constructor(from, to, webrtc) {
+	constructor(from, webrtc) {
 		this.from = from;
-		this.toPeer = to;
 		this.webrtc = webrtc;
 
 		this.revokeMessageEvt = webrtc.addListener('message', this._onMessage);
@@ -33,11 +30,8 @@ export default class MessagingWebRTC {
 
 	_onMessage = (data, peerId) => {
 		if (data.action) {
-			if (data.action == 'ping') {
-				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
-			}
-
-			if (data.action == Chat().action) {
+			if (data.action == StoreLookUp().action
+				|| data.action == StoreMessage().action) {
 				if (this.evtMessage) this.evtMessage(data, peerId);
 			}
 		}
@@ -48,14 +42,14 @@ export default class MessagingWebRTC {
 	}
 
 	_onError = (data, peerId) => {
-		if (data?.action == Chat().action && data?.message?._id) {
+		if (data?.action == StoreMessage().action) {
 			if (this.onError) this.onError(data.message, peerId);
 		}
 	}
 
-	send(data) {
-		const address = this.toPeer;
-		this.data = Chat(data, this.from, this.toPeer);
+	send(data, to) {
+		const address = to;
+		this.data = StoreMessage(data, this.from, address);
 
 		if (this.webrtc && this.webrtc.sendToPeer) {
 			this.webrtc.sendToPeer(address, this.data);

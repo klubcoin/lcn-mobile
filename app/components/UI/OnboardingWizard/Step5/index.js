@@ -7,7 +7,7 @@ import Coachmark from '../Coachmark';
 import setOnboardingWizardStep from '../../../../actions/wizard';
 import { DrawerActions } from 'react-navigation-drawer'; // eslint-disable-line
 import { strings } from '../../../../../locales/i18n';
-import onboardingStyles from './../styles';
+import onboardingStyles from '../styles';
 import Device from '../../../../util/Device';
 
 const INDICATOR_HEIGHT = 10;

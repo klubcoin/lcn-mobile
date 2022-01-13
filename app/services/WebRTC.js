@@ -1,13 +1,11 @@
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
-import { JoinFile, ReadFile, ReadFileResult, StoreFile } from './FileStore';
-import FileTransferWebRTC from './FileTransferWebRTC';
 import CryptoSignature, { sha256 } from '../core/CryptoSignature';
 import moment from 'moment';
 import io from 'socket.io-client';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import Messaging, { Message, WSEvent } from './Messaging';
-import { AckWebRTC, Chat, ChatFile, ChatProfile } from './Messages';
+import { AckWebRTC } from './Messages';
 import preferences from '../store/preferences';
 import { WalletProfile } from '../components/Views/Contacts/FriendRequestMessages';
 import assert from 'assert';
@@ -34,9 +32,11 @@ export default class WebRTC {
 	onceListeners = [];
 
 	constructor(from) {
-		this.fromUserId = from;
+		this.fromUserId = from.toLowerCase();
 		this.initSocket();
 	}
+
+	address = () => this.fromUserId;
 
 	addEncryptor = (encryptionLayer) => {
 		this.encryptor = encryptionLayer;
@@ -79,7 +79,7 @@ export default class WebRTC {
 
 	handleWebRtcSignal = message => {
 		try {
-			const data = JSON.parse(message);
+			const data = (message.action || message.payload) ? message : JSON.parse(message);
 			if (data.webrtc) {
 				switch (data.signal) {
 					case 'offer':
@@ -92,9 +92,18 @@ export default class WebRTC {
 						this.handleNewICECandidateMsg(data);
 						break;
 				}
+			} else if (data.action && data.from) {
+				this.handleWebSocketMessage(message, data.from?.toLowerCase())
 			}
 		} catch (e) {}
 	};
+
+	handleWebSocketMessage = (data, peerId) => {
+		try {
+			this.events.message.map(callback => callback(data, peerId));
+			this.signalOnce(data, peerId);
+		} catch (e) { }
+	}
 
 	sendSignal = (signal, payload) => {
 		const message = Message(payload.target, {
@@ -103,14 +112,19 @@ export default class WebRTC {
 			...payload
 		});
 
+		this.sendWebSocketMessage(message);
+	};
+
+	sendWebSocketMessage = (message) => {
 		if (useSocketIO) {
-			this.socketRef.emit(WSEvent.message, message);
+			this.socketRef.emit(message.action, message);
 		} else {
 			this.messaging.send(message);
 		}
 	};
 
-	connectTo = address => {
+	connectTo = addr => {
+		const address = addr.toLowerCase();
 		this.peerRefs[address] = this.Peer(address);
 		this.sendChannels[address] = this.peerRefs[address].createDataChannel('sendChannel');
 
@@ -132,8 +146,9 @@ export default class WebRTC {
 		this.peerRefs[peerId].ondatachannel = event => {
 			this.sendChannels[peerId] = event.channel;
 			this.sendChannels[peerId].onmessage = message => this.handleReceiveMessage(message, peerId);
+			this.sendChannels[peerId].ready = true;
 			console.log('[SUCCESS] Connection established');
-			this.sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
+			this._sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
 			// if (this.onReady) this.onReady(this.sendChannels[peerId]);
 			this.events.ready.map(callback => callback(this.sendChannels[peerId], peerId));
 		};
@@ -184,28 +199,30 @@ export default class WebRTC {
 	handleWebRtcMessage = async (json, peerId) => {
 		try {
 			let data = JSON.parse(json);
-			if (`${peerId}`.toLowerCase() != this.parseSignature(data)) return;
+			if (data.signature && `${peerId}`.toLowerCase() != this.parseSignature(data)) return;
 
 			if (data.encrypted) {
 				data = this.decryptPayload(data);
-			} else {
+			} else if (data.payload) {
 				data = JSON.parse(data.payload);
 			}
 
 			if (data.action == 'ping') {
 				this.peerPublicKeys[peerId] = data.publicKey;
-				this.sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
+				this.sendChannels[peerId].ready = true;
+				this._sendToPeer(peerId, { action: 'pong', publicKey: this.publicKey });
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
-			} else if (data.checksum) {
-				this.sendToPeer(peerId, AckWebRTC(data.checksum));
-			} else if (data.action == AckWebRTC().action && data.hash) {
-				if (this.monitors[peerId]) {
-					clearTimeout(this.monitors[peerId]);
-					this.monitors[peerId] = null;
+			} else if (data.reqId || data.checksum) {
+				this._sendToPeer(peerId, AckWebRTC(data.reqId || data.checksum));
+			}
+			if (data.action == AckWebRTC().action && data.hash) {
+				if (this.monitors[data.hash]) {
+					clearTimeout(this.monitors[data.hash]);
 				}
-			} else if (data.action == WalletProfile().action) {
+			}
+			if (data.action == WalletProfile().action) {
 				if (data.profile) {
 					await preferences.setPeerProfile(peerId, data.profile);
 				} else {
@@ -216,8 +233,6 @@ export default class WebRTC {
 				}
 			}
 
-			await this.handleChatMessage(data, peerId);
-			await this.handleFileTransfer(data, peerId);
 			this.events.message.map(callback => callback(data, peerId));
 			this.signalOnce(data, peerId);
 		} catch (e) {}
@@ -256,83 +271,6 @@ export default class WebRTC {
 		}
 	}
 
-	handleChatMessage = async (data, peerId) => {
-		if (data.action == Chat().action) {
-			const { action } = data.message;
-			if (action) {
-				if (action == ChatProfile().action) {
-					const { profile } = data.message;
-					if (!profile) {
-						const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
-						const name = `${firstname} ${lastname}`;
-						const avatarb64 = await RNFS.readFile(avatar, 'base64');
-						this.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));
-					}
-				}
-			} else {
-				const conversation = (await preferences.getChatMessages(peerId)) || { messages: [], isRead: false };
-
-				conversation.messages.unshift(data.message);
-				preferences.saveChatMessages(peerId, conversation);
-			}
-		} else if (data.action == ChatProfile().action) {
-			await preferences.setPeerProfile(peerId, data.profile);
-		}
-	};
-
-	handleFileTransfer = async (data, peerId) => {
-		if (data.action == StoreFile().action) {
-			FileTransferWebRTC.storeFile(data).then(message => this.sendToPeer(peerId, message));
-		} else if (data.action == JoinFile().action) {
-			FileTransferWebRTC.joinFile(data).then(async path => {
-				const conversation = await preferences.getChatMessages(peerId);
-				const { messages } = conversation || { messages: [] };
-
-				const message = messages.find(e => {
-					const { payload } = e;
-					if (payload && payload.action == ChatFile().action) {
-						return payload.name == data.name;
-					}
-				});
-
-				if (message) {
-					message.payload.uri = `file://${path}`;
-					message.payload.loading = false;
-					preferences.saveChatMessages(peerId, { messages });
-					DeviceEventEmitter.emit('FileTransReceived', { data, path });
-				}
-			});
-		} else if (data.action == ReadFile().action && !data.sourcePeer) {
-			const { from, hash, name } = data;
-			const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
-			if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
-
-			const files = await RNFS.readDir(folder);
-
-			const foundFiles = files.filter(e => e.name.indexOf(hash) === 0 || e.name.indexOf(name) === 0);
-			foundFiles.map(async e => {
-				const content = await RNFS.readFile(e.path, 'utf8');
-				const partId = e.name.split('.').reverse()[0];
-				const totalPart = e.name.split('.').reverse()[1];
-				const message = ReadFileResult(from, hash, name, moment(e.mtime).unix(), totalPart, [
-					{ i: partId, v: content }
-				]);
-				message.sourcePeer = this.fromUserId;
-				this.sendToPeer(peerId, message);
-			});
-		} else if (data.action == ReadFileResult().action) {
-			//responded file
-			const { name, parts } = data;
-			const hash = sha256(name);
-			parts.map(e => {
-				const index = e.i;
-				FileTransferWebRTC.storeFile(data).then(() =>
-					DeviceEventEmitter.emit(`FileTransPart:${hash}:${index}`, data)
-				);
-			});
-		}
-	};
-
 	handleNewICECandidateMsg = incoming => {
 		const peerId = incoming.caller;
 		const candidate = new RTCIceCandidate(incoming.candidate);
@@ -343,13 +281,15 @@ export default class WebRTC {
 	Peer = peerId => {
 		const peer = new RTCPeerConnection({
 			iceServers: [
+				/*
 				{
 					urls: 'stun:stun.stunprotocol.org'
 				},
+				*/
 				{
 					urls: 'turn:numb.viagenie.ca',
-					credential: 'long3232',
-					username: 'dragons3232@gmail.com'
+					credential: 'cWR5rgwNDKtNwR8',
+					username: 'sebastien.michea@manaty.net'
 				}
 			]
 		});
@@ -395,8 +335,14 @@ export default class WebRTC {
 			.catch(err => this.onError && this.onError(err));
 	};
 
-	hasChannel(address) {
+	hasChannel(addr) {
+		const address = addr.toLowerCase();
 		return this.sendChannels && this.sendChannels[address];
+	}
+
+	channelReady = (addr) => {
+		const address = addr.toLowerCase();
+		return this.hasChannel(address) && this.sendChannels[address].ready;
 	}
 
 	async _sendToPeer(peerId, message) {
@@ -428,12 +374,16 @@ export default class WebRTC {
 		});
 	};
 
-	sendToPeer = async (address, data) => {
+	sendToPeer = async (addr, data) => {
+		const address = addr.toLowerCase();
 		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
+		if (!data.reqId) data.reqId = Math.random() * new Date().getTime() + data.checksum;
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
+		} else if (!this.channelReady(address)) {
+			setTimeout(() => this.sendToPeer(address, data), 1000);
 		} else {
-			this.monitors[address] = setTimeout(() => this.connectAndSend(address, data), 5000);
+			this.monitors[data.reqId] = setTimeout(() => this.connectAndSend(address, data), 5000);
 			this._sendToPeer(address, data);
 		}
 	}

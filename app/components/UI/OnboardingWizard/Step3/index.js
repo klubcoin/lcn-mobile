@@ -7,7 +7,7 @@ import setOnboardingWizardStep from '../../../../actions/wizard';
 import { colors, fontStyles } from '../../../../styles/common';
 import AccountOverview from '../../AccountOverview';
 import { strings } from '../../../../../locales/i18n';
-import onboardingStyles from './../styles';
+import onboardingStyles from '../styles';
 import Device from '../../../../util/Device';
 
 const styles = StyleSheet.create({

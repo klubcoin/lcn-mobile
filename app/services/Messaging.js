@@ -37,7 +37,7 @@ export default class Messaging {
   _events = {};
 
   constructor(address) {
-    this._walletAddress = address;
+    this._walletAddress = address.toLowerCase();
   }
 
   on = (evt, callback) => {
@@ -86,7 +86,7 @@ export default class Messaging {
   }
 
   _onError = (data) => {
-    console.warn('onError', data)
+    console.warn('WS onError', data)
     this._onEvent(WSEvent.error, data);
   }
 

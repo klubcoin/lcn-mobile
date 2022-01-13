@@ -57,3 +57,11 @@ export function toggleFriendRequestQR(visible) {
 		visible
 	};
 }
+
+export function showTipperModal(data) {
+	return {
+		type: 'SHOW_TIPPER_MODAL',
+		data
+	};
+}
+

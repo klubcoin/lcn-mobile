@@ -187,7 +187,7 @@ export class VoteDrawer extends Component {
           </SafeAreaView>
           <View style={styles.profile}>
             <Identicon diameter={48} address={selectedAddress} />
-            <Text style={styles.name}>{account?.name}</Text>
+            <Text style={styles.name}>{account?.name?.name || account?.name}</Text>
             {
               account && (
                 <EthereumAddress

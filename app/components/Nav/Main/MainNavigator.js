@@ -77,6 +77,26 @@ import Partners from '../../Views/Partners';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';
 import ManageCoin from '../../Views/ManageCoin';
 import EditProfile from '../../Views/EditProfile';
+import MarketSellerOverview from '../../Views/MarketPlace/SellerOverview';
+import MarketAddEditProduct from '../../Views/MarketPlace/AddEditProduct';
+import MarketDrawer from '../../Views/MarketPlace/Drawer';
+import MarketSellerCategory from '../../Views/MarketPlace/SellerCategory';
+import MarketProduct from '../../Views/MarketPlace/ProductDetails';
+import ShoppingCart from '../../Views/MarketPlace/ShoppingCart';
+import MarketCheckout from '../../Views/MarketPlace/Checkout';
+import ShippingInfo from '../../Views/MarketPlace/ShippingInfo';
+import StoreProfile from '../../Views/MarketPlace/StoreProfile';
+import EditStoreProfile from '../../Views/MarketPlace/EditStoreProfile';
+import MarketAddEditReview from '../../Views/MarketPlace/AddEditReview';
+import StoreReviews from '../../Views/MarketPlace/StoreReviews';
+import MarketPurchase from '../../Views/MarketPlace/Purchase';
+import PurchasedOrders from '../../Views/MarketPlace/Order';
+import OrderDetails from '../../Views/MarketPlace/OrderDetails';
+import StoreOrderDetails from '../../Views/MarketPlace/StoreOrderDetails';
+import VendorOrders from '../../Views/MarketPlace/VendorOrder';
+import TipperAmount from '../../Views/Tipper/TipperAmount';
+import TipperDetails from '../../Views/Tipper/TipperDetails';
+import MarketProductReview from '../../Views/MarketPlace/ProductReview';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -125,12 +145,6 @@ export default createStackNavigator(
 						StorageStatistic: {
 							screen: StorageStatistic
 						},
-						Message: {
-							screen: Message
-						},
-						Chat: {
-							screen: Chat
-						},
 						ContactForm: {
 							screen: ContactForm
 						},
@@ -146,6 +160,9 @@ export default createStackNavigator(
 						EditProfile: {
 							screen: EditProfile
 						}
+						ShippingInfo: {
+							screen: ShippingInfo
+						},
 					}),
 					VotingAppHome: createDrawerNavigator({
 						VotingApp: {
@@ -199,19 +216,148 @@ export default createStackNavigator(
 				}
 			)
 		},
-		MarketPlace: {
-			screen: createStackNavigator({
-				MarketPlace: {
-					screen: MarketPlace
-				},
-				MarketCategory: {
-					screen: MarketCategory
-				},
-				MarketApp: {
-					screen: MarketApp
-				}
-			})
-		},
+		MessageApp: createStackNavigator({
+			Message: {
+				screen: Message
+			},
+			Chat: {
+				screen: Chat
+			},
+		}),
+		MarketPlaceApp: createDrawerNavigator(
+			{
+				MarketPlace: createStackNavigator(
+					{
+						MarketPlaceSearch: {
+							screen: MarketPlace
+						},
+						MarketCategory: {
+							screen: MarketCategory
+						},
+						MarketSellerCategory: {
+							screen: MarketSellerCategory
+						},
+						MarketProduct: {
+							screen: MarketProduct
+						},
+						MarketProductReview: {
+							screen: MarketProductReview
+						},
+						ShoppingCart: {
+							screen: ShoppingCart
+						},
+						MarketCheckout: {
+							screen: MarketCheckout
+						},
+						ShippingInfo: {
+							screen: ShippingInfo
+						},
+						Chat: {
+							screen: Chat
+						},
+						MarketPurchase: {
+							screen: MarketPurchase
+						}
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
+				MarketSeller: createStackNavigator(
+					{
+						MarketSellerOverview: {
+							screen: MarketSellerOverview
+						},
+						MarketSellerCategory: {
+							screen: MarketSellerCategory
+						},
+						MarketProduct: {
+							screen: MarketProduct
+						},
+						MarketAddEditProduct: {
+							screen: MarketAddEditProduct
+						},
+						Chat: {
+							screen: Chat
+						}
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
+				StoreProfile: createStackNavigator(
+					{
+						StoreProfile: {
+							screen: StoreProfile
+						},
+						EditStoreProfile: {
+							screen: EditStoreProfile
+						}
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
+				StoreReviews: createStackNavigator(
+					{
+						StoreReviews: {
+							screen: StoreReviews
+						}
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				),
+				MarketOrders: createStackNavigator(
+					{
+						PurchasedOrders: {
+							screen: PurchasedOrders
+						},
+						VendorOrders: {
+							screen: VendorOrders
+						},
+						OrderDetails: {
+							screen: OrderDetails
+						},
+						MarketAddEditReview: {
+							screen: MarketAddEditReview
+						},
+						Chat: {
+							screen: Chat
+						},
+						StoreOrderDetails: {
+							screen: StoreOrderDetails
+						}
+					},
+					{
+						defaultNavigationOptions: {
+							header: null
+						}
+					}
+				)
+			},
+			{
+				contentComponent: MarketDrawer,
+				drawerWidth: 240,
+				overlayColor: 'rgba(0, 0, 0, 0.5)'
+			}
+		),
+		TipperApp: createStackNavigator({
+			TipperAmount: {
+				screen: TipperAmount
+			},
+			TipperDetails: {
+				screen: TipperDetails
+			}
+		}),
 		Webview: {
 			screen: createStackNavigator(
 				{

@@ -149,7 +149,7 @@ class Contacts extends PureComponent {
 
 	getPeerInfo = address => {
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address}`, data => {
+		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, (data) => {
 			if (!data.profile) return true;
 			Object.assign(this.data.data, data.profile);
 			this.setState({ data: data.profile });
@@ -174,7 +174,7 @@ class Contacts extends PureComponent {
 		const { selectedAddress, identities, toggleFriendRequestQR } = this.props;
 		const account = identities[selectedAddress];
 
-		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Request);
+		const data = LiquichainNameCard(selectedAddress, account.name?.name || account?.name, FriendRequestTypes.Request);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		const base64Content = base64.encode(JSON.stringify(data));
 
@@ -230,7 +230,7 @@ class Contacts extends PureComponent {
 		const { selectedAddress, identities } = this.props;
 		const account = identities[selectedAddress];
 		const to = this.data.data.from;
-		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Accept);
+		const data = LiquichainNameCard(selectedAddress, account.name?.name || account?.name, FriendRequestTypes.Accept);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		refWebRTC().sendToPeer(to, data);
 		this.props.navigation.goBack();
@@ -289,7 +289,7 @@ class Contacts extends PureComponent {
 
 		const { selectedAddress, identities } = this.props;
 		const account = identities[selectedAddress];
-		const data = LiquichainNameCard(selectedAddress, account.name, FriendRequestTypes.Revoke);
+		const data = LiquichainNameCard(selectedAddress, account.name?.name || account?.name, FriendRequestTypes.Revoke);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		refWebRTC().sendToPeer(address, data);
 	};
@@ -328,7 +328,7 @@ class Contacts extends PureComponent {
 		contacts.filter(e => {
 			const { searchQuery } = this.state;
 			const query = searchQuery.toLocaleLowerCase();
-			return e.name.toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
+			return (e.name?.name ?? e.name).toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
 		});
 
 	render() {

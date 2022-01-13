@@ -1,37 +1,27 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
 	StyleSheet,
 	View,
-	TextInput,
 	Text,
-	Image,
-	TouchableHighlight,
-	Button,
 	ScrollView,
-	DeviceEventEmitter,
 	TouchableWithoutFeedback,
 	Alert,
 	KeyboardAvoidingView
 } from 'react-native';
-import { getFileManagerNavbar, getNavigationOptionsTitle } from '../../UI/Navbar';
+import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors, fontStyles } from '../../../styles/common';
 import CustomButton from '../../Base/CustomButton';
-import { color } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import * as FilesReader from '../../../util/files-reader';
 import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
 import preferences from '../../../store/preferences';
+import fileShareStore from '../FilesManager/store'
 import FileItem from './components/FileItem';
 import uuid from 'react-native-uuid';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import Device from '../../../util/Device';
-import * as RNFS from 'react-native-fs';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
-import { refWebRTC } from '../../../services/WebRTC';
 import { statuses } from './FileDetails';
 import FileTransfer from './Transfer.service';
 import SearchBar from '../../Base/SearchBar';
@@ -74,8 +64,7 @@ class FilesManager extends Component {
 	}
 
 	async fetchLocalFiles() {
-		// await preferences.deleteTransferredFiles();
-		var results = await preferences.getTransferredFiles();
+		var results = await fileShareStore.getTransferredFiles();
 
 		if (results) {
 			this.setState(prevState => ({
@@ -125,7 +114,7 @@ class FilesManager extends Component {
 				contacts: selectedContacts
 			};
 			this.FileTransferIns.queueFiles.push(record);
-			await preferences.saveTransferredFiles(record);
+			await fileShareStore.saveTransferredFiles(record);
 		}
 		this.fetchLocalFiles();
 		this.FileTransferIns.startTransfer(selectedAddress, () => this.fetchLocalFiles());
@@ -168,7 +157,7 @@ class FilesManager extends Component {
 				text: 'Yes',
 				onPress: async () => {
 					if (!file) return;
-					await preferences.deleteTransferredFile(file.id);
+					await fileShareStore.deleteTransferredFile(file.id);
 					await this.fetchLocalFiles();
 				}
 			},

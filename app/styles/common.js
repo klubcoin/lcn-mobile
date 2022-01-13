@@ -2,6 +2,8 @@
  * Common styles and variables
  */
 
+import ccolors from "../common/colors";
+
 /**
  * Map of color names to HEX values
  */

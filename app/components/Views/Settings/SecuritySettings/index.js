@@ -48,8 +48,8 @@ import HintModal from '../../../UI/HintModal';
 import { trackErrorAsAnalytics } from '../../../../util/analyticsV2';
 import SeedPhraseVideo from '../../../UI/SeedPhraseVideo';
 import preferences from '../../../../store/preferences';
-import { ReadFile } from '../../../../services/FileStore';
-import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
+import { ReadFile } from '../../FilesManager/store/FileStore';
+import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import { refWebRTC } from '../../../../services/WebRTC';
 import { displayName } from '../../../../../app.json';
 import styles from './styles/index';
@@ -439,7 +439,7 @@ class Settings extends PureComponent {
 		const webrtc = refWebRTC();
 		const { selectedAddress, identities, navigation } = this.props;
 		const account = identities[selectedAddress];
-		const lookupName = `${account.name} private key`;
+		const lookupName = `${account.name?.name || account?.name} private key`;
 
 		const privateKey = await this.getPrivateKey();
 		const addresses = contacts.map(e => e.address);
@@ -469,13 +469,13 @@ class Settings extends PureComponent {
 		const { selectedAddress, addressBook, network, identities } = this.props;
 		const addresses = addressBook[network] || {};
 		const account = identities[selectedAddress];
-		const lookupName = `${account.name} private key`;
+		const lookupName = `${account.name?.name || account?.name} private key`;
 
 		const from = selectedAddress;
 		const contacts = Object.keys(addresses).map(addr => addresses[addr]);
 
 		const webrtc = refWebRTC();
-		const command = ReadFile(from, null, lookupName);
+		const command = ReadFile(from, null, null, lookupName);
 		FileTransferWebRTC.readFile(command, contacts.map(e => e.address), webrtc);
 		DeviceEventEmitter.once('FileTransFetched', async ({ path }) => {
 			const content = await RNFS.readFile(path, 'utf8');
@@ -749,20 +749,33 @@ class Settings extends PureComponent {
 								/>
 							</View>
 						</View>
-						<ActionModal
-							modalVisible={approvalModalVisible}
-							confirmText={strings('app_settings.clear')}
-							cancelText={strings('app_settings.reset_account_cancel_button')}
-							onCancelPress={this.toggleClearApprovalsModal}
-							onRequestClose={this.toggleClearApprovalsModal}
-							onConfirmPress={this.clearApprovals}
-						>
-							<View style={styles.modalView}>
-								<Text style={styles.modalTitle}>
-									{strings('app_settings.clear_approvals_modal_title')}
-								</Text>
-								<Text style={styles.modalText}>
-									{strings('app_settings.clear_approvals_modal_message')}
+					)}
+					<View style={styles.setting} testID={'reveal-private-key-section'}>
+						<Text style={styles.title}>
+							{strings('reveal_credential.private_key_title_for_account', {
+								accountName: account.name?.name || account?.name
+							})}
+						</Text>
+						<Text style={styles.desc}>
+							{strings('reveal_credential.private_key_warning', { accountName: account.name?.name || account?.name })}
+						</Text>
+						<StyledButton type="normal" onPress={this.goToExportPrivateKey} containerStyle={styles.confirm}>
+							{strings('reveal_credential.show_private_key')}
+						</StyledButton>
+					</View>
+					<View style={styles.setting}>
+						<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
+						<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
+						<StyledButton type="confirm" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
+							{strings('private_key.backup_private_key')}
+						</StyledButton>
+						{!!privateKeyBackupStats && (
+							<View style={{ flexDirection: 'row' }}>
+								<Text style={styles.desc}>
+									{strings('private_key.sending_backup_progress', {
+										progress: privateKeyBackupStats.currentPart + 1,
+										total: privateKeyBackupStats.partCount
+									})}
 								</Text>
 							</View>
 						</ActionModal>

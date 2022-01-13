@@ -121,17 +121,19 @@ const TransactionsView = ({
 
 	return (
 		<View style={styles.wrapper} testID={'wallet-screen'}>
-			<Transactions
-				navigation={navigation}
-				transactions={allTransactions}
-				submittedTransactions={submittedTxs}
-				confirmedTransactions={confirmedTxs}
-				conversionRate={conversionRate}
-				currentCurrency={currentCurrency}
-				selectedAddress={selectedAddress}
-				networkType={networkType}
-				loading={loading}
-			/>
+			{
+				allTransactions.length > 0 && <Transactions
+					navigation={navigation}
+					transactions={allTransactions}
+					submittedTransactions={submittedTxs}
+					confirmedTransactions={confirmedTxs}
+					conversionRate={conversionRate}
+					currentCurrency={currentCurrency}
+					selectedAddress={selectedAddress}
+					networkType={networkType}
+					loading={loading}
+				/>
+			}
 		</View>
 	);
 };

@@ -31,6 +31,7 @@ import API from 'services/api';
 import Routes from 'common/routes';
 import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
+import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
 import Device from '../../../util/Device';
 import styles from './styles/index';
@@ -94,7 +95,7 @@ class Wallet extends PureComponent {
 	mounted = false;
 
 	componentDidMount = () => {
-		preferences.setActiveChatPeerId(null);
+		messageStore.setActiveChatPeerId(null);
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 			AssetsDetectionController.detectAssets();
@@ -127,8 +128,11 @@ class Wallet extends PureComponent {
 			[selectedAddress],
 			response => {
 				if (response.result) {
-					const name = response.result;
+					const { name, publicInfo } = response.result;
 					PreferencesController.setAccountLabel(selectedAddress, name);
+					preferences.getOnboardProfile()
+						.then(value => preferences.setOnboardProfile(Object.assign(value, { publicInfo })))
+						.catch(e => console.log('profile onboarding error', e));
 				}
 			},
 			error => {
@@ -243,6 +247,33 @@ class Wallet extends PureComponent {
 
 		const { currentConversion } = this.state;
 
+		//TODO: need to remove fixed code for TIPPER app
+		const tipper = {
+			"image": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
+			"name": "Tipper",
+			"address": "0x8a61a394-7813-1234-9797-ee8016b1356d-test",
+			"application": {
+				"creationDate": 1636070400000,
+				"description": "Tipper app",
+				"hexCode": "4321123412341234123412341234123412344366-test",
+				"iconUrl": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
+				"name": "Tipper",
+				"shortCode": "Tipper",
+				"uuid": "7fe9443a-203a-48a2-a8f4-61118fafe738-test",
+				"version": "1.0"
+			},
+			"description": "Get a tip from community",
+			"iconUrl": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
+			"instance": {
+				"description": "Get a tip from community",
+				"iconUrl": "https://docs.liquichain.io/media/app/liquimart.png",
+				"name": "Tipper",
+				"uuid": "8a61a394-7813-4046-9797-ee8016b1356d-test"
+			},
+			"name": "Tipper",
+			"uuid": "8a61a394-7813-4046-9797-ee8016b1356d-test"
+		};
+
 		let balance = 0;
 		let assets = tokens;
 		if (selectedAddress && accounts) {
@@ -257,6 +288,7 @@ class Wallet extends PureComponent {
 					balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
 					logo: '../images/logo.png'
 				},
+				tipper,
 				...tokens
 			];
 		} else {

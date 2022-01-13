@@ -120,8 +120,10 @@ export default class StyledButton extends PureComponent {
 		}
 
 		return (
-			<TouchableNativeFeedback {...touchableProps} testID={this.props.testID} disabled={this.props.disabled}>
-				<View style={containerStyles}>{this.renderGroupedChildren(formattedTypes, containerStyles)}</View>
+			<TouchableNativeFeedback {...touchableProps} testID={this.props.testID} disabled={this.props.disabled}
+				accessibilityLabel={this.props.accessibilityLabel || this.props.testID}
+			>
+				<View style={containerStyles}>{this.renderGroupedChildren(fontStyle, containerStyles)}</View>
 			</TouchableNativeFeedback>
 		);
 	};

@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import Coachmark from '../Coachmark';
 import setOnboardingWizardStep from '../../../../actions/wizard';
 import { strings } from '../../../../../locales/i18n';
-import onboardingStyles from './../styles';
+import onboardingStyles from '../styles';
 import { fontStyles, colors } from '../../../../styles/common';
 import { displayName } from '../../../../../app.json';
 const styles = StyleSheet.create({

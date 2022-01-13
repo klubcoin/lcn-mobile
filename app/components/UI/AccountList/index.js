@@ -28,7 +28,7 @@ import Routes from 'common/routes';
 import * as sha3JS from 'js-sha3';
 import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import FileTransferWebRTC from '../../Views/FilesManager/store/FileTransferWebRTC';
 import { RestoreSecretRequest } from '../../../services/Messages';
 import styles from './styles/index';
 
@@ -220,17 +220,14 @@ class AccountList extends PureComponent {
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const hash = sha3JS.keccak_256(firstname + lastname + account.address + avatarb64);
 
-		API.postRequest(
-			Routes.walletCreation,
-			[name, account.address, hash],
-			response => {
-				console.log('account creation', response);
-				this.getBalance(account.address);
-			},
-			error => {
-				console.log('error account', error);
-			}
-		);
+		API.postRequest(Routes.walletCreation, [
+			name, account.address, hash, JSON.stringify({})
+		], response => {
+			console.log('account creation', response)
+			this.getBalance(account.address)
+		}, error => {
+			console.log('error account', error)
+		})
 	}
 
 	getBalance = async selectedAddress => {

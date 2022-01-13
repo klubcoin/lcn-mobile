@@ -1,0 +1,12 @@
+[
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.liquichain",
+			"sha256_cert_fingerprints": [
+				"71:16:5A:7C:59:2F:FB:42:86:E7:69:88:64:31:4C:6D:A0:EF:05:F3:05:77:BE:19:CC:64:63:DD:53:FB:DB:B9"
+			]
+		}
+	}
+]

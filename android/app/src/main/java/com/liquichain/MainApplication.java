@@ -1,6 +1,7 @@
 package com.liquichain;
 
 import com.facebook.react.ReactApplication;
+import com.microsoft.codepush.react.CodePush;
 import com.cmcewen.blurview.BlurViewPackage;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -32,11 +33,17 @@ public class MainApplication extends MultiDexApplication implements ShareApplica
     }
 
     @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
+
+    @Override
     protected List<ReactPackage> getPackages() {
       @SuppressWarnings("UnnecessaryLocalVariable")
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new LottiePackage());
       // packages.add(new RNGestureHandlerPackage());
+      packages.add(new CodePush(getString(R.string.CodePushDeploymentKey), MainApplication.this, BuildConfig.DEBUG, getString(R.string.CodePushServerURL)));
       packages.add(new RCTAnalyticsPackage());
       packages.add(new PreventScreenshotPackage());
 

@@ -153,7 +153,7 @@ export default class FriendMessageOverview extends PureComponent {
 				<View style={styles.avatarView}>
 					<RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${avatar}` }} />
 				</View>
-				<Text style={styles.name}>{name}</Text>
+				<Text style={styles.name}>{name?.name || `${name}`}</Text>
 				<TouchableOpacity activeOpacity={0.6} onPress={this.toggleAddress}>
 					<EthereumAddress key={addressType} style={styles.address} address={address} type={addressType} />
 				</TouchableOpacity>

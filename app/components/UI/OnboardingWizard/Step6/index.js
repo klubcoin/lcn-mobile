@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Coachmark from '../Coachmark';
 import setOnboardingWizardStep from '../../../../actions/wizard';
 import { strings } from '../../../../../locales/i18n';
-import onboardingStyles from './../styles';
+import onboardingStyles from '../styles';
 import Device from '../../../../util/Device';
 
 const styles = StyleSheet.create({

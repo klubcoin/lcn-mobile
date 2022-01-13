@@ -62,7 +62,8 @@ import {
 	toggleDappTransactionModal,
 	toggleApproveModal,
 	showConfirmOtherIdentityPrompt,
-	toggleFriendRequestQR
+	toggleFriendRequestQR,
+	showTipperModal
 } from '../../../actions/modals';
 import { setOnboardProfile } from '../../../actions/user';
 import AccountApproval from '../../UI/AccountApproval';
@@ -76,15 +77,21 @@ import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import BigNumber from 'bignumber.js';
 import { setInfuraAvailabilityBlocked, setInfuraAvailabilityNotBlocked } from '../../../actions/infuraAvailability';
-import Messaging, { Pong, WSEvent } from '../../../services/Messaging';
 import { FriendRequestTypes, LiquichainNameCard, WalletProfile } from '../../Views/Contacts/FriendRequestMessages';
 import FriendMessageOverview from '../../Views/Contacts/widgets/FriendMessageOverview';
 import WebRTC, { refWebRTC, setWebRTC } from '../../../services/WebRTC';
 import CryptoSignature from '../../../core/CryptoSignature';
-import { Chat, ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
+import { Chat } from '../../Views/Message/store/Messages';
+import { ConfirmProfileBlock, ConfirmProfileRejected, ConfirmProfileRequest } from '../../../services/Messages';
 import ConfirmIdentity from '../../Views/ConfirmIdentity';
 import * as base64 from 'base-64';
 import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
+import store from '../../Views/MarketPlace/store';
+import StoreService, { setStoreService } from '../../Views/MarketPlace/store/StoreService';
+import ChatService, { setChatService } from '../../Views/Message/store/ChatService';
+import messageStore from '../../Views/Message/store'
+import FileTransferService, { setFileTransferService } from '../../Views/FilesManager/store/FileTransferService';
+import TipperModal from '../../Views/Tipper/TipperModal';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -103,7 +110,6 @@ const styles = StyleSheet.create({
 	}
 });
 const Main = props => {
-	const [messaging, setMessaging] = useState(null);
 	const [friendMessage, setFriendMessage] = useState(null);
 	const [acceptedNameCardVisible, showAcceptedNameCard] = useState(null);
 	const [identity2Confirm, showConfirmOtherIdentity] = useState(null);
@@ -630,7 +636,7 @@ const Main = props => {
 		}
 		// request if not yet exists
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address}`, data => {
+		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, (data) => {
 			if (!data.profile) return true;
 			Object.assign(message.data, data.profile, { address });
 			setFriendMessage(message);
@@ -658,26 +664,44 @@ const Main = props => {
 		return { privateKey, publicKey };
 	};
 
+	initializeServices = async (address) => {
+		const apps = await preferences.getSavedAppList();
+		const marketApp = apps.find(app => app.instance.name == 'Liquimart');
+		// if (marketApp) {
+			await store.load();
+			const storeService = new StoreService(address);
+			setStoreService(storeService);
+			storeService.announceToTracker();
+		// }
+
+		const chatApp = apps.find(app => app.instance.name == 'Liquichat');
+		// if (chatApp) {
+			await messageStore.load();
+			const chatService = new ChatService(address);
+			setChatService(chatService);
+		// }
+
+		const fileService = new FileTransferService(address);
+		setFileTransferService(fileService);
+	}
+
 	// Remove all notifications that aren't visible
 	useEffect(
 		() => {
 			const { selectedAddress } = props;
+			const address = selectedAddress.toLowerCase();
 			props.removeNotVisibleNotifications();
 
-			const webrtc = new WebRTC(selectedAddress);
+			const webrtc = new WebRTC(address);
 			setWebRTC(webrtc);
-			const encryptor = new EncryptionWebRTC(selectedAddress);
+			const encryptor = new EncryptionWebRTC(address);
 			webrtc.addEncryptor(encryptor);
 			encryptor.setKeyPairHandler(bindPrivateKey);
 			const revokeWebRTC = webrtc.addListener('message', onWebRtcMessage);
-
-			const messaging = new Messaging(selectedAddress);
-			setMessaging(messaging);
-			messaging.initConnection();
+			initializeServices(address);
 
 			return () => {
 				revokeWebRTC();
-				messaging && messaging.disconnect();
 			};
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -823,7 +847,7 @@ const Main = props => {
 				case Chat().action:
 					const { from, message } = data;
 					const senderId = `${from}`.toLowerCase();
-					const activeChatPeerId = `${preferences.activeChatPeerId}`.toLowerCase();
+					const activeChatPeerId = `${messageStore.activeChatPeerId}`.toLowerCase();
 
 					const { action } = message;
 					if (action) break;
@@ -833,7 +857,7 @@ const Main = props => {
 						const addresses = addressBook[network] || {};
 						const sender = addresses[from];
 
-						showNotice(sender.name, message.text);
+						showNotice(sender?.name || from, message.text);
 					}
 					break;
 				case LiquichainNameCard().action:
@@ -854,6 +878,21 @@ const Main = props => {
 					showConfirmOtherIdentity(null);
 					props.showConfirmOtherIdentity(null);
 				}}
+			/>
+		);
+	};
+
+	const renderTipperModal = () => {
+		const { tipperModalData, showTipperModal } = props;
+
+		return (
+			tipperModalData && <TipperModal
+				visible={!!tipperModalData}
+				hideModal={() => showTipperModal(null)}
+				title={strings('contacts.friend_request')}
+				confirmLabel={strings('tipper.tip')}
+				cancelLabel={strings('contacts.reject')}
+				data={tipperModalData}
 			/>
 		);
 	};
@@ -893,6 +932,7 @@ const Main = props => {
 			{renderApproveModal()}
 			{renderAcceptedFriendNameCard()}
 			{renderConfirmOtherIdentity()}
+			{renderTipperModal()}
 		</React.Fragment>
 	);
 };
@@ -998,7 +1038,8 @@ const mapStateToProps = state => ({
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
 	network: state.engine.backgroundState.NetworkController.network,
 	identities: state.engine.backgroundState.PreferencesController.identities,
-	otherIdentityToConfirm: state.modals.otherIdentityToConfirm
+	otherIdentityToConfirm: state.modals.otherIdentityToConfirm,
+	tipperModalData: state.modals.tipperModalData
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1015,7 +1056,8 @@ const mapDispatchToProps = dispatch => ({
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
 	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
 	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data)),
-	toggleFriendRequestQR: visible => dispatch(toggleFriendRequestQR(visible))
+	toggleFriendRequestQR: (visible) => dispatch(toggleFriendRequestQR(visible)),
+	showTipperModal: (data) => dispatch(showTipperModal(data)),
 });
 
 export default connect(

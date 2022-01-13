@@ -69,7 +69,13 @@ class ModalSelector extends PureComponent {
 		const { key, value, desc, icon } = item;
 
 		return (
-			<TouchableOpacity style={styles.option} activeOpacity={0.55} onPress={() => onSelect(item)}>
+			<TouchableOpacity
+				style={styles.option}
+				activeOpacity={0.55}
+				onPress={() => onSelect(item)}
+				testID={'modal-selector-item'}
+				accessibilityLabel={'modal-selector-item'}
+			>
 				{typeof icon == 'string' ? (
 					<RemoteImage resizeMode={'contain'} source={{ uri: icon }} style={styles.logo} />
 				) : (

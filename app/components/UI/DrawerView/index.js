@@ -292,7 +292,7 @@ class DrawerView extends PureComponent {
 
 		API.postRequest(
 			Routes.walletUpdate,
-			[name, address, signature],
+			[name, address, signature, JSON.stringify({})],
 			response => {
 				if (response.error) {
 					alert(`${response.error.message}`);

@@ -20,9 +20,9 @@ import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { refWebRTC } from '../../../../services/WebRTC';
-import MessagingWebRTC from '../../../../services/MessagingWebRTC';
+import MessagingWebRTC from '../store/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { ChatFile, ChatProfile, RequestPayment, TransactionSync, Typing } from '../../../../services/Messages';
+import { ChatFile, ChatProfile, RequestPayment, TransactionSync, Typing } from '../store/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';
@@ -33,12 +33,12 @@ import { setRecipient, setSelectedAsset } from '../../../../actions/transaction'
 import { getEther } from '../../../../util/transactions';
 import { map3rdPartyTransaction } from '../../../UI/Transactions';
 import ChatTransaction from '../components/ChatTransaction';
-import FileTransferWebRTC from '../../../../services/FileTransferWebRTC';
-import { StoreFile } from '../../../../services/FileStore';
+import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import { sha256 } from '../../../../core/CryptoSignature';
 import AudioMessage from '../components/AudioMessage';
 import FileMessage from '../components/FileMessage';
 import ImageMessage from '../components/ImageMessage';
+import store from '../store';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -52,7 +52,7 @@ class Chat extends Component {
 
 	componentDidMount() {
 		const selectedContact = this.state.contact;
-		preferences.setActiveChatPeerId(selectedContact.address);
+		store.setActiveChatPeerId(selectedContact.address.toLowerCase());
 		this.bindContactForAddress();
 		this.initConnection();
 		this.fetchConversation();
@@ -67,7 +67,7 @@ class Chat extends Component {
 		const addresses = addressBook[network] || {};
 
 		const selectedContact = this.state.contact;
-		const user = addresses[selectedContact.address];
+		const user = addresses[selectedContact.address] || addresses[selectedContact.address.toLowerCase()];
 		selectedContact.name = user?.name || selectedContact.name;
 	}
 
@@ -76,13 +76,13 @@ class Chat extends Component {
 		if (this.fileReceivedEvt) this.fileReceivedEvt.remove();
 		if (this.transactionListener) this.transactionListener.remove();
 		this.messaging.removeListeners();
-		preferences.setActiveChatPeerId(null);
+		store.setActiveChatPeerId(null);
 	}
 
 	initConnection = () => {
 		const { selectedAddress } = this.props;
 		const to = this.state.contact;
-		this.messaging = new MessagingWebRTC(selectedAddress, to.address, refWebRTC());
+		this.messaging = new MessagingWebRTC(selectedAddress.toLowerCase(), to.address.toLowerCase(), refWebRTC());
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			if (`${peerId}`.toLowerCase() != `${to.address}`.toLowerCase()) return;
 
@@ -170,7 +170,7 @@ class Chat extends Component {
 		const address = selectedAddress.toLowerCase();
 		const peerAddr = selectedContact.address.toLowerCase();
 
-		const data = await preferences.getChatMessages(selectedContact.address);
+		const data = await store.getChatMessages(peerAddr);
 		if (!data) return Promise.resolve([]);
 		const messages = data.messages.filter(e => {
 			const senderAddr = e.user._id.toLowerCase();
@@ -192,9 +192,9 @@ class Chat extends Component {
 
 	fetchProfile = async () => {
 		const selectedContact = this.state.contact;
-		const profile = await preferences.peerProfile(selectedContact.address);
+		const profile = await preferences.peerProfile(selectedContact.address.toLowerCase());
 		if (profile) {
-			selectedContact.avatar = profile.avatar;
+			this.state.contact = {...selectedContact, ...profile}
 		}
 	};
 
@@ -220,7 +220,7 @@ class Chat extends Component {
 
 	onSend = message => {
 		this.addNewMessage(message);
-		preferences.setConversationIsRead(this.state.contact.address, true);
+		store.setConversationIsRead(this.state.contact.address.toLowerCase(), true);
 		this.messaging.send(message[0]);
 	};
 
@@ -234,9 +234,9 @@ class Chat extends Component {
 			typing: false
 		}));
 
-		if (!incoming) await preferences.saveChatMessages(this.state.contact.address, { messages: newMessages });
+		if (!incoming) await store.saveChatMessages(this.state.contact.address.toLowerCase(), { messages: newMessages });
 		else {
-			preferences.setConversationIsRead(this.state.contact.address, true);
+			store.setConversationIsRead(this.state.contact.address.toLowerCase(), true);
 		}
 	};
 
@@ -299,7 +299,7 @@ class Chat extends Component {
 
 	sendPaymentRequest = request => {
 		const selectedContact = this.state.contact;
-		this.sendPayloadMessage(RequestPayment(selectedContact.address, request));
+		this.sendPayloadMessage(RequestPayment(selectedContact.address.toLowerCase(), request));
 	};
 
 	onPickFile = async () => {
@@ -318,9 +318,9 @@ class Chat extends Component {
 		const webrtc = refWebRTC();
 		const { selectedAddress } = this.props;
 		const selectedContact = this.state.contact;
-		const peerAddr = selectedContact.address;
+		const peerAddr = selectedContact.address.toLowerCase();
 
-		const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [peerAddr], webrtc, { direct: true });
+		const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress.toLowerCase(), [peerAddr], webrtc, { direct: true });
 		ft.setOnError(() => {
 			alert(`Error: Failed to send to ${selectedContact.name}`);
 			this.onSendError(message);
@@ -334,15 +334,15 @@ class Chat extends Component {
 
 	addFile = async file => {
 		const selectedContact = this.state.contact;
-		const peerAddr = selectedContact.address;
+		const peerAddr = selectedContact.address.toLowerCase();
 
 		return await this.sendPayloadMessage(ChatFile(peerAddr, file));
 	};
 
 	onSendError = async (message) => {
 		const selectedContact = this.state.contact;
-		const peerId = selectedContact.address;
-		const conversation = await preferences.getChatMessages(peerId);
+		const peerId = selectedContact.address.toLowerCase();
+		const conversation = await store.getChatMessages(peerId);
 		const { messages } = conversation || { messages: [] };
 
 		if (message.payload) {
@@ -352,13 +352,13 @@ class Chat extends Component {
 			Object.assign(m, message);
 			this.setState({ messages });
 
-			preferences.saveChatMessages(peerId, { messages });
+			store.saveChatMessages(peerId, { messages });
 		}
 	}
 
 	onFileReceived = async ({ data, path }) => {
 		const peerId = data.from;
-		const conversation = await preferences.getChatMessages(peerId);
+		const conversation = await store.getChatMessages(peerId);
 		const { messages } = conversation || { messages: [] };
 
 		const message = messages.find(e => {

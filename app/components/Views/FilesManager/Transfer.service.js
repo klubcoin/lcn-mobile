@@ -1,9 +1,10 @@
 import { DeviceEventEmitter } from 'react-native';
 import { statuses } from './FileDetails';
 import preferences from '../../../store/preferences';
+import fileShareStore from './store';
 import { refWebRTC } from '../../../services/WebRTC';
 import * as RNFS from 'react-native-fs';
-import FileTransferWebRTC from '../../../services/FileTransferWebRTC';
+import FileTransferWebRTC from './store/FileTransferWebRTC';
 
 export default class FileTransfer {
 	static instance;
@@ -19,7 +20,7 @@ export default class FileTransfer {
 	updatePreference = async (selectedFile, status, percent, detailPart, partCount) => {
 		if (!selectedFile) return;
 
-		var localFiles = await preferences.getTransferredFiles();
+		var localFiles = await fileShareStore.getTransferredFiles();
 		var file = localFiles.find(e => e.id === selectedFile.id);
 
 		if (percent) file.percent = percent;
@@ -55,7 +56,7 @@ export default class FileTransfer {
 				break;
 		}
 
-		localFiles.forEach(e => preferences.saveTransferredFiles(e));
+		localFiles.forEach(e => fileShareStore.saveTransferredFiles(e));
 	};
 
 	sendToNextFile = (selectedAddress, callback) => {
@@ -67,7 +68,6 @@ export default class FileTransfer {
 
 	startTransfer = async (selectedAddress, callback) => {
 		try {
-			const webrtc = refWebRTC();
 
 			const file = this.queueFiles[0];
 			const addresses = file.contacts.map(e => e.address);
@@ -103,7 +103,7 @@ export default class FileTransfer {
 					this.sendToNextFile(selectedAddress, callback); // remove if done
 				}
 			});
-			FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, webrtc);
+			FileTransferWebRTC.sendAsParts(content, lookupName, selectedAddress, addresses, refWebRTC());
 		} catch (error) {
 			const file = this.queueFiles[0];
 			this.updatePreference(file, statuses.failed, 0);

@@ -1,18 +1,21 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../styles/common';
 
-export default function SearchBar({ value, onChange, placeholder, containerStyle }) {
+export default function SearchBar({ value, onChange, hideIcon, placeholder, containerStyle }) {
 	return (
 		<View style={[styles.searchSection, containerStyle]}>
-			<Icon name="search" size={22} style={styles.icon} color={colors.white} />
+			{!hideIcon && <Icon name="search" size={22} style={styles.icon} color={colors.white} />}
 			<TextInput
 				style={styles.textInput}
 				value={value}
 				placeholder={placeholder}
-				placeholderTextColor={colors.grey100}
+				placeholderTextColor={colors.grey400}
 				onChangeText={onChange}
+				testID={'search-bar-input'}
+				accessibilityLabel={'search-bar-input'}
 			/>
 		</View>
 	);
@@ -33,6 +36,7 @@ const styles = StyleSheet.create({
 		height: 30,
 		marginLeft: 5,
 		paddingVertical: 0,
-		color: colors.fontPrimary
+		color: colors.fontPrimary,
+		fontSize: RFValue(12)
 	}
 });

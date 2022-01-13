@@ -12,6 +12,9 @@ import { strings } from '../../locales/i18n';
 import { getNetworkTypeById } from '../util/networks';
 import { WalletDevice } from '@metamask/controllers/';
 import moment from 'moment';
+import { showTipperModal } from '../actions/modals';
+import { store } from '../store';
+import { refStoreService } from '../components/Views/MarketPlace/store/StoreService';
 
 class DeeplinkManager {
 	constructor(_navigation) {
@@ -87,6 +90,10 @@ class DeeplinkManager {
 		});
 	}
 
+	handleNavigateTip(data) {
+		this.navigation.navigate('TipperAmount', data);
+	}
+
 	parse(url, { browserCallBack, origin, onHandled }) {
 		const urlObj = new URL(url);
 		let params;
@@ -137,7 +144,25 @@ class DeeplinkManager {
 						case 'focus':
 						case '':
 							break;
+						case 'tip':
+							const receiverAddress = urlObj.pathname.split('/')[2];
+							const value = params['value']
+							const symbol = params['symbol']
+							const isETH = params['isETH'];
+							const decimals = params['decimals'];
+							const tipData = {
+								receiverAddress,
+								value,
+								symbol,
+								isETH,
+								decimals
+							};
 
+							store.dispatch(showTipperModal(tipData))
+							break;
+						case 'product':
+							this.handleProductLink(urlObj.pathname);
+							break;
 						default:
 							Alert.alert(strings('deeplink.not_supported'));
 					}
@@ -198,6 +223,29 @@ class DeeplinkManager {
 		}
 
 		return true;
+	}
+
+	handleProductLink = async (path) => {
+		const parts = path.split('/');
+		const vendorAddr = parts[2];
+		const productId = parts[3];
+		const chatGroup = parts.length >= 5 ? parts[4] : '';
+
+		const storeService = refStoreService();
+		if (!storeService) {
+			setTimeout(() => this.handleProductLink(path), 1000);
+			return;
+		}
+		storeService.addListener((message) => {
+			if (message && message.uuid && message.data != 1) {
+				const { uuid, data } = message;
+				if (productId == uuid) {
+					const product = { ...data };
+					this.navigation.navigate('MarketProduct', { product, group: chatGroup });
+				}
+			}
+		});
+		storeService.fetchProduct(productId, vendorAddr);
 	}
 }
 

@@ -1,9 +1,9 @@
 import moment from 'moment';
-import { sha256 } from '../core/CryptoSignature';
+import { sha256 } from '../../../../core/CryptoSignature';
 import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import { ContainFiles, FilePart, JoinFile, PartSize, ReadFileResult, SavedFile, StoreFile } from './FileStore';
-import { AckWebRTC } from './Messages';
+import { AckWebRTC } from '../../../../services/Messages';
 
 export default class FileTransferWebRTC {
 	_ready = false;
@@ -28,7 +28,7 @@ export default class FileTransferWebRTC {
 	evtError = null;
 
 	constructor(data, from, addresses, webrtc, params) {
-		this.from = from;
+		this.from = from.toLowerCase();
 		this.data = data;
 		this.addresses = addresses;
 		this.webrtc = webrtc;
@@ -87,13 +87,17 @@ export default class FileTransferWebRTC {
 	static async joinFile(data) {
 		const { from, hash, name, totalPart } = data;
 
-		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 		const fileName = `${/*hash ||*/ name}`;
 		const path = `${folder}/${fileName}`;
 
-		if (await RNFS.exists(path)) await RNFS.unlink(path);
+		if (await RNFS.exists(path)) try {
+			await RNFS.unlink(path);
+		} catch (e) {
+			console.log(e);
+		}
 
 		const files = await RNFS.readDir(folder);
 		const foundFiles = files.filter(e =>
@@ -125,12 +129,16 @@ export default class FileTransferWebRTC {
 		const keys = Object.keys(this.partCollector).sort();
 		const { from, hash, name, created } = this.partCollector[keys[0]];
 
-		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 		const fileName = `${/*hash ||*/ name}`;
 		const path = `${folder}/${fileName}`;
-		if (await RNFS.exists(path)) await RNFS.unlink(path);
+		if (await RNFS.exists(path)) try {
+			await RNFS.unlink(path);
+		} catch (e) {
+			console.log(e);
+		}
 
 		for (var k in keys) {
 			const data = this.partCollector[keys[k]];
@@ -148,13 +156,18 @@ export default class FileTransferWebRTC {
 	static async storeFile(data) {
 		const { from, hash, name, created, totalPart, parts } = data;
 
-		const folder = `${RNFS.DocumentDirectoryPath}/${from}`;
+		const folder = `${RNFS.DocumentDirectoryPath}/${from.toLowerCase()}`;
 		if (!(await RNFS.exists(folder))) await RNFS.mkdir(folder);
 
 		const part = parts[0];
 		const content = part?.v;
 		const fileName = `${/*hash ||*/ name}.${totalPart}.${part?.i}`;
 		const path = `${folder}/${fileName}`;
+		if (await RNFS.exists(path)) try {
+			await RNFS.unlink(path);
+		} catch (e) {
+			console.log(e);
+		}
 
 		return new Promise((resolve, reject) => {
 			RNFS.writeFile(path, content, 'utf8')
@@ -191,7 +204,7 @@ export default class FileTransferWebRTC {
 			.map((e, index) => {
 				return {
 					index: index + 1,
-					address: addresses[index % addresses.length],
+					address: addresses[index % addresses.length].toLowerCase(),
 					status: 0
 				};
 			});
@@ -312,6 +325,7 @@ export default class FileTransferWebRTC {
 		});
 	};
 
+	// read file parts from peers
 	static readFile(readFileAction, addresses, webrtc) {
 		const data = readFileAction;
 		const { from, name } = data;
@@ -321,18 +335,20 @@ export default class FileTransferWebRTC {
 		return ft;
 	}
 
+	// send parts to different peers
 	static sendAsParts(data, lookupName, from, addresses, webrtc, params) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, params);
-		ft.checksum = sha256(data);
+		ft.checksum = data?.hash || sha256(JSON.stringify(data));
 		ft.name = lookupName;
 		ft.timestamp = moment().unix();
 		ft._sendQueue();
 		return ft;
 	}
 
+	// send a complete file to peer
 	static sendAsOne(data, from, addresses, webrtc) {
 		const ft = new FileTransferWebRTC(data, from, addresses, webrtc, { fullSend: true });
-		ft.checksum = sha256(data);
+		ft.checksum = data?.hash || sha256(JSON.stringify(data));
 		ft._sendAsOne();
 		return ft;
 	}

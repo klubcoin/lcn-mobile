@@ -9,11 +9,9 @@ export const kTokenKeycloak = 'KeycloakToken';
 export const kAccountKeycloak = 'KeycloakAccount';
 export const kCurrentAppId = 'CurrentAppId';
 export const kOnboardProfile = 'OnboardProfile';
-export const kTransferredFiles = 'TransferredFiles';
 export const kBlockedIdentityReqPeers = 'BlockedIdentityReqPeers';
 export const kNotifications = 'Notifications';
 export const kPublicKeys = 'PublicKeys';
-export const kChatMessages = 'ChatMessages';
 export const kPeerProfiles = 'PeerProfiles';
 
 const keys = [
@@ -23,11 +21,9 @@ const keys = [
 	kAccountKeycloak,
 	kCurrentAppId,
 	kOnboardProfile,
-	kTransferredFiles,
 	kBlockedIdentityReqPeers,
 	kNotifications,
 	kPublicKeys,
-	kChatMessages,
 	kPeerProfiles
 ];
 
@@ -38,9 +34,6 @@ class Preferences {
 	notifications = {};
 	publicKeys = {};
 	peerProfiles = {};
-
-	// session variables
-	activeChatPeerId = null;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -151,29 +144,6 @@ class Preferences {
 		return this.onboardProfile;
 	}
 
-	async saveTransferredFiles(files) {
-		if (!this.storage[kTransferredFiles]) {
-			this.storage[kTransferredFiles] = {};
-		}
-		this.storage[kTransferredFiles][files.id] = files;
-		await this.saveStorage(kTransferredFiles);
-	}
-
-	async getTransferredFiles() {
-		const transferredFiles = this.storage[kTransferredFiles] || {};
-		return Object.keys(transferredFiles).map(key => transferredFiles[key]);
-	}
-
-	async deleteTransferredFile(id) {
-		delete this.storage[kTransferredFiles][id];
-		await this.saveStorage(kTransferredFiles);
-	}
-
-	async deleteTransferredFiles() {
-		this.storage[kTransferredFiles] = {};
-		await this.saveStorage(kTransferredFiles);
-	}
-
 	async blockIdentityReqPeer(address) {
 		this.blockedIdentityReqPeers[address] = true;
 		this.storage[kBlockedIdentityReqPeers] = this.blockedIdentityReqPeers;
@@ -214,52 +184,6 @@ class Preferences {
 	async peerProfile(address) {
 		const peerProfiles = this.storage[kPeerProfiles] || {};
 		return peerProfiles[address];
-	}
-
-	async saveChatMessages(address, messages) {
-		if (!this.storage[kChatMessages]) {
-			this.storage[kChatMessages] = {};
-		}
-		this.storage[kChatMessages][address] = messages;
-		await this.saveStorage(kChatMessages);
-	}
-
-	async getChatMessages(address) {
-		const chatMessages = this.storage[kChatMessages];
-		if (address) return chatMessages[address];
-		return chatMessages;
-	}
-
-	async setConversationIsRead(address, isRead) {
-		const chatMessages = this.storage[kChatMessages] || {};
-		if (!address) return;
-		let foundConversation;
-		const keys = Object.keys(chatMessages);
-
-		keys.forEach(e => {
-			if (e.toLocaleLowerCase() == address.toLocaleLowerCase()) {
-				foundConversation = chatMessages[e];
-				if (!foundConversation) return;
-				foundConversation.isRead = isRead;
-				this.storage[kChatMessages][e] = foundConversation;
-				this.saveStorage(kChatMessages);
-			}
-		});
-		await this.saveStorage(kChatMessages);
-	}
-
-	async deleteChatMessage(address) {
-		delete this.storage[kChatMessages][address];
-		await this.saveStorage(kChatMessages);
-	}
-
-	async deleteChatMessages() {
-		this.storage[kChatMessages] = {};
-		await this.saveStorage(kChatMessages);
-	}
-
-	setActiveChatPeerId(address) {
-		this.activeChatPeerId = address;
 	}
 }
 
