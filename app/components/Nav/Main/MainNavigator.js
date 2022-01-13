@@ -76,6 +76,7 @@ import MarketApp from '../../Views/MarketPlace/Application';
 import Partners from '../../Views/Partners';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';
 import ManageCoin from '../../Views/ManageCoin';
+import EditProfile from '../../Views/EditProfile';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -141,6 +142,9 @@ export default createStackNavigator(
 						},
 						PartnerDetails: {
 							screen: PartnerDetails
+						},
+						EditProfile: {
+							screen: EditProfile
 						}
 					}),
 					VotingAppHome: createDrawerNavigator({
@@ -181,7 +185,12 @@ export default createStackNavigator(
 						TransactionsView: {
 							screen: ActivityView
 						}
-					})
+					}),
+					ManageCoinFlow: {
+						screen: createStackNavigator({
+							ManageCoin: ManageCoin
+						})
+					}
 				},
 				{
 					defaultNavigationOptions: () => ({
@@ -424,11 +433,6 @@ export default createStackNavigator(
 					}
 				}
 			)
-		},
-		ManageCoinFlow: {
-			screen: createStackNavigator({
-				ManageCoin: ManageCoin
-			})
 		}
 	},
 	{

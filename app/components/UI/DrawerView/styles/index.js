@@ -229,7 +229,8 @@ const styles = StyleSheet.create({
 	protectWalletButtonWrapper: { marginVertical: 8 },
 	accountBalanceWrapper: {},
 	balance: {},
-	iconWrapper: {}
+	iconWrapper: {},
+	accountInfo: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

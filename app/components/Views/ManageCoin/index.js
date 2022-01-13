@@ -58,7 +58,8 @@ import { displayName } from '../../../../app.json';
  * View that is displayed to first time (new) users
  */
 class ManageCoin extends PureComponent {
-	static navigationOptions = ({ navigation }) => getTransparentBackOnboardingNavbarOptions(navigation);
+	static navigationOptions = ({ navigation }) =>
+		getTransparentBackOnboardingNavbarOptions(navigation, strings('drawer.manage_coins'));
 
 	static propTypes = {
 		/**

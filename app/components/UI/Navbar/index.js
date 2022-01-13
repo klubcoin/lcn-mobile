@@ -99,7 +99,7 @@ export function getNavigationOptionsTitle(title, navigation) {
 		headerRight: <View />,
 		// headerLeft: headerLeftHide
 		headerLeft: (
-			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton}>
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
@@ -463,24 +463,27 @@ export function getTransparentOnboardingNavbarOptions() {
  *
  * @returns {Object} - Corresponding navbar options containing headerTitle and a back button
  */
-export function getTransparentBackOnboardingNavbarOptions(navigation) {
-	function navigationPop() {
-		navigation.pop();
-	}
+export function getTransparentBackOnboardingNavbarOptions(navigation, title) {
+	const openDrawer = () => navigation.openDrawer();
 
 	return {
-		headerTransparent: true,
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			borderBottomWidth: 0
+		},
 		headerTitle: (
 			<View style={styles.metamaskNameTransparentWrapper}>
-				{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
-				{/* <Text style={[styles.header, brandStyles.header]}>LIQUICHAIN</Text> */}
+				<Text style={[styles.header, { alignSelf: 'center' }]}>{title}</Text>
 			</View>
 		),
 		headerBackTitle: strings('navigation.back'),
 		headerRight: <View />,
+		// headerLeft: headerLeftHide
 		headerLeft: (
-			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
-				<Icon name={'arrow-left'} size={16} style={[styles.backIcon, { color: colors.white }]} />
+			<TouchableOpacity onPress={openDrawer} style={styles.backButton}>
+				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
 	};

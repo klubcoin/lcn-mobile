@@ -66,6 +66,9 @@ const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
 const ICON_IMAGES = {
 	wallet: require('../../../images/wallet-icon.png'),
 	partners: require('../../../images/ic_partners.png'),
+	collect: require('../../../images/ic_collect.png'),
+	manageCoin: require('../../../images/ic_manage_coin.png'),
+	receiveTip: require('../../../images/ic_receive_tip.png'),
 	'selected-wallet': require('../../../images/selected-wallet-icon.png'),
 	'selected-partners': require('../../../images/ic_partners.png')
 };
@@ -574,7 +577,8 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.manage_coins'),
-					icon: this.getIcon('share'),
+					icon: this.getImageIcon('manageCoin'),
+					selectedIcon: this.getImageIcon('manageCoin'),
 					action: this.gotoManageCoin,
 					routeNames: ['ManageCoin']
 				},
@@ -625,12 +629,14 @@ class DrawerView extends PureComponent {
 				},
 				{
 					name: strings('drawer.collect'),
-					icon: this.getIcon('share'),
+					icon: this.getImageIcon('collect'),
+					selectedIcon: this.getImageIcon('collect'),
 					action: this.onShare
 				},
 				{
 					name: strings('drawer.receive_tips'),
-					icon: this.getIcon('share'),
+					icon: this.getImageIcon('receiveTip'),
+					selectedIcon: this.getImageIcon('receiveTip'),
 					action: this.onShare
 				},
 				{

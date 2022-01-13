@@ -92,6 +92,9 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.purple,
 		padding: 5,
 		borderRadius: 8
+	},
+	accountInfo: {
+		flex: 1
 	}
 });
 
