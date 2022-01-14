@@ -167,7 +167,7 @@ class ImportFromSeed extends PureComponent {
 					this.props.navigation.navigate('ManualBackupStep3');
 				} else {
 					this.props.setOnboardingWizardStep(1);
-					this.props.navigation.navigate('WalletView');
+					this.props.navigation.navigate('Dashboard');
 				}
 				await importAdditionalAccounts();
 			} catch (error) {

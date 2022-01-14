@@ -360,7 +360,7 @@ class DrawerView extends PureComponent {
 	};
 
 	showWallet = () => {
-		this.props.navigation.navigate('WalletTabHome');
+		this.props.navigation.navigate('Dashboard');
 		this.hideDrawer();
 		this.trackEvent(ANALYTICS_EVENTS_V2.WALLET_OPENED);
 	};
@@ -574,7 +574,7 @@ class DrawerView extends PureComponent {
 					icon: this.getImageIcon('wallet'),
 					selectedIcon: this.getSelectedImageIcon('wallet'),
 					action: this.showWallet,
-					routeNames: ['WalletView', 'Asset', 'AddAsset', 'Collectible']
+					routeNames: ['Dashboard', 'Asset', 'AddAsset', 'Collectible']
 				},
 				{
 					name: strings('drawer.manage_coins'),

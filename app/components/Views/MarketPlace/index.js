@@ -387,7 +387,7 @@ class MarketPlace extends PureComponent {
 	};
 
 	onBack = () => {
-		this.props.navigation.navigate('WalletView');
+		this.props.navigation.navigate('Dashboard');
 	};
 
 	toggleDrawer = () => {

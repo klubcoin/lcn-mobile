@@ -73,7 +73,7 @@ const Entry = props => {
 
 	const onAnimationFinished = useCallback(
 		viewToGo => {
-			if (viewToGo && (viewToGo !== 'WalletView' || viewToGo !== 'Onboarding')) {
+			if (viewToGo && (viewToGo !== 'Dashboard' || viewToGo !== 'Onboarding')) {
 				props.navigation.navigate(viewToGo);
 			} else if (viewToGo === 'Onboarding') {
 				props.navigation.navigate('OnboardingRootNav');
@@ -129,7 +129,7 @@ const Entry = props => {
 					animateAndGoTo('HomeNav');
 				} else {
 					props.setOnboardingWizardStep(1);
-					animateAndGoTo('WalletView');
+					animateAndGoTo('Dashboard');
 				}
 			} else if (props.passwordSet) {
 				animateAndGoTo('Login');

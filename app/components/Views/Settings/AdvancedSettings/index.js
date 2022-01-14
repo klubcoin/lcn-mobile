@@ -113,7 +113,7 @@ class AdvancedSettings extends PureComponent {
 		const { TransactionController } = Engine.context;
 		const { navigation } = this.props;
 		TransactionController.wipeTransactions(true);
-		navigation.navigate('WalletView');
+		navigation.navigate('Dashboard');
 	};
 
 	cancelResetAccount = () => {

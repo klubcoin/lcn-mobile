@@ -32,7 +32,7 @@ const menuItems = () => [
 		key: menuKeys().home,
 		title: strings('market.home'),
 		icon: 'home',
-		screen: 'WalletView'
+		screen: 'Dashboard'
 	},
 	{
 		key: menuKeys().shopping,
@@ -71,7 +71,7 @@ const menuItemsVendor = () => [
 		key: menuKeys().home,
 		title: strings('market.home'),
 		icon: 'home',
-		screen: 'WalletView'
+		screen: 'Dashboard'
 	},
 	{
 		key: menuKeys().shopping,

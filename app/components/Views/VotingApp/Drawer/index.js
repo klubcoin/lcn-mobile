@@ -80,7 +80,7 @@ const menuItems = () => [
     key: 'home',
     title: strings('voting.home'),
     icon: 'home',
-    screen: 'WalletView',
+    screen: 'Dashboard',
   },
   {
     key: 'votes',

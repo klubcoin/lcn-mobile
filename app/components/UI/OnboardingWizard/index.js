@@ -140,7 +140,7 @@ class OnboardingWizard extends PureComponent {
 			return this.closeOnboardingWizard();
 		} else if (step === 5) {
 			setOnboardingWizardStep(4);
-			navigation.navigate('WalletView');
+			navigation.navigate('Dashboard');
 			navigation.dispatch(DrawerActions.closeDrawer());
 		} else if (step === 6) {
 			navigation && navigation.openDrawer();

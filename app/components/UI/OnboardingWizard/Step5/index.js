@@ -81,11 +81,11 @@ class Step5 extends PureComponent {
 
 	/**
 	 * Dispatches 'setOnboardingWizardStep' with next step
-	 * Closing drawer and navigating to 'WalletView'
+	 * Closing drawer and navigating to 'Dashboard'
 	 */
 	onBack = () => {
 		const { navigation, setOnboardingWizardStep } = this.props;
-		navigation && navigation.navigate('WalletView');
+		navigation && navigation.navigate('Dashboard');
 		navigation && navigation.dispatch(DrawerActions.closeDrawer());
 		setTimeout(() => {
 			setOnboardingWizardStep && setOnboardingWizardStep(4);

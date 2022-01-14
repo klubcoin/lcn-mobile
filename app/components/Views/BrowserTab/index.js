@@ -696,7 +696,7 @@ export const BrowserTab = props => {
 				metamask_showTutorial: async () => {
 					wizardScrollAdjusted = false;
 					props.setOnboardingWizardStep(1);
-					props.navigation.navigate('WalletView');
+					props.navigation.navigate('Dashboard');
 
 					res.result = true;
 				},

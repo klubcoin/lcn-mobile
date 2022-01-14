@@ -96,6 +96,7 @@ import VendorOrders from '../../Views/MarketPlace/VendorOrder';
 import TipperAmount from '../../Views/Tipper/TipperAmount';
 import TipperDetails from '../../Views/Tipper/TipperDetails';
 import MarketProductReview from '../../Views/MarketPlace/ProductReview';
+import Dashboard from '../../Views/Dashboard';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -114,6 +115,9 @@ export default createStackNavigator(
 			screen: createBottomTabNavigator(
 				{
 					WalletTabHome: createStackNavigator({
+						Dashboard: {
+							screen: Dashboard
+						},
 						WalletView: {
 							screen: Wallet
 						},

@@ -377,6 +377,9 @@
 		"update_profile_success": "Update profile successfully",
 		"update_profile_fail": "Failed to update profile"
 	},
+	"dashboard": {
+		"title": "Dashboard"
+	},
 	"voting": {
 		"title": "Voting",
 		"see_lawbook": "See lawbook",

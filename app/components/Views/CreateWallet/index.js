@@ -145,7 +145,7 @@ class CreateWallet extends PureComponent {
 					this.props.navigation.navigate('HomeNav');
 				} else {
 					this.props.setOnboardingWizardStep(1);
-					this.props.navigation.navigate('WalletView');
+					this.props.navigation.navigate('Dashboard');
 				}
 			}, 1000);
 		});

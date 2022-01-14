@@ -161,7 +161,7 @@ const WhatsNewModal = props => {
 	useEffect(() => {
 		if (props.enabled && !!featuresToShow) {
 			const route = findRouteNameFromNavigatorState(props.navigation.state);
-			if (route === 'WalletView') {
+			if (route === 'Dashboard') {
 				InteractionManager.runAfterInteractions(() => {
 					setShow(true);
 				});

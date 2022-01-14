@@ -280,7 +280,7 @@ class NetworkSettings extends PureComponent {
 			};
 			AnalyticsV2.trackEvent(AnalyticsV2.ANALYTICS_EVENTS.NETWORK_ADDED, analyticsParamsAdd);
 
-			navigation.navigate('WalletView');
+			navigation.navigate('Dashboard');
 		}
 	};
 
