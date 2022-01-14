@@ -14,10 +14,12 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent
 	},
 	seedPhraseWrapper: {
-		backgroundColor: colors.grey
+		backgroundColor: colors.purple,
+		borderWidth: 0,
 	},
 	wordWrapper: {
-		backgroundColor: colors.transparent
+		backgroundColor: colors.transparent,
+		borderStyle: 'solid'
 	},
 	wordText: {
 		color: colors.white

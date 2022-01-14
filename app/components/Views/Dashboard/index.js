@@ -187,8 +187,6 @@ class Dashboard extends PureComponent {
             response => {
                 // console.log(parseInt(response.result, 16))
                 const balance = response.result;
-                if (typeof balance !== "string") return; //to check special case when server returns object type
-                
                 accounts[selectedAddress] = {
                     balance: balance,
                     conversion: this.state.currentConversion
@@ -332,6 +330,18 @@ class Dashboard extends PureComponent {
         );
     }
 
+    /**
+     * Return current step of onboarding wizard if not step 5 nors 0
+     */
+    renderOnboardingWizard = () => {
+        const { wizardStep } = this.props;
+        return (
+            [1, 2, 3, 4].includes(wizardStep) && (
+                <OnboardingWizard navigation={this.props.navigation} coachmarkRef={this.accountOverviewRef} />
+            )
+        );
+    };
+
     render = () => (
         <ErrorBoundary view="Wallet">
             <View style={baseStyles.flexGrow} testID={'wallet-screen'}>
@@ -341,6 +351,7 @@ class Dashboard extends PureComponent {
                 >
                     {this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
                 </ScrollView>
+                {this.renderOnboardingWizard()}
             </View>
         </ErrorBoundary>
     );

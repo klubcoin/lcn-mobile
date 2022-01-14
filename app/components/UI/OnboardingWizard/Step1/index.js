@@ -9,22 +9,7 @@ import { strings } from '../../../../../locales/i18n';
 import onboardingStyles from '../styles';
 import { ANALYTICS_EVENT_OPTS } from '../../../../util/analytics';
 import Analytics from '../../../../core/Analytics';
-
-const styles = StyleSheet.create({
-	main: {
-		flex: 1
-	},
-	coachmark: {
-		marginHorizontal: 16
-	},
-	coachmarkContainer: {
-		flex: 1,
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		bottom: Device.isIphoneX() ? 36 : Device.isIos() ? 16 : 36
-	}
-});
+import styles from './styles/index'
 
 class Step1 extends PureComponent {
 	static propTypes = {
