@@ -44,7 +44,7 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	onPickImage() {
-		ImagePicker.openPicker({
+		ImagePicker.openCamera({
 			width: 300,
 			height: 300,
 			cropping: true
@@ -148,8 +148,8 @@ class ProfileOnboard extends PureComponent {
 								/>
 								<TextField
 									value={this.lastname}
-									label={strings('profile.lastname')}
-									placeholder={strings('profile.lastname')}
+									label={strings('profile.surname')}
+									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text)}
 								/>
 								<TextField

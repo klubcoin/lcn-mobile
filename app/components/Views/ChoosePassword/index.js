@@ -160,15 +160,16 @@ class ChoosePassword extends PureComponent {
 			return;
 		}
 		const { avatar, firstname, lastname, email, phone } = preferences.onboardProfile;
+		const { username } = this.state;
 		const name = `${firstname} ${lastname}`;
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
-		const publicInfo = JSON.stringify({ email, phone });
+		const publicInfo = JSON.stringify({ email, phone, name });
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
-		const params = [name, selectedAddress, publicInfo, hash];
+		const params = [username, selectedAddress, hash, publicInfo];
 
 		API.postRequest(
 			Routes.walletCreation,
-			[name, selectedAddress, publicInfo, hash],
+			params,
 			response => {
 				console.log('account creation', response);
 			},
@@ -230,7 +231,6 @@ class ChoosePassword extends PureComponent {
 	};
 
 	onError = async error => {
-    console.log("🚀 ~ file: index.js ~ line 233 ~ ChoosePassword ~ error", error)
 		await this.recreateVault('');
 		// Set state in app as it was with no password
 		await SecureKeychain.resetGenericPassword();
