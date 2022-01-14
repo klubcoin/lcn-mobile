@@ -27,12 +27,14 @@ import Engine from '../../../core/Engine';
 import * as sha3JS from 'js-sha3';
 import { setOnboardProfile } from '../../../actions/user';
 import connect from 'react-redux/lib/connect/connect';
+import { renderAccountName } from '../../../util/address';
 
 class EditProfile extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
 		getNavigationOptionsTitle(strings('wallet.edit_profile'), navigation);
 
 	avatar = '';
+	username = '';
 	firstname = '';
 	lastname = '';
 	email = '';
@@ -43,6 +45,7 @@ class EditProfile extends PureComponent {
 		super(props);
 		makeObservable(this, {
 			avatar: observable,
+			username: observable,
 			firstname: observable,
 			lastname: observable,
 			email: observable,
@@ -52,7 +55,12 @@ class EditProfile extends PureComponent {
 	}
 
 	componentDidMount() {
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { identities } = Engine.state.PreferencesController;
 		const { avatar, firstname, lastname, email, phone } = preferences.onboardProfile;
+	
+	
+		this.username = renderAccountName(selectedAddress, identities);
 		this.avatar = avatar;
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -112,10 +120,12 @@ class EditProfile extends PureComponent {
 		return true;
 	}
 
+
 	async onUpdate() {
 		if (this.isLoading) return;
 		this.isLoading = true;
 
+		const username = this.username.trim();
 		const firstname = this.firstname.trim();
 		const lastname = this.lastname.trim();
 		const email = this.email.trim().toLowerCase();
@@ -136,9 +146,9 @@ class EditProfile extends PureComponent {
 
 			const name = `${firstname} ${lastname}`;
 			const avatarb64 = await RNFS.readFile(path, 'base64');
-			const publicInfo = JSON.stringify({ email, phone });
+			const publicInfo = JSON.stringify({ name, email, phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-			const params = [name, selectedAddress, publicInfo, hash];
+			const params = [username, selectedAddress, hash, publicInfo];
 
 			const profile = {
 				avatar: path,
@@ -159,7 +169,8 @@ class EditProfile extends PureComponent {
 					if (response.error) {
 						alert(`${response.error.message}`);
 					} else {
-						Engine.state.PreferencesController.setAccountLabel(selectedAddress, name);
+						const { PreferencesController } = Engine.context;
+						PreferencesController.setAccountLabel(selectedAddress, username);
 						showSuccess(strings('wallet.update_profile_success'));
 					}
 					this.isLoading = false;
@@ -196,6 +207,12 @@ class EditProfile extends PureComponent {
 							</Text>
 
 							<View style={styles.form}>
+								<TextField
+									value={this.username}
+									label={strings('choose_password.username')}
+									placeholder={strings('choose_password.username')}
+									onChangeText={text => (this.username = text)}
+								/>
 								<TextField
 									value={this.firstname}
 									label={strings('profile.name')}
