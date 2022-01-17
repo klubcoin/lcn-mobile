@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
 		right: Device.isAndroid() ? 0.5 : 0,
 		bottom: Device.isAndroid() ? 1 : 2
 	},
-	textWrapperStyle: {}
+	textWrapperStyle: {},
+	imageIcon: {},
 });
 
 export default assignNestedObj(styles, brandStyles);

@@ -1,48 +1,46 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const brandStyles = StyleSheet.create({
 	button: {
-		marginHorizontal: 5
+		// marginHorizontal: 5,
+		padding: 10,
+		backgroundColor: colors.purple,
+		borderRadius: 10,
+		flex: 1,
 	},
 	buttonIconWrapper: {
-		width: 50,
-		height: 50,
+		width: 48,
+		height: 48,
 		borderRadius: 100,
-		backgroundColor: colors.blue,
-		borderColor: colors.borderBlue,
-		borderWidth: 3
+		backgroundColor: colors.primaryFox,
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	textWrapperStyle: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginTop: 10,
-		paddingVertical: 3,
-		paddingHorizontal: 10,
-		backgroundColor: colors.grey,
-		borderColor: colors.blue,
-		borderWidth: 2,
-		borderRadius: 80,
-		shadowColor: colors.blue,
-		shadowOpacity: 0.7,
-		shadowRadius: 10,
-		shadowOffset: {
-			height: 1
-		}
+		marginTop: 4,
 	},
 	buttonIcon: {
 		color: colors.white,
-		paddingHorizontal: 3
+		paddingHorizontal: 3,
 	},
 	buttonText: {
 		color: colors.white,
-		marginTop: 0,
-		marginLeft: 5
+		marginTop: 1,
+		...fontStyles.bold,
+		fontSize: RFValue(14)
 	},
 	receive: {
 		transform: [{ rotate: '0deg' }]
+	},
+	imageIcon: {
+		width: 25,
+		height: 25,
 	}
 });
 

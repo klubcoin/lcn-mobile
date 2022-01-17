@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -12,6 +12,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';
 import Colors from 'common/colors';
 import styles from './styles/index';
+
+const ICON_IMAGES = {
+	receive: require('../../../images/wallet-icon-receive.png'),
+	buy: require('../../../images/wallet-icon-buy.png'),
+	send: require('../../../images/wallet-icon-send.png'),
+	trade: require('../../../images/wallet-icon-trade.png'),
+}
+
+function getImageIcon(name) {
+	return <Image source={ICON_IMAGES[name]} style={styles.imageIcon} resizeMode={'contain'} />;
+}
 
 function getIcon(type) {
 	switch (type) {
@@ -72,16 +83,16 @@ function getLabelIcon(type) {
 	}
 }
 
-function AssetActionButton({ onPress, icon, label, disabled }) {
+function AssetActionButton({ onPress, icon, label, disabled, lastIcon = false }) {
 	return (
 		<TouchableOpacity
 			onPress={onPress}
-			style={[styles.button, disabled && styles.disabledButton]}
+			style={[styles.button, disabled && styles.disabledButton, { marginRight: lastIcon ? 0 : 6 }]}
 			disabled={disabled}
 		>
-			<View style={styles.buttonIconWrapper}>{icon && (typeof icon === 'string' ? getIcon(icon) : icon)}</View>
+			<View style={styles.buttonIconWrapper}>{icon && (typeof icon === 'string' ? getImageIcon(icon) : icon)}</View>
 			<View style={styles.textWrapperStyle}>
-				{getLabelIcon(icon)}
+				{/* {getLabelIcon(icon)} */}
 				<Text centered style={styles.buttonText} numberOfLines={1}>
 					{label}
 				</Text>

@@ -226,6 +226,7 @@ class Dashboard extends PureComponent {
                 Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_COLLECTIBLES);
             }
         });
+
     };
 
     onRef = ref => {

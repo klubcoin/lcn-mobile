@@ -27,7 +27,9 @@ import { newAssetTransaction } from '../../../actions/transaction';
 
 import Device from '../../../util/Device';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import { renderFiat } from '../../../util/number';
+import { renderFiat, balanceToFiat, hexToBN, weiToFiat } from '../../../util/number';
+import { showInfo } from '../../../util/notify';
+
 import { renderAccountName } from '../../../util/address';
 import { isMainNet } from '../../../util/networks';
 import { getEther } from '../../../util/transactions';
@@ -241,12 +243,17 @@ class AccountOverview extends PureComponent {
 			onboardingWizard,
 			chainId,
 			swapsIsLive,
-			onboardProfile
+			onboardProfile,
+			conversionRate,
+			tokenExchangeRates,
 		} = this.props;
 
 		if (!address) return null;
+
 		const { accountLabelEditable, accountLabel } = this.state;
 		const { avatar } = onboardProfile || {};
+
+		const balanceFiat = weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
 
 		return (
 			<View ref={this.scrollViewContainer} collapsable={false}>
@@ -258,67 +265,74 @@ class AccountOverview extends PureComponent {
 					testID={'account-overview'}
 				>
 					<View style={styles.info} ref={this.mainView}>
-						<TouchableOpacity
-							style={styles.identiconBorder}
-							disabled={onboardingWizard}
-							onPress={this.toggleAccountsModal}
-							testID={'wallet-account-identicon'}
-						>
-							{!!avatar ? (
-								<RemoteImage
-									source={{ uri: `file://${avatar}?v=${new Date().getTime()}` }}
-									style={styles.avatar}
-								/>
-							) : (
-								<Identicon address={address} diameter={38} noFadeIn={onboardingWizard} />
-							)}
-						</TouchableOpacity>
-						<View ref={this.editableLabelRef} style={styles.data} collapsable={false}>
-							{accountLabelEditable ? (
-								<TextInput
-									style={[
-										styles.label,
-										styles.labelInput,
-										styles.onboardingWizardLabel,
-										onboardingWizard ? { borderColor: colors.blue } : { borderColor: colors.white }
-									]}
-									editable={accountLabelEditable}
-									onChangeText={this.onAccountLabelChange}
-									onSubmitEditing={this.setAccountLabel}
-									onBlur={this.setAccountLabel}
-									testID={'account-label-text-input'}
-									value={accountLabel}
-									selectTextOnFocus
-									ref={this.input}
-									returnKeyType={'done'}
-									autoCapitalize={'none'}
-									autoCorrect={false}
-									numberOfLines={1}
-								/>
-							) : (
-								<TouchableOpacity onLongPress={this.setAccountLabelEditable}>
-									<Text
-										style={[
-											styles.label,
-											styles.onboardingWizardLabel,
-											onboardingWizard
-												? { borderColor: colors.blue }
-												: { borderColor: colors.transparent }
-										]}
-										numberOfLines={1}
-										testID={'edit-account-label'}
-									>
-										{name?.name || `${name}`}
-									</Text>
+						<View style={styles.accountWrapper}>
+							<View style={styles.row}>
+								<TouchableOpacity
+									style={styles.identiconBorder}
+									disabled={onboardingWizard}
+									onPress={this.toggleAccountsModal}
+									testID={'wallet-account-identicon'}
+								>
+									{!!avatar ? (
+										<RemoteImage
+											source={{ uri: `file://${avatar}?v=${new Date().getTime()}` }}
+											style={styles.avatar}
+										/>
+									) : (
+										<Identicon address={address} diameter={38} noFadeIn={onboardingWizard} />
+									)}
 								</TouchableOpacity>
-							)}
+								<View ref={this.editableLabelRef} style={styles.data} collapsable={false}>
+									{accountLabelEditable ? (
+										<TextInput
+											style={[
+												styles.label,
+												styles.labelInput,
+												styles.onboardingWizardLabel,
+												onboardingWizard ? { borderColor: colors.blue } : { borderColor: colors.white }
+											]}
+											editable={accountLabelEditable}
+											onChangeText={this.onAccountLabelChange}
+											onSubmitEditing={this.setAccountLabel}
+											onBlur={this.setAccountLabel}
+											testID={'account-label-text-input'}
+											value={accountLabel}
+											selectTextOnFocus
+											ref={this.input}
+											returnKeyType={'done'}
+											autoCapitalize={'none'}
+											autoCorrect={false}
+											numberOfLines={1}
+										/>
+									) : (
+										<TouchableOpacity onLongPress={this.setAccountLabelEditable}>
+											<Text
+												style={[
+													styles.label,
+													styles.onboardingWizardLabel,
+													onboardingWizard
+														? { borderColor: colors.blue }
+														: { borderColor: colors.transparent }
+												]}
+												numberOfLines={1}
+												testID={'edit-account-label'}
+											>
+												{name?.name || `${name}`}
+											</Text>
+										</TouchableOpacity>
+									)}
+									<Text style={styles.balance}>{balanceFiat}</Text>
+								</View>
+							</View>
+
+							{/* {isMainNet(chainId) && (
+								<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
+							)} */}
+
+							<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
+								<EthereumAddress address={address} style={styles.address} type={'short'} />
+							</TouchableOpacity>
 						</View>
-						{isMainNet(chainId) && (
-							<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
-						)}
-						<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
-							<EthereumAddress address={address} style={styles.address} type={'short'} />
-						</TouchableOpacity>
 
 						<View style={styles.actions}>
 							<AssetActionButton
@@ -338,6 +352,12 @@ class AccountOverview extends PureComponent {
 								icon="send"
 								onPress={this.onSend}
 								label={strings('asset_overview.send_button')}
+							/>
+							<AssetActionButton
+								icon="trade"
+								onPress={() => showInfo('This feature in under maintain')}
+								label={strings('asset_overview.trade')}
+								lastIcon
 							/>
 							{/* <AssetActionButton
 								icon="send"
@@ -367,7 +387,8 @@ const mapStateToProps = state => ({
 	chainId: state.engine.backgroundState.NetworkController.provider.chainId,
 	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
 	swapsIsLive: swapsLivenessSelector(state),
-	onboardProfile: state.user.onboardProfile
+	onboardProfile: state.user.onboardProfile,
+	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -748,7 +748,8 @@
 		"balance": "balance. See the support article",
 		"troubleshooting_missing": "troubleshooting missing balances",
 		"for_help": "for help.",
-		"could_not_fetch_order_info": "Could not fetch order information"
+		"could_not_fetch_order_info": "Could not fetch order information",
+		"trade": "Trade"
 	},
 	"payQR": {
 		"order_summary": "Order Summary",

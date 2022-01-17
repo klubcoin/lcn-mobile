@@ -74,7 +74,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 		flexDirection: 'row'
-	}
+	},
+	accountWrapper: {},
+	row: {},
+	balance: {},
 });
 
 export default assignNestedObj(styles, brandStyles);
