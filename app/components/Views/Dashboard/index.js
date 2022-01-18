@@ -4,9 +4,10 @@ import {
     ScrollView,
     InteractionManager,
     ActivityIndicator,
-    StyleSheet,
+    Text,
     View,
-    ImageBackground
+    Dimensions,
+    TouchableOpacity
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -36,12 +37,34 @@ import preferences from '../../../store/preferences';
 import Device from '../../../util/Device';
 import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { LineChart } from "react-native-chart-kit";
 
 /**
  * Main view for the wallet
  */
+
+// TODO: Remove this hardcode data.
+const DummyData = [
+    10 * 100,
+    20 * 100,
+    40 * 100,
+    40 * 100,
+    40 * 100,
+    14 * 100,
+    40 * 100,
+    40 * 100,
+    40 * 100,
+    50 * 100,
+    40 * 100,
+    100 * 100,
+    40 * 100,
+    40 * 100,
+];
+const CurrenIndex = 5;
+
 class Dashboard extends PureComponent {
-    static navigationOptions = ({ navigation }) => getWalletNavbarOptions('wallet.title', navigation);
+    static navigationOptions = ({ navigation }) => getWalletNavbarOptions('dashboard.title', navigation);
 
     static propTypes = {
         /**
@@ -234,6 +257,13 @@ class Dashboard extends PureComponent {
         this.accountOverviewRef = ref;
     };
 
+    renderTitle = title => {
+        return (
+            <View style={styles.title}>
+                <Text style={styles.titleText}>{title}</Text>
+            </View>);
+    }
+
     renderContent() {
         const {
             accounts,
@@ -248,7 +278,6 @@ class Dashboard extends PureComponent {
         } = this.props;
 
         const { currentConversion } = this.state;
-
         //TODO: need to remove fixed code for TIPPER app
         const tipper = {
             "image": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
@@ -297,32 +326,109 @@ class Dashboard extends PureComponent {
             assets = tokens;
         }
 
-        console.log({
-            accounts
-        });
-
-        const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+        // const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 
         return (
             <View style={styles.wrapper}>
-                {selectedAddress && account && (
-                    <AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
-                )}
-                <View style={styles.tabWrapper}>
-                    <ScrollableTabView
-                        renderTabBar={this.renderTabBar}
-                        // eslint-disable-next-line react/jsx-no-bind
-                        onChangeTab={obj => this.onChangeTab(obj)}
-                    >
-                        <Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
-                        <CollectibleContracts
-                            navigation={navigation}
-                            tabLabel={strings('wallet.collectibles')}
-                            collectibles={collectibles}
-                        />
-                    </ScrollableTabView>
+
+                {/* Dashboard */}
+                {this.renderTitle(strings('dashboard.title'))}
+
+                {/* Dashboard Content */}
+                <View style={styles.row}>
+                    <View style={styles.card}>
+                        <View style={styles.row}>
+                            <Text style={styles.cardTitle}>{strings('watch_asset_request.token')}</Text>
+                            <Text style={styles.extraCardTitle}>+2,4%</Text>
+                        </View>
+                        <View style={styles.cardContent}>
+                            <Text style={styles.balance}>
+                                100,000
+                                <Text style={styles.currency}>  KlubCoins</Text>
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={[styles.card, { marginRight: 0 }]}>
+                        <View style={styles.row}>
+                            <Text style={styles.cardTitle}>{strings('watch_asset_request.balance')}</Text>
+                            <Text style={styles.extraCardTitle}>+2,4%</Text>
+                        </View>
+                        <View style={[styles.cardContent, styles.row]}>
+                            <Text style={[styles.balance, { paddingRight: 15 }]}>
+                                $100,000,000
+                            </Text>
+                            <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} />
+                        </View>
+                    </View>
                 </View>
 
+                {/* Chart */}
+                {this.renderTitle(strings('dashboard.chart'))}
+
+                {/* //TODO: Wait to implement API for real data and feature */}
+                <View
+                    style={{ padding: 15, backgroundColor: colors.purple, borderRadius: 10, marginBottom: 20 }}>
+                    <LineChart
+                        onDataPointClick={({ index, dateSet }) => {
+                            console.log("🚀 ~ file: index.js ~ line 415 ~ Dashboard ~ renderContent ~ dateSet", dateSet)
+                            console.log(index);
+                        }}
+                        data={{
+                            datasets: [
+                                {
+                                    data: DummyData
+                                }
+                            ]
+                        }}
+                        width={Dimensions.get("window").width - 35 * 2}
+                        height={Dimensions.get("window").width - 35 * 2}
+                        // withDots={tr}
+                        withOuterLines={false}
+                        withHorizontalLabels={false}
+                        fromZero={true}
+                        segments={Math.round(DummyData.length / 2)}
+                        hidePointsAtIndex={[...Array(DummyData.length).keys()].filter(i => i != CurrenIndex)}
+                        chartConfig={{
+                            color: (opacity = 1) => colors.blue,
+                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            backgroundGradientFrom: colors.purple,
+                            backgroundGradientTo: colors.purple,
+                            fillShadowGradient: colors.blue,
+                            fillShadowGradientOpacity: 0.4,
+                            strokeWidth: 1.4,
+                            propsForDots: {
+                                stroke: colors.white,
+                                strokeWidth: 2,
+                                fill: colors.black
+                            },
+                            propsForBackgroundLines: {
+                                strokeDasharray: 5,
+                                strokeDashoffset: 1,
+                                stroke: 'rgba(255, 255, 255, 0.1)',
+                            },
+                        }}
+                        style={{
+                            backgroundColor: 'red',
+                            paddingRight: 5,
+                            paddingBottom: -35 * 2
+                        }}
+
+                    />
+                </View>
+
+                {/* Action button */}
+                <View style={styles.btnWrapper}>
+                    <TouchableOpacity style={styles.btn}>
+                        <Text style={styles.btnText}>{strings('dashboard.buy_more')}</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.btnWrapper}>
+                    <TouchableOpacity style={styles.btn}>
+                        <Text style={styles.btnText}>{strings('dashboard.spend_coin')}</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }

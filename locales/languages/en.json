@@ -378,7 +378,10 @@
 		"update_profile_fail": "Failed to update profile"
 	},
 	"dashboard": {
-		"title": "Dashboard"
+		"title": "Dashboard",
+		"chart": "Chart",
+		"buy_more": "Buy more Klub Coins",
+		"spend_coin": "Spend your Klub Coins"
 	},
 	"voting": {
 		"title": "Voting",
