@@ -12,16 +12,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from '../../Base/Text';
 import Colors from 'common/colors';
 import styles from './styles/index';
-
-const ICON_IMAGES = {
-	receive: require('../../../images/wallet-icon-receive.png'),
-	buy: require('../../../images/wallet-icon-buy.png'),
-	send: require('../../../images/wallet-icon-send.png'),
-	trade: require('../../../images/wallet-icon-trade.png'),
-}
+import drawables from '../../../common/drawables';
 
 function getImageIcon(name) {
-	return <Image source={ICON_IMAGES[name]} style={styles.imageIcon} resizeMode={'contain'} />;
+	return <Image source={drawables[name]} style={styles.imageIcon} resizeMode={'contain'} />;
 }
 
 function getIcon(type) {
