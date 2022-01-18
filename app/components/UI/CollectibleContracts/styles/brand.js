@@ -4,7 +4,11 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.transparent
+		backgroundColor: colors.purple,
+		marginTop: 0,
+		paddingTop: 16,
+		borderBottomLeftRadius: 10,
+		borderBottomRightRadius: 10
 	},
 	addText: {
 		color: colors.blue

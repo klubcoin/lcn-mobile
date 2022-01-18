@@ -35,6 +35,7 @@ import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
 import Device from '../../../util/Device';
 import styles from './styles/index';
+import CustomTabBar from '../../UI/CustomTabBar'
 
 /**
  * Main view for the wallet
@@ -207,9 +208,9 @@ class Dashboard extends PureComponent {
 
     renderTabBar() {
         return (
-            <DefaultTabBar
+            <CustomTabBar
                 underlineStyle={styles.tabUnderlineStyle}
-                activeTextColor={colors.blue}
+                activeTextColor={colors.white}
                 inactiveTextColor={colors.fontTertiary}
                 backgroundColor={colors.transparent}
                 tabStyle={styles.tabStyle}
@@ -307,18 +308,21 @@ class Dashboard extends PureComponent {
                 {selectedAddress && account && (
                     <AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
                 )}
-                <ScrollableTabView
-                    renderTabBar={this.renderTabBar}
-                    // eslint-disable-next-line react/jsx-no-bind
-                    onChangeTab={obj => this.onChangeTab(obj)}
-                >
-                    <Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
-                    <CollectibleContracts
-                        navigation={navigation}
-                        tabLabel={strings('wallet.collectibles')}
-                        collectibles={collectibles}
-                    />
-                </ScrollableTabView>
+                <View style={styles.tabWrapper}>
+                    <ScrollableTabView
+                        renderTabBar={this.renderTabBar}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        onChangeTab={obj => this.onChangeTab(obj)}
+                    >
+                        <Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
+                        <CollectibleContracts
+                            navigation={navigation}
+                            tabLabel={strings('wallet.collectibles')}
+                            collectibles={collectibles}
+                        />
+                    </ScrollableTabView>
+                </View>
+
             </View>
         );
     }
