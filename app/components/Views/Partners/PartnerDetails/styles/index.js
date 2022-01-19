@@ -1,5 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
-import { colors, fontStyles, baseStyles } from '../../../../../styles/common';
+import { StyleSheet } from 'react-native';
+import { colors, fontStyles } from '../../../../../styles/common';
 import brandStyles from './brand';
 import { assignNestedObj } from '../../../../../util/object';
 
@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
 	title: {
 		color: colors.white,
 		...fontStyles.bold,
-		fontSize: 30
+		fontSize: 30,
+		alignSelf: 'center'
 	},
 	desc: {
 		color: colors.white,

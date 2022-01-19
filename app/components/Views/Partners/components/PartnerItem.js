@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, TouchableHighlight, StyleSheet } from 'react-native';
 import { colors } from '../../../../styles/common';
-
+import APIService, { basicAuth } from '../../../../services/APIService';
 export default function PartnerItem({ imageSrc, onItemPress }) {
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -25,7 +25,20 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 	return (
 		<TouchableHighlight style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
 			<View style={styles.imgWrapper}>
-				<Image source={imageSrc} resizeMode={'contain'} style={styles.img} />
+				<Image
+					source={{
+						uri:
+							'https://account.liquichain.io/meveo/api/rest/fileSystem/binaries/default/KlubCoinPartner/88540662-605e-4b2f-8028-3405b3d6b4ac/icon',
+						headers: {
+							Authorization: `Basic ${basicAuth}`
+						}
+					}}
+					resizeMode={'contain'}
+					style={styles.img}
+					onError={error => {
+						console.log(error);
+					}}
+				/>
 			</View>
 		</TouchableHighlight>
 	);

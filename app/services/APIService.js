@@ -2,7 +2,7 @@ import moment from 'moment';
 import config from '../config';
 import WebService from './WebService';
 
-const basicAuth = 'apitest:apitest';
+export const basicAuth = 'apitest:apitest';
 const basicAuthAdmin = 'meveo.admin:meveo';
 
 const dateFormatMeveo = 'YYYY-MM-DD HH:mm:ss';
@@ -20,6 +20,7 @@ export default class APIService {
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
 	static routePersistenceAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
+	static routeMeveoAPI = () => 'https://account.liquichain.io/meveo';
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
 	static apiGetWalletContract = appWallet => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;
@@ -31,6 +32,9 @@ export default class APIService {
 	static apiMarketCategories = () => APIService.routePersistenceAPI() + `LiquimartProductCategory/list`;
 
 	static apiStoreReviews = () => APIService.routePersistenceAPI() + `LiquimartProductReview/list`;
+
+	static apiGetPartnerList = () => APIService.routePersistenceAPI() + 'KlubCoinPartner';
+	static apiGetPartnerIcon = iconPath => APIService.routeMeveoAPI() + iconPath;
 
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
@@ -219,5 +223,16 @@ export default class APIService {
 	static getStoreReviews(callback) {
 		const data = { basicAuth };
 		WebService.sendPostDirect(this.apiStoreReviews(), data, callback);
+	}
+
+	static getPartnerList(callback) {
+		const data = { basicAuth };
+		WebService.sendGetDirect(this.apiGetPartnerList(), data, callback);
+	}
+
+	static getPartnerImage(imagePath, callback) {
+		const data = { basicAuth };
+		console.log(this.apiGetPartnerIcon(imagePath));
+		WebService.sendFetch('GET', this.apiGetPartnerIcon(imagePath), data, callback);
 	}
 }
