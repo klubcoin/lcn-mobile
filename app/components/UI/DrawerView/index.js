@@ -70,7 +70,9 @@ const ICON_IMAGES = {
 	manageCoin: require('../../../images/ic_manage_coin.png'),
 	receiveTip: require('../../../images/ic_receive_tip.png'),
 	'selected-wallet': require('../../../images/selected-wallet-icon.png'),
-	'selected-partners': require('../../../images/ic_partners.png')
+	'selected-partners': require('../../../images/ic_partners.png'),
+	dashboard: require('../../../images/dashboard.png'),
+	'selected-dashboard': require('../../../images/dashboard.png'),
 };
 
 /**
@@ -360,10 +362,15 @@ class DrawerView extends PureComponent {
 	};
 
 	showWallet = () => {
-		this.props.navigation.navigate('Dashboard');
+		this.props.navigation.navigate('WalletView');
 		this.hideDrawer();
 		this.trackEvent(ANALYTICS_EVENTS_V2.WALLET_OPENED);
 	};
+
+	showDashboard = () => {
+		this.props.navigation.navigate('Dashboard');
+		this.hideDrawer();
+	}
 
 	goToProfile = () => {
 		this.props.navigation.navigate('Profile');
@@ -570,11 +577,18 @@ class DrawerView extends PureComponent {
 				// 	routeNames: ['BrowserView', 'AddBookmark']
 				// },
 				{
+					name: strings('dashboard.title'),
+					icon: this.getImageIcon('dashboard'),
+					selectedIcon: this.getSelectedImageIcon('dashboard'),
+					action: this.showDashboard,
+					routeNames: ['Dashboard']
+				},
+				{
 					name: strings('drawer.wallet'),
 					icon: this.getImageIcon('wallet'),
 					selectedIcon: this.getSelectedImageIcon('wallet'),
 					action: this.showWallet,
-					routeNames: ['Dashboard', 'Asset', 'AddAsset', 'Collectible']
+					routeNames: ['WalletView', 'Asset', 'AddAsset', 'Collectible']
 				},
 				{
 					name: strings('drawer.manage_coins'),

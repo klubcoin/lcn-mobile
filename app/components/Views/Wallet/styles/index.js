@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	imgBackground: {}
+	imgBackground: {},
+	tabWrapper: {},
 });
 
 export default assignNestedObj(styles, brandStyles);
