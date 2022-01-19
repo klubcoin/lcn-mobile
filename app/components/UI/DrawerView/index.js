@@ -457,6 +457,12 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
+	goToFAQ = () => {
+		this.props.navigation.navigate('FAQ');
+		this.hideDrawer();
+		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_FAQ);
+	}
+
 	goToBrowserUrl(url, title) {
 		this.props.navigation.navigate('Webview', {
 			url,
@@ -680,7 +686,7 @@ class DrawerView extends PureComponent {
 				{
 					name: strings('drawer.faq'),
 					icon: this.getAntDesignIcon('question'),
-					action: this.showHelp
+					action: this.goToFAQ
 				},
 				// {
 				// 	name: strings('drawer.request_feature'),
