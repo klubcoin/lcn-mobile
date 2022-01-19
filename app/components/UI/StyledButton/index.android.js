@@ -70,6 +70,10 @@ export default class StyledButton extends PureComponent {
 		disabledContainerStyle: { opacity: 0.6 }
 	};
 
+	capitalizeFirstLetter = string => {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	};
+
 	renderGroupedChildren = fontStyle => {
 		const { disabled, type } = this.props;
 		const style = [
@@ -120,7 +124,10 @@ export default class StyledButton extends PureComponent {
 		}
 
 		return (
-			<TouchableNativeFeedback {...touchableProps} testID={this.props.testID} disabled={this.props.disabled}
+			<TouchableNativeFeedback
+				{...touchableProps}
+				testID={this.props.testID}
+				disabled={this.props.disabled}
 				accessibilityLabel={this.props.accessibilityLabel || this.props.testID}
 			>
 				<View style={containerStyles}>{this.renderGroupedChildren(fontStyle, containerStyles)}</View>
