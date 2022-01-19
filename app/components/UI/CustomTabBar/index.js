@@ -28,13 +28,10 @@ const CustomTabBar = CreateReactClass({
 
     getDefaultProps: function () {
         return {
-            activeTextColor: 'navy',
-            inactiveTextColor: 'black',
+            activeTextColor: colors.navy,
+            inactiveTextColor: colors.black,
             backgroundColor: null,
         };
-    },
-
-    renderTabOption(name, page) {
     },
 
     renderTab(name, page, isTabActive, onPressHandler) {

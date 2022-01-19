@@ -381,9 +381,8 @@ class Dashboard extends PureComponent {
                                 }
                             ]
                         }}
-                        width={Dimensions.get("window").width - 35 * 2}
-                        height={Dimensions.get("window").width - 35 * 2}
-                        // withDots={tr}
+                        width={Device.getDeviceWidth() - 35 * 2}
+                        height={Device.getDeviceWidth() - 35 * 2}
                         withOuterLines={false}
                         withHorizontalLabels={false}
                         fromZero={true}
@@ -405,11 +404,10 @@ class Dashboard extends PureComponent {
                             propsForBackgroundLines: {
                                 strokeDasharray: 5,
                                 strokeDashoffset: 1,
-                                stroke: 'rgba(255, 255, 255, 0.1)',
+                                stroke: colors.white000,
                             },
                         }}
                         style={{
-                            backgroundColor: 'red',
                             paddingRight: 5,
                             paddingBottom: -35 * 2
                         }}

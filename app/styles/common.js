@@ -18,6 +18,7 @@ export const colors = {
 	black: '#000000',
 	white: '#FFFFFF',
 	white100: '#F9FAFB',
+	white000: 'rgba(255, 255, 255, 0.1)',
 	grey450: '#8E8E93',
 	grey700: '#3C3F42',
 	grey600: '#5B5D67',
@@ -72,8 +73,9 @@ export const colors = {
 	pink: '#eb00f7',
 	purple: '#21193d',
 	purple100: '#563fab',
-	lightPink: '#fee5e5',
 	purple500: '#19132f',
+	lightPink: '#fee5e5',
+	navy: 'navy'
 };
 
 /**
