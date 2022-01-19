@@ -98,6 +98,7 @@ import TipperDetails from '../../Views/Tipper/TipperDetails';
 import MarketProductReview from '../../Views/MarketPlace/ProductReview';
 import Dashboard from '../../Views/Dashboard';
 import FAQ from '../../Views/FAQ';
+import Collect from '../../Views/Collect';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -169,6 +170,9 @@ export default createStackNavigator(
 						},
 						FAQ: {
 							screen: FAQ
+						},
+						Collect: {
+							screen: Collect
 						}
 					}),
 					VotingAppHome: createDrawerNavigator({
