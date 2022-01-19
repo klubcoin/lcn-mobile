@@ -99,6 +99,7 @@ import MarketProductReview from '../../Views/MarketPlace/ProductReview';
 import Dashboard from '../../Views/Dashboard';
 import FAQ from '../../Views/FAQ';
 import Collect from '../../Views/Collect';
+import FAQAnswer from '../../Views/FAQ/FAQAnswer';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -170,6 +171,9 @@ export default createStackNavigator(
 						},
 						FAQ: {
 							screen: FAQ
+						},
+						FAQAnswer: {
+							screen: FAQAnswer,
 						},
 						Collect: {
 							screen: Collect

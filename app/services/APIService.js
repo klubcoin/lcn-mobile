@@ -32,9 +32,10 @@ export default class APIService {
 
 	static apiStoreReviews = () => APIService.routePersistenceAPI() + `LiquimartProductReview/list`;
 
-	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
-		config.googleApi.key
-	}`;
+	static apiFAQs = () => APIService.routePersistenceAPI() + 'FrequentlyAskedQuestion';
+
+	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${config.googleApi.key
+		}`;
 
 	static announcePeerOnlineStatus(peerId, callback) {
 		const data = {
@@ -219,5 +220,10 @@ export default class APIService {
 	static getStoreReviews(callback) {
 		const data = { basicAuth };
 		WebService.sendPostDirect(this.apiStoreReviews(), data, callback);
+	}
+
+	static getFAQs(callback) {
+		const data = { basicAuth };
+		WebService.sendGetDirect(this.apiFAQs(), data, callback);
 	}
 }
