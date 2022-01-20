@@ -57,9 +57,7 @@ class EditProfile extends PureComponent {
 	componentDidMount() {
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const { identities } = Engine.state.PreferencesController;
-		const { avatar, firstname, lastname, email, phone } = preferences.onboardProfile;
-	
-	
+		const { avatar, firstname, lastname, email, phone } = preferences?.onboardProfile ?? {};
 		this.username = renderAccountName(selectedAddress, identities);
 		this.avatar = avatar;
 		this.firstname = firstname;
@@ -88,10 +86,10 @@ class EditProfile extends PureComponent {
 	}
 
 	isDataValid() {
-		const firstname = this.firstname.trim();
-		const lastname = this.lastname.trim();
-		const email = this.email.trim();
-		const phone = this.phone.trim();
+		const firstname = this.firstname?.trim();
+		const lastname = this.lastname?.trim();
+		const email = this.email?.trim();
+		const phone = this.phone?.trim();
 
 		if (!this.avatar) {
 			showError(strings('profile.missing_photo'));
@@ -125,14 +123,17 @@ class EditProfile extends PureComponent {
 		if (this.isLoading) return;
 		this.isLoading = true;
 
-		const username = this.username.trim();
-		const firstname = this.firstname.trim();
-		const lastname = this.lastname.trim();
-		const email = this.email.trim().toLowerCase();
-		const phone = this.phone.trim();
+		const username = this.username?.trim();
+		const firstname = this.firstname?.trim();
+		const lastname = this.lastname?.trim();
+		const email = this.email?.trim().toLowerCase();
+		const phone = this.phone?.trim();
 
 		const isValid = this.isDataValid();
-		if (!isValid) return;
+		if (!isValid) {
+			this.isLoading = false;
+			return;
+		}
 
 		try {
 			const selectedAddress = Engine.state.PreferencesController.selectedAddress;
