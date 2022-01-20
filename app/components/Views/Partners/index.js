@@ -6,7 +6,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import PartnerItem from './components/PartnerItem';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import APIService from '../../../services/APIService';
+import APIService, { apiGetPartnerIcon } from '../../../services/APIService';
 
 class Partners extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -34,15 +34,7 @@ class Partners extends PureComponent {
 		APIService.getPartnerList((success, json) => {
 			if (success) {
 				this.partnerList = json;
-				this.fetchPartnerImage(json[0].icon);
 			}
-		});
-	}
-
-	fetchPartnerImage(imagePath) {
-		APIService.getPartnerImage(imagePath, (success, json) => {
-			console.log('11111111111111');
-			console.log(json);
 		});
 	}
 

@@ -229,10 +229,4 @@ export default class APIService {
 		const data = { basicAuth };
 		WebService.sendGetDirect(this.apiGetPartnerList(), data, callback);
 	}
-
-	static getPartnerImage(imagePath, callback) {
-		const data = { basicAuth };
-		console.log(this.apiGetPartnerIcon(imagePath));
-		WebService.sendFetch('GET', this.apiGetPartnerIcon(imagePath), data, callback);
-	}
 }

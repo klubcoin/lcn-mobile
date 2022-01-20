@@ -8,6 +8,7 @@ import { strings } from '../../../../../locales/i18n';
 import StyledButton from '../../../UI/StyledButton';
 import styles from './styles/index';
 import APIService, { basicAuth } from '../../../../services/APIService';
+import * as base64 from 'base-64';
 
 class PartnerDetails extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -51,7 +52,7 @@ class PartnerDetails extends PureComponent {
 						source={{
 							uri: APIService.apiGetPartnerIcon(this.icon),
 							headers: {
-								Authorization: `Basic ${basicAuth}`
+								Authorization: `Basic ${base64.encode(basicAuth)}`
 							}
 						}}
 						resizeMode={'cover'}
