@@ -750,7 +750,6 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 					</View>
-					)}
 					<View style={styles.setting} testID={'reveal-private-key-section'}>
 						<Text style={styles.title}>
 							{strings('reveal_credential.private_key_title_for_account', {
@@ -758,7 +757,9 @@ class Settings extends PureComponent {
 							})}
 						</Text>
 						<Text style={styles.desc}>
-							{strings('reveal_credential.private_key_warning', { accountName: account.name?.name || account?.name })}
+							{strings('reveal_credential.private_key_warning', {
+								accountName: account.name?.name || account?.name
+							})}
 						</Text>
 						<StyledButton type="normal" onPress={this.goToExportPrivateKey} containerStyle={styles.confirm}>
 							{strings('reveal_credential.show_private_key')}
@@ -778,8 +779,8 @@ class Settings extends PureComponent {
 										total: privateKeyBackupStats.partCount
 									})}
 								</Text>
-							</View>)
-						}
+							</View>
+						)}
 						<ActionModal
 							modalVisible={browserHistoryModalVisible}
 							confirmText={strings('app_settings.clear')}
