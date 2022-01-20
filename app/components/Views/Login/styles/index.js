@@ -64,6 +64,17 @@ const styles = StyleSheet.create({
 		color: colors.blue,
 		...fontStyles.normal
 	},
+	biometricTop: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 20
+	},
+	biometricBottom: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 10,
+		marginBottom: 30
+	},
 	biometrics: {
 		flexDirection: 'row',
 		alignItems: 'center',

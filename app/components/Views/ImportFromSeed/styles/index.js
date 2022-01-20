@@ -68,6 +68,17 @@ const styles = StyleSheet.create({
 	inputContainerStyle: {
 		paddingRight: 46
 	},
+	biometricTop: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 20
+	},
+	biometricBottom: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 10,
+		marginBottom: 30
+	},
 	biometrics: {
 		alignItems: 'flex-start',
 		marginTop: 10
