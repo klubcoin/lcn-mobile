@@ -1,6 +1,8 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import { colors, fontStyles } from '../../../../../styles/common';
 import { StyleSheet } from 'react-native';
+import brandStyles from './brand';
+import { assignNestedObj } from '../../../../../util/object';
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -20,4 +22,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default styles;
+export default assignNestedObj(styles, brandStyles);
