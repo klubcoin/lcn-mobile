@@ -35,7 +35,7 @@ const SettingsDrawer = ({ title, description, noBorder, onPress, warning }) => (
 	<TouchableOpacity onPress={onPress}>
 		<View style={noBorder ? [styles.root, styles.noBorder] : styles.root}>
 			<View style={styles.content}>
-				<Text style={styles.title}>{title}</Text>
+				{title && <Text style={styles.title}>{title}</Text>}
 				{description && <Text style={styles.description}>{description}</Text>}
 				<View>
 					{warning ? (

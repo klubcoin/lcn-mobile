@@ -1,16 +1,15 @@
 import React, { PureComponent } from 'react';
 import { ScrollView, Text, View, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { getNavigationOptionsTitle } from '../../../UI/Navbar';
-import { strings } from '../../../../../locales/i18n';
-import { fontStyles, colors } from '../../../../styles/common';
-import StyledButton from '../../../UI/StyledButton';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import { getNavigationOptionsTitle } from '../../UI/Navbar';
+import { strings } from '../../../../locales/i18n';
+import { fontStyles, colors } from '../../../styles/common';
+import StyledButton from '../../UI/StyledButton';
 import styles from './styles/index';
 
-class PartnerDetails extends PureComponent {
-	static navigationOptions = ({ navigation }) =>
-		getNavigationOptionsTitle(navigation.getParam('partner'), navigation);
+class Collect extends PureComponent {
+	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.collect'), navigation);
 
 	render() {
 		return (
@@ -24,7 +23,7 @@ class PartnerDetails extends PureComponent {
 						the blockchain. Each DJenerates NFT owner automatically receive 500 Klub Coins.
 					</Text>
 					<Image
-						source={require('../../../../images/partner_sample.png')}
+						source={require('../../../images/partner_sample.png')}
 						resizeMode={'cover'}
 						style={styles.partnerImage}
 					/>
@@ -34,7 +33,7 @@ class PartnerDetails extends PureComponent {
 							onPress={this.onViewPartners}
 							testID={'onboarding-import-button'}
 						>
-							{strings('onboarding.website').toUpperCase()}
+							{strings('account_backup_step_1.cta_text').toUpperCase()}
 						</StyledButton>
 					</View>
 				</View>
@@ -42,4 +41,4 @@ class PartnerDetails extends PureComponent {
 		);
 	}
 }
-export default observer(PartnerDetails);
+export default observer(Collect);

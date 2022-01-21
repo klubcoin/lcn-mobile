@@ -27,8 +27,8 @@ class Partners extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<ScrollView>
-					{Object.keys(logos).map(e => (
-						<PartnerItem imageSrc={logos[e]} onItemPress={() => this.gotoDetails(e)} />
+					{Object.keys(logos).map((e, index) => (
+						<PartnerItem imageSrc={logos[e]} onItemPress={() => this.gotoDetails(e)} key={index} />
 					))}
 				</ScrollView>
 			</OnboardingScreenWithBg>
