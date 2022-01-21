@@ -12,6 +12,7 @@ import TabBar from '../../Base/TabBar';
 import { strings } from '../../../../locales/i18n';
 import FiatOrdersView from '../FiatOrdersView';
 import ErrorBoundary from '../ErrorBoundary';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -31,18 +32,20 @@ function ActivityView({ hasOrders, ...props }) {
 	);
 
 	return (
-		<ErrorBoundary view="ActivityView">
-			<View style={styles.wrapper}>
-				<ScrollableTabView
-					renderTabBar={hasOrders && TabBar}
-					locked={!hasOrders}
-					page={!hasOrders ? 0 : undefined}
-				>
-					<TransactionsView tabLabel={strings('transactions_view.title')} />
-					{hasOrders && <FiatOrdersView tabLabel={strings('fiat_on_ramp.purchases')} />}
-				</ScrollableTabView>
-			</View>
-		</ErrorBoundary>
+		<OnboardingScreenWithBg screen="a">
+			<ErrorBoundary view="ActivityView">
+				<View style={styles.wrapper}>
+					<ScrollableTabView
+						renderTabBar={hasOrders && TabBar}
+						locked={!hasOrders}
+						page={!hasOrders ? 0 : undefined}
+					>
+						<TransactionsView tabLabel={strings('transactions_view.title')} />
+						{hasOrders && <FiatOrdersView tabLabel={strings('fiat_on_ramp.purchases')} />}
+					</ScrollableTabView>
+				</View>
+			</ErrorBoundary>
+		</OnboardingScreenWithBg>
 	);
 }
 

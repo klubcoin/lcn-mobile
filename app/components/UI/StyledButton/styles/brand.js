@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
 	danger: {
 		backgroundColor: colors.red,
 		borderColor: colors.red,
+		borderRadius: 10,
 		borderWidth: 1
 	},
 	viewText: {

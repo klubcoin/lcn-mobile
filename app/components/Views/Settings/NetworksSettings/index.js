@@ -10,14 +10,21 @@ import Networks, { getAllNetworks } from '../../../../util/networks';
 import StyledButton from '../../../UI/StyledButton';
 import Engine from '../../../../core/Engine';
 import { MAINNET, RPC } from '../../../../constants/network';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
-	wrapper: {
-		backgroundColor: colors.white,
-		flex: 1,
-		paddingVertical: 12,
-		paddingHorizontal: 24,
-		marginBottom: 24
+	networksWrapper: {
+		paddingHorizontal: 20
+	},
+	itemRoot: {
+		backgroundColor: colors.purple,
+		borderBottomWidth: 0,
+		flexDirection: 'row',
+		paddingVertical: 15,
+		alignItems: 'center',
+		borderRadius: 15,
+		paddingHorizontal: 15,
+		minHeight: 0
 	},
 	networkIcon: {
 		width: 15,
@@ -34,13 +41,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.grey100
 	},
 	network: {
-		flex: 1,
-		flexDirection: 'row',
-		paddingVertical: 12
-	},
-	networkWrapper: {
-		flex: 0,
-		flexDirection: 'row'
+		marginTop: 20
 	},
 	networkLabel: {
 		fontSize: 16,
@@ -52,6 +53,16 @@ const styles = StyleSheet.create({
 		paddingVertical: 12,
 		color: colors.fontPrimary,
 		...fontStyles.bold
+	},
+	syncConfirm: {
+		marginBottom: 20,
+		marginHorizontal: 20,
+		backgroundColor: colors.purple,
+		borderColor: colors.purple,
+		color: colors.white
+	},
+	addNetworkText: {
+		color: colors.white
 	}
 });
 
@@ -184,7 +195,7 @@ class NetworksSettings extends PureComponent {
 					key={`network-${MAINNET}`}
 					onPress={() => this.onPress(MAINNET)} // eslint-disable-line
 				>
-					<View style={styles.networkWrapper}>
+					<View style={styles.itemRoot}>
 						<View style={[styles.networkIcon, { backgroundColor: mainnetColor }]} />
 						<View style={styles.networkInfo}>
 							<Text style={styles.networkLabel}>{mainnetName}</Text>
@@ -197,7 +208,7 @@ class NetworksSettings extends PureComponent {
 
 	render() {
 		return (
-			<View style={styles.wrapper} testID={'networks-screen'}>
+			<OnboardingScreenWithBg screen="a">
 				<ScrollView style={styles.networksWrapper}>
 					{this.renderMainnet()}
 					{/*<Text style={styles.sectionLabel}>{strings('app_settings.network_other_networks')}</Text>
@@ -205,10 +216,11 @@ class NetworksSettings extends PureComponent {
 										{this.renderRpcNetworksView()}*/}
 				</ScrollView>
 				<StyledButton
-					type="confirm"
+					type="normal"
 					onPress={this.onAddNetwork}
 					containerStyle={styles.syncConfirm}
 					testID={'add-network-button'}
+					style={styles.addNetworkText}
 				>
 					{strings('app_settings.network_add_network')}
 				</StyledButton>
@@ -220,7 +232,7 @@ class NetworksSettings extends PureComponent {
 					destructiveButtonIndex={0}
 					onPress={this.onActionSheetPress}
 				/>
-			</View>
+			</OnboardingScreenWithBg>
 		);
 	}
 }

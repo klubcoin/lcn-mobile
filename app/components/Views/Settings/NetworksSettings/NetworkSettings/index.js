@@ -18,10 +18,10 @@ import Logger from '../../../../../util/Logger';
 import { isPrefixedFormattedHexString } from '../../../../../util/number';
 import AppConstants from '../../../../../core/AppConstants';
 import AnalyticsV2 from '../../../../../util/analyticsV2';
+import OnboardingScreenWithBg from '../../../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
 		flex: 1,
 		flexDirection: 'column'
 	},
@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		...fontStyles.normal,
-		borderColor: colors.grey200,
-		borderRadius: 5,
 		borderWidth: 2,
-		padding: 10
+		padding: 10,
+		backgroundColor: colors.purple,
+		borderRadius: 15,
+		color: colors.white
 	},
 	warningText: {
 		...fontStyles.normal,
@@ -448,121 +449,123 @@ class NetworkSettings extends PureComponent {
 			inputWidth
 		} = this.state;
 		return (
-			<SafeAreaView style={styles.wrapper} testID={'new-rpc-screen'}>
-				<KeyboardAwareScrollView style={styles.informationWrapper}>
-					<View style={styles.scrollWrapper}>
-						{addMode && (
-							<Text style={styles.title} testID={'rpc-screen-title'}>
-								{strings('app_settings.new_RPC_URL')}
-							</Text>
-						)}
-						{addMode && <Text style={styles.desc}>{strings('app_settings.rpc_desc')}</Text>}
+			<OnboardingScreenWithBg screen="a">
+				<SafeAreaView style={styles.wrapper} testID={'new-rpc-screen'}>
+					<KeyboardAwareScrollView style={styles.informationWrapper}>
+						<View style={styles.scrollWrapper}>
+							{addMode && (
+								<Text style={styles.title} testID={'rpc-screen-title'}>
+									{strings('app_settings.new_RPC_URL')}
+								</Text>
+							)}
+							{addMode && <Text style={styles.desc}>{strings('app_settings.rpc_desc')}</Text>}
 
-						<Text style={styles.label}>{strings('app_settings.network_name_label')}</Text>
-						<TextInput
-							style={[styles.input, inputWidth]}
-							autoCapitalize={'none'}
-							autoCorrect={false}
-							value={nickname}
-							editable={editable}
-							onChangeText={this.onNicknameChange}
-							placeholder={strings('app_settings.network_name_placeholder')}
-							placeholderTextColor={colors.grey100}
-							onSubmitEditing={this.jumpToRpcURL}
-							testID={'input-network-name'}
-						/>
+							<Text style={styles.label}>{strings('app_settings.network_name_label')}</Text>
+							<TextInput
+								style={[styles.input, inputWidth]}
+								autoCapitalize={'none'}
+								autoCorrect={false}
+								value={nickname}
+								editable={editable}
+								onChangeText={this.onNicknameChange}
+								placeholder={strings('app_settings.network_name_placeholder')}
+								placeholderTextColor={colors.grey100}
+								onSubmitEditing={this.jumpToRpcURL}
+								testID={'input-network-name'}
+							/>
 
-						<Text style={styles.label}>{strings('app_settings.network_rpc_url_label')}</Text>
-						<TextInput
-							ref={this.inputRpcURL}
-							style={[styles.input, inputWidth]}
-							autoCapitalize={'none'}
-							autoCorrect={false}
-							value={rpcUrl}
-							editable={editable}
-							onChangeText={this.onRpcUrlChange}
-							onBlur={this.validateRpcUrl}
-							placeholder={strings('app_settings.network_rpc_placeholder')}
-							placeholderTextColor={colors.grey100}
-							onSubmitEditing={this.jumpToChainId}
-							testID={'input-rpc-url'}
-						/>
-						{warningRpcUrl && (
-							<View style={styles.warningContainer} testID={'rpc-url-warning'}>
-								<Text style={styles.warningText}>{warningRpcUrl}</Text>
-							</View>
-						)}
+							<Text style={styles.label}>{strings('app_settings.network_rpc_url_label')}</Text>
+							<TextInput
+								ref={this.inputRpcURL}
+								style={[styles.input, inputWidth]}
+								autoCapitalize={'none'}
+								autoCorrect={false}
+								value={rpcUrl}
+								editable={editable}
+								onChangeText={this.onRpcUrlChange}
+								onBlur={this.validateRpcUrl}
+								placeholder={strings('app_settings.network_rpc_placeholder')}
+								placeholderTextColor={colors.grey100}
+								onSubmitEditing={this.jumpToChainId}
+								testID={'input-rpc-url'}
+							/>
+							{warningRpcUrl && (
+								<View style={styles.warningContainer} testID={'rpc-url-warning'}>
+									<Text style={styles.warningText}>{warningRpcUrl}</Text>
+								</View>
+							)}
 
-						<Text style={styles.label}>{strings('app_settings.network_chain_id_label')}</Text>
-						<TextInput
-							ref={this.inputChainId}
-							style={[styles.input, inputWidth]}
-							autoCapitalize={'none'}
-							autoCorrect={false}
-							value={chainId}
-							editable={editable}
-							onChangeText={this.onChainIDChange}
-							onBlur={this.validateChainId}
-							placeholder={strings('app_settings.network_chain_id_placeholder')}
-							placeholderTextColor={colors.grey100}
-							onSubmitEditing={this.jumpToSymbol}
-							keyboardType={'numbers-and-punctuation'}
-							testID={'input-chain-id'}
-						/>
-						{warningChainId ? (
-							<View style={styles.warningContainer}>
-								<Text style={styles.warningText}>{warningChainId}</Text>
-							</View>
-						) : null}
+							<Text style={styles.label}>{strings('app_settings.network_chain_id_label')}</Text>
+							<TextInput
+								ref={this.inputChainId}
+								style={[styles.input, inputWidth]}
+								autoCapitalize={'none'}
+								autoCorrect={false}
+								value={chainId}
+								editable={editable}
+								onChangeText={this.onChainIDChange}
+								onBlur={this.validateChainId}
+								placeholder={strings('app_settings.network_chain_id_placeholder')}
+								placeholderTextColor={colors.grey100}
+								onSubmitEditing={this.jumpToSymbol}
+								keyboardType={'numbers-and-punctuation'}
+								testID={'input-chain-id'}
+							/>
+							{warningChainId ? (
+								<View style={styles.warningContainer}>
+									<Text style={styles.warningText}>{warningChainId}</Text>
+								</View>
+							) : null}
 
-						<Text style={styles.label}>{strings('app_settings.network_symbol_label')}</Text>
-						<TextInput
-							ref={this.inputSymbol}
-							style={[styles.input, inputWidth]}
-							autoCapitalize={'none'}
-							autoCorrect={false}
-							value={ticker}
-							editable={editable}
-							onChangeText={this.onTickerChange}
-							placeholder={strings('app_settings.network_symbol_placeholder')}
-							placeholderTextColor={colors.grey100}
-							onSubmitEditing={this.jumpBlockExplorerURL}
-							testID={'input-network-symbol'}
-						/>
+							<Text style={styles.label}>{strings('app_settings.network_symbol_label')}</Text>
+							<TextInput
+								ref={this.inputSymbol}
+								style={[styles.input, inputWidth]}
+								autoCapitalize={'none'}
+								autoCorrect={false}
+								value={ticker}
+								editable={editable}
+								onChangeText={this.onTickerChange}
+								placeholder={strings('app_settings.network_symbol_placeholder')}
+								placeholderTextColor={colors.grey100}
+								onSubmitEditing={this.jumpBlockExplorerURL}
+								testID={'input-network-symbol'}
+							/>
 
-						<Text style={styles.label}>{strings('app_settings.network_block_explorer_label')}</Text>
-						<TextInput
-							ref={this.inputBlockExplorerURL}
-							style={[styles.input, inputWidth]}
-							autoCapitalize={'none'}
-							autoCorrect={false}
-							value={blockExplorerUrl}
-							editable={editable}
-							onChangeText={this.onBlockExplorerUrlChange}
-							placeholder={strings('app_settings.network_block_explorer_placeholder')}
-							placeholderTextColor={colors.grey100}
-							onSubmitEditing={this.addRpcUrl}
-						/>
-					</View>
-					{(addMode || editable) && (
-						<View style={styles.buttonsWrapper}>
-							<View style={styles.buttonsContainer}>
-								<StyledButton
-									type="confirm"
-									onPress={this.addRpcUrl}
-									testID={'network-add-button'}
-									containerStyle={styles.syncConfirm}
-									disabled={!enableAction || this.disabledByRpcUrl() || this.disabledByChainId()}
-								>
-									{editable
-										? strings('app_settings.network_save')
-										: strings('app_settings.network_add')}
-								</StyledButton>
-							</View>
+							<Text style={styles.label}>{strings('app_settings.network_block_explorer_label')}</Text>
+							<TextInput
+								ref={this.inputBlockExplorerURL}
+								style={[styles.input, inputWidth]}
+								autoCapitalize={'none'}
+								autoCorrect={false}
+								value={blockExplorerUrl}
+								editable={editable}
+								onChangeText={this.onBlockExplorerUrlChange}
+								placeholder={strings('app_settings.network_block_explorer_placeholder')}
+								placeholderTextColor={colors.grey100}
+								onSubmitEditing={this.addRpcUrl}
+							/>
 						</View>
-					)}
-				</KeyboardAwareScrollView>
-			</SafeAreaView>
+						{(addMode || editable) && (
+							<View style={styles.buttonsWrapper}>
+								<View style={styles.buttonsContainer}>
+									<StyledButton
+										type="normal"
+										onPress={this.addRpcUrl}
+										testID={'network-add-button'}
+										containerStyle={styles.syncConfirm}
+										disabled={!enableAction || this.disabledByRpcUrl() || this.disabledByChainId()}
+									>
+										{editable
+											? strings('app_settings.network_save')
+											: strings('app_settings.network_add')}
+									</StyledButton>
+								</View>
+							</View>
+						)}
+					</KeyboardAwareScrollView>
+				</SafeAreaView>
+			</OnboardingScreenWithBg>
 		);
 	}
 }
