@@ -308,7 +308,8 @@
 		"collect": "Collect",
 		"receive_tips": "Receive tips",
 		"chat": "Chat",
-		"faq": "FAQ"
+		"faq": "FAQ",
+		"faq_answer": "FAQ Answer"
 	},
 	"contacts": {
 		"search": "Search",

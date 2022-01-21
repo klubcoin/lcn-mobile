@@ -72,4 +72,4 @@ class PartnerDetails extends PureComponent {
 		);
 	}
 }
-export default inject('store')(observer(PartnerDetails));
+export default observer(PartnerDetails);

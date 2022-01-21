@@ -39,6 +39,7 @@ export default class APIService {
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
 	}`;
+	static apiFAQs = () => APIService.routePersistenceAPI() + 'FrequentlyAskedQuestion';
 
 	static announcePeerOnlineStatus(peerId, callback) {
 		const data = {
@@ -228,5 +229,10 @@ export default class APIService {
 	static getPartnerList(callback) {
 		const data = { basicAuth };
 		WebService.sendGetDirect(this.apiGetPartnerList(), data, callback);
+	}
+
+	static getFAQs(callback) {
+		const data = { basicAuth };
+		WebService.sendGetDirect(this.apiFAQs(), data, callback);
 	}
 }

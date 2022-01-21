@@ -457,6 +457,17 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
+	goToFAQ = () => {
+		this.props.navigation.navigate('FAQ');
+		this.hideDrawer();
+		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_FAQ);
+	}
+
+	goToCollect = () => {
+		this.props.navigation.navigate('Collect');
+		this.hideDrawer();
+	}
+
 	goToBrowserUrl(url, title) {
 		this.props.navigation.navigate('Webview', {
 			url,
@@ -646,7 +657,7 @@ class DrawerView extends PureComponent {
 					name: strings('drawer.collect'),
 					icon: this.getImageIcon('collect'),
 					selectedIcon: this.getImageIcon('collect'),
-					action: this.onShare
+					action: this.goToCollect
 				},
 				{
 					name: strings('drawer.receive_tips'),
@@ -680,7 +691,7 @@ class DrawerView extends PureComponent {
 				{
 					name: strings('drawer.faq'),
 					icon: this.getAntDesignIcon('question'),
-					action: this.showHelp
+					action: this.goToFAQ
 				},
 				// {
 				// 	name: strings('drawer.request_feature'),
