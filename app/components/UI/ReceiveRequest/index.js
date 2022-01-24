@@ -222,12 +222,12 @@ class ReceiveRequest extends PureComponent {
 					</TouchableOpacity>
 					<View style={styles.actionRow}>
 						{allowedToBuy(this.props.network) && (
-							<StyledButton type={'blue'} containerStyle={styles.actionButton} onPress={this.onBuy}>
+							<StyledButton type={'normal'} containerStyle={styles.actionButton} onPress={this.onBuy}>
 								{strings('fiat_on_ramp.buy_eth', { appName: displayName })}
 							</StyledButton>
 						)}
 						<StyledButton
-							type={'normal'}
+							type={'white'}
 							onPress={this.onReceive}
 							containerStyle={styles.actionButton}
 							testID={'request-payment-button'}

@@ -883,7 +883,7 @@ class Amount extends PureComponent {
 					>
 						<View style={styles.buttonNextWrapper}>
 							<StyledButton
-								type={'confirm'}
+								type={'normal'}
 								containerStyle={styles.buttonNext}
 								disabled={!estimatedTotalGas}
 								onPress={this.onNext}

@@ -933,7 +933,7 @@ class Confirm extends PureComponent {
 					</ScrollView>
 					<View style={styles.buttonNextWrapper}>
 						<StyledButton
-							type={'confirm'}
+							type={'normal'}
 							disabled={!gasEstimationReady || Boolean(errorMessage)}
 							containerStyle={styles.buttonNext}
 							onPress={this.onNext}

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import TokenIcon from '../Swaps/components/TokenIcon';
 
 function NetworkMainAssetLogo({ chainId, ticker, style, big, biggest }) {
+	
 	if (chainId === NetworksChainId.mainnet) {
 		return <TokenIcon big={big} biggest={biggest} symbol={'ETH'} style={style} />;
 	}
