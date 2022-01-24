@@ -34,7 +34,6 @@ class FAQScreen extends PureComponent {
 	async fetchQuestions() {
 		APIService.getFAQs((success, json) => {
 			this.questions = [...json];
-			console.log(json);
 			this.loading = false;
 		});
 	}

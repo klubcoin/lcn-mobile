@@ -507,7 +507,11 @@ class Settings extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView style={styles.wrapper} testID={'security-settings-scrollview'}>
+				<ScrollView
+					style={styles.wrapper}
+					contentContainerStyle={styles.wrapperContainer}
+					testID={'security-settings-scrollview'}
+				>
 					<View style={styles.inner}>
 						<Heading first>{strings('app_settings.security_heading')}</Heading>
 						<View style={[styles.setting, styles.firstSetting]}>

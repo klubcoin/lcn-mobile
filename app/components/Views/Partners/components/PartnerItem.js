@@ -28,8 +28,7 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 			<View style={styles.imgWrapper}>
 				<Image
 					source={{
-						uri:
-							'https://account.liquichain.io/meveo/api/rest/fileSystem/binaries/default/KlubCoinPartner/88540662-605e-4b2f-8028-3405b3d6b4ac/icon',
+						uri: APIService.apiGetPartnerIcon(imageSrc),
 						headers: {
 							Authorization: `Basic ${base64.encode(basicAuth)}`
 						}
