@@ -11,6 +11,7 @@ import { displayName } from '../../../../../../app.json';
 import PaymentMethodItem from './PurchaseMethod';
 
 function Purchase({ selectedAddress, ...props }) {
+	
 	const onBuy = () => {
 		props.navigation.navigate('BuyWithPayPal');
 	};
