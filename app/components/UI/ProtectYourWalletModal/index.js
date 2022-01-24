@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
 	},
 	learnMoreText: {
 		textAlign: 'center',
-		...fontStyles.normal,
-		color: colors.blue,
+		...fontStyles.bold,
+		color: colors.black,
 		marginBottom: 14,
 		fontSize: 14
 	},
@@ -102,8 +102,8 @@ class ProtectYourWalletModal extends PureComponent {
 				onCancelPress={this.goToBackupFlow}
 				onRequestClose={this.props.protectWalletModalNotVisible}
 				onConfirmPress={this.props.protectWalletModalNotVisible}
-				cancelButtonMode={'sign'}
-				confirmButtonMode={'transparent-blue'}
+				cancelButtonMode={'normal'}
+				confirmButtonMode={'warning'}
 				verticalButtons
 			>
 				<View style={styles.wrapper} testID={'protect-wallet-modal'}>
