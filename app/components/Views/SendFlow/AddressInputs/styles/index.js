@@ -7,7 +7,7 @@ import brandStyles from './brand';
 const styles = StyleSheet.create({
 	wrapper: {
 		flexDirection: 'row',
-		marginHorizontal: 8
+		marginHorizontal: 8,
 	},
 	selectWrapper: {
 		flex: 1,

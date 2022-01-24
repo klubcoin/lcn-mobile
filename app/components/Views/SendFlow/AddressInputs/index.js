@@ -10,6 +10,7 @@ import { strings } from '../../../../../locales/i18n';
 import Text from '../../../Base/Text';
 import { hasZeroWidthPoints } from '../../../../util/validators';
 import styles from './styles/index';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const AddressName = ({ toAddressName, confusableCollection = [] }) => {
 	if (confusableCollection.length) {
@@ -227,11 +228,7 @@ export const AddressFrom = props => {
 				{!!onPressIcon && (
 					<TouchableOpacity onPress={onPressIcon} style={styles.iconWrapper}>
 						<View style={styles.dropdownIconWrapper}>
-							<FontAwesome
-								name={'caret-down'}
-								size={20}
-								style={[styles.dropdownIcon, highlighted ? styles.iconHighlighted : styles.iconOpaque]}
-							/>
+						<Icon name="angle-down" size={30} style={[styles.dropdownIcon, highlighted ? styles.iconHighlighted : styles.iconOpaque]} />
 						</View>
 					</TouchableOpacity>
 				)}

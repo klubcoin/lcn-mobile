@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Image, TouchableHighlight, StyleSheet } from 'react-native';
 import { colors } from '../../../../styles/common';
+import APIService, { basicAuth } from '../../../../services/APIService';
+import * as base64 from 'base-64';
 
 export default function PartnerItem({ imageSrc, onItemPress }) {
 	const styles = StyleSheet.create({
@@ -21,11 +23,22 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 			width: 150
 		}
 	});
-
 	return (
 		<TouchableHighlight style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
 			<View style={styles.imgWrapper}>
-				<Image source={imageSrc} resizeMode={'contain'} style={styles.img} />
+				<Image
+					source={{
+						uri: APIService.apiGetPartnerIcon(imageSrc),
+						headers: {
+							Authorization: `Basic ${base64.encode(basicAuth)}`
+						}
+					}}
+					resizeMode={'contain'}
+					style={styles.img}
+					onError={error => {
+						console.log(error);
+					}}
+				/>
 			</View>
 		</TouchableHighlight>
 	);

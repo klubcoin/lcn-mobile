@@ -17,10 +17,10 @@ import { strings } from '../../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import AppConstants from '../../../../core/AppConstants';
 import { displayName } from '../../../../../app.json';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
 		flex: 1
 	},
 	wrapperContent: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 		textAlign: 'left',
 		marginBottom: 20,
 		...fontStyles.normal,
-		color: colors.blue
+		color: colors.grey000
 	},
 	division: {
 		borderBottomColor: colors.grey400,
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
 	},
 	logoWrapper: {
 		flex: 1,
-		backgroundColor: colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
 		top: 20,
@@ -136,37 +135,39 @@ export default class AppInformation extends PureComponent {
 	};
 
 	render = () => (
-		<SafeAreaView style={styles.wrapper} testID={'app-settings-screen'}>
-			<ScrollView contentContainerStyle={styles.wrapperContent}>
-				<View style={styles.logoWrapper}>
-					<Image source={foxImage} style={styles.image} resizeMethod={'auto'} />
-					<Text style={styles.versionInfo}>{this.state.appInfo}</Text>
-				</View>
-				<Text style={styles.title}>{strings('app_information.links')}</Text>
-				<View style={styles.links}>
-					<TouchableOpacity onPress={this.onPrivacyPolicy}>
-						<Text style={styles.link}>{strings('app_information.privacy_policy')}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={this.onTermsOfUse}>
-						<Text style={styles.link}>{strings('app_information.terms_of_use')}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={this.onAttributions}>
-						<Text style={styles.link}>{strings('app_information.attributions')}</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={styles.division} />
-				<View style={styles.links}>
-					<TouchableOpacity onPress={this.onSupportCenter}>
-						<Text style={styles.link}>{strings('app_information.support_center')}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={this.onWebSite}>
-						<Text style={styles.link}>{strings('app_information.web_site')}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={this.onContactUs}>
-						<Text style={styles.link}>{strings('app_information.contact_us')}</Text>
-					</TouchableOpacity>
-				</View>
-			</ScrollView>
-		</SafeAreaView>
+		<OnboardingScreenWithBg screen="a">
+			<SafeAreaView style={styles.wrapper} testID={'app-settings-screen'}>
+				<ScrollView contentContainerStyle={styles.wrapperContent}>
+					<View style={styles.logoWrapper}>
+						<Image source={foxImage} style={styles.image} resizeMethod={'auto'} />
+						<Text style={styles.versionInfo}>{this.state.appInfo}</Text>
+					</View>
+					<Text style={styles.title}>{strings('app_information.links')}</Text>
+					<View style={styles.links}>
+						<TouchableOpacity onPress={this.onPrivacyPolicy} activeOpacity={0.7}>
+							<Text style={styles.link}>{strings('app_information.privacy_policy')}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.onTermsOfUse} activeOpacity={0.7}>
+							<Text style={styles.link}>{strings('app_information.terms_of_use')}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.onAttributions} activeOpacity={0.7}>
+							<Text style={styles.link}>{strings('app_information.attributions')}</Text>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.division} />
+					<View style={styles.links}>
+						<TouchableOpacity onPress={this.onSupportCenter} activeOpacity={0.7}>
+							<Text style={styles.link}>{strings('app_information.support_center')}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.onWebSite} activeOpacity={0.7}>
+							<Text style={styles.link}>{strings('app_information.web_site')}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.onContactUs} activeOpacity={0.7}>
+							<Text style={styles.link}>{strings('app_information.contact_us')}</Text>
+						</TouchableOpacity>
+					</View>
+				</ScrollView>
+			</SafeAreaView>
+		</OnboardingScreenWithBg>
 	);
 }

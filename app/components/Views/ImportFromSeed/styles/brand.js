@@ -32,6 +32,17 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.purple,
 		borderRadius: 15,
 		textAlign: 'center'
+	},
+	biometricTop: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 20
+	},
+	biometricBottom: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 10,
+		marginBottom: 30
 	}
 });
 

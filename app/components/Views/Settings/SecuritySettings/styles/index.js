@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
 		padding: 24,
 		paddingBottom: 48
 	},
+	wrapperContainer: {
+		paddingBottom: 48
+	},
 	title: {
 		...fontStyles.normal,
 		color: colors.fontPrimary,

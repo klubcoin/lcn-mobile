@@ -191,7 +191,7 @@ class AdvancedSettings extends PureComponent {
 								<Text style={styles.title}>{strings('app_settings.reset_account')}</Text>
 								<Text style={styles.desc}>{strings('app_settings.reset_desc')}</Text>
 								<StyledButton
-									type="confirm"
+									type="normal"
 									onPress={this.displayResetAccountModal}
 									containerStyle={styles.marginTop}
 								>
@@ -247,7 +247,7 @@ class AdvancedSettings extends PureComponent {
 									{strings('app_settings.state_logs_desc', { appName: displayName })}
 								</Text>
 								<StyledButton
-									type="confirm"
+									type="normal"
 									onPress={this.downloadStateLogs}
 									containerStyle={styles.marginTop}
 								>

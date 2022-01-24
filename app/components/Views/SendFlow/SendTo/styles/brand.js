@@ -7,7 +7,7 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.black
 	},
 	inputWrapper: {
-		paddingVertical: 20
+		paddingVertical: 20,
 	}
 });
 

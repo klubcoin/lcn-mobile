@@ -210,10 +210,10 @@ class ChoosePassword extends PureComponent {
 
 			// Set state in app as it was with password
 			await SecureKeychain.resetGenericPassword();
-			if (this.state.biometryType && this.state.biometryChoice) {
-				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
-			} else if (this.state.rememberMe) {
+			if (this.state.rememberMe) {
 				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
+			} else if (this.state.biometryType && this.state.biometryChoice) {
+				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
 			} else {
 				await SecureKeychain.resetGenericPassword();
 			}
@@ -346,35 +346,45 @@ class ChoosePassword extends PureComponent {
 	};
 
 	renderSwitch = () => {
-		const { biometryType, rememberMe, biometryChoice } = this.state;
-		return (
-			<View style={styles.biometrics}>
-				{biometryType ? (
-					<View style={styles.biometricsContainer}>
-						<Text style={styles.biometryLabel}>
-							{strings(`biometrics.enable_${biometryType.toLowerCase()}`)}
-						</Text>
-						<Switch
-							onValueChange={this.updateBiometryChoice} // eslint-disable-line react/jsx-no-bind
-							value={biometryChoice}
-							style={styles.biometrySwitch}
-							trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey300 } : null}
-							ios_backgroundColor={colors.grey300}
-						/>
-					</View>
-				) : (
-					<View style={styles.biometricsContainer}>
+		if (this.state.biometryType) {
+			return (
+				<>
+					<View style={styles.biometricTop}>
 						<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
-						{/* <Text style={styles.biometryLabel}>{strings(`choose_password.sign_in_biometrics`)}</Text> */}
 						<Switch
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
-							value={rememberMe}
+							value={this.state.rememberMe}
 							style={styles.biometrySwitch}
-							trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey300 } : null}
+							trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
 							ios_backgroundColor={colors.grey300}
 						/>
 					</View>
-				)}
+					<View style={styles.biometricBottom}>
+						<Text style={styles.biometryLabel}>
+							{strings(`biometrics.enable_${this.state.biometryType.toLowerCase()}`)}
+						</Text>
+						<Switch
+							onValueChange={this.updateBiometryChoice}
+							value={this.state.biometryChoice}
+							style={styles.biometrySwitch}
+							trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
+							ios_backgroundColor={colors.grey300}
+						/>
+					</View>
+				</>
+			);
+		}
+
+		return (
+			<View style={styles.biometrics}>
+				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
+				<Switch
+					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
+					value={this.state.rememberMe}
+					style={styles.biometrySwitch}
+					trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
+					ios_backgroundColor={colors.grey300}
+				/>
 			</View>
 		);
 	};
