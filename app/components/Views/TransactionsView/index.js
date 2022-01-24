@@ -122,7 +122,7 @@ const TransactionsView = ({
 	return (
 		<View style={styles.wrapper} testID={'wallet-screen'}>
 			{
-				allTransactions.length > 0 && <Transactions
+				<Transactions
 					navigation={navigation}
 					transactions={allTransactions}
 					submittedTransactions={submittedTxs}
