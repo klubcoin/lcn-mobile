@@ -56,7 +56,7 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 		navigation.openDrawer();
 		trackEvent(ANALYTICS_EVENT_OPTS.COMMON_TAPS_HAMBURGER_MENU);
 	}
-
+	
 	return {
 		headerTitle: <NavbarTitle title={title} disableNetwork={disableNetwork} />,
 		headerLeft: (
@@ -65,9 +65,7 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 			</TouchableOpacity>
 		),
 		headerRight: <AccountRightButton />,
-		headerStyle: {
-			backgroundColor: colors.grey
-		}
+		headerStyle: styles.headerBackground
 	};
 }
 
@@ -760,7 +758,7 @@ export function getPurchaseMethodNavbar(navigation) {
 	const rightAction = navigation.dismiss;
 
 	return {
-		headerTitle: <Text style={styles.centeredTitle}>{strings('fiat_on_ramp.purchase_method')}</Text>,
+		headerTitle: <Text style={[styles.centeredTitle, styles.centeredWhiteTitle]}>{strings('fiat_on_ramp.purchase_method')}</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
 				<Icon name={'arrow-left'} size={16} color={colors.white} />

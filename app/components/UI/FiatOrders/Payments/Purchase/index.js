@@ -7,10 +7,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import OnboardingScreenWithBg from '../../../OnboardingScreenWithBg';
 import styles from './styles/index';
-import StyledButton from '../../../StyledButton';
 import { displayName } from '../../../../../../app.json';
+import PaymentMethodItem from './PurchaseMethod';
 
 function Purchase({ selectedAddress, ...props }) {
+	
 	const onBuy = () => {
 		props.navigation.navigate('BuyWithPayPal');
 	};
@@ -21,28 +22,7 @@ function Purchase({ selectedAddress, ...props }) {
 			<Title />
 			<SafeAreaView style={styles.wrapper}>
 				<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-					<View style={styles.card}>
-						<View
-							style={{
-								flexDirection: 'row',
-								alignItems: 'center'
-							}}
-						>
-							<Image
-								source={require('../../../../../images/paypal_logo.png')}
-								style={styles.paypalIc}
-								resizeMode={'contain'}
-							/>
-							<Text style={styles.paypal}>PayPal</Text>
-						</View>
-						<Text style={styles.creditCard}>With Credit/Debit Card</Text>
-						<Text style={styles.fee}>Fees vary based from paypal.</Text>
-						<View style={{ marginBottom: 5 }}>
-							<StyledButton type={'normal'} onPress={onBuy}>
-								Buy {displayName} with PayPal
-							</StyledButton>
-						</View>
-					</View>
+					<PaymentMethodItem onBuy={onBuy} displayName={displayName} image={require('../../../../../images/paypal_logo.png')} typeText={'PayPal'} />
 				</ScrollView>
 			</SafeAreaView>
 			{/* </ScreenView> */}

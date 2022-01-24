@@ -117,6 +117,12 @@ const styles = StyleSheet.create({
 		...fontStyles.normal,
 		alignItems: 'center',
 		flex: 1
+	},
+	centeredWhiteTitle: {
+		color: colors.white,
+	},
+	headerBackground: {
+		backgroundColor: colors.white,
 	}
 });
 

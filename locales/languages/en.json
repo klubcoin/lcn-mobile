@@ -1427,7 +1427,10 @@
 		"send_link": "Send Link",
 		"request_qr_code": "Payment Request QR Code",
 		"balance": "Balance",
-		"send": "Send"
+		"send": "Send",
+		"with_credit_card": "With Credit/Debit Card",
+		"base_from": "Fees vary based from {{typeText}}",
+		"buy_with": "Buy {{displayName}} with {{typeText}}"
 	},
 	"receive_request": {
 		"title": "Receive",

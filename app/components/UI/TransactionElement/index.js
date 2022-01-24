@@ -121,15 +121,14 @@ class TransactionElement extends PureComponent {
 		const { tx, selectedAddress } = this.props;
 		const incoming = safeToChecksumAddress(tx.transaction.to) === selectedAddress;
 		const selfSent = incoming && safeToChecksumAddress(tx.transaction.from) === selectedAddress;
-		return `#${parseInt(tx.transaction.nonce, 16)} - ${
-			(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
-				? `${toDateFormat(tx.time)} ${strings(
-						'transactions.from_device_label'
-						// eslint-disable-next-line no-mixed-spaces-and-tabs
-				  )}`
-				: `${toDateFormat(tx.time)}
+		return `#${parseInt(tx.transaction.nonce, 16)} - ${(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
+			? `${toDateFormat(tx.time)} ${strings(
+				'transactions.from_device_label'
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+			)}`
+			: `${toDateFormat(tx.time)}
 			`
-		}`;
+			}`;
 	};
 
 	/**
@@ -147,7 +146,7 @@ class TransactionElement extends PureComponent {
 							{`${strings('transactions.import_wallet_row')} `}
 							<FAIcon name="info-circle" style={styles.infoIcon} />
 						</Text>
-						<ListItem.Date>{toDateFormat(accountImportTime)}</ListItem.Date>
+						<ListItem.Date style={styles.importDate}>{toDateFormat(accountImportTime)}</ListItem.Date>
 					</TouchableOpacity>
 				</>
 			);
@@ -199,7 +198,7 @@ class TransactionElement extends PureComponent {
 			<>
 				{accountImportTime > time && this.renderImportTime()}
 				<ListItem>
-					<ListItem.Date>{this.renderTxTime()}</ListItem.Date>
+					<ListItem.Date style={styles.importDate}>{this.renderTxTime()}</ListItem.Date>
 					<ListItem.Content>
 						<ListItem.Icon>{this.renderTxElementIcon(transactionElement, status)}</ListItem.Icon>
 						<ListItem.Body>
@@ -256,7 +255,7 @@ class TransactionElement extends PureComponent {
 
 	renderSpeedUpButton = () => (
 		<StyledButton
-			type={'normal'}
+			type={'white'}
 			containerStyle={[styles.actionContainerStyle, styles.speedupActionContainerStyle]}
 			style={styles.actionStyle}
 			onPress={this.showSpeedUpModal}
