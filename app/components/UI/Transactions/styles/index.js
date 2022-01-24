@@ -6,14 +6,14 @@ import brandStyles from './brand';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.primaryFox,
 		flex: 1
 	},
 	emptyContainer: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: colors.white,
+		backgroundColor: colors.primaryFox,
 		minHeight: Dimensions.get('window').height / 2
 	},
 	loader: {

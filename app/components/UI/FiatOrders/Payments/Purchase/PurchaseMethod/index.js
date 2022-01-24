@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
+import { strings } from '../../../../../../../locales/i18n';
 import StyledButton from '../../../../StyledButton';
 import styles from './styles';
 
@@ -15,11 +16,11 @@ const PaymentMethodItem = ({ onBuy, displayName, image, typeText }) => {
             />
             <Text style={styles.paypal}>{typeText}</Text>
         </View>
-        <Text style={styles.creditCard}>With Credit/Debit Card</Text>
-        <Text style={styles.fee}>Fees vary based from {typeText}.</Text>
+        <Text style={styles.creditCard}>{strings('payment_request.with_credit_card')}</Text>
+        <Text style={styles.fee}>{strings('payment_request.base_from', { typeText })}</Text>
         <View style={{ marginBottom: 5 }}>
             <StyledButton type={'white'} onPress={onBuy}>
-                Buy {displayName} with {typeText}
+                {strings('payment_request.base_from', { typeText, displayName })}
             </StyledButton>
         </View>
     </View>);
