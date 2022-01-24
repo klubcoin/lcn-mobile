@@ -144,7 +144,7 @@ class Transactions extends PureComponent {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.selectedAddress != this.props.selectedAddress) {
+		if (prevProps.selectedAddress != this.props.selectedAddress || prevProps.transactions != this.props.transactions) {
 			this.setState({ ready: false, loading: true });
 			this.retrieveTransactions();
 		}
@@ -371,6 +371,7 @@ class Transactions extends PureComponent {
 		if (!this.props.transactions.length) {
 			return this.renderEmpty();
 		}
+
 
 		const { submittedTransactions, confirmedTransactions, header } = this.props;
 		const { cancelConfirmDisabled, speedUpConfirmDisabled } = this.state;

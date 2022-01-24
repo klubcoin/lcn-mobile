@@ -41,20 +41,21 @@ const styles = StyleSheet.create({
 	actionContainerStyle: {
 		height: 25,
 		width: 70,
-		padding: 0
+		padding: 0,
 	},
 	speedupActionContainerStyle: {
-		marginRight: 10
+		marginRight: 10,
+		backgroundColor: colors.blue
 	},
 	actionStyle: {
 		fontSize: 10,
 		padding: 0,
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
 	},
 	transactionActionsContainer: {
 		flexDirection: 'row',
 		paddingTop: 10
-	}
+	},
 });
 
 const NO_RPC_BLOCK_EXPLORER = 'NO_BLOCK_EXPLORER';
@@ -155,9 +156,9 @@ class TransactionDetails extends PureComponent {
 
 	renderSpeedUpButton = () => (
 		<StyledButton
-			type={'normal'}
+			type={'white'}
 			containerStyle={[styles.actionContainerStyle, styles.speedupActionContainerStyle]}
-			style={styles.actionStyle}
+			style={[styles.actionStyle]}
 			onPress={this.props.showSpeedUpModal}
 		>
 			{strings('transaction.speedup')}
