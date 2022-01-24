@@ -56,7 +56,7 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 		navigation.openDrawer();
 		trackEvent(ANALYTICS_EVENT_OPTS.COMMON_TAPS_HAMBURGER_MENU);
 	}
-
+	
 	return {
 		headerTitle: <NavbarTitle title={title} disableNetwork={disableNetwork} />,
 		headerLeft: (
@@ -65,9 +65,7 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 			</TouchableOpacity>
 		),
 		headerRight: <AccountRightButton />,
-		headerStyle: {
-			backgroundColor: colors.grey
-		}
+		headerStyle: styles.headerBackground
 	};
 }
 

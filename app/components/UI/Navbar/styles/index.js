@@ -120,6 +120,9 @@ const styles = StyleSheet.create({
 	},
 	centeredWhiteTitle: {
 		color: colors.white,
+	},
+	headerBackground: {
+		backgroundColor: colors.white,
 	}
 });
 

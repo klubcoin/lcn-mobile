@@ -273,7 +273,7 @@ class Transactions extends PureComponent {
 	renderLoader = () => (
 		<OnboardingScreenWithBg screen="a">
 			<View style={styles.emptyContainer}>
-				<ActivityIndicator style={styles.loader} size="small" />
+				<ActivityIndicator style={styles.loader} size="small" color={'white'} />
 			</View>
 		</OnboardingScreenWithBg>
 	);
@@ -297,7 +297,7 @@ class Transactions extends PureComponent {
 		index
 	});
 
-	keyExtractor = item => item.id.toString();
+	keyExtractor = (item, index) => item.id.toString() + `${index}`;
 
 	onSpeedUpAction = (speedUpAction, existingGasPriceDecimal, tx) => {
 		this.setState({ speedUpIsOpen: speedUpAction });
@@ -371,14 +371,14 @@ class Transactions extends PureComponent {
 		if (!this.props.transactions.length) {
 			return this.renderEmpty();
 		}
-		
+
 		const { submittedTransactions, confirmedTransactions, header } = this.props;
 		const { cancelConfirmDisabled, speedUpConfirmDisabled } = this.state;
 		const transactions = this.uses3rdPartyAPI
 			? this.transactions
 			: submittedTransactions && submittedTransactions.length
-			? submittedTransactions.concat(confirmedTransactions)
-			: this.props.transactions;
+				? submittedTransactions.concat(confirmedTransactions)
+				: this.props.transactions;
 
 		return (
 			<OnboardingScreenWithBg screen="a">

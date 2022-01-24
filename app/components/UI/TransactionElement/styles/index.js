@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: colors.grey000,
 		paddingTop: 10
+	},
+	importDate: {
+		color: colors.white
 	}
 });
 
