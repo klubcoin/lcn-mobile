@@ -170,7 +170,18 @@ const styles = StyleSheet.create({
 	},
 	newPwdTitle: {},
 	usernameField: {},
-	biometricsContainer: {}
+	biometricsContainer: {},
+	biometricTop: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 20
+	},
+	biometricBottom: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: 10,
+		marginBottom: 30
+	}
 });
 
 export default assignNestedObj(styles, brandStyles);
