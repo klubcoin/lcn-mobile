@@ -617,7 +617,7 @@ class SendFlow extends PureComponent {
 								{!errorContinue && (
 									<View style={styles.buttonNextWrapper}>
 										<StyledButton
-											type={'confirm'}
+											type={'normal'}
 											containerStyle={styles.buttonNext}
 											onPress={this.onTransactionDirectionSet}
 											testID={'address-book-next-button'}

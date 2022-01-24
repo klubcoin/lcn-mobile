@@ -56,7 +56,7 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
 		navigation.openDrawer();
 		trackEvent(ANALYTICS_EVENT_OPTS.COMMON_TAPS_HAMBURGER_MENU);
 	}
-	
+
 	return {
 		headerTitle: <NavbarTitle title={title} disableNetwork={disableNetwork} />,
 		headerLeft: (
@@ -159,7 +159,7 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
 		title,
 		headerTitleStyle: {
 			fontSize: 20,
-			color: colors.fontPrimary,
+			color: colors.black,
 			...fontStyles.normal
 		},
 		headerTintColor: colors.blue,
@@ -169,16 +169,18 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		) : (
-			<View />
-		),
-		headerRight: (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={() => navigation.pop()} style={styles.closeButton}>
-				<IonicIcon name={'ios-close'} size={38} style={[styles.backIcon, styles.backIconIOS]} />
+			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
+		// headerRight: (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={() => navigation.pop()} style={styles.closeButton}>
+		// 		<IonicIcon name={'ios-close'} size={38} style={[styles.backIcon, styles.backIconIOS]} />
+		// 	</TouchableOpacity>
+		// ),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.white
 		}
 	};
 }
@@ -189,13 +191,18 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
  *
  * @returns {Object} - Corresponding navbar options containing title, and headerRight
  */
-export function getPaymentRequestSuccessOptionsTitle(navigation) {
+export function getPaymentRequestSuccessOptionsTitle(navigation, title) {
 	return {
+		headerTitle: (
+			<View>
+				<Text style={styles.header}>{title}</Text>
+			</View>
+		),
 		headerStyle: {
 			shadowColor: colors.transparent,
 			elevation: 0,
-			backgroundColor: colors.grey,
-			borderBottomWidth: 0
+			backgroundColor: colors.white,
+			borderBottomWidth: 0,
 		},
 		headerTintColor: colors.blue,
 		headerLeft: <View />,
@@ -309,14 +316,14 @@ export function getSendFlowTitle(title, navigation, screenProps) {
 		headerLeft: canGoBack ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={leftAction} style={styles.closeButton}>
-				<AntIcon name={'arrowleft'} size={22} style={{ color: colors.white }} />
+				<AntIcon name={'arrowleft'} size={22} style={{ color: colors.black }} />
 				{/* <Text style={[styles.closeButtonText, brandStyles.closeButtonText]}>{strings('transaction.back')}</Text> */}
 			</TouchableOpacity>
 		) : (
 			<View />
 		),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.white
 		}
 	};
 }
@@ -671,7 +678,7 @@ export function getNetworkNavbarOptions(title, translate, navigation) {
 		),
 		headerRight: <View />,
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.white
 		}
 	};
 }

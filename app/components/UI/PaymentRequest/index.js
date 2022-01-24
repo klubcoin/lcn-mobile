@@ -526,11 +526,11 @@ class PaymentRequest extends PureComponent {
 					enabled={Device.isIos()}
 				>
 					<View style={styles.buttonsContainer}>
-						<StyledButton type={'normal'} onPress={this.onReset} containerStyle={[styles.button]}>
+						<StyledButton type={'white'} onPress={this.onReset} containerStyle={[styles.button]}>
 							{strings('payment_request.reset')}
 						</StyledButton>
 						<StyledButton
-							type={'blue'}
+							type={'normal'}
 							onPress={this.onNext}
 							containerStyle={[styles.button]}
 							disabled={!cryptoAmount || cryptoAmount === '0'}

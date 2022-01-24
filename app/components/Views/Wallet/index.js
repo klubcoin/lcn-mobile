@@ -288,7 +288,7 @@ class Wallet extends PureComponent {
                     isETH: true,
                     balance,
                     balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
-                    logo: '../images/logo.png'
+                    logo: '../images/klubcoin.png'
                 },
                 tipper,
                 ...tokens

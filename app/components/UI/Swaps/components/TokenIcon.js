@@ -7,9 +7,10 @@ import Text from '../../../Base/Text';
 import { colors } from '../../../../styles/common';
 
 /* eslint-disable import/no-commonjs */
-const ethLogo = require('../../../../images/logo.png');
+const ethLogo = require('../../../../images/klubcoin.png');
 const bnbLogo = require('../../../../images/bnb-logo.png');
 const lcnLogo = ({ uri: 'licoin' })
+const klubLogo = require('../../../../images/klubcoin.png');
 /* eslint-enable import/no-commonjs */
 
 const REGULAR_SIZE = 24;
@@ -101,6 +102,20 @@ function TokenIcon({ symbol, icon, medium, big, biggest, style }) {
 			<RemoteImage
 				fadeIn
 				source={lcnLogo}
+				style={[
+					styles.icon,
+					medium && styles.iconMedium,
+					big && styles.iconBig,
+					biggest && styles.iconBiggest,
+					style
+				]}
+			/>
+		);
+	} else if (symbol === 'KLUB') {
+		return (
+			<RemoteImage
+				fadeIn
+				source={klubLogo}
 				style={[
 					styles.icon,
 					medium && styles.iconMedium,

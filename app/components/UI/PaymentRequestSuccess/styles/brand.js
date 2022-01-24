@@ -11,6 +11,21 @@ const brandStyles = StyleSheet.create({
 	},
 	qrCode: {
 		color: colors.red
+	},
+	blueButtonText: {
+		color: colors.black
+	},
+	blueIcon: {
+		color: colors.black
+	},
+	buttonTextWrapper: {
+		color: colors.black
+	},
+	buttonText: {
+		color: colors.black
+	},
+	titleText: {
+		color: colors.white
 	}
 });
 

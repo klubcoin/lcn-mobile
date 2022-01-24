@@ -62,6 +62,9 @@ const styles = StyleSheet.create({
 	},
 	dismissButton: {
 		flex: 1
+	},
+	dismissButtonText: {
+		color: colors.red
 	}
 });
 
@@ -153,13 +156,13 @@ class BackupAlert extends PureComponent {
 					<View style={baseStyles.flexGrow}>
 						<Text style={styles.backupAlertTitle}>{strings('backup_alert.title')}</Text>
 						<View style={styles.buttonsWrapper}>
-							<TouchableOpacity onPress={this.goToBackupFlow}>
+							<TouchableOpacity onPress={this.goToBackupFlow} >
 								<Text style={[styles.backupAlertMessage, fontStyles.bold]}>
 									{strings('backup_alert.right_button')}
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={this.onDismiss} style={styles.dismissButton}>
-								<Text style={styles.backupAlertMessage} testID={'notification-remind-later-button'}>
+								<Text style={[styles.backupAlertMessage, styles.dismissButtonText]} testID={'notification-remind-later-button'}>
 									{strings('backup_alert.left_button')}
 								</Text>
 							</TouchableOpacity>

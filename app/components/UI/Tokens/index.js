@@ -277,7 +277,7 @@ class Tokens extends PureComponent {
 				{!ethBalance && !hasTokensBalance && (
 					<Text style={styles.tokensHomeText}>{strings('wallet.ready_to_explore')}</Text>
 				)}
-				<StyledButton type="blue" onPress={this.goToBuy} containerStyle={styles.tokensHomeButton}>
+				<StyledButton type="normal" onPress={this.goToBuy} containerStyle={styles.tokensHomeButton}>
 					Buy {Routes.mainNetWork.ticker}
 				</StyledButton>
 			</View>

@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
 	pinkPadding: {
 		backgroundColor: colors.pink,
 		borderRadius: 10,
-		paddingVertical: 20
 	},
 	pinkPaddingText: {
 		color: colors.black

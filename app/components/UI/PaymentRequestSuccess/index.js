@@ -34,7 +34,7 @@ import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
  * View to interact with a previously generated payment request link
  */
 class PaymentRequestSuccess extends PureComponent {
-	static navigationOptions = ({ navigation }) => getPaymentRequestSuccessOptionsTitle(navigation);
+	static navigationOptions = ({ navigation }) => getPaymentRequestSuccessOptionsTitle(navigation, strings('onboarding.success'));
 
 	static propTypes = {
 		/**
@@ -147,7 +147,7 @@ class PaymentRequestSuccess extends PureComponent {
 								>
 									<View style={styles.buttonContent}>
 										<View style={styles.buttonIconWrapper}>
-											<IonicIcon name={'ios-link'} size={18} color={colors.blue} />
+											<IonicIcon name={'ios-link'} size={18} color={colors.black} />
 										</View>
 										<View style={styles.buttonTextWrapper}>
 											<Text style={styles.buttonText}>
@@ -164,14 +164,14 @@ class PaymentRequestSuccess extends PureComponent {
 								>
 									<View style={styles.buttonContent}>
 										<View style={styles.buttonIconWrapper}>
-											<FontAwesome name={'qrcode'} size={18} color={colors.blue} />
+											<FontAwesome name={'qrcode'} size={18} color={colors.black} />
 										</View>
 										<View style={styles.buttonTextWrapper}>
 											<Text style={styles.buttonText}>{strings('payment_request.qr_code')}</Text>
 										</View>
 									</View>
 								</StyledButton>
-								<StyledButton type={'blue'} onPress={this.onShare} containerStyle={styles.button}>
+								<StyledButton type={'white'} onPress={this.onShare} containerStyle={styles.button}>
 									<View style={styles.buttonContent}>
 										<View style={styles.buttonIconWrapper}>
 											<EvilIcons name="share-apple" size={24} style={styles.blueIcon} />

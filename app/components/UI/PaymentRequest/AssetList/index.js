@@ -7,6 +7,7 @@ import { colors, fontStyles } from '../../../../styles/common';
 import Identicon from '../../Identicon';
 import NetworkMainAssetLogo from '../../NetworkMainAssetLogo';
 import styles from './styles/index';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 /**
  * PureComponent that provides ability to search assets.
@@ -49,10 +50,11 @@ export default class AssetList extends PureComponent {
 			<View style={styles.rowWrapper} testID={'add-searched-token-screen'}>
 				{searchResults.slice(0, 6).map((_, i) => {
 					const { symbol, name } = searchResults[i] || {};
+
 					return (
-						<StyledButton
-							type={'normal'}
-							containerStyle={styles.item}
+
+						<TouchableOpacity
+							style={styles.item}
 							onPress={() => handleSelectAsset(searchResults[i])} // eslint-disable-line
 							key={i}
 						>
@@ -63,7 +65,7 @@ export default class AssetList extends PureComponent {
 									{!!name && <Text style={styles.text}>{name}</Text>}
 								</View>
 							</View>
-						</StyledButton>
+						</TouchableOpacity>
 					);
 				})}
 				{searchResults.length === 0 && <Text style={styles.text}>{this.props.emptyMessage}</Text>}

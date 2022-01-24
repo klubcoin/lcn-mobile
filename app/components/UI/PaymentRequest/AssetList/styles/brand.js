@@ -9,6 +9,11 @@ const brandStyles = StyleSheet.create({
 	textSymbol: {
 		color: colors.white,
 		...fontStyles.bold
+	},
+	item: {
+		backgroundColor: colors.purple,
+		borderRadius: 10,
+		borderWidth: 0,
 	}
 });
 

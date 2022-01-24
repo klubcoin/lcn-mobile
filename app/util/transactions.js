@@ -355,7 +355,7 @@ export function getEther(ticker) {
 		name: 'Ether',
 		address: '',
 		symbol: ticker || strings('unit.eth'),
-		logo: '../images/logo.png',
+		logo: '../images/klubcoin.png',
 		isETH: true
 	};
 }

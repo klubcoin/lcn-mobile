@@ -11,7 +11,8 @@ const brandStyles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	assetsTitle: {
-		color: colors.white
+		color: colors.white,
+		marginBottom: 10,
 	},
 	container: {
 		backgroundColor: colors.grey
@@ -22,6 +23,9 @@ const brandStyles = StyleSheet.create({
 	},
 	eth: {
 		color: colors.white
+	},
+	button: {
+		paddingVertical: 12,
 	}
 });
 
