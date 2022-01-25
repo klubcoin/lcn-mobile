@@ -15,8 +15,9 @@ const BALANCE_KEY = 'balance';
 
 const styles = StyleSheet.create({
 	account: {
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.grey100,
+		backgroundColor: colors.purple500,
+		marginVertical: 10,
+		borderRadius: 12,
 		flexDirection: 'row',
 		paddingHorizontal: 20,
 		paddingVertical: 20,
@@ -32,7 +33,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	accountLabel: {
-		fontSize: 18,
+		fontSize: 20,
+		fontWeight: '700',
 		color: colors.fontPrimary,
 		...fontStyles.normal
 	},
@@ -57,11 +59,13 @@ const styles = StyleSheet.create({
 	},
 	accountMain: {
 		flex: 1,
-		flexDirection: 'column'
+		flexDirection: 'column',
+		alignItems: 'center'
 	},
 	selectedWrapper: {
 		flex: 0.2,
-		alignItems: 'flex-end'
+		alignItems: 'flex-end',
+		justifyContent: 'center'
 	},
 	importedText: {
 		color: colors.grey400,
@@ -145,6 +149,7 @@ class AccountElement extends PureComponent {
 					onPress={this.onPress}
 					onLongPress={this.onLongPress}
 					disabled={disabled}
+					activeOpacity={0.7}
 				>
 					{!!avatar ? (
 						<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />

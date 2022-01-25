@@ -31,6 +31,7 @@ import { refWebRTC } from '../../../services/WebRTC';
 import FileTransferWebRTC from '../../Views/FilesManager/store/FileTransferWebRTC';
 import { RestoreSecretRequest } from '../../../services/Messages';
 import styles from './styles/index';
+import StyledButton from '../StyledButton';
 
 /**
  * View that contains the list of all the available accounts
@@ -389,24 +390,22 @@ class AccountList extends PureComponent {
 				/>
 				{enableAccountsAddition && (
 					<View style={styles.footer}>
-						<TouchableOpacity
-							style={styles.footerButton}
-							testID={'create-account-button'}
+						<StyledButton
+							type={'normal'}
+							disabled={false}
+							containerStyle={styles.footerButton}
 							onPress={this.addAccount}
 						>
-							{this.state.loading ? (
-								<ActivityIndicator size="small" color={colors.blue} />
-							) : (
-								<Text style={styles.btnText}>{strings('accounts.create_new_account')}</Text>
-							)}
-						</TouchableOpacity>
-						<TouchableOpacity
+							{strings('accounts.create_new_account')}
+						</StyledButton>
+						<StyledButton
+							type={'normal'}
+							disabled={false}
+							containerStyle={styles.footerButton}
 							onPress={this.importAccount}
-							style={styles.footerButton}
-							testID={'import-account-button'}
 						>
-							<Text style={styles.btnText}>{strings('accounts.import_account')}</Text>
-						</TouchableOpacity>
+							{strings('accounts.import_account')}
+						</StyledButton>
 					</View>
 				)}
 				{enableRestoreAccount && (
