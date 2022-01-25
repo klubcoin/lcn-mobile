@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: colors.primaryFox,
-		minHeight: Dimensions.get('window').height / 2
 	},
 	loader: {
 		alignSelf: 'center'
@@ -23,6 +22,10 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		color: colors.fontTertiary,
 		...fontStyles.normal
+	},
+	centerScrollview: {
+		flexGrow: 1,
+		justifyContent: 'center'
 	}
 });
 
