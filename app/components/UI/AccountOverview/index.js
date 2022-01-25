@@ -125,6 +125,7 @@ class AccountOverview extends PureComponent {
 	mainView = React.createRef();
 
 	animatingAccountsModal = false;
+	date = new Date();
 
 	toggleAccountsModal = () => {
 		const { onboardingWizard } = this.props;
@@ -275,7 +276,7 @@ class AccountOverview extends PureComponent {
 								>
 									{!!avatar ? (
 										<RemoteImage
-											source={{ uri: `file://${avatar}?v=${new Date().getTime()}` }}
+											source={{ uri: `file://${avatar}?v=${this.date.getTime()}` }}
 											style={styles.avatar}
 										/>
 									) : (

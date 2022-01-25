@@ -355,7 +355,7 @@ class ChoosePassword extends PureComponent {
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 							value={this.state.rememberMe}
 							style={styles.biometrySwitch}
-							trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
+							trackColor={{ true: colors.blue, false: colors.grey200 }}
 							ios_backgroundColor={colors.grey300}
 						/>
 					</View>
@@ -367,7 +367,7 @@ class ChoosePassword extends PureComponent {
 							onValueChange={this.updateBiometryChoice}
 							value={this.state.biometryChoice}
 							style={styles.biometrySwitch}
-							trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
+							trackColor={{ true: colors.blue, false: colors.grey200 }}
 							ios_backgroundColor={colors.grey300}
 						/>
 					</View>
@@ -382,7 +382,7 @@ class ChoosePassword extends PureComponent {
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
 					style={styles.biometrySwitch}
-					trackColor={Device.isIos() ? { true: colors.green300, false: colors.grey300 } : null}
+					trackColor={{ true: colors.blue, false: colors.grey200 }}
 					ios_backgroundColor={colors.grey300}
 				/>
 			</View>

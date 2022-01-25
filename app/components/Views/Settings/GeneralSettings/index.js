@@ -207,7 +207,7 @@ class Settings extends PureComponent {
 								<Switch
 									value={hideZeroBalanceTokens}
 									onValueChange={this.toggleHideZeroBalanceTokens}
-									trackColor={Device.isIos() && { true: colors.blue, false: colors.grey000 }}
+									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
 								/>
 							</View>

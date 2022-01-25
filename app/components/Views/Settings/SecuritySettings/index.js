@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import {
 	Alert,
-	StyleSheet,
 	Switch,
 	Text,
 	ScrollView,
@@ -22,7 +21,7 @@ import StyledButton from '../../../UI/StyledButton';
 import SettingsNotification from '../../../UI/SettingsNotification';
 import { clearHistory } from '../../../../actions/browser';
 import { clearHosts, setPrivacyMode, setThirdPartyApiMode } from '../../../../actions/privacy';
-import { colors, fontStyles } from '../../../../styles/common';
+import { colors } from '../../../../styles/common';
 import Logger from '../../../../util/Logger';
 import Device from '../../../../util/Device';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
@@ -603,7 +602,7 @@ class Settings extends PureComponent {
 									<Switch
 										onValueChange={this.onSingInWithBiometrics}
 										value={this.state.biometryChoice}
-										trackColor={isIos ? { true: colors.blue, false: colors.grey000 } : null}
+										trackColor={{ true: colors.blue, false: colors.grey200 }}
 										ios_backgroundColor={colors.grey000}
 									/>
 								</View>
@@ -620,7 +619,7 @@ class Settings extends PureComponent {
 									<Switch
 										onValueChange={this.onSignInWithPasscode}
 										value={this.state.passcodeChoice}
-										trackColor={isIos ? { true: colors.blue, false: colors.grey000 } : null}
+										trackColor={{ true: colors.blue, false: colors.grey200 }}
 										ios_backgroundColor={colors.grey000}
 									/>
 								</View>
@@ -719,7 +718,7 @@ class Settings extends PureComponent {
 								<Switch
 									value={privacyMode}
 									onValueChange={this.togglePrivacy}
-									trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey000 } : null}
+									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
 								/>
 							</View>
@@ -733,7 +732,7 @@ class Settings extends PureComponent {
 								<Switch
 									value={metricsOptIn}
 									onValueChange={this.toggleMetricsOptIn}
-									trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey000 } : null}
+									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
 									testID={'metametrics-switch'}
 								/>
@@ -748,7 +747,7 @@ class Settings extends PureComponent {
 								<Switch
 									value={thirdPartyApiMode}
 									onValueChange={this.toggleThirdPartyAPI}
-									trackColor={Device.isIos() ? { true: colors.blue, false: colors.grey000 } : null}
+									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
 								/>
 							</View>
