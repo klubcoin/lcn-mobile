@@ -207,6 +207,7 @@ class DrawerView extends PureComponent {
 	processedNewBalance = false;
 	animatingNetworksModal = false;
 	animatingAccountsModal = false;
+	time = new Date();
 
 	isCurrentAccountImported() {
 		let ret = false;
@@ -864,7 +865,7 @@ class DrawerView extends PureComponent {
 									<View style={styles.identiconBorder}>
 										{!!avatar ? (
 											<RemoteImage
-												source={{ uri: `file://${avatar}?v=${new Date().getTime()}` }}
+												source={{ uri: `file://${avatar}?v=${this.time.getTime()}` }}
 												style={styles.avatar}
 											/>
 										) : (
