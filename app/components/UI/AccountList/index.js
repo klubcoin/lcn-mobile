@@ -400,6 +400,7 @@ class AccountList extends PureComponent {
 								<Text style={styles.btnText}>{strings('accounts.create_new_account')}</Text>
 							)}
 						</TouchableOpacity>
+
 						<TouchableOpacity
 							onPress={this.importAccount}
 							style={styles.footerButton}
@@ -407,13 +408,15 @@ class AccountList extends PureComponent {
 						>
 							<Text style={styles.btnText}>{strings('accounts.import_account')}</Text>
 						</TouchableOpacity>
+
+						{enableRestoreAccount && (
+							<TouchableOpacity onPress={this.restoreAccountFromFriends} style={styles.footerButton}>
+								<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
+							</TouchableOpacity>
+						)}
 					</View>
 				)}
-				{enableRestoreAccount && (
-					<TouchableOpacity onPress={this.restoreAccountFromFriends} style={styles.footerButton}>
-						<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
-					</TouchableOpacity>
-				)}
+
 			</SafeAreaView>
 		);
 	}
