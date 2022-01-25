@@ -6,7 +6,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import PartnerItem from './components/PartnerItem';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import APIService, { apiGetPartnerIcon } from '../../../services/APIService';
+import APIService from '../../../services/APIService';
 
 class Partners extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
