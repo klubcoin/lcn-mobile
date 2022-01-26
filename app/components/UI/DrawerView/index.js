@@ -407,6 +407,11 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_MANAGE_COIN);
 	};
 
+	gotoTipper = () => {
+		this.props.navigation.navigate('TipperApp');
+		this.hideDrawer();
+	}
+
 	showSettings = async () => {
 		this.props.navigation.navigate('SettingsView');
 		this.hideDrawer();
@@ -664,7 +669,7 @@ class DrawerView extends PureComponent {
 					name: strings('drawer.receive_tips'),
 					icon: this.getImageIcon('receiveTip'),
 					selectedIcon: this.getImageIcon('receiveTip'),
-					action: this.onShare
+					action: this.gotoTipper
 				},
 				{
 					name: strings('drawer.partners'),

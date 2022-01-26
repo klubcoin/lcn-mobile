@@ -160,7 +160,7 @@ export default class ImportPrivateKey extends PureComponent {
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							containerStyle={styles.button}
-							type={'confirm'}
+							type={'normal'}
 							onPress={this.goNext}
 							testID={'import-button'}
 						>

@@ -144,8 +144,12 @@ class Transactions extends PureComponent {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.selectedAddress != this.props.selectedAddress || prevProps.transactions != this.props.transactions) {
+		if (prevProps.selectedAddress != this.props.selectedAddress) {
 			this.setState({ ready: false, loading: true });
+			this.retrieveTransactions();
+		}
+		if (prevProps.transactions != this.props.transactions) {
+			this.setState({ ready: true, loading: true });
 			this.retrieveTransactions();
 		}
 	}
@@ -281,7 +285,10 @@ class Transactions extends PureComponent {
 	renderEmpty = () => (
 		<OnboardingScreenWithBg screen="a">
 			<ScrollView
-				refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+				refreshControl={<RefreshControl
+					refreshing={this.state.refreshing}
+					onRefresh={this.onRefresh} />}
+				contentContainerStyle={styles.centerScrollview}
 			>
 				{this.props.header ? this.props.header : null}
 				<View style={styles.emptyContainer}>

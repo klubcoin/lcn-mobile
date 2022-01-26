@@ -145,12 +145,14 @@ class ProfileOnboard extends PureComponent {
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
 									onChangeText={text => (this.firstname = text)}
+									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text)}
+									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.email}

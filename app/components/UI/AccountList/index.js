@@ -396,7 +396,11 @@ class AccountList extends PureComponent {
 							containerStyle={styles.footerButton}
 							onPress={this.addAccount}
 						>
-							{strings('accounts.create_new_account')}
+							{this.state.loading ? (
+								<ActivityIndicator size="small" color={colors.white} />
+							) : (
+								<Text style={styles.btnText}>{strings('accounts.create_new_account')}</Text>
+							)}
 						</StyledButton>
 						<StyledButton
 							type={'normal'}
@@ -408,11 +412,7 @@ class AccountList extends PureComponent {
 						</StyledButton>
 					</View>
 				)}
-				{enableRestoreAccount && (
-					<TouchableOpacity onPress={this.restoreAccountFromFriends} style={styles.footerButton}>
-						<Text style={styles.btnText}>{strings('accounts.restore_account_via_friends')}</Text>
-					</TouchableOpacity>
-				)}
+
 			</SafeAreaView>
 		);
 	}

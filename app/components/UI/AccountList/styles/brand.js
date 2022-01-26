@@ -9,10 +9,23 @@ const brandStyles = StyleSheet.create({
 	},
 	footerButton: {
 		width: '100%',
-		height: 36,
+		height: 50,
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginVertical: 5
+		marginVertical: 5,
+		backgroundColor: colors.blue,
+	},
+	footer: {
+		paddingHorizontal: 30,
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		paddingBottom: 0,
+		paddingTop: 10,
+	},
+	btnText: {
+		color: colors.black,
+		...fontStyles.bold,
+		fontSize: 14,
 	}
 });
 
