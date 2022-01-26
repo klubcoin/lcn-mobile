@@ -9,19 +9,12 @@ const brandStyles = StyleSheet.create({
 	},
 	footerButton: {
 		width: '100%',
-<<<<<<< Updated upstream
-		height: 50,
-=======
->>>>>>> Stashed changes
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginVertical: 5,
 		backgroundColor: colors.blue,
-<<<<<<< Updated upstream
-=======
 		borderWidth: 0,
 		paddingVertical: 20,
->>>>>>> Stashed changes
 	},
 	footer: {
 		paddingHorizontal: 30,
