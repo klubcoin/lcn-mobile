@@ -9,6 +9,7 @@ import OnboardingScreenWithBg from '../../../OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../../../app.json';
 import PaymentMethodItem from './PurchaseMethod';
+import drawables from '../../../../../common/drawables';
 
 function Purchase({ selectedAddress, ...props }) {
 	
@@ -23,6 +24,8 @@ function Purchase({ selectedAddress, ...props }) {
 			<SafeAreaView style={styles.wrapper}>
 				<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 					<PaymentMethodItem onBuy={onBuy} displayName={displayName} image={require('../../../../../images/paypal_logo.png')} typeText={'PayPal'} />
+
+					<PaymentMethodItem onBuy={onBuy} displayName={displayName} image={drawables.wyrn} typeText={'wyre'.toUpperCase()} />
 				</ScrollView>
 			</SafeAreaView>
 			{/* </ScreenView> */}

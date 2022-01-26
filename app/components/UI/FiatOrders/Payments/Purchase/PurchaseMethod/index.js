@@ -9,18 +9,20 @@ const PaymentMethodItem = ({ onBuy, displayName, image, typeText }) => {
         <View
             style={styles.title}
         >
-            <Image
-                source={image}
-                style={styles.paypalIc}
-                resizeMode={'contain'}
-            />
+            <View style={styles.imageContainer}> 
+                <Image
+                    source={image}
+                    style={styles.paypalIc}
+                    resizeMode={'contain'}
+                />
+            </View>
             <Text style={styles.paypal}>{typeText}</Text>
         </View>
         <Text style={styles.creditCard}>{strings('payment_request.with_credit_card')}</Text>
         <Text style={styles.fee}>{strings('payment_request.base_from', { typeText })}</Text>
         <View style={{ marginBottom: 5 }}>
             <StyledButton type={'white'} onPress={onBuy}>
-                {strings('payment_request.base_from', { typeText, displayName })}
+                {strings('payment_request.buy_with', { typeText, displayName })}
             </StyledButton>
         </View>
     </View>);

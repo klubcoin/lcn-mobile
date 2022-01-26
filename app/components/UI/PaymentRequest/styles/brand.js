@@ -26,6 +26,12 @@ const brandStyles = StyleSheet.create({
 	},
 	button: {
 		paddingVertical: 12,
+	},
+	fiatValue: {
+		color: colors.white
+	},
+	currencySymbolSmall: {
+		color: colors.white,
 	}
 });
 

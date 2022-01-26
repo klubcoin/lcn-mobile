@@ -74,11 +74,12 @@ export default class StyledButton extends PureComponent {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	};
 
-	renderGroupedChildren = fontStyle => {
-		const { disabled, type } = this.props;
+	renderGroupedChildren = (fontStyle, formattedTypes) => {
+		const { disabled } = this.props;
+
 		const style = [
 			...fontStyle,
-			styles[`${type}Text`],
+			styles[`${formattedTypes}Text`],
 			this.props.style,
 			disabled ? this.props.styleDisabled : null
 		];
@@ -113,10 +114,11 @@ export default class StyledButton extends PureComponent {
 		const touchableProps = {};
 		const containerStyles = [
 			...containerStyle,
-			styles[type],
+			styles[formattedTypes],
 			this.props.disabled ? this.props.disabledContainerStyle : null,
 			this.props.containerStyle
 		];
+
 
 		if (!this.props.disabled) {
 			touchableProps.onPress = this.props.onPress;
@@ -130,7 +132,7 @@ export default class StyledButton extends PureComponent {
 				disabled={this.props.disabled}
 				accessibilityLabel={this.props.accessibilityLabel || this.props.testID}
 			>
-				<View style={containerStyles}>{this.renderGroupedChildren(fontStyle, containerStyles)}</View>
+				<View style={containerStyles}>{this.renderGroupedChildren(fontStyle, formattedTypes)}</View>
 			</TouchableNativeFeedback>
 		);
 	};

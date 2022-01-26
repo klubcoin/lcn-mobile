@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     paypalIc: {
         width: 20,
         height: 20,
-        marginRight: 5
-    }
+    },
+    imageContainer: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

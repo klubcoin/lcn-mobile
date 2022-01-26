@@ -5,6 +5,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 import Identicon from '../Identicon';
 import { toggleAccountsModal } from '../../../actions/modals';
 import Device from '../../../util/Device';
+import RemoteImage from '../../Base/RemoteImage';
 
 const styles = StyleSheet.create({
 	leftButton: {
@@ -14,7 +15,12 @@ const styles = StyleSheet.create({
 		marginBottom: 12,
 		alignItems: 'center',
 		justifyContent: 'center'
-	}
+	},
+	avatar: {
+		width: 28,
+		height: 28,
+		borderRadius: 24
+	},
 });
 
 /**
@@ -34,6 +40,7 @@ class AccountRightButton extends PureComponent {
 	};
 
 	animating = false;
+	date = new Date()
 
 	toggleAccountsModal = () => {
 		if (!this.animating) {
@@ -46,20 +53,35 @@ class AccountRightButton extends PureComponent {
 	};
 
 	render = () => {
-		const { address } = this.props;
+		const { address, onboardProfile } = this.props;
+		const { avatar } = onboardProfile || {};
+
 		return (
 			<TouchableOpacity
 				style={styles.leftButton}
 				onPress={this.toggleAccountsModal}
 				testID={'navbar-account-button'}
 			>
-				<Identicon diameter={28} address={address} />
+				{!!avatar ? (
+					<RemoteImage
+						source={{ uri: `file://${avatar}?v=${this.date.getTime()}` }}
+						style={styles.avatar}
+					/>
+				) : (
+					<Identicon diameter={28} address={address} />
+				)}
+
 			</TouchableOpacity>
 		);
 	};
 }
 
-const mapStateToProps = state => ({ address: state.engine.backgroundState.PreferencesController.selectedAddress });
+
+const mapStateToProps = state => ({
+	address: state.engine.backgroundState.PreferencesController.selectedAddress,
+	onboardProfile: state.user.onboardProfile
+});
+
 const mapDispatchToProps = dispatch => ({
 	toggleAccountsModal: () => dispatch(toggleAccountsModal())
 });

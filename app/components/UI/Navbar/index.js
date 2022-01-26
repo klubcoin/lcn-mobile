@@ -307,12 +307,13 @@ export function getSendFlowTitle(title, navigation, screenProps) {
 
 	return {
 		headerTitle: <NavbarTitle title={titleToRender} disableNetwork />,
-		// headerRight: (
-		// 	// eslint-disable-next-line react/jsx-no-bind
-		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton} testID={'send-cancel-button'}>
-		// 		<Text style={[styles.closeButtonText, brandStyles.closeButtonText]}>{strings('transaction.cancel')}</Text>
-		// 	</TouchableOpacity>
-		// ),
+		headerRight: (
+			<View></View>
+			// eslint-disable-next-line react/jsx-no-bind
+			// <TouchableOpacity onPress={rightAction} style={styles.closeButton} testID={'send-cancel-button'}>
+			// 	<Text style={[styles.closeButtonText, brandStyles.closeButtonText]}>{strings('transaction.cancel')}</Text>
+			// </TouchableOpacity>
+		),
 		headerLeft: canGoBack ? (
 			// eslint-disable-next-line react/jsx-no-bind
 			<TouchableOpacity onPress={leftAction} style={styles.closeButton}>
@@ -646,16 +647,17 @@ export function getWalletNavbarOptions(title, navigation) {
 			<TouchableOpacity onPress={openDrawer} style={styles.backButton} testID={'hamburger-menu-button-wallet'}>
 				<Icon name={'bars'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
-		)
-		// headerRight: (
-		// 	<TouchableOpacity
-		// 		style={styles.infoButton}
-		// 		// eslint-disable-next-line
-		// 		onPress={openQRScanner}
-		// 	>
-		// 		<AntIcon name="scan1" size={28} style={styles.infoIcon} />
-		// 	</TouchableOpacity>
-		// ),
+		),
+		headerRight: (
+			<View></View>
+			// <TouchableOpacity
+			// 	style={styles.infoButton}
+			// 	// eslint-disable-next-line
+			// 	onPress={openQRScanner}
+			// >
+			// 	<AntIcon name="scan1" size={28} style={styles.infoIcon} />
+			// </TouchableOpacity>
+		),
 	};
 }
 
@@ -765,20 +767,21 @@ export function getPurchaseMethodNavbar(navigation) {
 	const rightAction = navigation.dismiss;
 
 	return {
-		headerTitle: <Text style={[styles.centeredTitle, styles.centeredWhiteTitle]}>{strings('fiat_on_ramp.purchase_method')}</Text>,
+		headerTitle: <Text style={[styles.centeredTitle]}>{strings('fiat_on_ramp.purchase_method')}</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} color={colors.white} />
+				<Icon name={'arrow-left'} size={16} color={colors.white} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
-		// headerRight: (
-		// 	// eslint-disable-next-line react/jsx-no-bind
-		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
-		// 		<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
-		// 	</TouchableOpacity>
-		// ),
+		headerRight: (
+			// // eslint-disable-next-line react/jsx-no-bind
+			// <TouchableOpacity onPress={rightAction} style={styles.closeButton}>
+			// 	<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
+			// </TouchableOpacity>
+			<View></View>
+		),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.white
 		}
 	};
 }

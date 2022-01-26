@@ -56,6 +56,7 @@ class PaymentRequestSuccess extends PureComponent {
 		qrLink: '',
 		amount: '',
 		symbol: '',
+		logo: '',
 		qrModalVisible: false
 	};
 
@@ -68,7 +69,9 @@ class PaymentRequestSuccess extends PureComponent {
 		const qrLink = navigation && navigation.getParam('qrLink', '');
 		const amount = navigation && navigation.getParam('amount', '');
 		const symbol = navigation && navigation.getParam('symbol', '');
-		this.setState({ link, qrLink, amount, symbol });
+		const logo = navigation && navigation.getParam('logo', '');
+		this.setState({ link, qrLink, amount, symbol, logo });
+        console.log("🚀 ~ file: index.js ~ line 75 ~ PaymentRequestSuccess ~ this.state", this.state)
 	};
 
 	componentWillUnmount = () => {

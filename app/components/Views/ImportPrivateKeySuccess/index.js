@@ -14,7 +14,7 @@ import { displayName } from '../../../../app.json';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.primaryFox,
 		flex: 1
 	},
 	wrapper: {
