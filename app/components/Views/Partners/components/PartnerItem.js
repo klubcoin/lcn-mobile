@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, TouchableHighlight, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../../styles/common';
 import APIService, { basicAuth } from '../../../../services/APIService';
 import * as base64 from 'base-64';
@@ -24,7 +24,7 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 		}
 	});
 	return (
-		<TouchableHighlight style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
+		<TouchableOpacity activeOpacity={0.7} style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
 			<View style={styles.imgWrapper}>
 				<Image
 					source={{
@@ -40,6 +40,6 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 					}}
 				/>
 			</View>
-		</TouchableHighlight>
+		</TouchableOpacity>
 	);
 }

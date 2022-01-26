@@ -78,6 +78,9 @@ const styles = StyleSheet.create({
 	listWrapper: {
 		flex: 1,
 		paddingBottom: 10
+	},
+	text: {
+		color: colors.white
 	}
 });
 
@@ -159,6 +162,7 @@ export default class SelectComponent extends PureComponent {
 				selectedValue={this.props.selectedValue}
 				onValueChange={this.onValueChange}
 				prompt={this.props.label}
+				style={styles.text}
 			>
 				{this.props.options.map(option => (
 					<PickerItem value={option.value} label={option.label} key={option.key} />

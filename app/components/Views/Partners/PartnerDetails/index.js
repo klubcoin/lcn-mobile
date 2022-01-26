@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Text, View, Image, Linking, Alert } from 'react-native';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
@@ -17,6 +17,7 @@ class PartnerDetails extends PureComponent {
 	name = '';
 	description = '';
 	icon = '';
+	image = '';
 	websiteUrl = '';
 	constructor(props) {
 		super(props);
@@ -24,13 +25,15 @@ class PartnerDetails extends PureComponent {
 			name: observable,
 			description: observable,
 			icon: observable,
-			websiteUrl: observable
+			websiteUrl: observable,
+			image: observable
 		});
 		const { params } = this.props.navigation.state;
 		this.name = params?.name ?? '';
 		this.description = params?.description ?? '';
 		this.icon = params?.icon ?? '';
 		this.websiteUrl = params?.websiteUrl ?? '';
+		this.image = params?.image ?? '';
 		// console.log(this.props.navigation);
 	}
 	async onViewPartners() {
@@ -48,16 +51,16 @@ class PartnerDetails extends PureComponent {
 				<View style={styles.wrapper}>
 					<Text style={styles.title}>{this.name}</Text>
 					<Text style={styles.desc}>{this.description}</Text>
-					<Image
+					{this.image ? <Image
 						source={{
-							uri: APIService.apiGetPartnerIcon(this.icon),
+							uri: APIService.apiGetPartnerIcon(this.image),
 							headers: {
 								Authorization: `Basic ${base64.encode(basicAuth)}`
 							}
 						}}
 						resizeMode={'cover'}
 						style={styles.partnerImage}
-					/>
+					/> : null}
 					<View style={styles.button}>
 						<StyledButton
 							type={'normal-padding'}

@@ -31,7 +31,9 @@ const brandStyles = StyleSheet.create({
 	inputContainerStyle: {
 		backgroundColor: colors.purple,
 		borderRadius: 15,
-		textAlign: 'center'
+		textAlign: 'center',
+		borderTopLeftRadius: 15,
+		borderTopRightRadius: 15
 	},
 	biometricTop: {
 		flexDirection: 'row',
