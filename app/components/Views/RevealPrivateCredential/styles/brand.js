@@ -7,7 +7,10 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent
 	},
 	input: {
-		color: colors.white
+		color: colors.white,
+		borderWidth: 0,
+		backgroundColor: colors.purple,
+		borderRadius: 12
 	},
 	enterPassword: {
 		color: colors.white

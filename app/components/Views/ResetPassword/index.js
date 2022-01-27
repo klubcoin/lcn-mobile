@@ -421,7 +421,7 @@ class ResetPassword extends PureComponent {
 									<View style={styles.buttonWrapper}>
 										<StyledButton
 											containerStyle={styles.button}
-											type={'confirm'}
+											type={'normal'}
 											onPress={this.tryUnlock}
 											testID={'submit-button'}
 										>
