@@ -10,4 +10,5 @@ export default {
 	send: require('../images/wallet-icon-send.png'),
 	trade: require('../images/wallet-icon-trade.png'),
 	wyrn: require('../images/wyre.png'),
+	logo: require('../images/klubcoin.png')
 };
