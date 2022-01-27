@@ -547,7 +547,7 @@ class Settings extends PureComponent {
 								) : null}
 							</SettingsNotification>
 							{!seedphraseBackedUp ? (
-								<StyledButton type="blue" onPress={this.manualBackup} containerStyle={styles.confirm}>
+								<StyledButton type="white" onPress={this.manualBackup} containerStyle={styles.confirm}>
 									{strings('app_settings.back_up_now')}
 								</StyledButton>
 							) : (
@@ -646,7 +646,7 @@ class Settings extends PureComponent {
 							<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
 							<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
 							<StyledButton
-								type="confirm"
+								type="normal"
 								onPress={this.backupPrivateKey}
 								containerStyle={styles.confirm}
 							>
@@ -771,7 +771,7 @@ class Settings extends PureComponent {
 					<View style={styles.setting}>
 						<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
 						<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
-						<StyledButton type="confirm" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
+						<StyledButton type="normal" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
 							{strings('private_key.backup_private_key')}
 						</StyledButton>
 						{!!privateKeyBackupStats && (

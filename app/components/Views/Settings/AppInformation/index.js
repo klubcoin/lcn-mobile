@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'left',
 		marginBottom: 20,
-		...fontStyles.normal
+		...fontStyles.normal,
+		color: colors.white
 	},
 	link: {
 		fontSize: 18,
@@ -143,7 +144,7 @@ export default class AppInformation extends PureComponent {
 						<Text style={styles.versionInfo}>{this.state.appInfo}</Text>
 					</View>
 					<Text style={styles.title}>{strings('app_information.links')}</Text>
-					<View style={styles.links}>
+					<View style={styles.link}>
 						<TouchableOpacity onPress={this.onPrivacyPolicy} activeOpacity={0.7}>
 							<Text style={styles.link}>{strings('app_information.privacy_policy')}</Text>
 						</TouchableOpacity>

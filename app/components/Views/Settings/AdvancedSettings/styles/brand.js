@@ -4,7 +4,8 @@ import { colors, fontStyles } from '../../../../../styles/common';
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.transparent
+		backgroundColor: colors.transparent,
+		paddingHorizontal: 20,
 	},
 	title: {
 		...fontStyles.bold
@@ -15,6 +16,12 @@ const brandStyles = StyleSheet.create({
 	seedPhrase: {
 		backgroundColor: colors.transparent,
 		color: colors.white
+	},
+	setting: {
+		backgroundColor: colors.purple,
+		padding: 20,
+		marginTop: 20,
+		borderRadius: 10,
 	}
 });
 

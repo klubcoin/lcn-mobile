@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 		width: '48%'
 	},
 	inner: {
-		paddingBottom: 112
+		paddingBottom: 0
 	},
 	picker: {
 		borderColor: colors.grey200,
@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
 		color: colors.black,
 		fontSize: 12,
 		flex: 1,
-		...fontStyles.normal
+		...fontStyles.normal,
+		lineHeight: 14
 	},
 	warningTextRed: {
 		color: colors.red
@@ -104,6 +105,9 @@ const styles = StyleSheet.create({
 	},
 	seedPhraseVideo: {
 		marginTop: 10
+	},
+	marginLeft: {
+		marginLeft: 10,
 	}
 });
 

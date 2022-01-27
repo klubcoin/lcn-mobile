@@ -4,7 +4,8 @@ import { colors, fontStyles } from '../../../../../styles/common';
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.transparent
+		backgroundColor: colors.transparent,
+		padding: 20
 	},
 	title: {
 		...fontStyles.bold
@@ -21,7 +22,17 @@ const brandStyles = StyleSheet.create({
 	},
 	selected_text: {
 		color: colors.blue
-	}
+	},
+	setting: {
+		backgroundColor: colors.purple,
+		padding: 20,
+		borderRadius: 10,
+		marginTop: 0,
+		marginBottom: 20,
+	},
+	firstSetting: {
+		marginBottom: 20
+	},
 });
 
 export default brandStyles;
