@@ -116,6 +116,8 @@ export default class AddByTokenAddress extends PureComponent {
 					onCancelPress={this.cancelAddToken}
 					onConfirmPress={this.addToken}
 					confirmDisabled={!this.address}
+					confirmText={strings('action_view.confirm')}
+					cancelText={strings('action_view.cancel')}
 				>
 					<View style={styles.rowWrapper}>
 						<Text style={[fontStyles.normal, { color: colors.white }]}>
