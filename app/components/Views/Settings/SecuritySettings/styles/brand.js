@@ -21,6 +21,13 @@ const brandStyles = StyleSheet.create({
 	},
 	selected_text: {
 		color: colors.blue
+	},
+	modalView: {
+		alignItems: 'center',
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
+		padding: 20
 	}
 });
 
