@@ -808,6 +808,9 @@ class Settings extends PureComponent {
 							onCancelPress={this.toggleClearCookiesModal}
 							onRequestClose={this.toggleClearCookiesModal}
 							onConfirmPress={this.clearCookies}
+							modalStyle={styles.modal}
+							actionContainerStyle={styles.modalActionView}
+							cancelButtonMode="normal"
 						>
 							<View style={styles.modalView}>
 								<Text style={styles.modalTitle}>

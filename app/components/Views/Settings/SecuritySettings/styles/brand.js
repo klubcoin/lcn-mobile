@@ -33,6 +33,13 @@ const brandStyles = StyleSheet.create({
 	firstSetting: {
 		marginBottom: 20
 	},
+	modalView: {
+		alignItems: 'center',
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
+		padding: 20
+	}
 });
 
 export default brandStyles;

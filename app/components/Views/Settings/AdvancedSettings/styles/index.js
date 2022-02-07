@@ -66,6 +66,9 @@ const styles = StyleSheet.create({
 		height: 37,
 		alignItems: 'center',
 		justifyContent: 'center'
+	},
+	modalActionView: {
+		borderTopWidth: 0
 	}
 });
 

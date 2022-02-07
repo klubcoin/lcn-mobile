@@ -7,7 +7,20 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.transparent
 	},
 	confirm_input: {
-		color: colors.white
+		color: colors.white,
+		backgroundColor: colors.purple,
+		borderWidth: 0,
+		borderRadius: 12
+	},
+	button: {
+		borderRadius: 12,
+		width: "100%"
+	},
+	buttonWrapper: {
+		flex: 1,
+		marginTop: 20,
+		justifyContent: 'flex-end',
+		width: '100%'
 	}
 });
 

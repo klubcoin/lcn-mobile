@@ -4,11 +4,11 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	mainWrapper: {
-		backgroundColor: colors.grey,
+		backgroundColor: colors.purple,
 		flex: 1
 	},
 	bottom: {
-		backgroundColor: colors.black
+		backgroundColor: colors.primaryFox
 	},
 	textColor: {
 		color: colors.fontPrimary
@@ -17,14 +17,15 @@ const brandStyles = StyleSheet.create({
 		color: colors.fontPrimary
 	},
 	input: {
-		backgroundColor: colors.grey,
-		borderWidth: StyleSheet.hairlineWidth,
+		backgroundColor: colors.purple,
 		borderColor: colors.white,
+		borderWidth: 0,
+		borderRadius: 12,
 		...fontStyles.normal,
 		color: colors.white
 	},
 	buttonWrapper: {
-		backgroundColor: colors.black
+		backgroundColor: colors.primaryFox
 	}
 });
 

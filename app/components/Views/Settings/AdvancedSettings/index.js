@@ -178,7 +178,8 @@ class AdvancedSettings extends PureComponent {
 								onRequestClose={this.cancelResetAccount}
 								onConfirmPress={this.resetAccount}
 								confirmButtonMode='normal'
-								cancelButtonMode='danger'
+								cancelButtonMode="normal"
+								actionContainerStyle={styles.modalActionView}
 							>
 								<View style={styles.modalView}>
 									<Text style={styles.modalTitle}>
