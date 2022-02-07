@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 	},
 	marginLeft: {
 		marginLeft: 10,
+	},
 	modal: {
 		backgroundColor: colors.darkAlert
 	},
