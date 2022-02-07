@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 	},
 	footerButton: {
 		width: '100%',
-		height: 36,
+		// height: 36,
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderTopWidth: StyleSheet.hairlineWidth,
