@@ -104,6 +104,12 @@ const styles = StyleSheet.create({
 	},
 	seedPhraseVideo: {
 		marginTop: 10
+	},
+	modal: {
+		backgroundColor: colors.darkAlert
+	},
+	modalActionView: {
+		borderTopWidth: 0
 	}
 });
 

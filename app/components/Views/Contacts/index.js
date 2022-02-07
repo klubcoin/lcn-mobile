@@ -364,7 +364,7 @@ class Contacts extends PureComponent {
 					/>
 					{this.contactSelection ? (
 						<StyledButton
-							type={'confirm'}
+							type={'normal'}
 							containerStyle={styles.addContact}
 							onPress={this.onConfirm.bind(this)}
 						>
@@ -372,7 +372,7 @@ class Contacts extends PureComponent {
 						</StyledButton>
 					) : (
 						<StyledButton
-							type={'confirm'}
+							type={'normal'}
 							containerStyle={styles.addContact}
 							onPress={this.createFriendRequest}
 							testID={'add-contact-button'}
