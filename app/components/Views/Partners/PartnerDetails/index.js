@@ -58,7 +58,7 @@ class PartnerDetails extends PureComponent {
 								Authorization: `Basic ${base64.encode(basicAuth)}`
 							}
 						}}
-						resizeMode={'cover'}
+						resizeMode={'contain'}
 						style={styles.partnerImage}
 					/> : null}
 					<View style={styles.button}>
