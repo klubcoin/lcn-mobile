@@ -128,6 +128,10 @@ class AddressQRCode extends PureComponent {
 						<QRCode
 							value={`ethereum:${this.props.selectedAddress}`}
 							size={Dimensions.get('window').width - 160}
+                            logoSize={50} 
+                            logoBackgroundColor='black'
+                            logoBorderRadius={100}
+                            logoMargin={5}
 						/>
 					</View>
 					<View style={styles.addressWrapper}>

@@ -29,6 +29,7 @@ import GlobalAlert from '../GlobalAlert';
 import StyledButton from '../StyledButton';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
+import drawables from '../../../common/drawables';
 
 /**
  * PureComponent that renders receive options
@@ -182,6 +183,11 @@ class ReceiveRequest extends PureComponent {
 									<QRCode
 										value={`ethereum:${this.props.selectedAddress}`}
 										size={Dimensions.get('window').width / 2}
+                                        logo={drawables.logo}
+                                        logoSize={50} 
+                                        logoBackgroundColor='black'
+                                        logoBorderRadius={100}
+                                        logoMargin={5}
 									/>
 								</TouchableOpacity>
 								<Modal
