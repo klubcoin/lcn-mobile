@@ -32,7 +32,7 @@ class Partners extends PureComponent {
 
 	fetchPartnerList() {
 		APIService.getPartnerList((success, json) => {
-			if (success) {
+			if (success && Array.isArray(json)) {
 				this.partnerList = json;
 			}
 		});
