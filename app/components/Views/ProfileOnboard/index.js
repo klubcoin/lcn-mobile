@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, Modal } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import preferences from '../../../store/preferences';
@@ -31,6 +31,7 @@ class ProfileOnboard extends PureComponent {
 	lastname = '';
 	email = '';
 	phone = '';
+	isViewModal = false;
 
 	constructor(props) {
 		super(props);
@@ -39,18 +40,35 @@ class ProfileOnboard extends PureComponent {
 			firstname: observable,
 			lastname: observable,
 			email: observable,
-			phone: observable
+			phone: observable,
+			isViewModal: observable
 		});
 	}
 
 	onPickImage() {
+		ImagePicker.openPicker({
+			width: 300,
+			height: 300,
+			cropping: true
+		}).then(image => {
+			this.isViewModal = false;
+			this.avatar = image.path;
+		});
+	}
+
+	onTakePicture() {
 		ImagePicker.openCamera({
 			width: 300,
 			height: 300,
 			cropping: true
 		}).then(image => {
+			this.isViewModal = false;
 			this.avatar = image.path;
 		});
+	}
+
+	onOpenModal() {
+		this.isViewModal = true;
 	}
 
 	showNotice(message) {
@@ -68,14 +86,14 @@ class ProfileOnboard extends PureComponent {
 		const email = this.email.trim();
 		const phone = this.phone.trim();
 
-		if (!this.avatar) {
-			showError(strings('profile.missing_photo'));
-			return;
-		}
-		if (!firstname || !lastname) {
-			showError(strings('profile.missing_name'));
-			return;
-		}
+		// if (!this.avatar) {
+		// 	showError(strings('profile.missing_photo'));
+		// 	return;
+		// }
+		// if (!firstname || !lastname) {
+		// 	showError(strings('profile.missing_name'));
+		// 	return;
+		// }
 		if (!email) {
 			showError(strings('profile.missing_email'));
 			return;
@@ -84,11 +102,11 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.invalid_email'));
 			return;
 		}
-		if (!phone) {
-			showError(strings('profile.missing_phone'));
-			return;
-		}
-		if (!/^\+?[\d\s]{8,15}$/.test(phone)) {
+		// if (!phone) {
+		// 	showError(strings('profile.missing_phone'));
+		// 	return;
+		// }
+		if (phone && !/^\+?[\d\s]{8,15}$/.test(phone)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
@@ -103,13 +121,14 @@ class ProfileOnboard extends PureComponent {
 
 		const isValid = this.isDataValid();
 		if (!isValid) return;
-
 		const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
-		if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
-		await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+		if (this.avatar) {
+			if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
+			await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+		}
 
 		preferences.setOnboardProfile({
-			avatar: path,
+			avatar: this.avatar ? path : '',
 			firstname,
 			lastname,
 			email,
@@ -131,7 +150,7 @@ class ProfileOnboard extends PureComponent {
 							<TouchableOpacity
 								activeOpacity={0.5}
 								style={styles.avatarView}
-								onPress={() => this.onPickImage()}
+								onPress={() => this.onOpenModal()}
 							>
 								<RemoteImage
 									source={{ uri: this.avatar || drawables.avatar_user }}
@@ -175,6 +194,32 @@ class ProfileOnboard extends PureComponent {
 							</StyledButton>
 						</View>
 					</ScrollView>
+					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
+						<TouchableOpacity
+							style={styles.centerModal}
+							onPress={() => {
+								this.isViewModal = false;
+							}}
+							activeOpacity={1}
+						>
+							<View style={styles.contentModal}>
+								<StyledButton
+									type={'normal'}
+									onPress={this.onPickImage.bind(this)}
+									containerStyle={styles.buttonModal}
+								>
+									{strings('profile.select_image')}
+								</StyledButton>
+								<StyledButton
+									type={'normal'}
+									onPress={this.onTakePicture.bind(this)}
+									containerStyle={styles.buttonModal}
+								>
+									{strings('profile.take_a_picture')}
+								</StyledButton>
+							</View>
+						</TouchableOpacity>
+					</Modal>
 				</KeyboardAvoidingView>
 			</OnboardingScreenWithBg>
 		);

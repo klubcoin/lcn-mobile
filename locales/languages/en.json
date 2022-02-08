@@ -207,7 +207,10 @@
 		"name": "Name",
 		"surname": "Surname",
 		"phone": "Phone",
-		"change_shipping_info": "Change shipping info"
+		"change_shipping_info": "Change shipping info",
+		"select_image": "Select Image",
+		"take_a_picture": "Take a Picture"
+
 	},
 	"confirm_profile": {
 		"confirm_profile_message": "Identity Confirmation",

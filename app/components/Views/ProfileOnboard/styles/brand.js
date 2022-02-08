@@ -23,6 +23,26 @@ const brandStyles = StyleSheet.create({
 	next: {
 		width: '80%',
 		maxWidth: 300
+	},
+	centerModal:{
+		backgroundColor:colors.greytransparent100,
+		justifyContent:"center",
+		width:'100%',
+		height:'100%',
+		alignItems:'center',
+
+	},
+	contentModal:{
+		backgroundColor:colors.purple500,
+		width:'60%',
+		alignItems:"center",
+		paddingVertical:20,
+		paddingHorizontal:20,
+		borderRadius:12
+	},
+	buttonModal:{
+		width:'100%',
+		marginVertical:12
 	}
 });
 
