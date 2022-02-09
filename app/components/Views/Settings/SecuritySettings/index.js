@@ -560,7 +560,7 @@ class Settings extends PureComponent {
 										{strings('app_settings.back_up_again')}
 									</StyledButton>
 									<StyledButton
-										type="blue"
+										type="warning"
 										onPress={this.goToRevealPrivateCredential}
 										containerStyle={[styles.confirm, styles.col]}
 										testID={'reveal-seed-button'}
