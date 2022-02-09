@@ -5,3 +5,4 @@
 * [ ] https://github.com/klubcoin/home/issues/48
 * [ ] https://github.com/klubcoin/home/issues/49
 * [ ] https://github.com/klubcoin/home/issues/50
+* [ ] https://github.com/klubcoin/home/issues/51
