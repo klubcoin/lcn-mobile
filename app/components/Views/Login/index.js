@@ -108,8 +108,14 @@ class Login extends PureComponent {
 	mounted = true;
 
 	fieldRef = React.createRef();
+	emailFieldRef = React.createRef();
 
 	async componentDidMount() {
+		if (this.props.navigation.state?.params?.isFromBackground) {
+			const { email } = preferences?.onboardProfile ?? {};
+			this.setState({ email: email });
+			this.emailFieldRef.current.setValue(email)
+		}
 		if (!this.props.passwordSet && !this.props.keycloakAuth) {
 			try {
 				const { KeyringController } = Engine.context;
@@ -453,7 +459,7 @@ class Login extends PureComponent {
 											testID={'login-password-input'}
 											returnKeyType={'done'}
 											autoCapitalize="none"
-											ref={this.fieldRef}
+											ref={this.emailFieldRef}
 											keyboardType={'email-address'}
 											onChangeText={this.setEmail}
 											value={this.state.email}

@@ -117,7 +117,7 @@ class LockScreen extends PureComponent {
 				this.animationName && this.animationName.play();
 				Logger.log('Lockscreen::unlockKeychain - playing animations');
 			} else if (this.props.passwordSet) {
-				this.props.navigation.navigate('Login');
+				this.props.navigation.navigate('Login', { isFromBackground: true });
 			} else {
 				this.props.navigation.navigate('Onboarding');
 			}
