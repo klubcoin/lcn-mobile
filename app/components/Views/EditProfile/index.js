@@ -109,10 +109,10 @@ class EditProfile extends PureComponent {
 		const email = this.email?.trim();
 		const phone = this.phone?.trim();
 
-		// if (!this.avatar) {
-		// 	showError(strings('profile.missing_photo'));
-		// 	return;
-		// }
+		if (!this.avatar) {
+			showError(strings('profile.missing_photo'));
+			return;
+		}
 		// if (!firstname || !lastname) {
 		// 	showError(strings('profile.missing_name'));
 		// 	return;
