@@ -1057,7 +1057,7 @@ class DrawerView extends PureComponent {
 						ticker={ticker}
 					/>
 				</Modal>
-				{this.renderOnboardingWizard()}
+				{/* {this.renderOnboardingWizard()} */}
 				<Modal
 					isVisible={this.props.receiveModalVisible}
 					onBackdropPress={this.toggleReceiveModal}

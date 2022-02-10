@@ -356,7 +356,7 @@ class Wallet extends PureComponent {
                 >
                     {this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
                 </ScrollView>
-                {this.renderOnboardingWizard()}
+                {/* {this.renderOnboardingWizard()} */}
             </View>
         </ErrorBoundary>
     );
