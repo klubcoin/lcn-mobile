@@ -97,10 +97,10 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.missing_photo'));
 			return;
 		}
-		// if (!firstname || !lastname) {
-		// 	showError(strings('profile.missing_name'));
-		// 	return;
-		// }
+		if (!firstname || !lastname) {
+			showError(strings('profile.missing_name'));
+			return;
+		}
 		if (!email) {
 			showError(strings('profile.missing_email'));
 			return;
