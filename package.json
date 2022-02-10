@@ -122,6 +122,7 @@
 		"buffer": "5.2.1",
 		"compare-versions": "^3.6.0",
 		"content-hash": "2.5.2",
+		"country-telephone-data": "^0.6.3",
 		"date-fns": "^2.25.0",
 		"dnode": "1.2.2",
 		"eth-ens-namehash": "2.0.8",

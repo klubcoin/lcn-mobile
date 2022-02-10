@@ -22,6 +22,9 @@ import styles from './styles/index';
 import TextField from '../../UI/TextField';
 import validator from 'validator';
 import { showError } from '../../../util/notify';
+import PhoneTextField from '../../UI/PhoneTextField';
+import CountrySearchModal from '../../UI/CountrySearchModal';
+import { allCountries } from 'country-telephone-data';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
@@ -32,6 +35,8 @@ class ProfileOnboard extends PureComponent {
 	email = '';
 	phone = '';
 	isViewModal = false;
+	showCountryCodePicker = false;
+	countryCode = '';
 
 	constructor(props) {
 		super(props);
@@ -41,7 +46,9 @@ class ProfileOnboard extends PureComponent {
 			lastname: observable,
 			email: observable,
 			phone: observable,
-			isViewModal: observable
+			isViewModal: observable,
+			showCountryCodePicker: observable,
+			countryCode: observable
 		});
 	}
 
@@ -106,7 +113,7 @@ class ProfileOnboard extends PureComponent {
 		// 	showError(strings('profile.missing_phone'));
 		// 	return;
 		// }
-		if (phone && !/^\+?[\d\s]{8,15}$/.test(phone)) {
+		if (phone && (!/^\+?[\d\s]{8,15}$/.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
@@ -117,7 +124,7 @@ class ProfileOnboard extends PureComponent {
 		const firstname = this.firstname.trim();
 		const lastname = this.lastname.trim();
 		const email = this.email.trim().toLowerCase();
-		const phone = this.phone.trim();
+		const phone = `+${this.countryCode}-${this.phone}`.trim();
 
 		const isValid = this.isDataValid();
 		if (!isValid) return;
@@ -180,12 +187,14 @@ class ProfileOnboard extends PureComponent {
 									onChangeText={text => (this.email = text)}
 									keyboardType="email-address"
 								/>
-								<TextField
+								<PhoneTextField
 									value={this.phone}
 									label={strings('profile.phone')}
 									placeholder={strings('profile.phone')}
 									onChangeText={text => (this.phone = text)}
 									keyboardType="number-pad"
+									countryCode={this.countryCode}
+									onPressCountryCode={() => (this.showCountryCodePicker = true)}
 								/>
 							</View>
 
@@ -194,6 +203,19 @@ class ProfileOnboard extends PureComponent {
 							</StyledButton>
 						</View>
 					</ScrollView>
+					{this.showCountryCodePicker && (
+						<CountrySearchModal
+							placeholder={strings('profile.search')}
+							items={allCountries}
+							countryCode={this.countryCode}
+							countryCode={this.countryCode}
+							onSelectCountryCode={item => {
+								this.countryCode = item.dialCode;
+								this.showCountryCodePicker = false;
+							}}
+							onClose={() => (this.showCountryCodePicker = false)}
+						/>
+					)}
 					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
 						<TouchableOpacity
 							style={styles.centerModal}
