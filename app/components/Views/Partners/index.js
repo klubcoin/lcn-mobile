@@ -7,6 +7,7 @@ import PartnerItem from './components/PartnerItem';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import APIService from '../../../services/APIService';
+import DisplayEmpty from '../../Base/DisplayEmpty';
 
 class Partners extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -41,10 +42,10 @@ class Partners extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView>
-					{this.partnerList.map((e, index) => (
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }}> 
+					{this.partnerList.length > 0 ? this.partnerList.map((e, index) => (
 						<PartnerItem imageSrc={e.icon} onItemPress={() => this.gotoDetails(e)} key={index} />
-					))}
+					)) : <DisplayEmpty content={strings('sync_with_extension.something_wrong')}/>}
 				</ScrollView>
 			</OnboardingScreenWithBg>
 		);
