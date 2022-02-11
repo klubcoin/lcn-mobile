@@ -7,7 +7,6 @@ import PartnerItem from './components/PartnerItem';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import APIService from '../../../services/APIService';
-import DisplayEmpty from '../../Base/DisplayEmpty';
 
 class Partners extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -33,6 +32,7 @@ class Partners extends PureComponent {
 
 	fetchPartnerList() {
 		APIService.getPartnerList((success, json) => {
+            console.log("🚀 ~ file: index.js ~ line 35 ~ Partners ~ APIService.getPartnerList ~ json", json)
 			if (success && Array.isArray(json)) {
 				this.partnerList = json;
 			}
@@ -43,9 +43,9 @@ class Partners extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}> 
-					{this.partnerList.length > 0 ? this.partnerList.map((e, index) => (
+					{this.partnerList.length > 0 && this.partnerList.map((e, index) => (
 						<PartnerItem imageSrc={e.icon} onItemPress={() => this.gotoDetails(e)} key={index} />
-					)) : <DisplayEmpty content={strings('sync_with_extension.something_wrong')}/>}
+					))}
 				</ScrollView>
 			</OnboardingScreenWithBg>
 		);
