@@ -9,8 +9,9 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { getTransparentOnboardingNavbarOptions } from '../../UI/Navbar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import Device from '../../../util/Device';
-import { styles, carousel_images, klubcoin_text } from './styles/index';
+import { styles, carousel_images, klubcoin_text, DEVICE_WIDTH, IMG_PADDING } from './styles/index';
 import { displayName } from '../../../../app.json';
+import ScaleImage from 'react-native-scalable-image';
 
 /**
  * View that is displayed to first time (new) users
@@ -46,12 +47,11 @@ export default class OnboardingCarousel extends PureComponent {
 				<OnboardingScreenWithBg screen={'carousel'}>
 					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>
-							<Image
-								source={klubcoin_text}
+							<ScaleImage
+							source={klubcoin_text}
+							width={Math.min(Device.getDeviceWidth() / 2,200)}
 								style={[styles.logoText]}
-								resizeMethod={'auto'}
-								resizeMode={'contain'}
-							/>
+								/>
 							<ScrollableTabView
 								style={styles.scrollTabs}
 								renderTabBar={this.renderTabBar}
@@ -75,12 +75,16 @@ export default class OnboardingCarousel extends PureComponent {
 												</Text>
 											</View>
 											<View style={styles.carouselImageWrapper}>
-												<Image
+												{/* <Image
 													source={carousel_images[index]}
 													style={[styles.carouselImage, styles[imgStyleKey]]}
 													resizeMethod={'auto'}
 													resizeMode={'contain'}
 													testID={`carousel-${value}-image`}
+												/> */}
+												<ScaleImage
+													source={carousel_images[index]}
+													width={DEVICE_WIDTH - IMG_PADDING}
 												/>
 											</View>
 										</View>

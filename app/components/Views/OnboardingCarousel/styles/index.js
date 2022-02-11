@@ -7,9 +7,9 @@ import { assignNestedObj } from '../../../../util/object';
 const IMAGE_3_RATIO = 215 / 315;
 const IMAGE_2_RATIO = 222 / 239;
 const IMAGE_1_RATIO = 285 / 203;
-const DEVICE_WIDTH = Dimensions.get('window').width;
+export const DEVICE_WIDTH = Dimensions.get('window').width;
 
-const IMG_PADDING = Device.isIphoneX() ? 100 : Device.isIphone5S() ? 180 : 220;
+export const IMG_PADDING = Device.isIphoneX() ? 100 : Device.isIphone5S() ? 180 : 220;
 
 const index = StyleSheet.create({
 	scroll: {
@@ -63,7 +63,6 @@ const index = StyleSheet.create({
 		height: (DEVICE_WIDTH - 60) * IMAGE_3_RATIO
 	},
 	carouselImageWrapper: {
-		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center'
@@ -81,8 +80,7 @@ const index = StyleSheet.create({
 	},
 	progessContainer: {
 		flexDirection: 'row',
-		alignSelf: 'center',
-		marginVertical: 36
+		alignSelf: 'center'
 	},
 	tab: {
 		marginHorizontal: 30
@@ -91,7 +89,8 @@ const index = StyleSheet.create({
 		width: Device.getDeviceWidth() / 2,
 		maxWidth: 200,
 		alignSelf: 'center'
-	}
+	},
+	scrollTabs: {}
 });
 
 const onboarding_carousel_1 = require('../../../../images/intro1.png'); // eslint-disable-line
