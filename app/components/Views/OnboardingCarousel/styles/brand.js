@@ -43,8 +43,8 @@ const brandStyles = StyleSheet.create({
 	progessContainer: {
 		flexDirection: 'row',
 		alignSelf: 'center',
-		marginVertical: 30,
-		flex:1
+		flex:1,
+		alignItems:'center'
 	},
 });
 
