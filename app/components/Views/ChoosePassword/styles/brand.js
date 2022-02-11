@@ -30,7 +30,8 @@ const brandStyles = StyleSheet.create({
 		color: colors.white
 	},
 	passwordStrengthLabel: {
-		color: colors.grey300
+		color: colors.fontError,
+		height:'auto'
 	},
 	subTextColor: {
 		color: colors.grey300
@@ -40,7 +41,7 @@ const brandStyles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	field: {
-		marginVertical: 0
+		marginVertical: 0,
 	},
 	usernameField: {
 		marginTop: 30

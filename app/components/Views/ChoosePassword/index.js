@@ -102,7 +102,9 @@ class ChoosePassword extends PureComponent {
 		loading: false,
 		error: null,
 		usePasswordAuth: true,
-		inputWidth: { width: '99%' }
+		inputWidth: { width: '99%' },
+		isValidPassword: true,
+		passwordErrorType: '1'
 	};
 
 	mounted = true;
@@ -458,6 +460,32 @@ class ChoosePassword extends PureComponent {
 		}
 	};
 
+	checkValidPassword() {
+		const { password } = this.state;
+		if (password.length < 8) {
+			this.setState({ isValidPassword: false, passwordErrorType: '1' });
+			return;
+		}
+		if(!/[a-z]/.test(password)){
+			this.setState({ isValidPassword: false, passwordErrorType: '2' });
+			return;
+		}
+		if(!/[A-Z]/.test(password)){
+			this.setState({ isValidPassword: false, passwordErrorType: '3' });
+			return;
+		}
+		if(!/[0-9]/.test(password)){
+			this.setState({ isValidPassword: false, passwordErrorType: '4' });
+			return;
+		}
+		if(!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)){
+			this.setState({ isValidPassword: false, passwordErrorType: '5' });
+			return;
+		}
+		this.setState({ isValidPassword: true });
+		return;
+	}
+
 	render() {
 		const {
 			isSelected,
@@ -469,7 +497,9 @@ class ChoosePassword extends PureComponent {
 			secureTextEntry,
 			error,
 			loading,
-			usePasswordAuth
+			usePasswordAuth,
+			isValidPassword,
+			passwordErrorType
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
 		const canSubmit = passwordsMatch && isSelected && username !== '';
@@ -561,18 +591,15 @@ class ChoosePassword extends PureComponent {
 													onSubmitEditing={this.jumpToConfirmPassword}
 													returnKeyType="next"
 													autoCapitalize="none"
+													onBlur={() => {
+														this.checkValidPassword();
+													}}
 												/>
-												{(password !== '' && (
-													<Text style={styles.passwordStrengthLabel}>
-														{strings('choose_password.password_strength')}
-														<Text style={styles[`strength_${passwordStrengthWord}`]}>
-															{' '}
-															{strings(
-																`choose_password.strength_${passwordStrengthWord}`
-															)}
-														</Text>
+												{(!isValidPassword && (
+													<Text style={styles.passwordStrengthLabel} numberOfLines={2}>
+														{strings(`choose_password.password_error_${passwordErrorType}`)}
 													</Text>
-												)) || <Text style={styles.passwordStrengthLabel} />}
+												))|| <Text style={styles.passwordStrengthLabel} />}
 											</View>
 											<View style={styles.field}>
 												<Text style={styles.hintLabel}>
@@ -596,11 +623,9 @@ class ChoosePassword extends PureComponent {
 														<Icon name="check" size={16} color={colors.green300} />
 													) : null}
 												</View>
-												<Text style={styles.passwordStrengthLabel}>
-													{strings('choose_password.must_be_at_least', {
-														number: MIN_PASSWORD_LENGTH
-													})}
-												</Text>
+												{!passwordsMatch&&<Text style={styles.passwordStrengthLabel}>
+													{strings('choose_password.password_match')}
+												</Text>}
 											</View>
 											<TextField
 												value={username}
