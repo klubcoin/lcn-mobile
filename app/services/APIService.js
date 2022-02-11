@@ -19,8 +19,8 @@ export default class APIService {
 	static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-	static routePersistenceAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
-	static routeMeveoAPI = () => 'https://account.liquichain.io/meveo';
+	static routePersistenceAPI = () => 'https://account2.liquichain.io/meveo/api/rest/default/persistence/';
+	static routeMeveoAPI = () => 'https://account2.liquichain.io/meveo';
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
 	static apiGetWalletContract = appWallet => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;

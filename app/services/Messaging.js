@@ -1,6 +1,6 @@
 import CryptoSignature from '../core/CryptoSignature';
 
-const WS_URL = 'wss://account.liquichain.io/meveo/ws/liquichain';
+const WS_URL = 'wss://account2.liquichain.io/meveo/ws/liquichain';
 
 export const Register = (address) => ({
   action: 'register',
