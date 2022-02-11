@@ -92,7 +92,9 @@ class ImportFromSeed extends PureComponent {
 		error: null,
 		seedphraseInputFocused: false,
 		inputWidth: { width: '99%' },
-		hideSeedPhraseInput: true
+		hideSeedPhraseInput: true,
+		isValidPassword: true,
+		passwordErrorType: '1'
 	};
 
 	passwordInput = React.createRef();
@@ -297,6 +299,32 @@ class ImportFromSeed extends PureComponent {
 
 	seedphraseInputFocused = () => this.setState({ seedphraseInputFocused: !this.state.seedphraseInputFocused });
 
+	checkValidPassword() {
+		const { password } = this.state;
+		if (password.length < 8) {
+			this.setState({ isValidPassword: false, passwordErrorType: '1' });
+			return;
+		}
+		if (!/[a-z]/.test(password)) {
+			this.setState({ isValidPassword: false, passwordErrorType: '2' });
+			return;
+		}
+		if (!/[A-Z]/.test(password)) {
+			this.setState({ isValidPassword: false, passwordErrorType: '3' });
+			return;
+		}
+		if (!/[0-9]/.test(password)) {
+			this.setState({ isValidPassword: false, passwordErrorType: '4' });
+			return;
+		}
+		if (!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
+			this.setState({ isValidPassword: false, passwordErrorType: '5' });
+			return;
+		}
+		this.setState({ isValidPassword: true });
+		return;
+	}
+
 	render() {
 		const {
 			password,
@@ -308,10 +336,13 @@ class ImportFromSeed extends PureComponent {
 			secureTextEntry,
 			error,
 			loading,
-			hideSeedPhraseInput
+			hideSeedPhraseInput,
+			isValidPassword,
+			passwordErrorType
 		} = this.state;
 
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
+		const passwordsMatch = password !== '' && password === confirmPassword;
 
 		return (
 			<OnboardingScreenWithBg screen="a">
@@ -411,15 +442,14 @@ class ImportFromSeed extends PureComponent {
 									activeLineWidth={0}
 									placeholderTextColor={colors.grey300}
 									onSubmitEditing={this.jumpToConfirmPassword}
+									onBlur={() => {
+										this.checkValidPassword();
+									}}
 								/>
 
-								{(password !== '' && (
-									<Text style={styles.passwordStrengthLabel}>
-										{strings('choose_password.password_strength')}
-										<Text style={styles[`strength_${passwordStrengthWord}`]}>
-											{' '}
-											{strings(`choose_password.strength_${passwordStrengthWord}`)}
-										</Text>
+								{(!isValidPassword && (
+									<Text style={styles.passwordStrengthLabel} numberOfLines={2}>
+										{strings(`choose_password.password_error_${passwordErrorType}`)}
 									</Text>
 								)) || <Text style={styles.passwordStrengthLabel} />}
 							</View>
@@ -451,9 +481,11 @@ class ImportFromSeed extends PureComponent {
 										<Icon name="check" size={12} color={colors.green300} />
 									) : null}
 								</View>
-								<Text style={styles.passwordStrengthLabel}>
-									{strings('choose_password.must_be_at_least', { number: MIN_PASSWORD_LENGTH })}
-								</Text>
+								{!passwordsMatch && (
+									<Text style={styles.passwordStrengthLabel}>
+										{strings('choose_password.password_match')}
+									</Text>
+								)}
 							</View>
 
 							{this.renderSwitch()}

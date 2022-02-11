@@ -466,19 +466,19 @@ class ChoosePassword extends PureComponent {
 			this.setState({ isValidPassword: false, passwordErrorType: '1' });
 			return;
 		}
-		if(!/[a-z]/.test(password)){
+		if (!/[a-z]/.test(password)) {
 			this.setState({ isValidPassword: false, passwordErrorType: '2' });
 			return;
 		}
-		if(!/[A-Z]/.test(password)){
+		if (!/[A-Z]/.test(password)) {
 			this.setState({ isValidPassword: false, passwordErrorType: '3' });
 			return;
 		}
-		if(!/[0-9]/.test(password)){
+		if (!/[0-9]/.test(password)) {
 			this.setState({ isValidPassword: false, passwordErrorType: '4' });
 			return;
 		}
-		if(!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)){
+		if (!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
 			this.setState({ isValidPassword: false, passwordErrorType: '5' });
 			return;
 		}
@@ -599,7 +599,7 @@ class ChoosePassword extends PureComponent {
 													<Text style={styles.passwordStrengthLabel} numberOfLines={2}>
 														{strings(`choose_password.password_error_${passwordErrorType}`)}
 													</Text>
-												))|| <Text style={styles.passwordStrengthLabel} />}
+												)) || <Text style={styles.passwordStrengthLabel} />}
 											</View>
 											<View style={styles.field}>
 												<Text style={styles.hintLabel}>
@@ -623,9 +623,11 @@ class ChoosePassword extends PureComponent {
 														<Icon name="check" size={16} color={colors.green300} />
 													) : null}
 												</View>
-												{!passwordsMatch&&<Text style={styles.passwordStrengthLabel}>
-													{strings('choose_password.password_match')}
-												</Text>}
+												{!passwordsMatch && (
+													<Text style={styles.passwordStrengthLabel}>
+														{strings('choose_password.password_match')}
+													</Text>
+												)}
 											</View>
 											<TextField
 												value={username}

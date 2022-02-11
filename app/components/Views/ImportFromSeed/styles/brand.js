@@ -21,12 +21,13 @@ const brandStyles = StyleSheet.create({
 		borderColor: colors.transparent
 	},
 	seedPhrase: {
-		backgroundColor: colors.grey,
-		borderColor: colors.white,
+		backgroundColor: colors.purple,
+		borderWidth:0,
 		color: colors.white
 	},
 	passwordStrengthLabel: {
-		color: colors.white
+		color: colors.fontError,
+		height:'auto'
 	},
 	inputContainerStyle: {
 		backgroundColor: colors.purple,
