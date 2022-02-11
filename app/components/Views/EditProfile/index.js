@@ -174,7 +174,7 @@ class EditProfile extends PureComponent {
 			// const avatarb64 = await RNFS.readFile(path, 'base64');
 			const publicInfo = JSON.stringify({ name, email, phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-			const params = [username, selectedAddress, hash, publicInfo];
+			const params = [username, selectedAddress,  publicInfo, hash];
 
 			const profile = {
 				avatar: this.avatar ? path : '',
