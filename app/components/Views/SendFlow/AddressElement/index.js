@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import { renderShortAddress } from '../../../../util/address';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Identicon from '../../../UI/Identicon';
-import { fontStyles, colors } from '../../../../styles/common';
 import PropTypes from 'prop-types';
 import { doENSReverseLookup } from '../../../../util/ENSUtils';
 import { connect } from 'react-redux';

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
-import { colors, fontStyles } from '../../../styles/common';
+import { FlatList, SafeAreaView, TextInput, View } from 'react-native';
+import { colors } from '../../../styles/common';
 import { PropTypes } from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';

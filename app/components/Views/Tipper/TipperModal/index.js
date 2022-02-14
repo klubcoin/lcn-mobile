@@ -1,7 +1,6 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
-    StyleSheet,
     View,
     Text,
     TouchableOpacity,
@@ -10,8 +9,7 @@ import {
     InteractionManager,
     DeviceEventEmitter,
 } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/common';
-import Device from '../../../../util/Device';
+import { colors } from '../../../../styles/common';
 import Modal from 'react-native-modal';
 import TransactionHeader from '../../../UI/TransactionHeader';
 import RemoteImage from '../../../Base/RemoteImage';
@@ -21,10 +19,9 @@ import styles from './styles/index'
 import { strings } from '../../../../../locales/i18n';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import base64 from 'base-64';
 import routes from '../../../../common/routes';
 import Api from '../../../../services/api';
-import { renderFromWei, toWei, toTokenMinimalUnit, fromWei, BNToHex, isDecimal } from '../../../../util/number';
+import { toWei, toTokenMinimalUnit, fromWei, BNToHex } from '../../../../util/number';
 import Engine from '../../../../core/Engine';
 import { getTicker } from '../../../../util/transactions';
 import BigNumber from 'bignumber.js';

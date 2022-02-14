@@ -4,21 +4,18 @@ import {
     ScrollView,
     InteractionManager,
     ActivityIndicator,
-    StyleSheet,
     View,
-    ImageBackground
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors, baseStyles } from '../../../styles/common';
 import AccountOverview from '../../UI/AccountOverview';
 import Tokens from '@UI/Tokens';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { renderFromWei, weiToFiat, hexToBN } from '../../../util/number';
+import { weiToFiat, hexToBN } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import CollectibleContracts from '../../UI/CollectibleContracts';
 import Analytics from '../../../core/Analytics';
@@ -33,7 +30,6 @@ import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
-import Device from '../../../util/Device';
 import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar'
 

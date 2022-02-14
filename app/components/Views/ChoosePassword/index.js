@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, StyleSheet, Image } from 'react-native';
+import { Switch, ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, Image } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -21,7 +20,7 @@ import preferences from '../../../../app/store/preferences';
 import StyledButton from '../../UI/StyledButton';
 import Engine from '../../../core/Engine';
 import Device from '../../../util/Device';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import SecureKeychain from '../../../core/SecureKeychain';
@@ -39,14 +38,11 @@ import {
 	SEED_PHRASE_HINTS,
 	BIOMETRY_CHOICE_DISABLED
 } from '../../../constants/storage';
-import { getPasswordStrengthWord, passwordRequirementsMet, MIN_PASSWORD_LENGTH } from '../../../util/password';
+import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import API from 'services/api';
 import Routes from 'common/routes';
 import * as sha3JS from 'js-sha3';
-
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
-import LoginWithKeycloak from '../LoginWithKeycloak';
-
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';

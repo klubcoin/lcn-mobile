@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, Text, Modal } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, TouchableOpacity, View, Text, Modal } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import preferences from '../../../store/preferences';
@@ -8,12 +8,8 @@ import RemoteImage from '../../Base/RemoteImage';
 import drawables from '../../../common/drawables';
 import * as RNFS from 'react-native-fs';
 import ImagePicker from 'react-native-image-crop-picker';
-import { colors, fontStyles } from '../../../styles/common';
-import OnboardingProgress from '../../UI/OnboardingProgress';
-import { ONBOARDING, PREVIOUS_SCREEN } from '../../../constants/navigation';
 import StyledButton from '../../UI/StyledButton';
 import { strings } from '../../../../locales/i18n';
-import { TextInput } from 'react-native-gesture-handler';
 import Device from '../../../util/Device';
 import Toast from 'react-native-toast-message';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -28,7 +24,6 @@ import routes from '../../../common/routes';
 import Engine from '../../../core/Engine';
 import * as sha3JS from 'js-sha3';
 import { setOnboardProfile } from '../../../actions/user';
-import connect from 'react-redux/lib/connect/connect';
 import { renderAccountName } from '../../../util/address';
 import { allCountries } from 'country-telephone-data';
 
