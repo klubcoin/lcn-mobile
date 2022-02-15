@@ -395,6 +395,11 @@
 		"buy_more": "Buy more Klub Coins",
 		"spend_coin": "Spend your Klub Coins"
 	},
+	"welcome": {
+		"go_to_my_wallet": "Go to my wallet",
+		"title": "Welcome to {{appName}}",
+		"subtitle": "The first global cryptocurrency for all clubbers, festival goers and electronic music fans."
+	},
 	"voting": {
 		"title": "Voting",
 		"see_lawbook": "See lawbook",
