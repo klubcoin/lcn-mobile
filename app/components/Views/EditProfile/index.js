@@ -136,7 +136,7 @@ class EditProfile extends PureComponent {
 		// 	showError(strings('profile.missing_phone'));
 		// 	return;
 		// }
-		if (phone && (!/^\+?[\d\s]{8,15}$/.test(phone) || !this.countryCode)) {
+		if (phone && (!/^\+?[\d\s]{10}$/.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
