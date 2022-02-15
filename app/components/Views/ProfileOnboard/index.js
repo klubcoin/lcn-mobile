@@ -35,6 +35,7 @@ class ProfileOnboard extends PureComponent {
 	isViewModal = false;
 	showCountryCodePicker = false;
 	countryCode = '';
+	hasUpdateAvatar = false;
 
 	constructor(props) {
 		super(props);
@@ -46,7 +47,8 @@ class ProfileOnboard extends PureComponent {
 			phone: observable,
 			isViewModal: observable,
 			showCountryCodePicker: observable,
-			countryCode: observable
+			countryCode: observable,
+			hasUpdateAvatar: observable
 		});
 	}
 
@@ -58,6 +60,7 @@ class ProfileOnboard extends PureComponent {
 		}).then(image => {
 			this.isViewModal = false;
 			this.avatar = image.path;
+			this.hasUpdateAvatar = true;
 		});
 	}
 
@@ -69,6 +72,7 @@ class ProfileOnboard extends PureComponent {
 		}).then(image => {
 			this.isViewModal = false;
 			this.avatar = image.path;
+			this.hasUpdateAvatar = true;
 		});
 	}
 
@@ -131,9 +135,15 @@ class ProfileOnboard extends PureComponent {
 		const isValid = this.isDataValid();
 		if (!isValid) return;
 		const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
-		if (this.avatar) {
-			if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
-			await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+		if (this.avatar && this.hasUpdateAvatar) {
+			//remove existing file
+			try {
+				if (await RNFS.exists(path)) await RNFS.unlink(path);
+				await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+				this.hasUpdateAvatar = false;
+			} catch (err) {
+				console.log(err);
+			}
 		}
 
 		preferences.setOnboardProfile({
