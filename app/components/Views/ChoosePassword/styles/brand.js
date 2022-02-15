@@ -31,7 +31,7 @@ const brandStyles = StyleSheet.create({
 	},
 	passwordStrengthLabel: {
 		color: colors.fontError,
-		height:'auto'
+		height: 'auto'
 	},
 	subTextColor: {
 		color: colors.grey300
@@ -41,7 +41,7 @@ const brandStyles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	field: {
-		marginVertical: 0,
+		marginVertical: 0
 	},
 	usernameField: {
 		marginTop: 30
@@ -59,26 +59,27 @@ const brandStyles = StyleSheet.create({
 	passwordValidateTitle: {
 		color: colors.white,
 		fontSize: 14,
+		marginTop: 6
 	},
 	passwordItemWrapper: {
 		flexDirection: 'row',
-		marginTop:2,
-		alignItems:'center'
+		marginTop: 2,
+		alignItems: 'center'
 	},
 	passwordItemText: {
 		color: colors.white,
-		fontSize:12,
-		marginLeft:4,
+		fontSize: 12,
+		marginLeft: 4
 	},
 	passwordItemTextError: {
 		color: colors.fontError,
-		fontSize:12,
-		marginLeft:4,
+		fontSize: 12,
+		marginLeft: 4
 	},
 	passwordItemIcon: {
-		width:12,
-		height:12,
-		color:colors.success,
+		width: 12,
+		height: 12,
+		color: colors.success
 	}
 });
 
