@@ -206,6 +206,7 @@
 		"notice": "Notice",
 		"missing_photo": "Photo is missing",
 		"missing_name": "Name is missing",
+		"missing_surname": "Surname is missing",
 		"missing_phone": "Phone is missing",
 		"missing_email": "Email is missing",
 		"invalid_phone": "Invalid phone number",

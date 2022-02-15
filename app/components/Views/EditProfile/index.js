@@ -116,8 +116,12 @@ class EditProfile extends PureComponent {
 			showError(strings('profile.missing_photo'));
 			return;
 		}
-		if (!firstname || !lastname) {
+		if (!firstname) {
 			showError(strings('profile.missing_name'));
+			return;
+		}
+		if (!lastname) {
+			showError(strings('profile.missing_surname'));
 			return;
 		}
 		if (!email) {
@@ -241,8 +245,8 @@ class EditProfile extends PureComponent {
 								/>
 								<TextField
 									value={this.lastname}
-									label={strings('profile.lastname')}
-									placeholder={strings('profile.lastname')}
+									label={strings('profile.surname')}
+									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text)}
 								/>
 								<TextField
