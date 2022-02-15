@@ -32,9 +32,13 @@ class Partners extends PureComponent {
 
 	fetchPartnerList() {
 		APIService.getPartnerList((success, json) => {
-            console.log("🚀 ~ file: index.js ~ line 35 ~ Partners ~ APIService.getPartnerList ~ json", json)
 			if (success && Array.isArray(json)) {
-				this.partnerList = json;
+				const data = json;
+				data.sort((a, b) => {
+					if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
+					return -1;
+				});
+				this.partnerList = data;
 			}
 		});
 	}
@@ -42,10 +46,11 @@ class Partners extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}> 
-					{this.partnerList.length > 0 && this.partnerList.map((e, index) => (
-						<PartnerItem imageSrc={e.icon} onItemPress={() => this.gotoDetails(e)} key={index} />
-					))}
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+					{this.partnerList.length > 0 &&
+						this.partnerList.map((e, index) => (
+							<PartnerItem imageSrc={e.icon} onItemPress={() => this.gotoDetails(e)} key={index} />
+						))}
 				</ScrollView>
 			</OnboardingScreenWithBg>
 		);
