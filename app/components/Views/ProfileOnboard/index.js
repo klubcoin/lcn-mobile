@@ -172,7 +172,7 @@ class ProfileOnboard extends PureComponent {
 								onPress={() => this.onOpenModal()}
 							>
 								<RemoteImage
-									source={{ uri: this.avatar || drawables.avatar_user }}
+									source={this.avatar ? { uri: this.avatar } : drawables.avatar_user}
 									style={styles.avatar}
 								/>
 							</TouchableOpacity>

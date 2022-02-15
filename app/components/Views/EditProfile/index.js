@@ -67,8 +67,12 @@ class EditProfile extends PureComponent {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
-		this.countryCode = phone?.replace('+','').split('-')[0]
-		this.phone = phone?.replace('+','').split('-').slice(1,phone?.split('-').length).join('-');
+		this.countryCode = phone?.replace('+', '').split('-')[0];
+		this.phone = phone
+			?.replace('+', '')
+			.split('-')
+			.slice(1, phone?.split('-').length)
+			.join('-');
 	}
 
 	onPickImage() {
@@ -173,7 +177,7 @@ class EditProfile extends PureComponent {
 			// const avatarb64 = await RNFS.readFile(path, 'base64');
 			const publicInfo = JSON.stringify({ name, email, phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-			const params = [username, selectedAddress,  publicInfo, hash];
+			const params = [username, selectedAddress, publicInfo, hash];
 
 			const profile = {
 				avatar: this.avatar ? path : '',
@@ -222,7 +226,7 @@ class EditProfile extends PureComponent {
 								onPress={() => this.onOpenModal()}
 							>
 								<RemoteImage
-									source={{ uri: this.avatar || drawables.avatar_user }}
+									source={this.avatar ? { uri: this.avatar } : drawables.avatar_user}
 									style={styles.avatar}
 								/>
 							</TouchableOpacity>
