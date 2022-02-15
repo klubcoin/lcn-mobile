@@ -100,7 +100,14 @@ class ChoosePassword extends PureComponent {
 		usePasswordAuth: true,
 		inputWidth: { width: '99%' },
 		isValidPassword: true,
-		passwordErrorType: '1'
+		validatePassword: {
+			length: false,
+			textUpperCase: false,
+			textLowerCase: false,
+			number: false,
+			specialCharacter: false
+		},
+		isBlurPassword: false
 	};
 
 	mounted = true;
@@ -389,8 +396,8 @@ class ChoosePassword extends PureComponent {
 
 	onPasswordChange = val => {
 		const passInfo = zxcvbn(val);
-
 		this.setState({ password: val, passwordStrength: passInfo.score });
+		this.checkValidPassword(val);
 	};
 
 	onUsernameChange = val => {
@@ -456,26 +463,24 @@ class ChoosePassword extends PureComponent {
 		}
 	};
 
-	checkValidPassword() {
-		const { password } = this.state;
-		if (password.length < 8) {
-			this.setState({ isValidPassword: false, passwordErrorType: '1' });
-			return;
-		}
-		if (!/[a-z]/.test(password)) {
-			this.setState({ isValidPassword: false, passwordErrorType: '2' });
-			return;
-		}
-		if (!/[A-Z]/.test(password)) {
-			this.setState({ isValidPassword: false, passwordErrorType: '3' });
-			return;
-		}
-		if (!/[0-9]/.test(password)) {
-			this.setState({ isValidPassword: false, passwordErrorType: '4' });
-			return;
-		}
-		if (!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
-			this.setState({ isValidPassword: false, passwordErrorType: '5' });
+	checkValidPassword(password) {
+		this.setState({
+			validatePassword: {
+				length: password.length >= 8,
+				textLowerCase: /[a-z]/.test(password),
+				textUpperCase: /[A-Z]/.test(password),
+				number: /[0-9]/.test(password),
+				specialCharacter: /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
+			}
+		});
+		if (
+			password.length < 8 ||
+			!/[a-z]/.test(password) ||
+			!/[A-Z]/.test(password) ||
+			!/[0-9]/.test(password) ||
+			!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
+		) {
+			this.setState({ isValidPassword: false });
 			return;
 		}
 		this.setState({ isValidPassword: true });
@@ -495,10 +500,11 @@ class ChoosePassword extends PureComponent {
 			loading,
 			usePasswordAuth,
 			isValidPassword,
-			passwordErrorType
+			isBlurPassword,
+			validatePassword
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
-		const canSubmit = passwordsMatch && isSelected && username !== '';
+		const canSubmit = passwordsMatch && isValidPassword && isSelected && username !== '';
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 
@@ -588,14 +594,85 @@ class ChoosePassword extends PureComponent {
 													returnKeyType="next"
 													autoCapitalize="none"
 													onBlur={() => {
-														this.checkValidPassword();
+														this.setState({ isBlurPassword: true });
+													}}
+													onFocus={() => {
+														this.setState({ isBlurPassword: false });
 													}}
 												/>
-												{(!isValidPassword && (
-													<Text style={styles.passwordStrengthLabel} numberOfLines={2}>
-														{strings(`choose_password.password_error_${passwordErrorType}`)}
+												<Text style={styles.passwordValidateTitle}>
+													{strings(`choose_password.password_validate_title`)}
+												</Text>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.length && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.length
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_1`)}
 													</Text>
-												)) || <Text style={styles.passwordStrengthLabel} />}
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.textLowerCase && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.textLowerCase
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_2`)}
+													</Text>
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.textUpperCase && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.textUpperCase
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_3`)}
+													</Text>
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.number && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.number
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_4`)}
+													</Text>
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.specialCharacter && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.specialCharacter
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_5`)}
+													</Text>
+												</View>
 											</View>
 											<View style={styles.field}>
 												<Text style={styles.hintLabel}>
@@ -619,7 +696,7 @@ class ChoosePassword extends PureComponent {
 														<Icon name="check" size={16} color={colors.green300} />
 													) : null}
 												</View>
-												{!passwordsMatch && (
+												{isValidPassword && !!confirmPassword && !passwordsMatch && (
 													<Text style={styles.passwordStrengthLabel}>
 														{strings('choose_password.password_match')}
 													</Text>

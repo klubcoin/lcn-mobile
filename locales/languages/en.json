@@ -197,7 +197,14 @@
 		"password_error_3": "Password must have at least an alphabet in upper case.",
 		"password_error_4": "Password must have at least a number.",
 		"password_error_5": "Password must have at least a special character.",
-		"password_match": "Confirm password must match with password"
+		"password_match": "Confirm password must match with password",
+		"password_validate_title": "Password must have:",
+		"password_validate_1": "Minimum length 8 characters",
+		"password_validate_2": "At least an alphabet in lower case",
+		"password_validate_3": "At least an alphabet in upper case",
+		"password_validate_4": "At least a number",
+		"password_validate_5": "At least a special character"
+
 
 	},
 	"profile": {
