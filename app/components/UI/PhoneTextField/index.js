@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class PhoneTextField extends Component {
 	render() {
@@ -16,14 +16,16 @@ export default class PhoneTextField extends Component {
 			keyboardType,
 			autoCapitalize = 'none',
 			onPressCountryCode,
-			countryCode=''
+			countryCode = '',
+			onFocus
 		} = this.props;
 		return (
 			<View style={containerStyle}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
 				<View style={styles.phoneWrapper}>
 					<TouchableOpacity style={styles.countryCodePicker} onPress={onPressCountryCode}>
-						<Text style={styles.countryCode}>+{countryCode?`${countryCode}-`:''}</Text>
+						{!!countryCode && <Text style={styles.countryCode}>+{countryCode}</Text>}
+						<Icon name="caret-down" style={styles.dropdownIcon} />
 					</TouchableOpacity>
 					<TextInput
 						style={styles.textInput}
@@ -33,6 +35,7 @@ export default class PhoneTextField extends Component {
 						onChangeText={onChangeText}
 						keyboardType={keyboardType}
 						autoCapitalize={autoCapitalize}
+						onFocus={onFocus}
 					/>
 				</View>
 			</View>

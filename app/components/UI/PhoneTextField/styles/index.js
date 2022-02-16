@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		...fontStyles.bold
 	},
+	dropdownIcon:{},
 	phoneWrapper:{},
 	countryCode:{},
 	countryCodePicker:{},

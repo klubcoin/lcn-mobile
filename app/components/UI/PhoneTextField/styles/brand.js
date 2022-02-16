@@ -14,18 +14,26 @@ const styles = StyleSheet.create({
 	countryCode: {
 		color: colors.white,
 		fontSize: 16,
-		fontWeight:'bold'
+		fontWeight: 'bold'
 	},
 	countryCodePicker: {
 		justifyContent: 'center',
 		paddingLeft: 10,
-		// backgroundColor:'red',
-		 minWidth:35
+		minWidth: 55,
+		borderRightWidth: 1,
+		flexDirection:"row", 
+		alignItems:'center',
+		justifyContent:'flex-end'
 	},
 	textInput: {
 		flex: 1,
-		paddingHorizontal: 0,
-		paddingRight: 10
+		paddingHorizontal: 10
+	},
+	dropdownIcon: {
+		color: colors.white,
+		fontSize:16,
+		marginLeft:6,
+		marginRight:12,
 	}
 });
 

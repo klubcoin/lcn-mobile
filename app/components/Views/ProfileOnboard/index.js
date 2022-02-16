@@ -203,10 +203,21 @@ class ProfileOnboard extends PureComponent {
 									value={this.phone}
 									label={strings('profile.phone')}
 									placeholder={strings('profile.phone')}
-									onChangeText={text => (this.phone = text)}
+									onChangeText={text => {
+										if (!this.countryCode) {
+											showError(strings('profile.select_country_code_first'));
+											return
+										}
+										this.phone = text;
+									}}
 									keyboardType="number-pad"
 									countryCode={this.countryCode}
 									onPressCountryCode={() => (this.showCountryCodePicker = true)}
+									onFocus={() => {
+										if (!this.countryCode) {
+											showError(strings('profile.select_country_code_first'));
+										}
+									}}
 								/>
 							</View>
 
