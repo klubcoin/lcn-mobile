@@ -226,6 +226,7 @@
 		"change_shipping_info": "Change shipping info",
 		"select_image": "Select Image",
 		"search": "Search...",
+		"grant_permission_camera_notification": "The app has been denied camera access, please grant access!",
 		"take_a_picture": "Take a Picture"
 
 	},

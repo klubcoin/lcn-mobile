@@ -43,7 +43,34 @@ const brandStyles = StyleSheet.create({
 	buttonModal:{
 		width:'100%',
 		marginVertical:12
-	}
+	},
+	notiCenterModal: {
+		backgroundColor:colors.greytransparent100,
+		justifyContent:"center",
+		width:'100%',
+		height:'100%',
+		alignItems:'center',
+	},
+	notiContentText:{
+		color:colors.red,
+		fontSize:20,
+		fontWeight:"bold",
+		textAlign:'center'
+	},	
+	notiContentModal: {
+		backgroundColor:colors.white,
+		width:'80%',
+		justifyContent:"space-around",
+		alignItems:"center",
+		paddingVertical:20,
+		paddingHorizontal:20,
+		borderRadius:12,
+		minHeight:200
+	},
+	notiButtonModal: {
+		width:'100%',
+		marginVertical:12,
+	},
 });
 
 export default brandStyles;

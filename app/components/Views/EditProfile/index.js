@@ -1,5 +1,14 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, ScrollView, TouchableOpacity, View, Text, Modal } from 'react-native';
+import {
+	KeyboardAvoidingView,
+	ScrollView,
+	TouchableOpacity,
+	View,
+	Text,
+	Modal,
+	Platform,
+	PermissionsAndroid
+} from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import preferences from '../../../store/preferences';
@@ -26,6 +35,7 @@ import * as sha3JS from 'js-sha3';
 import { setOnboardProfile } from '../../../actions/user';
 import { renderAccountName } from '../../../util/address';
 import { allCountries } from 'country-telephone-data';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 class EditProfile extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
@@ -41,6 +51,7 @@ class EditProfile extends PureComponent {
 	isViewModal = false;
 	showCountryCodePicker = false;
 	countryCode = '';
+	notiPermissionCamera = false;
 
 	constructor(props) {
 		super(props);
@@ -54,7 +65,8 @@ class EditProfile extends PureComponent {
 			isLoading: observable,
 			isViewModal: observable,
 			showCountryCodePicker: observable,
-			countryCode: observable
+			countryCode: observable,
+			notiPermissionCamera: observable
 		});
 	}
 
@@ -80,10 +92,43 @@ class EditProfile extends PureComponent {
 			width: 300,
 			height: 300,
 			cropping: true
-		}).then(image => {
-			this.isViewModal = false;
-			this.avatar = image.path;
-		});
+		})
+			.then(image => {
+				this.isViewModal = false;
+				this.avatar = image.path;
+			})
+			.catch(err => {
+				if (Platform.OS === 'android') {
+				// PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+				// 		this.isViewModal = false;
+				// 		this.notiPermissionCamera = !res;
+				// 	});
+				}
+				if (Platform.OS === 'ios') {
+				check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+						.then(result => {
+							switch (result) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+								case RESULTS.LIMITED:
+									break;
+								case RESULTS.GRANTED:
+									break;
+								case RESULTS.BLOCKED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+							}
+						})
+						.catch(error => {
+							// …
+						});
+				}
+			});
 	}
 
 	onTakePicture() {
@@ -91,10 +136,43 @@ class EditProfile extends PureComponent {
 			width: 300,
 			height: 300,
 			cropping: true
-		}).then(image => {
-			this.isViewModal = false;
-			this.avatar = image.path;
-		});
+		})
+			.then(image => {
+				this.isViewModal = false;
+				this.avatar = image.path;
+			})
+			.catch(err => {
+				if (Platform.OS === 'android') {
+					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
+						this.isViewModal = false;
+						this.notiPermissionCamera = !res;
+					});
+				}
+				if (Platform.OS === 'ios') {
+					check(PERMISSIONS.IOS.CAMERA)
+						.then(result => {
+							switch (result) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+								case RESULTS.LIMITED:
+									break;
+								case RESULTS.GRANTED:
+									break;
+								case RESULTS.BLOCKED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+							}
+						})
+						.catch(error => {
+							// …
+						});
+				}
+			});
 	}
 
 	onOpenModal() {
@@ -329,6 +407,24 @@ class EditProfile extends PureComponent {
 								</StyledButton>
 							</View>
 						</TouchableOpacity>
+					</Modal>
+					<Modal visible={this.notiPermissionCamera} animationType="fade" transparent>
+						<View style={styles.notiCenterModal}>
+							<View style={styles.notiContentModal}>
+								<Text style={styles.notiContentText}>
+									{strings('profile.grant_permission_camera_notification')}
+								</Text>
+								<StyledButton
+									type={'normal'}
+									onPress={() => {
+										this.notiPermissionCamera = false;
+									}}
+									containerStyle={styles.notiButtonModal}
+								>
+									{strings('navigation.close')}
+								</StyledButton>
+							</View>
+						</View>
 					</Modal>
 				</KeyboardAvoidingView>
 			</OnboardingScreenWithBg>
