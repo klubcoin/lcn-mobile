@@ -11,6 +11,8 @@ import Device from '../../../util/Device';
 import { styles, onboarding_carousel_klubcoin, klubcoin_text, DEVICE_WIDTH, IMG_PADDING } from './styles/index';
 import { displayName } from '../../../../app.json';
 import ScaleImage from 'react-native-scalable-image';
+import APIService from '../../../services/APIService';
+import preferences from '../../../store/preferences';
 
 /**
  * View that is displayed to first time (new) users
@@ -19,25 +21,45 @@ export default class Welcome extends PureComponent {
 	static navigationOptions = ({ navigation }) => getTransparentOnboardingNavbarOptions(navigation);
 
 	static propTypes = {
-		/**
-		 * The navigator object
-		 */
 		navigation: PropTypes.object
 	};
 
 	state = {
-		currentTab: 1
+		title: strings(`welcome.title`, {
+			appName: displayName
+		}),
+		content: strings(`welcome.subtitle`)
 	};
+
+	async componentDidMount() {
+		await this.fetchWelcomeData();
+		this.fetchWelcomeContent();
+	}
+
+	async fetchWelcomeData() {
+		const data = await preferences.fetch('welcome');
+		if (data !== null) {
+			this.setState({
+				title: data.title,
+				content: data.content
+			});
+		}
+	}
 
 	onLogin = () => this.props.navigation.navigate('Login');
 
-	renderTabBar = () => <View />;
-
-	onChangeTab = obj => {
-		this.setState({ currentTab: obj.i + 1 });
-	};
-
-	//TODO: check what app is
+	fetchWelcomeContent() {
+		APIService.getWelcomeContent((success, json) => {
+			if (!!json && Array.isArray(json) && json.length > 0) {
+				const data = json[0]
+				preferences.save('welcome',data)
+				this.setState({
+					title: data?.title,
+					content: data?.content
+				});
+			}
+		});
+	}
 
 	render() {
 		return (
@@ -53,16 +75,8 @@ export default class Welcome extends PureComponent {
 							<View style={styles.scrollTabs}>
 								<View style={baseStyles.flexGrow}>
 									<View style={styles.tab}>
-										<Text style={styles.title}>
-											{strings(`welcome.title`, {
-												appName: displayName
-											})}
-										</Text>
-										<Text style={styles.subtitle}>
-											{strings(`welcome.subtitle`, {
-												appName: displayName
-											})}
-										</Text>
+										<Text style={styles.title}>{this.state.title}</Text>
+										<Text style={styles.subtitle}>{this.state.content}</Text>
 									</View>
 									<View style={styles.carouselImageWrapper}>
 										<ScaleImage

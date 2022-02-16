@@ -219,6 +219,7 @@
 		"invalid_phone": "Invalid phone number",
 		"invalid_email": "Invalid email",
 		"request_profile_confirmation": "Request Profile Confirmation",
+		"select_country_code_first": "Please select the country code first",
 		"name": "Name",
 		"surname": "Surname",
 		"phone": "Phone",

@@ -32,6 +32,7 @@ export default class APIService {
 	static apiMarketCategories = () => APIService.routePersistenceAPI() + `LiquimartProductCategory/list`;
 
 	static apiStoreReviews = () => APIService.routePersistenceAPI() + `LiquimartProductReview/list`;
+	static apiWebPageContents = () => APIService.routePersistenceAPI() + `WebPageContent/list`;
 
 	static apiGetPartnerList = () => APIService.routePersistenceAPI() + 'KlubCoinPartner';
 	static apiGetPartnerIcon = iconPath => APIService.routeMeveoAPI() + iconPath;
@@ -234,5 +235,15 @@ export default class APIService {
 	static getFAQs(callback) {
 		const data = { basicAuth };
 		WebService.sendGetDirect(this.apiFAQs(), data, callback);
+	}
+
+	static getWelcomeContent(callback) {
+		const data = {
+			basicAuth,
+			firstRow: 0,
+			numberOfRows: 1,
+			filters: { code: 'welcome' }
+		};
+		WebService.sendPostDirect(this.apiWebPageContents(), data, callback);
 	}
 }
