@@ -304,7 +304,7 @@ class EditProfile extends PureComponent {
 								onPress={() => this.onOpenModal()}
 							>
 								<RemoteImage
-									source={this.avatar ? { uri: this.avatar } : drawables.avatar_user}
+									source={this.avatar ? { uri: `file://${this.avatar}` } : drawables.avatar_user}
 									style={styles.avatar}
 								/>
 							</TouchableOpacity>
