@@ -21,6 +21,8 @@ target 'Liquichain' do
   
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
+  pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
+
   target 'LiquichainTests' do
     inherit! :complete
     # Pods for testing
