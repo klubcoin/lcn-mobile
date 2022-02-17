@@ -113,15 +113,10 @@ class LockScreen extends PureComponent {
 				this.locked = false;
 				await this.setState({ ready: true });
 				Logger.log('Lockscreen::unlockKeychain - state: ready');
-				if (
-					this.secondAnimation &&
-					this.secondAnimation.play &&
-					this.animationName &&
-					this.animationName.play
-				) {
+				try {
 					this.secondAnimation.play();
-					this.animationName.play();
-				} else {
+					// this.animationName.play();
+				} catch (error) {
 					this.props.navigation.navigate('Dashboard');
 				}
 				Logger.log('Lockscreen::unlockKeychain - playing animations');
@@ -131,7 +126,7 @@ class LockScreen extends PureComponent {
 				this.props.navigation.navigate('Onboarding');
 			}
 		} catch (error) {
-			if (this.unlockAttempts <= 3) {
+			if (this.unlockAttempts <= 0) {
 				this.unlockKeychain();
 			} else {
 				trackErrorAsAnalytics(
@@ -180,10 +175,11 @@ class LockScreen extends PureComponent {
 					}}
 					style={styles.animation}
 					loop={false}
-					source={require('../../../animations/fox-in.json')}
+					// source={require('../../../animations/fox-in.json')}
+					source={require('../../../animations/bounce.json')}
 					onAnimationFinish={this.onAnimationFinished}
 				/>
-				<LottieView
+				{/* <LottieView
 					// eslint-disable-next-line react/jsx-no-bind
 					ref={animation => {
 						this.animationName = animation;
@@ -191,7 +187,7 @@ class LockScreen extends PureComponent {
 					style={styles.metamaskName}
 					loop={false}
 					source={require('../../../animations/wordmark.json')}
-				/>
+				/> */}
 			</View>
 		);
 	}
@@ -200,7 +196,7 @@ class LockScreen extends PureComponent {
 		return (
 			<View style={baseStyles.flexGrow}>
 				<Animated.View style={[styles.logoWrapper, { opacity: this.opacity }]}>
-					<View style={styles.fox}>{/*this.renderAnimations()*/}</View>
+					<View style={styles.fox}>{this.renderAnimations()}</View>
 				</Animated.View>
 			</View>
 		);
