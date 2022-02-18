@@ -67,25 +67,67 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	onPickImage() {
-		ImagePicker.openPicker({
-			width: 300,
-			height: 300,
-			cropping: true
-		})
-			.then(image => {
-				this.isViewModal = false;
-				this.avatar = image.path;
-				this.hasUpdateAvatar = true;
-			})
-			.catch(err => {
-				this.notiMessage = strings('profile.grant_permission_gallery_notification');
-				if (Platform.OS === 'android') {
-					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
-						this.isViewModal = false;
-						this.notiPermissionCamera = !res;
+		if (Platform.OS === 'android') {
+			PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+				if (!res) {
+					PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(granted => {
+						if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+							ImagePicker.openPicker({
+								width: 300,
+								height: 300,
+								cropping: true
+							})
+								.then(image => {
+									this.isViewModal = false;
+									this.avatar = image.path;
+								})
+								.catch(err => {
+									this.notiMessage = strings('profile.grant_permission_gallery_notification');
+									PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
+										res => {
+											this.isViewModal = false;
+											this.notiPermissionCamera = !res;
+										}
+									);
+								});
+						} else {
+							this.notiMessage = strings('profile.grant_permission_gallery_notification');
+							this.isViewModal = false;
+							this.notiPermissionCamera = !res;
+						}
 					});
+				} else {
+					ImagePicker.openPicker({
+						width: 300,
+						height: 300,
+						cropping: true
+					})
+						.then(image => {
+							this.isViewModal = false;
+							this.avatar = image.path;
+						})
+						.catch(err => {
+							this.notiMessage = strings('profile.grant_permission_gallery_notification');
+							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+								this.isViewModal = false;
+								this.notiPermissionCamera = !res;
+							});
+						});
 				}
-				if (Platform.OS === 'ios') {
+			});
+		}
+		if (Platform.OS === 'ios') {
+			ImagePicker.openPicker({
+				width: 300,
+				height: 300,
+				cropping: true
+			})
+				.then(image => {
+					this.isViewModal = false;
+					this.avatar = image.path;
+				})
+				.catch(err => {
+					this.notiMessage = strings('profile.grant_permission_gallery_notification');
 					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
 						.then(result => {
 							switch (result) {
@@ -108,8 +150,8 @@ class ProfileOnboard extends PureComponent {
 						.catch(error => {
 							// …
 						});
-				}
-			});
+				});
+		}
 	}
 
 	onTakePicture() {
