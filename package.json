@@ -50,7 +50,7 @@
 		"fixWebRtcBitcode": "node_modules/react-native-webrtc/tools/downloadBitcode.sh",
 		"codePush:android": "appcenter codepush release-react -a long-phan-pv6o/LiquiChain -d Staging",
 		"codePush:ios": "appcenter codepush release-react -a long-phan-pv6o/LiquiChain-1 -d Staging",
-		"rn-nodeify": "./node_modules/.bin/rn-nodeify 'stream,crypto,react-native-randombytes,os' --hack",
+		"rn-nodeify": "./node_modules/.bin/rn-nodeify 'stream,crypto,react-native-randombytes,os' --hack"
 	},
 	"prettier": {
 		"printWidth": 120,
