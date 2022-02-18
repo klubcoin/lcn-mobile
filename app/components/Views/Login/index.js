@@ -114,7 +114,7 @@ class Login extends PureComponent {
 		if (this.props.navigation.state?.params?.isFromBackground) {
 			const { email } = preferences?.onboardProfile ?? {};
 			this.setState({ email: email });
-			this.emailFieldRef.current.setValue(email)
+			this.emailFieldRef.current.setValue(email);
 		}
 		if (!this.props.passwordSet && !this.props.keycloakAuth) {
 			try {
@@ -342,14 +342,19 @@ class Login extends PureComponent {
 	tryBiometric = async e => {
 		if (e) e.preventDefault();
 		const { current: field } = this.fieldRef;
+		const { current: emailField } = this.emailFieldRef;
 		field.blur();
+		emailField.blur();
 		try {
 			const credentials = await SecureKeychain.getGenericPassword();
 			if (!credentials) return false;
 			field.blur();
-			this.setState({ password: credentials.password });
+			emailField.blur();
+			this.setState({ password: credentials.password, email: preferences?.onboardProfile?.email });
 			field.setValue(credentials.password);
+			emailField.setValue(preferences?.onboardProfile?.email);
 			field.blur();
+			emailField.blur();
 			this.onLogin();
 		} catch (error) {
 			Logger.log(error);
