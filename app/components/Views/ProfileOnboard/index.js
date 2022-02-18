@@ -33,6 +33,7 @@ import PhoneTextField from '../../UI/PhoneTextField';
 import CountrySearchModal from '../../UI/CountrySearchModal';
 import { allCountries } from 'country-telephone-data';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import emojiRegex from 'emoji-regex';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
@@ -48,6 +49,7 @@ class ProfileOnboard extends PureComponent {
 	hasUpdateAvatar = false;
 	notiPermissionCamera = false;
 	notiMessage = '';
+	regex = emojiRegex();
 
 	constructor(props) {
 		super(props);
@@ -306,14 +308,14 @@ class ProfileOnboard extends PureComponent {
 									value={this.firstname}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.lastname = text)}
+									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
 								/>
 								<TextField

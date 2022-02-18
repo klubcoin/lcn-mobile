@@ -126,6 +126,7 @@
 		"country-telephone-data": "^0.6.3",
 		"date-fns": "^2.25.0",
 		"dnode": "1.2.2",
+		"emoji-regex": "^10.0.0",
 		"eth-ens-namehash": "2.0.8",
 		"eth-json-rpc-errors": "^2.0.2",
 		"eth-json-rpc-filters": "4.2.2",

@@ -47,6 +47,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import TextField from '../../UI/TextField';
+import emojiRegex from 'emoji-regex';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -111,6 +112,7 @@ class ChoosePassword extends PureComponent {
 	};
 
 	mounted = true;
+	regex = emojiRegex();
 
 	confirmPasswordInput = React.createRef();
 	// Flag to know if password in keyring was set or not
@@ -401,7 +403,7 @@ class ChoosePassword extends PureComponent {
 	};
 
 	onUsernameChange = val => {
-		this.setState({ username: val });
+		this.setState({ username: val.replace(this.regex, '') });
 	};
 
 	toggleShowHide = () => {

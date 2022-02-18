@@ -36,6 +36,7 @@ import { setOnboardProfile } from '../../../actions/user';
 import { renderAccountName } from '../../../util/address';
 import { allCountries } from 'country-telephone-data';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import emojiRegex from 'emoji-regex';
 
 class EditProfile extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
@@ -53,6 +54,7 @@ class EditProfile extends PureComponent {
 	countryCode = '';
 	notiPermissionCamera = false;
 	notiMessage = '';
+	regex = emojiRegex();
 
 	constructor(props) {
 		super(props);
@@ -364,19 +366,19 @@ class EditProfile extends PureComponent {
 									value={this.username}
 									label={strings('choose_password.username')}
 									placeholder={strings('choose_password.username')}
-									onChangeText={text => (this.username = text)}
+									onChangeText={text => (this.username = text.replace(this.regex, ''))}
 								/>
 								<TextField
 									value={this.firstname}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
 								/>
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.lastname = text)}
+									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
 								/>
 								<TextField
 									value={this.email}
