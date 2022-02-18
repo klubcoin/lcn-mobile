@@ -245,7 +245,7 @@ class ProfileOnboard extends PureComponent {
 		// 	showError(strings('profile.missing_phone'));
 		// 	return;
 		// }
-		if (phone && (!/^\+?[\d\s]{10}$/.test(phone) || !this.countryCode)) {
+		if (phone && (!/^[\d]{10}$/.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
