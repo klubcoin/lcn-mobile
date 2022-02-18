@@ -12,6 +12,8 @@ import Device from '../../../util/Device';
 import { styles, carousel_images, klubcoin_text, DEVICE_WIDTH, IMG_PADDING } from './styles/index';
 import { displayName } from '../../../../app.json';
 import ScaleImage from 'react-native-scalable-image';
+import APIService from '../../../services/APIService';
+import preferences from '../../../store/preferences';
 
 /**
  * View that is displayed to first time (new) users
@@ -27,8 +29,39 @@ export default class OnboardingCarousel extends PureComponent {
 	};
 
 	state = {
-		currentTab: 1
+		currentTab: 1,
+		onboardingData: []
 	};
+
+	async componentDidMount() {
+		await this.fetchOnboardingData();
+		this.fetchOnboardingContent();
+	}
+
+	async fetchOnboardingData() {
+		const data = await preferences.fetch('onboading');
+		if (data !== null) {
+			this.setState({
+				onboardingData: data
+			});
+		}
+	}
+
+	fetchOnboardingContent() {
+		APIService.getOnboardingContent((success, json) => {
+			if (!!json && Array.isArray(json) && json.length > 0) {
+				const data = json;
+				data.sort((a, b) => {
+					if (a.code.toUpperCase() > b.code.toUpperCase()) return 1;
+					return -1;
+				});
+				preferences.save('onboarding', data);
+				this.setState({
+					onboardingData: data
+				});
+			}
+		});
+	}
 
 	onPresGetStarted = () => this.props.navigation.navigate('Onboarding');
 
@@ -48,31 +81,25 @@ export default class OnboardingCarousel extends PureComponent {
 					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>
 							<ScaleImage
-							source={klubcoin_text}
-							width={Math.min(Device.getDeviceWidth() / 2,200)}
+								source={klubcoin_text}
+								width={Math.min(Device.getDeviceWidth() / 2, 200)}
 								style={[styles.logoText]}
-								/>
+							/>
 							<ScrollableTabView
 								style={styles.scrollTabs}
 								renderTabBar={this.renderTabBar}
 								onChangeTab={this.onChangeTab}
 							>
-								{['one', 'two', 'three'].map((value, index) => {
+								{this.state.onboardingData.map((value, index) => {
 									const key = index + 1;
 									const imgStyleKey = `carouselImage${key}`;
 									return (
 										<View key={key} style={baseStyles.flexGrow}>
 											<View style={styles.tab}>
 												<Text style={styles.title} testID={`carousel-screen-${value}`}>
-													{strings(`onboarding_carousel.title${key}`, {
-														appName: displayName
-													})}
+													{value.title}
 												</Text>
-												<Text style={styles.subtitle}>
-													{strings(`onboarding_carousel.subtitle${key}`, {
-														appName: displayName
-													})}
-												</Text>
+												<Text style={styles.subtitle}>{value.content}</Text>
 											</View>
 											<View style={styles.carouselImageWrapper}>
 												{/* <Image

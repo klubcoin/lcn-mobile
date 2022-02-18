@@ -246,4 +246,13 @@ export default class APIService {
 		};
 		WebService.sendPostDirect(this.apiWebPageContents(), data, callback);
 	}
+
+	static getOnboardingContent(callback) {
+		const data = {
+			basicAuth,
+			firstRow: 0,
+			filters: { code: ['onboarding-1', 'onboarding-2', 'onboarding-3'] }
+		};
+		WebService.sendPostDirect(this.apiWebPageContents(), data, callback);
+	}
 }
