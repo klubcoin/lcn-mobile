@@ -47,6 +47,7 @@ class ProfileOnboard extends PureComponent {
 	countryCode = '';
 	hasUpdateAvatar = false;
 	notiPermissionCamera = false;
+	notiMessage = '';
 
 	constructor(props) {
 		super(props);
@@ -60,7 +61,8 @@ class ProfileOnboard extends PureComponent {
 			showCountryCodePicker: observable,
 			countryCode: observable,
 			hasUpdateAvatar: observable,
-			notiPermissionCamera: observable
+			notiPermissionCamera: observable,
+			notiMessage: observable
 		});
 	}
 
@@ -69,42 +71,45 @@ class ProfileOnboard extends PureComponent {
 			width: 300,
 			height: 300,
 			cropping: true
-		}).then(image => {
-			this.isViewModal = false;
-			this.avatar = image.path;
-			this.hasUpdateAvatar = true;
-		}).catch(err => {
-			if (Platform.OS === 'android') {
-			// PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
-			// 		this.isViewModal = false;
-			// 		this.notiPermissionCamera = !res;
-			// 	});
-			}
-			if (Platform.OS === 'ios') {
-			check(PERMISSIONS.IOS.PHOTO_LIBRARY)
-					.then(result => {
-						switch (result) {
-							case RESULTS.UNAVAILABLE:
-								break;
-							case RESULTS.DENIED:
-								this.isViewModal = false;
-								this.notiPermissionCamera = true;
-								break;
-							case RESULTS.LIMITED:
-								break;
-							case RESULTS.GRANTED:
-								break;
-							case RESULTS.BLOCKED:
-								this.isViewModal = false;
-								this.notiPermissionCamera = true;
-								break;
-						}
-					})
-					.catch(error => {
-						// …
+		})
+			.then(image => {
+				this.isViewModal = false;
+				this.avatar = image.path;
+				this.hasUpdateAvatar = true;
+			})
+			.catch(err => {
+				this.notiMessage = strings('profile.grant_permission_gallery_notification');
+				if (Platform.OS === 'android') {
+					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+						this.isViewModal = false;
+						this.notiPermissionCamera = !res;
 					});
-			}
-		});
+				}
+				if (Platform.OS === 'ios') {
+					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+						.then(result => {
+							switch (result) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+								case RESULTS.LIMITED:
+									break;
+								case RESULTS.GRANTED:
+									break;
+								case RESULTS.BLOCKED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+							}
+						})
+						.catch(error => {
+							// …
+						});
+				}
+			});
 	}
 
 	onTakePicture() {
@@ -113,43 +118,44 @@ class ProfileOnboard extends PureComponent {
 			height: 300,
 			cropping: true
 		})
-		.then(image => {
-			this.isViewModal = false;
-			this.avatar = image.path;
-			this.hasUpdateAvatar = true;
-		})
-		.catch(err => {
-			if (Platform.OS === 'android') {
-				PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
-					this.isViewModal = false;
-					this.notiPermissionCamera = !res;
-				});
-			}
-			if (Platform.OS === 'ios') {
-				check(PERMISSIONS.IOS.CAMERA)
-					.then(result => {
-						switch (result) {
-							case RESULTS.UNAVAILABLE:
-								break;
-							case RESULTS.DENIED:
-								this.isViewModal = false;
-								this.notiPermissionCamera = true;
-								break;
-							case RESULTS.LIMITED:
-								break;
-							case RESULTS.GRANTED:
-								break;
-							case RESULTS.BLOCKED:
-								this.isViewModal = false;
-								this.notiPermissionCamera = true;
-								break;
-						}
-					})
-					.catch(error => {
-						// …
+			.then(image => {
+				this.isViewModal = false;
+				this.avatar = image.path;
+				this.hasUpdateAvatar = true;
+			})
+			.catch(err => {
+				this.notiMessage = strings('profile.grant_permission_camera_notification');
+				if (Platform.OS === 'android') {
+					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
+						this.isViewModal = false;
+						this.notiPermissionCamera = !res;
 					});
-			}
-		});
+				}
+				if (Platform.OS === 'ios') {
+					check(PERMISSIONS.IOS.CAMERA)
+						.then(result => {
+							switch (result) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+								case RESULTS.LIMITED:
+									break;
+								case RESULTS.GRANTED:
+									break;
+								case RESULTS.BLOCKED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+							}
+						})
+						.catch(error => {
+							// …
+						});
+				}
+			});
 	}
 
 	onOpenModal() {
@@ -344,9 +350,7 @@ class ProfileOnboard extends PureComponent {
 					<Modal visible={this.notiPermissionCamera} animationType="fade" transparent>
 						<View style={styles.notiCenterModal}>
 							<View style={styles.notiContentModal}>
-								<Text style={styles.notiContentText}>
-									{strings('profile.grant_permission_camera_notification')}
-								</Text>
+								<Text style={styles.notiContentText}>{this.notiMessage}</Text>
 								<StyledButton
 									type={'normal'}
 									onPress={() => {

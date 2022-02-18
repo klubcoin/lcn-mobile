@@ -52,6 +52,7 @@ class EditProfile extends PureComponent {
 	showCountryCodePicker = false;
 	countryCode = '';
 	notiPermissionCamera = false;
+	notiMessage = '';
 
 	constructor(props) {
 		super(props);
@@ -66,7 +67,8 @@ class EditProfile extends PureComponent {
 			isViewModal: observable,
 			showCountryCodePicker: observable,
 			countryCode: observable,
-			notiPermissionCamera: observable
+			notiPermissionCamera: observable,
+			notiMessage: observable
 		});
 	}
 
@@ -98,14 +100,15 @@ class EditProfile extends PureComponent {
 				this.avatar = image.path;
 			})
 			.catch(err => {
+				this.notiMessage = strings('profile.grant_permission_gallery_notification');
 				if (Platform.OS === 'android') {
-				// PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
-				// 		this.isViewModal = false;
-				// 		this.notiPermissionCamera = !res;
-				// 	});
+					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+						this.isViewModal = false;
+						this.notiPermissionCamera = !res;
+					});
 				}
 				if (Platform.OS === 'ios') {
-				check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
 						.then(result => {
 							switch (result) {
 								case RESULTS.UNAVAILABLE:
@@ -142,6 +145,7 @@ class EditProfile extends PureComponent {
 				this.avatar = image.path;
 			})
 			.catch(err => {
+				this.notiMessage = strings('profile.grant_permission_camera_notification');
 				if (Platform.OS === 'android') {
 					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
 						this.isViewModal = false;
@@ -411,9 +415,7 @@ class EditProfile extends PureComponent {
 					<Modal visible={this.notiPermissionCamera} animationType="fade" transparent>
 						<View style={styles.notiCenterModal}>
 							<View style={styles.notiContentModal}>
-								<Text style={styles.notiContentText}>
-									{strings('profile.grant_permission_camera_notification')}
-								</Text>
+								<Text style={styles.notiContentText}>{this.notiMessage}</Text>
 								<StyledButton
 									type={'normal'}
 									onPress={() => {
