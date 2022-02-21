@@ -16,8 +16,8 @@ export default {
 		ticker: 'KLUB',
 		coin: 'Klubcoin',
 		route: 'https://account2.liquichain.io/meveo/rest/',
-		hostDomain: 'liquichain.io',
-		blockExploreUrl: 'https://liquichain.io',
+		hostDomain: 'klubcoin.net',
+		blockExploreUrl: 'https://klubcoin.net',
 		accountUrl: 'https://account2.liquichain.io',
 		helpSupportUrl: 'https://docs.liquichain.io',
 		reportIssueUrl: 'https://github.com/liquichain/lcn-mobile/issues'
