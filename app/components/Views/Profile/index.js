@@ -12,14 +12,12 @@ import Identicon from '../../UI/Identicon';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import RemoteImage from '../../../components/Base/RemoteImage';
 import Text from '../../../components/Base/Text';
-import ImagePicker from 'react-native-image-crop-picker';
 import { colors } from '../../../styles/common';
 import AccountList from '../../UI/AccountList';
 import StyledButton from '../../UI/StyledButton';
 import FileTransferWebRTC from '../FilesManager/store/FileTransferWebRTC';
 import { ConfirmProfileRequest } from '../../../services/Messages';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import CryptoSignature from '../../../core/CryptoSignature';
 
 const styles = StyleSheet.create({
 	container: {

@@ -132,7 +132,7 @@ const Entry = props => {
 					animateAndGoTo('Dashboard');
 				}
 			} else if (props.passwordSet) {
-				animateAndGoTo('Login');
+				animateAndGoTo('Welcome');
 			} else {
 				await KeyringController.submitPassword('');
 				await SecureKeychain.resetGenericPassword();
@@ -140,7 +140,7 @@ const Entry = props => {
 			}
 		} catch (error) {
 			Logger.log("Keychain couldn't be accessed", error);
-			animateAndGoTo('Login');
+			animateAndGoTo('Welcome');
 		}
 	}, [animateAndGoTo, props, fingerScanned]);
 

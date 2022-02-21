@@ -5,7 +5,6 @@ import {
     View,
     ScrollView,
     Text,
-    StyleSheet,
     InteractionManager,
     TouchableOpacity
 } from 'react-native';
@@ -24,7 +23,6 @@ import Share from 'react-native-share'; // eslint-disable-line  import/default
 import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import { renderNumber } from '../../../../util/number';
-import Device from '../../../../util/Device';
 import { strings } from '../../../../../locales/i18n';
 import { protectWalletModalVisible } from '../../../../actions/user';
 import styles from './styles/index'

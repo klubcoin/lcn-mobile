@@ -4,6 +4,7 @@ import { createAppContainer, createSwitchNavigator, NavigationActions } from 're
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import Login from '../../Views/Login';
+import Welcome from '../../Views/Welcome';
 import QRScanner from '../../Views/QRScanner';
 import Onboarding from '../../Views/Onboarding';
 import OnboardingCarousel from '../../Views/OnboardingCarousel';
@@ -176,6 +177,7 @@ const AppNavigator = createSwitchNavigator(
 		Entry,
 		HomeNav,
 		OnboardingRootNav,
+		Welcome,
 		Login,
 		OnboardingCarousel,
 		LockScreen

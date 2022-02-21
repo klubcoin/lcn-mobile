@@ -1,5 +1,14 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import {
+	KeyboardAvoidingView,
+	ScrollView,
+	TouchableOpacity,
+	View,
+	Modal,
+	Text,
+	Platform,
+	PermissionsAndroid
+} from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import preferences from '../../../store/preferences';
@@ -8,13 +17,11 @@ import RemoteImage from '../../Base/RemoteImage';
 import drawables from '../../../common/drawables';
 import * as RNFS from 'react-native-fs';
 import ImagePicker from 'react-native-image-crop-picker';
-import { colors, fontStyles } from '../../../styles/common';
 import OnboardingProgress from '../../UI/OnboardingProgress';
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import { ONBOARDING, PREVIOUS_SCREEN } from '../../../constants/navigation';
 import StyledButton from '../../UI/StyledButton';
 import { strings } from '../../../../locales/i18n';
-import { TextInput } from 'react-native-gesture-handler';
 import Device from '../../../util/Device';
 import Toast from 'react-native-toast-message';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -22,6 +29,11 @@ import styles from './styles/index';
 import TextField from '../../UI/TextField';
 import validator from 'validator';
 import { showError } from '../../../util/notify';
+import PhoneTextField from '../../UI/PhoneTextField';
+import CountrySearchModal from '../../UI/CountrySearchModal';
+import { allCountries } from 'country-telephone-data';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import emojiRegex from 'emoji-regex';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
@@ -31,6 +43,13 @@ class ProfileOnboard extends PureComponent {
 	lastname = '';
 	email = '';
 	phone = '';
+	isViewModal = false;
+	showCountryCodePicker = false;
+	countryCode = '';
+	hasUpdateAvatar = false;
+	notiPermissionCamera = false;
+	notiMessage = '';
+	regex = emojiRegex();
 
 	constructor(props) {
 		super(props);
@@ -39,18 +58,155 @@ class ProfileOnboard extends PureComponent {
 			firstname: observable,
 			lastname: observable,
 			email: observable,
-			phone: observable
+			phone: observable,
+			isViewModal: observable,
+			showCountryCodePicker: observable,
+			countryCode: observable,
+			hasUpdateAvatar: observable,
+			notiPermissionCamera: observable,
+			notiMessage: observable
 		});
 	}
 
 	onPickImage() {
+		if (Platform.OS === 'android') {
+			PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+				if (!res) {
+					PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(granted => {
+						if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+							ImagePicker.openPicker({
+								width: 300,
+								height: 300,
+								cropping: true
+							})
+								.then(image => {
+									this.isViewModal = false;
+									this.avatar = image.path;
+									this.hasUpdateAvatar = true;
+								})
+								.catch(err => {
+									this.notiMessage = strings('profile.grant_permission_gallery_notification');
+									PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
+										res => {
+											this.isViewModal = false;
+											this.notiPermissionCamera = !res;
+										}
+									);
+								});
+						} else {
+							this.notiMessage = strings('profile.grant_permission_gallery_notification');
+							this.isViewModal = false;
+							this.notiPermissionCamera = !res;
+						}
+					});
+				} else {
+					ImagePicker.openPicker({
+						width: 300,
+						height: 300,
+						cropping: true
+					})
+						.then(image => {
+							this.isViewModal = false;
+							this.avatar = image.path;
+							this.hasUpdateAvatar = true;
+						})
+						.catch(err => {
+							this.notiMessage = strings('profile.grant_permission_gallery_notification');
+							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
+								this.isViewModal = false;
+								this.notiPermissionCamera = !res;
+							});
+						});
+				}
+			});
+		}
+		if (Platform.OS === 'ios') {
+			ImagePicker.openPicker({
+				width: 300,
+				height: 300,
+				cropping: true
+			})
+				.then(image => {
+					this.isViewModal = false;
+					this.avatar = image.path;
+					this.hasUpdateAvatar = true;
+				})
+				.catch(err => {
+					this.notiMessage = strings('profile.grant_permission_gallery_notification');
+					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+						.then(result => {
+							switch (result) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+								case RESULTS.LIMITED:
+									break;
+								case RESULTS.GRANTED:
+									break;
+								case RESULTS.BLOCKED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+							}
+						})
+						.catch(error => {
+							// …
+						});
+				});
+		}
+	}
+
+	onTakePicture() {
 		ImagePicker.openCamera({
 			width: 300,
 			height: 300,
 			cropping: true
-		}).then(image => {
-			this.avatar = image.path;
-		});
+		})
+			.then(image => {
+				this.isViewModal = false;
+				this.avatar = image.path;
+				this.hasUpdateAvatar = true;
+			})
+			.catch(err => {
+				this.notiMessage = strings('profile.grant_permission_camera_notification');
+				if (Platform.OS === 'android') {
+					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
+						this.isViewModal = false;
+						this.notiPermissionCamera = !res;
+					});
+				}
+				if (Platform.OS === 'ios') {
+					check(PERMISSIONS.IOS.CAMERA)
+						.then(result => {
+							switch (result) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+								case RESULTS.LIMITED:
+									break;
+								case RESULTS.GRANTED:
+									break;
+								case RESULTS.BLOCKED:
+									this.isViewModal = false;
+									this.notiPermissionCamera = true;
+									break;
+							}
+						})
+						.catch(error => {
+							// …
+						});
+				}
+			});
+	}
+
+	onOpenModal() {
+		this.isViewModal = true;
 	}
 
 	showNotice(message) {
@@ -72,8 +228,12 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.missing_photo'));
 			return;
 		}
-		if (!firstname || !lastname) {
+		if (!firstname) {
 			showError(strings('profile.missing_name'));
+			return;
+		}
+		if (!lastname) {
+			showError(strings('profile.missing_surname'));
 			return;
 		}
 		if (!email) {
@@ -84,11 +244,11 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.invalid_email'));
 			return;
 		}
-		if (!phone) {
-			showError(strings('profile.missing_phone'));
-			return;
-		}
-		if (!/^\+?[\d\s]{8,15}$/.test(phone)) {
+		// if (!phone) {
+		// 	showError(strings('profile.missing_phone'));
+		// 	return;
+		// }
+		if (phone && (!/^[\d]{10}$/.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
@@ -99,17 +259,24 @@ class ProfileOnboard extends PureComponent {
 		const firstname = this.firstname.trim();
 		const lastname = this.lastname.trim();
 		const email = this.email.trim().toLowerCase();
-		const phone = this.phone.trim();
+		const phone = `+${this.countryCode}-${this.phone}`.trim();
 
 		const isValid = this.isDataValid();
 		if (!isValid) return;
-
 		const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
-		if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
-		await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+		if (this.avatar && this.hasUpdateAvatar) {
+			//remove existing file
+			try {
+				if (await RNFS.exists(path)) await RNFS.unlink(path);
+				await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
+				this.hasUpdateAvatar = false;
+			} catch (err) {
+				console.log(err);
+			}
+		}
 
 		preferences.setOnboardProfile({
-			avatar: path,
+			avatar: this.avatar ? path : '',
 			firstname,
 			lastname,
 			email,
@@ -131,10 +298,10 @@ class ProfileOnboard extends PureComponent {
 							<TouchableOpacity
 								activeOpacity={0.5}
 								style={styles.avatarView}
-								onPress={() => this.onPickImage()}
+								onPress={() => this.onOpenModal()}
 							>
 								<RemoteImage
-									source={{ uri: this.avatar || drawables.avatar_user }}
+									source={this.avatar ? { uri: this.avatar } : drawables.avatar_user}
 									style={styles.avatar}
 								/>
 							</TouchableOpacity>
@@ -144,14 +311,14 @@ class ProfileOnboard extends PureComponent {
 									value={this.firstname}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.firstname = text)}
+									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.lastname = text)}
+									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
 								/>
 								<TextField
@@ -161,12 +328,25 @@ class ProfileOnboard extends PureComponent {
 									onChangeText={text => (this.email = text)}
 									keyboardType="email-address"
 								/>
-								<TextField
+								<PhoneTextField
 									value={this.phone}
 									label={strings('profile.phone')}
 									placeholder={strings('profile.phone')}
-									onChangeText={text => (this.phone = text)}
+									onChangeText={text => {
+										if (!this.countryCode) {
+											showError(strings('profile.select_country_code_first'));
+											return;
+										}
+										this.phone = text;
+									}}
 									keyboardType="number-pad"
+									countryCode={this.countryCode}
+									onPressCountryCode={() => (this.showCountryCodePicker = true)}
+									onFocus={() => {
+										if (!this.countryCode) {
+											showError(strings('profile.select_country_code_first'));
+										}
+									}}
 								/>
 							</View>
 
@@ -175,6 +355,61 @@ class ProfileOnboard extends PureComponent {
 							</StyledButton>
 						</View>
 					</ScrollView>
+					{this.showCountryCodePicker && (
+						<CountrySearchModal
+							placeholder={strings('profile.search')}
+							items={allCountries}
+							countryCode={this.countryCode}
+							countryCode={this.countryCode}
+							onSelectCountryCode={item => {
+								this.countryCode = item.dialCode;
+								this.showCountryCodePicker = false;
+							}}
+							onClose={() => (this.showCountryCodePicker = false)}
+						/>
+					)}
+					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
+						<TouchableOpacity
+							style={styles.centerModal}
+							onPress={() => {
+								this.isViewModal = false;
+							}}
+							activeOpacity={1}
+						>
+							<View style={styles.contentModal}>
+								<StyledButton
+									type={'normal'}
+									onPress={this.onPickImage.bind(this)}
+									containerStyle={styles.buttonModal}
+								>
+									{strings('profile.select_image')}
+								</StyledButton>
+								<StyledButton
+									type={'normal'}
+									onPress={this.onTakePicture.bind(this)}
+									containerStyle={styles.buttonModal}
+								>
+									{strings('profile.take_a_picture')}
+								</StyledButton>
+							</View>
+						</TouchableOpacity>
+					</Modal>
+					<Modal visible={this.notiPermissionCamera} animationType="fade" transparent>
+						<View style={styles.notiCenterModal}>
+							<View style={styles.notiContentModal}>
+								<Text style={styles.notiContentText}>{this.notiMessage}</Text>
+								<StyledButton
+									type={'normal'}
+									onPress={() => {
+										this.notiPermissionCamera = false;
+									}}
+									containerStyle={styles.notiButtonModal}
+								>
+									{strings('navigation.close')}
+								</StyledButton>
+							</View>
+						</View>
+					</Modal>
 				</KeyboardAvoidingView>
 			</OnboardingScreenWithBg>
 		);

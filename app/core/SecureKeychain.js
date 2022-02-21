@@ -106,6 +106,7 @@ export default {
 		}
 
 		const encryptedPassword = await instance.encryptPassword(password);
+		await this.resetGenericPassword();
 		await Keychain.setGenericPassword('metamask-user', encryptedPassword, { ...defaultOptions, ...authOptions });
 
 		if (type === this.TYPES.BIOMETRICS) {

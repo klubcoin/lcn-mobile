@@ -9,13 +9,11 @@ import {
 	View,
 	TextInput,
 	SafeAreaView,
-	StyleSheet,
 	ScrollView,
 	Image,
 	InteractionManager
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -27,7 +25,7 @@ import StyledButton from '../../UI/StyledButton';
 import LoginWithKeycloak from '../LoginWithKeycloak';
 import Engine from '../../../core/Engine';
 import Device from '../../../util/Device';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors, baseStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import SecureKeychain from '../../../core/SecureKeychain';

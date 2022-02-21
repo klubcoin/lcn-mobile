@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import {
     Dimensions,
     SafeAreaView,
-    StyleSheet,
     View,
     Text,
     TextInput,
@@ -11,7 +10,7 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import AsyncStorage from '@react-native-community/async-storage';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import ActionView from '../../UI/ActionView';

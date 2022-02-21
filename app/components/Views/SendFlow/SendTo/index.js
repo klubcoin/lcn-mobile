@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
-import { colors, fontStyles, baseStyles } from '../../../../styles/common';
+import { colors, baseStyles } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
 import AddressList from '../AddressList';
 import PropTypes from 'prop-types';
 import {
-	StyleSheet,
 	View,
 	TouchableOpacity,
 	TextInput,

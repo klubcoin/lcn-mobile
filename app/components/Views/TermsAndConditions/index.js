@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import AppConstants from '../../../core/AppConstants';
 import styles from './styles';

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, FlatList } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/common';
+import { View, Text, TouchableOpacity, ScrollView, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { safeToChecksumAddress } from '../../../../util/address';

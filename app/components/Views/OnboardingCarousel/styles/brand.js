@@ -31,7 +31,21 @@ const brandStyles = StyleSheet.create({
 	},
 	circle: {
 		backgroundColor: colors.blue
-	}
+	},
+	logoText:{
+		marginVertical:30,
+		alignSelf: 'center',
+	},
+	scrollTabs:{
+		paddingTop:20,
+		flex:0
+	},
+	progessContainer: {
+		flexDirection: 'row',
+		alignSelf: 'center',
+		flex:1,
+		alignItems:'center'
+	},
 });
 
 export default brandStyles;

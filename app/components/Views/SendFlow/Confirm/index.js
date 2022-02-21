@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import { colors, baseStyles, fontStyles } from '../../../../styles/common';
+import { colors, baseStyles } from '../../../../styles/common';
 import {
 	InteractionManager,
-	StyleSheet,
 	SafeAreaView,
 	View,
 	Alert,

@@ -3,7 +3,6 @@ import {
     SafeAreaView,
     TextInput,
     Text,
-    StyleSheet,
     View,
     TouchableOpacity,
     KeyboardAvoidingView,
@@ -33,7 +32,6 @@ import { strings } from '../../../../../locales/i18n';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import StyledButton from '../../../UI/StyledButton';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { generateETHLink, generateERC20Link, generateUniversalLinkRequest } from '../../../../util/payment-link-generator';
 import Device from '../../../../util/Device';
 import currencySymbols from '../../../../util/currency-symbols.json';
 import { NetworksChainId } from '@metamask/controllers';
@@ -41,11 +39,7 @@ import { getTicker } from '../../../../util/transactions';
 import { toLowerCaseCompare } from '../../../../util/general';
 import styles from './styles/index';
 import { baseStyles } from '../../../../styles/common';
-import { colors, fontStyles } from '../../../../styles/common';
-import CryptoSignature from '../../../../core/CryptoSignature';
-import base64 from 'base-64';
-import RNFS from 'react-native-fs';
-import routes from '../../../../common/routes';
+import { colors } from '../../../../styles/common';
 import AppConstants from '../../../../core/AppConstants';
 
 const KEYBOARD_OFFSET = 120;

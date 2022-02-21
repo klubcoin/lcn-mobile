@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, SafeAreaView, StyleSheet, Switch, Text, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, Switch, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ActionModal from '../../../UI/ActionModal';
 import Engine from '../../../../core/Engine';
 import StyledButton from '../../../UI/StyledButton';
-import { colors, fontStyles, baseStyles } from '../../../../styles/common';
+import { colors, baseStyles } from '../../../../styles/common';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { setShowCustomNonce, setShowHexData } from '../../../../actions/settings';
 import { strings } from '../../../../../locales/i18n';

@@ -181,7 +181,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 10,
 		marginBottom: 30
-	}
+	},
+	passwordValidateTitle:{},
+	passwordItemWrapper:{},
+	passwordItemText:{},
+	passwordItemTextError:{},
+	passwordItemIcon:{},
 });
 
 export default assignNestedObj(styles, brandStyles);

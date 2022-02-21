@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { StyleSheet, Text, ScrollView, Switch, View, Image, TouchableOpacity } from 'react-native';
+import { Text, ScrollView, Switch, View, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import Engine from '../../../../core/Engine';
 import I18n, { strings, getLanguages, setLocale } from '../../../../../locales/i18n';
 import SelectComponent from '../../../UI/SelectComponent';
 import infuraCurrencies from '../../../../util/infura-conversion.json';
-import { colors, fontStyles } from '../../../../styles/common';
+import { colors } from '../../../../styles/common';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import {
 	setSearchEngine,
@@ -17,7 +17,6 @@ import {
 } from '../../../../actions/settings';
 import PickComponent from '../../PickComponent';
 import { toDataUrl } from '../../../../util/blockies.js';
-import Device from '../../../../util/Device';
 import Jazzicon from 'react-native-jazzicon';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';

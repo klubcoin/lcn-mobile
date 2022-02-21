@@ -1,4 +1,3 @@
-import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react'
 import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native'
@@ -6,7 +5,6 @@ import { strings } from '../../../../../locales/i18n';
 import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import moment from 'moment';
-import APIService from '../../../../services/APIService';
 import NavbarTitle from '../../../UI/NavbarTitle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
