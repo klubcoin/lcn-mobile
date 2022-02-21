@@ -82,6 +82,7 @@ class ProfileOnboard extends PureComponent {
 								.then(image => {
 									this.isViewModal = false;
 									this.avatar = image.path;
+									this.hasUpdateAvatar = true;
 								})
 								.catch(err => {
 									this.notiMessage = strings('profile.grant_permission_gallery_notification');
@@ -107,6 +108,7 @@ class ProfileOnboard extends PureComponent {
 						.then(image => {
 							this.isViewModal = false;
 							this.avatar = image.path;
+							this.hasUpdateAvatar = true;
 						})
 						.catch(err => {
 							this.notiMessage = strings('profile.grant_permission_gallery_notification');
@@ -127,6 +129,7 @@ class ProfileOnboard extends PureComponent {
 				.then(image => {
 					this.isViewModal = false;
 					this.avatar = image.path;
+					this.hasUpdateAvatar = true;
 				})
 				.catch(err => {
 					this.notiMessage = strings('profile.grant_permission_gallery_notification');
