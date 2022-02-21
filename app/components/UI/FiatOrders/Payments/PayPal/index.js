@@ -182,7 +182,7 @@ function PayPal({selectedAddress, ...props}){
     if(url && url.includes("error")){
       console.log('navigate to PurchaseMethods')
       // props.navigation.navigate('PurchaseMethods')
-    }else if(url && url.includes("https://account.liquichain.io")){
+    }else if(url && url.includes("https://account2.liquichain.io")){
       capturePayPalOrder(url)
     }else{
       // unknown url

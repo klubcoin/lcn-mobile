@@ -1834,7 +1834,7 @@ export const BrowserTab = props => {
 				{isTabActive() && renderWatchAssetModal()}
 				{isTabActive() && renderOptions()}
 				{isTabActive() && renderBottomBar()}
-				{isTabActive() && renderOnboardingWizard()}
+				{/* {isTabActive() && renderOnboardingWizard()} */}
 				{isTabActive() && renderAddCustomNetworkModal()}
 				{isTabActive() && renderSwitchCustomNetworkModal()}
 			</View>

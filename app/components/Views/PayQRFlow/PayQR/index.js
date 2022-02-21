@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { colors, fontStyles } from '../../../../styles/common';
+import { colors } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
 import PropTypes from 'prop-types';
 import { makeObservable, observable } from 'mobx';

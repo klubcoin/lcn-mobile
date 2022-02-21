@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../styles/common';
+import { SafeAreaView } from 'react-native';
+import { colors } from '../../../styles/common';
 import Routes from '../../../common/routes';
 import { connect } from 'react-redux';
 import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';

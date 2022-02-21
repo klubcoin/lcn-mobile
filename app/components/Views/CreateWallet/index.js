@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
-import AnimatedFox from 'react-native-animated-fox';
 import { strings } from '../../../../locales/i18n';
 import Engine from '../../../core/Engine';
 import SecureKeychain from '../../../core/SecureKeychain';

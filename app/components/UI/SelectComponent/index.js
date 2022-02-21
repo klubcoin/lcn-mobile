@@ -63,17 +63,16 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15,
 		paddingVertical: 5,
 		flexDirection: 'row',
-		height: ROW_HEIGHT
+		height: ROW_HEIGHT,
+		alignItems:'center'
 	},
 	optionLabel: {
-		paddingVertical: 10,
 		flex: 1,
 		fontSize: 14,
-		...fontStyles.normal
+		...fontStyles.normal,
 	},
 	icon: {
 		paddingHorizontal: 10,
-		marginTop: 5
 	},
 	listWrapper: {
 		flex: 1,

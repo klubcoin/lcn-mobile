@@ -86,9 +86,11 @@ const styles = StyleSheet.create({
 	},
 	qrCodeWrapper: {
 		marginTop: 20,
+		padding: 20,
 		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		backgroundColor: 'white'
 	},
 	tabUnderlineStyle: {
 		height: 2,

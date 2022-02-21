@@ -191,7 +191,21 @@
 		"profile": "Profile",
 		"continue": "Continue",
 		"sign_in_biometrics": "Sign in with Biometrics",
-		"username": "Username"
+		"username": "Username",
+		"password_error_1": "Password must have minimum length 8 characters.",
+		"password_error_2": "Password must have at least an alphabet in lower case.",
+		"password_error_3": "Password must have at least an alphabet in upper case.",
+		"password_error_4": "Password must have at least a number.",
+		"password_error_5": "Password must have at least a special character.",
+		"password_match": "Confirm password must match with password",
+		"password_validate_title": "Password must have:",
+		"password_validate_1": "Minimum length 8 characters",
+		"password_validate_2": "At least an alphabet in lower case",
+		"password_validate_3": "At least an alphabet in upper case",
+		"password_validate_4": "At least a number",
+		"password_validate_5": "At least a special character"
+
+
 	},
 	"profile": {
 		"firstname": "Firstname",
@@ -199,15 +213,23 @@
 		"notice": "Notice",
 		"missing_photo": "Photo is missing",
 		"missing_name": "Name is missing",
+		"missing_surname": "Surname is missing",
 		"missing_phone": "Phone is missing",
 		"missing_email": "Email is missing",
 		"invalid_phone": "Invalid phone number",
 		"invalid_email": "Invalid email",
 		"request_profile_confirmation": "Request Profile Confirmation",
+		"select_country_code_first": "Please select the country code first",
 		"name": "Name",
 		"surname": "Surname",
 		"phone": "Phone",
-		"change_shipping_info": "Change shipping info"
+		"change_shipping_info": "Change shipping info",
+		"select_image": "Select Image",
+		"search": "Search...",
+		"grant_permission_camera_notification": "The app has been denied camera access, please grant access!",
+		"grant_permission_gallery_notification": "The app has been denied gallery access, please grant access!",
+		"take_a_picture": "Take a Picture"
+
 	},
 	"confirm_profile": {
 		"confirm_profile_message": "Identity Confirmation",
@@ -383,6 +405,11 @@
 		"chart": "Chart",
 		"buy_more": "Buy more Klub Coins",
 		"spend_coin": "Spend your Klub Coins"
+	},
+	"welcome": {
+		"go_to_my_wallet": "Go to my wallet",
+		"title": "Welcome to {{appName}}",
+		"subtitle": "The first global cryptocurrency for all clubbers, festival goers and electronic music fans."
 	},
 	"voting": {
 		"title": "Voting",

@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, StyleSheet, Image } from 'react-native';
+import { Switch, ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, Image } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import AnimatedFox from 'react-native-animated-fox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -21,7 +20,7 @@ import preferences from '../../../../app/store/preferences';
 import StyledButton from '../../UI/StyledButton';
 import Engine from '../../../core/Engine';
 import Device from '../../../util/Device';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import SecureKeychain from '../../../core/SecureKeychain';
@@ -39,18 +38,16 @@ import {
 	SEED_PHRASE_HINTS,
 	BIOMETRY_CHOICE_DISABLED
 } from '../../../constants/storage';
-import { getPasswordStrengthWord, passwordRequirementsMet, MIN_PASSWORD_LENGTH } from '../../../util/password';
+import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import API from 'services/api';
 import Routes from 'common/routes';
 import * as sha3JS from 'js-sha3';
-
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
-import LoginWithKeycloak from '../LoginWithKeycloak';
-
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import TextField from '../../UI/TextField';
+import emojiRegex from 'emoji-regex';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -102,10 +99,20 @@ class ChoosePassword extends PureComponent {
 		loading: false,
 		error: null,
 		usePasswordAuth: true,
-		inputWidth: { width: '99%' }
+		inputWidth: { width: '99%' },
+		isValidPassword: true,
+		validatePassword: {
+			length: false,
+			textUpperCase: false,
+			textLowerCase: false,
+			number: false,
+			specialCharacter: false
+		},
+		isBlurPassword: false
 	};
 
 	mounted = true;
+	regex = emojiRegex();
 
 	confirmPasswordInput = React.createRef();
 	// Flag to know if password in keyring was set or not
@@ -391,12 +398,12 @@ class ChoosePassword extends PureComponent {
 
 	onPasswordChange = val => {
 		const passInfo = zxcvbn(val);
-
 		this.setState({ password: val, passwordStrength: passInfo.score });
+		this.checkValidPassword(val);
 	};
 
 	onUsernameChange = val => {
-		this.setState({ username: val });
+		this.setState({ username: val.replace(this.regex, '') });
 	};
 
 	toggleShowHide = () => {
@@ -458,6 +465,30 @@ class ChoosePassword extends PureComponent {
 		}
 	};
 
+	checkValidPassword(password) {
+		this.setState({
+			validatePassword: {
+				length: password.length >= 8,
+				textLowerCase: /[a-z]/.test(password),
+				textUpperCase: /[A-Z]/.test(password),
+				number: /[0-9]/.test(password),
+				specialCharacter: /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
+			}
+		});
+		if (
+			password.length < 8 ||
+			!/[a-z]/.test(password) ||
+			!/[A-Z]/.test(password) ||
+			!/[0-9]/.test(password) ||
+			!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
+		) {
+			this.setState({ isValidPassword: false });
+			return;
+		}
+		this.setState({ isValidPassword: true });
+		return;
+	}
+
 	render() {
 		const {
 			isSelected,
@@ -469,10 +500,13 @@ class ChoosePassword extends PureComponent {
 			secureTextEntry,
 			error,
 			loading,
-			usePasswordAuth
+			usePasswordAuth,
+			isValidPassword,
+			isBlurPassword,
+			validatePassword
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
-		const canSubmit = passwordsMatch && isSelected && username !== '';
+		const canSubmit = passwordsMatch && isValidPassword && isSelected && username !== '';
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 
@@ -561,18 +595,86 @@ class ChoosePassword extends PureComponent {
 													onSubmitEditing={this.jumpToConfirmPassword}
 													returnKeyType="next"
 													autoCapitalize="none"
+													onBlur={() => {
+														this.setState({ isBlurPassword: true });
+													}}
+													onFocus={() => {
+														this.setState({ isBlurPassword: false });
+													}}
 												/>
-												{(password !== '' && (
-													<Text style={styles.passwordStrengthLabel}>
-														{strings('choose_password.password_strength')}
-														<Text style={styles[`strength_${passwordStrengthWord}`]}>
-															{' '}
-															{strings(
-																`choose_password.strength_${passwordStrengthWord}`
-															)}
-														</Text>
+												<Text style={styles.passwordValidateTitle}>
+													{strings(`choose_password.password_validate_title`)}
+												</Text>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.length && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.length
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_1`)}
 													</Text>
-												)) || <Text style={styles.passwordStrengthLabel} />}
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.textLowerCase && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.textLowerCase
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_2`)}
+													</Text>
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.textUpperCase && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.textUpperCase
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_3`)}
+													</Text>
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.number && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.number
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_4`)}
+													</Text>
+												</View>
+												<View style={styles.passwordItemWrapper}>
+													{validatePassword.specialCharacter && (
+														<Icon style={styles.passwordItemIcon} name={'check'} />
+													)}
+													<Text
+														style={
+															isBlurPassword && !validatePassword.specialCharacter
+																? styles.passwordItemTextError
+																: styles.passwordItemText
+														}
+													>
+														{strings(`choose_password.password_validate_5`)}
+													</Text>
+												</View>
 											</View>
 											<View style={styles.field}>
 												<Text style={styles.hintLabel}>
@@ -596,11 +698,11 @@ class ChoosePassword extends PureComponent {
 														<Icon name="check" size={16} color={colors.green300} />
 													) : null}
 												</View>
-												<Text style={styles.passwordStrengthLabel}>
-													{strings('choose_password.must_be_at_least', {
-														number: MIN_PASSWORD_LENGTH
-													})}
-												</Text>
+												{isValidPassword && !!confirmPassword && !passwordsMatch && (
+													<Text style={styles.passwordStrengthLabel}>
+														{strings('choose_password.password_match')}
+													</Text>
+												)}
 											</View>
 											<TextField
 												value={username}

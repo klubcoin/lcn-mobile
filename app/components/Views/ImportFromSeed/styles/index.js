@@ -139,7 +139,12 @@ const styles = StyleSheet.create({
 		...fontStyles.normal,
 		fontSize: 16,
 		paddingTop: 2
-	}
+	},
+	passwordValidateTitle:{},
+	passwordItemWrapper:{},
+	passwordItemText:{},
+	passwordItemTextError:{},
+	passwordItemIcon:{},
 });
 
 export default assignNestedObj(styles, brandStyles);

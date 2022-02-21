@@ -6,22 +6,16 @@ import {
     ActivityIndicator,
     Text,
     View,
-    Dimensions,
     TouchableOpacity
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
-import DefaultTabBar from 'react-native-scrollable-tab-view/DefaultTabBar';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
-import AccountOverview from '../../UI/AccountOverview';
-import Tokens from '@UI/Tokens';
+import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { renderFromWei, weiToFiat, hexToBN } from '../../../util/number';
+import { weiToFiat, hexToBN } from '../../../util/number';
 import Engine from '../../../core/Engine';
-import CollectibleContracts from '../../UI/CollectibleContracts';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { getTicker } from '../../../util/transactions';
@@ -460,7 +454,7 @@ class Dashboard extends PureComponent {
                 >
                     {this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
                 </ScrollView>
-                {this.renderOnboardingWizard()}
+                {/* {this.renderOnboardingWizard()} */}
             </View>
         </ErrorBoundary>
     );

@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, View, Image } from 'react-native';
-import { inject, observer } from 'mobx-react';
+import { Text, View, Image } from 'react-native';
+import { observer } from 'mobx-react';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { fontStyles, colors } from '../../../styles/common';
 import StyledButton from '../../UI/StyledButton';
 import styles from './styles/index';
 

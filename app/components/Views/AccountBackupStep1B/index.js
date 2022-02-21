@@ -3,7 +3,7 @@ import { ScrollView, TouchableOpacity, Text, View, SafeAreaView, StyleSheet, Ima
 import PropTypes from 'prop-types';
 import routes from '../../../common/routes';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import StyledButton from '../../UI/StyledButton';
 import OnboardingProgress from '../../UI/OnboardingProgress';
 import { strings } from '../../../../locales/i18n';

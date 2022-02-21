@@ -60,6 +60,8 @@ import preferences from '../../../store/preferences';
 import RemoteImage from '../../Base/RemoteImage';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
+import AsyncStorage from '@react-native-community/async-storage';
+import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -72,7 +74,7 @@ const ICON_IMAGES = {
 	'selected-wallet': require('../../../images/selected-wallet-icon.png'),
 	'selected-partners': require('../../../images/ic_partners.png'),
 	dashboard: require('../../../images/dashboard.png'),
-	'selected-dashboard': require('../../../images/dashboard.png'),
+	'selected-dashboard': require('../../../images/dashboard.png')
 };
 
 /**
@@ -371,7 +373,7 @@ class DrawerView extends PureComponent {
 	showDashboard = () => {
 		this.props.navigation.navigate('Dashboard');
 		this.hideDrawer();
-	}
+	};
 
 	goToProfile = () => {
 		this.props.navigation.navigate('Profile');
@@ -410,7 +412,7 @@ class DrawerView extends PureComponent {
 	gotoTipper = () => {
 		this.props.navigation.navigate('TipperApp');
 		this.hideDrawer();
-	}
+	};
 
 	showSettings = async () => {
 		this.props.navigation.navigate('SettingsView');
@@ -421,7 +423,12 @@ class DrawerView extends PureComponent {
 	onLogout = async () => {
 		const { passwordSet, keycloakAuth } = this.props;
 		const { KeyringController } = Engine.context;
-		await SecureKeychain.resetGenericPassword();
+		const passcodeDisable = await AsyncStorage.getItem(PASSCODE_DISABLED);
+		const biometricDisable = await AsyncStorage.getItem(BIOMETRY_CHOICE_DISABLED);
+		if (passcodeDisable === TRUE && biometricDisable === TRUE) {
+			await SecureKeychain.resetGenericPassword();
+		}
+		// await SecureKeychain.resetGenericPassword();
 		await KeyringController.setLocked();
 		if (!passwordSet && !keycloakAuth) {
 			this.props.navigation.navigate('Onboarding');
@@ -446,7 +453,7 @@ class DrawerView extends PureComponent {
 		} = this.props;
 		const url = getEtherscanAddressUrl(network.provider.type, selectedAddress);
 		const etherscan_url = getEtherscanBaseUrl(network.provider.type).replace('https://', '');
-		this.goToBrowserUrl(Routes.mainNetWork.accountUrl, displayName);
+		this.goToBrowserUrl(Routes.mainNetWork.blockExploreUrl, displayName);
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_VIEW_ETHERSCAN);
 	};
 
@@ -467,12 +474,12 @@ class DrawerView extends PureComponent {
 		this.props.navigation.navigate('FAQ');
 		this.hideDrawer();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_FAQ);
-	}
+	};
 
 	goToCollect = () => {
 		this.props.navigation.navigate('Collect');
 		this.hideDrawer();
-	}
+	};
 
 	goToBrowserUrl(url, title) {
 		this.props.navigation.navigate('Webview', {
@@ -1057,7 +1064,7 @@ class DrawerView extends PureComponent {
 						ticker={ticker}
 					/>
 				</Modal>
-				{this.renderOnboardingWizard()}
+				{/* {this.renderOnboardingWizard()} */}
 				<Modal
 					isVisible={this.props.receiveModalVisible}
 					onBackdropPress={this.toggleReceiveModal}

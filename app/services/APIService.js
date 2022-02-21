@@ -19,8 +19,8 @@ export default class APIService {
 	static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-	static routePersistenceAPI = () => 'https://account.liquichain.io/meveo/api/rest/default/persistence/';
-	static routeMeveoAPI = () => 'https://account.liquichain.io/meveo';
+	static routePersistenceAPI = () => 'https://account2.liquichain.io/meveo/api/rest/default/persistence/';
+	static routeMeveoAPI = () => 'https://account2.liquichain.io/meveo';
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
 	static apiGetWalletContract = appWallet => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;
@@ -32,6 +32,7 @@ export default class APIService {
 	static apiMarketCategories = () => APIService.routePersistenceAPI() + `LiquimartProductCategory/list`;
 
 	static apiStoreReviews = () => APIService.routePersistenceAPI() + `LiquimartProductReview/list`;
+	static apiWebPageContents = () => APIService.routePersistenceAPI() + `WebPageContent/list`;
 
 	static apiGetPartnerList = () => APIService.routePersistenceAPI() + 'KlubCoinPartner';
 	static apiGetPartnerIcon = iconPath => APIService.routeMeveoAPI() + iconPath;
@@ -234,5 +235,24 @@ export default class APIService {
 	static getFAQs(callback) {
 		const data = { basicAuth };
 		WebService.sendGetDirect(this.apiFAQs(), data, callback);
+	}
+
+	static getWelcomeContent(callback) {
+		const data = {
+			basicAuth,
+			firstRow: 0,
+			numberOfRows: 1,
+			filters: { code: 'welcome' }
+		};
+		WebService.sendPostDirect(this.apiWebPageContents(), data, callback);
+	}
+
+	static getOnboardingContent(callback) {
+		const data = {
+			basicAuth,
+			firstRow: 0,
+			filters: { code: ['onboarding-1', 'onboarding-2', 'onboarding-3'] }
+		};
+		WebService.sendPostDirect(this.apiWebPageContents(), data, callback);
 	}
 }
