@@ -204,8 +204,6 @@
 		"password_validate_3": "At least an alphabet in upper case",
 		"password_validate_4": "At least a number",
 		"password_validate_5": "At least a special character"
-
-
 	},
 	"profile": {
 		"firstname": "Firstname",
@@ -229,7 +227,6 @@
 		"grant_permission_camera_notification": "The app has been denied camera access, please grant access!",
 		"grant_permission_gallery_notification": "The app has been denied gallery access, please grant access!",
 		"take_a_picture": "Take a Picture"
-
 	},
 	"confirm_profile": {
 		"confirm_profile_message": "Identity Confirmation",
@@ -1984,5 +1981,14 @@
 		"tip": "Tip",
 		"current_balance": "Your current balance: {{balance}}",
 		"tip_through_qr": "Get a tip through QR code"
+	},
+	"paypal_checkout": {
+		"buy_crypto": "Buy Crypto to your wallet",
+		"using_payment_method": "Using payment method",
+		"paypal": "PayPal",
+		"see_calculation": "See calculation",
+		"receive_estimate": "Receive(estimate)",
+		"you_pay": "You pay",
+		"proceed_checkout": "Proceed Checkout"
 	}
 }

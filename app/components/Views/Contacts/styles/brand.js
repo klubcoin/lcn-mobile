@@ -13,7 +13,8 @@ const brandStyles = StyleSheet.create({
 		flex: 1,
 		height: 30,
 		...fontStyles.normal,
-		padding: 0
+		padding: 0,
+		color:colors.white
 	},
 });
 

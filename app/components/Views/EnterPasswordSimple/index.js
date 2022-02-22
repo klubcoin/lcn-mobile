@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		padding: 10,
 		backgroundColor: colors.purple,
-		marginBottom: 30
+		marginBottom: 30,
+		color:colors.white
 	},
 	ctaWrapper: {
 		marginTop: 10
