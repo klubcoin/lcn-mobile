@@ -62,6 +62,7 @@ import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import AsyncStorage from '@react-native-community/async-storage';
 import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
+import * as RNFS from 'react-native-fs';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -199,7 +200,9 @@ class DrawerView extends PureComponent {
 	};
 
 	state = {
-		showProtectWalletModal: undefined
+		showProtectWalletModal: undefined,
+		file: '',
+		time: new Date()
 	};
 
 	browserSectionRef = React.createRef();
@@ -209,7 +212,6 @@ class DrawerView extends PureComponent {
 	processedNewBalance = false;
 	animatingNetworksModal = false;
 	animatingAccountsModal = false;
-	time = new Date();
 
 	isCurrentAccountImported() {
 		let ret = false;
@@ -226,6 +228,14 @@ class DrawerView extends PureComponent {
 	}
 
 	componentDidUpdate() {
+		RNFS.readFile(this.props?.onboardProfile?.avatar, 'base64').then(file => {
+			if (file !== this.state.file) {
+				this.setState({
+					file,
+					time: new Date()
+				});
+			}
+		});
 		const route = findRouteNameFromNavigatorState(this.props.navigation.state);
 		if (!this.props.passwordSet || !this.props.seedphraseBackedUp) {
 			const bottomTab = findBottomTabRouteNameFromNavigatorState(this.props.navigation.state);
@@ -877,7 +887,7 @@ class DrawerView extends PureComponent {
 									<View style={styles.identiconBorder}>
 										{!!avatar ? (
 											<RemoteImage
-												source={{ uri: `file://${avatar}?v=${this.time.getTime()}` }}
+												source={{ uri: `file://${avatar}?v=${this.state.time.getTime()}` }}
 												style={styles.avatar}
 											/>
 										) : (

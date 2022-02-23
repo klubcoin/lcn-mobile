@@ -55,6 +55,7 @@ class EditProfile extends PureComponent {
 	notiPermissionCamera = false;
 	notiMessage = '';
 	regex = emojiRegex();
+	time = new Date();
 
 	constructor(props) {
 		super(props);
@@ -70,7 +71,8 @@ class EditProfile extends PureComponent {
 			showCountryCodePicker: observable,
 			countryCode: observable,
 			notiPermissionCamera: observable,
-			notiMessage: observable
+			notiMessage: observable,
+			time: observable
 		});
 	}
 
@@ -298,6 +300,7 @@ class EditProfile extends PureComponent {
 				if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
 				await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
 				this.avatar = path;
+				this.time = new Date();
 			}
 
 			const name = `${firstname} ${lastname}`;
@@ -353,7 +356,11 @@ class EditProfile extends PureComponent {
 								onPress={() => this.onOpenModal()}
 							>
 								<RemoteImage
-									source={this.avatar ? { uri: `file://${this.avatar}` } : drawables.avatar_user}
+									source={
+										this.avatar
+											? { uri: `file://${this.avatar}?v=${this.time.getTime()}` }
+											: drawables.avatar_user
+									}
 									style={styles.avatar}
 								/>
 							</TouchableOpacity>
