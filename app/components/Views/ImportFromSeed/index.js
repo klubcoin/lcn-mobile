@@ -38,6 +38,8 @@ import Api from '../../../services/api';
 import routes from '../../../common/routes';
 import * as sha3JS from 'js-sha3';
 import preferences from '../../../store/preferences';
+import NetInfo from '@react-native-community/netinfo';
+import { showError } from '../../../util/notify';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -95,7 +97,8 @@ class ImportFromSeed extends PureComponent {
 			number: false,
 			specialCharacter: false
 		},
-		isBlurPassword: false
+		isBlurPassword: false,
+		internetConnect: true
 	};
 
 	passwordInput = React.createRef();
@@ -115,9 +118,24 @@ class ImportFromSeed extends PureComponent {
 		setTimeout(() => {
 			this.setState({ inputWidth: { width: '100%' } });
 		}, 100);
+		unsubscribe = NetInfo.addEventListener(state => {
+			this.setState({
+				internetConnect: state.isConnected
+			});
+		});
 	}
 
-	async sendAccount(selectedAddress) {
+	cleanUser = async () => {
+		try {
+			preferences.setOnboardProfile(null);
+			await AsyncStorage.removeItem(EXISTING_USER);
+			this.setState({ loading: false });
+		} catch (error) {
+			Logger.log(error, `Failed to remove key: ${EXISTING_USER} from AsyncStorage`);
+		}
+	};
+
+	async sendAccount(selectedAddress, metricsOptIn, onboardingWizard) {
 		if (selectedAddress == null) {
 			return;
 		}
@@ -126,6 +144,7 @@ class ImportFromSeed extends PureComponent {
 		const email = '';
 		const phone = '';
 		const avatarb64 = '';
+		// const username = '';
 		const username = selectedAddress;
 		const name = `${firstname} ${lastname}`;
 		const publicInfo = JSON.stringify({ email, phone, name });
@@ -135,7 +154,12 @@ class ImportFromSeed extends PureComponent {
 			routes.walletCreation,
 			params,
 			response => {
-				console.log('account creation', response);
+				if (response.result) {
+					this.continueImport(metricsOptIn, onboardingWizard);
+				} else {
+					this.cleanUser();
+					showError(strings('import_from_seed.import_wallet_wrong'));
+				}
 			},
 			error => {
 				console.log('error account', error);
@@ -143,7 +167,7 @@ class ImportFromSeed extends PureComponent {
 		);
 	}
 
-	async getAccountInfo(selectedAddress) {
+	async getAccountInfo(selectedAddress, metricsOptIn, onboardingWizard) {
 		const address = selectedAddress.slice(2, selectedAddress.length);
 		Api.postRequest(
 			routes.walletInfo,
@@ -163,18 +187,38 @@ class ImportFromSeed extends PureComponent {
 						email,
 						phone
 					});
+					this.continueImport(metricsOptIn, onboardingWizard);
 				} else {
-					this.sendAccount(selectedAddress);
+					this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
 				}
 			},
 			error => reject(error)
 		);
 	}
 
+	continueImport = async (metricsOptIn, onboardingWizard) => {
+		this.setState({ loading: false });
+		this.props.passwordSet();
+		this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
+		this.props.seedphraseBackedUp();
+		if (!metricsOptIn) {
+			this.props.navigation.navigate('OptinMetrics');
+		} else if (onboardingWizard) {
+			this.props.navigation.navigate('ManualBackupStep3');
+		} else {
+			this.props.setOnboardingWizardStep(1);
+			this.props.navigation.navigate('Dashboard');
+		}
+		await importAdditionalAccounts();
+	};
+
 	onPressImport = async () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
 		const { loading, seed, password, confirmPassword } = this.state;
 		const parsedSeed = parseSeedPhrase(seed);
-
 		if (loading) return;
 		let error = null;
 		if (!passwordRequirementsMet(password)) {
@@ -214,22 +258,7 @@ class ImportFromSeed extends PureComponent {
 				// mark the user as existing so it doesn't see the create password screen again
 				await AsyncStorage.setItem(EXISTING_USER, TRUE);
 				await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
-				await this.getAccountInfo(address[0]);
-				setTimeout(async () => {
-					this.setState({ loading: false });
-					this.props.passwordSet();
-					this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
-					this.props.seedphraseBackedUp();
-					if (!metricsOptIn) {
-						this.props.navigation.navigate('OptinMetrics');
-					} else if (onboardingWizard) {
-						this.props.navigation.navigate('ManualBackupStep3');
-					} else {
-						this.props.setOnboardingWizardStep(1);
-						this.props.navigation.navigate('Dashboard');
-					}
-					await importAdditionalAccounts();
-				}, 10000);
+				await this.getAccountInfo(address[0], metricsOptIn, onboardingWizard);
 			} catch (error) {
 				// Should we force people to enable passcode / biometrics?
 				if (error.toString() === PASSCODE_NOT_SET_ERROR) {

@@ -283,7 +283,9 @@
 		"invalid_seed_phrase": "Invalid Secret Recovery Phrase",
 		"error": "Error",
 		"invalid_qr_code_title": "Invalid QR Code",
-		"invalid_qr_code_message": "This QR code doesn't represent a valid Secret Recovery Phrase"
+		"invalid_qr_code_message": "This QR code doesn't represent a valid Secret Recovery Phrase",
+		"internet_warning": "Please connect internet for continue!",
+		"import_wallet_wrong": "Something were wrong! Please try again."
 	},
 	"bottom_tab_bar": {
 		"dapps": "ÐApps",
@@ -1991,7 +1993,7 @@
 		"you_pay": "You pay",
 		"proceed_checkout": "Proceed Checkout"
 	},
-	"lock_modal":{
-		"title":"Authentication for continue!"
+	"lock_modal": {
+		"title": "Authentication for continue!"
 	}
 }
