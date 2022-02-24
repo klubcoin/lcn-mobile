@@ -1990,5 +1990,8 @@
 		"receive_estimate": "Receive(estimate)",
 		"you_pay": "You pay",
 		"proceed_checkout": "Proceed Checkout"
+	},
+	"lock_modal":{
+		"title":"Authentication for continue!"
 	}
 }
