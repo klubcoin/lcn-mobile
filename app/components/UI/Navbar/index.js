@@ -570,18 +570,18 @@ export function getOfflineModalNavbar(navigation) {
 			backgroundColor: colors.white,
 			borderBottomWidth: 0
 		},
-		headerLeft: Device.isAndroid() ? (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
-			</TouchableOpacity>
-		) : null,
-		headerRight: Device.isIos() ? (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<Icon name={'times'} size={16} style={styles.backIcon} />
-			</TouchableOpacity>
-		) : null
+		// headerLeft: Device.isAndroid() ? (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+		// 		<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+		// 	</TouchableOpacity>
+		// ) : null,
+		// headerRight: Device.isIos() ? (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+		// 		<Icon name={'times'} size={16} style={styles.backIcon} />
+		// 	</TouchableOpacity>
+		// ) : null
 	};
 }
 
