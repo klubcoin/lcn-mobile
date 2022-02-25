@@ -144,7 +144,6 @@ class ImportFromSeed extends PureComponent {
 		const email = '';
 		const phone = '';
 		const avatarb64 = '';
-		// const username = '';
 		const username = selectedAddress;
 		const name = `${firstname} ${lastname}`;
 		const publicInfo = JSON.stringify({ email, phone, name });
@@ -162,7 +161,8 @@ class ImportFromSeed extends PureComponent {
 				}
 			},
 			error => {
-				console.log('error account', error);
+				this.cleanUser();
+				showError(strings('import_from_seed.import_wallet_wrong'));``
 			}
 		);
 	}
@@ -192,7 +192,10 @@ class ImportFromSeed extends PureComponent {
 					this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
 				}
 			},
-			error => reject(error)
+			error => {
+				console.log(error);
+				this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
+			}
 		);
 	}
 
