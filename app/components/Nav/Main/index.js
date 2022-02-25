@@ -8,10 +8,8 @@ import {
 	Alert,
 	InteractionManager,
 	PushNotificationIOS, // eslint-disable-line react-native/split-platform-components
-	DeviceEventEmitter,
 	PanResponder,
 	Text,
-	TextInput,
 	TouchableOpacity
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
@@ -110,7 +108,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
-import { recreateVaultWithSamePassword } from '../../../core/Vault';
+import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -159,8 +157,7 @@ const styles = StyleSheet.create({
 	},
 	passwordInput: {
 		flex: 1,
-		color: colors.white,
-		paddingHorizontal: 12
+		color: colors.white
 	},
 	biometricButton: {
 		backgroundColor: colors.purple,
@@ -168,12 +165,17 @@ const styles = StyleSheet.create({
 		height: 40,
 		borderRadius: 12,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		marginBottom: -8
 	},
-	button: {
-		marginTop: 12
-	},
-	biometricIcon: {}
+	button: {},
+	biometricIcon: {},
+	inputContainer: {
+		width: '100%',
+		paddingHorizontal: 15,
+		borderRadius: 15,
+		backgroundColor: colors.purple
+	}
 });
 const Main = props => {
 	const [friendMessage, setFriendMessage] = useState(null);
@@ -727,29 +729,30 @@ const Main = props => {
 				<Text style={styles.lockModalTitle}>{strings('lock_modal.title')}</Text>
 				<View style={styles.passwordWrapper}>
 					<Text style={styles.passwordTitle}>{strings('login.password')}</Text>
-					<View style={styles.passwordInputWrapper}>
-						<TextInput
-							style={styles.passwordInput}
-							secureTextEntry={true}
-							autoCapitalize="none"
-							value={password}
-							onChangeText={text => {
-								setPassword(text);
-								setPasswordErrorString('');
-							}}
-							ref={passwordRef}
-						/>
-						{lockType.biometric && (
-							<TouchableOpacity style={styles.biometricButton} onPress={tryBiometric}>
-								<MaterialIcon
-									color={colors.white}
-									style={styles.biometricIcon}
-									size={28}
-									name="fingerprint"
-								/>
-							</TouchableOpacity>
-						)}
-					</View>
+					<OutlinedTextField
+						inputContainerStyle={styles.inputContainer}
+						style={styles.passwordInput}
+						secureTextEntry={true}
+						autoCapitalize="none"
+						value={password}
+						onChangeText={text => {
+							setPassword(text);
+							setPasswordErrorString('');
+						}}
+						ref={passwordRef}
+						renderRightAccessory={() =>
+							lockType.biometric && (
+								<TouchableOpacity style={styles.biometricButton} onPress={tryBiometric}>
+									<MaterialIcon
+										color={colors.white}
+										style={styles.biometricIcon}
+										size={28}
+										name="fingerprint"
+									/>
+								</TouchableOpacity>
+							)
+						}
+					/>
 					{!!passwordErrorString && <Text style={styles.passwordError}>{passwordErrorString}</Text>}
 					<View style={styles.button}>
 						<StyledButton type={'normal-padding'} onPress={() => onLogin(password)}>
