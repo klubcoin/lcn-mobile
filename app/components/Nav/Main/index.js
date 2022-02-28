@@ -259,12 +259,14 @@ const Main = props => {
 	}, []);
 
 	useEffect(() => {
-		const timeout = setTimeout(() => {
-			setLock(true);
-			setPasswordErrorString('');
-		}, props.lockTime);
-		return () => clearTimeout(timeout);
-	}, [activeTime]);
+		if (props.lockTime >= 0) {
+			const timeout = setTimeout(() => {
+				setLock(true);
+				setPasswordErrorString('');
+			}, props.lockTime + 5000);
+			return () => clearTimeout(timeout);
+		}
+	}, [activeTime, props.lockTime]);
 
 	const usePrevious = value => {
 		const ref = useRef();
