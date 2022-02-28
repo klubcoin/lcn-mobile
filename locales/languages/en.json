@@ -138,6 +138,7 @@
 		"reset_wallet": "Reset Wallet",
 		"cant_proceed": "You can’t proceed till you type the word ‘Delete’. With this action you are opting in to erase your current wallet.",
 		"invalid_password": "Invalid password",
+		"invalid_email_or_password": "Invalid email or password",
 		"type_delete": "Type ‘delete’ to erase current wallet permanently",
 		"delete_my": "Delete my wallet",
 		"are_you_sure": "Are you sure you want to erase your wallet?",

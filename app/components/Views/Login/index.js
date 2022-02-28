@@ -162,12 +162,12 @@ class Login extends PureComponent {
 
 		const isEmailValid = email.trim().toLowerCase() === onboardEmail;
 		if (!isEmailValid) {
-			this.setState({ error: strings('profile.invalid_email') });
+			this.setState({ error: strings('login.invalid_email_or_password') });
 			return;
 		}
 
 		const locked = !passwordRequirementsMet(password);
-		if (locked) this.setState({ error: strings('login.invalid_password') });
+		if (locked) this.setState({ error: strings('login.invalid_email_or_password') });
 		if (this.state.loading || locked) return;
 		this.handleLogin(password);
 	};
@@ -213,7 +213,7 @@ class Login extends PureComponent {
 				toLowerCaseCompare(error, WRONG_PASSWORD_ERROR) ||
 				toLowerCaseCompare(error, WRONG_PASSWORD_ERROR_ANDROID)
 			) {
-				this.setState({ loading: false, error: strings('login.invalid_password') });
+				this.setState({ loading: false, error: strings('login.invalid_email_or_password') });
 
 				trackErrorAsAnalytics('Login: Invalid Password', error);
 
