@@ -1995,5 +1995,11 @@
 	},
 	"lock_modal": {
 		"title": "Authentication for continue!"
+	},
+	"verify_otp": {
+		"title": "Verification",
+		"verify_otp": "Verify OTP Code send on",
+		"resend_code": "Resend code",
+		"verify": "Verify"
 	}
 }
