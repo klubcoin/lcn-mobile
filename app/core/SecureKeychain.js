@@ -70,6 +70,7 @@ export default {
 		const options = { service: defaultOptions.service };
 		await AsyncStorage.removeItem(BIOMETRY_CHOICE);
 		await AsyncStorage.removeItem(PASSCODE_CHOICE);
+		await AsyncStorage.removeItem(PASSCODE_DISABLED);
 		return Keychain.resetGenericPassword(options);
 	},
 

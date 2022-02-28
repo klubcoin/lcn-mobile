@@ -202,7 +202,7 @@ export function getPaymentRequestSuccessOptionsTitle(navigation, title) {
 			shadowColor: colors.transparent,
 			elevation: 0,
 			backgroundColor: colors.white,
-			borderBottomWidth: 0,
+			borderBottomWidth: 0
 		},
 		headerTintColor: colors.blue,
 		headerLeft: <View />,
@@ -308,7 +308,7 @@ export function getSendFlowTitle(title, navigation, screenProps) {
 	return {
 		headerTitle: <NavbarTitle title={titleToRender} disableNetwork />,
 		headerRight: (
-			<View></View>
+			<View />
 			// eslint-disable-next-line react/jsx-no-bind
 			// <TouchableOpacity onPress={rightAction} style={styles.closeButton} testID={'send-cancel-button'}>
 			// 	<Text style={[styles.closeButtonText, brandStyles.closeButtonText]}>{strings('transaction.cancel')}</Text>
@@ -570,18 +570,18 @@ export function getOfflineModalNavbar(navigation) {
 			backgroundColor: colors.white,
 			borderBottomWidth: 0
 		},
-		headerLeft: Device.isAndroid() ? (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
-			</TouchableOpacity>
-		) : null,
-		headerRight: Device.isIos() ? (
-			// eslint-disable-next-line react/jsx-no-bind
-			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-				<Icon name={'times'} size={16} style={styles.backIcon} />
-			</TouchableOpacity>
-		) : null
+		// headerLeft: Device.isAndroid() ? (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+		// 		<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+		// 	</TouchableOpacity>
+		// ) : null,
+		// headerRight: Device.isIos() ? (
+		// 	// eslint-disable-next-line react/jsx-no-bind
+		// 	<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+		// 		<Icon name={'times'} size={16} style={styles.backIcon} />
+		// 	</TouchableOpacity>
+		// ) : null
 	};
 }
 
@@ -649,7 +649,7 @@ export function getWalletNavbarOptions(title, navigation) {
 			</TouchableOpacity>
 		),
 		headerRight: (
-			<View></View>
+			<View />
 			// <TouchableOpacity
 			// 	style={styles.infoButton}
 			// 	// eslint-disable-next-line
@@ -657,7 +657,7 @@ export function getWalletNavbarOptions(title, navigation) {
 			// >
 			// 	<AntIcon name="scan1" size={28} style={styles.infoIcon} />
 			// </TouchableOpacity>
-		),
+		)
 	};
 }
 
@@ -748,7 +748,7 @@ export function getPayPalNavbar(navigation) {
 		headerTitle: <Text style={styles.centeredTitle}>PayPal Checkout</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} color={colors.white} />
+				<Icon name={'arrow-left'} size={16} color={colors.black} />
 			</TouchableOpacity>
 		),
 		// headerRight: (
@@ -758,7 +758,7 @@ export function getPayPalNavbar(navigation) {
 		// 	</TouchableOpacity>
 		// ),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.white
 		}
 	};
 }
@@ -778,7 +778,7 @@ export function getPurchaseMethodNavbar(navigation) {
 			// <TouchableOpacity onPress={rightAction} style={styles.closeButton}>
 			// 	<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
 			// </TouchableOpacity>
-			<View></View>
+			<View />
 		),
 		headerStyle: {
 			backgroundColor: colors.white

@@ -1,6 +1,6 @@
 'use strict';
-import React from 'react';
-import { SafeAreaView, Image, View, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { SafeAreaView, Image, View, StyleSheet, BackHandler } from 'react-native';
 import Text from '../../Base/Text';
 import NetInfo from '@react-native-community/netinfo';
 import { baseStyles, colors, fontStyles } from '../../../styles/common';
@@ -59,6 +59,14 @@ const OfflineMode = ({ navigation, infuraBlocked }) => {
 
 	const learnMore = () => {
 		navigation.navigate('SimpleWebview', { url: AppConstants.URLS.CONNECTIVITY_ISSUES });
+	};
+
+	useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', () => onBack());
+	}, []);
+
+	const onBack = () => {
+		return true;
 	};
 
 	const action = () => {

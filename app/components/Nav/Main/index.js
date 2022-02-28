@@ -8,7 +8,9 @@ import {
 	Alert,
 	InteractionManager,
 	PushNotificationIOS, // eslint-disable-line react-native/split-platform-components
-	DeviceEventEmitter
+	PanResponder,
+	Text,
+	TouchableOpacity
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import PropTypes from 'prop-types';
@@ -89,9 +91,24 @@ import EncryptionWebRTC from '../../../services/EncryptionWebRTC';
 import store from '../../Views/MarketPlace/store';
 import StoreService, { setStoreService } from '../../Views/MarketPlace/store/StoreService';
 import ChatService, { setChatService } from '../../Views/Message/store/ChatService';
-import messageStore from '../../Views/Message/store'
+import messageStore from '../../Views/Message/store';
 import FileTransferService, { setFileTransferService } from '../../Views/FilesManager/store/FileTransferService';
 import TipperModal from '../../Views/Tipper/TipperModal';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import StyledButton from '../../UI/StyledButton';
+import SecureKeychain from '../../../core/SecureKeychain';
+import { passwordRequirementsMet } from '../../../util/password';
+import {
+	BIOMETRY_CHOICE,
+	BIOMETRY_CHOICE_DISABLED,
+	PASSCODE_CHOICE,
+	PASSCODE_DISABLED,
+	TRUE
+} from '../../../constants/storage';
+import AsyncStorage from '@react-native-community/async-storage';
+import { toLowerCaseCompare } from '../../../util/general';
+import { displayName } from '../../../../app.json';
+import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -107,6 +124,57 @@ const styles = StyleSheet.create({
 	bottomModal: {
 		justifyContent: 'flex-end',
 		margin: 0
+	},
+	lockModal: {
+		backgroundColor: colors.transparent,
+		alignItems: 'center'
+	},
+	lockModalContent: {
+		width: '100%',
+		paddingHorizontal: 12
+	},
+	lockModalTitle: {
+		color: colors.white,
+		fontSize: 20,
+		alignSelf: 'center'
+	},
+	passwordWrapper: {},
+	passwordTitle: {
+		color: colors.white,
+		marginTop: 40,
+		marginBottom: 12
+	},
+	passwordInputWrapper: {
+		backgroundColor: colors.purple,
+		borderRadius: 12,
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 12
+	},
+	passwordError: {
+		color: colors.red,
+		marginBottom: 12
+	},
+	passwordInput: {
+		flex: 1,
+		color: colors.white
+	},
+	biometricButton: {
+		backgroundColor: colors.purple,
+		width: 40,
+		height: 40,
+		borderRadius: 12,
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginBottom: -8
+	},
+	button: {},
+	biometricIcon: {},
+	inputContainer: {
+		width: '100%',
+		paddingHorizontal: 15,
+		borderRadius: 15,
+		backgroundColor: colors.purple
 	}
 });
 const Main = props => {
@@ -125,9 +193,16 @@ const Main = props => {
 	const [currentPageTitle, setCurrentPageTitle] = useState('');
 	const [currentPageUrl, setCurrentPageUrl] = useState('');
 	const [currentPageIcon, setCurrentPageIcon] = useState('');
-
+	const [panResponder, setPanResponder] = useState({});
 	const [showRemindLaterModal, setShowRemindLaterModal] = useState(false);
 	const [skipCheckbox, setSkipCheckbox] = useState(false);
+	const [lock, setLock] = useState(false);
+	const [activeTime, setActiveTime] = useState(new Date());
+	const [password, setPassword] = useState('');
+	const [passwordErrorString, setPasswordErrorString] = useState('');
+	const [lockType, setLockType] = useState({ biometric: false, passcode: false });
+
+	const passwordRef = useRef();
 
 	const backgroundMode = useRef(false);
 	const locale = useRef(I18n.locale);
@@ -138,6 +213,58 @@ const Main = props => {
 	const toggleApproveModal = props.toggleApproveModal;
 	const toggleDappTransactionModal = props.toggleDappTransactionModal;
 	const setEtherTransaction = props.setEtherTransaction;
+
+	const WRONG_PASSWORD_ERROR = strings('login.wrong_password_error');
+	const WRONG_PASSWORD_ERROR_ANDROID = strings('login.wrong_password_error_android');
+	const VAULT_ERROR = strings('login.vault_error');
+
+	const checkLockType = async () => {
+		const passcodeDisable = await AsyncStorage.getItem(PASSCODE_DISABLED);
+		const biometricDisable = await AsyncStorage.getItem(BIOMETRY_CHOICE_DISABLED);
+		const passcode = await AsyncStorage.getItem(PASSCODE_CHOICE);
+		const biometric = await AsyncStorage.getItem(BIOMETRY_CHOICE);
+		setLockType({
+			passcode: !(passcodeDisable === TRUE) && !(passcode === TRUE),
+			biometric: biometric === TRUE
+		});
+	};
+
+	useEffect(() => {
+		checkLockType();
+	}, [lock]);
+
+	useEffect(() => {
+		setPanResponder(
+			PanResponder.create({
+				onStartShouldSetPanResponder: () => {
+					setActiveTime(new Date());
+				},
+				onMoveShouldSetPanResponder: () => {
+					setActiveTime(new Date());
+				},
+				onStartShouldSetPanResponderCapture: () => {
+					setActiveTime(new Date());
+				},
+				onMoveShouldSetPanResponderCapture: () => {
+					setActiveTime(new Date());
+				},
+				onPanResponderTerminationRequest: () => {
+					setActiveTime(new Date());
+				},
+				onShouldBlockNativeResponder: () => {
+					setActiveTime(new Date());
+				}
+			})
+		);
+	}, []);
+
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setLock(true);
+			setPasswordErrorString('');
+		}, props.lockTime);
+		return () => clearTimeout(timeout);
+	}, [activeTime]);
 
 	const usePrevious = value => {
 		const ref = useRef();
@@ -436,6 +563,17 @@ const Main = props => {
 
 	const handleAppStateChange = useCallback(
 		appState => {
+			let lockTimer = null;
+			setActiveTime(new Date());
+			if (appState !== 'active') {
+				// Auto-lock immediately
+				lockTimer = BackgroundTimer.setTimeout(() => {
+					setLock(false);
+				}, props.lockTime);
+			}
+			if (appState === 'active') {
+				return lockTimer && BackgroundTimer.clearTimeout(lockTimer);
+			}
 			const newModeIsBackground = appState === 'background';
 			// If it was in background and it's not anymore
 			// we need to stop the Background timer
@@ -521,6 +659,108 @@ const Main = props => {
 					showExpandedMessage={showExpandedMessage}
 				/>
 			)}
+		</Modal>
+	);
+
+	const handleLogin = async password => {
+		try {
+			const { KeyringController } = Engine.context;
+
+			await KeyringController.submitPassword(password);
+			setPassword('');
+			setActiveTime(new Date());
+			setPasswordErrorString('');
+			setLock(false);
+		} catch (e) {
+			const error = e.toString();
+			if (
+				toLowerCaseCompare(error, WRONG_PASSWORD_ERROR) ||
+				toLowerCaseCompare(error, WRONG_PASSWORD_ERROR_ANDROID)
+			) {
+				setPasswordErrorString(strings('login.invalid_password'));
+				return;
+			} else if (toLowerCaseCompare(error, VAULT_ERROR)) {
+				setPasswordErrorString(strings('login.clean_vault_error', { appName: displayName }));
+			} else {
+				setPasswordErrorString(error);
+			}
+		}
+	};
+
+	const onLogin = async (usePassword = '') => {
+		passwordRef?.current?.blur();
+		const locked = !passwordRequirementsMet(usePassword);
+		if (locked) setPasswordErrorString(strings('login.invalid_password'));
+		handleLogin(usePassword);
+	};
+
+	const tryBiometric = async e => {
+		passwordRef?.current?.blur();
+		if (e) e?.preventDefault();
+		try {
+			const credentials = await SecureKeychain.getGenericPassword();
+			if (!credentials) return false;
+			setPassword(credentials.password);
+			setTimeout(() => {
+				onLogin();
+			}, 1000);
+			onLogin(credentials.password);
+		} catch (error) {}
+		return true;
+	};
+
+	const renderLockModal = () => (
+		<Modal
+			isVisible={lock}
+			animationIn="shake"
+			animationOut="fadeOut"
+			style={styles.lockModal}
+			backdropColor={colors.primaryFox}
+			backdropOpacity={1}
+			animationInTiming={600}
+			animationOutTiming={600}
+			onBackdropPress={onSignAction}
+			onBackButtonPress={showExpandedMessage ? toggleExpandedMessage : onSignAction}
+			onSwipeComplete={onSignAction}
+			swipeDirection={'down'}
+			propagateSwipe
+		>
+			<View style={styles.lockModalContent}>
+				<Text style={styles.lockModalTitle}>{strings('lock_modal.title')}</Text>
+				<View style={styles.passwordWrapper}>
+					<Text style={styles.passwordTitle}>{strings('login.password')}</Text>
+					<OutlinedTextField
+						inputContainerStyle={styles.inputContainer}
+						style={styles.passwordInput}
+						secureTextEntry={true}
+						autoCapitalize="none"
+						value={password}
+						onChangeText={text => {
+							setPassword(text);
+							setPasswordErrorString('');
+						}}
+						ref={passwordRef}
+						renderRightAccessory={() =>
+							lockType.biometric && (
+								<TouchableOpacity style={styles.biometricButton} onPress={tryBiometric}>
+									<MaterialIcon
+										color={colors.white}
+										style={styles.biometricIcon}
+										size={28}
+										name="fingerprint"
+									/>
+								</TouchableOpacity>
+							)
+						}
+					/>
+					{!!passwordErrorString && <Text style={styles.passwordError}>{passwordErrorString}</Text>}
+					<View style={styles.button}>
+						<StyledButton type={'normal-padding'} onPress={() => onLogin(password)}>
+							{strings('login.login_button')}
+						</StyledButton>
+					</View>
+				</View>
+			</View>
 		</Modal>
 	);
 
@@ -636,7 +876,7 @@ const Main = props => {
 		}
 		// request if not yet exists
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, (data) => {
+		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, data => {
 			if (!data.profile) return true;
 			Object.assign(message.data, data.profile, { address });
 			setFriendMessage(message);
@@ -664,26 +904,26 @@ const Main = props => {
 		return { privateKey, publicKey };
 	};
 
-	initializeServices = async (address) => {
+	const initializeServices = async address => {
 		const apps = await preferences.getSavedAppList();
 		const marketApp = apps.find(app => app.instance.name == 'Liquimart');
 		// if (marketApp) {
-			await store.load();
-			const storeService = new StoreService(address);
-			setStoreService(storeService);
-			storeService.announceToTracker();
+		await store.load();
+		const storeService = new StoreService(address);
+		setStoreService(storeService);
+		storeService.announceToTracker();
 		// }
 
 		const chatApp = apps.find(app => app.instance.name == 'Liquichat');
 		// if (chatApp) {
-			await messageStore.load();
-			const chatService = new ChatService(address);
-			setChatService(chatService);
+		await messageStore.load();
+		const chatService = new ChatService(address);
+		setChatService(chatService);
 		// }
 
 		const fileService = new FileTransferService(address);
 		setFileTransferService(fileService);
-	}
+	};
 
 	// Remove all notifications that aren't visible
 	useEffect(
@@ -886,20 +1126,22 @@ const Main = props => {
 		const { tipperModalData, showTipperModal } = props;
 
 		return (
-			tipperModalData && <TipperModal
-				visible={!!tipperModalData}
-				hideModal={() => showTipperModal(null)}
-				title={strings('contacts.friend_request')}
-				confirmLabel={strings('tipper.tip')}
-				cancelLabel={strings('contacts.reject')}
-				data={tipperModalData}
-			/>
+			tipperModalData && (
+				<TipperModal
+					visible={!!tipperModalData}
+					hideModal={() => showTipperModal(null)}
+					title={strings('contacts.friend_request')}
+					confirmLabel={strings('tipper.tip')}
+					cancelLabel={strings('contacts.reject')}
+					data={tipperModalData}
+				/>
+			)
 		);
 	};
 
 	return (
 		<React.Fragment>
-			<View style={styles.flex}>
+			<View style={styles.flex} {...panResponder.panHandlers}>
 				{!forceReload ? (
 					<MainNavigator
 						navigation={props.navigation}
@@ -933,6 +1175,7 @@ const Main = props => {
 			{renderAcceptedFriendNameCard()}
 			{renderConfirmOtherIdentity()}
 			{renderTipperModal()}
+			{(lockType.passcode || lockType.biometric) && renderLockModal()}
 		</React.Fragment>
 	);
 };
@@ -983,20 +1226,20 @@ Main.propTypes = {
 	 */
 	thirdPartyApiMode: PropTypes.bool,
 	/**
-	/* Hides or shows dApp transaction modal
-	*/
+    /* Hides or shows dApp transaction modal
+    */
 	toggleDappTransactionModal: PropTypes.func,
 	/**
-	/* Hides or shows approve modal
-	*/
+    /* Hides or shows approve modal
+    */
 	toggleApproveModal: PropTypes.func,
 	/**
-	/* dApp transaction modal visible or not
-	*/
+    /* dApp transaction modal visible or not
+    */
 	dappTransactionModalVisible: PropTypes.bool,
 	/**
-	/* Token approve modal visible or not
-	*/
+    /* Token approve modal visible or not
+    */
 	approveModalVisible: PropTypes.bool,
 	/**
 	 * Selected address
@@ -1056,8 +1299,8 @@ const mapDispatchToProps = dispatch => ({
 	removeNotVisibleNotifications: () => dispatch(removeNotVisibleNotifications()),
 	setOnboardProfile: profile => dispatch(setOnboardProfile(profile)),
 	showConfirmOtherIdentity: data => dispatch(showConfirmOtherIdentityPrompt(data)),
-	toggleFriendRequestQR: (visible) => dispatch(toggleFriendRequestQR(visible)),
-	showTipperModal: (data) => dispatch(showTipperModal(data)),
+	toggleFriendRequestQR: visible => dispatch(toggleFriendRequestQR(visible)),
+	showTipperModal: data => dispatch(showTipperModal(data))
 });
 
 export default connect(

@@ -53,6 +53,8 @@ import {
 } from '../../../constants/storage';
 import styles from './styles';
 import { displayName } from '../../../../app.json';
+import NetInfo from '@react-native-community/netinfo';
+import { showError } from '../../../util/notify';
 
 const PUB_KEY = process.env.MM_PUBNUB_PUB_KEY;
 
@@ -141,7 +143,8 @@ class Onboarding extends PureComponent {
 		warningModalVisible: false,
 		loading: false,
 		existingUser: false,
-		qrCodeModalVisible: false
+		qrCodeModalVisible: false,
+		internetConnect: true
 	};
 
 	seedwords = null;
@@ -181,6 +184,11 @@ class Onboarding extends PureComponent {
 					this.props.unsetLoading();
 				}, 2000);
 			}
+		});
+		unsubscribe = NetInfo.addEventListener(state => {
+			this.setState({
+				internetConnect: state.isConnected
+			});
 		});
 	}
 
@@ -401,6 +409,10 @@ class Onboarding extends PureComponent {
 	};
 
 	onPressCreate = () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
 		const action = () => {
 			this.props.navigation.navigate('ProfileOnboard', {
 				[PREVIOUS_SCREEN]: ONBOARDING
@@ -442,6 +454,10 @@ class Onboarding extends PureComponent {
 	};
 
 	onPressImport = () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
 		const action = () => {
 			this.props.navigation.push('ImportFromSeed');
 			this.track(ANALYTICS_EVENT_OPTS.ONBOARDING_SELECTED_IMPORT_WALLET);

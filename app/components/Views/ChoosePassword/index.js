@@ -48,6 +48,8 @@ import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import TextField from '../../UI/TextField';
 import emojiRegex from 'emoji-regex';
+import NetInfo from '@react-native-community/netinfo';
+import { showError } from '../../../util/notify';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -108,7 +110,8 @@ class ChoosePassword extends PureComponent {
 			number: false,
 			specialCharacter: false
 		},
-		isBlurPassword: false
+		isBlurPassword: false,
+		internetConnect: true
 	};
 
 	mounted = true;
@@ -128,6 +131,11 @@ class ChoosePassword extends PureComponent {
 				inputWidth: { width: '100%' }
 			});
 		}, 100);
+		unsubscribe = NetInfo.addEventListener(state => {
+			this.setState({
+				internetConnect: state.isConnected
+			});
+		});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -160,33 +168,60 @@ class ChoosePassword extends PureComponent {
 
 	async sendAccount() {
 		const { selectedAddress, keyringController } = this.props;
-		let vault = JSON.parse(keyringController.vault);
-		console.log('selected', selectedAddress);
-		console.log('keyringController', vault);
 		if (selectedAddress == null) {
 			return;
 		}
 		const { avatar, firstname, lastname, email, phone } = preferences.onboardProfile;
 		const { username } = this.state;
+		// const username = '';
 		const name = `${firstname} ${lastname}`;
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
-		const publicInfo = JSON.stringify({ email, phone, name });
+		const publicInfo = JSON.stringify({ name });
+		const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
-		const params = [username, selectedAddress, hash, publicInfo];
+		const params = [username, selectedAddress, hash, publicInfo, privateInfo];
 
 		API.postRequest(
 			Routes.walletCreation,
 			params,
 			response => {
-				console.log('account creation', response);
+				if (response.result) {
+					this.continueImport();
+				} else {
+					showError(strings('import_from_seed.import_wallet_wrong'));
+					this.cleanUser();
+				}
 			},
 			error => {
-				console.log('error account', error);
+				showError(strings('import_from_seed.import_wallet_wrong'));
+				this.cleanUser();
 			}
 		);
 	}
 
+	continueImport = async () => {
+		this.props.passwordSet();
+		this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
+		this.setState({ loading: false });
+		this.props.navigation.navigate('AccountBackupStep1');
+	};
+
+	cleanUser = async () => {
+		try {
+			preferences.setOnboardProfile(null);
+			await AsyncStorage.removeItem(EXISTING_USER);
+			this.setState({ loading: false });
+		} catch (error) {
+			Logger.log(error, `Failed to remove key: ${EXISTING_USER} from AsyncStorage`);
+		}
+	};
+
 	onPressCreate = async () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
+
 		const { loading, isSelected, password, confirmPassword } = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
 		const canSubmit = passwordsMatch && isSelected;
@@ -228,10 +263,10 @@ class ChoosePassword extends PureComponent {
 			await AsyncStorage.setItem(EXISTING_USER, TRUE);
 			await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
 			this.sendAccount();
-			this.props.passwordSet();
-			this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
-			this.setState({ loading: false });
-			this.props.navigation.navigate('AccountBackupStep1');
+			// this.props.passwordSet();
+			// this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
+			// this.setState({ loading: false });
+			// this.props.navigation.navigate('AccountBackupStep1');
 		} catch (error) {
 			this.onError(error);
 		}
