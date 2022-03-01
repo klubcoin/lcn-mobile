@@ -92,11 +92,12 @@ class EditProfile extends PureComponent {
 		this.lastname = lastname;
 		this.email = email;
 		this.countryCode = phone?.replace('+', '').split('-')[0];
-		this.phone = phone
-			?.replace('+', '')
-			.split('-')
-			.slice(1, phone?.split('-').length)
-			.join('-');
+		this.phone =
+			phone
+				?.replace('+', '')
+				.split('-')
+				.slice(1, phone?.split('-').length)
+				.join('-') ?? '';
 		this.preData = {
 			phone: phone
 				?.replace('+', '')
