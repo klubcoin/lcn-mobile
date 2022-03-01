@@ -46,7 +46,7 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
-import TextField from '../../UI/TextField';
+import TextField, { MAX_LENGTH_INPUT } from '../../UI/TextField';
 import emojiRegex from 'emoji-regex';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
@@ -636,6 +636,7 @@ class ChoosePassword extends PureComponent {
 													onFocus={() => {
 														this.setState({ isBlurPassword: false });
 													}}
+													maxLength={MAX_LENGTH_INPUT}
 												/>
 												<Text style={styles.passwordValidateTitle}>
 													{strings(`choose_password.password_validate_title`)}
@@ -727,6 +728,7 @@ class ChoosePassword extends PureComponent {
 													onSubmitEditing={this.onPressCreate}
 													returnKeyType={'done'}
 													autoCapitalize="none"
+													maxLength={MAX_LENGTH_INPUT}
 												/>
 												<View style={styles.showMatchingPasswords}>
 													{passwordsMatch ? (
