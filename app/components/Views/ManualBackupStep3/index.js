@@ -106,6 +106,8 @@ class ManualBackupStep3 extends PureComponent {
 			this.props.navigation.goBack(null);
 		} else {
 			this.props.navigation.navigate('HomeNav');
+			this.props.navigation.popToTop();
+			this.props.navigation.goBack(null);
 		}
 	};
 
