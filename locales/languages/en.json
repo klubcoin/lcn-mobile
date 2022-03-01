@@ -2002,5 +2002,9 @@
 		"verify_otp": "Verify OTP Code send on",
 		"resend_code": "Resend code",
 		"verify": "Verify"
+	},
+	"coming_soon": {
+		"coming_soon": "Coming Soon",
+		"stay_in_touch_with_us": "Stay in touch with us :"
 	}
 }

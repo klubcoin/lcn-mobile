@@ -35,6 +35,7 @@ import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
 import { colors } from '../../../styles/common';
 import Partners from '../../Views/Partners';
+import ComingSoon from '../../Views/ComingSoon';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';
 /**
  * Stack navigator responsible for the onboarding process
@@ -126,12 +127,15 @@ const OnboardingRootNav = createStackNavigator(
 		Partners: {
 			screen: Partners
 		},
+		ComingSoon: {
+			screen: ComingSoon
+		},
 		PartnerDetails: {
 			screen: PartnerDetails
 		},
 		VerifyOTP: {
 			screen: VerifyOTP
-		},
+		}
 	},
 	{
 		mode: 'modal'

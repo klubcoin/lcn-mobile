@@ -423,6 +423,8 @@ class Onboarding extends PureComponent {
 	};
 
 	onPressSync = () => {
+		this.props.navigation.navigate('ComingSoon');
+		return
 		const { existingUser } = this.state;
 		const action = () =>
 			setTimeout(() => {

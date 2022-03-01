@@ -356,7 +356,10 @@ class AccountOverview extends PureComponent {
 							/>
 							<AssetActionButton
 								icon="trade"
-								onPress={() => showInfo('This feature in under maintain')}
+								onPress={() => {
+									// showInfo('This feature in under maintain');
+									this.props.navigation.navigate("ComingSoon")
+								}}
 								label={strings('asset_overview.trade')}
 								lastIcon
 							/>

@@ -528,6 +528,40 @@ export function getOptinMetricsNavbarOptions() {
 		)
 	};
 }
+export function getComingSoonNavbarOptions(navigation) {
+	const navigationPop = () => navigation.pop();
+	return {
+		headerStyle: {
+			shadowColor: colors.white,
+			elevation: 0,
+			backgroundColor: colors.white,
+			borderBottomWidth: 0,
+			height: 50,
+			marginTop: 20
+		},
+		headerTitle: (
+			<View style={styles.optinHeaderLeft}>
+				<View style={styles.metamaskNameWrapper}>
+					<Image
+						source={klubcoin_text}
+						style={styles.metamaskName}
+						resizeMethod={'auto'}
+						resizeMode={'contain'}
+					/>
+				</View>
+				<View style={styles.metamaskNameWrapper}>
+					{/*<Image source={metamask_name} style={styles.metamaskName} resizeMethod={'auto'} />*/}
+					{/* <Text style={styles.header}>{displayName.toUpperCase()}</Text> */}
+				</View>
+			</View>
+		),
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
+	};
+}
 /**
  * Function that returns the navigation options
  * for our closable screens,
@@ -569,7 +603,7 @@ export function getOfflineModalNavbar(navigation) {
 			elevation: 0,
 			backgroundColor: colors.white,
 			borderBottomWidth: 0
-		},
+		}
 		// headerLeft: Device.isAndroid() ? (
 		// 	// eslint-disable-next-line react/jsx-no-bind
 		// 	<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
