@@ -436,6 +436,10 @@ class Onboarding extends PureComponent {
 	};
 
 	onViewPartners = () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
 		const { navigation } = this.props;
 		navigation.navigate('Partners');
 	};
