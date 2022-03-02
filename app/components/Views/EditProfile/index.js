@@ -414,6 +414,7 @@ class EditProfile extends PureComponent {
 							<View style={styles.form}>
 								<TextField
 									value={this.username}
+									disabled
 									label={strings('choose_password.username')}
 									placeholder={strings('choose_password.username')}
 									onChangeText={text => (this.username = text.replace(this.regex, ''))}
