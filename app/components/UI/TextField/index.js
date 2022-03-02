@@ -5,11 +5,20 @@ import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
 
-export const MAX_LENGTH_INPUT = 256
+export const MAX_LENGTH_INPUT = 256;
 
 export default class TextField extends Component {
 	render() {
-		const { label, placeholder, value, onChangeText, containerStyle, keyboardType, autoCapitalize = 'none' } = this.props;
+		const {
+			label,
+			placeholder,
+			value,
+			onChangeText,
+			containerStyle,
+			disabled = false,
+			keyboardType,
+			autoCapitalize = 'none'
+		} = this.props;
 		return (
 			<View style={containerStyle}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
@@ -22,6 +31,7 @@ export default class TextField extends Component {
 					keyboardType={keyboardType}
 					autoCapitalize={autoCapitalize}
 					maxLength={MAX_LENGTH_INPUT}
+					editable={!disabled}
 				/>
 			</View>
 		);
