@@ -29,6 +29,7 @@ import Routes from 'common/routes';
 import moment from 'moment';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import { addHexPrefix } from '@walletconnect/utils';
 
 const ROW_HEIGHT = (Device.isIos() ? 95 : 100) + StyleSheet.hairlineWidth;
 
@@ -178,7 +179,7 @@ class Transactions extends PureComponent {
 			chainId: mainNetWork.chainId,
 			origin: mainNetWork.name,
 			status: e.blockNumber && e.blockNumber != 'null' ? 'confirmed' : 'pending',
-			time: moment(e.timeStamp).unix() * 1000,
+			time: moment(e.timeStamp?.epochSecond * 1000),
 			transaction: {
 				from: e.from,
 				gas: e.gas,
@@ -200,7 +201,7 @@ class Transactions extends PureComponent {
 		const network = NetworkController.state.network;
 		const hashArr = [];
 
-		this.uses3rdPartyAPI = network == '7';
+		this.uses3rdPartyAPI = network == '1662';
 		if (!selectedAddress || !this.uses3rdPartyAPI) return;
 
 		await new Promise((resolve, reject) => {
@@ -208,9 +209,10 @@ class Transactions extends PureComponent {
 				this.setState({ ready: true, loading: false });
 				if (success && response) {
 					this.transactions = response.result.map(e => {
-						if (!hashArr.includes(e.hash)) {
-							hashArr.push(e.hash);
+						if (!hashArr.includes(addHexPrefix(e.hash))) {
+							hashArr.push(addHexPrefix(e.hash));
 						}
+						
 						const transaction = transactions.find(t => t.transactionHash == e.hash);
 						if (transaction) return transaction;
 
