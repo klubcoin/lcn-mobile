@@ -39,7 +39,13 @@ const brandStyles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'center',
 		padding: 20
-	}
+	},
+	loader: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor:colors.primaryFox
+	},
 });
 
 export default brandStyles;

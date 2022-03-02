@@ -153,7 +153,8 @@ class Settings extends PureComponent {
 		metricsOptIn: false,
 		passcodeChoice: false,
 		showHint: false,
-		hintText: ''
+		hintText: '',
+		loading: false
 	};
 
 	autolockOptions = [
@@ -199,7 +200,15 @@ class Settings extends PureComponent {
 		}
 	];
 
+	componentWillUnmount() {
+		this.focusListener.remove();
+	}
+
 	componentDidMount = async () => {
+		const { navigation } = this.props;
+		this.focusListener = navigation.addListener('didFocus', () => {
+			this.setState({ loading: false });
+		});
 		const biometryType = await SecureKeychain.getSupportedBiometryType();
 		const metricsOptIn = Analytics.getEnabled();
 
@@ -500,7 +509,7 @@ class Settings extends PureComponent {
 		if (loading)
 			return (
 				<View style={styles.loader}>
-					<ActivityIndicator size="large" />
+					<ActivityIndicator size="large" color={'#ffffff'} />
 				</View>
 			);
 
@@ -645,11 +654,7 @@ class Settings extends PureComponent {
 						<View style={styles.setting}>
 							<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
 							<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
-							<StyledButton
-								type="normal"
-								onPress={this.backupPrivateKey}
-								containerStyle={styles.confirm}
-							>
+							<StyledButton type="normal" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
 								{strings('private_key.backup_private_key')}
 							</StyledButton>
 							{!!privateKeyBackupStats && (
