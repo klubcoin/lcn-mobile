@@ -41,7 +41,10 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.grey100
 	},
 	network: {
-		marginTop: 20
+		marginTop: 20,
+		flexDirection: 'row',
+		flex: 1,
+		width: '100%'
 	},
 	networkLabel: {
 		fontSize: 16,
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
 	},
 	sectionLabel: {
 		fontSize: 14,
-		paddingVertical: 12,
+		paddingTop: 12,
 		color: colors.fontPrimary,
 		...fontStyles.bold
 	},
@@ -178,7 +181,7 @@ class NetworksSettings extends PureComponent {
 		const { frequentRpcList } = this.props;
 		if (frequentRpcList.length > 0) {
 			return (
-				<View testID={'rpc-networks'}>
+				<View testID={'rpc-networks'} style={{marginTop: 10}}>
 					<Text style={styles.sectionLabel}>{strings('app_settings.network_rpc_networks')}</Text>
 					{this.renderRpcNetworks()}
 				</View>
@@ -211,9 +214,9 @@ class NetworksSettings extends PureComponent {
 			<OnboardingScreenWithBg screen="a">
 				<ScrollView style={styles.networksWrapper}>
 					{this.renderMainnet()}
-					{/*<Text style={styles.sectionLabel}>{strings('app_settings.network_other_networks')}</Text>
-										{this.renderOtherNetworks()}
-										{this.renderRpcNetworksView()}*/}
+					<Text style={styles.sectionLabel}>{strings('app_settings.network_other_networks')}</Text>
+						{this.renderOtherNetworks()}
+						{this.renderRpcNetworksView()}
 				</ScrollView>
 				<StyledButton
 					type="normal"
