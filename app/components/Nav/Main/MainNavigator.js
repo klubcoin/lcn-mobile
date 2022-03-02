@@ -100,6 +100,8 @@ import Dashboard from '../../Views/Dashboard';
 import FAQ from '../../Views/FAQ';
 import Collect from '../../Views/Collect';
 import FAQAnswer from '../../Views/FAQ/FAQAnswer';
+import VerifyOTP from '../../Views/VerifyOTP';
+import ComingSoon from '../../Views/ComingSoon';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -159,6 +161,12 @@ export default createStackNavigator(
 						},
 						Partners: {
 							screen: Partners
+						},
+						VerifyOTP: {
+							screen: VerifyOTP
+						},
+						ComingSoon: {
+							screen: ComingSoon
 						},
 						PartnerDetails: {
 							screen: PartnerDetails

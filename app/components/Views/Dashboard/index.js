@@ -346,13 +346,14 @@ class Dashboard extends PureComponent {
                     <View style={[styles.card, { marginRight: 0 }]}>
                         <View style={styles.row}>
                             <Text style={styles.cardTitle}>{strings('watch_asset_request.balance')}</Text>
-                            <Text style={styles.extraCardTitle}>+2,4%</Text>
+                            {/* <Text style={styles.extraCardTitle}>+2,4%</Text> */}
                         </View>
                         <View style={[styles.cardContent, styles.row]}>
-                            <Text style={[styles.balance, { paddingRight: 15 }]}>
+                            {/* <Text style={[styles.balance, { paddingRight: 15 }]}>
                                 $100,000,000
                             </Text>
-                            <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} />
+                            <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} /> */}
+                            <Text style={styles.comingSoon}>{strings("receive_request.coming_soon")}</Text>
                         </View>
                     </View>
                 </View>
@@ -411,13 +412,13 @@ class Dashboard extends PureComponent {
 
                 {/* Action button */}
                 <View style={styles.btnWrapper}>
-                    <TouchableOpacity style={styles.btn}>
+                    <TouchableOpacity style={styles.btn} activeOpacity={0.7} onPress={()=>{this.props.navigation.navigate('ComingSoon')}}>
                         <Text style={styles.btnText}>{strings('dashboard.buy_more')}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.btnWrapper}>
-                    <TouchableOpacity style={styles.btn}>
+                    <TouchableOpacity style={styles.btn} activeOpacity={0.7} onPress={()=>{this.props.navigation.navigate('ComingSoon')}}>
                         <Text style={styles.btnText}>{strings('dashboard.spend_coin')}</Text>
                     </TouchableOpacity>
                 </View>

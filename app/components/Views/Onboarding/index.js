@@ -423,6 +423,8 @@ class Onboarding extends PureComponent {
 	};
 
 	onPressSync = () => {
+		this.props.navigation.navigate('ComingSoon');
+		return
 		const { existingUser } = this.state;
 		const action = () =>
 			setTimeout(() => {
@@ -436,6 +438,10 @@ class Onboarding extends PureComponent {
 	};
 
 	onViewPartners = () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
 		const { navigation } = this.props;
 		navigation.navigate('Partners');
 	};

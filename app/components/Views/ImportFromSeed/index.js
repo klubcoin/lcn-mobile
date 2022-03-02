@@ -40,6 +40,7 @@ import * as sha3JS from 'js-sha3';
 import preferences from '../../../store/preferences';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
+import { MAX_LENGTH_INPUT } from '../../UI/TextField';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -538,6 +539,7 @@ class ImportFromSeed extends PureComponent {
 									onFocus={() => {
 										this.setState({ isBlurPassword: false });
 									}}
+									maxLength={MAX_LENGTH_INPUT}
 								/>
 								<Text style={styles.passwordValidateTitle}>
 									{strings(`choose_password.password_validate_title`)}
@@ -630,6 +632,7 @@ class ImportFromSeed extends PureComponent {
 									onSubmitEditing={this.onPressImport}
 									lineWidth={0}
 									activeLineWidth={0}
+									maxLength={MAX_LENGTH_INPUT}
 								/>
 
 								<View style={styles.showMatchingPasswords}>

@@ -674,7 +674,8 @@ class DrawerView extends PureComponent {
 						(blockExplorer && `${strings('drawer.view_in')} ${blockExplorerName}`) ||
 						strings('drawer.view_in_liquichain', { appName: displayName }),
 					icon: this.getIcon('eye'),
-					action: this.viewInEtherscan
+					// action: this.viewInEtherscan
+					action: this.comingSoon
 				},
 				{
 					name: strings('drawer.collect'),
@@ -696,7 +697,8 @@ class DrawerView extends PureComponent {
 				{
 					name: strings('drawer.chat'),
 					icon: this.getIonIcon('chatbox'),
-					action: this.onShare
+					// action: this.onShare
+					action: this.comingSoon
 				}
 			],
 			[
@@ -742,6 +744,10 @@ class DrawerView extends PureComponent {
 				data: { msg: strings('account_details.account_copied_to_clipboard') }
 			});
 		});
+	};
+
+	comingSoon = () => {
+		this.props.navigation.navigate('ComingSoon');
 	};
 
 	onShare = () => {

@@ -56,6 +56,11 @@ class EditProfile extends PureComponent {
 	notiMessage = '';
 	regex = emojiRegex();
 	time = new Date();
+	preData = {
+		phone: '',
+		countryCode: '',
+		email: ''
+	};
 
 	constructor(props) {
 		super(props);
@@ -72,7 +77,8 @@ class EditProfile extends PureComponent {
 			countryCode: observable,
 			notiPermissionCamera: observable,
 			notiMessage: observable,
-			time: observable
+			time: observable,
+			preData: observable
 		});
 	}
 
@@ -86,11 +92,21 @@ class EditProfile extends PureComponent {
 		this.lastname = lastname;
 		this.email = email;
 		this.countryCode = phone?.replace('+', '').split('-')[0];
-		this.phone = phone
-			?.replace('+', '')
-			.split('-')
-			.slice(1, phone?.split('-').length)
-			.join('-');
+		this.phone =
+			phone
+				?.replace('+', '')
+				.split('-')
+				.slice(1, phone?.split('-').length)
+				.join('-') ?? '';
+		this.preData = {
+			phone: phone
+				?.replace('+', '')
+				.split('-')
+				.slice(1, phone?.split('-').length)
+				.join('-'),
+			countryCode: phone?.replace('+', '').split('-')[0],
+			email
+		};
 	}
 
 	onPickImage() {
@@ -276,6 +292,33 @@ class EditProfile extends PureComponent {
 		return true;
 	}
 
+	onPressUpdate() {
+		let hasUpdate = false;
+		let params = {
+			onVerify: () => this.onUpdate()
+		};
+		if (this.email !== this.preData.email) {
+			hasUpdate = true;
+			params = {
+				...params,
+				email: this.email
+			};
+		}
+		if (this.countryCode !== this.preData.countryCode || this.phone !== this.preData.phone) {
+			hasUpdate = true;
+			params = {
+				...params,
+				phone: `+${this.countryCode}-${this.phone}`
+			};
+		}
+		if (hasUpdate) {
+			// this.props.navigation.navigate('Partners');
+			this.props.navigation.navigate('VerifyOTP', params);
+		} else {
+			this.onUpdate();
+		}
+	}
+
 	async onUpdate() {
 		if (this.isLoading) return;
 		this.isLoading = true;
@@ -371,6 +414,7 @@ class EditProfile extends PureComponent {
 							<View style={styles.form}>
 								<TextField
 									value={this.username}
+									disabled
 									label={strings('choose_password.username')}
 									placeholder={strings('choose_password.username')}
 									onChangeText={text => (this.username = text.replace(this.regex, ''))}
@@ -417,7 +461,7 @@ class EditProfile extends PureComponent {
 							</View>
 							<StyledButton
 								type={'white'}
-								onPress={this.onUpdate.bind(this)}
+								onPress={this.onPressUpdate.bind(this)}
 								containerStyle={styles.next}
 								disabled={this.isLoading}
 							>

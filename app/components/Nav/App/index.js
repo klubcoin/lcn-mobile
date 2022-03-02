@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import Login from '../../Views/Login';
 import Welcome from '../../Views/Welcome';
+import VerifyOTP from '../../Views/VerifyOTP';
 import QRScanner from '../../Views/QRScanner';
 import Onboarding from '../../Views/Onboarding';
 import OnboardingCarousel from '../../Views/OnboardingCarousel';
@@ -34,6 +35,7 @@ import { Linking } from 'react-native';
 import ProfileOnboard from '../../Views/ProfileOnboard';
 import { colors } from '../../../styles/common';
 import Partners from '../../Views/Partners';
+import ComingSoon from '../../Views/ComingSoon';
 import PartnerDetails from '../../Views/Partners/PartnerDetails';
 /**
  * Stack navigator responsible for the onboarding process
@@ -125,8 +127,14 @@ const OnboardingRootNav = createStackNavigator(
 		Partners: {
 			screen: Partners
 		},
+		ComingSoon: {
+			screen: ComingSoon
+		},
 		PartnerDetails: {
 			screen: PartnerDetails
+		},
+		VerifyOTP: {
+			screen: VerifyOTP
 		}
 	},
 	{

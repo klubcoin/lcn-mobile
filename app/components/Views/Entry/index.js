@@ -24,6 +24,8 @@ import {
 import { getVersion } from 'react-native-device-info';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { displayName } from '../../../../app.json';
+import NetInfo from '@react-native-community/netinfo';
+import { showError } from '../../../util/notify';
 
 /**
  * Entry Screen that decides which screen to show
@@ -146,6 +148,11 @@ const Entry = props => {
 
 	useEffect(() => {
 		async function startApp() {
+			const state = await NetInfo.fetch()
+			if(!state.isConnected){
+				animateAndGoTo('Welcome');
+				return
+			}
 			const existingUser = await AsyncStorage.getItem(EXISTING_USER);
 			try {
 				const currentVersion = await getVersion();

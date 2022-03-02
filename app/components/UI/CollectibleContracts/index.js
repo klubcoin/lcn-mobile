@@ -33,6 +33,8 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 	};
 
 	const goToAddCollectible = () => {
+		navigation.navigate('ComingSoon')
+		return
 		navigation.push('AddAsset', { assetType: 'collectible' });
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_ADD_COLLECTIBLES);

@@ -138,6 +138,7 @@
 		"reset_wallet": "Reset Wallet",
 		"cant_proceed": "You can’t proceed till you type the word ‘Delete’. With this action you are opting in to erase your current wallet.",
 		"invalid_password": "Invalid password",
+		"invalid_email_or_password": "Invalid email or password",
 		"type_delete": "Type ‘delete’ to erase current wallet permanently",
 		"delete_my": "Delete my wallet",
 		"are_you_sure": "Are you sure you want to erase your wallet?",
@@ -1995,5 +1996,15 @@
 	},
 	"lock_modal": {
 		"title": "Authentication for continue!"
+	},
+	"verify_otp": {
+		"title": "Verification",
+		"verify_otp": "Verify OTP Code send on",
+		"resend_code": "Resend code",
+		"verify": "Verify"
+	},
+	"coming_soon": {
+		"coming_soon": "Coming Soon",
+		"stay_in_touch_with_us": "Stay in touch with us :"
 	}
 }
