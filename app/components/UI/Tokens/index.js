@@ -132,6 +132,7 @@ class Tokens extends PureComponent {
 	renderEmpty = () => (
 		<View style={styles.emptyView}>
 			<Text style={styles.text}>{strings('wallet.no_tokens')}</Text>
+			{this.renderFooter()}
 		</View>
 	);
 
