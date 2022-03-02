@@ -51,6 +51,8 @@ import LoginWithKeycloak from '../LoginWithKeycloak';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
+import NetInfo from '@react-native-community/netinfo';
+import { showError } from '../../../util/notify';
 
 const isTextDelete = text => tlc(text) === 'delete';
 const deviceHeight = Device.getDeviceHeight();
@@ -102,7 +104,8 @@ class Login extends PureComponent {
 		deleteModalVisible: false,
 		disableDelete: true,
 		deleteText: '',
-		showDeleteWarning: false
+		showDeleteWarning: false,
+		internetConnect: true
 	};
 
 	mounted = true;
@@ -111,6 +114,11 @@ class Login extends PureComponent {
 	emailFieldRef = React.createRef();
 
 	async componentDidMount() {
+		unsubscribe = NetInfo.addEventListener(state => {
+			this.setState({
+				internetConnect: state.isConnected
+			});
+		});
 		if (this.props.navigation.state?.params?.isFromBackground) {
 			const { email } = preferences?.onboardProfile ?? {};
 			this.setState({ email: email });
@@ -157,6 +165,10 @@ class Login extends PureComponent {
 	}
 
 	onLogin = async () => {
+		if (!this.state.internetConnect) {
+			showError(strings('import_from_seed.internet_warning'));
+			return;
+		}
 		const onboardEmail = preferences.onboardProfile.email;
 		const { password, email } = this.state;
 
@@ -347,6 +359,10 @@ class Login extends PureComponent {
 		emailField.blur();
 		try {
 			const credentials = await SecureKeychain.getGenericPassword();
+			if (!this.state.internetConnect) {
+				showError(strings('import_from_seed.internet_warning'));
+				return true;
+			}
 			if (!credentials) return false;
 			field.blur();
 			emailField.blur();
