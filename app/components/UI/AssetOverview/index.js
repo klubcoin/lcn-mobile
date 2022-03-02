@@ -251,31 +251,47 @@ class AssetOverview extends PureComponent {
 		} = this.props;
 		let mainBalance, secondaryBalance;
 		const itemAddress = safeToChecksumAddress(address);
+		// let balance, balanceFiat;
+		// if (selectedAddress && typeof accounts[selectedAddress].balance != 'undefined') {
+		// 	balance = accounts[selectedAddress].balance;
+		// 	balanceFiat = isMainNet(chainId)
+		// 		? weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency)
+		// 		: null;
+		// } else {
+		// 	const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
+		// 	balance =
+		// 		itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], decimals) : 0;
+		// 	balanceFiat = isMainNet(chainId)
+		// 		? balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
+		// 		: null;
+		// }
+		// // choose balances depending on 'primaryCurrency'
+		// let newBalance = Helper.demosToLiquichain(balance)
+		// if (primaryCurrency === 'ETH') {
+		// 	mainBalance = `${newBalance} ${ticker}`;
+		// 	secondaryBalance = balanceFiat;
+		// } else {
+		// 	mainBalance = !balanceFiat ? `${newBalance} ${ticker}` : balanceFiat;
+		// 	secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
+		// }
 		let balance, balanceFiat;
-
-		if (selectedAddress && typeof accounts[selectedAddress].balance != 'undefined') {
-			balance = accounts[selectedAddress].balance;
-			balanceFiat = isMainNet(chainId)
-				? weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency)
-				: null;
+		if (isETH) {
+			balance = renderFromWei(accounts[selectedAddress] && accounts[selectedAddress].balance);
+			balanceFiat = weiToFiat(hexToBN(accounts[selectedAddress].balance), conversionRate, currentCurrency);
 		} else {
 			const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
 			balance =
 				itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], decimals) : 0;
-			balanceFiat = isMainNet(chainId)
-				? balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
-				: null;
+			balanceFiat = balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency);
 		}
 		// choose balances depending on 'primaryCurrency'
-		let newBalance = Helper.demosToLiquichain(balance)
 		if (primaryCurrency === 'ETH') {
-			mainBalance = `${newBalance} ${ticker}`;
+			mainBalance = `${balance} ${symbol}`;
 			secondaryBalance = balanceFiat;
 		} else {
-			mainBalance = !balanceFiat ? `${newBalance} ${ticker}` : balanceFiat;
+			mainBalance = !balanceFiat ? `${balance} ${symbol}` : balanceFiat;
 			secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
 		}
-
 		const conversion = typeof accounts[selectedAddress] != 'undefined' && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
 		return (
 			<View style={styles.wrapper} testID={'token-asset-overview'}>

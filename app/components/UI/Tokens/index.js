@@ -7,7 +7,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import contractMap from '@metamask/contract-metadata';
 import ActionSheet from 'react-native-actionsheet';
-import { renderFromTokenMinimalUnit, balanceToFiat } from '../../../util/number';
+import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import AssetElement from '../AssetElement';
 import { connect } from 'react-redux';
@@ -172,23 +172,24 @@ class Tokens extends PureComponent {
 		const itemAddress = safeToChecksumAddress(asset.address);
 		const logo = asset.logo || ((contractMap[itemAddress] && contractMap[itemAddress].logo) || undefined);
 		const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
-		let balance =
-			asset.balance ||
+		const balance =
+			asset.balance ? renderFromWei(asset.balance):
 			(itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], asset.decimals) : 0);
-		const balanceFiat =
-			isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
-				? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
-				: null;
+		// const balanceFiat =
+		// 	isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
+		// 		? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
+		// 		: null;
+		const balanceFiat = asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency);
+		const balanceValue = `${balance} ${asset.symbol}`;
+		// let account = null;
+		// if (selectedAddress && typeof accounts[selectedAddress] != 'undefined') {
+		// 	account = accounts[selectedAddress];
+		// 	balance = accounts[selectedAddress].balance;
+		// }
 
-		let account = null;
-		if (selectedAddress && typeof accounts[selectedAddress] != 'undefined') {
-			account = accounts[selectedAddress];
-			balance = accounts[selectedAddress].balance;
-		}
+		// balance = Helper.demosToLiquichain(balance || 0);
 
-		balance = Helper.demosToLiquichain(balance || 0);
-
-		const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
+		// const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 		//TODO: remove this condition
 		if (asset.name == "Tipper")
 			var app = asset;

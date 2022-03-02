@@ -274,6 +274,8 @@ class Wallet extends PureComponent {
 
         let balance = 0;
         let assets = tokens;
+       
+
         if (selectedAddress && accounts) {
             balance = accounts[selectedAddress].balance;
             // balance = "0x00"
@@ -286,7 +288,7 @@ class Wallet extends PureComponent {
                     balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
                     logo: '../images/klubcoin.png'
                 },
-                tipper,
+                // tipper,
                 ...tokens
             ];
         } else {
