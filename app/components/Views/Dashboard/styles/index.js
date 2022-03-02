@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
 		...fontStyles.bold,
 		fontSize: RFValue(16),
 		color: colors.purple
-	}
+	},
+	comingSoon:{}
 });
 
 export default assignNestedObj(styles, brandStyles);
