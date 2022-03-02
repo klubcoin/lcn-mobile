@@ -220,7 +220,7 @@ class Amount extends PureComponent {
 	};
 
 	getBalance = async () => {
-		const { accounts, selectedAddress, identities } = this.props;
+		const { accounts, selectedAddress, identities, selectedAsset } = this.props;
 		// for(const account in accounts){
 		let params = [selectedAddress];
 		await API.postRequest(
@@ -234,7 +234,7 @@ class Amount extends PureComponent {
 				};
 				const { AccountTrackerController } = Engine.context;
 				AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
-				this.handleSelectedAssetBalance();
+				this.handleSelectedAssetBalance(selectedAsset);
 			},
 			error => {
 				console.log(error.message);
@@ -579,13 +579,22 @@ class Amount extends PureComponent {
 		this.setState({ assetsModalVisible: !assetsModalVisible });
 	};
 
-	handleSelectedAssetBalance = () => {
-		const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
-		if (accounts && accounts[selectedAddress]) {
-			this.setState({
-				currentBalance: `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${selectedAsset.symbol}`
-			});
+	handleSelectedAssetBalance = ( selectedAsset ) => {
+		// const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
+		// if (accounts && accounts[selectedAddress]) {
+		// 	this.setState({
+		// 		currentBalance: `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${selectedAsset.symbol}`
+		// 	});
+		const { accounts, selectedAddress, contractBalances } = this.props;
+		const { address, decimals, symbol, isETH } = selectedAsset;
+		let currentBalance;
+		if (isETH) {
+			currentBalance = `${renderFromWei(accounts[selectedAddress].balance)} ${symbol}`;
+		} else {
+			currentBalance = `${renderFromTokenMinimalUnit(contractBalances[address], decimals)} ${symbol}`;
 		}
+		this.setState({ currentBalance: currentBalance});
+
 	};
 
 	pickSelectedAsset = selectedAsset => {
@@ -593,7 +602,7 @@ class Amount extends PureComponent {
 		this.props.setSelectedAsset(selectedAsset);
 		if (!selectedAsset.tokenId) {
 			this.onInputChange(undefined, selectedAsset);
-			// this.handleSelectedAssetBalance(selectedAsset);
+			this.handleSelectedAssetBalance(selectedAsset);
 			// Wait for input to mount first
 			setTimeout(() => this.amountInput && this.amountInput.current && this.amountInput.current.focus(), 500);
 		}
@@ -752,6 +761,7 @@ class Amount extends PureComponent {
 		console.log({
 			currentBalance
 		});
+
 		const { currentCurrency } = this.props;
 		return (
 			<View>
