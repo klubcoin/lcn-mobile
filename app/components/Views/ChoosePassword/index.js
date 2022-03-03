@@ -211,6 +211,7 @@ class ChoosePassword extends PureComponent {
 			preferences.setOnboardProfile(null);
 			await AsyncStorage.removeItem(EXISTING_USER);
 			this.setState({ loading: false });
+			this.props.navigation.goBack()
 		} catch (error) {
 			Logger.log(error, `Failed to remove key: ${EXISTING_USER} from AsyncStorage`);
 		}
