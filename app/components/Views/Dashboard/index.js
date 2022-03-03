@@ -124,6 +124,7 @@ class Dashboard extends PureComponent {
         });
         this.getCurrentConversion();
         this.announceOnline();
+        this.addDefaultToken();
     };
 
     announceOnline() {
@@ -136,6 +137,17 @@ class Dashboard extends PureComponent {
             }
         });
     }
+
+    addDefaultToken = async () => {
+        const { AssetsController } = Engine.context;
+        const klubErc20 = {
+            address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",
+            symbol: "KLB",
+            decimals: 18,
+            image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
+        }
+        await AssetsController.addToken(klubErc20.address, klubErc20.symbol, klubErc20.decimals, klubErc20.image);
+    };
 
     async getWalletInfo() {
         const { selectedAddress } = this.props;
