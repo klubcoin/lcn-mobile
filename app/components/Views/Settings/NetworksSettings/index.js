@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 15,
 		paddingHorizontal: 15,
-		minHeight: 0
+		minHeight: 0,
+		width: '100%'
 	},
 	networkIcon: {
 		width: 15,
