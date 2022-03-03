@@ -418,7 +418,7 @@ class Dashboard extends PureComponent {
                 </View>
 
                 <View style={styles.btnWrapper}>
-                    <TouchableOpacity style={styles.btn} activeOpacity={0.7} onPress={()=>{this.props.navigation.navigate('ComingSoon')}}>
+                    <TouchableOpacity style={styles.btn} activeOpacity={0.7} onPress={()=>{this.props.navigation.navigate('Partners')}}>
                         <Text style={styles.btnText}>{strings('dashboard.spend_coin')}</Text>
                     </TouchableOpacity>
                 </View>
