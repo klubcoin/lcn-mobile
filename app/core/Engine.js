@@ -192,12 +192,12 @@ class Engine {
 					controller.update(initialState[controller.name]);
 				}
 			}
-			networkController.setRpcTarget(
-				Routes.mainNetWork.url,
-				Routes.mainNetWork.chainId,
-				Routes.mainNetWork.ticker,
-				Routes.mainNetWork.name,
-			);
+			// networkController.setRpcTarget(
+			// 	Routes.mainNetWork.url,
+			// 	Routes.mainNetWork.chainId,
+			// 	Routes.mainNetWork.ticker,
+			// 	Routes.mainNetWork.name,
+			// );
 
 			this.datamodel = new ComposableController(controllers, this.controllerMessenger);
 			this.context = controllers.reduce((context, controller) => {
