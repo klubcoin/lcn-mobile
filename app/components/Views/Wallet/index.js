@@ -15,7 +15,7 @@ import Tokens from '@UI/Tokens';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { weiToFiat, hexToBN } from '../../../util/number';
+import { weiToFiat, hexToBN, renderFromTokenMinimalUnit } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import CollectibleContracts from '../../UI/CollectibleContracts';
 import Analytics from '../../../core/Analytics';
@@ -32,12 +32,13 @@ import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
 import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar'
+import { setSelectedAsset } from '../../../actions/transaction';
 
 /**
  * Main view for the wallet
  */
 class Wallet extends PureComponent {
-	static navigationOptions = ({ navigation }) => getWalletNavbarOptions('wallet.title', navigation);
+    static navigationOptions = ({ navigation }) => getWalletNavbarOptions('wallet.title', navigation);
 
     static propTypes = {
         /**
@@ -103,6 +104,21 @@ class Wallet extends PureComponent {
         });
         this.getCurrentConversion();
         this.announceOnline();
+        this.addDefaultToken();
+    };
+
+    addDefaultToken = async () => {
+        const { AssetsController, TokenBalancesController } = Engine.context;
+        const { tokenBalances } = this.props;
+
+        const klubErc20 = {
+            address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",
+            symbol: "KLB",
+            decimals: 18,
+            image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
+        }
+    //    this.props.setSelectedAsset(klubErc20);
+        await AssetsController.addToken(klubErc20.address, klubErc20.symbol, klubErc20.decimals, klubErc20.image);
     };
 
     announceOnline() {
@@ -274,20 +290,20 @@ class Wallet extends PureComponent {
 
         let balance = 0;
         let assets = tokens;
-       
+
 
         if (selectedAddress && accounts) {
             balance = accounts[selectedAddress].balance;
             // balance = "0x00"
             assets = [
-                {
-                    name: 'Liquichain',
-                    symbol: getTicker(ticker),
-                    isETH: true,
-                    balance,
-                    balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
-                    logo: '../images/klubcoin.png'
-                },
+                // {
+                //     name: 'Liquichain',
+                //     symbol: getTicker(ticker),
+                //     isETH: true,
+                //     balance,
+                //     balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
+                //     logo: '../images/klubcoin.png'
+                // },
                 // tipper,
                 ...tokens
             ];
@@ -361,24 +377,26 @@ class Wallet extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
-	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
-	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
-	identities: state.engine.backgroundState.PreferencesController.identities,
-	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
-	tokens: state.engine.backgroundState.AssetsController.tokens,
-	collectibles: state.engine.backgroundState.AssetsController.collectibles,
-	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
-	wizardStep: state.wizard.step
+    accounts: state.engine.backgroundState.AccountTrackerController.accounts,
+    conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
+    currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
+    identities: state.engine.backgroundState.PreferencesController.identities,
+    selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+    tokens: state.engine.backgroundState.AssetsController.tokens,
+    tokenBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
+    collectibles: state.engine.backgroundState.AssetsController.collectibles,
+    ticker: state.engine.backgroundState.NetworkController.provider.ticker,
+    wizardStep: state.wizard.step
 });
 
 const mapDispatchToProps = dispatch => ({
-	showTransactionNotification: args => dispatch(showTransactionNotification(args)),
-	hideCurrentNotification: () => dispatch(hideCurrentNotification()),
-	updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers))
+    showTransactionNotification: args => dispatch(showTransactionNotification(args)),
+    hideCurrentNotification: () => dispatch(hideCurrentNotification()),
+    updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers)),
+    setSelectedAsset: selectedAddress => dispatch(setSelectedAsset(selectedAddress))
 });
 
 export default connect(
-	mapStateToProps,
-	mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Wallet);

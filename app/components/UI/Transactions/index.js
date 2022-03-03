@@ -201,8 +201,8 @@ class Transactions extends PureComponent {
 		const network = NetworkController.state.network;
 		const hashArr = [];
 
-		this.uses3rdPartyAPI = network == '1662';
-		if (!selectedAddress || !this.uses3rdPartyAPI) return;
+		// this.uses3rdPartyAPI = network == '1662';
+		// if (!selectedAddress || !this.uses3rdPartyAPI) return;
 
 		await new Promise((resolve, reject) => {
 			APIService.getTransactionHistory(selectedAddress, (success, response) => {
