@@ -63,6 +63,9 @@ import { displayName } from '../../../../app.json';
 import AsyncStorage from '@react-native-community/async-storage';
 import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
 import * as RNFS from 'react-native-fs';
+import routes from '../../../common/routes';
+import { BNToHex, weiToFiat } from '../../../util/number';
+import { hexToBN } from '@metamask/controllers/dist/util';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -202,7 +205,7 @@ class DrawerView extends PureComponent {
 	state = {
 		showProtectWalletModal: undefined,
 		file: '',
-		time: new Date()
+		time: new Date(),
 	};
 
 	browserSectionRef = React.createRef();
@@ -226,6 +229,7 @@ class DrawerView extends PureComponent {
 
 		return ret;
 	}
+
 
 	componentDidUpdate() {
 		RNFS.readFile(this.props?.onboardProfile?.avatar, 'base64').then(file => {
@@ -831,7 +835,8 @@ class DrawerView extends PureComponent {
 			chainId,
 			ticker,
 			seedphraseBackedUp,
-			onboardProfile
+			onboardProfile,
+			conversionRate,
 		} = this.props;
 
 		const { avatar } = onboardProfile || {};
@@ -840,14 +845,16 @@ class DrawerView extends PureComponent {
 		let account, balance, conversion;
 		if (accounts && accounts[selectedAddress]) {
 			account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
-			balance =
-				typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00';
-			conversion =
-				typeof accounts[selectedAddress].conversion != 'undefined'
-					? accounts[selectedAddress].conversion
-					: null;
+			// balance =
+			// 	typeof accounts[selectedAddress].balance != 'undefined' ? accounts[selectedAddress].balance : '0x00';
+			// conversion =
+			// 	typeof accounts[selectedAddress].conversion != 'undefined'
+			// 		? accounts[selectedAddress].conversion
+			// 		: null;
 		}
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
+		const balanceFiat = weiToFiat(hexToBN(account?.balance|| '0x0'), conversionRate, currentCurrency) || 0;
+
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
 				<ScrollView>
@@ -919,7 +926,7 @@ class DrawerView extends PureComponent {
 											</Text>
 										)}
 										{/* <Icon name="caret-down" size={24} style={styles.caretDown} /> */}
-										<Text style={styles.balance}>$0</Text>
+										<Text style={styles.balance}>{balanceFiat}</Text>
 									</View>
 									{isMainNet(chainId) && (
 										<Text style={styles.accountBalance}>
@@ -1153,7 +1160,8 @@ const mapStateToProps = state => ({
 	tokenBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
 	collectibles: state.engine.backgroundState.AssetsController.collectibles,
 	seedphraseBackedUp: state.user.seedphraseBackedUp,
-	onboardProfile: state.user.onboardProfile
+	onboardProfile: state.user.onboardProfile,
+	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
 });
 
 const mapDispatchToProps = dispatch => ({

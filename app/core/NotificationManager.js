@@ -13,6 +13,8 @@ import { PUSH_NOTIFICATIONS_PROMPT_COUNT, PUSH_NOTIFICATIONS_PROMPT_TIME } from 
 import { RPC } from '../constants/network';
 import { safeToChecksumAddress } from '../util/address';
 import { displayName } from '../../app.json';
+import routes from '../common/routes';
+import { BNToHex } from '@metamask/controllers/dist/util';
 
 const constructTitleAndMessage = data => {
 	let title, message;
@@ -190,6 +192,7 @@ class NotificationManager {
 				switch (originalTransaction.assetType) {
 					case 'ERC20': {
 						pollPromises.push(...[TokenBalancesController.poll(), AssetsDetectionController.poll()]);
+						this.pollTokenBalances();
 						break;
 					}
 					case 'ERC721':
@@ -202,11 +205,23 @@ class NotificationManager {
 					setTimeout(() => {
 						this.requestPushNotificationsPermission();
 					}, 7000);
-
+				
 				this._removeListeners(transactionMeta.id);
 				delete this._transactionsWatchTable[transactionMeta.transaction.nonce];
 			}, 2000);
 	};
+
+	pollTokenBalances = async () => {
+		const { TokenBalancesController } = Engine.context;
+		await TokenBalancesController.updateBalances();
+		const { accounts } = Engine.state.AccountTrackerController;
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { contractBalances } = Engine.state.TokenBalancesController;
+		if (Object.keys(contractBalances).includes(routes.klubToken.address)) {
+			const account = accounts[selectedAddress];
+			account.balance = BNToHex(contractBalances[routes.klubToken.address]);
+		}
+	}
 
 	_speedupCallback = transactionMeta => {
 		this.watchSubmittedTransaction(transactionMeta, true);

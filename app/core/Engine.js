@@ -159,7 +159,7 @@ class Engine {
 						getSelectedAddress: () => preferencesController.state.selectedAddress,
 						getBalanceOf: assetsContractController.getBalanceOf.bind(assetsContractController)
 					},
-					{ interval: 10000 }
+					{ interval: 2000 }
 				),
 				new TokenRatesController({
 					onAssetsStateChange: listener => assetsController.subscribe(listener),

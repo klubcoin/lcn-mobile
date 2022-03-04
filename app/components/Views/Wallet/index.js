@@ -15,7 +15,7 @@ import Tokens from '@UI/Tokens';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { weiToFiat, hexToBN, renderFromTokenMinimalUnit } from '../../../util/number';
+import { weiToFiat, hexToBN, renderFromTokenMinimalUnit, BNToHex } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import CollectibleContracts from '../../UI/CollectibleContracts';
 import Analytics from '../../../core/Analytics';
@@ -106,6 +106,7 @@ class Wallet extends PureComponent {
         this.getCurrentConversion();
         this.announceOnline();
         this.addDefaultToken();
+        this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
     };
 
     addDefaultToken = async () => {
@@ -115,6 +116,22 @@ class Wallet extends PureComponent {
         const exists = tokens.find(e => e.address == address);
         if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
     };
+
+    clearBalanceInterval = () => {
+        if (this.pollTokens) clearInterval(this.pollTokens);
+    }
+
+    pollTokenBalances = async () => {
+        const { TokenBalancesController } = Engine.context;
+        await TokenBalancesController.updateBalances();
+        const { accounts } = Engine.state.AccountTrackerController;
+        const { selectedAddress } = Engine.state.PreferencesController;
+        const { contractBalances } = Engine.state.TokenBalancesController;
+        if (Object.keys(contractBalances).includes(routes.klubToken.address)) {
+            const account = accounts[selectedAddress];
+            account.balance = BNToHex(contractBalances[routes.klubToken.address]);
+        }
+    }
 
     announceOnline() {
         const { selectedAddress, updateOnlinePeerWallets } = this.props;
@@ -211,6 +228,7 @@ class Wallet extends PureComponent {
 
     componentWillUnmount() {
         this.mounted = false;
+        this.clearBalanceInterval();
     }
 
     renderTabBar() {
