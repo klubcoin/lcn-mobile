@@ -33,6 +33,7 @@ import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { LineChart } from "react-native-chart-kit";
+import routes from '../../../common/routes';
 
 /**
  * Main view for the wallet
@@ -141,16 +142,9 @@ class Dashboard extends PureComponent {
     addDefaultToken = async () => {
         const { AssetsController } = Engine.context;
         const { tokens } = Engine.state.AssetsController;
-
-        const klubErc20 = {
-            address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",
-            symbol: "KLB",
-            decimals: 18,
-            image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
-        }
-
-        const exists = tokens.find(e => e.address == klubErc20.address);
-        if (!exists) await AssetsController.addToken(klubErc20.address, klubErc20.symbol, klubErc20.decimals, klubErc20.image);
+        const { address, symbol, decimals, image } = routes.klubToken;
+        const exists = tokens.find(e => e.address == address);
+        if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
     };
 
     async getWalletInfo() {

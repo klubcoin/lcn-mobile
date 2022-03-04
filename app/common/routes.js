@@ -22,6 +22,12 @@ export default {
 		helpSupportUrl: 'https://docs.liquichain.io',
 		reportIssueUrl: 'https://github.com/liquichain/lcn-mobile/issues'
 	},
+	klubToken: {
+		address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",
+		symbol: "KLB",
+		decimals: 18,
+		image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
+	},
 	basicMethod: {
 		jsonrpc: '2.0',
 		method: null,
