@@ -186,7 +186,7 @@ class Amount extends PureComponent {
 		navigation.setParams({ providerType });
 
 		this.getCurrentConversion();
-		this.getBalance();
+		// this.getBalance();
 
 		this.tokens = [getEther(ticker), ...tokens];
 		this.collectibles = this.processCollectibles();

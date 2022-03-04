@@ -98,7 +98,7 @@ class Wallet extends PureComponent {
             const { AssetsDetectionController, AccountTrackerController } = Engine.context;
             AssetsDetectionController.detectAssets();
             // AccountTrackerController.refresh();
-            this.getBalance();
+            // this.getBalance();
             this.getWalletInfo();
             this.mounted = true;
         });
@@ -108,8 +108,8 @@ class Wallet extends PureComponent {
     };
 
     addDefaultToken = async () => {
-        const { AssetsController, TokenBalancesController } = Engine.context;
-        const { tokenBalances } = this.props;
+        const { AssetsController } = Engine.context;
+        const { tokens } = Engine.state.AssetsController;
 
         const klubErc20 = {
             address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",
@@ -117,8 +117,9 @@ class Wallet extends PureComponent {
             decimals: 18,
             image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
         }
-    //    this.props.setSelectedAsset(klubErc20);
-        await AssetsController.addToken(klubErc20.address, klubErc20.symbol, klubErc20.decimals, klubErc20.image);
+
+        const exists = tokens.find(e => e.address == klubErc20.address);
+        if (!exists) await AssetsController.addToken(klubErc20.address, klubErc20.symbol, klubErc20.decimals, klubErc20.image);
     };
 
     announceOnline() {

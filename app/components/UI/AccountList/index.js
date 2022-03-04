@@ -225,7 +225,7 @@ class AccountList extends PureComponent {
 			name, account.address, hash, JSON.stringify({})
 		], response => {
 			console.log('account creation', response)
-			this.getBalance(account.address)
+			// this.getBalance(account.address)
 		}, error => {
 			console.log('error account', error)
 		})
