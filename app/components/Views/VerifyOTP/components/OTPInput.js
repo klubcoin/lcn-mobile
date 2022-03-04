@@ -1,8 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, TextInput, Dimensions, Text } from 'react-native';
 import { colors } from '../../../../styles/common';
-import APIService, { basicAuth } from '../../../../services/APIService';
-import * as base64 from 'base-64';
 
 const { width } = Dimensions.get('screen');
 export default function OTPInput({ style, value, onChange }) {

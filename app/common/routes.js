@@ -1,4 +1,5 @@
 import { displayName } from '../../app.json';
+import BuildVariant from '../variants/BuildVariant'
 
 export default {
 	jsonRPC: 'jsonrpc',
@@ -10,15 +11,15 @@ export default {
 	getTransaction: 'eth_getTransactionByHash',
 	mainNetWork: {
 		name: `${displayName} Main Network`,
-		url: 'https://account2.liquichain.io/meveo/rest/jsonrpc',
+		url: `${BuildVariant.activeVariant().ServerAddress}/meveo/rest/jsonrpc`,
 		chainId: '76',
 		symbol: null,
 		ticker: 'KLUB',
 		coin: 'Klubcoin',
-		route: 'https://account2.liquichain.io/meveo/rest/',
+		route: `${BuildVariant.activeVariant().ServerAddress}/meveo/rest/`,
 		hostDomain: 'klubcoin.net',
 		blockExploreUrl: 'https://klubcoin.net',
-		accountUrl: 'https://account2.liquichain.io',
+		accountUrl: BuildVariant.activeVariant().ServerAddress,
 		helpSupportUrl: 'https://docs.liquichain.io',
 		reportIssueUrl: 'https://github.com/liquichain/lcn-mobile/issues'
 	},

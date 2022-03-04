@@ -1,5 +1,6 @@
 import Device from '../util/Device';
 import { MAINNET, RINKEBY } from '../constants/network';
+import BuildVariant from "../variants/BuildVariant"
 
 const DEVELOPMENT = 'development';
 
@@ -27,7 +28,7 @@ export default {
 		},
 		SUPPORTED_NETWORKS: [MAINNET, RINKEBY]
 	},
-	MM_UNIVERSAL_LINK_HOST: 'account2.liquichain.io',
+	MM_UNIVERSAL_LINK_HOST: BuildVariant.activeVariant().universalLink,
 	MM_INFURA_PROJECT_ID: 'aece2b99680d44839ec28ff077670ec6',
 	SAI_ADDRESS: '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359',
 	HOMEPAGE_URL: 'https://home.liquichain.io/',
