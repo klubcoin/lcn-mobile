@@ -1,0 +1,18 @@
+--- a/node_modules/@metamask/controllers/dist/assets/AccountTrackerController.js	2022-03-04 02:03:36.000000000 +0700
++++ b/node_modules/@metamask/controllers/dist/assets/AccountTrackerController.js	2022-03-03 15:03:55.000000000 +0700
+@@ -42,7 +42,6 @@
+          */
+         this.refresh = () => __awaiter(this, void 0, void 0, function* () {
+             this.syncAccounts();
+-            /*
+             const { accounts } = this.state;
+             for (const address in accounts) {
+                 yield util_1.safelyExecuteWithTimeout(() => __awaiter(this, void 0, void 0, function* () {
+@@ -51,7 +50,6 @@
+                     this.update({ accounts: Object.assign({}, accounts) });
+                 }));
+             }
+-            */
+         });
+         this.defaultConfig = {
+             interval: 10000,
