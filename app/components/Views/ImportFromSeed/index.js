@@ -41,6 +41,8 @@ import preferences from '../../../store/preferences';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
+import Web3 from 'web3';
+import BuildVariant from '../../../variants/BuildVariant';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -163,19 +165,26 @@ class ImportFromSeed extends PureComponent {
 			},
 			error => {
 				this.cleanUser();
-				showError(strings('import_from_seed.import_wallet_wrong'));``
+				showError(strings('import_from_seed.import_wallet_wrong'));
 			}
 		);
 	}
 
 	async getAccountInfo(selectedAddress, metricsOptIn, onboardingWizard) {
 		const address = selectedAddress.slice(2, selectedAddress.length);
+		const web3 = new Web3();
+		const message = `walletInfo,${address},${new Date().getTime()}`;
+		const sign = web3.eth.accounts.sign(
+			message,
+			'0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7'
+		);
 		Api.postRequest(
 			routes.walletInfo,
-			[address],
+			[address, sign.signature, message],
 			response => {
 				if (response.result) {
-					const { email, name, phone } = response.result?.publicInfo ?? {};
+					const { name } = response.result?.publicInfo ?JSON.parse(response.result?.publicInfo): {};
+					const { emailAddress, phoneNumber } = response.result?.privateInfo ?JSON.parse(response.result?.privateInfo): {};
 					preferences.setOnboardProfile({
 						avatar: '',
 						firstname: name ? name.split(' ')[0] : '',
@@ -185,17 +194,21 @@ class ImportFromSeed extends PureComponent {
 									.slice(1, name.split(' ').length)
 									.join(' ')
 							: '',
-						email,
-						phone
+						email: emailAddress,
+						phone: phoneNumber
 					});
 					this.continueImport(metricsOptIn, onboardingWizard);
 				} else {
-					this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
+					// this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
+					showError(strings('import_from_seed.wallet_not_created'));
+					this.cleanUser();
 				}
 			},
 			error => {
 				console.log(error);
-				this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
+				showError(strings('import_from_seed.wallet_not_created'));
+				this.cleanUser();
+				// this.sendAccount(selectedAddress, metricsOptIn, onboardingWizard);
 			}
 		);
 	}

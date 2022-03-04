@@ -286,6 +286,7 @@
 		"invalid_qr_code_title": "Invalid QR Code",
 		"invalid_qr_code_message": "This QR code doesn't represent a valid Secret Recovery Phrase",
 		"internet_warning": "Please connect internet for continue!",
+		"wallet_not_created": "This wallet was never created on the app!",
 		"import_wallet_wrong": "Something were wrong! Please try again."
 	},
 	"bottom_tab_bar": {

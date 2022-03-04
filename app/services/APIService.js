@@ -1,8 +1,9 @@
 import moment from 'moment';
 import config from '../config';
 import WebService from './WebService';
+import BuildVariant from '../variants/BuildVariant'
 
-export const basicAuth = 'apitest:apitest';
+export const basicAuth =BuildVariant.activeVariant().basicAuth;
 const basicAuthAdmin = 'meveo.admin:meveo';
 
 const dateFormatMeveo = 'YYYY-MM-DD HH:mm:ss';
@@ -19,8 +20,8 @@ export default class APIService {
 	static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-	static routePersistenceAPI = () => 'https://account2.liquichain.io/meveo/api/rest/default/persistence/';
-	static routeMeveoAPI = () => 'https://account2.liquichain.io/meveo';
+	static routeMeveoAPI = () => `${BuildVariant.activeVariant().ServerAddress}/meveo`;
+	static routePersistenceAPI = () => `${BuildVariant.activeVariant().ServerAddress}/meveo/api/rest/default/persistence/`;
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
 	static apiGetWalletContract = appWallet => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;

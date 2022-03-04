@@ -1,9 +1,10 @@
 import { RNKeycloak } from '@react-keycloak/native';
+import BuildVariant from "./app/variants/BuildVariant"
 
 // Setup Keycloak instance as needed
 // Pass initialization options as required
 const keycloak = new RNKeycloak({
-  url: 'https://account2.liquichain.io/auth',
+  url: BuildVariant.activeVariant().keycloakUrl,
   realm: 'meveo',
   clientId: 'account',
 });

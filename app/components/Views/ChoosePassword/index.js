@@ -47,6 +47,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import TextField, { MAX_LENGTH_INPUT } from '../../UI/TextField';
+import Web3 from 'web3';
 import emojiRegex from 'emoji-regex';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
@@ -179,8 +180,7 @@ class ChoosePassword extends PureComponent {
 		const publicInfo = JSON.stringify({ name });
 		const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
-		const params = [username, selectedAddress, hash, publicInfo, privateInfo];
-
+		const params = [username, selectedAddress.toLowerCase(), hash, publicInfo, privateInfo];
 		API.postRequest(
 			Routes.walletCreation,
 			params,
@@ -188,12 +188,14 @@ class ChoosePassword extends PureComponent {
 				if (response.result) {
 					this.continueImport();
 				} else {
-					showError(strings('import_from_seed.import_wallet_wrong'));
+					showError(response?.error?.message ?? strings('import_from_seed.import_wallet_wrong'));
+					// this.continueImport();
 					this.cleanUser();
 				}
 			},
 			error => {
 				showError(strings('import_from_seed.import_wallet_wrong'));
+				// this.continueImport();
 				this.cleanUser();
 			}
 		);
@@ -211,7 +213,7 @@ class ChoosePassword extends PureComponent {
 			preferences.setOnboardProfile(null);
 			await AsyncStorage.removeItem(EXISTING_USER);
 			this.setState({ loading: false });
-			this.props.navigation.goBack()
+			this.props.navigation.goBack();
 		} catch (error) {
 			Logger.log(error, `Failed to remove key: ${EXISTING_USER} from AsyncStorage`);
 		}
@@ -223,6 +225,12 @@ class ChoosePassword extends PureComponent {
 			return;
 		}
 
+		const web3 = new Web3();
+		const message = `walletInfo,${this.props.selectedAddress},${new Date().getTime()}`;
+		const sign = web3.eth.accounts.sign(
+			message,
+			'0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7'
+		);
 		const { loading, isSelected, password, confirmPassword } = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
 		const canSubmit = passwordsMatch && isSelected;
