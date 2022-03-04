@@ -188,7 +188,8 @@ class Amount extends PureComponent {
 		this.getCurrentConversion();
 		// this.getBalance();
 
-		this.tokens = [getEther(ticker), ...tokens];
+		// this.tokens = [getEther(ticker), ...tokens];
+		this.tokens = [...tokens];
 		this.collectibles = this.processCollectibles();
 		this.amountInput && this.amountInput.current && this.amountInput.current.focus();
 		this.onInputChange && this.onInputChange(readableValue);
