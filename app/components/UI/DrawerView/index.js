@@ -232,14 +232,17 @@ class DrawerView extends PureComponent {
 
 
 	componentDidUpdate() {
-		RNFS.readFile(this.props?.onboardProfile?.avatar, 'base64').then(file => {
-			if (file !== this.state.file) {
-				this.setState({
-					file,
-					time: new Date()
-				});
-			}
-		});
+		if (!!this.props?.onboardProfile?.avatar) {
+			RNFS.readFile(this.props?.onboardProfile?.avatar, 'base64').then(file => {
+				if (file !== this.state.file) {
+					this.setState({
+						file,
+						time: new Date()
+					});
+				}
+			});
+		}
+
 		const route = findRouteNameFromNavigatorState(this.props.navigation.state);
 		if (!this.props.passwordSet || !this.props.seedphraseBackedUp) {
 			const bottomTab = findBottomTabRouteNameFromNavigatorState(this.props.navigation.state);
