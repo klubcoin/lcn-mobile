@@ -14,7 +14,7 @@ import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { weiToFiat, hexToBN } from '../../../util/number';
+import { weiToFiat, hexToBN, BNToHex, renderFromTokenMinimalUnit } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -32,9 +32,10 @@ import Device from '../../../util/Device';
 import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { LineChart } from "react-native-chart-kit";
+import { LineChart } from 'react-native-chart-kit';
 import routes from '../../../common/routes';
 import Web3 from 'web3';
+import { toChecksumAddress } from 'ethereumjs-util';
 
 /**
  * Main view for the wallet
@@ -108,12 +109,81 @@ class Dashboard extends PureComponent {
 
 	state = {
 		refreshing: false,
-		currentConversion: null
+		currentConversion: null,
+		totalToken: 0
 	};
 
 	accountOverviewRef = React.createRef();
 
 	mounted = false;
+
+	fetchTotalTokens() {
+		const accounts = this.getAccounts();
+		const { klubToken } = Routes;
+		let totalToken = 0;
+		for (account of accounts) {
+			totalToken += +renderFromTokenMinimalUnit(account?.balance, klubToken.decimals);
+		}
+		this.setState({
+			totalToken
+		});
+	}
+
+	componentWillUpdate() {
+		this.fetchTotalTokens();
+	}
+
+	componentWillUnmount() {
+		this.clearBalanceInterval();
+	}
+
+	clearBalanceInterval = () => {
+		if (this.pollTokens) clearInterval(this.pollTokens);
+	};
+
+	pollTokenBalances = async () => {
+		const { TokenBalancesController } = Engine.context;
+		await TokenBalancesController.updateBalances();
+		const { accounts } = Engine.state.AccountTrackerController;
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { contractBalances } = Engine.state.TokenBalancesController;
+		if (Object.keys(contractBalances).includes(routes.klubToken.address)) {
+			const account = accounts[selectedAddress];
+			account.balance = BNToHex(contractBalances[routes.klubToken.address]);
+		}
+	};
+
+	getAccounts() {
+		const { accounts, identities, keyrings, getBalanceError } = this.props;
+		const allKeyrings = keyrings && keyrings.length ? keyrings : Engine.context.KeyringController.state.keyrings;
+
+		const accountsOrdered = allKeyrings.reduce((list, keyring) => list.concat(keyring.accounts), []);
+
+		if (accounts) {
+			return accountsOrdered
+				.filter(address => !!identities[toChecksumAddress(address)])
+				.map((addr, index) => {
+					const checksummedAddress = toChecksumAddress(addr);
+					const identity = identities[checksummedAddress];
+					const { address } = identity;
+					const identityAddressChecksummed = toChecksumAddress(address);
+					let balance = 0x0;
+					if (accounts[identityAddressChecksummed]) {
+						balance = accounts[identityAddressChecksummed]
+							? accounts[identityAddressChecksummed]?.balance
+							: null;
+					}
+
+					const balanceError = getBalanceError ? getBalanceError(balance) : null;
+					return {
+						index,
+						address: identityAddressChecksummed,
+						balance,
+						balanceError
+					};
+				});
+		}
+	}
 
 	componentDidMount = () => {
 		messageStore.setActiveChatPeerId(null);
@@ -128,6 +198,7 @@ class Dashboard extends PureComponent {
 		this.getCurrentConversion();
 		this.announceOnline();
 		this.addDefaultToken();
+		this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
 	};
 
 	announceOnline() {
@@ -154,7 +225,7 @@ class Dashboard extends PureComponent {
 		const exists = tokens.find(e => e.address == address);
 		if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
 	};
-	
+
 	async getWalletInfo() {
 		const { selectedAddress } = this.props;
 		const { PreferencesController } = Engine.context;
@@ -382,8 +453,8 @@ class Dashboard extends PureComponent {
 						</View>
 						<View style={styles.cardContent}>
 							<Text style={styles.balance}>
-								100,000
-								<Text style={styles.currency}> KlubCoins</Text>
+								{`${this.state.totalToken} `}
+								<Text style={styles.currency}>{Routes.klubToken.symbol}</Text>
 							</Text>
 						</View>
 					</View>
@@ -523,11 +594,13 @@ const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
 	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
 	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
+	keyrings: state.engine.backgroundState.KeyringController.keyrings,
 	identities: state.engine.backgroundState.PreferencesController.identities,
 	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
 	tokens: state.engine.backgroundState.AssetsController.tokens,
 	collectibles: state.engine.backgroundState.AssetsController.collectibles,
 	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
+	tokenBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
 	wizardStep: state.wizard.step
 });
 
