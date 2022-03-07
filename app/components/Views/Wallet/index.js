@@ -94,6 +94,7 @@ class Wallet extends PureComponent {
     mounted = false;
 
     componentDidMount = () => {
+        this.addDefaultToken();
         messageStore.setActiveChatPeerId(null);
         requestAnimationFrame(async () => {
             const { AssetsDetectionController, AccountTrackerController } = Engine.context;
@@ -105,9 +106,15 @@ class Wallet extends PureComponent {
         });
         this.getCurrentConversion();
         this.announceOnline();
-        this.addDefaultToken();
         this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
     };
+
+    componentDidUpdate = prevProps => {
+        if (this.props != prevProps) {
+            this.addDefaultToken();
+        }
+    };
+
 
     addDefaultToken = async () => {
         const { AssetsController } = Engine.context;
@@ -203,26 +210,26 @@ class Wallet extends PureComponent {
     };
 
     getBalance = async () => {
-        const { accounts, selectedAddress, identities } = this.props;
-        // for(const account in accounts){
-        let params = [selectedAddress];
-        await API.postRequest(
-            Routes.getBalance,
-            params,
-            response => {
-                // console.log(parseInt(response.result, 16))
-                const balance = response.result;
-                accounts[selectedAddress] = {
-                    balance: balance,
-                    conversion: this.state.currentConversion
-                };
-                const { AccountTrackerController } = Engine.context;
-                AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
-            },
-            error => {
-                console.log(error.message);
-            }
-        );
+        // const { accounts, selectedAddress, identities } = this.props;
+        // // for(const account in accounts){
+        // let params = [selectedAddress];
+        // await API.postRequest(
+        //     Routes.getBalance,
+        //     params,
+        //     response => {
+        //         // console.log(parseInt(response.result, 16))
+        //         const balance = response.result;
+        //         accounts[selectedAddress] = {
+        //             balance: balance,
+        //             conversion: this.state.currentConversion
+        //         };
+        //         const { AccountTrackerController } = Engine.context;
+        //         AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
+        //     },
+        //     error => {
+        //         console.log(error.message);
+        //     }
+        // );
         // }
     };
 

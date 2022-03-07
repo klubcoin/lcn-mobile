@@ -141,6 +141,12 @@ class Dashboard extends PureComponent {
 		});
 	}
 
+	componentDidUpdate = prevProps => {
+		if (this.props != prevProps) {
+			this.addDefaultToken();
+		}
+	};
+
 	addDefaultToken = async () => {
 		const { AssetsController } = Engine.context;
 		const { tokens } = Engine.state.AssetsController;
