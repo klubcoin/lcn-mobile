@@ -10,13 +10,13 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;cp &quot;${PROJECT_DIR}/../.env.development&quot; &quot;${PROJECT_DIR}/../.env&quot;&#10;">
+               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;cp &quot;${PROJECT_DIR}/../.env.production&quot; &quot;${PROJECT_DIR}/../.env&quot;&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-                     BuildableName = "Liquichain.app"
-                     BlueprintName = "Liquichain"
+                     BlueprintIdentifier = "C893A5B127D7B0F800B20984"
+                     BuildableName = "LiquichainProduction.app"
+                     BlueprintName = "LiquichainProduction"
                      ReferencedContainer = "container:Liquichain.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
@@ -32,9 +32,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Liquichain.app"
-               BlueprintName = "Liquichain"
+               BlueprintIdentifier = "C893A5B127D7B0F800B20984"
+               BuildableName = "LiquichainProduction.app"
+               BlueprintName = "LiquichainProduction"
                ReferencedContainer = "container:Liquichain.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -73,13 +73,13 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;cp &quot;${PROJECT_DIR}/../.env.development&quot; &quot;${PROJECT_DIR}/../.env&quot;&#10;">
+               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;cp &quot;${PROJECT_DIR}/../.env.production&quot; &quot;${PROJECT_DIR}/../.env&quot;&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-                     BuildableName = "Liquichain.app"
-                     BlueprintName = "Liquichain"
+                     BlueprintIdentifier = "C893A5B127D7B0F800B20984"
+                     BuildableName = "LiquichainProduction.app"
+                     BlueprintName = "LiquichainProduction"
                      ReferencedContainer = "container:Liquichain.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
@@ -90,9 +90,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Liquichain.app"
-            BlueprintName = "Liquichain"
+            BlueprintIdentifier = "C893A5B127D7B0F800B20984"
+            BuildableName = "LiquichainProduction.app"
+            BlueprintName = "LiquichainProduction"
             ReferencedContainer = "container:Liquichain.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -103,16 +103,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Liquichain.app"
-            BlueprintName = "Liquichain"
+            BlueprintIdentifier = "C893A5B127D7B0F800B20984"
+            BuildableName = "LiquichainProduction.app"
+            BlueprintName = "LiquichainProduction"
             ReferencedContainer = "container:Liquichain.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
