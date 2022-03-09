@@ -94,7 +94,6 @@ class ChoosePassword extends PureComponent {
 		isSelected: false,
 		password: '',
 		confirmPassword: '',
-		username: '',
 		secureTextEntry: true,
 		biometryType: null,
 		biometryChoice: false,
@@ -172,13 +171,12 @@ class ChoosePassword extends PureComponent {
 		if (selectedAddress == null) {
 			return;
 		}
-		const { avatar, firstname, lastname, email, phone } = preferences.onboardProfile;
-		const { username } = this.state;
-		// const username = '';
+		const { avatar, firstname, lastname, email } = preferences.onboardProfile;
+		const {username }= this.props.navigation.state.params;
 		const name = `${firstname} ${lastname}`;
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const publicInfo = JSON.stringify({ name });
-		const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
+		const privateInfo = JSON.stringify({ emailAddress: email });
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
 		const params = [username, selectedAddress.toLowerCase(), hash, publicInfo, privateInfo];
 		API.postRequest(
@@ -446,10 +444,6 @@ class ChoosePassword extends PureComponent {
 		this.checkValidPassword(val);
 	};
 
-	onUsernameChange = val => {
-		this.setState({ username: val.replace(this.regex, '') });
-	};
-
 	toggleShowHide = () => {
 		this.setState(state => ({ secureTextEntry: !state.secureTextEntry }));
 	};
@@ -540,7 +534,6 @@ class ChoosePassword extends PureComponent {
 			password,
 			passwordStrength,
 			confirmPassword,
-			username,
 			secureTextEntry,
 			error,
 			loading,
@@ -550,7 +543,7 @@ class ChoosePassword extends PureComponent {
 			validatePassword
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
-		const canSubmit = passwordsMatch && isValidPassword && isSelected && username !== '';
+		const canSubmit = passwordsMatch && isValidPassword && isSelected ;
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 
@@ -750,13 +743,6 @@ class ChoosePassword extends PureComponent {
 													</Text>
 												)}
 											</View>
-											<TextField
-												value={username}
-												label={strings('choose_password.username')}
-												placeholder={strings('login.type_here')}
-												containerStyle={styles.usernameField}
-												onChangeText={this.onUsernameChange}
-											/>
 											<View>{this.renderSwitch()}</View>
 											<View style={styles.checkboxContainer}>
 												<CheckBox

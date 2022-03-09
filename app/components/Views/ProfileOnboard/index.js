@@ -29,9 +29,6 @@ import styles from './styles/index';
 import TextField from '../../UI/TextField';
 import validator from 'validator';
 import { showError } from '../../../util/notify';
-import PhoneTextField from '../../UI/PhoneTextField';
-import CountrySearchModal from '../../UI/CountrySearchModal';
-import { allCountries } from 'country-telephone-data';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import emojiRegex from 'emoji-regex';
 
@@ -42,10 +39,8 @@ class ProfileOnboard extends PureComponent {
 	firstname = '';
 	lastname = '';
 	email = '';
-	phone = '';
+	username = '';
 	isViewModal = false;
-	showCountryCodePicker = false;
-	countryCode = '';
 	hasUpdateAvatar = false;
 	notiPermissionCamera = false;
 	notiMessage = '';
@@ -58,15 +53,17 @@ class ProfileOnboard extends PureComponent {
 			firstname: observable,
 			lastname: observable,
 			email: observable,
-			phone: observable,
 			isViewModal: observable,
-			showCountryCodePicker: observable,
-			countryCode: observable,
 			hasUpdateAvatar: observable,
 			notiPermissionCamera: observable,
-			notiMessage: observable
+			notiMessage: observable,
+			username: observable
 		});
 	}
+
+	onUsernameChange = val => {
+		this.username = val.replace(this.regex, '');
+	};
 
 	onPickImage() {
 		if (Platform.OS === 'android') {
@@ -222,8 +219,7 @@ class ProfileOnboard extends PureComponent {
 		const firstname = this.firstname.trim();
 		const lastname = this.lastname.trim();
 		const email = this.email.trim();
-		const phone = this.phone.trim();
-
+		const username = this.username.trim();
 		if (!this.avatar) {
 			showError(strings('profile.missing_photo'));
 			return;
@@ -244,12 +240,8 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.invalid_email'));
 			return;
 		}
-		// if (!phone) {
-		// 	showError(strings('profile.missing_phone'));
-		// 	return;
-		// }
-		if (phone && (!/^[\d]{10}$/.test(phone) || !this.countryCode)) {
-			showError(strings('profile.invalid_phone'));
+		if (!username) {
+			showError(strings('profile.missing_username'));
 			return;
 		}
 		return true;
@@ -259,7 +251,7 @@ class ProfileOnboard extends PureComponent {
 		const firstname = this.firstname.trim();
 		const lastname = this.lastname.trim();
 		const email = this.email.trim().toLowerCase();
-		const phone = `+${this.countryCode}-${this.phone}`.trim();
+		const username = this.username;
 
 		const isValid = this.isDataValid();
 		if (!isValid) return;
@@ -279,12 +271,12 @@ class ProfileOnboard extends PureComponent {
 			avatar: this.avatar ? path : '',
 			firstname,
 			lastname,
-			email,
-			phone
+			email
 		});
 
 		this.props.navigation.navigate('ChoosePassword', {
-			[PREVIOUS_SCREEN]: ONBOARDING
+			[PREVIOUS_SCREEN]: ONBOARDING,
+			username
 		});
 	}
 
@@ -328,46 +320,23 @@ class ProfileOnboard extends PureComponent {
 									onChangeText={text => (this.email = text)}
 									keyboardType="email-address"
 								/>
-								<PhoneTextField
-									value={this.phone}
-									label={strings('profile.phone')}
-									placeholder={strings('profile.phone')}
-									onChangeText={text => {
-										if (!this.countryCode) {
-											showError(strings('profile.select_country_code_first'));
-											return;
-										}
-										this.phone = text;
-									}}
-									keyboardType="number-pad"
-									countryCode={this.countryCode}
-									onPressCountryCode={() => (this.showCountryCodePicker = true)}
-									onFocus={() => {
-										if (!this.countryCode) {
-											showError(strings('profile.select_country_code_first'));
-										}
-									}}
+								<TextField
+									value={this.username}
+									label={strings('choose_password.username')}
+									placeholder={strings('login.type_here')}
+									containerStyle={styles.usernameField}
+									onChangeText={this.onUsernameChange}
 								/>
 							</View>
-
-							<StyledButton type={'normal'} onPress={this.onNext.bind(this)} containerStyle={styles.next}>
+							<StyledButton
+								type={'normal'}
+								onPress={this.onNext.bind(this)}
+								containerStyle={styles.next}
+							>
 								{strings('choose_password.continue')}
 							</StyledButton>
 						</View>
 					</ScrollView>
-					{this.showCountryCodePicker && (
-						<CountrySearchModal
-							placeholder={strings('profile.search')}
-							items={allCountries}
-							countryCode={this.countryCode}
-							countryCode={this.countryCode}
-							onSelectCountryCode={item => {
-								this.countryCode = item.dialCode;
-								this.showCountryCodePicker = false;
-							}}
-							onClose={() => (this.showCountryCodePicker = false)}
-						/>
-					)}
 					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
 						<TouchableOpacity
 							style={styles.centerModal}
