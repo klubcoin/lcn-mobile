@@ -419,7 +419,7 @@ class Dashboard extends PureComponent {
 		let balance = 0;
 		let assets = tokens;
 		if (selectedAddress && accounts) {
-			balance = accounts[selectedAddress].balance;
+			balance = accounts[selectedAddress]?.balance;
 			// balance = "0x00"
 			assets = [
 				{
