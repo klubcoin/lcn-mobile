@@ -1,6 +1,7 @@
 import Device from '../util/Device';
 import { MAINNET, RINKEBY } from '../constants/network';
-import BuildVariant from "../variants/BuildVariant"
+import BuildVariant from '../variants/BuildVariant';
+import Config from 'react-native-config';
 
 const DEVELOPMENT = 'development';
 
@@ -71,8 +72,8 @@ export default {
 	},
 	MAX_SAFE_CHAIN_ID: 4503599627370476,
 	URLS: {
-		TERMS_AND_CONDITIONS: 'https://liquichain.io/terms-of-use/',
-		PRIVACY_POLICY: 'https://liquichain.io/privacy-policy/',
+		TERMS_AND_CONDITIONS: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/term_conditions.html`,
+		PRIVACY_POLICY: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/privacy.html`,
 		CONNECTIVITY_ISSUES: 'https://liquichain.io',
 		NFT: 'https://liquichain.io'
 	},
