@@ -331,10 +331,6 @@ class Wallet extends PureComponent {
             assets = tokens;
         }
 
-        console.log({
-            accounts
-        });
-
         const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 
         return (

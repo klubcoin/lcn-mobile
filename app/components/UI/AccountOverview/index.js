@@ -226,6 +226,8 @@ class AccountOverview extends PureComponent {
 	};
 
 	onBuy = () => {
+		this.props.navigation.navigate('ComingSoon');
+		return;
 		this.props.navigation.navigate('PurchaseMethods');
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_BUY_ETH);
@@ -246,7 +248,7 @@ class AccountOverview extends PureComponent {
 			swapsIsLive,
 			onboardProfile,
 			conversionRate,
-			tokenExchangeRates,
+			tokenExchangeRates
 		} = this.props;
 
 		if (!address) return null;
@@ -290,7 +292,9 @@ class AccountOverview extends PureComponent {
 												styles.label,
 												styles.labelInput,
 												styles.onboardingWizardLabel,
-												onboardingWizard ? { borderColor: colors.blue } : { borderColor: colors.white }
+												onboardingWizard
+													? { borderColor: colors.blue }
+													: { borderColor: colors.white }
 											]}
 											editable={accountLabelEditable}
 											onChangeText={this.onAccountLabelChange}
@@ -342,11 +346,11 @@ class AccountOverview extends PureComponent {
 								label={strings('asset_overview.receive_button')}
 							/>
 							{/* {allowedToBuy(chainId) && ( */}
-								<AssetActionButton
-									icon="buy"
-									onPress={this.onBuy}
-									label={strings('asset_overview.buy_button')}
-								/>
+							<AssetActionButton
+								icon="buy"
+								onPress={this.onBuy}
+								label={strings('asset_overview.buy_button')}
+							/>
 							{/* )} */}
 							<AssetActionButton
 								testID={'token-send-button'}
@@ -358,7 +362,7 @@ class AccountOverview extends PureComponent {
 								icon="trade"
 								onPress={() => {
 									// showInfo('This feature in under maintain');
-									this.props.navigation.navigate("ComingSoon")
+									this.props.navigation.navigate('ComingSoon');
 								}}
 								label={strings('asset_overview.trade')}
 								lastIcon
@@ -392,7 +396,7 @@ const mapStateToProps = state => ({
 	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
 	swapsIsLive: swapsLivenessSelector(state),
 	onboardProfile: state.user.onboardProfile,
-	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
+	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate
 });
 
 const mapDispatchToProps = dispatch => ({

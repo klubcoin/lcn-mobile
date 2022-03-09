@@ -299,7 +299,7 @@ class Tokens extends PureComponent {
 		return (
 			<View>
 				{tokensToDisplay.map(item => this.renderItem(item))}
-				{this.renderBuyLCN()}
+				{/* {this.renderBuyLCN()} */}
 				{this.renderFooter()}
 			</View>
 		);
