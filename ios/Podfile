@@ -23,6 +23,8 @@ target 'Liquichain' do
 
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
 
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
   target 'LiquichainTests' do
     inherit! :complete
     # Pods for testing

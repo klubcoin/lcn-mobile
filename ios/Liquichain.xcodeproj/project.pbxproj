@@ -31,6 +31,68 @@
 		AC6BB40E522B4FB4B7B39A84 /* EuclidCircularB-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 07F11F4E2D654437A1C35795 /* EuclidCircularB-SemiboldItalic.otf */; };
 		C23EE0F96B964A86B8E4BD20 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2E8B512700C43FDBCE890E8 /* Roboto-Thin.ttf */; };
 		C85F7AE17A234AAB953CF17D /* EuclidCircularB-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C5EE98F0B2D94BDDAE8378A7 /* EuclidCircularB-Regular.otf */; };
+		C893A55B27D7AC6500B20984 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		C893A55C27D7AC6500B20984 /* LCN-Mobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5212FCDE2682C16B0058A247 /* LCN-Mobile.swift */; };
+		C893A55D27D7AC6500B20984 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		C893A55F27D7AC6500B20984 /* libPods-Liquichain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88489BF028DB8ADE119B8DD1 /* libPods-Liquichain.a */; };
+		C893A56127D7AC6500B20984 /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = 13BD5E4B26CBEB8C00DFFA74 /* InpageBridgeWeb3.js */; };
+		C893A56227D7AC6500B20984 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		C893A56327D7AC6500B20984 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		C893A56427D7AC6500B20984 /* EuclidCircularB-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D7EDA083FAA44A8EB61C2CC2 /* EuclidCircularB-Bold.otf */; };
+		C893A56527D7AC6500B20984 /* EuclidCircularB-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 88597B7406724C54A467452C /* EuclidCircularB-BoldItalic.otf */; };
+		C893A56627D7AC6500B20984 /* EuclidCircularB-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8FB1D8EF2B6640F4BD744004 /* EuclidCircularB-Light.otf */; };
+		C893A56727D7AC6500B20984 /* EuclidCircularB-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55624A8308964BB6AB600504 /* EuclidCircularB-LightItalic.otf */; };
+		C893A56827D7AC6500B20984 /* EuclidCircularB-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 359A7E62C1CB46458F87C4D6 /* EuclidCircularB-Medium.otf */; };
+		C893A56927D7AC6500B20984 /* EuclidCircularB-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F01E6FA141D246E5AB4A2F62 /* EuclidCircularB-MediumItalic.otf */; };
+		C893A56A27D7AC6500B20984 /* EuclidCircularB-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C5EE98F0B2D94BDDAE8378A7 /* EuclidCircularB-Regular.otf */; };
+		C893A56B27D7AC6500B20984 /* EuclidCircularB-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503DC345D0874B52B8E27448 /* EuclidCircularB-RegularItalic.otf */; };
+		C893A56C27D7AC6500B20984 /* EuclidCircularB-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8541EDCAF10E4647AAF4B638 /* EuclidCircularB-Semibold.otf */; };
+		C893A56D27D7AC6500B20984 /* EuclidCircularB-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 07F11F4E2D654437A1C35795 /* EuclidCircularB-SemiboldItalic.otf */; };
+		C893A56E27D7AC6500B20984 /* Metamask.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B84384A85AED494487DC5A1A /* Metamask.ttf */; };
+		C893A56F27D7AC6500B20984 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C42D0860212F481B83492E67 /* Roboto-Black.ttf */; };
+		C893A57027D7AC6500B20984 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 510B1D17B3CD402B9152C90E /* Roboto-BlackItalic.ttf */; };
+		C893A57127D7AC6500B20984 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C308B45EA1A64E22BD1CA83C /* Roboto-Bold.ttf */; };
+		C893A57227D7AC6500B20984 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF6EE24513ED449B8618F9B9 /* Roboto-BoldItalic.ttf */; };
+		C893A57327D7AC6500B20984 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F2BCBF8720BE429D81EDB275 /* Roboto-Italic.ttf */; };
+		C893A57427D7AC6500B20984 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF38347A42D8497C93A83C38 /* Roboto-Light.ttf */; };
+		C893A57527D7AC6500B20984 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 500136A276A34907A9771F1D /* Roboto-LightItalic.ttf */; };
+		C893A57627D7AC6500B20984 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87F784DCC92B41AAB3CAC3F8 /* Roboto-Medium.ttf */; };
+		C893A57727D7AC6500B20984 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1EBA08F752B460D989FF75D /* Roboto-MediumItalic.ttf */; };
+		C893A57827D7AC6500B20984 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94D767DE77844EF9B28123D /* Roboto-Regular.ttf */; };
+		C893A57927D7AC6500B20984 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2E8B512700C43FDBCE890E8 /* Roboto-Thin.ttf */; };
+		C893A57A27D7AC6500B20984 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCFFC3D1CC144317A0924A56 /* Roboto-ThinItalic.ttf */; };
+		C893A58327D7AC9F00B20984 /* Info-Staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = C893A58227D7AC6600B20984 /* Info-Staging.plist */; };
+		C893A5B527D7B0F800B20984 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		C893A5B627D7B0F800B20984 /* LCN-Mobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5212FCDE2682C16B0058A247 /* LCN-Mobile.swift */; };
+		C893A5B727D7B0F800B20984 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		C893A5B927D7B0F800B20984 /* libPods-Liquichain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88489BF028DB8ADE119B8DD1 /* libPods-Liquichain.a */; };
+		C893A5BB27D7B0F800B20984 /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = 13BD5E4B26CBEB8C00DFFA74 /* InpageBridgeWeb3.js */; };
+		C893A5BC27D7B0F800B20984 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		C893A5BD27D7B0F800B20984 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		C893A5BE27D7B0F800B20984 /* EuclidCircularB-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D7EDA083FAA44A8EB61C2CC2 /* EuclidCircularB-Bold.otf */; };
+		C893A5BF27D7B0F800B20984 /* EuclidCircularB-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 88597B7406724C54A467452C /* EuclidCircularB-BoldItalic.otf */; };
+		C893A5C027D7B0F800B20984 /* EuclidCircularB-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8FB1D8EF2B6640F4BD744004 /* EuclidCircularB-Light.otf */; };
+		C893A5C127D7B0F800B20984 /* EuclidCircularB-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55624A8308964BB6AB600504 /* EuclidCircularB-LightItalic.otf */; };
+		C893A5C227D7B0F800B20984 /* EuclidCircularB-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 359A7E62C1CB46458F87C4D6 /* EuclidCircularB-Medium.otf */; };
+		C893A5C327D7B0F800B20984 /* EuclidCircularB-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F01E6FA141D246E5AB4A2F62 /* EuclidCircularB-MediumItalic.otf */; };
+		C893A5C427D7B0F800B20984 /* EuclidCircularB-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C5EE98F0B2D94BDDAE8378A7 /* EuclidCircularB-Regular.otf */; };
+		C893A5C527D7B0F800B20984 /* EuclidCircularB-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503DC345D0874B52B8E27448 /* EuclidCircularB-RegularItalic.otf */; };
+		C893A5C627D7B0F800B20984 /* EuclidCircularB-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8541EDCAF10E4647AAF4B638 /* EuclidCircularB-Semibold.otf */; };
+		C893A5C727D7B0F800B20984 /* EuclidCircularB-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 07F11F4E2D654437A1C35795 /* EuclidCircularB-SemiboldItalic.otf */; };
+		C893A5C827D7B0F800B20984 /* Metamask.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B84384A85AED494487DC5A1A /* Metamask.ttf */; };
+		C893A5CA27D7B0F800B20984 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C42D0860212F481B83492E67 /* Roboto-Black.ttf */; };
+		C893A5CB27D7B0F800B20984 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 510B1D17B3CD402B9152C90E /* Roboto-BlackItalic.ttf */; };
+		C893A5CC27D7B0F800B20984 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C308B45EA1A64E22BD1CA83C /* Roboto-Bold.ttf */; };
+		C893A5CD27D7B0F800B20984 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF6EE24513ED449B8618F9B9 /* Roboto-BoldItalic.ttf */; };
+		C893A5CE27D7B0F800B20984 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F2BCBF8720BE429D81EDB275 /* Roboto-Italic.ttf */; };
+		C893A5CF27D7B0F800B20984 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF38347A42D8497C93A83C38 /* Roboto-Light.ttf */; };
+		C893A5D027D7B0F800B20984 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 500136A276A34907A9771F1D /* Roboto-LightItalic.ttf */; };
+		C893A5D127D7B0F800B20984 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87F784DCC92B41AAB3CAC3F8 /* Roboto-Medium.ttf */; };
+		C893A5D227D7B0F800B20984 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1EBA08F752B460D989FF75D /* Roboto-MediumItalic.ttf */; };
+		C893A5D327D7B0F800B20984 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94D767DE77844EF9B28123D /* Roboto-Regular.ttf */; };
+		C893A5D427D7B0F800B20984 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2E8B512700C43FDBCE890E8 /* Roboto-Thin.ttf */; };
+		C893A5D527D7B0F800B20984 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCFFC3D1CC144317A0924A56 /* Roboto-ThinItalic.ttf */; };
+		C893A5DE27D7B1AA00B20984 /* Info-Production.plist in Resources */ = {isa = PBXBuildFile; fileRef = C893A5DD27D7B0F900B20984 /* Info-Production.plist */; };
 		D75449A12BC946E8A9E67E5D /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C42D0860212F481B83492E67 /* Roboto-Black.ttf */; };
 		E8364510C02C48D6909173B8 /* EuclidCircularB-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D7EDA083FAA44A8EB61C2CC2 /* EuclidCircularB-Bold.otf */; };
 		EB5484B508C744728884A54E /* EuclidCircularB-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8FB1D8EF2B6640F4BD744004 /* EuclidCircularB-Light.otf */; };
@@ -87,6 +149,10 @@
 		C308B45EA1A64E22BD1CA83C /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../app/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		C42D0860212F481B83492E67 /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../app/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		C5EE98F0B2D94BDDAE8378A7 /* EuclidCircularB-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "EuclidCircularB-Regular.otf"; path = "../app/fonts/EuclidCircularB-Regular.otf"; sourceTree = "<group>"; };
+		C893A58127D7AC6500B20984 /* LiquichainStaging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiquichainStaging.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C893A58227D7AC6600B20984 /* Info-Staging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-Staging.plist"; path = "/Users/trien.vo/Desktop/Work/Klubcoin/lcn-mobile/ios/Info-Staging.plist"; sourceTree = "<absolute>"; };
+		C893A5DC27D7B0F800B20984 /* LiquichainProduction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiquichainProduction.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C893A5DD27D7B0F900B20984 /* Info-Production.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-Production.plist"; path = "/Users/trien.vo/Desktop/Work/Klubcoin/lcn-mobile/ios/Info-Production.plist"; sourceTree = "<absolute>"; };
 		CF38347A42D8497C93A83C38 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../app/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		D7EDA083FAA44A8EB61C2CC2 /* EuclidCircularB-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "EuclidCircularB-Bold.otf"; path = "../app/fonts/EuclidCircularB-Bold.otf"; sourceTree = "<group>"; };
 		DCFFC3D1CC144317A0924A56 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../app/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
@@ -115,6 +181,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C893A55E27D7AC6500B20984 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C893A55F27D7AC6500B20984 /* libPods-Liquichain.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C893A5B827D7B0F800B20984 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C893A5B927D7B0F800B20984 /* libPods-Liquichain.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -138,6 +220,8 @@
 		13B07FAE1A68108700A75B9A /* Liquichain */ = {
 			isa = PBXGroup;
 			children = (
+				C893A42027D7A7BA00B20984 /* LiquichainProduction */,
+				C893A41F27D7A79F00B20984 /* LiquichainStagging */,
 				1307F1D2276BED46009E94ED /* LiquichainDebug.entitlements */,
 				13BD5E4B26CBEB8C00DFFA74 /* InpageBridgeWeb3.js */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -201,8 +285,26 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Liquichain.app */,
 				00E356EE1AD99517003FC87E /* LiquichainTests.xctest */,
+				C893A58127D7AC6500B20984 /* LiquichainStaging.app */,
+				C893A5DC27D7B0F800B20984 /* LiquichainProduction.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C893A41F27D7A79F00B20984 /* LiquichainStagging */ = {
+			isa = PBXGroup;
+			children = (
+				C893A58227D7AC6600B20984 /* Info-Staging.plist */,
+			);
+			name = LiquichainStagging;
+			sourceTree = "<group>";
+		};
+		C893A42027D7A7BA00B20984 /* LiquichainProduction */ = {
+			isa = PBXGroup;
+			children = (
+				C893A5DD27D7B0F900B20984 /* Info-Production.plist */,
+			);
+			name = LiquichainProduction;
 			sourceTree = "<group>";
 		};
 		F46936F692BB447893F42799 /* Resources */ = {
@@ -281,6 +383,50 @@
 			productReference = 13B07F961A680F5B00A75B9A /* Liquichain.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C893A55727D7AC6500B20984 /* LiquichainStaging */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C893A57E27D7AC6500B20984 /* Build configuration list for PBXNativeTarget "LiquichainStaging" */;
+			buildPhases = (
+				C893A55827D7AC6500B20984 /* [CP] Check Pods Manifest.lock */,
+				C893A55927D7AC6500B20984 /* Start Packager */,
+				C893A55A27D7AC6500B20984 /* Sources */,
+				C893A55E27D7AC6500B20984 /* Frameworks */,
+				C893A56027D7AC6500B20984 /* Resources */,
+				C893A57B27D7AC6500B20984 /* Bundle React Native code and images */,
+				C893A57C27D7AC6500B20984 /* [CP] Copy Pods Resources */,
+				C893A57D27D7AC6500B20984 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LiquichainStaging;
+			productName = Liquichain;
+			productReference = C893A58127D7AC6500B20984 /* LiquichainStaging.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C893A5B127D7B0F800B20984 /* LiquichainProduction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C893A5D927D7B0F800B20984 /* Build configuration list for PBXNativeTarget "LiquichainProduction" */;
+			buildPhases = (
+				C893A5B227D7B0F800B20984 /* [CP] Check Pods Manifest.lock */,
+				C893A5B327D7B0F800B20984 /* Start Packager */,
+				C893A5B427D7B0F800B20984 /* Sources */,
+				C893A5B827D7B0F800B20984 /* Frameworks */,
+				C893A5BA27D7B0F800B20984 /* Resources */,
+				C893A5D627D7B0F800B20984 /* Bundle React Native code and images */,
+				C893A5D727D7B0F800B20984 /* [CP] Copy Pods Resources */,
+				C893A5D827D7B0F800B20984 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LiquichainProduction;
+			productName = Liquichain;
+			productReference = C893A5DC27D7B0F800B20984 /* LiquichainProduction.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -313,6 +459,8 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* Liquichain */,
 				00E356ED1AD99517003FC87E /* LiquichainTests */,
+				C893A55727D7AC6500B20984 /* LiquichainStaging */,
+				C893A5B127D7B0F800B20984 /* LiquichainProduction */,
 			);
 		};
 /* End PBXProject section */
@@ -355,6 +503,74 @@
 				FB84BDC4AAA043A19C3DC3E5 /* Roboto-Regular.ttf in Resources */,
 				C23EE0F96B964A86B8E4BD20 /* Roboto-Thin.ttf in Resources */,
 				EBD36988C80F4E5CB0264903 /* Roboto-ThinItalic.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C893A56027D7AC6500B20984 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C893A56127D7AC6500B20984 /* InpageBridgeWeb3.js in Resources */,
+				C893A56227D7AC6500B20984 /* LaunchScreen.storyboard in Resources */,
+				C893A56327D7AC6500B20984 /* Images.xcassets in Resources */,
+				C893A56427D7AC6500B20984 /* EuclidCircularB-Bold.otf in Resources */,
+				C893A56527D7AC6500B20984 /* EuclidCircularB-BoldItalic.otf in Resources */,
+				C893A56627D7AC6500B20984 /* EuclidCircularB-Light.otf in Resources */,
+				C893A56727D7AC6500B20984 /* EuclidCircularB-LightItalic.otf in Resources */,
+				C893A56827D7AC6500B20984 /* EuclidCircularB-Medium.otf in Resources */,
+				C893A56927D7AC6500B20984 /* EuclidCircularB-MediumItalic.otf in Resources */,
+				C893A56A27D7AC6500B20984 /* EuclidCircularB-Regular.otf in Resources */,
+				C893A56B27D7AC6500B20984 /* EuclidCircularB-RegularItalic.otf in Resources */,
+				C893A56C27D7AC6500B20984 /* EuclidCircularB-Semibold.otf in Resources */,
+				C893A56D27D7AC6500B20984 /* EuclidCircularB-SemiboldItalic.otf in Resources */,
+				C893A56E27D7AC6500B20984 /* Metamask.ttf in Resources */,
+				C893A58327D7AC9F00B20984 /* Info-Staging.plist in Resources */,
+				C893A56F27D7AC6500B20984 /* Roboto-Black.ttf in Resources */,
+				C893A57027D7AC6500B20984 /* Roboto-BlackItalic.ttf in Resources */,
+				C893A57127D7AC6500B20984 /* Roboto-Bold.ttf in Resources */,
+				C893A57227D7AC6500B20984 /* Roboto-BoldItalic.ttf in Resources */,
+				C893A57327D7AC6500B20984 /* Roboto-Italic.ttf in Resources */,
+				C893A57427D7AC6500B20984 /* Roboto-Light.ttf in Resources */,
+				C893A57527D7AC6500B20984 /* Roboto-LightItalic.ttf in Resources */,
+				C893A57627D7AC6500B20984 /* Roboto-Medium.ttf in Resources */,
+				C893A57727D7AC6500B20984 /* Roboto-MediumItalic.ttf in Resources */,
+				C893A57827D7AC6500B20984 /* Roboto-Regular.ttf in Resources */,
+				C893A57927D7AC6500B20984 /* Roboto-Thin.ttf in Resources */,
+				C893A57A27D7AC6500B20984 /* Roboto-ThinItalic.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C893A5BA27D7B0F800B20984 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C893A5BB27D7B0F800B20984 /* InpageBridgeWeb3.js in Resources */,
+				C893A5BC27D7B0F800B20984 /* LaunchScreen.storyboard in Resources */,
+				C893A5BD27D7B0F800B20984 /* Images.xcassets in Resources */,
+				C893A5BE27D7B0F800B20984 /* EuclidCircularB-Bold.otf in Resources */,
+				C893A5BF27D7B0F800B20984 /* EuclidCircularB-BoldItalic.otf in Resources */,
+				C893A5C027D7B0F800B20984 /* EuclidCircularB-Light.otf in Resources */,
+				C893A5C127D7B0F800B20984 /* EuclidCircularB-LightItalic.otf in Resources */,
+				C893A5C227D7B0F800B20984 /* EuclidCircularB-Medium.otf in Resources */,
+				C893A5C327D7B0F800B20984 /* EuclidCircularB-MediumItalic.otf in Resources */,
+				C893A5C427D7B0F800B20984 /* EuclidCircularB-Regular.otf in Resources */,
+				C893A5C527D7B0F800B20984 /* EuclidCircularB-RegularItalic.otf in Resources */,
+				C893A5C627D7B0F800B20984 /* EuclidCircularB-Semibold.otf in Resources */,
+				C893A5C727D7B0F800B20984 /* EuclidCircularB-SemiboldItalic.otf in Resources */,
+				C893A5C827D7B0F800B20984 /* Metamask.ttf in Resources */,
+				C893A5CA27D7B0F800B20984 /* Roboto-Black.ttf in Resources */,
+				C893A5CB27D7B0F800B20984 /* Roboto-BlackItalic.ttf in Resources */,
+				C893A5CC27D7B0F800B20984 /* Roboto-Bold.ttf in Resources */,
+				C893A5CD27D7B0F800B20984 /* Roboto-BoldItalic.ttf in Resources */,
+				C893A5CE27D7B0F800B20984 /* Roboto-Italic.ttf in Resources */,
+				C893A5CF27D7B0F800B20984 /* Roboto-Light.ttf in Resources */,
+				C893A5D027D7B0F800B20984 /* Roboto-LightItalic.ttf in Resources */,
+				C893A5D127D7B0F800B20984 /* Roboto-Medium.ttf in Resources */,
+				C893A5D227D7B0F800B20984 /* Roboto-MediumItalic.ttf in Resources */,
+				C893A5D327D7B0F800B20984 /* Roboto-Regular.ttf in Resources */,
+				C893A5DE27D7B1AA00B20984 /* Info-Production.plist in Resources */,
+				C893A5D427D7B0F800B20984 /* Roboto-Thin.ttf in Resources */,
+				C893A5D527D7B0F800B20984 /* Roboto-ThinItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +664,184 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquichain-LiquichainTests/Pods-Liquichain-LiquichainTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C893A55827D7AC6500B20984 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Liquichain-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A55927D7AC6500B20984 /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A57B27D7AC6500B20984 /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		C893A57C27D7AC6500B20984 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A57D27D7AC6500B20984 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A5B227D7B0F800B20984 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Liquichain-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A5B327D7B0F800B20984 /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A5D627D7B0F800B20984 /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		C893A5D727D7B0F800B20984 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C893A5D827D7B0F800B20984 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquichain/Pods-Liquichain-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E20CF2675791AE83B55E3FE2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -527,6 +921,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C893A55A27D7AC6500B20984 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C893A55B27D7AC6500B20984 /* AppDelegate.m in Sources */,
+				C893A55C27D7AC6500B20984 /* LCN-Mobile.swift in Sources */,
+				C893A55D27D7AC6500B20984 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C893A5B427D7B0F800B20984 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C893A5B527D7B0F800B20984 /* AppDelegate.m in Sources */,
+				C893A5B627D7B0F800B20984 /* LCN-Mobile.swift in Sources */,
+				C893A5B727D7B0F800B20984 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -598,24 +1012,25 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Liquichain/LiquichainDebug.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 14;
-				DEVELOPMENT_TEAM = 75C9U59DUL;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H48MFKU69U;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Liquichain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.liquichain;
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin.development;
 				PRODUCT_NAME = Liquichain;
-				PROVISIONING_PROFILE_SPECIFIER = "Liquichain DEV";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -629,24 +1044,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 14;
-				DEVELOPMENT_TEAM = 75C9U59DUL;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H48MFKU69U;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Liquichain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.liquichain;
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin.development;
 				PRODUCT_NAME = Liquichain;
-				PROVISIONING_PROFILE_SPECIFIER = "Liquichain DISTRIBUTION";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -777,6 +1193,134 @@
 			};
 			name = Release;
 		};
+		C893A57F27D7AC6500B20984 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39675396663D5FA571C22752 /* Pods-Liquichain.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Liquichain/LiquichainDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H48MFKU69U;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/Info-Staging.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin.staging;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		C893A58027D7AC6500B20984 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B7E3E681CD4DE0AA45B19696 /* Pods-Liquichain.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H48MFKU69U;
+				ENABLE_BITCODE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Info-Staging.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin.staging;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		C893A5DA27D7B0F800B20984 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39675396663D5FA571C22752 /* Pods-Liquichain.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Liquichain/LiquichainDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H48MFKU69U;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "LiquichainStaging copy2-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		C893A5DB27D7B0F800B20984 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B7E3E681CD4DE0AA45B19696 /* Pods-Liquichain.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H48MFKU69U;
+				ENABLE_BITCODE = YES;
+				INFOPLIST_FILE = "LiquichainStaging copy2-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -803,6 +1347,24 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C893A57E27D7AC6500B20984 /* Build configuration list for PBXNativeTarget "LiquichainStaging" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C893A57F27D7AC6500B20984 /* Debug */,
+				C893A58027D7AC6500B20984 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C893A5D927D7B0F800B20984 /* Build configuration list for PBXNativeTarget "LiquichainProduction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C893A5DA27D7B0F800B20984 /* Debug */,
+				C893A5DB27D7B0F800B20984 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

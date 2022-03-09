@@ -2,8 +2,9 @@ import moment from 'moment';
 import config from '../config';
 import WebService from './WebService';
 import BuildVariant from '../variants/BuildVariant'
+import Config from "react-native-config";
 
-export const basicAuth =BuildVariant.activeVariant().basicAuth;
+export const basicAuth = Config.BASIC_AUTH;
 const basicAuthAdmin = 'meveo.admin:meveo';
 
 const dateFormatMeveo = 'YYYY-MM-DD HH:mm:ss';
@@ -20,8 +21,8 @@ export default class APIService {
 	static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-	static routeMeveoAPI = () => `${BuildVariant.activeVariant().ServerAddress}/meveo`;
-	static routePersistenceAPI = () => `${BuildVariant.activeVariant().ServerAddress}/meveo/api/rest/default/persistence/`;
+	static routeMeveoAPI = () => `${Config.SERVER_ADDRESS}/meveo`;
+	static routePersistenceAPI = () => `${Config.SERVER_ADDRESS}/meveo/api/rest/default/persistence/`;
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
 	static apiGetWalletContract = appWallet => APIService.routePersistenceAPI() + `Wallet/${appWallet}`;
