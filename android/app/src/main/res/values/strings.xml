@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Klubcoin</string>
+    <string name="app_name">@string/APP_NAME</string>
     <string moduleConfig="true" name="CodePushServerURL">https://account.liquichain.io/meveo/rest/codepush</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">123456</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
