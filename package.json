@@ -4,6 +4,9 @@
 	"private": true,
 	"scripts": {
 		"start": "react-native start",
+		"build:android-dev": "cd android && ENVFILE=.env.development ./gradlew assembleRelease",
+		"build:android-staging": "cd android && ENVFILE=.env.staging ./gradlew assembleRelease",
+		"build:android-pro": "cd android && ENVFILE=.env.production ./gradlew assembleRelease",
 		"android-dev": "ENVFILE=.env.development react-native run-android",
 		"android-staging": "ENVFILE=.env.staging react-native run-android",
 		"android-prod": "ENVFILE=.env.production react-native run-android",
