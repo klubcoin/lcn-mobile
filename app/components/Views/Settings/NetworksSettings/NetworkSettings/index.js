@@ -472,8 +472,8 @@ class NetworkSettings extends PureComponent {
 								placeholderTextColor={colors.grey100}
 								onSubmitEditing={this.jumpToRpcURL}
 								testID={'input-network-name'}
+								maxLength={256}
 							/>
-
 							<Text style={styles.label}>{strings('app_settings.network_rpc_url_label')}</Text>
 							<TextInput
 								ref={this.inputRpcURL}
@@ -488,6 +488,7 @@ class NetworkSettings extends PureComponent {
 								placeholderTextColor={colors.grey100}
 								onSubmitEditing={this.jumpToChainId}
 								testID={'input-rpc-url'}
+								maxLength={256}
 							/>
 							{warningRpcUrl && (
 								<View style={styles.warningContainer} testID={'rpc-url-warning'}>
@@ -510,6 +511,7 @@ class NetworkSettings extends PureComponent {
 								onSubmitEditing={this.jumpToSymbol}
 								keyboardType={'numbers-and-punctuation'}
 								testID={'input-chain-id'}
+								maxLength={256}
 							/>
 							{warningChainId ? (
 								<View style={styles.warningContainer}>
@@ -530,8 +532,8 @@ class NetworkSettings extends PureComponent {
 								placeholderTextColor={colors.grey100}
 								onSubmitEditing={this.jumpBlockExplorerURL}
 								testID={'input-network-symbol'}
+								maxLength={256}
 							/>
-
 							<Text style={styles.label}>{strings('app_settings.network_block_explorer_label')}</Text>
 							<TextInput
 								ref={this.inputBlockExplorerURL}
@@ -544,6 +546,7 @@ class NetworkSettings extends PureComponent {
 								placeholder={strings('app_settings.network_block_explorer_placeholder')}
 								placeholderTextColor={colors.grey100}
 								onSubmitEditing={this.addRpcUrl}
+								maxLength={256}
 							/>
 						</View>
 						{(addMode || editable) && (
