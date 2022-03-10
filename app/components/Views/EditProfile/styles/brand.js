@@ -77,6 +77,9 @@ const brandStyles = StyleSheet.create({
 		width:'100%',
 		marginVertical:12,
 	},
+	errorText:{
+		color:colors.pdfColor
+	}
 });
 
 export default brandStyles;

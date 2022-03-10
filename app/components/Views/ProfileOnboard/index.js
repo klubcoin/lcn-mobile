@@ -7,7 +7,8 @@ import {
 	Modal,
 	Text,
 	Platform,
-	PermissionsAndroid
+	PermissionsAndroid,
+	ActivityIndicator
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
@@ -31,6 +32,12 @@ import validator from 'validator';
 import { showError } from '../../../util/notify';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import emojiRegex from 'emoji-regex';
+import APIService from '../../../services/APIService';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors } from '../../../styles/common';
+
+export const SUCCESS = 'success';
+export const ALREADY_EXISTS = 'already_exists';
 
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
@@ -45,6 +52,12 @@ class ProfileOnboard extends PureComponent {
 	notiPermissionCamera = false;
 	notiMessage = '';
 	regex = emojiRegex();
+	timeoutCheckUniqueUsername = null;
+	timeoutCheckUniqueEmail = null;
+	isValidEmail = false;
+	isValidUsername = false;
+	isCheckingEmail = false;
+	isCheckingUsername = false;
 
 	constructor(props) {
 		super(props);
@@ -57,12 +70,57 @@ class ProfileOnboard extends PureComponent {
 			hasUpdateAvatar: observable,
 			notiPermissionCamera: observable,
 			notiMessage: observable,
-			username: observable
+			username: observable,
+			timeoutCheckUniqueUsername: observable,
+			timeoutCheckUniqueEmail: observable,
+			isValidEmail: observable,
+			isValidUsername: observable,
+			isCheckingEmail: observable,
+			isCheckingUsername: observable
 		});
 	}
 
 	onUsernameChange = val => {
 		this.username = val.replace(this.regex, '');
+		this.isCheckingUsername = true;
+		this.isValidUsername = false;
+		if (this.timeoutCheckUniqueUsername) {
+			clearTimeout(this.timeoutCheckUniqueUsername);
+		}
+		this.timeoutCheckUniqueUsername = setTimeout(() => {
+			APIService.checkUniqueField('name', val, (success, json) => {
+				this.isCheckingUsername = false;
+				if (json === SUCCESS) {
+					this.isValidUsername = true;
+				} else {
+					this.isValidUsername = false;
+				}
+			});
+		}, 2000);
+	};
+
+	onEmailChange = val => {
+		this.email = val.replace(this.regex, '');
+		if (!validator.isEmail(val)) {
+			this.isCheckingEmail = false;
+			this.isValidEmail = false;
+			return;
+		}
+		this.isCheckingEmail = true;
+		this.isValidEmail = false;
+		if (this.timeoutCheckUniqueEmail) {
+			clearTimeout(this.timeoutCheckUniqueEmail);
+		}
+		this.timeoutCheckUniqueEmail = setTimeout(() => {
+			APIService.checkUniqueField('email', val, (success, json) => {
+				this.isCheckingEmail = false;
+				if (json === SUCCESS) {
+					this.isValidEmail = true;
+				} else {
+					this.isValidEmail = false;
+				}
+			});
+		}, 2000);
 	};
 
 	onPickImage() {
@@ -317,21 +375,49 @@ class ProfileOnboard extends PureComponent {
 									value={this.email}
 									label={strings('login.email')}
 									placeholder={strings('login.email')}
-									onChangeText={text => (this.email = text)}
+									onChangeText={text => this.onEmailChange(text)}
 									keyboardType="email-address"
+									rightItem={
+										!this.email ? null : this.isCheckingEmail ? (
+											<ActivityIndicator size="small" color="#fff" />
+										) : this.isValidEmail ? (
+											<Icon name="check" size={16} color={colors.success} />
+										) : (
+											<Icon name="remove" size={16} color={colors.fontError} />
+										)
+									}
 								/>
+								{!!this.email &&
+									validator.isEmail(this.email) &&
+									!this.isCheckingEmail &&
+									!this.isValidEmail && (
+										<Text style={styles.errorText}>{strings('profile.email_used')}</Text>
+									)}
 								<TextField
 									value={this.username}
 									label={strings('choose_password.username')}
 									placeholder={strings('login.type_here')}
 									containerStyle={styles.usernameField}
 									onChangeText={this.onUsernameChange}
+									rightItem={
+										!this.username ? null : this.isCheckingUsername ? (
+											<ActivityIndicator size="small" color="#fff" />
+										) : this.isValidUsername ? (
+											<Icon name="check" size={16} color={colors.success} />
+										) : (
+											<Icon name="remove" size={16} color={colors.fontError} />
+										)
+									}
 								/>
+								{!!this.username && !this.isCheckingUsername && !this.isValidUsername && (
+									<Text style={styles.errorText}>{strings('profile.email_used')}</Text>
+								)}
 							</View>
 							<StyledButton
 								type={'normal'}
 								onPress={this.onNext.bind(this)}
 								containerStyle={styles.next}
+								disabled={!this.isValidEmail && !this.isValidUsername}
 							>
 								{strings('choose_password.continue')}
 							</StyledButton>

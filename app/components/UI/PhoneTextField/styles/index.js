@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
 	phoneWrapper:{},
 	countryCode:{},
 	countryCodePicker:{},
+	textInputWrapper:{}
 });
 
 export default assignNestedObj(styles, brandStyles);

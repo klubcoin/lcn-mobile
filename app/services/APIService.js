@@ -1,8 +1,8 @@
 import moment from 'moment';
 import config from '../config';
 import WebService from './WebService';
-import BuildVariant from '../variants/BuildVariant'
-import Config from "react-native-config";
+import BuildVariant from '../variants/BuildVariant';
+import Config from 'react-native-config';
 
 export const basicAuth = Config.BASIC_AUTH;
 const basicAuthAdmin = 'meveo.admin:meveo';
@@ -38,6 +38,7 @@ export default class APIService {
 
 	static apiGetPartnerList = () => APIService.routePersistenceAPI() + 'KlubCoinPartner';
 	static apiGetPartnerIcon = iconPath => APIService.routeMeveoAPI() + iconPath;
+	static apiCheckUniqueField = () => APIService.routeMeveoAPI() + '/rest/validateField';
 
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
@@ -256,5 +257,14 @@ export default class APIService {
 			filters: { code: ['onboarding-1', 'onboarding-2', 'onboarding-3'] }
 		};
 		WebService.sendPostDirect(this.apiWebPageContents(), data, callback);
+	}
+
+	static checkUniqueField(field, value, callback) {
+		const data = {
+			basicAuth,
+			field,
+			value
+		};
+		WebService.sendGetDirect(this.apiCheckUniqueField(), data, callback);
 	}
 }

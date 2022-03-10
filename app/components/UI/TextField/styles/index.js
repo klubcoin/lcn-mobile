@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
 		color: colors.white,
 		fontSize: 16,
 		...fontStyles.bold
-	}
+	},
+	textInputWrapper:{}
 });
 
 export default assignNestedObj(styles, brandStyles);

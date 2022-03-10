@@ -25,9 +25,20 @@ const styles = StyleSheet.create({
 		alignItems:'center',
 		justifyContent:'flex-end'
 	},
+	textInputWrapper:{
+		flex:1,
+		flexDirection:'row',
+		paddingHorizontal: 10,
+		borderRadius: 10,
+		backgroundColor: colors.purple,
+		alignItems:'center'
+	},
 	textInput: {
 		flex: 1,
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
+		paddingHorizontal:0,
+		alignItems: 'center',
+		marginBottom:0,
 	},
 	dropdownIcon: {
 		color: colors.white,

@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
 	notiCenterModal: {},
 	notiContentModal: {},
 	notiContentText: {},
-	notiButtonModal: {}
+	notiButtonModal: {},
+	errorText: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

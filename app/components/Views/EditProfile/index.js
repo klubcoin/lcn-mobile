@@ -7,7 +7,8 @@ import {
 	Text,
 	Modal,
 	Platform,
-	PermissionsAndroid
+	PermissionsAndroid,
+	ActivityIndicator
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
@@ -37,6 +38,12 @@ import { renderAccountName } from '../../../util/address';
 import { allCountries } from 'country-telephone-data';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import emojiRegex from 'emoji-regex';
+import APIService from '../../../services/APIService';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors } from '../../../styles/common';
+import { SUCCESS, ALREADY_EXISTS } from '../ProfileOnboard';
+
+export const REGEX_PHONE_NUMBER = /^[\d]{4,13}$/;
 
 class EditProfile extends PureComponent {
 	static navigationOptions = ({ navigation }) =>
@@ -61,6 +68,12 @@ class EditProfile extends PureComponent {
 		countryCode: '',
 		email: ''
 	};
+	timeoutCheckUniqueEmail = null;
+	timeoutCheckUniquePhoneNumber = null;
+	isValidEmail = true;
+	isValidPhoneNumber = true;
+	isCheckingEmail = false;
+	isCheckingPhoneNumber = false;
 
 	constructor(props) {
 		super(props);
@@ -78,7 +91,13 @@ class EditProfile extends PureComponent {
 			notiPermissionCamera: observable,
 			notiMessage: observable,
 			time: observable,
-			preData: observable
+			preData: observable,
+			timeoutCheckUniqueEmail: observable,
+			timeoutCheckUniquePhoneNumber: observable,
+			isValidEmail: observable,
+			isValidPhoneNumber: observable,
+			isCheckingEmail: observable,
+			isCheckingPhoneNumber: observable
 		});
 	}
 
@@ -108,6 +127,54 @@ class EditProfile extends PureComponent {
 			email
 		};
 	}
+
+	onEmailChange = val => {
+		this.email = val.replace(this.regex, '');
+		if (!validator.isEmail(val)) {
+			this.isCheckingEmail = false;
+			this.isValidEmail = false;
+			return;
+		}
+		this.isCheckingEmail = true;
+		this.isValidEmail = false;
+		if (this.timeoutCheckUniqueEmail) {
+			clearTimeout(this.timeoutCheckUniqueEmail);
+		}
+		this.timeoutCheckUniqueEmail = setTimeout(() => {
+			APIService.checkUniqueField('email', val, (success, json) => {
+				this.isCheckingEmail = false;
+				if (json === SUCCESS) {
+					this.isValidEmail = true;
+				} else {
+					this.isValidEmail = false;
+				}
+			});
+		}, 2000);
+	};
+
+	onPhoneNumberChange = (countryCode, phoneNumber) => {
+		this.phone = phoneNumber;
+		if (!REGEX_PHONE_NUMBER.test(phoneNumber)) {
+			this.isCheckingPhoneNumber = false;
+			this.isValidPhoneNumber = false;
+			return;
+		}
+		this.isCheckingPhoneNumber = true;
+		this.isValidPhoneNumber = false;
+		if (this.timeoutCheckUniquePhoneNumber) {
+			clearTimeout(this.timeoutCheckUniquePhoneNumber);
+		}
+		this.timeoutCheckUniquePhoneNumber = setTimeout(() => {
+			APIService.checkUniqueField('phoneNumber', `+${countryCode}-${phoneNumber}`, (success, json) => {
+				this.isCheckingPhoneNumber = false;
+				if (json === SUCCESS) {
+					this.isValidPhoneNumber = true;
+				} else {
+					this.isValidPhoneNumber = false;
+				}
+			});
+		}, 2000);
+	};
 
 	onPickImage() {
 		if (Platform.OS === 'android') {
@@ -285,7 +352,7 @@ class EditProfile extends PureComponent {
 		// 	showError(strings('profile.missing_phone'));
 		// 	return;
 		// }
-		if (phone && (!/^[\d]{10}$/.test(phone) || !this.countryCode)) {
+		if (phone && (!REGEX_PHONE_NUMBER.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
@@ -435,9 +502,24 @@ class EditProfile extends PureComponent {
 									value={this.email}
 									label={strings('login.email')}
 									placeholder={strings('login.email')}
-									onChangeText={text => (this.email = text)}
+									onChangeText={text => this.onEmailChange(text)}
 									keyboardType="email-address"
+									rightItem={
+										!this.email ? null : this.isCheckingEmail ? (
+											<ActivityIndicator size="small" color="#fff" />
+										) : this.isValidEmail ? (
+											<Icon name="check" size={16} color={colors.success} />
+										) : (
+											<Icon name="remove" size={16} color={colors.fontError} />
+										)
+									}
 								/>
+								{!!this.email &&
+									validator.isEmail(this.email) &&
+									!this.isCheckingEmail &&
+									!this.isValidEmail && (
+										<Text style={styles.errorText}>{strings('profile.email_used')}</Text>
+									)}
 								<PhoneTextField
 									value={this.phone}
 									label={strings('profile.phone')}
@@ -447,7 +529,7 @@ class EditProfile extends PureComponent {
 											showError(strings('profile.select_country_code_first'));
 											return;
 										}
-										this.phone = text;
+										this.onPhoneNumberChange(this.countryCode, text);
 									}}
 									keyboardType="number-pad"
 									countryCode={this.countryCode}
@@ -457,13 +539,25 @@ class EditProfile extends PureComponent {
 											showError(strings('profile.select_country_code_first'));
 										}
 									}}
+									rightItem={
+										!this.phone ? null : this.isCheckingPhoneNumber ? (
+											<ActivityIndicator size="small" color="#fff" />
+										) : this.isValidPhoneNumber ? (
+											<Icon name="check" size={16} color={colors.success} />
+										) : (
+											<Icon name="remove" size={16} color={colors.fontError} />
+										)
+									}
 								/>
+								{!!this.phone && !this.isCheckingPhoneNumber && !this.isValidPhoneNumber && (
+									<Text style={styles.errorText}>{strings('profile.phone_number_used')}</Text>
+								)}
 							</View>
 							<StyledButton
 								type={'white'}
 								onPress={this.onPressUpdate.bind(this)}
 								containerStyle={styles.next}
-								disabled={this.isLoading}
+								disabled={this.isLoading || !this.isValidEmail || !this.isValidPhoneNumber}
 							>
 								{strings('wallet.update_profile').toUpperCase()}
 							</StyledButton>
@@ -474,9 +568,9 @@ class EditProfile extends PureComponent {
 							placeholder={strings('profile.search')}
 							items={allCountries}
 							countryCode={this.countryCode}
-							countryCode={this.countryCode}
 							onSelectCountryCode={item => {
 								this.countryCode = item.dialCode;
+								this.onPhoneNumberChange(item.dialCode, this.phone);
 								this.showCountryCodePicker = false;
 							}}
 							onClose={() => (this.showCountryCodePicker = false)}

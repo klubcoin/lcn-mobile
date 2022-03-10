@@ -17,7 +17,8 @@ export default class PhoneTextField extends Component {
 			autoCapitalize = 'none',
 			onPressCountryCode,
 			countryCode = '',
-			onFocus
+			onFocus,
+			rightItem = null
 		} = this.props;
 		return (
 			<View style={containerStyle}>
@@ -27,16 +28,19 @@ export default class PhoneTextField extends Component {
 						{!!countryCode && <Text style={styles.countryCode}>+{countryCode}</Text>}
 						<Icon name="caret-down" style={styles.dropdownIcon} />
 					</TouchableOpacity>
-					<TextInput
-						style={styles.textInput}
-						value={value}
-						placeholder={placeholder}
-						placeholderTextColor={colors.grey300}
-						onChangeText={onChangeText}
-						keyboardType={keyboardType}
-						autoCapitalize={autoCapitalize}
-						onFocus={onFocus}
-					/>
+					<View style={styles.textInputWrapper}>
+						<TextInput
+							style={styles.textInput}
+							value={value}
+							placeholder={placeholder}
+							placeholderTextColor={colors.grey300}
+							onChangeText={onChangeText}
+							keyboardType={keyboardType}
+							autoCapitalize={autoCapitalize}
+							onFocus={onFocus}
+						/>
+						{rightItem && rightItem }
+					</View>
 				</View>
 			</View>
 		);

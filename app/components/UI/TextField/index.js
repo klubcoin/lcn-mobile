@@ -17,22 +17,26 @@ export default class TextField extends Component {
 			containerStyle,
 			disabled = false,
 			keyboardType,
-			autoCapitalize = 'none'
+			autoCapitalize = 'none',
+			rightItem = null
 		} = this.props;
 		return (
 			<View style={containerStyle}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
-				<TextInput
-					style={styles.textInput}
-					value={value}
-					placeholder={placeholder}
-					placeholderTextColor={colors.grey300}
-					onChangeText={onChangeText}
-					keyboardType={keyboardType}
-					autoCapitalize={autoCapitalize}
-					maxLength={MAX_LENGTH_INPUT}
-					editable={!disabled}
-				/>
+				<View style={styles.textInputWrapper}>
+					<TextInput
+						style={styles.textInput}
+						value={value}
+						placeholder={placeholder}
+						placeholderTextColor={colors.grey300}
+						onChangeText={onChangeText}
+						keyboardType={keyboardType}
+						autoCapitalize={autoCapitalize}
+						maxLength={MAX_LENGTH_INPUT}
+						editable={!disabled}
+					/>
+					{rightItem && rightItem }
+				</View>
 			</View>
 		);
 	}
