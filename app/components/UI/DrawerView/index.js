@@ -364,6 +364,8 @@ class DrawerView extends PureComponent {
 	};
 
 	onReceive = () => {
+		this.props.navigation.navigate('ComingSoon');
+		return
 		this.toggleReceiveModal();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_RECEIVE);
 	};
