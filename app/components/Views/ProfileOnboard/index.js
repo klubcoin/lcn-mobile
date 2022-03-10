@@ -417,7 +417,7 @@ class ProfileOnboard extends PureComponent {
 								type={'normal'}
 								onPress={this.onNext.bind(this)}
 								containerStyle={styles.next}
-								disabled={!this.isValidEmail && !this.isValidUsername}
+								disabled={!this.isValidEmail || !this.isValidUsername}
 							>
 								{strings('choose_password.continue')}
 							</StyledButton>
