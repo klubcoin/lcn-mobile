@@ -259,8 +259,10 @@ class Dashboard extends PureComponent {
 												.slice(1, name2.split(' ').length)
 												.join(' ')
 										: '',
-									email: emailAddress,
-									phone: phoneNumber
+									email: emailAddress?.value,
+									phone: phoneNumber?.value,
+									emailVerified: emailAddress?.verified,
+									phoneVerified: phoneNumber?.verified
 								})
 							)
 						)
