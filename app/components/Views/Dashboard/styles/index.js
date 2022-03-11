@@ -10,13 +10,13 @@ const cardTextStyle = {
 	color: colors.white,
 	fontSize: RFValue(12),
 	...fontStyles.normal
-}
+};
 
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
 		backgroundColor: colors.primaryFox,
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
 	},
 	loader: {
 		backgroundColor: colors.white,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		marginBottom: 15,
-		marginTop: 20,
+		marginTop: 20
 	},
 	titleText: {
 		fontSize: RFValue(18),
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 	row: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	card: {
 		flex: 1,
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
 	cardTitle: cardTextStyle,
 	extraCardTitle: {
 		...cardTextStyle,
-		color: colors.blue,
+		color: colors.blue
 	},
 	cardContent: {
-		marginTop: 5,
+		marginTop: 5
 	},
 
 	balance: {
@@ -63,23 +63,24 @@ const styles = StyleSheet.create({
 	},
 	currency: {
 		...cardTextStyle,
-		fontSize: RFValue(12),
+		fontSize: RFValue(12)
 	},
 	btnWrapper: {
-		marginTop: 20,
+		marginTop: 20
 	},
 	btn: {
 		backgroundColor: colors.white,
 		padding: 10,
-		alignItems: "center",
-		borderRadius: 10,
+		alignItems: 'center',
+		borderRadius: 10
 	},
 	btnText: {
 		...fontStyles.bold,
 		fontSize: RFValue(16),
 		color: colors.purple
 	},
-	comingSoon:{}
+	comingSoon: {},
+	chartBox: {}
 });
 
 export default assignNestedObj(styles, brandStyles);
