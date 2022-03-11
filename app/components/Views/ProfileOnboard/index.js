@@ -90,6 +90,9 @@ class ProfileOnboard extends PureComponent {
 		this.timeoutCheckUniqueUsername = setTimeout(() => {
 			APIService.checkUniqueField('name', val, (success, json) => {
 				this.isCheckingUsername = false;
+				if (this.username !== val) {
+					return;
+				}
 				if (json === SUCCESS) {
 					this.isValidUsername = true;
 				} else {
@@ -114,6 +117,9 @@ class ProfileOnboard extends PureComponent {
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
 			APIService.checkUniqueField('email', val, (success, json) => {
 				this.isCheckingEmail = false;
+				if (this.email !== val) {
+					return;
+				}
 				if (json === SUCCESS) {
 					this.isValidEmail = true;
 				} else {

@@ -130,6 +130,9 @@ class EditProfile extends PureComponent {
 
 	onEmailChange = val => {
 		this.email = val.replace(this.regex, '');
+		if (this.preData.email === val.replace(this.regex, '')) {
+			return;
+		}
 		if (!validator.isEmail(val)) {
 			this.isCheckingEmail = false;
 			this.isValidEmail = false;
@@ -143,6 +146,9 @@ class EditProfile extends PureComponent {
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
 			APIService.checkUniqueField('email', val, (success, json) => {
 				this.isCheckingEmail = false;
+				if (this.email !== val) {
+					return;
+				}
 				if (json === SUCCESS) {
 					this.isValidEmail = true;
 				} else {
@@ -167,6 +173,9 @@ class EditProfile extends PureComponent {
 		this.timeoutCheckUniquePhoneNumber = setTimeout(() => {
 			APIService.checkUniqueField('phoneNumber', `+${countryCode}-${phoneNumber}`, (success, json) => {
 				this.isCheckingPhoneNumber = false;
+				if (`+${this.countryCode}-${this.phone}` !== `+${countryCode}-${phoneNumber}`) {
+					return;
+				}
 				if (json === SUCCESS) {
 					this.isValidPhoneNumber = true;
 				} else {
@@ -419,15 +428,6 @@ class EditProfile extends PureComponent {
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
 			const params = [username, selectedAddress, publicInfo, privateInfo];
-			const profile = {
-				avatar: this.avatar ? path : '',
-				firstname,
-				lastname,
-				email,
-				phone
-			};
-			preferences.setOnboardProfile(profile);
-			setOnboardProfile(profile);
 
 			//Update wallet info on server
 			Api.postRequest(
@@ -440,6 +440,20 @@ class EditProfile extends PureComponent {
 						const { PreferencesController } = Engine.context;
 						PreferencesController.setAccountLabel(selectedAddress, username);
 						showSuccess(strings('wallet.update_profile_success'));
+						const profile = {
+							avatar: this.avatar ? path : '',
+							firstname,
+							lastname,
+							email,
+							phone
+						};
+						preferences.setOnboardProfile(profile);
+						setOnboardProfile(profile);
+						this.preData = {
+							email,
+							phone: this.phone,
+							countryCode: this.countryCode
+						};
 					}
 					this.isLoading = false;
 				},
@@ -505,7 +519,8 @@ class EditProfile extends PureComponent {
 									onChangeText={text => this.onEmailChange(text)}
 									keyboardType="email-address"
 									rightItem={
-										!this.email ? null : this.isCheckingEmail ? (
+										!this.email || this.email === this.preData.email ? null : this
+												.isCheckingEmail ? (
 											<ActivityIndicator size="small" color="#fff" />
 										) : this.isValidEmail ? (
 											<Icon name="check" size={16} color={colors.success} />
@@ -540,7 +555,10 @@ class EditProfile extends PureComponent {
 										}
 									}}
 									rightItem={
-										!this.phone ? null : this.isCheckingPhoneNumber ? (
+										!this.phone ||
+										(this.phone === this.preData.phone &&
+											this.countryCode === this.preData.countryCode) ? null : this
+												.isCheckingPhoneNumber ? (
 											<ActivityIndicator size="small" color="#fff" />
 										) : this.isValidPhoneNumber ? (
 											<Icon name="check" size={16} color={colors.success} />
@@ -549,9 +567,12 @@ class EditProfile extends PureComponent {
 										)
 									}
 								/>
-								{!!this.phone && !this.isCheckingPhoneNumber && !this.isValidPhoneNumber && (
-									<Text style={styles.errorText}>{strings('profile.phone_number_used')}</Text>
-								)}
+								{!!this.phone &&
+									!this.isCheckingPhoneNumber &&
+									!this.isValidPhoneNumber &&
+									REGEX_PHONE_NUMBER.test(this.phone) && (
+										<Text style={styles.errorText}>{strings('profile.phone_number_used')}</Text>
+									)}
 							</View>
 							<StyledButton
 								type={'white'}
