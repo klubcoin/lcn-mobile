@@ -410,7 +410,7 @@ class ProfileOnboard extends PureComponent {
 									}
 								/>
 								{!!this.username && !this.isCheckingUsername && !this.isValidUsername && (
-									<Text style={styles.errorText}>{strings('profile.email_used')}</Text>
+									<Text style={styles.errorText}>{strings('profile.username_used')}</Text>
 								)}
 							</View>
 							<StyledButton
