@@ -129,11 +129,12 @@ class EditProfile extends PureComponent {
 	}
 
 	onEmailChange = val => {
+		const email = val.replace(this.regex, '').trim()
 		this.email = val.replace(this.regex, '');
-		if (this.preData.email === val.replace(this.regex, '')) {
+		if (this.preData.email === email) {
 			return;
 		}
-		if (!validator.isEmail(val)) {
+		if (!validator.isEmail(email)) {
 			this.isCheckingEmail = false;
 			this.isValidEmail = false;
 			return;
@@ -144,9 +145,9 @@ class EditProfile extends PureComponent {
 			clearTimeout(this.timeoutCheckUniqueEmail);
 		}
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
-			APIService.checkUniqueField('email', val, (success, json) => {
+			APIService.checkUniqueField('email', email, (success, json) => {
 				this.isCheckingEmail = false;
-				if (this.email !== val) {
+				if (this.email !== email) {
 					return;
 				}
 				if (json === SUCCESS) {

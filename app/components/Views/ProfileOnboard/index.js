@@ -104,7 +104,7 @@ class ProfileOnboard extends PureComponent {
 
 	onEmailChange = val => {
 		this.email = val.replace(this.regex, '');
-		if (!validator.isEmail(val)) {
+		if (!validator.isEmail(val.trim())) {
 			this.isCheckingEmail = false;
 			this.isValidEmail = false;
 			return;
@@ -115,9 +115,9 @@ class ProfileOnboard extends PureComponent {
 			clearTimeout(this.timeoutCheckUniqueEmail);
 		}
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
-			APIService.checkUniqueField('email', val, (success, json) => {
+			APIService.checkUniqueField('email', val.trim(), (success, json) => {
 				this.isCheckingEmail = false;
-				if (this.email !== val) {
+				if (this.email.trim() !== val.trim()) {
 					return;
 				}
 				if (json === SUCCESS) {
