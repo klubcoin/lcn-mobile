@@ -58,6 +58,10 @@ class ProfileOnboard extends PureComponent {
 	isValidUsername = false;
 	isCheckingEmail = false;
 	isCheckingUsername = false;
+	nameFocused = false;
+	surnameFocused = false;
+	emailFocused = false;
+	usernameFocused = false;
 
 	constructor(props) {
 		super(props);
@@ -76,11 +80,16 @@ class ProfileOnboard extends PureComponent {
 			isValidEmail: observable,
 			isValidUsername: observable,
 			isCheckingEmail: observable,
-			isCheckingUsername: observable
+			isCheckingUsername: observable,
+			nameFocused: observable,
+			surnameFocused: observable,
+			emailFocused: observable,
+			usernameFocused: observable
 		});
 	}
 
 	onUsernameChange = val => {
+		this.usernameFocused = false;
 		this.username = val.replace(this.regex, '');
 		this.isCheckingUsername = true;
 		this.isValidUsername = false;
@@ -103,6 +112,7 @@ class ProfileOnboard extends PureComponent {
 	};
 
 	onEmailChange = val => {
+		this.emailFocused = false;
 		this.email = val.replace(this.regex, '');
 		if (!validator.isEmail(val.trim())) {
 			this.isCheckingEmail = false;
@@ -345,6 +355,31 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	render() {
+		let nameErrorText = '';
+		let surnameErrorText = '';
+		let emailErrorText = '';
+		let usernameErrorText = '';
+
+		if (this.nameFocused && !this.firstname) {
+			nameErrorText = strings('profile.name_required');
+		}
+
+		if (this.surnameFocused && !this.lastname) {
+			surnameErrorText = strings('profile.surname_required');
+		}
+
+		if (!!this.email && validator.isEmail(this.email) && !this.isCheckingEmail && !this.isValidEmail) {
+			emailErrorText = strings('profile.email_used');
+		} else if (this.emailFocused & !this.email) {
+			emailErrorText = strings('profile.email_required');
+		}
+
+		if (!!this.username && !this.isCheckingUsername && !this.isValidUsername) {
+			usernameErrorText = strings('profile.username_used');
+		} else if (this.usernameFocused && !this.username) {
+			usernameErrorText = strings('profile.username_required');
+		}
+
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
@@ -367,22 +402,42 @@ class ProfileOnboard extends PureComponent {
 									value={this.firstname}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
+									onChangeText={text => {
+										this.firstname = text.replace(this.regex, '');
+										this.nameFocused = false;
+									}}
 									autoCapitalize={'words'}
+									textInputWrapperStyle={styles.textInputWrapperStyle}
+									containerStyle={styles.textContainerStyle}
+									onBlur={() => {
+										this.nameFocused = true;
+									}}
 								/>
+								{!!nameErrorText && <Text style={styles.errorText}>{nameErrorText}</Text>}
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
+									onChangeText={text => {
+										this.lastname = text.replace(this.regex, '');
+										this.surnameFocused = false;
+									}}
 									autoCapitalize={'words'}
+									textInputWrapperStyle={styles.textInputWrapperStyle}
+									containerStyle={styles.textContainerStyle}
+									onBlur={() => {
+										this.surnameFocused = true;
+									}}
 								/>
+								{!!surnameErrorText && <Text style={styles.errorText}>{surnameErrorText}</Text>}
 								<TextField
 									value={this.email}
 									label={strings('login.email')}
 									placeholder={strings('login.email')}
 									onChangeText={text => this.onEmailChange(text)}
 									keyboardType="email-address"
+									textInputWrapperStyle={styles.textInputWrapperStyle}
+									containerStyle={styles.textContainerStyle}
 									rightItem={
 										!this.email ? null : this.isCheckingEmail ? (
 											<ActivityIndicator size="small" color="#fff" />
@@ -392,19 +447,18 @@ class ProfileOnboard extends PureComponent {
 											<Icon name="remove" size={16} color={colors.fontError} />
 										)
 									}
+									onBlur={() => {
+										this.emailFocused = true;
+									}}
 								/>
-								{!!this.email &&
-									validator.isEmail(this.email) &&
-									!this.isCheckingEmail &&
-									!this.isValidEmail && (
-										<Text style={styles.errorText}>{strings('profile.email_used')}</Text>
-									)}
+								{!!emailErrorText && <Text style={styles.errorText}>{emailErrorText}</Text>}
 								<TextField
 									value={this.username}
 									label={strings('choose_password.username')}
 									placeholder={strings('login.type_here')}
-									containerStyle={styles.usernameField}
 									onChangeText={this.onUsernameChange}
+									textInputWrapperStyle={styles.textInputWrapperStyle}
+									containerStyle={styles.textContainerStyle}
 									rightItem={
 										!this.username ? null : this.isCheckingUsername ? (
 											<ActivityIndicator size="small" color="#fff" />
@@ -414,16 +468,23 @@ class ProfileOnboard extends PureComponent {
 											<Icon name="remove" size={16} color={colors.fontError} />
 										)
 									}
+									onBlur={() => {
+										this.usernameFocused = true;
+									}}
 								/>
-								{!!this.username && !this.isCheckingUsername && !this.isValidUsername && (
-									<Text style={styles.errorText}>{strings('profile.username_used')}</Text>
-								)}
+								{!!usernameErrorText && <Text style={styles.errorText}>{usernameErrorText}</Text>}
 							</View>
 							<StyledButton
 								type={'normal'}
 								onPress={this.onNext.bind(this)}
 								containerStyle={styles.next}
-								disabled={!this.isValidEmail || !this.isValidUsername ||!this.firstname||!this.lastname||!this.avatar}
+								disabled={
+									!this.isValidEmail ||
+									!this.isValidUsername ||
+									!this.firstname ||
+									!this.lastname ||
+									!this.avatar
+								}
 							>
 								{strings('choose_password.continue')}
 							</StyledButton>

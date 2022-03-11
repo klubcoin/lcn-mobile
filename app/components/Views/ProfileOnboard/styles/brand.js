@@ -24,55 +24,60 @@ const brandStyles = StyleSheet.create({
 		width: '80%',
 		maxWidth: 300
 	},
-	centerModal:{
-		backgroundColor:colors.greytransparent100,
-		justifyContent:"center",
-		width:'100%',
-		height:'100%',
-		alignItems:'center',
-
+	centerModal: {
+		backgroundColor: colors.greytransparent100,
+		justifyContent: 'center',
+		width: '100%',
+		height: '100%',
+		alignItems: 'center'
 	},
-	contentModal:{
-		backgroundColor:colors.purple500,
-		width:'60%',
-		alignItems:"center",
-		paddingVertical:20,
-		paddingHorizontal:20,
-		borderRadius:12
+	contentModal: {
+		backgroundColor: colors.purple500,
+		width: '60%',
+		alignItems: 'center',
+		paddingVertical: 20,
+		paddingHorizontal: 20,
+		borderRadius: 12
 	},
-	buttonModal:{
-		width:'100%',
-		marginVertical:12
+	buttonModal: {
+		width: '100%',
+		marginVertical: 12
 	},
 	notiCenterModal: {
-		backgroundColor:colors.greytransparent100,
-		justifyContent:"center",
-		width:'100%',
-		height:'100%',
-		alignItems:'center',
+		backgroundColor: colors.greytransparent100,
+		justifyContent: 'center',
+		width: '100%',
+		height: '100%',
+		alignItems: 'center'
 	},
-	notiContentText:{
-		color:colors.red,
-		fontSize:20,
-		fontWeight:"bold",
-		textAlign:'center'
-	},	
+	notiContentText: {
+		color: colors.red,
+		fontSize: 20,
+		fontWeight: 'bold',
+		textAlign: 'center'
+	},
 	notiContentModal: {
-		backgroundColor:colors.white,
-		width:'80%',
-		justifyContent:"space-around",
-		alignItems:"center",
-		paddingVertical:20,
-		paddingHorizontal:20,
-		borderRadius:12,
-		minHeight:200
+		backgroundColor: colors.white,
+		width: '80%',
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		paddingVertical: 20,
+		paddingHorizontal: 20,
+		borderRadius: 12,
+		minHeight: 200
 	},
 	notiButtonModal: {
-		width:'100%',
-		marginVertical:12,
+		width: '100%',
+		marginVertical: 12
 	},
-	errorText:{
-		color:colors.pdfColor
+	errorText: {
+		color: colors.pdfColor
+	},
+	textInputWrapperStyle: {
+		marginBottom: 5
+	},
+	textContainerStyle: {
+		marginTop: 15
 	}
 });
 
