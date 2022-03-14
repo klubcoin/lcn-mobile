@@ -5,6 +5,7 @@ import BuildVariant from '../variants/BuildVariant';
 import Config from 'react-native-config';
 
 export const basicAuth = Config.BASIC_AUTH;
+export const adminAuth = Config.ADMIN_AUTH;
 const basicAuthAdmin = 'meveo.admin:meveo';
 
 const dateFormatMeveo = 'YYYY-MM-DD HH:mm:ss';
@@ -21,7 +22,7 @@ export default class APIService {
 	static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-	static routeMeveoAPI = () => `${Config.SERVER_ADDRESS}/meveo`;
+	static routeMeveoAPI = () => `${Config.SERVER_ADDRESS}meveo`;
 	static routePersistenceAPI = () => `${Config.SERVER_ADDRESS}/meveo/api/rest/default/persistence/`;
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
@@ -39,6 +40,8 @@ export default class APIService {
 	static apiGetPartnerList = () => APIService.routePersistenceAPI() + 'KlubCoinPartner';
 	static apiGetPartnerIcon = iconPath => APIService.routeMeveoAPI() + iconPath;
 	static apiCheckUniqueField = () => APIService.routeMeveoAPI() + '/rest/validateField';
+	static apiSendEmailOTP = email => `${APIService.routeMeveoAPI()}/rest/emailOtp/${email}`;
+	static apiVerifyEmailOTP = email => `${APIService.routeMeveoAPI()}/rest/verifyOtp/${email}`;
 
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
@@ -266,5 +269,20 @@ export default class APIService {
 			value
 		};
 		WebService.sendGetDirect(this.apiCheckUniqueField(), data, callback);
+	}
+
+	static sendEmailOTP(email, callback) {
+		const data = {
+			basicAuth: adminAuth
+		};
+		WebService.sendGetDirect(this.apiSendEmailOTP(email), data, callback);
+	}
+
+	static verifyEmailOTP(email, otp, callback) {
+		const data = {
+			basicAuth: adminAuth,
+			otp
+		};
+		WebService.sendPostDirect(this.apiVerifyEmailOTP(email), data, callback);
 	}
 }

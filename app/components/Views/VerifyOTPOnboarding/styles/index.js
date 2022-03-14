@@ -4,14 +4,21 @@ import brandStyles from './brand';
 import { assignNestedObj } from '../../../../util/object';
 
 const styles = StyleSheet.create({
-	wrapper: {},
+	emailWrapper: {},
 	title: {},
 	resendButton: {},
 	resendText: {},
 	textWrapper: {},
 	resendText: {},
 	errorText: {},
-	text: {}
+	text: {},
+	mainWrapper: {},
+	wrapper: {},
+	emoji: {},
+	congratulations: {},
+	congratulationsText: {},
+	learnMore: {},
+	footer: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

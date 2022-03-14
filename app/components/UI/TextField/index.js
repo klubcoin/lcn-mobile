@@ -18,12 +18,15 @@ export default class TextField extends Component {
 			disabled = false,
 			keyboardType,
 			autoCapitalize = 'none',
-			rightItem = null
+			rightItem = null,
+			textInputWrapperStyle,
+			onBlur,
+			onFocus
 		} = this.props;
 		return (
 			<View style={containerStyle}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
-				<View style={styles.textInputWrapper}>
+				<View style={[styles.textInputWrapper, textInputWrapperStyle]}>
 					<TextInput
 						style={styles.textInput}
 						value={value}
@@ -34,8 +37,10 @@ export default class TextField extends Component {
 						autoCapitalize={autoCapitalize}
 						maxLength={MAX_LENGTH_INPUT}
 						editable={!disabled}
+						onBlur={() => onBlur && onBlur()}
+						onFocus={() => onFocus && onFocus()}
 					/>
-					{rightItem && rightItem }
+					{rightItem && rightItem}
 				</View>
 			</View>
 		);

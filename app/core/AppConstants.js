@@ -74,6 +74,7 @@ export default {
 	URLS: {
 		TERMS_AND_CONDITIONS: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/term_conditions.html`,
 		PRIVACY_POLICY: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/privacy.html`,
+		LEARN_MORE: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/learnmore.html`,
 		CONNECTIVITY_ISSUES: 'https://liquichain.io',
 		NFT: 'https://liquichain.io'
 	},

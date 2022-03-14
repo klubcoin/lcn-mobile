@@ -249,7 +249,7 @@ class Dashboard extends PureComponent {
 					PreferencesController.setAccountLabel(selectedAddress, name);
 					preferences
 						.getOnboardProfile()
-						.then(value =>
+						.then(value => {
 							preferences.setOnboardProfile(
 								Object.assign(value, {
 									firstName: name2 ? name2.split(' ')[0] : '',
@@ -259,11 +259,13 @@ class Dashboard extends PureComponent {
 												.slice(1, name2.split(' ').length)
 												.join(' ')
 										: '',
-									email: emailAddress,
-									phone: phoneNumber
+									email: emailAddress?.value,
+									phone: phoneNumber?.value,
+									emailVerified: emailAddress?.verified === 'true',
+									phoneVerified: phoneNumber?.verified
 								})
-							)
-						)
+							);
+						})
 						.catch(e => console.log('profile onboarding error', e));
 				}
 			},
@@ -478,8 +480,9 @@ class Dashboard extends PureComponent {
 				{this.renderTitle(strings('dashboard.chart'))}
 
 				{/* //TODO: Wait to implement API for real data and feature */}
-				<View style={{ padding: 15, backgroundColor: colors.purple, borderRadius: 10, marginBottom: 20 }}>
-					<LineChart
+				<View style={styles.chartBox}>
+					<Text style={styles.comingSoon}>{strings('receive_request.coming_soon')}</Text>
+					{/* <LineChart
 						onDataPointClick={({ index, dateSet }) => {
 							console.log(
 								'🚀 ~ file: index.js ~ line 415 ~ Dashboard ~ renderContent ~ dateSet',
@@ -524,7 +527,7 @@ class Dashboard extends PureComponent {
 							paddingRight: 5,
 							paddingBottom: -35 * 2
 						}}
-					/>
+					/> */}
 				</View>
 
 				{/* Action button */}

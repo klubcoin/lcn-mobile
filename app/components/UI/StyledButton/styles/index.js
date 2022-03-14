@@ -119,7 +119,9 @@ const styles = StyleSheet.create({
 	view: {
 		borderWidth: 1,
 		borderColor: colors.white
-	}
+	},
+	disable: {},
+	disableText: {}
 });
 
 function getStyles(type) {
@@ -208,6 +210,10 @@ function getStyles(type) {
 		case 'white-padding':
 			fontStyle = styles.whiteTextPadding;
 			containerStyle = styles.whitePadding;
+			break;
+		case 'disable':
+			fontStyle = styles.disableText;
+			containerStyle = styles.disable;
 			break;
 		default:
 			throw new Error('Unknown button type');

@@ -95,6 +95,8 @@ class ManualBackupStep3 extends PureComponent {
 	};
 
 	done = async () => {
+		this.props.navigation.navigate('EmailVerifyOnboarding');
+		return;
 		const onboardingWizard = await AsyncStorage.getItem(ONBOARDING_WIZARD);
 		// Check if user passed through metrics opt-in screen
 		const metricsOptIn = await AsyncStorage.getItem(METRICS_OPT_IN);

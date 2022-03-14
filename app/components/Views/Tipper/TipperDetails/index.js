@@ -145,7 +145,7 @@ class TipperDetails extends PureComponent {
                             >
                                 <View style={styles.buttonContent}>
                                     <View style={styles.buttonIconWrapper}>
-                                        <IonicIcon name={'ios-link'} size={18} color={colors.blue} />
+                                        <IonicIcon name={'ios-link'} size={18} color={colors.black} />
                                     </View>
                                     <View style={styles.buttonTextWrapper}>
                                         <Text style={styles.buttonText}>
@@ -162,7 +162,7 @@ class TipperDetails extends PureComponent {
                             >
                                 <View style={styles.buttonContent}>
                                     <View style={styles.buttonIconWrapper}>
-                                        <FontAwesome name={'qrcode'} size={18} color={colors.blue} />
+                                        <FontAwesome name={'qrcode'} size={18} color={colors.black} />
                                     </View>
                                     <View style={styles.buttonTextWrapper}>
                                         <Text style={styles.buttonText}>{strings('payment_request.qr_code')}</Text>
