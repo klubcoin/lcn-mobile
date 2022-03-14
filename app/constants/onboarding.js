@@ -4,7 +4,9 @@ export const CHOOSE_PASSWORD_STEPS = [
 	strings('choose_password.profile'),
 	strings('choose_password.title'),
 	strings('choose_password.secure'),
-	strings('choose_password.confirm')
+	strings('choose_password.confirm'),
+	strings('choose_password.verify_email'),
+	strings('choose_password.verification')
 ];
 
 export const MANUAL_BACKUP_STEPS = [

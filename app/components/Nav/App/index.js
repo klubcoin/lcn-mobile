@@ -11,6 +11,8 @@ import Onboarding from '../../Views/Onboarding';
 import OnboardingCarousel from '../../Views/OnboardingCarousel';
 import CreateWallet from '../../Views/CreateWallet';
 import ChoosePassword from '../../Views/ChoosePassword';
+import VerifyOTPOnboarding from '../../Views/VerifyOTPOnboarding';
+import EmailVerifyOnboarding from '../../Views/EmailVerifyOnboarding';
 import AccountBackupStep1 from '../../Views/AccountBackupStep1';
 import AccountBackupStep1B from '../../Views/AccountBackupStep1B';
 import ManualBackupStep1 from '../../Views/ManualBackupStep1';
@@ -51,6 +53,12 @@ const OnboardingNav = createStackNavigator(
 		},
 		CreateWallet: {
 			screen: CreateWallet
+		},
+		VerifyOTPOnboarding: {
+			screen: VerifyOTPOnboarding
+		},
+		EmailVerifyOnboarding: {
+			screen: EmailVerifyOnboarding
 		},
 		ChoosePassword: {
 			screen: ChoosePassword

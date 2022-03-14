@@ -190,6 +190,8 @@
 		"setup_local_account": "Setup local account (geek)",
 		"or": "Or",
 		"profile": "Profile",
+		"verify_email": "Verify Email",
+		"verification": "Verification",
 		"continue": "Continue",
 		"sign_in_biometrics": "Sign in with Biometrics",
 		"username": "Username",
@@ -1268,6 +1270,21 @@
 		"what_is_seedphrase_text_2": "You must keep your Secret Recovery Phrase secret and safe. If someone gets your Secret Recovery Phrase, they’ll gain control over your accounts.",
 		"what_is_seedphrase_text_3": "Save it in a place where only you can access it. If you lose it, not even {{appName}} can help you recover it."
 	},
+	"email_verify_onboarding": {
+		"title": "Verify your email",
+		"info_text_1_1": "Get your Klubcoin Wallet account fully verified to unlock all of our",
+		"info_text_1_2": "awesome features",
+		"info_text_1_3": ".",
+		"info_text_1_4": "You may also decide to verify it later on at Klubcoin Settings.",
+		"cta_text": "Verify now",
+		"cta_subText": "Highly recommended",
+		"skip_button_cancel": "Verify now",
+		"skip_button_confirm": "Skip",
+		"skip_title": "Skip email verification?",
+		"skip_check": "You can verify your email at Settings > Security & Privacy.",
+		"remind_me_later": "Remind me later",
+		"remind_me_later_subtext": "(Not recommended)"
+	},
 	"account_backup_step_1B": {
 		"title": "Secure your wallet",
 		"subtitle_1": "Secure your wallet's",
@@ -2024,7 +2041,12 @@
 		"exceeded_attempts": "You exceeded maximum attempts. Up to 5 Failed Attempts are allowed. Please try again later.",
 		"exceeded_send_otp": "You exceeded maximum of send OTP. Up to 5 sends per hour. Please try again later.",
 		"verify_success": "Verify email success.",
-		"verify": "Verify"
+		"verify": "Verify",
+		"congratulations": "Congratulations",
+		"text1": "You've successfully verified your Klubcoin Wallet account. Proceed now to fully enjoy our awesome features!",
+		"text2": "For lost email or forgotten email addresses. You can change and verify your new email via Email in Settings > Security & Privacy.",
+		"learn_more": "Learn more",
+		"done": "Done"
 	},
 	"coming_soon": {
 		"coming_soon": "Coming Soon",
