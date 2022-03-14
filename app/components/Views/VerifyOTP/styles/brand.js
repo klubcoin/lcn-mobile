@@ -1,4 +1,3 @@
-import { collectStoredAnnotations } from 'mobx/dist/internal';
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../../styles/common';
 

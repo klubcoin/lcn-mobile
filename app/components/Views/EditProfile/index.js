@@ -370,30 +370,7 @@ class EditProfile extends PureComponent {
 	}
 
 	onPressUpdate() {
-		let hasUpdate = false;
-		let params = {
-			onVerify: () => this.onUpdate()
-		};
-		if (this.email !== this.preData.email) {
-			hasUpdate = true;
-			params = {
-				...params,
-				email: this.email
-			};
-		}
-		if (this.countryCode !== this.preData.countryCode || this.phone !== this.preData.phone) {
-			hasUpdate = true;
-			params = {
-				...params,
-				phone: `+${this.countryCode}-${this.phone}`
-			};
-		}
-		if (hasUpdate) {
-			// this.props.navigation.navigate('Partners');
-			this.props.navigation.navigate('VerifyOTP', params);
-		} else {
-			this.onUpdate();
-		}
+		this.onUpdate();
 	}
 
 	async onUpdate() {
@@ -519,6 +496,7 @@ class EditProfile extends PureComponent {
 									placeholder={strings('login.email')}
 									onChangeText={text => this.onEmailChange(text)}
 									keyboardType="email-address"
+									disabled
 									rightItem={
 										!this.email || this.email === this.preData.email ? null : this
 												.isCheckingEmail ? (
