@@ -774,7 +774,7 @@
 		"desc": "Get your Klubcoin Wallet account fully verified to unlock all of our awesome features. You can alse update your email for security purposes.",
 		"verify_your_email": "Verfy your email",
 		"verified": "Verfied",
-		"Change_email": "Change email"
+		"change_email": "Change email"
 	},
 	"password_reset": {
 		"password_title": "Password",
@@ -2046,6 +2046,7 @@
 		"text1": "You've successfully verified your Klubcoin Wallet account. Proceed now to fully enjoy our awesome features!",
 		"text2": "For lost email or forgotten email addresses. You can change and verify your new email via Email in Settings > Security & Privacy.",
 		"learn_more": "Learn more",
+		"email_already_verified": "This email already verified!",
 		"done": "Done"
 	},
 	"coming_soon": {

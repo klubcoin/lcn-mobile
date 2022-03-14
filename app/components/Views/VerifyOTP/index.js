@@ -66,6 +66,20 @@ class VerifyOTP extends PureComponent {
 				case 'too_many_requests':
 					this.tooManySendOtp = true;
 					break;
+				case 'already_verified':
+					showSuccess(strings('verify_otp.email_already_verified'));
+					preferences
+						.getOnboardProfile()
+						.then(value =>
+							preferences.setOnboardProfile(
+								Object.assign(value, {
+									emailVerified: true
+								})
+							)
+						)
+						.catch(e => console.log('profile onboarding error', e));
+					this.props.navigation.goBack();
+					break;
 				default:
 					this.timingResend = 60;
 					this.timing();

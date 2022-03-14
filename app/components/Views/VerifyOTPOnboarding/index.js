@@ -67,6 +67,9 @@ class VerifyOTPOnboarding extends PureComponent {
 					this.timingResend = 60;
 					this.timing();
 					break;
+				case 'already_verified':
+					this.verifySuccess = true;
+					break;
 				case 'too_many_requests':
 					this.tooManySendOtp = true;
 					break;
@@ -82,18 +85,6 @@ class VerifyOTPOnboarding extends PureComponent {
 			this.otpEmail = '';
 			switch (response) {
 				case 'success':
-					// showSuccess(strings('verify_otp.verify_success'));
-					// preferences
-					// 	.getOnboardProfile()
-					// 	.then(value =>
-					// 		preferences.setOnboardProfile(
-					// 			Object.assign(value, {
-					// 				emailVerified: true
-					// 			})
-					// 		)
-					// 	)
-					// 	.catch(e => console.log('profile onboarding error', e));
-					// this.props.navigation.goBack();
 					this.verifySuccess = true;
 					break;
 				case 'invalid_code':
