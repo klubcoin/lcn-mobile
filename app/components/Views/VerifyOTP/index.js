@@ -8,6 +8,9 @@ import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
 import OTPInput from './components/OTPInput';
 import StyledButton from '../../UI/StyledButton';
+import APIService from '../../../services/APIService';
+import { showSuccess } from '../../../util/notify';
+import preferences from '../../../store/preferences';
 
 class VerifyOTP extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -18,6 +21,13 @@ class VerifyOTP extends PureComponent {
 	otpPhone = '';
 	email = '';
 	phone = '';
+	timingResend = 0;
+	interval = null;
+	resendAble = true;
+	incorrentOTP = false;
+	tooManyVerifyAttempts = false;
+	tooManySendOtp = false;
+
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
@@ -25,11 +35,83 @@ class VerifyOTP extends PureComponent {
 			otpEmail: observable,
 			otpPhone: observable,
 			email: observable,
-			phone: observable
+			phone: observable,
+			timingResend: observable,
+			interval: observable,
+			resendAble: observable,
+			incorrentOTP: observable,
+			tooManyVerifyAttempts: observable,
+			tooManySendOtp: observable
 		});
 		const { params } = props.navigation.state;
 		this.email = params?.email;
 		this.phone = params?.phone;
+	}
+
+	componentDidMount() {
+		this.sendOTPEmail();
+	}
+
+	sendOTPEmail() {
+		APIService.sendEmailOTP(this.email, (success, response) => {
+			switch (response) {
+				case 'success':
+					this.timingResend = 60;
+					this.timing();
+					break;
+				case 'retry_later':
+					this.timingResend = 60;
+					this.timing();
+					break;
+				case 'too_many_requests':
+					this.tooManySendOtp = true;
+					break;
+				default:
+					this.timingResend = 60;
+					this.timing();
+			}
+		});
+	}
+
+	verifyOTPEmail() {
+		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {
+			this.otpEmail = '';
+			switch (response) {
+				case 'success':
+					showSuccess(strings('verify_otp.verify_success'));
+					preferences
+						.getOnboardProfile()
+						.then(value =>
+							preferences.setOnboardProfile(
+								Object.assign(value, {
+									emailVerified: true
+								})
+							)
+						)
+						.catch(e => console.log('profile onboarding error', e));
+					this.props.navigation.goBack();
+					break;
+				case 'invalid_code':
+					this.incorrentOTP = true;
+					break;
+				case 'too_many_attempts':
+					this.tooManyVerifyAttempts = true;
+					break;
+				case 'invalid_request':
+					this.incorrentOTP = true;
+					break;
+				default:
+			}
+		});
+	}
+
+	timing() {
+		this.interval = setInterval(() => {
+			this.timingResend = this.timingResend - 1;
+			if (this.timingResend <= 0) {
+				clearInterval(this.interval);
+			}
+		}, 1000);
 	}
 
 	setOtpEmail(text) {
@@ -54,10 +136,29 @@ class VerifyOTP extends PureComponent {
 					.split('')
 					.fill('*', 1)
 					.join('')}`}</Text>
-				<OTPInput value={this.otpEmail} onChange={text => this.setOtpEmail(text)} />
-				<TouchableOpacity style={styles.resendButton} activeOpacity={0.7}>
-					<Text style={styles.resendText}>{strings('verify_otp.resend_code').toUpperCase()}</Text>
-				</TouchableOpacity>
+				<OTPInput
+					value={this.otpEmail}
+					disable={this.tooManySendOtp || this.tooManyVerifyAttempts}
+					onChange={text => this.setOtpEmail(text)}
+				/>
+				{!this.tooManySendOtp ? (
+					<Text style={styles.textWrapper}>
+						<Text>{strings('verify_otp.not_receive_code')}</Text>
+						{this.timingResend > 0 ? (
+							<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
+						) : (
+							<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
+								{strings('verify_otp.resend_now')}
+							</Text>
+						)}
+					</Text>
+				) : (
+					<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
+				)}
+				{this.incorrentOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
+				{this.tooManyVerifyAttempts && (
+					<Text style={styles.errorText}>{strings('verify_otp.exceeded_attempts')}</Text>
+				)}
 			</View>
 		);
 	}
@@ -79,11 +180,6 @@ class VerifyOTP extends PureComponent {
 		);
 	}
 
-	onVerify() {
-		this.props.navigation.goBack();
-		this.props.navigation.state.params.onVerify && this.props.navigation.state.params.onVerify();
-	}
-
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
@@ -95,9 +191,11 @@ class VerifyOTP extends PureComponent {
 							type={'normal'}
 							disabled={
 								(this.email && this.email !== '' && this.otpEmail.length < 6) ||
-								(this.phone && this.phone !== '' && this.otpPhone.length < 6)
+								(this.phone && this.phone !== '' && this.otpPhone.length < 6) ||
+								this.tooManySendOtp ||
+								this.tooManyVerifyAttempts
 							}
-							onPress={() => this.onVerify()}
+							onPress={() => this.verifyOTPEmail()}
 						>
 							{strings('verify_otp.verify_otp')}
 						</StyledButton>

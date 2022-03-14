@@ -249,7 +249,7 @@ class Dashboard extends PureComponent {
 					PreferencesController.setAccountLabel(selectedAddress, name);
 					preferences
 						.getOnboardProfile()
-						.then(value =>
+						.then(value => {
 							preferences.setOnboardProfile(
 								Object.assign(value, {
 									firstName: name2 ? name2.split(' ')[0] : '',
@@ -261,11 +261,11 @@ class Dashboard extends PureComponent {
 										: '',
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,
-									emailVerified: emailAddress?.verified,
+									emailVerified: emailAddress?.verified === 'true',
 									phoneVerified: phoneNumber?.verified
 								})
-							)
-						)
+							);
+						})
 						.catch(e => console.log('profile onboarding error', e));
 				}
 			},

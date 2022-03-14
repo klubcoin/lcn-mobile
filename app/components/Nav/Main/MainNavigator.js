@@ -407,6 +407,9 @@ export default createStackNavigator(
 				SecuritySettings: {
 					screen: SecuritySettings
 				},
+				VerifyOTP: {
+					screen: VerifyOTP
+				},
 				ExperimentalSettings: {
 					screen: ExperimentalSettings
 				},

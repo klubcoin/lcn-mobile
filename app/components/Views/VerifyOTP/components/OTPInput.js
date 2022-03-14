@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, TextInput, Dimensions, Text } from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, TextInput, Dimensions, Text } from 'react-native';
 import { colors } from '../../../../styles/common';
 
 const { width } = Dimensions.get('screen');
-export default function OTPInput({ style, value, onChange }) {
+export default function OTPInput({ style, value, onChange, disable = false }) {
 	const styles = StyleSheet.create({
 		wrapper: {
 			flex: 1,
@@ -12,28 +12,30 @@ export default function OTPInput({ style, value, onChange }) {
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			overflow: 'hidden',
-      marginVertical:12
+			marginVertical: 12
 		},
 		input: {
 			position: 'absolute',
 			top: -100
 		},
 		item: {
-			backgroundColor: colors.white,
+			backgroundColor: colors.transparent,
 			width: 40,
 			maxWidth: width / 10,
 			height: 60,
 			justifyContent: 'center',
-			alignItems: 'center'
+			alignItems: 'center',
+			borderBottomWidth: 4,
+			borderBottomColor: colors.white
 		},
 		activeItem: {
-			borderBottomWidth: 4,
-			borderBottomColor: colors.purple100
+			// borderBottomWidth: 4,
+			// borderBottomColor: colors.purple100
 		},
 		textItem: {
 			fontSize: 30,
 			fontWeight: 'bold',
-			color: colors.black
+			color: colors.white
 		}
 	});
 
@@ -50,23 +52,25 @@ export default function OTPInput({ style, value, onChange }) {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={0.7} style={[styles.wrapper, style]} underlayColor={colors.grey}>
+		<TouchableOpacity
+			activeOpacity={0.7}
+			disable={disable}
+			onPress={onFocus}
+			style={[styles.wrapper, style]}
+			underlayColor={colors.grey}
+		>
 			<TextInput
 				style={styles.input}
 				maxLength={6}
-        keyboardType={"number-pad"}
+				keyboardType={'number-pad'}
 				ref={inputRef}
 				value={value}
 				onChangeText={text => onChange(text)}
 			/>
 			{[0, 1, 2, 3, 4, 5].map(e => (
-				<TouchableOpacity
-					activeOpacity={0.7}
-					style={[styles.item, value.length === e ? styles.activeItem : null]}
-					onPress={onFocus}
-				>
+				<View activeOpacity={0.7} style={[styles.item, value.length === e ? styles.activeItem : null]}>
 					<Text style={styles.textItem}>{value[e]}</Text>
-				</TouchableOpacity>
+				</View>
 			))}
 		</TouchableOpacity>
 	);

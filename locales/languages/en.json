@@ -767,6 +767,13 @@
 		"text": "TEXT",
 		"qr_code": "QR CODE"
 	},
+	"verify_email": {
+		"title": "Email",
+		"desc": "Get your Klubcoin Wallet account fully verified to unlock all of our awesome features. You can alse update your email for security purposes.",
+		"verify_your_email": "Verfy your email",
+		"verified": "Verfied",
+		"Change_email": "Change email"
+	},
 	"password_reset": {
 		"password_title": "Password",
 		"password_desc": "Choose a strong password to unlock {{appName}} app on your device. If you lose this password, you will need your Secret Recovery Phrase to re-import your wallet.",
@@ -2010,6 +2017,13 @@
 		"title": "Verification",
 		"verify_otp": "Verify OTP Code send on",
 		"resend_code": "Resend code",
+		"not_receive_code": "Didn't receive code?",
+		"resend_in": "Resend in {{second}} seconds.",
+		"resend_now": "Resend now.",
+		"incorrect_otp": "Incorrect OPT! Please try again.",
+		"exceeded_attempts": "You exceeded maximum attempts. Up to 5 Failed Attempts are allowed. Please try again later.",
+		"exceeded_send_otp": "You exceeded maximum of send OTP. Up to 5 sends per hour. Please try again later.",
+		"verify_success": "Verify email success.",
 		"verify": "Verify"
 	},
 	"coming_soon": {

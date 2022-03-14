@@ -198,7 +198,7 @@ class ImportFromSeed extends PureComponent {
 							: '',
 						email: emailAddress?.value,
 						phone: phoneNumber?.value,
-						emailVerified: emailAddress?.verified,
+						emailVerified: emailAddress?.verified === 'true',
 						phoneVerified: phoneNumber?.verified
 					});
 					this.continueImport(metricsOptIn, onboardingWizard);
