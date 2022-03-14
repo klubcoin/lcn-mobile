@@ -53,6 +53,7 @@ import { refWebRTC } from '../../../../services/WebRTC';
 import { displayName } from '../../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import { failedSeedPhraseRequirements } from '../../../../util/validators';
 
 const isIos = Device.isIos();
 
@@ -154,7 +155,8 @@ class Settings extends PureComponent {
 		passcodeChoice: false,
 		showHint: false,
 		hintText: '',
-		loading: false
+		loading: false,
+		emailVerified: preferences?.onboardProfile?.emailVerified
 	};
 
 	autolockOptions = [
@@ -204,10 +206,22 @@ class Settings extends PureComponent {
 		this.focusListener.remove();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.isFocused !== this.props.isFocused) {
+			// Use the `this.props.isFocused` boolean
+			// Call any action
+		}
+	}
+
 	componentDidMount = async () => {
+		const unsubscribe = this.props.navigation.addListener('didFocus', () => {});
+
 		const { navigation } = this.props;
 		this.focusListener = navigation.addListener('didFocus', () => {
-			this.setState({ loading: false });
+			this.setState({
+				loading: false,
+				emailVerified: preferences?.onboardProfile?.emailVerified
+			});
 		});
 		const biometryType = await SecureKeychain.getSupportedBiometryType();
 		const metricsOptIn = Analytics.getEnabled();
@@ -238,6 +252,7 @@ class Settings extends PureComponent {
 				hintText: manualBackup
 			});
 		}
+		return unsubscribe;
 	};
 
 	onSingInWithBiometrics = async enabled => {
@@ -393,6 +408,9 @@ class Settings extends PureComponent {
 	resetPassword = () => {
 		this.props.navigation.navigate('ResetPassword');
 	};
+	verifyEmail = () => {
+		this.props.navigation.navigate('VerifyOTP', { email: preferences.onboardProfile?.email });
+	};
 
 	saveHint = async () => {
 		const { hintText } = this.state;
@@ -501,7 +519,8 @@ class Settings extends PureComponent {
 			metricsOptIn,
 			loading,
 			hintText,
-			privateKeyBackupStats
+			privateKeyBackupStats,
+			emailVerified
 		} = this.state;
 		const { accounts, identities, selectedAddress } = this.props;
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
@@ -577,6 +596,23 @@ class Settings extends PureComponent {
 										{strings('reveal_credential.seed_phrase_title')}
 									</StyledButton>
 								</View>
+							)}
+						</View>
+						<View style={styles.setting} testID={'verify-email-section'}>
+							<Text style={styles.title}>{strings('verify_email.title')}</Text>
+							<Text style={styles.desc}>{strings('verify_email.desc')}</Text>
+							{emailVerified ? (
+								<StyledButton type={'disable'} containerStyle={styles.confirm} disable={true}>
+									{strings('verify_email.verified')}
+								</StyledButton>
+							) : (
+								<StyledButton
+									type={'normal'}
+									onPress={this.verifyEmail}
+									containerStyle={styles.confirm}
+								>
+									{strings('verify_email.verify_your_email')}
+								</StyledButton>
 							)}
 						</View>
 						<View style={styles.setting} testID={'change-password-section'}>

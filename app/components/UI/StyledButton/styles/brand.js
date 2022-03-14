@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
 	},
 	pinkPadding: {
 		backgroundColor: colors.pink,
-		borderRadius: 10,
+		borderRadius: 10
 	},
 	pinkPaddingText: {
 		color: colors.black
@@ -179,6 +179,14 @@ const styles = StyleSheet.create({
 	},
 	whitePaddingText: {
 		color: colors.black
+	},
+	disable: {
+		backgroundColor: colors.grey600,
+		borderRadius: 10,
+		paddingVertical: 12
+	},
+	disableText: {
+		color: colors.success
 	}
 });
 

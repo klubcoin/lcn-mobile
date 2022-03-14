@@ -496,6 +496,8 @@ class DrawerView extends PureComponent {
 	};
 
 	goToCollect = () => {
+		this.props.navigation.navigate('ComingSoon');
+		return
 		this.props.navigation.navigate('Collect');
 		this.hideDrawer();
 	};

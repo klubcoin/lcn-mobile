@@ -450,7 +450,7 @@ class ChoosePassword extends PureComponent {
 
 	learnMore = () => {
 		this.props.navigation.push('Webview', {
-			url: routes.mainNetWork.helpSupportUrl,
+			url: AppConstants.URLS.LEARN_MORE,
 			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};

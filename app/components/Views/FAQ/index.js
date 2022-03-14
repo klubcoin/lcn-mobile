@@ -46,8 +46,6 @@ class FAQScreen extends PureComponent {
 		if (
 			!keys.includes('answer') ||
 			!faq.answer ||
-			!keys.includes('section') ||
-			!faq.section ||
 			!keys.includes('question') ||
 			!faq.question
 		) {

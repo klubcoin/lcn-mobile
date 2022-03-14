@@ -29,6 +29,8 @@ import LockScreen from '../../Views/LockScreen';
 import ChoosePasswordSimple from '../../Views/ChoosePasswordSimple';
 import EnterPasswordSimple from '../../Views/EnterPasswordSimple';
 import ChoosePassword from '../../Views/ChoosePassword';
+import VerifyOTPOnboarding from '../../Views/VerifyOTPOnboarding';
+import EmailVerifyOnboarding from '../../Views/EmailVerifyOnboarding';
 import ResetPassword from '../../Views/ResetPassword';
 import AccountBackupStep1 from '../../Views/AccountBackupStep1';
 import AccountBackupStep1B from '../../Views/AccountBackupStep1B';
@@ -181,7 +183,7 @@ export default createStackNavigator(
 							screen: FAQ
 						},
 						FAQAnswer: {
-							screen: FAQAnswer,
+							screen: FAQAnswer
 						},
 						Collect: {
 							screen: Collect
@@ -245,7 +247,7 @@ export default createStackNavigator(
 			},
 			Chat: {
 				screen: Chat
-			},
+			}
 		}),
 		MarketPlaceApp: createDrawerNavigator(
 			{
@@ -407,6 +409,9 @@ export default createStackNavigator(
 				SecuritySettings: {
 					screen: SecuritySettings
 				},
+				VerifyOTP: {
+					screen: VerifyOTP
+				},
 				ExperimentalSettings: {
 					screen: ExperimentalSettings
 				},
@@ -566,6 +571,12 @@ export default createStackNavigator(
 				{
 					ChoosePassword: {
 						screen: ChoosePassword
+					},
+					VerifyOTPOnboarding: {
+						screen: VerifyOTPOnboarding
+					},
+					EmailVerifyOnboarding: {
+						screen: EmailVerifyOnboarding
 					},
 					ProfileOnboard: {
 						screen: ProfileOnboard

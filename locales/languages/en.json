@@ -190,6 +190,8 @@
 		"setup_local_account": "Setup local account (geek)",
 		"or": "Or",
 		"profile": "Profile",
+		"verify_email": "Verify Email",
+		"verification": "Verification",
 		"continue": "Continue",
 		"sign_in_biometrics": "Sign in with Biometrics",
 		"username": "Username",
@@ -216,6 +218,10 @@
 		"missing_phone": "Phone is missing",
 		"missing_email": "Email is missing",
 		"email_used": "This email is already in use. Please enter another email!",
+		"name_required": "Name is required!",
+		"surname_required": "Surname is required!",
+		"email_required": "Email is required!",
+		"username_required": "Username is required!",
 		"username_used": "This username is already in use. Please enter another username",
 		"phone_number_used": "This phone number is already in use. Please enter another phone number",
 		"invalid_phone": "Invalid phone number",
@@ -763,6 +769,13 @@
 		"text": "TEXT",
 		"qr_code": "QR CODE"
 	},
+	"verify_email": {
+		"title": "Email",
+		"desc": "Get your Klubcoin Wallet account fully verified to unlock all of our awesome features. You can alse update your email for security purposes.",
+		"verify_your_email": "Verfy your email",
+		"verified": "Verfied",
+		"Change_email": "Change email"
+	},
 	"password_reset": {
 		"password_title": "Password",
 		"password_desc": "Choose a strong password to unlock {{appName}} app on your device. If you lose this password, you will need your Secret Recovery Phrase to re-import your wallet.",
@@ -1256,6 +1269,21 @@
 		"what_is_seedphrase_text_1": "A Secret Recovery Phrase is a set of twelve words that contains all the information about your wallet, including your funds. It’s like a secret code used to access your entire wallet.",
 		"what_is_seedphrase_text_2": "You must keep your Secret Recovery Phrase secret and safe. If someone gets your Secret Recovery Phrase, they’ll gain control over your accounts.",
 		"what_is_seedphrase_text_3": "Save it in a place where only you can access it. If you lose it, not even {{appName}} can help you recover it."
+	},
+	"email_verify_onboarding": {
+		"title": "Verify your email",
+		"info_text_1_1": "Get your Klubcoin Wallet account fully verified to unlock all of our",
+		"info_text_1_2": "awesome features",
+		"info_text_1_3": ".",
+		"info_text_1_4": "You may also decide to verify it later on at Klubcoin Settings.",
+		"cta_text": "Verify now",
+		"cta_subText": "Highly recommended",
+		"skip_button_cancel": "Verify now",
+		"skip_button_confirm": "Skip",
+		"skip_title": "Skip email verification?",
+		"skip_check": "You can verify your email at Settings > Security & Privacy.",
+		"remind_me_later": "Remind me later",
+		"remind_me_later_subtext": "(Not recommended)"
 	},
 	"account_backup_step_1B": {
 		"title": "Secure your wallet",
@@ -2006,7 +2034,19 @@
 		"title": "Verification",
 		"verify_otp": "Verify OTP Code send on",
 		"resend_code": "Resend code",
-		"verify": "Verify"
+		"not_receive_code": "Didn't receive code?",
+		"resend_in": "Resend in {{second}} seconds.",
+		"resend_now": "Resend now.",
+		"incorrect_otp": "Incorrect OPT! Please try again.",
+		"exceeded_attempts": "You exceeded maximum attempts. Up to 5 Failed Attempts are allowed. Please try again later.",
+		"exceeded_send_otp": "You exceeded maximum of send OTP. Up to 5 sends per hour. Please try again later.",
+		"verify_success": "Verify email success.",
+		"verify": "Verify",
+		"congratulations": "Congratulations",
+		"text1": "You've successfully verified your Klubcoin Wallet account. Proceed now to fully enjoy our awesome features!",
+		"text2": "For lost email or forgotten email addresses. You can change and verify your new email via Email in Settings > Security & Privacy.",
+		"learn_more": "Learn more",
+		"done": "Done"
 	},
 	"coming_soon": {
 		"coming_soon": "Coming Soon",

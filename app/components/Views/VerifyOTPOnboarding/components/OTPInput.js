@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, TextInput, Dimensions, Text } from 
 import { colors } from '../../../../styles/common';
 
 const { width } = Dimensions.get('screen');
-export default function OTPInput({ style, value, onChange, disable = false }) {
+export default function OTPInput({ style, value, onChange, disable  }) {
 	const styles = StyleSheet.create({
 		wrapper: {
 			flex: 1,
@@ -54,7 +54,7 @@ export default function OTPInput({ style, value, onChange, disable = false }) {
 	return (
 		<TouchableOpacity
 			activeOpacity={0.7}
-			disable={disable}
+			disabled={disable}
 			onPress={onFocus}
 			style={[styles.wrapper, style]}
 			underlayColor={colors.grey}

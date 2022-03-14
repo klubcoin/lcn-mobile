@@ -183,8 +183,10 @@ class ImportFromSeed extends PureComponent {
 			[address, sign.signature, message],
 			response => {
 				if (response.result) {
-					const { name } = response.result?.publicInfo ?JSON.parse(response.result?.publicInfo): {};
-					const { emailAddress, phoneNumber } = response.result?.privateInfo ?JSON.parse(response.result?.privateInfo): {};
+					const { name } = response.result?.publicInfo ? JSON.parse(response.result?.publicInfo) : {};
+					const { emailAddress, phoneNumber } = response.result?.privateInfo
+						? JSON.parse(response.result?.privateInfo)
+						: {};
 					preferences.setOnboardProfile({
 						avatar: '',
 						firstname: name ? name.split(' ')[0] : '',
@@ -194,8 +196,10 @@ class ImportFromSeed extends PureComponent {
 									.slice(1, name.split(' ').length)
 									.join(' ')
 							: '',
-						email: emailAddress,
-						phone: phoneNumber
+						email: emailAddress?.value,
+						phone: phoneNumber?.value,
+						emailVerified: emailAddress?.verified === 'true',
+						phoneVerified: phoneNumber?.verified
 					});
 					this.continueImport(metricsOptIn, onboardingWizard);
 				} else {

@@ -7,22 +7,16 @@ import OnboardingProgress from '../../UI/OnboardingProgress';
 import { strings } from '../../../../locales/i18n';
 import AndroidBackHandler from '../AndroidBackHandler';
 import Device from '../../../util/Device';
-import SeedphraseModal from '../../UI/SeedphraseModal';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import Engine from '../../../core/Engine';
 import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
-import SkipAccountSecurityModal from '../../UI/SkipAccountSecurityModal';
+import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 
-/**
- * View that's shown during the first step of
- * the backup seed phrase flow
- */
-const AccountBackupStep1 = props => {
+const EmailVerifyOnboarding = props => {
 	const [showRemindLaterModal, setRemindLaterModal] = useState(false);
-	const [showWhatIsSeedphraseModal, setWhatIsSeedphraseModal] = useState(false);
 	const [skipCheckbox, setToggleSkipCheckbox] = useState(false);
 	const [hasFunds, setHasFunds] = useState(false);
 
@@ -46,7 +40,7 @@ const AccountBackupStep1 = props => {
 	);
 
 	const goNext = () => {
-		props.navigation.navigate('AccountBackupStep1B', { ...props.navigation.state.params });
+		props.navigation.navigate('VerifyOTPOnboarding');
 	};
 
 	const showRemindLater = () => {
@@ -69,9 +63,10 @@ const AccountBackupStep1 = props => {
 
 	const skip = async () => {
 		hideRemindLaterModal();
-		// Get onboarding wizard state
-		props.navigation.navigate('EmailVerifyOnboarding');
-		return;
+		// Get onboarding wizard state\
+		// props.navigation.navigate('HomeNav');
+		// props.navigation.popToTop();
+		// props.navigation.goBack(null);
 		const onboardingWizard = await AsyncStorage.getItem(ONBOARDING_WIZARD);
 		// Check if user passed through metrics opt-in screen
 		const metricsOptIn = await AsyncStorage.getItem(METRICS_OPT_IN);
@@ -85,32 +80,24 @@ const AccountBackupStep1 = props => {
 			props.navigation.navigate('HomeNav');
 		}
 	};
-
-	const showWhatIsSeedphrase = () => setWhatIsSeedphraseModal(true);
-
-	const hideWhatIsSeedphrase = () => setWhatIsSeedphraseModal(false);
-
 	return (
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.mainWrapper}>
+				<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={4} />
 				<ScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
 					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
 				>
 					<View style={styles.wrapper} testID={'protect-your-account-screen'}>
-						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={2} />
 						<View style={styles.content}>
-							<Text style={styles.title}>{strings('account_backup_step_1.title')}</Text>
-							{/* <SeedPhraseVideo /> */}
+							<Text style={styles.title}>{strings('email_verify_onboarding.title')}</Text>
 							<View style={styles.text}>
 								<Text style={styles.label}>
-									{strings('account_backup_step_1.info_text_1_1')}{' '}
-									<Text style={styles.blue} onPress={showWhatIsSeedphrase}>
-										{strings('account_backup_step_1.info_text_1_2')}
-									</Text>{' '}
-									{strings('account_backup_step_1.info_text_1_3')}{' '}
-									<Text style={styles.bold}>{strings('account_backup_step_1.info_text_1_4')}</Text>
+									{strings('email_verify_onboarding.info_text_1_1')}{' '}
+									<Text style={styles.blue}>{strings('email_verify_onboarding.info_text_1_2')}</Text>{' '}
+									{strings('email_verify_onboarding.info_text_1_3')}{' '}
+									<Text style={styles.bold}>{strings('email_verify_onboarding.info_text_1_4')}</Text>
 								</Text>
 							</View>
 						</View>
@@ -125,12 +112,12 @@ const AccountBackupStep1 = props => {
 											testID={'remind-me-later-button'}
 										>
 											<Text style={styles.remindLaterText}>
-												{strings('account_backup_step_1.remind_me_later')}
+												{strings('email_verify_onboarding.remind_me_later')}
 											</Text>
 										</TouchableOpacity>
 									</View>
 									<Text style={styles.remindLaterSubText}>
-										{strings('account_backup_step_1.remind_me_later_subtext')}
+										{strings('email_verify_onboarding.remind_me_later_subtext')}
 									</Text>
 								</View>
 							)}
@@ -141,15 +128,17 @@ const AccountBackupStep1 = props => {
 									onPress={goNext}
 									testID={'submit-button'}
 								>
-									{strings('account_backup_step_1.cta_text').toUpperCase()}
+									{strings('email_verify_onboarding.cta_text').toUpperCase()}
 								</StyledButton>
-								<Text style={styles.startSubText}>{strings('account_backup_step_1.cta_subText')}</Text>
+								<Text style={styles.startSubText}>
+									{strings('email_verify_onboarding.cta_subText')}
+								</Text>
 							</View>
 						</View>
 					</View>
 				</ScrollView>
 				{Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />}
-				<SkipAccountSecurityModal
+				<SkipVerifyEmailModal
 					modalVisible={showRemindLaterModal}
 					onCancel={secureNow}
 					onConfirm={skip}
@@ -157,25 +146,21 @@ const AccountBackupStep1 = props => {
 					onPress={hideRemindLaterModal}
 					toggleSkipCheckbox={toggleSkipCheckbox}
 				/>
-				<SeedphraseModal
-					showWhatIsSeedphraseModal={showWhatIsSeedphraseModal}
-					hideWhatIsSeedphrase={hideWhatIsSeedphrase}
-				/>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>
 	);
 };
 
-AccountBackupStep1.propTypes = {
+EmailVerifyOnboarding.propTypes = {
 	/**
 	/* navigation object required to push and pop other views
 	*/
 	navigation: PropTypes.object
 };
 
-AccountBackupStep1.navigationOptions = ({ navigation }) => ({
+EmailVerifyOnboarding.navigationOptions = ({ navigation }) => ({
 	...getOnboardingNavbarOptions(navigation, { headerLeft: <View /> }),
 	gesturesEnabled: false
 });
 
-export default AccountBackupStep1;
+export default EmailVerifyOnboarding;
