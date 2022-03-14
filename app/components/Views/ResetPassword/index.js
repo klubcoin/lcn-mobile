@@ -346,7 +346,7 @@ class ResetPassword extends PureComponent {
 
 	tryUnlock = hash => {
 		const { password } = this.state;
-		this.tryUnlockWithPassword(hash || password);
+		this.tryUnlockWithPassword(password || hash);
 	};
 
 	onKeycloakResult = async error => {
