@@ -2047,7 +2047,7 @@
 		"not_receive_code": "Didn't receive code?",
 		"resend_in": "Resend in {{second}} seconds.",
 		"resend_now": "Resend now.",
-		"incorrect_otp": "Incorrect OPT! Please try again.",
+		"incorrect_otp": "Incorrect OTP! Please try again.",
 		"exceeded_attempts": "You exceeded maximum attempts. Up to 5 Failed Attempts are allowed. Please try again later.",
 		"exceeded_send_otp": "You exceeded maximum of send OTP. Up to 5 sends per hour. Please try again later.",
 		"verify_success": "Verify email success.",
