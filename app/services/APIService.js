@@ -22,7 +22,7 @@ export default class APIService {
 	static apiApproveVoteProposal = (proposalId, voterId) => `approveProposal/${proposalId}/${voterId}`;
 	static apiListVotes = (instanceId, voterId) => `listVotes/${instanceId}/${voterId}`;
 
-	static routeMeveoAPI = () => `${Config.SERVER_ADDRESS}meveo`;
+	static routeMeveoAPI = () => `${Config.SERVER_ADDRESS}/meveo`;
 	static routePersistenceAPI = () => `${Config.SERVER_ADDRESS}/meveo/api/rest/default/persistence/`;
 	static apiListApps = () => APIService.routePersistenceAPI() + 'LiquichainApp/list';
 	static apiGetAppInstances = cetCode => APIService.routePersistenceAPI() + `${cetCode}/list`;
