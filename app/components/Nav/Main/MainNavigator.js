@@ -32,6 +32,7 @@ import ChoosePassword from '../../Views/ChoosePassword';
 import VerifyOTPOnboarding from '../../Views/VerifyOTPOnboarding';
 import EmailVerifyOnboarding from '../../Views/EmailVerifyOnboarding';
 import ResetPassword from '../../Views/ResetPassword';
+import ChangeEmail from '../../Views/ChangeEmail';
 import AccountBackupStep1 from '../../Views/AccountBackupStep1';
 import AccountBackupStep1B from '../../Views/AccountBackupStep1B';
 import ManualBackupStep1 from '../../Views/ManualBackupStep1';
@@ -444,6 +445,9 @@ export default createStackNavigator(
 				},
 				ResetPassword: {
 					screen: ResetPassword
+				},
+				ChangeEmail: {
+					screen: ChangeEmail
 				},
 				ManualBackupStep1: {
 					screen: ManualBackupStep1

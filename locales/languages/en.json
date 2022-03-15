@@ -782,6 +782,16 @@
 		"password_learn_more": "Learn more.",
 		"change_password": "Change password"
 	},
+	"change_email": {
+		"change_email": "Change Email",
+		"new_email": "New Email",
+		"change": "Change",
+		"enter_new_email_id": "Enter new Email ID",
+		"email_id": "Email Id",
+		"verify": "Verify",
+		"email": "Email"
+
+	},
 	"asset_overview": {
 		"send_button": "Send",
 		"buy_button": "Buy",

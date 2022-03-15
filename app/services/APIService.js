@@ -271,6 +271,16 @@ export default class APIService {
 		WebService.sendGetDirect(this.apiCheckUniqueField(), data, callback);
 	}
 
+	static checkUniqueFieldInWallet(field, value, walletId, callback) {
+		const data = {
+			basicAuth,
+			field,
+			value,
+			walletId
+		};
+		WebService.sendGetDirect(this.apiCheckUniqueField(), data, callback);
+	}
+
 	static sendEmailOTP(email, callback) {
 		const data = {
 			basicAuth: adminAuth

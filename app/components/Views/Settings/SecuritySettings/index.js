@@ -53,7 +53,6 @@ import { refWebRTC } from '../../../../services/WebRTC';
 import { displayName } from '../../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-import { failedSeedPhraseRequirements } from '../../../../util/validators';
 
 const isIos = Device.isIos();
 
@@ -408,8 +407,13 @@ class Settings extends PureComponent {
 	resetPassword = () => {
 		this.props.navigation.navigate('ResetPassword');
 	};
+
 	verifyEmail = () => {
 		this.props.navigation.navigate('VerifyOTP', { email: preferences.onboardProfile?.email });
+	};
+
+	changeEmail = () => {
+		this.props.navigation.navigate('ChangeEmail');
 	};
 
 	saveHint = async () => {
@@ -601,19 +605,32 @@ class Settings extends PureComponent {
 						<View style={styles.setting} testID={'verify-email-section'}>
 							<Text style={styles.title}>{strings('verify_email.title')}</Text>
 							<Text style={styles.desc}>{strings('verify_email.desc')}</Text>
-							{emailVerified ? (
-								<StyledButton type={'disable'} containerStyle={styles.confirm} disable={true}>
-									{strings('verify_email.verified')}
-								</StyledButton>
-							) : (
+							<View style={styles.protect}>
+								{emailVerified ? (
+									<StyledButton
+										type={'disable'}
+										containerStyle={[styles.verifyEmailButton, styles.confirm, styles.col]}
+										disable={true}
+									>
+										{strings('verify_email.verified')}
+									</StyledButton>
+								) : (
+									<StyledButton
+										type={'warning'}
+										onPress={this.verifyEmail}
+										containerStyle={[styles.verifyEmailButton, styles.confirm, styles.col]}
+									>
+										{strings('verify_email.verify_your_email')}
+									</StyledButton>
+								)}
 								<StyledButton
 									type={'normal'}
-									onPress={this.verifyEmail}
-									containerStyle={styles.confirm}
+									onPress={this.changeEmail}
+									containerStyle={[styles.verifyEmailButton, styles.confirm, styles.col]}
 								>
-									{strings('verify_email.verify_your_email')}
+									{strings('verify_email.change_email')}
 								</StyledButton>
-							)}
+							</View>
 						</View>
 						<View style={styles.setting} testID={'change-password-section'}>
 							<Text style={styles.title}>{strings('password_reset.password_title')}</Text>

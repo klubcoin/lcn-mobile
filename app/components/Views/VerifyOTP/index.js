@@ -27,6 +27,7 @@ class VerifyOTP extends PureComponent {
 	incorrentOTP = false;
 	tooManyVerifyAttempts = false;
 	tooManySendOtp = false;
+	callback = null;
 
 	constructor(props) {
 		super(props);
@@ -46,6 +47,7 @@ class VerifyOTP extends PureComponent {
 		const { params } = props.navigation.state;
 		this.email = params?.email;
 		this.phone = params?.phone;
+		this.callback = params?.callback;
 	}
 
 	componentDidMount() {
@@ -98,11 +100,15 @@ class VerifyOTP extends PureComponent {
 						.then(value =>
 							preferences.setOnboardProfile(
 								Object.assign(value, {
+									email:this.email,
 									emailVerified: true
 								})
 							)
 						)
 						.catch(e => console.log('profile onboarding error', e));
+					if (this.callback) {
+						this.callback();
+					}
 					this.props.navigation.goBack();
 					break;
 				case 'invalid_code':
@@ -211,7 +217,7 @@ class VerifyOTP extends PureComponent {
 							}
 							onPress={() => this.verifyOTPEmail()}
 						>
-							{strings('verify_otp.verify_otp')}
+							{strings('verify_otp.verify')}
 						</StyledButton>
 					</View>
 				</ScrollView>

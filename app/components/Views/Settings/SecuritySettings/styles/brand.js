@@ -28,7 +28,7 @@ const brandStyles = StyleSheet.create({
 		padding: 20,
 		borderRadius: 10,
 		marginTop: 0,
-		marginBottom: 20,
+		marginBottom: 20
 	},
 	firstSetting: {
 		marginBottom: 20
@@ -44,8 +44,11 @@ const brandStyles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor:colors.primaryFox
+		backgroundColor: colors.primaryFox
 	},
+	verifyEmailButton: {
+		minHeight: 60
+	}
 });
 
 export default brandStyles;

@@ -107,14 +107,15 @@ const styles = StyleSheet.create({
 		marginTop: 10
 	},
 	marginLeft: {
-		marginLeft: 10,
+		marginLeft: 10
 	},
 	modal: {
 		backgroundColor: colors.darkAlert
 	},
 	modalActionView: {
 		borderTopWidth: 0
-	}
+	},
+	verifyEmailButton: {}
 });
 
 export default assignNestedObj(styles, brandStyles);
