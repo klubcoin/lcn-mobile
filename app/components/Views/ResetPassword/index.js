@@ -410,8 +410,9 @@ class ResetPassword extends PureComponent {
 										placeholderTextColor={colors.grey100}
 										onChangeText={this.onPasswordChange}
 										secureTextEntry
-										onSubmitEditing={this.tryUnlock}
+										onSubmitEditing={() => this.tryUnlock()}
 										testID={'private-credential-password-text-input'}
+										autoCapitalize="none"
 									/>
 									{warningIncorrectPassword && (
 										<Text style={styles.warningMessageText}>{warningIncorrectPassword}</Text>
@@ -420,7 +421,7 @@ class ResetPassword extends PureComponent {
 										<StyledButton
 											containerStyle={styles.button}
 											type={'normal'}
-											onPress={this.tryUnlock}
+											onPress={() => this.tryUnlock()}
 											testID={'submit-button'}
 										>
 											{strings('manual_backup_step_1.confirm')}
@@ -450,7 +451,6 @@ class ResetPassword extends PureComponent {
 		const canSubmit = passwordsMatch && isSelected;
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
-
 		return (
 			<SafeAreaView style={styles.mainWrapper}>
 				{loading ? (
@@ -561,7 +561,7 @@ class ResetPassword extends PureComponent {
 
 							<View style={styles.ctaWrapper}>
 								<StyledButton
-									type={'blue'}
+									type={'normal'}
 									onPress={this.onPressCreate}
 									testID={'submit-button'}
 									disabled={!canSubmit}

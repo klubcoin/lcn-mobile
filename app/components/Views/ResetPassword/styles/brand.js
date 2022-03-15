@@ -21,7 +21,24 @@ const brandStyles = StyleSheet.create({
 		marginTop: 20,
 		justifyContent: 'flex-end',
 		width: '100%'
-	}
+	},
+	label: {
+		...fontStyles.normal,
+		fontSize: 14,
+		color: colors.white,
+		paddingHorizontal: 10,
+		lineHeight: 18
+	},
+	input: {
+		borderWidth: 0,
+		padding: 10,
+		fontSize: 14,
+		height: 50,
+		backgroundColor:colors.purple,
+		borderRadius:12,
+		color:colors.white,
+		...fontStyles.normal
+	},
 });
 
 export default brandStyles;
