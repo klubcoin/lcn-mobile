@@ -26,18 +26,10 @@ import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import SecureKeychain from '../../../core/SecureKeychain';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AppConstants from '../../../core/AppConstants';
-import zxcvbn from 'zxcvbn';
-import Logger from '../../../util/Logger';
 import { ONBOARDING, PREVIOUS_SCREEN } from '../../../constants/navigation';
-import { EXISTING_USER, TRUE, BIOMETRY_CHOICE_DISABLED } from '../../../constants/storage';
-import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
-import NotificationManager from '../../../core/NotificationManager';
-import { syncPrefs } from '../../../util/sync';
 import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
-import { TESTING } from '../Entry';
 import TextField from '../../UI/TextField';
 import emojiRegex from 'emoji-regex';
 import APIService from '../../../services/APIService';
@@ -47,7 +39,6 @@ import { renderAccountName } from '../../../util/address';
 import Api from '../../../services/api';
 import * as sha3JS from 'js-sha3';
 
-const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 const CHANGE_EMAIL = 'change_email';
 const CONFIRM_PASSWORD = 'confirm_password';
 
@@ -82,7 +73,7 @@ class ChangeEmail extends PureComponent {
 	regex = emojiRegex();
 	state = {
 		isSelected: false,
-		password: TESTING ? 'A!aaaaaa1' : '',
+		password: '',
 		biometryType: null,
 		biometryChoice: false,
 		rememberMe: false,
