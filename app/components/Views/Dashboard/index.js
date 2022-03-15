@@ -237,7 +237,7 @@ class Dashboard extends PureComponent {
 		);
 		API.postRequest(
 			Routes.walletInfo,
-			[selectedAddress.toLowerCase(), sign.signature, message],
+			[selectedAddress, sign.signature, message],
 			response => {
 				if (response.result) {
 					const { name } = response.result;

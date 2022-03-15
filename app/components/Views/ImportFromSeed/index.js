@@ -260,11 +260,12 @@ class ImportFromSeed extends PureComponent {
 			try {
 				this.setState({ loading: true });
 
-				const { KeyringController } = Engine.context;
+				const { KeyringController, PreferencesController } = Engine.context;
 				await Engine.resetState();
 				await AsyncStorage.removeItem(NEXT_MAKER_REMINDER);
 				await KeyringController.createNewVaultAndRestore(password, parsedSeed);
-				const address = await KeyringController.getAccounts();
+				// const address = await KeyringController.getAccounts();
+				const address = Object.keys(PreferencesController.internalState.identities)[0];
 				if (this.state.rememberMe) {
 					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
 				} else if (this.state.biometryType && this.state.biometryChoice) {
@@ -279,7 +280,7 @@ class ImportFromSeed extends PureComponent {
 				// mark the user as existing so it doesn't see the create password screen again
 				await AsyncStorage.setItem(EXISTING_USER, TRUE);
 				await AsyncStorage.removeItem(SEED_PHRASE_HINTS);
-				await this.getAccountInfo(address[0], metricsOptIn, onboardingWizard);
+				await this.getAccountInfo(address, metricsOptIn, onboardingWizard);
 			} catch (error) {
 				// Should we force people to enable passcode / biometrics?
 				if (error.toString() === PASSCODE_NOT_SET_ERROR) {
