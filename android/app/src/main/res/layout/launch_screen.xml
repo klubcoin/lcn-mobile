@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="#ffffffff">
-    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/diamond" android:scaleType="center" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+        android:src="@drawable/splash"
+        app:srcCompat="@mipmap/splash"
+        tools:srcCompat="@mipmap/splash" />
 </RelativeLayout>
