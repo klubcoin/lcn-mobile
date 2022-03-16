@@ -19,7 +19,7 @@ export default {
 		coin: 'Klubcoin',
 		route: `${Config.SERVER_ADDRESS}/meveo/rest/`,
 		hostDomain: 'klubcoin.net',
-		blockExploreUrl: 'https://klubcoin.net',
+		blockExploreUrl: 'https://etherscan.io/token/0xf993c2749a21d10a4a36fe5dda23830b415d9e0d',
 		accountUrl: Config.SERVER_ADDRESS,
 		helpSupportUrl: 'https://docs.liquichain.io',
 		reportIssueUrl: 'https://github.com/klubcoin/lcn-mobile/issues',
