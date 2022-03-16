@@ -431,27 +431,34 @@ class Amount extends PureComponent {
 		const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
 		const { estimatedTotalGas } = this.state;
 		let weiBalance, weiInput, amountError;
-		if (isDecimal(inputValue)) {
-			if (selectedAsset.isETH) {
-				weiBalance = hexToBN(accounts[selectedAddress].balance);
-				weiInput = toWei(inputValue).add(estimatedTotalGas);
-			} else {
-				weiBalance = contractBalances[selectedAsset.address];
-				weiInput = toTokenMinimalUnit(inputValue, selectedAsset.decimals);
-			}
-			amountError = weiBalance.gte(weiInput) ? undefined : strings('transaction.insufficient');
+		try {
+			if (isDecimal(inputValue)) {
+				if (selectedAsset.isETH) {
+					weiBalance = hexToBN(accounts[selectedAddress].balance);
+					weiInput = toWei(inputValue).add(estimatedTotalGas);
+				} else {
+					weiBalance = contractBalances[selectedAsset.address];
+					weiInput = toTokenMinimalUnit(inputValue, selectedAsset.decimals);
+				}
+				amountError = weiBalance.gte(weiInput) ? undefined : strings('transaction.insufficient');
 
-			if (weiInput == "0") {
+				if (weiInput == "0") {
+					amountError = strings('transaction.invalid_amount');
+				}
+			} else {
 				amountError = strings('transaction.invalid_amount');
 			}
-		} else {
-			amountError = strings('transaction.invalid_amount');
-		}
-		if (amountError) {
+			if (amountError) {
+				this.setState({ amountError });
+				dismissKeyboard();
+			}
+			return !!amountError;
+		} catch (error) {
+			amountError = error.toString();
 			this.setState({ amountError });
-			dismissKeyboard();
+			return !!amountError;
 		}
-		return !!amountError;
+		
 	};
 
 	/**
