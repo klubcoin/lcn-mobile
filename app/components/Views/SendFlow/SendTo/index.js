@@ -387,10 +387,12 @@ class SendFlow extends PureComponent {
 			toSelectedAddress,
 			toEnsName,
 			toSelectedAddressName,
-			fromAccountName
+			fromAccountName, 
+			balanceIsZero
 		} = this.state;
 		const addressError = await this.validateToAddress();
 		if (addressError) return;
+		if (balanceIsZero) return;
 		setRecipient(fromSelectedAddress, toSelectedAddress, toEnsName, toSelectedAddressName, fromAccountName);
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEventWithParameters(ANALYTICS_EVENT_OPTS.SEND_FLOW_ADDS_RECIPIENT, {
