@@ -122,7 +122,7 @@ class Dashboard extends PureComponent {
 		const { klubToken } = Routes;
 		let totalToken = 0;
 		for (account of accounts) {
-			totalToken += +renderFromTokenMinimalUnit(account?.balance, klubToken.decimals);
+			totalToken += account?.balance ? +renderFromTokenMinimalUnit(account?.balance, klubToken.decimals) : 0;
 		}
 		this.setState({
 			totalToken
