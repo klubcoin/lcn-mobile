@@ -2038,7 +2038,7 @@
 		"proceed_checkout": "Proceed Checkout"
 	},
 	"lock_modal": {
-		"title": "Authentication for continue!"
+		"title": "Authenticate to continue!"
 	},
 	"verify_otp": {
 		"title": "Verification",
