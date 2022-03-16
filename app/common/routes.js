@@ -22,7 +22,9 @@ export default {
 		blockExploreUrl: 'https://klubcoin.net',
 		accountUrl: Config.SERVER_ADDRESS,
 		helpSupportUrl: 'https://docs.liquichain.io',
-		reportIssueUrl: 'https://github.com/liquichain/lcn-mobile/issues'
+		reportIssueUrl: 'https://github.com/klubcoin/lcn-mobile/issues',
+		portalUrl: 'https://klubcoin.net',
+		contactUrl: 'https://klubcoin.net/contact',
 	},
 	klubToken: {
 		address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",

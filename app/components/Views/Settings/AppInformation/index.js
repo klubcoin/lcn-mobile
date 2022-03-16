@@ -116,7 +116,7 @@ export default class AppInformation extends PureComponent {
 	};
 
 	onAttributions = () => {
-		const url = 'https://docs.liquichain.io/attributions.html';
+		const url = 'https://klubcoin.net/legal-notice';
 		this.goTo(url, strings('app_information.attributions'));
 	};
 
@@ -126,12 +126,12 @@ export default class AppInformation extends PureComponent {
 	};
 
 	onWebSite = () => {
-		const url = routes.mainNetWork.accountUrl;
-		this.goTo(url, 'liquichain.io');
+		const url = routes.mainNetWork.portalUrl;
+		this.goTo(url, routes.mainNetWork.hostDomain);
 	};
 
 	onContactUs = () => {
-		const url = routes.mainNetWork.reportIssueUrl;
+		const url = routes.mainNetWork.contactUrl;
 		this.goTo(url, strings('drawer.metamask_support', { appName: displayName }));
 	};
 
