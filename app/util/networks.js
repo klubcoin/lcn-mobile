@@ -16,7 +16,7 @@ import { displayName } from '../../app.json';
 const NetworkList = {
 	[MAINNET]: {
 		name: `${displayName} Main Network`,
-		shortName: 'Ethereum',
+		shortName: 'Klubcoin',
 		networkId: 1,
 		chainId: 1,
 		hexChainId: '0x1',
