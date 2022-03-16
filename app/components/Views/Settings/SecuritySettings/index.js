@@ -554,7 +554,7 @@ class Settings extends PureComponent {
 								) : null}
 								<Text style={styles.title}>Test</Text>
 							</Text>
-							<SeedPhraseVideo style={styles.seedPhraseVideo} />
+							{/* <SeedPhraseVideo style={styles.seedPhraseVideo} /> */}
 							<Text style={styles.desc}>{strings('app_settings.protect_desc')}</Text>
 							<SettingsNotification isWarning={!seedphraseBackedUp}>
 								<Text
