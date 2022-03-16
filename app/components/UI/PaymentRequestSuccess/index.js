@@ -133,7 +133,7 @@ class PaymentRequestSuccess extends PureComponent {
                             <Text style={styles.descriptionText}>{strings('payment_request.description_1')}</Text>
                             <Text style={styles.descriptionText}>
                                 {strings('payment_request.description_2')}
-                                <Text style={fontStyles.bold}>{' ' + renderNumber(amount) + ' ' + symbol}</Text>
+                                <Text style={fontStyles.bold}>{' ' + amount + ' ' + symbol}</Text>
                             </Text>
                         </View>
                         <View style={styles.linkWrapper}>
