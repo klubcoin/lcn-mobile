@@ -9,6 +9,7 @@ import { swapsUtils } from '@metamask/swaps-controller';
 import { hexToBN } from './number';
 import AppConstants from '../core/AppConstants';
 import { isMainnetByChainId } from './networks';
+import routes from '../common/routes';
 const { SAI_ADDRESS } = AppConstants;
 
 export const TOKEN_METHOD_TRANSFER = 'transfer';
@@ -351,13 +352,14 @@ export function getTicker(ticker) {
  * @returns {object} - ETH object
  */
 export function getEther(ticker) {
-	return {
-		name: 'Ether',
-		address: '',
-		symbol: ticker || strings('unit.eth'),
-		logo: '../images/klubcoin.png',
-		isETH: true
-	};
+	return routes.klubToken;
+	// return {
+	// 	name: 'Ether',
+	// 	address: '',
+	// 	symbol: ticker || strings('unit.eth'),
+	// 	logo: '../images/klubcoin.png',
+	// 	isETH: true
+	// };
 }
 
 /**

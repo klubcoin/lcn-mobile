@@ -186,7 +186,7 @@ class Amount extends PureComponent {
 		navigation.setParams({ providerType });
 
 		this.getCurrentConversion();
-		// this.getBalance();
+		this.getBalance();
 
 		// this.tokens = [getEther(ticker), ...tokens];
 		this.tokens = [...tokens];
@@ -221,27 +221,29 @@ class Amount extends PureComponent {
 	};
 
 	getBalance = async () => {
-		const { accounts, selectedAddress, identities, selectedAsset } = this.props;
-		// for(const account in accounts){
-		let params = [selectedAddress];
-		await API.postRequest(
-			Routes.getBalance,
-			params,
-			response => {
-				// console.log(parseInt(response.result, 16))
-				const balance = response.result;
-				accounts[selectedAddress] = {
-					balance: balance
-				};
-				const { AccountTrackerController } = Engine.context;
-				AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
-				this.handleSelectedAssetBalance(selectedAsset);
-			},
-			error => {
-				console.log(error.message);
-			}
-		);
+		const { selectedAsset } = this.props;
+		// const { accounts, selectedAddress, identities, selectedAsset } = this.props;
+		// // for(const account in accounts){
+		// let params = [selectedAddress];
+		// await API.postRequest(
+		// 	Routes.getBalance,
+		// 	params,
+		// 	response => {
+		// 		// console.log(parseInt(response.result, 16))
+		// 		const balance = response.result;
+		// 		accounts[selectedAddress] = {
+		// 			balance: balance
+		// 		};
+		// 		const { AccountTrackerController } = Engine.context;
+		// 		AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
+		// 		this.handleSelectedAssetBalance(selectedAsset);
+		// 	},
+		// 	error => {
+		// 		console.log(error.message);
+		// 	}
+		// );
 		// }
+		this.handleSelectedAssetBalance(selectedAsset);
 	};
 
 	validateCollectibleOwnership = async () => {
@@ -577,7 +579,7 @@ class Amount extends PureComponent {
 
 	toggleAssetsModal = () => {
 		const { assetsModalVisible } = this.state;
-		this.setState({ assetsModalVisible: !assetsModalVisible });
+		// this.setState({ assetsModalVisible: !assetsModalVisible });
 	};
 
 	handleSelectedAssetBalance = ( selectedAsset ) => {

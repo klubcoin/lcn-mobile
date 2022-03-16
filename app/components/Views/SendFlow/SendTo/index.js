@@ -15,7 +15,7 @@ import { AddressFrom, AddressTo } from '../AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
 import { connect } from 'react-redux';
-import { renderFromWei } from '../../../../util/number';
+import { renderFromTokenMinimalUnit, renderFromWei } from '../../../../util/number';
 import ActionModal from '../../../UI/ActionModal';
 import Engine from '../../../../core/Engine';
 import { isValidAddress, toChecksumAddress } from 'ethereumjs-util';
@@ -122,15 +122,16 @@ class SendFlow extends PureComponent {
 	};
 
 	componentDidMount = async () => {
-		const { addressBook, selectedAddress, accounts, ticker, network, navigation, providerType } = this.props;
-		const { fromAccountName } = this.state;
+		const { addressBook, selectedAddress, accounts, ticker, network, navigation, providerType, selectedAsset } = this.props;
+		const { fromAccountName, fromSelectedAddress } = this.state;
 		// For analytics
 		navigation.setParams({ providerType });
 		const networkAddressBook = addressBook[network] || {};
 		const ens = await doENSReverseLookup(selectedAddress, network);
-		const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${
-			Routes.mainNetWork.ticker
-		}`;
+		// const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${
+		// 	Routes.mainNetWork.ticker
+		// }`;
+		const fromAccountBalance = `${renderFromTokenMinimalUnit(accounts[fromSelectedAddress].balance, selectedAsset.decimals)} ${getTicker(ticker)}`;
 
 		setTimeout(() => {
 			this.setState({
@@ -225,10 +226,10 @@ class SendFlow extends PureComponent {
 	};
 
 	onAccountChange = async accountAddress => {
-		const { identities, ticker, accounts } = this.props;
+		const { identities, ticker, accounts, selectedAsset } = this.props;
 		const { name } = identities[accountAddress];
 		const { PreferencesController } = Engine.context;
-		const fromAccountBalance = `${renderFromWei(accounts[accountAddress].balance)} ${getTicker(ticker)}`;
+		const fromAccountBalance = `${renderFromTokenMinimalUnit(accounts[accountAddress].balance, selectedAsset.decimals)} ${getTicker(ticker)}`;
 		const ens = await doENSReverseLookup(accountAddress);
 		const fromAccountName = ens || name;
 		PreferencesController.setSelectedAddress(accountAddress);
