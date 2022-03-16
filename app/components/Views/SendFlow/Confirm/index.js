@@ -24,7 +24,8 @@ import {
 	balanceToFiatNumber,
 	renderFiatAddition,
 	isDecimal,
-	toBN
+	toBN,
+	fromTokenMinimalUnit
 } from '../../../../util/number';
 import { getTicker, decodeTransferData, getNormalizedTxState } from '../../../../util/transactions';
 import StyledButton from '../../../UI/StyledButton';
@@ -410,7 +411,7 @@ class Confirm extends PureComponent {
 			)} ${symbol}`;
 			[transactionTo, , rawAmount] = decodeTransferData('transfer', data);
 			const rawAmountString = parseInt(rawAmount, 16).toLocaleString('fullwide', { useGrouping: false });
-			const transferValue = renderFromTokenMinimalUnit(rawAmountString, decimals);
+			const transferValue = fromTokenMinimalUnit(rawAmountString, decimals);
 			transactionValue = `${transferValue} ${symbol}`;
 			const exchangeRate = contractExchangeRates[address];
 			const transactionFeeFiatNumber = weiToFiatNumber(weiTransactionFee, conversionRate);
