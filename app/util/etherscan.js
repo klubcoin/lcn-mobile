@@ -1,3 +1,4 @@
+import routes from '../common/routes';
 import { MAINNET } from '../constants/network';
 
 /**
@@ -29,6 +30,7 @@ export function getEtherscanTransactionUrl(network, tx_hash) {
  * @returns - string
  */
 export function getEtherscanBaseUrl(network) {
-	const subdomain = network.toLowerCase() === MAINNET ? '' : `${network.toLowerCase()}.`;
+	if (network.toLowerCase() === MAINNET) return routes.mainNetWork.blockExploreUrl;
+	const subdomain = `${network.toLowerCase()}.`;
 	return `https://${subdomain}etherscan.io`;
 }

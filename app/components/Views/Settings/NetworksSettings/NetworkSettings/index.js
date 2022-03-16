@@ -19,6 +19,8 @@ import { isPrefixedFormattedHexString } from '../../../../../util/number';
 import AppConstants from '../../../../../core/AppConstants';
 import AnalyticsV2 from '../../../../../util/analyticsV2';
 import OnboardingScreenWithBg from '../../../../UI/OnboardingScreenWithBg';
+import { MAINNET } from '../../../../../constants/network';
+import routes from '../../../../../common/routes';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -138,7 +140,7 @@ class NetworkSettings extends PureComponent {
 				nickname = networkInformation.name;
 				chainId = networkInformation.chainId.toString();
 				editable = false;
-				rpcUrl = allNetworksblockExplorerUrl + network;
+				rpcUrl = network == MAINNET ? routes.mainNetWork.url : allNetworksblockExplorerUrl + network;
 				ticker = strings('unit.eth');
 			} else {
 				const networkInformation = frequentRpcList.find(({ rpcUrl }) => rpcUrl === network);
