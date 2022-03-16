@@ -142,9 +142,7 @@ const EmailVerifyOnboarding = props => {
 					modalVisible={showRemindLaterModal}
 					onCancel={secureNow}
 					onConfirm={skip}
-					skipCheckbox={skipCheckbox}
 					onPress={hideRemindLaterModal}
-					toggleSkipCheckbox={toggleSkipCheckbox}
 				/>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>

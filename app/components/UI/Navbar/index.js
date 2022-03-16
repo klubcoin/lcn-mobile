@@ -410,7 +410,7 @@ export function getModalNavbarOptions(title) {
  *
  * @returns {Object} - Corresponding navbar options containing headerTitle, headerTitle and headerTitle
  */
-export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
+ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	const headerLeftHide = headerLeft || navigation.getParam('headerLeft');
 	const navigationPop = () => navigation.pop();
 
@@ -441,6 +441,36 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 			</TouchableOpacity>
 		)
+	};
+}
+
+export function getOnboardingWithoutBackNavbarOptions(navigation, { headerLeft } = {}) {
+	const headerLeftHide = headerLeft || navigation.getParam('headerLeft');
+	const navigationPop = () => navigation.pop();
+
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			marginTop: Device.isIos() ? 20 : 0,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Image
+					source={klubcoin_text}
+					style={styles.metamaskName}
+					resizeMethod={'auto'}
+					resizeMode={'contain'}
+				/>
+				{/* <Text style={styles.header}>{displayName.toUpperCase()}</Text> */}
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		// headerLeft: headerLeftHide
+		headerLeft: <View />
 	};
 }
 

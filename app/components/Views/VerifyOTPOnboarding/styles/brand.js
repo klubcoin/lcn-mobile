@@ -31,6 +31,17 @@ const brandStyles = StyleSheet.create({
 		color: colors.fontError,
 		marginTop: 10
 	},
+	errorText2: {
+		fontSize: 16,
+		color: colors.blue,
+		marginTop: 10
+	},
+	errorTextBold: {
+		fontSize: 16,
+		color: colors.fontError,
+		marginTop: 10,
+		fontWeight: 'bold'
+	},
 	mainWrapper: {
 		backgroundColor: colors.transparent,
 		flex: 1
@@ -72,6 +83,9 @@ const brandStyles = StyleSheet.create({
 		width: '100%',
 		justifyContent: 'flex-end',
 		padding: 12
+	},
+	skipButton: {
+		marginTop: 12
 	}
 });
 
