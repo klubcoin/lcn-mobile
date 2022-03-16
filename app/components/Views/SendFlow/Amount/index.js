@@ -298,6 +298,7 @@ class Amount extends PureComponent {
 		if (value && value.includes(',')) {
 			value = inputValue.replace(',', '.');
 		}
+
 		if (!selectedAsset.tokenId && this.validateAmount(value)) {
 			return;
 		} else if (selectedAsset.tokenId) {
@@ -439,6 +440,10 @@ class Amount extends PureComponent {
 				weiInput = toTokenMinimalUnit(inputValue, selectedAsset.decimals);
 			}
 			amountError = weiBalance.gte(weiInput) ? undefined : strings('transaction.insufficient');
+
+			if (weiInput == "0") {
+				amountError = strings('transaction.invalid_amount');
+			}
 		} else {
 			amountError = strings('transaction.invalid_amount');
 		}
