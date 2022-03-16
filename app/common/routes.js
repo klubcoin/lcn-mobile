@@ -26,7 +26,7 @@ export default {
 	},
 	klubToken: {
 		address: "0x7Bd6050C39252103cEad4501DA5069481aB4F172",
-		symbol: "KLB",
+		symbol: "KLUB",
 		decimals: 18,
 		image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
 	},
