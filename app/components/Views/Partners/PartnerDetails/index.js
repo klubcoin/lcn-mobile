@@ -9,6 +9,7 @@ import StyledButton from '../../../UI/StyledButton';
 import styles from './styles/index';
 import APIService, { basicAuth } from '../../../../services/APIService';
 import * as base64 from 'base-64';
+import PartnerImage from '../components/PartnerImage';
 
 class PartnerDetails extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -51,16 +52,7 @@ class PartnerDetails extends PureComponent {
 				<View style={styles.wrapper}>
 					<Text style={styles.title}>{this.name}</Text>
 					<Text style={styles.desc}>{this.description}</Text>
-					{this.image ? <Image
-						source={{
-							uri: APIService.apiGetPartnerIcon(this.image),
-							headers: {
-								Authorization: `Basic ${base64.encode(basicAuth)}`
-							}
-						}}
-						resizeMode={'contain'}
-						style={styles.partnerImage}
-					/> : null}
+					{this.image && <PartnerImage source={APIService.apiGetPartnerIcon(this.image)} style={styles.partnerImage} />}
 					<View style={styles.button}>
 						<StyledButton
 							type={'normal-padding'}
