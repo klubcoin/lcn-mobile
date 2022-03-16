@@ -390,7 +390,7 @@ class EditProfile extends PureComponent {
 		}
 
 		try {
-			const selectedAddress = Engine.state.PreferencesController.selectedAddress.toLowerCase();
+			const selectedAddress = Engine.state.PreferencesController.selectedAddress;
 			const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
 
 			if (this.avatar && this.avatar !== path) {
@@ -483,12 +483,14 @@ class EditProfile extends PureComponent {
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
 									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
+									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
+									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.email}
