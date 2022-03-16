@@ -933,7 +933,8 @@
 		"smartContractAddressWarning": "This address is a smart contract address. Please make sure you understand what this address is for, otherwise you risk losing your funds.",
 		"continueError": "I understand the risks, continue",
 		"confusable_title": "Check the recipient address",
-		"confusable_msg": "We have detected a confusable character in the ENS name. Check the ENS name to avoid a potential scam."
+		"confusable_msg": "We have detected a confusable character in the ENS name. Check the ENS name to avoid a potential scam.",
+		"can_not_send_same_account": "Can not send to the same account"
 	},
 	"custom_gas": {
 		"total": "Total",

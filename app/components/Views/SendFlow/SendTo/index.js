@@ -336,7 +336,7 @@ class SendFlow extends PureComponent {
 	};
 
 	validateToAddress = async () => {
-		const { toSelectedAddress } = this.state;
+		const { toSelectedAddress, fromSelectedAddress } = this.state;
 		const { network } = this.props;
 		let addressError;
 		if (isENS(toSelectedAddress)) {
@@ -346,6 +346,8 @@ class SendFlow extends PureComponent {
 			}
 		} else if (!isValidAddress(toSelectedAddress)) {
 			addressError = strings('transaction.invalid_address');
+		} else if (fromSelectedAddress == toSelectedAddress) {
+			addressError = strings('transaction.can_not_send_same_account');
 		}
 		this.setState({ addressError });
 		return addressError;
