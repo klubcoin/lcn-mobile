@@ -483,12 +483,14 @@ class EditProfile extends PureComponent {
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
 									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
+									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
+									autoCapitalize={'words'}
 								/>
 								<TextField
 									value={this.email}
