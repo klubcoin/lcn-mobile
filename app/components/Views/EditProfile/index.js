@@ -390,7 +390,7 @@ class EditProfile extends PureComponent {
 		}
 
 		try {
-			const selectedAddress = Engine.state.PreferencesController.selectedAddress.toLowerCase();
+			const selectedAddress = Engine.state.PreferencesController.selectedAddress;
 			const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
 
 			if (this.avatar && this.avatar !== path) {
