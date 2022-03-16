@@ -70,7 +70,7 @@ import SwitchCustomNetwork from '../../UI/SwitchCustomNetwork';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
 
 const { HOMEPAGE_URL, USER_AGENT, NOTIFICATION_NAMES } = AppConstants;
-const HOMEPAGE_HOST = routes.mainNetWork.blockExploreUrl.replace(/http(s)?:\/\//, '');
+const HOMEPAGE_HOST = routes.mainNetWork.hostDomain.replace(/http(s)?:\/\//, '');
 const MM_MIXPANEL_TOKEN = process.env.MM_MIXPANEL_TOKEN;
 
 const ANIMATION_TIMING = 300;
