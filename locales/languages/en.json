@@ -2050,9 +2050,11 @@
 		"resend_now": "Resend now.",
 		"incorrect_otp": "Incorrect OTP! Please try again.",
 		"exceeded_attempts": "You exceeded maximum attempts. Up to 5 Failed Attempts are allowed. ",
+		"exceeded_attempts2": "You exceeded maximum attempts. Up to 5 Failed Attempts are allowed. Please try again later.",
 		"noti_1": "You can verify your Klubcoin Wallet acccount after 2 hours on ",
 		"noti_2": "Verify your email at Settings > Security & Privacy. ",
 		"noti_3": "For now, you may proceed to Klubcoin Dashboard.",
+		"noti_4": "You can reverify this email after 2 hours. For now, you may proceed to Settings.",
 		"exceeded_send_otp": "You exceeded maximum of send OTP. Up to 5 sends per hour. Please try again later.",
 		"verify_success": "Verify email success.",
 		"verify": "Verify",
@@ -2062,6 +2064,7 @@
 		"learn_more": "Learn more",
 		"email_already_verified": "This email already verified!",
 		"proceed_to_dashboard": "Proceed to Dashboard",
+		"proceed_to_settings": "Proceed to Settings",
 		"done": "Done"
 	},
 	"coming_soon": {

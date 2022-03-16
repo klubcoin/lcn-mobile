@@ -20,17 +20,30 @@ const brandStyles = StyleSheet.create({
 	textWrapper: {
 		fontSize: 16,
 		color: colors.white,
-		marginTop:10
+		marginTop: 10
 	},
-	text: {
-	},
+	text: {},
 	resendText: {
 		textDecorationLine: 'underline'
 	},
 	errorText: {
 		fontSize: 16,
 		color: colors.fontError,
-		marginTop:10
+		marginTop: 10
+	},
+	errorText2: {
+		fontSize: 16,
+		color: colors.blue,
+		marginTop: 10
+	},
+	errorTextBold: {
+		fontSize: 16,
+		color: colors.fontError,
+		marginTop: 10,
+		fontWeight: 'bold'
+	},
+	skipButton: {
+		marginBottom: 24
 	}
 });
 

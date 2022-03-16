@@ -3,7 +3,7 @@ import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { getNavigationOptionsTitle } from '../../UI/Navbar';
+import { getNavigationWithoutBackOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
 import OTPInput from './components/OTPInput';
@@ -14,7 +14,7 @@ import preferences from '../../../store/preferences';
 
 class VerifyOTP extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
-		return getNavigationOptionsTitle(strings('verify_otp.title'), navigation);
+		return getNavigationWithoutBackOptionsTitle(strings('verify_otp.title'), navigation);
 	};
 	partnerList = [];
 	otpEmail = '';
@@ -28,6 +28,7 @@ class VerifyOTP extends PureComponent {
 	tooManyVerifyAttempts = false;
 	tooManySendOtp = false;
 	callback = null;
+	resendOTP = false;
 
 	constructor(props) {
 		super(props);
@@ -42,7 +43,8 @@ class VerifyOTP extends PureComponent {
 			resendAble: observable,
 			incorrentOTP: observable,
 			tooManyVerifyAttempts: observable,
-			tooManySendOtp: observable
+			tooManySendOtp: observable,
+			resendOTP: observable
 		});
 		const { params } = props.navigation.state;
 		this.email = params?.email;
@@ -58,6 +60,7 @@ class VerifyOTP extends PureComponent {
 		APIService.sendEmailOTP(this.email, (success, response) => {
 			switch (response) {
 				case 'success':
+					this.resendOTP = false;
 					this.timingResend = 60;
 					this.timing();
 					break;
@@ -80,7 +83,7 @@ class VerifyOTP extends PureComponent {
 							)
 						)
 						.catch(e => console.log('profile onboarding error', e));
-					this.props.navigation.goBack();
+					this.props.navigation.navigate('SecuritySettings');
 					break;
 				default:
 					this.timingResend = 60;
@@ -100,16 +103,13 @@ class VerifyOTP extends PureComponent {
 						.then(value =>
 							preferences.setOnboardProfile(
 								Object.assign(value, {
-									email:this.email,
+									email: this.email,
 									emailVerified: true
 								})
 							)
 						)
 						.catch(e => console.log('profile onboarding error', e));
-					if (this.callback) {
-						this.callback();
-					}
-					this.props.navigation.goBack();
+					this.props.navigation.navigate('SecuritySettings');
 					break;
 				case 'invalid_code':
 					this.incorrentOTP = true;
@@ -118,7 +118,7 @@ class VerifyOTP extends PureComponent {
 					this.tooManyVerifyAttempts = true;
 					break;
 				case 'invalid_request':
-					this.incorrentOTP = true;
+					this.resendOTP = true;
 					break;
 				default:
 			}
@@ -158,8 +158,13 @@ class VerifyOTP extends PureComponent {
 					.join('')}`}</Text>
 				<OTPInput
 					value={this.otpEmail}
-					disable={this.tooManySendOtp || this.tooManyVerifyAttempts}
-					onChange={text => this.setOtpEmail(text)}
+					disable={this.tooManySendOtp || this.tooManyVerifyAttempts || this.resendOTP}
+					onChange={text => {
+						this.setOtpEmail(text);
+						if (text.length === 6) {
+							this.verifyOTPEmail();
+						}
+					}}
 				/>
 				{!this.tooManySendOtp ? (
 					<Text style={styles.textWrapper}>
@@ -177,8 +182,12 @@ class VerifyOTP extends PureComponent {
 				)}
 				{this.incorrentOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
 				{this.tooManyVerifyAttempts && (
-					<Text style={styles.errorText}>{strings('verify_otp.exceeded_attempts')}</Text>
+					<Text>
+						<Text style={styles.errorTextBold}>{strings('verify_otp.exceeded_attempts')}</Text>
+						<Text style={styles.errorText}>{strings('verify_otp.noti_4')}</Text>
+					</Text>
 				)}
+				{this.resendOTP && <Text style={styles.errorText}>{strings('verify_otp.resend_otp')}</Text>}
 			</View>
 		);
 	}
@@ -209,15 +218,12 @@ class VerifyOTP extends PureComponent {
 					<View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', padding: 12 }}>
 						<StyledButton
 							type={'normal'}
-							disabled={
-								(this.email && this.email !== '' && this.otpEmail.length < 6) ||
-								(this.phone && this.phone !== '' && this.otpPhone.length < 6) ||
-								this.tooManySendOtp ||
-								this.tooManyVerifyAttempts
-							}
-							onPress={() => this.verifyOTPEmail()}
+							containerStyle={styles.skipButton}
+							onPress={() => {
+								this.props.navigation.navigate('SecuritySettings');
+							}}
 						>
-							{strings('verify_otp.verify')}
+							{strings('verify_otp.proceed_to_settings')}
 						</StyledButton>
 					</View>
 				</ScrollView>

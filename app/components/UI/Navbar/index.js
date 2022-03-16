@@ -103,6 +103,28 @@ export function getNavigationOptionsTitle(title, navigation) {
 	};
 }
 
+export function getNavigationWithoutBackOptionsTitle(title, navigation) {
+	const navigationPop = () => navigation.pop();
+
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Text style={styles.header}>{title}</Text>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		// headerLeft: headerLeftHide
+		headerLeft: <View />
+	};
+}
+
 /**
  * Function that returns the navigation options
  * This is used by contact form
@@ -410,7 +432,7 @@ export function getModalNavbarOptions(title) {
  *
  * @returns {Object} - Corresponding navbar options containing headerTitle, headerTitle and headerTitle
  */
- export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
+export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	const headerLeftHide = headerLeft || navigation.getParam('headerLeft');
 	const navigationPop = () => navigation.pop();
 
@@ -469,7 +491,6 @@ export function getOnboardingWithoutBackNavbarOptions(navigation, { headerLeft }
 		),
 		headerBackTitle: strings('navigation.back'),
 		headerRight: <View />,
-		// headerLeft: headerLeftHide
 		headerLeft: <View />
 	};
 }
