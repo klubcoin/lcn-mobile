@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../../styles/common';
 import APIService, { basicAuth } from '../../../../services/APIService';
 import * as base64 from 'base-64';
+import PartnerImage from './PartnerImage';
 
 export default function PartnerItem({ imageSrc, onItemPress }) {
 	const styles = StyleSheet.create({
@@ -26,19 +27,7 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 	return (
 		<TouchableOpacity activeOpacity={0.7} style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
 			<View style={styles.imgWrapper}>
-				<Image
-					source={{
-						uri: APIService.apiGetPartnerIcon(imageSrc),
-						headers: {
-							Authorization: `Basic ${base64.encode(basicAuth)}`
-						}
-					}}
-					resizeMode={'contain'}
-					style={styles.img}
-					onError={error => {
-						console.log(error);
-					}}
-				/>
+				<PartnerImage source={APIService.apiGetPartnerIcon(imageSrc)} style={styles.img} />
 			</View>
 		</TouchableOpacity>
 	);
