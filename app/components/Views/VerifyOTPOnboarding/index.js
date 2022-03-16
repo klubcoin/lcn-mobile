@@ -3,7 +3,7 @@ import { ScrollView, Text, View, SafeAreaView } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
-import { getOnboardingNavbarOptions } from '../../UI/Navbar';
+import { getOnboardingWithoutBackNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
 import OTPInput from './components/OTPInput';
@@ -18,10 +18,11 @@ import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../c
 import preferences from '../../../../app/store/preferences';
 import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
+import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
 
 class VerifyOTPOnboarding extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
-		return getOnboardingNavbarOptions(navigation);
+		return getOnboardingWithoutBackNavbarOptions(navigation);
 	};
 	partnerList = [];
 	otpEmail = '';
@@ -33,7 +34,9 @@ class VerifyOTPOnboarding extends PureComponent {
 	tooManyVerifyAttempts = false;
 	tooManySendOtp = false;
 	verifySuccess = false;
-
+	verifySuccess = false;
+	resendOTP = false;
+	showRemindLaterModal = false;
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
@@ -46,7 +49,9 @@ class VerifyOTPOnboarding extends PureComponent {
 			incorrentOTP: observable,
 			tooManyVerifyAttempts: observable,
 			tooManySendOtp: observable,
-			verifySuccess: observable
+			verifySuccess: observable,
+			resendOTP: observable,
+			showRemindLaterModal: observable
 		});
 		this.email = preferences?.onboardProfile.email;
 	}
@@ -60,6 +65,7 @@ class VerifyOTPOnboarding extends PureComponent {
 		APIService.sendEmailOTP(this.email, (success, response) => {
 			switch (response) {
 				case 'success':
+					this.resendOTP = false;
 					this.timingResend = 60;
 					this.timing();
 					break;
@@ -79,7 +85,6 @@ class VerifyOTPOnboarding extends PureComponent {
 			}
 		});
 	}
-
 	verifyOTPEmail() {
 		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {
 			this.otpEmail = '';
@@ -94,7 +99,7 @@ class VerifyOTPOnboarding extends PureComponent {
 					this.tooManyVerifyAttempts = true;
 					break;
 				case 'invalid_request':
-					this.incorrentOTP = true;
+					this.resendOTP = true;
 					break;
 				default:
 			}
@@ -138,8 +143,13 @@ class VerifyOTPOnboarding extends PureComponent {
 						.join('')}`}</Text>
 					<OTPInput
 						value={this.otpEmail}
-						disable={this.tooManySendOtp || this.tooManyVerifyAttempts}
-						onChange={text => this.setOtpEmail(text)}
+						disable={this.tooManySendOtp || this.tooManyVerifyAttempts || this.resendOTP}
+						onChange={text => {
+							this.setOtpEmail(text);
+							if (text.length === 6) {
+								this.verifyOTPEmail();
+							}
+						}}
 					/>
 					{!this.tooManySendOtp ? (
 						<Text style={styles.textWrapper}>
@@ -157,20 +167,24 @@ class VerifyOTPOnboarding extends PureComponent {
 					)}
 					{this.incorrentOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
 					{this.tooManyVerifyAttempts && (
-						<Text style={styles.errorText}>{strings('verify_otp.exceeded_attempts')}</Text>
+						<Text>
+							<Text style={styles.errorTextBold}>{strings('verify_otp.exceeded_attempts')}</Text>
+							<Text style={styles.errorText}>{strings('verify_otp.noti_1')}</Text>
+							<Text style={styles.errorText2}>{strings('verify_otp.noti_2')}</Text>
+							<Text style={styles.errorText}>{strings('verify_otp.noti_3')}</Text>
+						</Text>
 					)}
+					{this.resendOTP && <Text style={styles.errorText}>{strings('verify_otp.resend_otp')}</Text>}
 				</View>
 				<View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', padding: 12 }}>
 					<StyledButton
 						type={'normal'}
-						disabled={
-							(this.email && this.email !== '' && this.otpEmail.length < 6) ||
-							this.tooManySendOtp ||
-							this.tooManyVerifyAttempts
-						}
-						onPress={() => this.verifyOTPEmail()}
+						containerStyle={styles.skipButton}
+						onPress={() => {
+							this.showRemindLaterModal = true;
+						}}
 					>
-						{strings('verify_otp.verify')}
+						{strings('verify_otp.proceed_to_dashboard')}
 					</StyledButton>
 				</View>
 			</>
@@ -227,6 +241,13 @@ class VerifyOTPOnboarding extends PureComponent {
 							{this.verifySuccess && this.renderCongratulations()}
 						</ScrollView>
 					</View>
+					<SkipVerifyEmailModal
+						modalVisible={this.showRemindLaterModal && !this.verifySuccess}
+						onCancel={() => {
+							this.showRemindLaterModal = false;
+						}}
+						onConfirm={() => this.onDone()}
+					/>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);
