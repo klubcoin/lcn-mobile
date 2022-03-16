@@ -268,7 +268,7 @@ export function getTransactionOptionsTitle(_title, navigation) {
 				<View />
 			),
 		headerStyle: {
-			backgroundColor: colors.grey
+			backgroundColor: colors.white
 		}
 	};
 }

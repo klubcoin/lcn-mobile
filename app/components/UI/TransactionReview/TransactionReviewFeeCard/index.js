@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 24
 	},
 	loader: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.transparent,
 		height: 10
 	},
 	over: {
