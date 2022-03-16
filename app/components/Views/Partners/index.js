@@ -34,10 +34,7 @@ class Partners extends PureComponent {
 		APIService.getPartnerList((success, json) => {
 			if (success && Array.isArray(json)) {
 				const data = json;
-				data.sort((a, b) => {
-					if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
-					return -1;
-				});
+				data.sort((a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase()));
 				this.partnerList = data;
 			}
 		});
