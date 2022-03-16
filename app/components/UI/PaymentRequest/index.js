@@ -261,7 +261,7 @@ class PaymentRequest extends PureComponent {
 					</View>
 				)}
 				<View style={styles.assetsWrapper} testID={'searched-asset-results'}>
-					<Text style={styles.assetsTitle}>
+					{/* <Text style={styles.assetsTitle}>
 						{this.state.searchInputValue
 							? strings('payment_request.search_results')
 							: strings('payment_request.search_top_picks')}
@@ -272,7 +272,7 @@ class PaymentRequest extends PureComponent {
 						selectedAsset={this.state.selectedAsset}
 						searchQuery={this.state.searchInputValue}
 						emptyMessage={strings('payment_request.search_no_tokens_found')}
-					/>
+					/> */}
 				</View>
 				{userTokens.length > 0 && (
 					<View style={styles.assetsWrapper}>
