@@ -54,6 +54,11 @@ import { displayName } from '../../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
+export const BACKUP_TYPE = {
+	CREATE: 'CREATE',
+	BACKUP: 'BACKUP'
+};
+
 const isIos = Device.isIos();
 
 const Heading = ({ children, first }) => (
@@ -401,6 +406,7 @@ class Settings extends PureComponent {
 	};
 
 	manualBackup = () => {
+		AsyncStorage.setItem('BACKUP_TYPE', BACKUP_TYPE.BACKUP);
 		this.props.navigation.navigate('ManualBackupStep1');
 	};
 

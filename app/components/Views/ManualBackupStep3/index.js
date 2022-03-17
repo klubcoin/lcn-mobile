@@ -19,6 +19,7 @@ import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../c
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { displayName } from '../../../../app.json';
+import { BACKUP_TYPE } from '../Settings/SecuritySettings';
 
 const hardwareBackPress = () => ({});
 const HARDWARE_BACK_PRESS = 'hardwareBackPress';
@@ -95,7 +96,12 @@ class ManualBackupStep3 extends PureComponent {
 	};
 
 	done = async () => {
-		this.props.navigation.navigate('EmailVerifyOnboarding');
+		const backupType = await AsyncStorage.getItem('BACKUP_TYPE');
+		if (backupType === BACKUP_TYPE.BACKUP) {
+			this.props.navigation.navigate('SecuritySettings');
+		} else {
+			this.props.navigation.navigate('EmailVerifyOnboarding');
+		}
 		return;
 		const onboardingWizard = await AsyncStorage.getItem(ONBOARDING_WIZARD);
 		// Check if user passed through metrics opt-in screen
