@@ -323,7 +323,7 @@ class AccountList extends PureComponent {
 		return (
 			<AccountElement
 				onPress={this.onAccountChange}
-				onLongPress={this.onLongPress}
+				// onLongPress={this.onLongPress}
 				item={item}
 				ticker={ticker}
 				disabled={Boolean(item.balanceError)}
