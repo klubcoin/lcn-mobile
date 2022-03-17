@@ -6,6 +6,7 @@
 	<array>
 		<string>applinks:klb-staging.liquichain.io</string>
 		<string>applinks:account2.liquichain.io</string>
+		<string>applinks:klb.liquichain.io</string>
 	</array>
 </dict>
 </plist>
