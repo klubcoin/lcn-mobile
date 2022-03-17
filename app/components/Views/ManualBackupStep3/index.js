@@ -15,11 +15,10 @@ import Device from '../../../util/Device';
 import Confetti from '../../UI/Confetti';
 import HintModal from '../../UI/HintModal';
 import { getTransparentOnboardingNavbarOptions } from '../../UI/Navbar';
-import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../constants/storage';
+import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS, BACKUP, BACKUP_TYPE } from '../../../constants/storage';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { displayName } from '../../../../app.json';
-import { BACKUP_TYPE } from '../Settings/SecuritySettings';
 
 const hardwareBackPress = () => ({});
 const HARDWARE_BACK_PRESS = 'hardwareBackPress';
@@ -96,9 +95,13 @@ class ManualBackupStep3 extends PureComponent {
 	};
 
 	done = async () => {
-		const backupType = await AsyncStorage.getItem('BACKUP_TYPE');
-		if (backupType === BACKUP_TYPE.BACKUP) {
+		const backupType = await AsyncStorage.getItem(BACKUP);
+		if (backupType === BACKUP_TYPE.SETTING) {
 			this.props.navigation.navigate('SecuritySettings');
+		} else if (backupType === BACKUP_TYPE.ALERT) {
+			this.props.navigation.navigate('HomeNav');
+			this.props.navigation.popToTop();
+			this.props.navigation.goBack(null);
 		} else {
 			this.props.navigation.navigate('EmailVerifyOnboarding');
 		}

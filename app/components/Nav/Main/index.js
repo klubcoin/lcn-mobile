@@ -99,6 +99,8 @@ import StyledButton from '../../UI/StyledButton';
 import SecureKeychain from '../../../core/SecureKeychain';
 import { passwordRequirementsMet } from '../../../util/password';
 import {
+	BACKUP,
+	BACKUP_TYPE,
 	BIOMETRY_CHOICE,
 	BIOMETRY_CHOICE_DISABLED,
 	PASSCODE_CHOICE,
@@ -828,9 +830,10 @@ const Main = props => {
 		setSkipCheckbox(!skipCheckbox);
 	};
 
-	const skipAccountModalSecureNow = () => {
+	const skipAccountModalSecureNow = async () => {
 		toggleRemindLater();
-		props.navigation.navigate('AccountBackupStep1B', { ...props.navigation.state.params });
+		await AsyncStorage.setItem(BACKUP, BACKUP_TYPE.ALERT);
+		props.navigation.navigate('ManualBackupStep1', { ...props.navigation.state.params });
 	};
 
 	const skipAccountModalSkip = () => {

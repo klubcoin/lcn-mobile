@@ -466,9 +466,7 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	};
 }
 
-export function getOnboardingWithoutBackNavbarOptions(navigation, { headerLeft } = {}) {
-	const headerLeftHide = headerLeft || navigation.getParam('headerLeft');
-	const navigationPop = () => navigation.pop();
+export function getOnboardingWithoutBackNavbarOptions(navigation) {
 
 	return {
 		headerStyle: {

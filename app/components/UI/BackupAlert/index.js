@@ -9,6 +9,8 @@ import Device from '../../../util/Device';
 import { connect } from 'react-redux';
 import { backUpSeedphraseAlertNotVisible } from '../../../actions/user';
 import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorState } from '../../../util/general';
+import AsyncStorage from '@react-native-community/async-storage';
+import { BACKUP, BACKUP_TYPE } from '../../../constants/storage';
 
 const BROWSER_ROUTE = 'BrowserView';
 
@@ -127,7 +129,11 @@ class BackupAlert extends PureComponent {
 		}
 	};
 
-	goToBackupFlow = () => {
+	goToBackupFlow = async () => {
+		const { backUpSeedphraseAlertNotVisible } = this.props;
+		await AsyncStorage.setItem(BACKUP, BACKUP_TYPE.ALERT);
+		backUpSeedphraseAlertNotVisible();
+
 		this.props.navigation.navigate('AccountBackupStep1');
 	};
 
@@ -156,13 +162,16 @@ class BackupAlert extends PureComponent {
 					<View style={baseStyles.flexGrow}>
 						<Text style={styles.backupAlertTitle}>{strings('backup_alert.title')}</Text>
 						<View style={styles.buttonsWrapper}>
-							<TouchableOpacity onPress={this.goToBackupFlow} >
+							<TouchableOpacity onPress={this.goToBackupFlow}>
 								<Text style={[styles.backupAlertMessage, fontStyles.bold]}>
 									{strings('backup_alert.right_button')}
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={this.onDismiss} style={styles.dismissButton}>
-								<Text style={[styles.backupAlertMessage, styles.dismissButtonText]} testID={'notification-remind-later-button'}>
+								<Text
+									style={[styles.backupAlertMessage, styles.dismissButtonText]}
+									testID={'notification-remind-later-button'}
+								>
 									{strings('backup_alert.left_button')}
 								</Text>
 							</TouchableOpacity>

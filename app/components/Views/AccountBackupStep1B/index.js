@@ -16,8 +16,6 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
-import { BACKUP_TYPE } from '../Settings/SecuritySettings';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const explain_backup_seedphrase = require('../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
 
@@ -30,7 +28,6 @@ const AccountBackupStep1B = props => {
 	const [showWhatIsSeedphraseModal, setWhatIsSeedphraseModal] = useState(false);
 
 	const goNext = () => {
-		AsyncStorage.setItem('BACKUP_TYPE', BACKUP_TYPE.CREATE);
 		props.navigation.navigate('ManualBackupStep1', { ...props.navigation.state.params });
 	};
 

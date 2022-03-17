@@ -78,6 +78,8 @@ const EmailVerifyOnboarding = props => {
 			props.navigation.goBack(null);
 		} else {
 			props.navigation.navigate('HomeNav');
+			props.navigation.popToTop();
+			props.navigation.goBack(null);
 		}
 	};
 	return (

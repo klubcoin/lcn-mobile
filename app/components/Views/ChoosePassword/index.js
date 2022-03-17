@@ -36,7 +36,9 @@ import {
 	NEXT_MAKER_REMINDER,
 	TRUE,
 	SEED_PHRASE_HINTS,
-	BIOMETRY_CHOICE_DISABLED
+	BIOMETRY_CHOICE_DISABLED,
+	BACKUP,
+	BACKUP_TYPE
 } from '../../../constants/storage';
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import API from 'services/api';
@@ -172,7 +174,7 @@ class ChoosePassword extends PureComponent {
 			return;
 		}
 		const { avatar, firstname, lastname, email } = preferences.onboardProfile;
-		const {username }= this.props.navigation.state.params;
+		const { username } = this.props.navigation.state.params;
 		const name = `${firstname} ${lastname}`;
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const publicInfo = JSON.stringify({ name });
@@ -203,6 +205,8 @@ class ChoosePassword extends PureComponent {
 		this.props.passwordSet();
 		this.props.setLockTime(AppConstants.DEFAULT_LOCK_TIMEOUT);
 		this.setState({ loading: false });
+		await AsyncStorage.setItem(BACKUP, BACKUP_TYPE.CREATE);
+
 		this.props.navigation.navigate('AccountBackupStep1');
 	};
 
@@ -543,7 +547,7 @@ class ChoosePassword extends PureComponent {
 			validatePassword
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
-		const canSubmit = passwordsMatch && isValidPassword && isSelected ;
+		const canSubmit = passwordsMatch && isValidPassword && isSelected;
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 

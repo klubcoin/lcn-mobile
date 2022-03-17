@@ -19,6 +19,13 @@ export const PUSH_NOTIFICATIONS_PROMPT_COUNT = `${prefix}pushNotificationsPrompt
 export const PUSH_NOTIFICATIONS_PROMPT_TIME = `${prefix}pushNotificationsPromptTime`;
 
 export const LANGUAGE = `${prefix}language`;
+export const BACKUP = `${prefix}backup`;
+
+export const BACKUP_TYPE = {
+	SETTING: 'SETTING',
+	CREATE: 'CREATE',
+	ALERT: 'ALERT'
+};
 
 export const ENCRYPTION_LIB = `${prefix}encryptionLib`;
 

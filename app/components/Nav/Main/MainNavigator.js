@@ -132,6 +132,15 @@ export default createStackNavigator(
 						Asset: {
 							screen: Asset
 						},
+						ManualBackupStep1: {
+							screen: ManualBackupStep1
+						},
+						ManualBackupStep2: {
+							screen: ManualBackupStep2
+						},
+						ManualBackupStep3: {
+							screen: ManualBackupStep3
+						},
 						AddAsset: {
 							screen: AddAsset
 						},

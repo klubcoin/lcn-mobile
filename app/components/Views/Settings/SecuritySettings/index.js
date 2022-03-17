@@ -38,7 +38,9 @@ import {
 	TRUE,
 	PASSCODE_DISABLED,
 	BIOMETRY_CHOICE_DISABLED,
-	SEED_PHRASE_HINTS
+	SEED_PHRASE_HINTS,
+	BACKUP,
+	BACKUP_TYPE
 } from '../../../../constants/storage';
 
 import CookieManager from '@react-native-community/cookies';
@@ -53,11 +55,6 @@ import { refWebRTC } from '../../../../services/WebRTC';
 import { displayName } from '../../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
-
-export const BACKUP_TYPE = {
-	CREATE: 'CREATE',
-	BACKUP: 'BACKUP'
-};
 
 const isIos = Device.isIos();
 
@@ -405,8 +402,8 @@ class Settings extends PureComponent {
 		this.props.setLockTime(parseInt(lockTime, 10));
 	};
 
-	manualBackup = () => {
-		AsyncStorage.setItem('BACKUP_TYPE', BACKUP_TYPE.BACKUP);
+	manualBackup = async () => {
+		await AsyncStorage.setItem(BACKUP, BACKUP_TYPE.SETTING);
 		this.props.navigation.navigate('ManualBackupStep1');
 	};
 

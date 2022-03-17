@@ -8,9 +8,9 @@ import { strings } from '../../../../locales/i18n';
 import AndroidBackHandler from '../AndroidBackHandler';
 import Device from '../../../util/Device';
 import SeedphraseModal from '../../UI/SeedphraseModal';
-import { getOnboardingNavbarOptions } from '../../UI/Navbar';
+import { getOnboardingWithoutBackNavbarOptions } from '../../UI/Navbar';
 import Engine from '../../../core/Engine';
-import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
+import { ONBOARDING_WIZARD, METRICS_OPT_IN, BACKUP, BACKUP_TYPE } from '../../../constants/storage';
 import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import SkipAccountSecurityModal from '../../UI/SkipAccountSecurityModal';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -68,6 +68,13 @@ const AccountBackupStep1 = props => {
 	};
 
 	const skip = async () => {
+		const backupType = await AsyncStorage.getItem(BACKUP);
+		if (backupType === BACKUP_TYPE.ALERT) {
+			props.navigation.navigate('HomeNav');
+			props.navigation.popToTop();
+			props.navigation.goBack(null);
+			return;
+		}
 		hideRemindLaterModal();
 		// Get onboarding wizard state
 		props.navigation.navigate('EmailVerifyOnboarding');
@@ -174,7 +181,7 @@ AccountBackupStep1.propTypes = {
 };
 
 AccountBackupStep1.navigationOptions = ({ navigation }) => ({
-	...getOnboardingNavbarOptions(navigation, { headerLeft: <View /> }),
+	...getOnboardingWithoutBackNavbarOptions(navigation),
 	gesturesEnabled: false
 });
 
