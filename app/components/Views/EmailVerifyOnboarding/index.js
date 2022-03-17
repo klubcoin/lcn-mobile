@@ -139,7 +139,7 @@ const EmailVerifyOnboarding = props => {
 						</View>
 					</View>
 				</ScrollView>
-				{Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />}
+				{/* {Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />} */}
 				<SkipVerifyEmailModal
 					modalVisible={showRemindLaterModal}
 					onCancel={secureNow}
