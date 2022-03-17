@@ -595,6 +595,7 @@
 	"app_settings": {
 		"title": "Settings",
 		"current_conversion": "Base Currency",
+		"protect_your_wallet": "Protect your Wallet",
 		"current_language": "Current Language",
 		"ipfs_gateway": "IPFS Gateway",
 		"ipfs_gateway_down": "Your current IPFS gateway is down",

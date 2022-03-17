@@ -558,7 +558,7 @@ class Settings extends PureComponent {
 										<WarningIcon />{' '}
 									</>
 								) : null}
-								<Text style={styles.title}>Test</Text>
+								<Text style={styles.title}>{strings('app_settings.protect_your_wallet')}</Text>
 							</Text>
 							{/* <SeedPhraseVideo style={styles.seedPhraseVideo} /> */}
 							<Text style={styles.desc}>{strings('app_settings.protect_desc')}</Text>
