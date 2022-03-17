@@ -230,9 +230,9 @@ class DrawerView extends PureComponent {
 		return ret;
 	}
 
-
-	componentDidUpdate() {
-		if (!!this.props?.onboardProfile?.avatar) {
+	fetchAvatar = async () => {
+		if (!!this.props?.onboardProfile?.avatar
+			&& await RNFS.exists(this.props?.onboardProfile?.avatar)) {
 			RNFS.readFile(this.props?.onboardProfile?.avatar, 'base64').then(file => {
 				if (file !== this.state.file) {
 					this.setState({
@@ -242,6 +242,10 @@ class DrawerView extends PureComponent {
 				}
 			});
 		}
+	}
+
+	componentDidUpdate() {
+		this.fetchAvatar();
 
 		const route = findRouteNameFromNavigatorState(this.props.navigation.state);
 		if (!this.props.passwordSet || !this.props.seedphraseBackedUp) {
@@ -862,7 +866,7 @@ class DrawerView extends PureComponent {
 			// 		: null;
 		}
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
-		const balanceFiat = weiToFiat(hexToBN(account?.balance|| '0x0'), conversionRate, currentCurrency) || 0;
+		const balanceFiat = weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
 
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
