@@ -772,7 +772,7 @@
 	"verify_email": {
 		"title": "Email",
 		"desc": "Get your Klubcoin Wallet account fully verified to unlock all of our awesome features. You can alse update your email for security purposes.",
-		"verify_your_email": "Verfy your email",
+		"verify_your_email": "Verify your email",
 		"verified": "Verfied",
 		"change_email": "Change email"
 	},
