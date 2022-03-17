@@ -515,20 +515,14 @@ class ChoosePassword extends PureComponent {
 				textUpperCase: /[A-Z]/.test(password),
 				number: /[0-9]/.test(password),
 				specialCharacter: /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
-			}
+			},
+			isValidPassword:
+				password.length >= 8 &&
+				/[a-z]/.test(password) &&
+				/[A-Z]/.test(password) &&
+				/[0-9]/.test(password) &&
+				/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
 		});
-		if (
-			password.length < 8 ||
-			!/[a-z]/.test(password) ||
-			!/[A-Z]/.test(password) ||
-			!/[0-9]/.test(password) ||
-			!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
-		) {
-			this.setState({ isValidPassword: false });
-			return;
-		}
-		this.setState({ isValidPassword: true });
-		return;
 	}
 
 	render() {

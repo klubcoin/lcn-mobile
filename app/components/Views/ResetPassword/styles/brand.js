@@ -14,7 +14,7 @@ const brandStyles = StyleSheet.create({
 	},
 	button: {
 		borderRadius: 12,
-		width: "100%"
+		width: '100%'
 	},
 	buttonWrapper: {
 		flex: 1,
@@ -34,11 +34,40 @@ const brandStyles = StyleSheet.create({
 		padding: 10,
 		fontSize: 14,
 		height: 50,
-		backgroundColor:colors.purple,
-		borderRadius:12,
-		color:colors.white,
+		backgroundColor: colors.purple,
+		borderRadius: 12,
+		color: colors.white,
 		...fontStyles.normal
 	},
+	passwordItemWrapper: {
+		flexDirection: 'row',
+		marginTop: 2,
+		alignItems: 'center'
+	},
+	passwordItemText: {
+		color: colors.white,
+		fontSize: 12,
+		marginLeft: 4
+	},
+	passwordItemTextError: {
+		color: colors.fontError,
+		fontSize: 12,
+		marginLeft: 4
+	},
+	passwordItemIcon: {
+		width: 12,
+		height: 12,
+		color: colors.success
+	},
+	passwordValidateTitle: {
+		color: colors.white,
+		fontSize: 14,
+		marginTop: 6
+	},
+	passwordStrengthLabel: {
+		color: colors.fontError,
+		height: 'auto'
+	}
 });
 
 export default brandStyles;

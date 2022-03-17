@@ -206,7 +206,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		alignSelf: 'center'
-	}
+	},
+	passwordValidateTitle: {},
+	passwordItemWrapper: {},
+	passwordItemText: {},
+	passwordItemTextError: {},
+	passwordItemIcon: {},
+	passwordStrengthLabel: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

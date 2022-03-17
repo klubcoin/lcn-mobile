@@ -87,7 +87,16 @@ class ResetPassword extends PureComponent {
 		inputWidth: { width: '99%' },
 		view: RESET_PASSWORD,
 		originalPassword: null,
-		ready: true
+		ready: true,
+		validatePassword: {
+			length: false,
+			textUpperCase: false,
+			textLowerCase: false,
+			number: false,
+			specialCharacter: false
+		},
+		isValidPassword: true,
+		isBlurPassword: false
 	};
 
 	mounted = true;
@@ -362,6 +371,31 @@ class ResetPassword extends PureComponent {
 		this.setState({ password: val, passwordStrength: passInfo.score });
 	};
 
+	onPasswordChangeWithValidate = val => {
+		const passInfo = zxcvbn(val);
+
+		this.setState({ password: val, passwordStrength: passInfo.score });
+		this.checkValidPassword(val);
+	};
+
+	checkValidPassword(password) {
+		this.setState({
+			validatePassword: {
+				length: password.length >= 8,
+				textLowerCase: /[a-z]/.test(password),
+				textUpperCase: /[A-Z]/.test(password),
+				number: /[0-9]/.test(password),
+				specialCharacter: /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
+			},
+			isValidPassword:
+				password.length >= 8 &&
+				/[a-z]/.test(password) &&
+				/[A-Z]/.test(password) &&
+				/[0-9]/.test(password) &&
+				/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)
+		});
+	}
+
 	toggleShowHide = () => {
 		this.setState(state => ({ secureTextEntry: !state.secureTextEntry }));
 	};
@@ -445,10 +479,13 @@ class ResetPassword extends PureComponent {
 			confirmPassword,
 			secureTextEntry,
 			error,
-			loading
+			loading,
+			validatePassword,
+			isValidPassword,
+			isBlurPassword
 		} = this.state;
 		const passwordsMatch = password !== '' && password === confirmPassword;
-		const canSubmit = passwordsMatch && isSelected;
+		const canSubmit = passwordsMatch && isValidPassword && isSelected;
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
 		return (
@@ -496,7 +533,7 @@ class ResetPassword extends PureComponent {
 									<TextInput
 										style={[styles.input, inputWidth]}
 										value={password}
-										onChangeText={this.onPasswordChange}
+										onChangeText={this.onPasswordChangeWithValidate}
 										secureTextEntry={secureTextEntry}
 										placeholder=""
 										testID="input-password"
@@ -504,15 +541,79 @@ class ResetPassword extends PureComponent {
 										returnKeyType="next"
 										autoCapitalize="none"
 									/>
-									{(password !== '' && (
-										<Text style={styles.hintLabel}>
-											{strings('reset_password.password_strength')}
-											<Text style={styles[`strength_${passwordStrengthWord}`]}>
-												{' '}
-												{strings(`reset_password.strength_${passwordStrengthWord}`)}
-											</Text>
+									<Text style={styles.passwordValidateTitle}>
+										{strings(`choose_password.password_validate_title`)}
+									</Text>
+									<View style={styles.passwordItemWrapper}>
+										{validatePassword.length && (
+											<Icon style={styles.passwordItemIcon} name={'check'} />
+										)}
+										<Text
+											style={
+												isBlurPassword && !validatePassword.length
+													? styles.passwordItemTextError
+													: styles.passwordItemText
+											}
+										>
+											{strings(`choose_password.password_validate_1`)}
 										</Text>
-									)) || <Text style={styles.hintLabel} />}
+									</View>
+									<View style={styles.passwordItemWrapper}>
+										{validatePassword.textLowerCase && (
+											<Icon style={styles.passwordItemIcon} name={'check'} />
+										)}
+										<Text
+											style={
+												isBlurPassword && !validatePassword.textLowerCase
+													? styles.passwordItemTextError
+													: styles.passwordItemText
+											}
+										>
+											{strings(`choose_password.password_validate_2`)}
+										</Text>
+									</View>
+									<View style={styles.passwordItemWrapper}>
+										{validatePassword.textUpperCase && (
+											<Icon style={styles.passwordItemIcon} name={'check'} />
+										)}
+										<Text
+											style={
+												isBlurPassword && !validatePassword.textUpperCase
+													? styles.passwordItemTextError
+													: styles.passwordItemText
+											}
+										>
+											{strings(`choose_password.password_validate_3`)}
+										</Text>
+									</View>
+									<View style={styles.passwordItemWrapper}>
+										{validatePassword.number && (
+											<Icon style={styles.passwordItemIcon} name={'check'} />
+										)}
+										<Text
+											style={
+												isBlurPassword && !validatePassword.number
+													? styles.passwordItemTextError
+													: styles.passwordItemText
+											}
+										>
+											{strings(`choose_password.password_validate_4`)}
+										</Text>
+									</View>
+									<View style={styles.passwordItemWrapper}>
+										{validatePassword.specialCharacter && (
+											<Icon style={styles.passwordItemIcon} name={'check'} />
+										)}
+										<Text
+											style={
+												isBlurPassword && !validatePassword.specialCharacter
+													? styles.passwordItemTextError
+													: styles.passwordItemText
+											}
+										>
+											{strings(`choose_password.password_validate_5`)}
+										</Text>
+									</View>
 								</View>
 								<View style={styles.field}>
 									<Text style={styles.hintLabel}>{strings('reset_password.confirm_password')}</Text>
@@ -534,9 +635,14 @@ class ResetPassword extends PureComponent {
 											<Icon name="check" size={16} color={colors.green300} />
 										) : null}
 									</View>
-									<Text style={styles.hintLabel}>
+									{/* <Text style={styles.hintLabel}>
 										{strings('reset_password.must_be_at_least', { number: 8 })}
-									</Text>
+									</Text> */}
+									{isValidPassword && !!confirmPassword && !passwordsMatch && (
+										<Text style={styles.passwordStrengthLabel}>
+											{strings('choose_password.password_match')}
+										</Text>
+									)}
 								</View>
 								<View>{this.renderSwitch()}</View>
 								<View style={styles.checkboxContainer}>
