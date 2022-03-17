@@ -4,11 +4,8 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:telecelplay.io</string>
-		<string>applinks:*.telecelplay.io</string>
-		<string>applinks:liquichain.io</string>
-		<string>applinks:*.liquichain.io</string>
-		<string>applinks:dev.telecelplay.io</string>
+		<string>applinks:klb-staging.liquichain.io</string>
+		<string>applinks:account2.liquichain.io</string>
 	</array>
 </dict>
 </plist>

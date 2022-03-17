@@ -1,7 +1,6 @@
 import moment from 'moment';
 import config from '../config';
 import WebService from './WebService';
-import BuildVariant from '../variants/BuildVariant';
 import Config from 'react-native-config';
 
 export const basicAuth = Config.BASIC_AUTH;

@@ -1,5 +1,4 @@
 import { displayName } from '../../app.json';
-import BuildVariant from '../variants/BuildVariant'
 import Config from "react-native-config";
 
 export default {

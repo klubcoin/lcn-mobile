@@ -42,7 +42,6 @@ import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
 import Web3 from 'web3';
-import BuildVariant from '../../../variants/BuildVariant';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 

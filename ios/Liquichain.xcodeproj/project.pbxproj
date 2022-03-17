@@ -153,6 +153,8 @@
 		C893A58227D7AC6600B20984 /* Info-Staging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-Staging.plist"; path = "/Users/trien.vo/Desktop/Work/Klubcoin/lcn-mobile/ios/Info-Staging.plist"; sourceTree = "<absolute>"; };
 		C893A5DC27D7B0F800B20984 /* LiquichainProduction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiquichainProduction.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C893A5DD27D7B0F900B20984 /* Info-Production.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-Production.plist"; path = "/Users/trien.vo/Desktop/Work/Klubcoin/lcn-mobile/ios/Info-Production.plist"; sourceTree = "<absolute>"; };
+		C8E2F6EE27E2D2260096B644 /* Liquichain.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Liquichain.entitlements; path = Liquichain/Liquichain.entitlements; sourceTree = "<group>"; };
+		C8E2F6EF27E2DAB10096B644 /* LiquichainProduction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LiquichainProduction.entitlements; sourceTree = "<group>"; };
 		CF38347A42D8497C93A83C38 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../app/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		D7EDA083FAA44A8EB61C2CC2 /* EuclidCircularB-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "EuclidCircularB-Bold.otf"; path = "../app/fonts/EuclidCircularB-Bold.otf"; sourceTree = "<group>"; };
 		DCFFC3D1CC144317A0924A56 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../app/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 		13B07FAE1A68108700A75B9A /* Liquichain */ = {
 			isa = PBXGroup;
 			children = (
+				C8E2F6EE27E2D2260096B644 /* Liquichain.entitlements */,
 				C893A42027D7A7BA00B20984 /* LiquichainProduction */,
 				C893A41F27D7A79F00B20984 /* LiquichainStagging */,
 				1307F1D2276BED46009E94ED /* LiquichainDebug.entitlements */,
@@ -267,6 +270,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C8E2F6EF27E2DAB10096B644 /* LiquichainProduction.entitlements */,
 				13B07FAE1A68108700A75B9A /* Liquichain */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* LiquichainTests */,
@@ -1044,6 +1048,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Liquichain/Liquichain.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1216,7 +1221,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin.staging;
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
@@ -1248,7 +1253,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin.staging;
+				PRODUCT_BUNDLE_IDENTIFIER = com.klubcoin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Liquichain-Bridging-Header.h";
@@ -1296,6 +1301,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = LiquichainProduction.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
