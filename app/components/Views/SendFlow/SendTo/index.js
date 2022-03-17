@@ -625,6 +625,7 @@ class SendFlow extends PureComponent {
 											containerStyle={styles.buttonNext}
 											onPress={this.onTransactionDirectionSet}
 											testID={'address-book-next-button'}
+											disabled = {balanceIsZero}
 										>
 											{strings('address_book.next')}
 										</StyledButton>
