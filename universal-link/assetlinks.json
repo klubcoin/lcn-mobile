@@ -3,9 +3,33 @@
 		"relation": ["delegate_permission/common.handle_all_urls"],
 		"target": {
 			"namespace": "android_app",
-			"package_name": "com.liquichain",
+			"package_name": "com.klubcoin",
 			"sha256_cert_fingerprints": [
-				"71:16:5A:7C:59:2F:FB:42:86:E7:69:88:64:31:4C:6D:A0:EF:05:F3:05:77:BE:19:CC:64:63:DD:53:FB:DB:B9"
+				"66:82:5A:65:59:D5:92:A7:1C:BD:DE:17:95:AD:DF:03:80:A0:D2:BD:07:50:37:D3:C2:9B:CE:FC:58:33:53:0C"
+			]
+		}
+	},
+	{
+		"relation": [
+			"delegate_permission/common.handle_all_urls"
+		],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "staging.klubcoin",
+			"sha256_cert_fingerprints": [
+				"66:82:5A:65:59:D5:92:A7:1C:BD:DE:17:95:AD:DF:03:80:A0:D2:BD:07:50:37:D3:C2:9B:CE:FC:58:33:53:0C"
+			]
+		}
+	},
+	{
+		"relation": [
+			"delegate_permission/common.handle_all_urls"
+		],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "dev.klubcoin",
+			"sha256_cert_fingerprints": [
+				"66:82:5A:65:59:D5:92:A7:1C:BD:DE:17:95:AD:DF:03:80:A0:D2:BD:07:50:37:D3:C2:9B:CE:FC:58:33:53:0C"
 			]
 		}
 	}

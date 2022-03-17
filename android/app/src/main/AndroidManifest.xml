@@ -1,131 +1,160 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-  package="com.liquichain">
+    package="com.liquichain">
 
-    
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-  <uses-permission android:name="android.permission.CAMERA" />
-  <!-- <uses-sdk tools:overrideLibrary="com.tectiv3.aes" /> -->
 
-  <application
-    android:name=".MainApplication"
-    android:label="@string/app_name"
-    android:icon="@mipmap/ic_launcher"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:allowBackup="false"
-    android:theme="@style/AppTheme"
-    android:hardwareAccelerated="true"
-    android:usesCleartextTraffic="${isDebug}"
-    android:networkSecurityConfig="@xml/react_native_config"
-      android:requestLegacyExternalStorage="true"
-  >
-    <activity
-      android:launchMode="singleTask"
-      android:name=".SplashActivity"
-      android:theme="@style/SplashTheme"
-      android:label="@string/app_name"
-    >
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-      </intent-filter>
-    </activity>
-    <activity
-      android:launchMode="singleTask"
-      android:name=".MainActivity"
-      android:label="@string/app_name"
-      android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
-      android:windowSoftInputMode="adjustResize"
-      android:screenOrientation="portrait"
-      android:exported="true"
-    >
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-      <!-- Branch URI Scheme -->
-      <intent-filter>
-        <data android:scheme="liquichain" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-      </intent-filter>
-      <intent-filter>
-        <data android:scheme="ethereum" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-      </intent-filter>
-      <intent-filter>
-        <data android:scheme="dapp" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-      </intent-filter>
-      <intent-filter>
-        <data android:scheme="wc" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-      </intent-filter>
-      <intent-filter>
-        <data android:scheme="http" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-      </intent-filter>
-      <intent-filter>
-        <data android:scheme="https" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-      </intent-filter>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- <uses-sdk tools:overrideLibrary="com.tectiv3.aes" /> -->
 
-      <!-- Branch App Links (optional) -->
-      <intent-filter android:autoVerify="true">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="https" android:host="liquichain.io" />
-      </intent-filter>
-    </activity>
-    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-    <!-- Branch init -->
-    <meta-data android:name="io.branch.sdk.BranchKey" android:value="${MM_BRANCH_KEY_LIVE}" />
-    <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="${MM_BRANCH_KEY_TEST}" />
-    <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
-    <!-- PUSH NOTIFICATIONS -->
-    <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
-    android:value="com.liquichain"/>
-    <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
-    android:value="com.liquichain"/>
-    <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
-    android:resource="@color/lightgray"/>
-    <!-- MIXPANEL -->
-    <meta-data android:name="com.mixpanel.android.mpmetrics.MixpanelAPI.token" android:value="${MM_MIXPANEL_TOKEN}" />
-    <activity android:name="com.mixpanel.android.takeoverinapp.TakeoverInAppActivity"
-    android:theme="@style/com_mixpanel_android_TakeoverInAppActivityTheme"/>
+    <application
+        android:name=".MainApplication"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="${isDebug}"
+        android:networkSecurityConfig="@xml/react_native_config"
+        android:requestLegacyExternalStorage="true">
+        <activity
+            android:launchMode="singleTask"
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:launchMode="singleTask"
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Branch URI Scheme -->
+            <intent-filter>
+                <data android:scheme="liquichain" />
+                <action android:name="android.intent.action.VIEW" />
 
-    <!-- Branch install referrer tracking (optional) -->
-    <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-      <intent-filter>
-        <action android:name="com.android.vending.INSTALL_REFERRER" />
-      </intent-filter>
-    </receiver>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="ethereum" />
+                <action android:name="android.intent.action.VIEW" />
 
-    <provider
-      android:name="androidx.core.content.FileProvider"
-      android:authorities="${applicationId}.provider"
-      android:grantUriPermissions="true"
-      android:exported="false"
-      tools:replace="android:authorities"
-    >
-      <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/filepaths"
-          tools:replace="android:resource"
-      />
-    </provider>
-  </application>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="dapp" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="wc" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="http" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="https" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links (optional) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="klb-staging.liquichain.io" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="account2.liquichain.io" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+        <!-- Branch init -->
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="${MM_BRANCH_KEY_LIVE}" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey.test"
+            android:value="${MM_BRANCH_KEY_TEST}" />
+        <meta-data
+            android:name="io.branch.sdk.TestMode"
+            android:value="false" />
+        <!-- PUSH NOTIFICATIONS -->
+        <meta-data
+            android:name="com.dieam.reactnativepushnotification.notification_channel_name"
+            android:value="com.liquichain" />
+        <meta-data
+            android:name="com.dieam.reactnativepushnotification.notification_channel_description"
+            android:value="com.liquichain" />
+        <meta-data
+            android:name="com.dieam.reactnativepushnotification.notification_color"
+            android:resource="@color/lightgray" />
+        <!-- MIXPANEL -->
+        <meta-data
+            android:name="com.mixpanel.android.mpmetrics.MixpanelAPI.token"
+            android:value="${MM_MIXPANEL_TOKEN}" />
+        <activity
+            android:name="com.mixpanel.android.takeoverinapp.TakeoverInAppActivity"
+            android:theme="@style/com_mixpanel_android_TakeoverInAppActivityTheme" />
+
+        <!-- Branch install referrer tracking (optional) -->
+        <receiver
+            android:name="io.branch.referral.InstallListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"
+                tools:replace="android:resource" />
+        </provider>
+    </application>
 </manifest>

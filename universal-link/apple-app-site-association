@@ -2,15 +2,17 @@
 	"applinks": {
 		"details": [
 			{
-				"appIDs": ["75C9U59DUL.com.liquichain"],
+				"appIDs": [
+					"H48MFKU69U.com.klubcoin","H48MFKU69U.com.klubcoin.development"
+				],
 				"components": [
 					{
 						"/": "/tip/*",
 						"comment": "Matches any URL whose path starts with /tip/"
 					},
 					{
-						"/": "/product/*",
-						"comment": "Matches any URL whose path starts with /product/"
+						"/": "/send/*",
+						"comment": "Matches any URL whose path starts with /send/"
 					}
 				]
 			}
