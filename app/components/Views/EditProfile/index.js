@@ -69,11 +69,9 @@ class EditProfile extends PureComponent {
 		email: ''
 	};
 	timeoutCheckUniqueEmail = null;
-	timeoutCheckUniquePhoneNumber = null;
 	isValidEmail = true;
 	isValidPhoneNumber = true;
 	isCheckingEmail = false;
-	isCheckingPhoneNumber = false;
 
 	constructor(props) {
 		super(props);
@@ -93,11 +91,9 @@ class EditProfile extends PureComponent {
 			time: observable,
 			preData: observable,
 			timeoutCheckUniqueEmail: observable,
-			timeoutCheckUniquePhoneNumber: observable,
 			isValidEmail: observable,
 			isValidPhoneNumber: observable,
 			isCheckingEmail: observable,
-			isCheckingPhoneNumber: observable
 		});
 	}
 
@@ -129,7 +125,7 @@ class EditProfile extends PureComponent {
 	}
 
 	onEmailChange = val => {
-		const email = val.replace(this.regex, '').trim()
+		const email = val.replace(this.regex, '').trim();
 		this.email = val.replace(this.regex, '');
 		if (this.preData.email === email) {
 			return;
@@ -162,28 +158,10 @@ class EditProfile extends PureComponent {
 	onPhoneNumberChange = (countryCode, phoneNumber) => {
 		this.phone = phoneNumber;
 		if (!REGEX_PHONE_NUMBER.test(phoneNumber)) {
-			this.isCheckingPhoneNumber = false;
 			this.isValidPhoneNumber = false;
 			return;
 		}
-		this.isCheckingPhoneNumber = true;
-		this.isValidPhoneNumber = false;
-		if (this.timeoutCheckUniquePhoneNumber) {
-			clearTimeout(this.timeoutCheckUniquePhoneNumber);
-		}
-		this.timeoutCheckUniquePhoneNumber = setTimeout(() => {
-			APIService.checkUniqueField('phoneNumber', `+${countryCode}-${phoneNumber}`, (success, json) => {
-				this.isCheckingPhoneNumber = false;
-				if (`+${this.countryCode}-${this.phone}` !== `+${countryCode}-${phoneNumber}`) {
-					return;
-				}
-				if (json === SUCCESS) {
-					this.isValidPhoneNumber = true;
-				} else {
-					this.isValidPhoneNumber = false;
-				}
-			});
-		}, 2000);
+		this.isValidPhoneNumber = true;
 	};
 
 	onPickImage() {
@@ -536,24 +514,13 @@ class EditProfile extends PureComponent {
 										}
 									}}
 									rightItem={
-										!this.phone ||
-										(this.phone === this.preData.phone &&
-											this.countryCode === this.preData.countryCode) ? null : this
-												.isCheckingPhoneNumber ? (
-											<ActivityIndicator size="small" color="#fff" />
-										) : this.isValidPhoneNumber ? (
+										this.isValidPhoneNumber ? (
 											<Icon name="check" size={16} color={colors.success} />
 										) : (
 											<Icon name="remove" size={16} color={colors.fontError} />
 										)
 									}
 								/>
-								{!!this.phone &&
-									!this.isCheckingPhoneNumber &&
-									!this.isValidPhoneNumber &&
-									REGEX_PHONE_NUMBER.test(this.phone) && (
-										<Text style={styles.errorText}>{strings('profile.phone_number_used')}</Text>
-									)}
 							</View>
 							<StyledButton
 								type={'white'}
