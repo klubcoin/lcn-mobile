@@ -246,7 +246,10 @@ class VerifyOTPOnboarding extends PureComponent {
 						onCancel={() => {
 							this.showRemindLaterModal = false;
 						}}
-						onConfirm={() => this.onDone()}
+						onConfirm={() => {
+							this.showRemindLaterModal = false;
+							this.onDone();
+						}}
 					/>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
