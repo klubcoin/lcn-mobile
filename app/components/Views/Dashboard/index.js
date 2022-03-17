@@ -36,6 +36,7 @@ import { LineChart } from 'react-native-chart-kit';
 import routes from '../../../common/routes';
 import Web3 from 'web3';
 import { toChecksumAddress } from 'ethereumjs-util';
+import Erc20Service from '../../../core/Erc20Service';
 
 /**
  * Main view for the wallet
@@ -78,8 +79,8 @@ class Dashboard extends PureComponent {
 		 */
 		currentCurrency: PropTypes.string,
 		/**
-        /* navigation object required to push new views
-        */
+				/* navigation object required to push new views
+				*/
 		navigation: PropTypes.object,
 		/**
 		 * An object containing each identity in the format address => account
@@ -255,9 +256,9 @@ class Dashboard extends PureComponent {
 									firstName: name2 ? name2.split(' ')[0] : '',
 									lastName: name2
 										? name2
-												.split(' ')
-												.slice(1, name2.split(' ').length)
-												.join(' ')
+											.split(' ')
+											.slice(1, name2.split(' ').length)
+											.join(' ')
 										: '',
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,
@@ -312,6 +313,16 @@ class Dashboard extends PureComponent {
 	};
 
 	getBalance = async () => {
+		const { AccountTrackerController } = Engine.context;
+		const { accounts, selectedAddress } = this.props;
+
+		const balance = await new Erc20Service().getBalance(selectedAddress);
+		accounts[selectedAddress] = {
+			balance,
+			conversion: this.state.currentConversion
+		};
+		AccountTrackerController.update({ accounts: { ...accounts } });
+
 		// const { accounts, selectedAddress, identities } = this.props;
 		// // for(const account in accounts){
 		// let params = [selectedAddress];
