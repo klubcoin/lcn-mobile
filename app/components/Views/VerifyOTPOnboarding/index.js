@@ -181,7 +181,10 @@ class VerifyOTPOnboarding extends PureComponent {
 						type={'normal'}
 						containerStyle={styles.skipButton}
 						onPress={() => {
-							this.showRemindLaterModal = true;
+							// this.showRemindLaterModal = true;
+							this.props.navigation.navigate('HomeNav');
+							this.props.navigation.popToTop();
+							this.props.navigation.goBack(null);
 						}}
 					>
 						{strings('verify_otp.proceed_to_dashboard')}
@@ -241,7 +244,7 @@ class VerifyOTPOnboarding extends PureComponent {
 							{this.verifySuccess && this.renderCongratulations()}
 						</ScrollView>
 					</View>
-					<SkipVerifyEmailModal
+					{/* <SkipVerifyEmailModal
 						modalVisible={this.showRemindLaterModal && !this.verifySuccess}
 						onCancel={() => {
 							this.showRemindLaterModal = false;
@@ -250,7 +253,7 @@ class VerifyOTPOnboarding extends PureComponent {
 							this.showRemindLaterModal = false;
 							this.onDone();
 						}}
-					/>
+					/> */}
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);
