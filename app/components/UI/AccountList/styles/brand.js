@@ -14,13 +14,13 @@ const brandStyles = StyleSheet.create({
 		marginVertical: 5,
 		backgroundColor: colors.blue,
 		borderWidth: 0,
-		paddingVertical: 20,
+		paddingVertical: 12,
 	},
 	footer: {
 		paddingHorizontal: 30,
 		alignItems: 'center',
 		justifyContent: 'flex-start',
-		paddingBottom: Device.isIphoneX() ? 30 : 110,
+		marginBottom: Device.isIphoneX() ? 30 : 10,
 		paddingTop: 10,
 	},
 	btnText: {
