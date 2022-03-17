@@ -166,20 +166,21 @@ class VerifyOTP extends PureComponent {
 						}
 					}}
 				/>
-				{!this.tooManySendOtp ? (
-					<Text style={styles.textWrapper}>
-						<Text>{strings('verify_otp.not_receive_code')}</Text>
-						{this.timingResend > 0 ? (
-							<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
-						) : (
-							<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
-								{strings('verify_otp.resend_now')}
-							</Text>
-						)}
-					</Text>
-				) : (
-					<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
-				)}
+				{!this.tooManyVerifyAttempts &&
+					(!this.tooManySendOtp ? (
+						<Text style={styles.textWrapper}>
+							<Text>{strings('verify_otp.not_receive_code')}</Text>
+							{this.timingResend > 0 ? (
+								<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
+							) : (
+								<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
+									{strings('verify_otp.resend_now')}
+								</Text>
+							)}
+						</Text>
+					) : (
+						<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
+					))}
 				{this.incorrentOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
 				{this.tooManyVerifyAttempts && (
 					<Text>
