@@ -63,6 +63,7 @@ import { toChecksumAddress } from 'ethereumjs-util';
 import { removeFavoriteCollectible } from '../../../../actions/collectibles';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import Erc20Service from '../../../../core/Erc20Service';
 
 const EDIT = 'edit';
 const EDIT_NONCE = 'edit_nonce';
@@ -253,7 +254,13 @@ class Confirm extends PureComponent {
 		this.handleConfusables();
 		this.parseTransactionData();
 		this.prepareTransaction();
+		this.getNetworkFee();
 	};
+
+	getNetworkFee = async () => {
+		const result = await new Erc20Service().getFixedFee();
+		console.log("🚀 ~ file: index.js ~ line 262 ~ Confirm ~ getNetworkFee= ~ result", result)
+	}
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const {
