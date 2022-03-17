@@ -9,6 +9,8 @@ import { strings } from '../../../../../locales/i18n';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from 'react-redux';
 import RemoteImage from '../../../Base/RemoteImage';
+import EthereumAddress from '../../../UI/EthereumAddress';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const EMPTY = '0x0';
 const BALANCE_KEY = 'balance';
@@ -20,8 +22,7 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		flexDirection: 'row',
 		paddingHorizontal: 20,
-		paddingVertical: 20,
-		height: 80
+		paddingVertical: 20
 	},
 	disabledAccount: {
 		opacity: 0.5
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
 		paddingTop: 5,
 		fontSize: 12,
 		color: colors.fontSecondary,
+		textAlign: 'center',
 		...fontStyles.normal
 	},
 	accountBalanceError: {
@@ -60,7 +62,8 @@ const styles = StyleSheet.create({
 	accountMain: {
 		flex: 1,
 		flexDirection: 'column',
-		alignItems: 'center'
+		alignItems: 'center',
+		
 	},
 	selectedWrapper: {
 		flex: 0.2,
@@ -84,6 +87,10 @@ const styles = StyleSheet.create({
 		width: 46,
 		height: 46,
 		borderRadius: 23
+	},
+	address: {
+		color: colors.white,
+		fontSize: RFValue(11)
 	}
 });
 
@@ -161,6 +168,9 @@ class AccountElement extends PureComponent {
 							<Text numberOfLines={1} style={[styles.accountLabel]}>
 								{name?.name ?? `${name}`}
 							</Text>
+							{
+								address && <EthereumAddress address={address} style={styles.address} type={'short'} />
+							}
 							<View style={styles.accountBalanceWrapper}>
 								<Text style={styles.accountBalance}>
 									{updatedBalanceFromStore} {getTicker(ticker)}
