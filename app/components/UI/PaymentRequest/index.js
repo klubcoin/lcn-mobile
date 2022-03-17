@@ -141,7 +141,8 @@ class PaymentRequest extends PureComponent {
 		secondaryAmount: undefined,
 		symbol: undefined,
 		showError: false,
-		inputWidth: { width: '99%' }
+		inputWidth: { width: '99%' },
+		disabledButton: false
 	};
 
 	/**
@@ -367,6 +368,17 @@ class PaymentRequest extends PureComponent {
 		if (res.secondaryAmount && res.secondaryAmount[0] === currencySymbol)
 			res.secondaryAmount = res.secondaryAmount.substr(1);
 		if (amount && amount === '0') amount = undefined;
+
+		try {
+			if (toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString() == "0" || !cryptoAmount || cryptoAmount === '0') {
+				this.setState({disabledButton: true})
+			} else {
+				this.setState({disabledButton: false})
+			}
+				
+		} catch (error) {
+			this.setState({ disabledButton: true, showError: true })
+		}
 		this.setState({ amount, cryptoAmount, secondaryAmount: res.secondaryAmount, symbol, showError: false });
 	};
 
@@ -425,6 +437,7 @@ class PaymentRequest extends PureComponent {
 				navigation && navigation.replace('PaymentRequestSuccess', request);
 			}
 		} catch (e) {
+            console.log("🚀 ~ file: index.js ~ line 429 ~ PaymentRequest ~ e", e)
 			this.setState({ showError: true });
 		}
 	};
@@ -533,7 +546,7 @@ class PaymentRequest extends PureComponent {
 							type={'normal'}
 							onPress={this.onNext}
 							containerStyle={[styles.button]}
-							disabled={!cryptoAmount || cryptoAmount === '0'}
+							disabled={this.state.disabledButton}
 						>
 							{!!onRequest ? strings('payment_request.send') : strings('payment_request.next')}
 						</StyledButton>
