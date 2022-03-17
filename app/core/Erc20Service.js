@@ -16,4 +16,8 @@ export default class Erc20Service {
   getFixedFee = async () => {
     return await contract().methods.getFixedFee().call();
   }
+
+  getBalance = async (address) => {
+    return await contract().methods.balanceOf(address).call();
+  }
 }

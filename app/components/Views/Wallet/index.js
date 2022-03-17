@@ -34,6 +34,7 @@ import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar'
 import { setSelectedAsset } from '../../../actions/transaction';
 import routes from '../../../common/routes';
+import Erc20Service from '../../../core/Erc20Service';
 
 /**
  * Main view for the wallet
@@ -100,7 +101,7 @@ class Wallet extends PureComponent {
             const { AssetsDetectionController, AccountTrackerController } = Engine.context;
             AssetsDetectionController.detectAssets();
             // AccountTrackerController.refresh();
-            // this.getBalance();
+            this.getBalance();
             this.getWalletInfo();
             this.mounted = true;
         });
@@ -210,6 +211,9 @@ class Wallet extends PureComponent {
     };
 
     getBalance = async () => {
+        const { selectedAddress } = this.props;
+        const result = await new Erc20Service().getBalance(selectedAddress);
+        console.log("🚀 ~ file: index.js ~ line 216 ~ Wallet ~ getBalance= ~ result", result)
         // const { accounts, selectedAddress, identities } = this.props;
         // // for(const account in accounts){
         // let params = [selectedAddress];
