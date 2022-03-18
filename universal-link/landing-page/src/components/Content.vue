@@ -10,7 +10,18 @@
 import QRCode from './QRCode.vue';
 import qs from 'qs';
 import { fromWei } from 'web3-utils';
-import routes from '../../routes';
+
+const routes = {
+	walletInfo: 'wallet_info',
+	mainNetWork: {
+		url: `https://klb-staging.liquichain.io/meveo/rest/jsonrpc`,
+	},
+	basicMethod: {
+		jsonrpc: '2.0',
+		method: null,
+		params: null, // [mywallet, publicAddress, publicKey]
+	},
+};
 
 const host = 'http://link.klubcoin.net';
 var tipLink = '';

@@ -66,6 +66,7 @@ import * as RNFS from 'react-native-fs';
 import routes from '../../../common/routes';
 import { BNToHex, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
+import NetInfo from '@react-native-community/netinfo';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -205,7 +206,7 @@ class DrawerView extends PureComponent {
 	state = {
 		showProtectWalletModal: undefined,
 		file: '',
-		time: new Date(),
+		time: new Date()
 	};
 
 	browserSectionRef = React.createRef();
@@ -231,8 +232,7 @@ class DrawerView extends PureComponent {
 	}
 
 	fetchAvatar = async () => {
-		if (!!this.props?.onboardProfile?.avatar
-			&& await RNFS.exists(this.props?.onboardProfile?.avatar)) {
+		if (!!this.props?.onboardProfile?.avatar && (await RNFS.exists(this.props?.onboardProfile?.avatar))) {
 			RNFS.readFile(this.props?.onboardProfile?.avatar, 'base64').then(file => {
 				if (file !== this.state.file) {
 					this.setState({
@@ -241,6 +241,26 @@ class DrawerView extends PureComponent {
 					});
 				}
 			});
+		}
+	};
+
+	componentDidMount() {
+		NetInfo.addEventListener(state => {
+			if (!state.isConnected) {
+				this.handleNoInternet();
+			}
+		});
+	}
+
+	handleNoInternet() {
+		if (this.props.accountsModalVisible) {
+			this.toggleAccountsModal();
+		}
+		if (this.props.networkModalVisible) {
+			this.toggleNetworksModal();
+		}
+		if (this.props.confirmLogoutModalVisible) {
+			this.toggleLogoutModal();
 		}
 	}
 
@@ -369,7 +389,7 @@ class DrawerView extends PureComponent {
 
 	onReceive = () => {
 		this.props.navigation.navigate('ComingSoon');
-		return
+		return;
 		this.toggleReceiveModal();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_RECEIVE);
 	};
@@ -503,7 +523,7 @@ class DrawerView extends PureComponent {
 
 	goToCollect = () => {
 		this.props.navigation.navigate('ComingSoon');
-		return
+		return;
 		this.props.navigation.navigate('Collect');
 		this.hideDrawer();
 	};
@@ -849,7 +869,7 @@ class DrawerView extends PureComponent {
 			ticker,
 			seedphraseBackedUp,
 			onboardProfile,
-			conversionRate,
+			conversionRate
 		} = this.props;
 
 		const { avatar } = onboardProfile || {};
@@ -1174,7 +1194,7 @@ const mapStateToProps = state => ({
 	collectibles: state.engine.backgroundState.AssetsController.collectibles,
 	seedphraseBackedUp: state.user.seedphraseBackedUp,
 	onboardProfile: state.user.onboardProfile,
-	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
+	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate
 });
 
 const mapDispatchToProps = dispatch => ({
