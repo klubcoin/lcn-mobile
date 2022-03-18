@@ -17,11 +17,11 @@ const NetworkList = {
 	[MAINNET]: {
 		name: `${displayName} Main Network`,
 		shortName: 'Klubcoin',
-		networkId: 1,
-		chainId: 76,
-		hexChainId: '0x1',
+		networkId: 7,
+		chainId: 1662,
+		hexChainId: '0x067E',
 		color: colors.blue,
-		networkType: 'mainnet'
+		networkType: 'rpc',
 	},
 	[ROPSTEN]: {
 		name: 'Ropsten Test Network',

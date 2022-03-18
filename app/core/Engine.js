@@ -72,9 +72,9 @@ class Engine {
 				infuraProjectId: AppConstants.MM_INFURA_PROJECT_ID || NON_EMPTY,
 				providerConfig: {
 					type: 'rpc',
-					rpcTarget: Routes.mainNetWork.url,
-					chainId: Routes.mainNetWork.chainId,
-					ticker: Routes.mainNetWork.ticker,
+					rpcTarget: Routes.klubToken.rpcUrl,
+					chainId: Routes.klubToken.chainId,
+					ticker: Routes.klubToken.symbol,
 					nickname: Routes.mainNetWork.name,
 					static: {
 						eth_sendTransaction: async (payload, next, end) => {

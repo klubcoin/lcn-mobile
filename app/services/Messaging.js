@@ -86,7 +86,7 @@ export default class Messaging {
   }
 
   _onError = (data) => {
-    console.warn('WS onError', data)
+    // console.warn('WS onError', data)
     this._onEvent(WSEvent.error, data);
   }
 

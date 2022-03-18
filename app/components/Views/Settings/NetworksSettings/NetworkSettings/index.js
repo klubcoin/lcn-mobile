@@ -140,7 +140,7 @@ class NetworkSettings extends PureComponent {
 				nickname = networkInformation.name;
 				chainId = networkInformation.chainId.toString();
 				editable = false;
-				rpcUrl = network == MAINNET ? routes.mainNetWork.url : allNetworksblockExplorerUrl + network;
+				rpcUrl = network == MAINNET ? routes.klubToken.rpcUrl : allNetworksblockExplorerUrl + network;
 				ticker = strings('unit.eth');
 			} else {
 				const networkInformation = frequentRpcList.find(({ rpcUrl }) => rpcUrl === network);
