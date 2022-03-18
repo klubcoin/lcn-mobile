@@ -365,7 +365,7 @@ class Confirm extends PureComponent {
 		const parsedTicker = getTicker(ticker);
 		const transactionFee = `${renderFromWei(weiTransactionFee)} ${parsedTicker}`;
 
-		this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } })
+		if (!networkFee) this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } })
 		if (selectedAsset.isETH) {
 			fromAccountBalance = `${renderFromWei(accounts[fromSelectedAddress].balance)} ${parsedTicker}`;
 			transactionValue = `${renderFromWei(value)} ${parsedTicker}`;
@@ -498,11 +498,11 @@ class Confirm extends PureComponent {
 			transactionState: { transaction },
 			showCustomNonce
 		} = this.props;
-		const { fromSelectedAddress } = this.state;
+		const { fromSelectedAddress, networkFee } = this.state;
 		const { nonce } = this.props.transaction;
 		const transactionToSend = { ...transaction };
-		transactionToSend.gas = BNToHex(transaction.gas);
-		transactionToSend.gasPrice = BNToHex(transaction.gasPrice);
+		transactionToSend.gas = BNToHex(networkFee ? networkFee.gas : transaction.gas);
+		transactionToSend.gasPrice = BNToHex(networkFee ? networkFee.gasPrice : transaction.gasPrice);
 		transactionToSend.from = fromSelectedAddress;
 		if (showCustomNonce && nonce) transactionToSend.nonce = BNToHex(nonce);
 		return transactionToSend;
