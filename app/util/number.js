@@ -180,6 +180,15 @@ export function renderFromTokenMinimalUnit(tokenValue, decimals, decimalsToShow 
 	return renderMinimalUnit;
 }
 
+export function renderFromTokenMinimalUnitNumber(tokenValue, decimals, decimalsToShow = 5) {
+	const minimalUnit = fromTokenMinimalUnit(tokenValue, decimals);
+	const minimalUnitNumber = parseFloat(minimalUnit);
+	let renderMinimalUnit;
+	const base = Math.pow(10, decimalsToShow);
+	renderMinimalUnit = (Math.round(minimalUnitNumber * base) / base).toString();
+	return renderMinimalUnit;
+}
+
 /**
  * Converts two fiat amounts into one with their respective currency, showing up to 5 decimals
  *
