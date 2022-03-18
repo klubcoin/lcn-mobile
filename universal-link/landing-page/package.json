@@ -9,8 +9,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "cli.js": "^1.0.2",
     "core-js": "^3.6.5",
     "express": "^4.17.2",
+    "npm-cli": "^0.1.0",
     "qrcode.vue": "^3.3.3",
     "qs": "^6.10.2",
     "vue": "^3.0.0",
