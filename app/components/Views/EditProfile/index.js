@@ -93,7 +93,7 @@ class EditProfile extends PureComponent {
 			timeoutCheckUniqueEmail: observable,
 			isValidEmail: observable,
 			isValidPhoneNumber: observable,
-			isCheckingEmail: observable,
+			isCheckingEmail: observable
 		});
 	}
 
@@ -113,6 +113,9 @@ class EditProfile extends PureComponent {
 				.split('-')
 				.slice(1, phone?.split('-').length)
 				.join('-') ?? '';
+		if (!phone) {
+			this.isValidPhoneNumber = false;
+		}
 		this.preData = {
 			phone: phone
 				?.replace('+', '')
@@ -340,7 +343,7 @@ class EditProfile extends PureComponent {
 		// 	showError(strings('profile.missing_phone'));
 		// 	return;
 		// }
-		if (phone && (!REGEX_PHONE_NUMBER.test(phone) || !this.countryCode)) {
+		if ((phone && !REGEX_PHONE_NUMBER.test(phone)) || !this.countryCode) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
@@ -359,7 +362,7 @@ class EditProfile extends PureComponent {
 		const firstname = this.firstname?.trim();
 		const lastname = this.lastname?.trim();
 		const email = this.email?.trim().toLowerCase();
-		const phone = `+${this.countryCode}-${this.phone}`?.trim();
+		const phone = this.countryCode && this.phone ? `+${this.countryCode}-${this.phone}`?.trim() : undefined;
 
 		const isValid = this.isDataValid();
 		if (!isValid) {
@@ -384,7 +387,6 @@ class EditProfile extends PureComponent {
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
 			const params = [username, selectedAddress, publicInfo, privateInfo];
-
 			//Update wallet info on server
 			Api.postRequest(
 				routes.walletUpdate,
