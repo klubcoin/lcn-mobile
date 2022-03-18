@@ -2,11 +2,10 @@
 	<div>
 		<ImageLink
 			class="site-logo"
-			href="https://www.liquichain.io/"
-			source="https://www.liquichain.io/assets/images/logo-white.svg"
+			href="https://klubcoin.net/"
+			source="https://klubcoin.net/wp-content/uploads/2021/12/klubcoin_horinzontal_logo_home.png"
 		/>
 
-		<h1 class="app-slogan">A sustainable blockchain for the people.</h1>
 		<Content />
 
 		<div class="app-links">
@@ -18,6 +17,10 @@
 				href="https://apps.apple.com/us/app/treadmeal/id1581708293"
 				:source="require('@/assets/apple_store.png')"
 			/>
+		</div>
+
+		<div class="deeplink">
+			<h3>If you already installed the app, click <a :href="deeplink">here</a></h3>
 		</div>
 	</div>
 </template>
@@ -31,7 +34,10 @@ export default {
 	components: {
 		ImageLink,
 		Content
-	}
+	},
+	computed: {
+		deeplink: () => window.location.href.replace(/http(s)?:\/\/[^/]+\//, 'klubcoin://'),
+	},
 };
 </script>
 
@@ -39,7 +45,7 @@ export default {
 body {
 	display: flex;
 	flex: 1;
-	background: #310a6b;
+	background: #000;
 	color: #fff;
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -69,5 +75,20 @@ body {
 }
 .image-link:last-child {
 	margin-left: 20px;
+}
+
+.bg-logo {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	flex: 1;
+	z-index: -1000;
+}
+.deeplink {
+	margin-top: 50px;
 }
 </style>
