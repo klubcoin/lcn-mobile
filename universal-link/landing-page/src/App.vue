@@ -10,11 +10,11 @@
 
 		<div class="app-links">
 			<ImageLink
-				href="https://play.google.com/store/apps/details?id=com.liquichain"
+				href="https://play.google.com/store/apps/details?id=com.klubcoin"
 				:source="require('@/assets/google_play.png')"
 			/>
 			<ImageLink
-				href="https://apps.apple.com/us/app/treadmeal/id1581708293"
+				href="https://apps.apple.com/us/app/treadmeal/id1609590427"
 				:source="require('@/assets/apple_store.png')"
 			/>
 		</div>
