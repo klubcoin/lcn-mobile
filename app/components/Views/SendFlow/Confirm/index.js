@@ -352,19 +352,20 @@ class Confirm extends PureComponent {
 			},
 			ticker
 		} = this.props;
-		const { fromSelectedAddress, over } = this.state;
+		const { fromSelectedAddress, over, networkFee } = this.state;
 		let fromAccountBalance,
 			transactionValue,
 			transactionValueFiat,
 			transactionTo,
 			transactionTotalAmount,
 			transactionTotalAmountFiat;
-		const weiTransactionFee = gas && gas.mul(gasPrice);
+		const weiTransactionFee = networkFee ? networkFee.weiTransactionFee : gas && gas.mul(gasPrice);
 		const valueBN = hexToBN(value);
 		const transactionFeeFiat = weiToFiat(weiTransactionFee, conversionRate, currentCurrency);
 		const parsedTicker = getTicker(ticker);
 		const transactionFee = `${renderFromWei(weiTransactionFee)} ${parsedTicker}`;
 
+		this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } })
 		if (selectedAsset.isETH) {
 			fromAccountBalance = `${renderFromWei(accounts[fromSelectedAddress].balance)} ${parsedTicker}`;
 			transactionValue = `${renderFromWei(value)} ${parsedTicker}`;
@@ -427,7 +428,7 @@ class Confirm extends PureComponent {
 			const transactionValueFiatNumber = balanceToFiatNumber(transferValue, conversionRate, exchangeRate);
 			transactionTotalAmount = (
 				<Text style={styles.totalAmount}>
-					{transactionValue} + ${renderFromWei(weiTransactionFee)} {parsedTicker}
+					{transactionValue} + {renderFromWei(weiTransactionFee)} {parsedTicker}
 				</Text>
 			);
 			transactionTotalAmountFiat = (
