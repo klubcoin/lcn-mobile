@@ -12,7 +12,7 @@ import qs from 'qs';
 import { fromWei } from 'web3-utils';
 import routes from '../../routes';
 
-const host = 'http://dev.telecelplay.io';
+const host = 'http://link.klubcoin.net';
 var tipLink = '';
 var tipValue = 0;
 var symbol = '';
