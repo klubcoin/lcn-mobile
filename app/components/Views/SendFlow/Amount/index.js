@@ -60,6 +60,7 @@ import { BaseController } from '@metamask/controllers';
 import API from 'services/api';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import Erc20Service from '../../../../core/Erc20Service';
 
 const { hexToBN, BNToHex } = util;
 
@@ -363,6 +364,7 @@ class Amount extends PureComponent {
 			setTransactionObject,
 			selectedAddress
 		} = this.props;
+		const { networkFee } = this.state;
 
 		const transactionObject = {
 			...transaction,
@@ -370,6 +372,12 @@ class Amount extends PureComponent {
 			selectedAsset,
 			from: selectedAddress
 		};
+
+		if (networkFee) {
+			const { gas, gasPrice } = networkFee;
+			transactionObject.gas = gas;
+			transactionObject.gasPrice = gasPrice;
+		}
 
 		if (selectedAsset.tokenId) {
 			const collectibleTransferTransactionProperties = this.getCollectibleTranferTransactionProperties();
@@ -398,6 +406,7 @@ class Amount extends PureComponent {
 			selectedAsset,
 			transactionState: { transaction, transactionTo }
 		} = this.props;
+		const { networkFee } = this.state;
 
 		if (selectedAsset.isETH) {
 			transaction.data = undefined;
@@ -416,6 +425,11 @@ class Amount extends PureComponent {
 			});
 			transaction.to = selectedAsset.address;
 			transaction.value = '0x0';
+		}
+		if (networkFee) {
+			const { gas, gasPrice } = networkFee;
+			transaction.gas = gas;
+			transaction.gasPrice = gasPrice;
 		}
 		prepareTransaction(transaction);
 	};
@@ -458,9 +472,20 @@ class Amount extends PureComponent {
 			this.setState({ amountError });
 			return !!amountError;
 		}
-		
+
 	};
 
+	getNetworkFee = async ({ from, to }) => {
+		const { selectedAsset } = this.props;
+		const result = await new Erc20Service().getFixedFee();
+		const base = Math.pow(10, selectedAsset.decimals);
+		const networkFee = {
+			gas: hexToBN('0x1'),
+			gasPrice: toWei(parseFloat(result) / base),
+		}
+		this.setState({ networkFee });
+		return networkFee;
+	}
 	/**
 	 * Estimate transaction gas with information available
 	 */
@@ -469,7 +494,7 @@ class Amount extends PureComponent {
 			transaction: { from },
 			transactionTo
 		} = this.props.transactionState;
-		const { gas, gasPrice } = await getGasPriceByChainId({
+		const { gas, gasPrice } = await this.getNetworkFee({
 			from,
 			to: transactionTo
 		});
@@ -594,7 +619,7 @@ class Amount extends PureComponent {
 		// this.setState({ assetsModalVisible: !assetsModalVisible });
 	};
 
-	handleSelectedAssetBalance = ( selectedAsset ) => {
+	handleSelectedAssetBalance = (selectedAsset) => {
 		// const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
 		// if (accounts && accounts[selectedAddress]) {
 		// 	this.setState({
@@ -608,7 +633,7 @@ class Amount extends PureComponent {
 		} else {
 			currentBalance = `${renderFromTokenMinimalUnit(contractBalances[address], decimals)} ${symbol}`;
 		}
-		this.setState({ currentBalance: currentBalance});
+		this.setState({ currentBalance: currentBalance });
 
 	};
 
@@ -773,9 +798,9 @@ class Amount extends PureComponent {
 			internalPrimaryCurrencyIsCrypto,
 			currentBalance
 		} = this.state;
-		console.log({
-			currentBalance
-		});
+		// console.log({
+		// 	currentBalance
+		// });
 
 		const { currentCurrency } = this.props;
 		return (
