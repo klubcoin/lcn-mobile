@@ -20,7 +20,7 @@ export default {
 		hostDomain: 'klubcoin.net',
 		blockExploreUrl: 'https://etherscan.io/token/0xf993c2749a21d10a4a36fe5dda23830b415d9e0d',
 		accountUrl: Config.SERVER_ADDRESS,
-		helpSupportUrl: 'https://docs.liquichain.io',
+		helpSupportUrl: 'https://app.klubcoin.net/docs.html',
 		reportIssueUrl: 'https://github.com/klubcoin/lcn-mobile/issues',
 		portalUrl: 'https://klubcoin.net',
 		contactUrl: 'https://klubcoin.net/contact',

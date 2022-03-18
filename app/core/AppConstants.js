@@ -71,9 +71,9 @@ export default {
 	},
 	MAX_SAFE_CHAIN_ID: 4503599627370476,
 	URLS: {
-		TERMS_AND_CONDITIONS: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/term_conditions.html`,
-		PRIVACY_POLICY: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/privacy.html`,
-		LEARN_MORE: `${Config.SERVER_ADDRESS}/meveo/frontend/default/website/learnmore.html`,
+		TERMS_AND_CONDITIONS: `https://app.klubcoin.net/terms.html`,
+		PRIVACY_POLICY: `https://app.klubcoin.net/privacy.html`,
+		LEARN_MORE: `https://app.klubcoin.net/docs.html`,
 		CONNECTIVITY_ISSUES: 'https://liquichain.io',
 		NFT: 'https://liquichain.io'
 	},
