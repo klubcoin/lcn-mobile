@@ -157,12 +157,12 @@ class TransactionReviewFeeCard extends PureComponent {
 							<Text primary bold>
 								{strings('transaction.gas_fee')}
 							</Text>
-							<TouchableOpacity onPress={edit} disabled={!gasEstimationReady}>
+							{/* <TouchableOpacity onPress={edit} disabled={!gasEstimationReady}>
 								<Text link bold>
 									{'  '}
 									{strings('transaction.edit')}
 								</Text>
-							</TouchableOpacity>
+							</TouchableOpacity> */}
 						</Summary.Col>
 						{this.renderIfGasEstimationReady(
 							<Text primary bold upper style={warningGasPriceHigh ? styles.over : styles.primary}>
