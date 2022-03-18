@@ -20,4 +20,8 @@ export default class Erc20Service {
   getBalance = async (address) => {
     return await contract().methods.balanceOf(address).call();
   }
+
+  transfer = async (to, amount) => {
+    return await contract().methods.transfer(to, amount).send();
+  }
 }
