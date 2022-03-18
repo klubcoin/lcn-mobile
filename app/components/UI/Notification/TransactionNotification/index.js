@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 	modalContainer: {
 		width: '90%',
 		borderRadius: 10,
-		backgroundColor: colors.white
+		backgroundColor: colors.primaryFox
 	},
 	titleWrapper: {
 		borderBottomWidth: StyleSheet.hairlineWidth,
