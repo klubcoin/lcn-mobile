@@ -64,6 +64,8 @@ export function fromWei(value = 0, unit = 'ether') {
  * @returns {string} - String containing the new number
  */
 export function fromTokenMinimalUnit(minimalInput, decimals) {
+	if (!minimalInput || minimalInput == '0xNaN') return '0';
+
 	minimalInput = addHexPrefix(Number(minimalInput).toString(16));
 	let minimal = numberToBN(minimalInput);
 	const negative = minimal.lt(new BN(0));
