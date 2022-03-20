@@ -27,7 +27,7 @@ import { newAssetTransaction } from '../../../actions/transaction';
 
 import Device from '../../../util/Device';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import { renderFiat, balanceToFiat, hexToBN, weiToFiat } from '../../../util/number';
+import { renderFiat, balanceToFiat, hexToBN, weiToFiat, fromWei } from '../../../util/number';
 import { showInfo } from '../../../util/notify';
 
 import { renderAccountName } from '../../../util/address';
@@ -44,6 +44,7 @@ import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import Helper from 'common/Helper';
 import RemoteImage from '../../Base/RemoteImage';
 import styles from './styles/index';
+import routes from '../../../common/routes';
 
 /**
  * View that's part of the <Wallet /> component
@@ -256,7 +257,7 @@ class AccountOverview extends PureComponent {
 		const { accountLabelEditable, accountLabel } = this.state;
 		const { avatar } = onboardProfile || {};
 
-		const balanceFiat = weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
+		const balanceFiat = balance ? `${parseFloat(fromWei(hexToBN(balance)))} ${routes.klubToken.symbol}` : `0x00`; //weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
 
 		return (
 			<View ref={this.scrollViewContainer} collapsable={false}>

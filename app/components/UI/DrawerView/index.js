@@ -64,7 +64,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
 import * as RNFS from 'react-native-fs';
 import routes from '../../../common/routes';
-import { BNToHex, weiToFiat } from '../../../util/number';
+import { BNToHex, fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -886,7 +886,7 @@ class DrawerView extends PureComponent {
 			// 		: null;
 		}
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
-		const balanceFiat = weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
+		const balanceFiat = account?.balance ? `${parseFloat(fromWei(hexToBN(account?.balance)))} ${routes.klubToken.symbol}` : `0x00`;// weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
 
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
