@@ -451,6 +451,7 @@ class Dashboard extends PureComponent {
 		}
 
 		// const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+		const balanceFiat = weiToFiat(hexToBN(balance || 0), conversionRate, currentCurrency);
 
 		return (
 			<View style={styles.wrapper}>
@@ -482,7 +483,7 @@ class Dashboard extends PureComponent {
                                 $100,000,000
                             </Text>
                             <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} /> */}
-							<Text style={styles.comingSoon}>{strings('receive_request.coming_soon')}</Text>
+							<Text style={styles.comingSoon}>{balanceFiat}</Text>
 						</View>
 					</View>
 				</View>
