@@ -1,0 +1,11 @@
+--- a/node_modules/@metamask/controllers/dist/transaction/TransactionController.js	2022-03-20 22:18:34.000000000 +0700
++++ b/node_modules/@metamask/controllers/dist/transaction/TransactionController.js	2022-03-20 22:26:46.000000000 +0700
+@@ -305,7 +305,7 @@
+                 transactionMeta.status = TransactionStatus.approved;
+                 transactionMeta.transaction.nonce =
+                     nonce ||
++                        (yield util_1.query(this.ethQuery, 'getTransactionCount', [from, 'pending']));
+-                        (yield util_1.query(this.ethQuery, 'getTransactionCount', [from]));
+                 transactionMeta.transaction.chainId = parseInt(currentChainId, undefined);
+                 const ethTransaction = new ethereumjs_tx_1.default(Object.assign({}, transactionMeta.transaction));
+                 yield this.sign(ethTransaction, transactionMeta.transaction.from);
