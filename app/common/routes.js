@@ -12,7 +12,7 @@ export default {
 	mainNetWork: {
 		name: `${displayName} Main Network`,
 		url: `${Config.SERVER_ADDRESS}/meveo/rest/jsonrpc`,
-		chainId: '76',
+		chainId: '1662',
 		symbol: null,
 		ticker: 'KLUB',
 		coin: 'Klubcoin',

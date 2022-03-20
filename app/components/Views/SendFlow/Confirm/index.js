@@ -504,7 +504,6 @@ class Confirm extends PureComponent {
 		transactionToSend.gas = BNToHex(transaction.gas);
 		transactionToSend.gasPrice = BNToHex(transaction.gasPrice);
 		transactionToSend.from = fromSelectedAddress;
-		transactionToSend.to = transactionTo;
 		if (showCustomNonce && nonce) transactionToSend.nonce = BNToHex(nonce);
 		return transactionToSend;
 	};
