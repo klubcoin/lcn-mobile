@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Application requires access to photo to upload your avatar</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -28,10 +26,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>liquichain</string>
+			<string>klubcoin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>liquichain</string>
+				<string>klubcoin</string>
 			</array>
 		</dict>
 	</array>
@@ -75,6 +73,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Application requires access to photo to upload your avatar</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Application requires camera access to scan QR code address</string>
 	<key>NSFaceIDUsageDescription</key>

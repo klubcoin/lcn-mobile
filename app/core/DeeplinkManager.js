@@ -190,7 +190,13 @@ class DeeplinkManager {
 				handled();
 				this.handleEthereumUrl(url, origin);
 				break;
-
+			case 'klubcoin':
+				handled();
+				this.handleEthereumUrl(
+					url.replace(`klubcoin://send/`, 'ethereum:'),
+					origin
+				);
+				break;
 			// Specific to the browser screen
 			// For ex. navigate to a specific dapp
 			case 'dapp':
