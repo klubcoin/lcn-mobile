@@ -16,6 +16,7 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
+import AppConstants from '../../../core/AppConstants';
 
 const explain_backup_seedphrase = require('../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
 
@@ -34,7 +35,7 @@ const AccountBackupStep1B = props => {
 	const learnMore = () => {
 		setWhySecureWalletModal(false);
 		props.navigation.navigate('Webview', {
-			url: routes.mainNetWork.helpSupportUrl,
+			url: AppConstants.URLS.WHY_IT_IMPORTANT,
 			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 	};
