@@ -121,7 +121,7 @@ export default class AppInformation extends PureComponent {
 	};
 
 	onSupportCenter = () => {
-		const url = routes.mainNetWork.helpSupportUrl;
+		const url = AppConstants.URLS.SUPPORT_CENTER;
 		this.goTo(url, strings('drawer.metamask_support', { appName: displayName }));
 	};
 

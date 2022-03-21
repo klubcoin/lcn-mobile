@@ -76,7 +76,8 @@ export default {
 		LEARN_MORE: `https://app.klubcoin.net/docs.html`,
 		CONNECTIVITY_ISSUES: 'https://liquichain.io',
 		NFT: 'https://liquichain.io',
-		WHY_IT_IMPORTANT: 'https://app.klubcoin.net/why-it-important.html'
+		WHY_IT_IMPORTANT: 'https://app.klubcoin.net/why-it-important.html',
+		SUPPORT_CENTER: 'https://app.klubcoin.net/support-center.html'
 	},
 	ERRORS: {
 		INFURA_BLOCKED_MESSAGE: 'EthQuery - RPC Error - This service is not available in your country'
