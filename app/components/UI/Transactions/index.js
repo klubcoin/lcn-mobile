@@ -390,6 +390,8 @@ class Transactions extends PureComponent {
 				? submittedTransactions.concat(confirmedTransactions)
 				: this.props.transactions;
 
+		transactions.sort((a, b) => b.time - a.time);
+
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<View style={styles.wrapper} testID={'transactions-screen'}>
