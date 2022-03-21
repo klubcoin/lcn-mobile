@@ -253,8 +253,8 @@ class Dashboard extends PureComponent {
 						.then(value => {
 							preferences.setOnboardProfile(
 								Object.assign(value, {
-									firstName: name2 ? name2.split(' ')[0] : '',
-									lastName: name2
+									firstname: name2 ? name2.split(' ')[0] : '',
+									lastname: name2
 										? name2
 											.split(' ')
 											.slice(1, name2.split(' ').length)
