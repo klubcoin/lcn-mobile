@@ -48,6 +48,9 @@ const brandStyles = StyleSheet.create({
 	},
 	verifyEmailButton: {
 		minHeight: 60
+	},
+	image: {
+		marginTop:12
 	}
 });
 

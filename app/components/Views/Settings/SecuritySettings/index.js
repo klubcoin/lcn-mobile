@@ -9,7 +9,8 @@ import {
 	ActivityIndicator,
 	TouchableOpacity,
 	Keyboard,
-	DeviceEventEmitter
+	DeviceEventEmitter,
+	Dimensions
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -55,9 +56,11 @@ import { refWebRTC } from '../../../../services/WebRTC';
 import { displayName } from '../../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import ledgerAccessories from '../../../../images/ledger_accessories.jpg';
+import ScaleImage from 'react-native-scalable-image';
 
 const isIos = Device.isIos();
-
+const { width } = Dimensions.get('window');
 const Heading = ({ children, first }) => (
 	<View style={[styles.setting, first && styles.firstSetting]}>
 		<Text style={[styles.title, styles.heading]}>{children}</Text>
@@ -558,6 +561,7 @@ class Settings extends PureComponent {
 								<Text style={styles.title}>{strings('app_settings.protect_your_wallet')}</Text>
 							</Text>
 							{/* <SeedPhraseVideo style={styles.seedPhraseVideo} /> */}
+							<ScaleImage source={ledgerAccessories} width={width - 80} style={[styles.image]} />
 							<Text style={styles.desc}>{strings('app_settings.protect_desc')}</Text>
 							<SettingsNotification isWarning={!seedphraseBackedUp}>
 								<Text

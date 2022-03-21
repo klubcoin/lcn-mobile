@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
 	modalActionView: {
 		borderTopWidth: 0
 	},
-	verifyEmailButton: {}
+	verifyEmailButton: {},
+	image: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

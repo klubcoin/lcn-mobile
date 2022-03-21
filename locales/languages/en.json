@@ -640,7 +640,7 @@
 		"protect_cta": "Protect",
 		"protect_title": "Protect your wallet",
 		"video_failed": "Video Failed to Load.",
-		"protect_desc": "Protect your wallet by saving your Secret Recovery Phrase in various places like on a piece of paper, password manager and/or the cloud.",
+		"protect_desc": "Protect your wallet by saving your Secret Recovery Phrase in various places like on a piece of paper, password manager or by using one of the great recovery phrase accessories of our partner Ledger.",
 		"seedphrase_not_backed_up": "Important! Secret Recovery Phrase not backed up",
 		"seedphrase_backed_up": "Secret Recovery Phrase backed up",
 		"back_up_now": "Back up now",
