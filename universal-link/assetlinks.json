@@ -32,5 +32,17 @@
 				"66:82:5A:65:59:D5:92:A7:1C:BD:DE:17:95:AD:DF:03:80:A0:D2:BD:07:50:37:D3:C2:9B:CE:FC:58:33:53:0C"
 			]
 		}
+	},
+	{
+		"relation": [
+			"delegate_permission/common.handle_all_urls"
+		],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.liquichain",
+			"sha256_cert_fingerprints": [
+				"66:82:5A:65:59:D5:92:A7:1C:BD:DE:17:95:AD:DF:03:80:A0:D2:BD:07:50:37:D3:C2:9B:CE:FC:58:33:53:0C"
+			]
+		}
 	}
 ]
