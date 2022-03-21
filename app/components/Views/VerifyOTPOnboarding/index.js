@@ -223,9 +223,9 @@ class VerifyOTPOnboarding extends PureComponent {
 				<Text style={styles.congratulations}>{strings('verify_otp.congratulations')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text1')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text2')}</Text>
-				<Text style={styles.learnMore} onPress={() => this.onLearnMore()}>
+				{/* <Text style={styles.learnMore} onPress={() => this.onLearnMore()}>
 					{strings('verify_otp.learn_more')}
-				</Text>
+				</Text> */}
 				<View style={styles.footer}>
 					<StyledButton type={'normal'} onPress={() => this.onDone()}>
 						{strings('verify_otp.done')}
