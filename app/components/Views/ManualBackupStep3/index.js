@@ -19,6 +19,7 @@ import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS, BACKUP, BACKUP_TY
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { displayName } from '../../../../app.json';
+import AppConstants from '../../../core/AppConstants';
 
 const hardwareBackPress = () => ({});
 const HARDWARE_BACK_PRESS = 'hardwareBackPress';
@@ -68,7 +69,7 @@ class ManualBackupStep3 extends PureComponent {
 
 	learnMore = () =>
 		this.props.navigation.navigate('Webview', {
-			url: routes.mainNetWork.helpSupportUrl,
+			url: AppConstants.URLS.WHY_IT_IMPORTANT,
 			title: strings('drawer.metamask_support', { appName: displayName })
 		});
 

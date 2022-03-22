@@ -1,8 +1,9 @@
 import Web3 from 'web3';
 import Engine from './Engine';
 import ContractABIs from './ABIs';
+import routes from '../common/routes';
 
-const contractAddress = '0x469f64a498F9f3751b37C1075556EBF5e3eA5616'; //'0x7Bd6050C39252103cEad4501DA5069481aB4F172';
+const contractAddress = routes.klubToken.address;
 const rpcProvider = 'https://testnet.liquichain.io/rpc';
 
 const contract = () => {
@@ -14,7 +15,7 @@ const contract = () => {
 export default class Erc20Service {
 
   getFixedFee = async () => {
-    return await contract().methods.getFixedFee().call();
+    return await contract().methods.fixedFee().call();
   }
 
   getBalance = async (address) => {

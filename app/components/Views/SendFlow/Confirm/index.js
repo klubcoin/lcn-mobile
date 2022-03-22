@@ -260,8 +260,7 @@ class Confirm extends PureComponent {
 
 	getNetworkFee = async () => {
 		const result = await new Erc20Service().getFixedFee();
-		console.log("🚀 ~ file: index.js ~ line 262 ~ Confirm ~ getNetworkFee= ~ result", result)
-	}
+	};
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const {
@@ -365,8 +364,11 @@ class Confirm extends PureComponent {
 		const transactionFeeFiat = weiToFiat(weiTransactionFee, conversionRate, currentCurrency);
 		const parsedTicker = getTicker(ticker);
 		const transactionFee = `${renderFromWei(weiTransactionFee)} ${parsedTicker}`;
+		let errorMessage;
+		const senderBalance = renderFromWei(accounts[fromSelectedAddress].balance);
+		const fee = renderFromWei(weiTransactionFee);
 
-		if (!networkFee) this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } })
+		if (!networkFee) this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } });
 		if (selectedAsset.isETH) {
 			fromAccountBalance = `${renderFromWei(accounts[fromSelectedAddress].balance)} ${parsedTicker}`;
 			transactionValue = `${renderFromWei(value)} ${parsedTicker}`;
@@ -383,6 +385,9 @@ class Confirm extends PureComponent {
 				</Text>
 			);
 			transactionTo = to;
+			if (!senderBalance < +fee + +renderFromWei(value)) {
+				errorMessage = strings('transaction.insufficient');
+			}
 		} else if (selectedAsset.tokenId) {
 			fromAccountBalance = `${renderFromWei(accounts[from].balance)} ${parsedTicker}`;
 			const collectibleTransferInformation =
@@ -437,6 +442,9 @@ class Confirm extends PureComponent {
 					{renderFiatAddition(transactionValueFiatNumber, transactionFeeFiatNumber, currentCurrency)}
 				</Text>
 			);
+			if (parseFloat(senderBalance) < parseFloat(fee) + parseFloat(transferValue)) {
+				errorMessage = strings('transaction.insufficient');
+			}
 		}
 
 		this.setState(
@@ -451,11 +459,17 @@ class Confirm extends PureComponent {
 				transactionTotalAmountFiat
 			},
 			() => {
-				this.validateAmount({
-					...this.props.transactionState.transaction,
-					from: fromSelectedAddress,
-					value
-				});
+				if (errorMessage) {
+					this.setState({
+						errorMessage
+					});
+				} else {
+					this.validateAmount({
+						...this.props.transactionState.transaction,
+						from: fromSelectedAddress,
+						value
+					});
+				}
 			}
 		);
 	};
@@ -568,6 +582,9 @@ class Confirm extends PureComponent {
 			}
 		} else {
 			errorMessage = strings('transaction.invalid_amount');
+		}
+		if (this.validateGas()) {
+			return;
 		}
 		this.setState({ errorMessage }, () => {
 			if (errorMessage) {
@@ -825,7 +842,6 @@ class Confirm extends PureComponent {
 		const checksummedAddress = transactionTo && toChecksumAddress(transactionTo);
 		const existingContact = checksummedAddress && addressBook[network] && addressBook[network][checksummedAddress];
 		const displayExclamation = !existingContact && !!confusableCollection.length;
-
 		const AdressToComponent = () => (
 			<AddressTo
 				addressToReady
