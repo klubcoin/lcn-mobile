@@ -211,7 +211,7 @@ export default class TipperModal extends PureComponent {
         const meta = {
             title: routes.mainNetWork.name,
             chainId: routes.mainNetWork.chainId,
-            url: routes.mainNetWork.blockExploreUrl,
+            url: routes.mainNetWork.blockExplorerUrl,
             icon: 'logo.png',
         };
 

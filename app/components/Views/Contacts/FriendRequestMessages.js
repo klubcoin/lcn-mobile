@@ -12,7 +12,7 @@ export const LiquichainNameCard = (selectedAddress, name, type) => ({
   meta: {
     title: routes.mainNetWork.name,
     chainId: routes.mainNetWork.chainId,
-    url: routes.mainNetWork.blockExploreUrl,
+    url: routes.mainNetWork.blockExplorerUrl,
     icon: 'logo.png',
   },
   data: {

@@ -30,7 +30,7 @@ export function getEtherscanTransactionUrl(network, tx_hash) {
  * @returns - string
  */
 export function getEtherscanBaseUrl(network) {
-	if (network.toLowerCase() === MAINNET) return routes.mainNetWork.blockExploreUrl;
+	if (network.toLowerCase() === MAINNET) return routes.mainNetWork.blockExplorerUrl;
 	const subdomain = `${network.toLowerCase()}.`;
 	return `https://${subdomain}etherscan.io`;
 }

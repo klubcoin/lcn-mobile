@@ -199,6 +199,7 @@ class Dashboard extends PureComponent {
 		this.getCurrentConversion();
 		this.announceOnline();
 		this.addDefaultToken();
+		this.addDefaultRpcList();
 		this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
 	};
 
@@ -226,6 +227,14 @@ class Dashboard extends PureComponent {
 		const exists = tokens.find(e => e.address == address);
 		if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
 	};
+
+	addDefaultRpcList = () => {
+		const { PreferencesController } = Engine.context;
+		const { rpcUrl, chainId, symbol} = routes.klubToken;
+		const { name, blockExplorerUrl } = routes.mainNetWork;
+
+		PreferencesController.addToFrequentRpcList(rpcUrl, chainId, symbol, name, { blockExplorerUrl });
+	}
 
 	async getWalletInfo() {
 		const { selectedAddress } = this.props;
