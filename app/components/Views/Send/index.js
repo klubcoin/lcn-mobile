@@ -29,6 +29,8 @@ import TransactionTypes from '../../../core/TransactionTypes';
 import { MAINNET } from '../../../constants/network';
 import BigNumber from 'bignumber.js';
 import { WalletDevice } from '@metamask/controllers/';
+import Erc20Service from '../../../core/Erc20Service';
+import { toWei } from 'web3-utils';
 
 const REVIEW = 'review';
 const EDIT = 'edit';
@@ -121,7 +123,8 @@ class Send extends PureComponent {
 		transactionKey: undefined,
 		ready: false,
 		transactionConfirmed: false,
-		transactionSubmitted: false
+		transactionSubmitted: false,
+		networkFee: {}
 	};
 
 	mounted = false;
@@ -181,6 +184,17 @@ class Send extends PureComponent {
 		this.mounted = true;
 		await this.reset();
 		this.checkForDeeplinks();
+	}
+
+	getNetworkFee = async (selectedAsset) => {
+		const result = await new Erc20Service().getFixedFee();
+		const base = Math.pow(10, selectedAsset.decimals);
+		const networkFee = {
+			gas: hexToBN("0x1"),
+			gasPrice: toWei((parseFloat(result) / base).toString()),
+		}
+		this.setState({ networkFee });
+		return networkFee;
 	}
 
 	/**
@@ -284,6 +298,7 @@ class Send extends PureComponent {
 				const selectedAsset = await this.handleTokenDeeplink(target_address);
 				const { ensRecipient, to } = this.handleNewTxMetaRecipient(parameters.address);
 				const tokenAmount = (parameters.uint256 && new BigNumber(parameters.uint256).toString(16)) || '0';
+				await this.getNetworkFee(selectedAsset);
 				newTxMeta = {
 					assetType: 'ERC20',
 					type: 'INDIVIDUAL_TOKEN_TRANSACTION',
@@ -321,6 +336,17 @@ class Send extends PureComponent {
 			// TODO: We should add here support for sending tokens
 			// or calling smart contract functions
 		}
+
+		if (!newTxMeta.gas || !newTxMeta.gasPrice) {
+			const { gas, gasPrice } = this.state.networkFee;
+			if (gas) {
+				newTxMeta.gas = toBN(gas);
+			}
+			if (gasPrice) {
+				newTxMeta.gasPrice = toBN(gasPrice);
+			}
+		}
+
 		if (!newTxMeta.gas || !newTxMeta.gasPrice) {
 			const { gas, gasPrice } = await Engine.context.TransactionController.estimateGas(this.props.transaction);
 			newTxMeta.gas = toBN(gas);
