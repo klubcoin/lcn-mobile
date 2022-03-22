@@ -101,11 +101,11 @@ export default class TransactionSummary extends PureComponent {
 				</Summary.Row>
 				<Summary.Separator />
 				<Summary.Row>
-					<Text small bold primary>
+					<Text small bold primary style={{ marginRight: 5 }}>
 						{strings('transaction.total_amount')}
 					</Text>
 					{this.renderIfGastEstimationReady(
-						<Text small bold primary upper>
+						<Text small bold primary upper style={{ flex: 1, textAlign: 'right'}}>
 							{totalAmount}
 						</Text>
 					)}

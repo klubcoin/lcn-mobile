@@ -11,7 +11,7 @@ import { strings } from '../../../../locales/i18n';
 import { toggleReceiveModal } from '../../../actions/modals';
 import { connect } from 'react-redux';
 import routes from '../../../common/routes';
-import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei, weiToFiat, hexToBN } from '../../../util/number';
+import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei, weiToFiat, hexToBN, fromTokenMinimalUnitString } from '../../../util/number';
 import { safeToChecksumAddress } from '../../../util/address';
 import { isMainNet } from '../../../util/networks';
 import { getEther } from '../../../util/transactions';
@@ -281,7 +281,7 @@ class AssetOverview extends PureComponent {
 		} else {
 			const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
 			balance =
-				itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], decimals) : 0;
+				itemAddress in tokenBalances ? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), decimals) : 0;
 			balanceFiat = balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency);
 		}
 		// choose balances depending on 'primaryCurrency'

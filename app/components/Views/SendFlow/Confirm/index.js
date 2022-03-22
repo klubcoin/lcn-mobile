@@ -25,7 +25,8 @@ import {
 	renderFiatAddition,
 	isDecimal,
 	toBN,
-	fromTokenMinimalUnit
+	fromTokenMinimalUnit,
+	fromTokenMinimalUnitString
 } from '../../../../util/number';
 import { getTicker, decodeTransferData, getNormalizedTxState } from '../../../../util/transactions';
 import StyledButton from '../../../UI/StyledButton';
@@ -413,8 +414,8 @@ class Confirm extends PureComponent {
 		} else {
 			let rawAmount;
 			const { address, symbol = 'ERC20', decimals } = selectedAsset;
-			fromAccountBalance = `${renderFromTokenMinimalUnit(
-				contractBalances[address] ? contractBalances[address] : '0',
+			fromAccountBalance = `${fromTokenMinimalUnitString(
+				contractBalances[address] ? contractBalances[address].toString(10) : '0',
 				decimals
 			)} ${symbol}`;
 			[transactionTo, , rawAmount] = decodeTransferData('transfer', data);

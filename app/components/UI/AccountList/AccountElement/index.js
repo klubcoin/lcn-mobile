@@ -170,7 +170,7 @@ class AccountElement extends PureComponent {
 							{address && <EthereumAddress address={address} style={styles.address} type={'short'} />}
 							<View style={styles.accountBalanceWrapper}>
 								<Text style={styles.accountBalance}>
-									{parseFloat(fromWei(hexToBN(updatedBalanceFromStore)))} {getTicker(ticker)}
+									{fromWei(hexToBN(updatedBalanceFromStore))} {getTicker(ticker)}
 								</Text>
 								{!!balanceError && (
 									<Text style={[styles.accountBalance, styles.accountBalanceError]}>

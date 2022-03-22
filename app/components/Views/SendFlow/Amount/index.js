@@ -309,12 +309,12 @@ class Amount extends PureComponent {
 				dismissKeyboard();
 			}
 		}
-
 		if (transaction.value !== undefined) {
 			this.updateTransaction(value);
 		} else {
 			await this.prepareTransaction(value);
 		}
+
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEventWithParameters(ANALYTICS_EVENT_OPTS.SEND_FLOW_ADDS_AMOUNT, { network: providerType });
 		});
@@ -631,7 +631,7 @@ class Amount extends PureComponent {
 		if (isETH) {
 			currentBalance = `${renderFromWei(accounts[selectedAddress].balance)} ${symbol}`;
 		} else {
-			currentBalance = `${renderFromTokenMinimalUnit(contractBalances[address], decimals)} ${symbol}`;
+			currentBalance = `${fromTokenMinimalUnitString(contractBalances[selectedAsset.address]?.toString(10), decimals)} ${symbol}`;
 		}
 		this.setState({ currentBalance: currentBalance });
 

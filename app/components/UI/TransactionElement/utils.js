@@ -10,7 +10,8 @@ import {
 	balanceToFiatNumber,
 	weiToFiatNumber,
 	addCurrencySymbol,
-	toBN
+	toBN,
+	fromTokenMinimalUnitString
 } from '../../../util/number';
 import { strings } from '../../../../locales/i18n';
 import { renderFullAddress, safeToChecksumAddress } from '../../../util/address';
@@ -56,8 +57,9 @@ function getTokenTransfer(args) {
 	const token = userHasToken ? tokens[safeToChecksumAddress(to)] : null;
 	const renderActionKey = token ? `${strings('transactions.sent')} ${token.symbol}` : actionKey;
 	const renderTokenAmount = token
-		? `${renderFromTokenMinimalUnit(amount, token.decimals)} ${token.symbol}`
+		? `${fromTokenMinimalUnitString(amount?.toString(10), token.decimals)} ${token.symbol}`
 		: undefined;
+
 	const exchangeRate = token ? contractExchangeRates[token.address] : undefined;
 	let renderTokenFiatAmount, renderTokenFiatNumber;
 	if (exchangeRate) {
@@ -75,7 +77,7 @@ function getTokenTransfer(args) {
 	}
 
 	const renderToken = token
-		? `${renderFromTokenMinimalUnit(amount, token.decimals)} ${token.symbol}`
+		? `${fromTokenMinimalUnitString(amount?.toString(10), token.decimals)} ${token.symbol}`
 		: strings('transaction.value_not_available');
 	const totalFiatNumber = renderTokenFiatNumber
 		? weiToFiatNumber(totalGas, conversionRate) + renderTokenFiatNumber
@@ -688,6 +690,7 @@ export default async function decodeTransaction(args) {
 		const [transactionElement, transactionDetails] = decodeSwapsTx({ ...args, actionKey });
 		if (transactionElement && transactionDetails) return [transactionElement, transactionDetails];
 	}
+
 	if (isTransfer) {
 		[transactionElement, transactionDetails] = decodeIncomingTransfer({ ...args, actionKey });
 	} else {

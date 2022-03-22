@@ -15,7 +15,7 @@ import { AddressFrom, AddressTo } from '../AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
 import { connect } from 'react-redux';
-import { renderFromTokenMinimalUnit, renderFromWei } from '../../../../util/number';
+import { fromTokenMinimalUnit, fromTokenMinimalUnitString, renderFromTokenMinimalUnit, renderFromWei } from '../../../../util/number';
 import ActionModal from '../../../UI/ActionModal';
 import Engine from '../../../../core/Engine';
 import { isValidAddress, toChecksumAddress } from 'ethereumjs-util';
@@ -40,6 +40,7 @@ import Routes from '../../../../common/routes';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../../app.json';
+import { fromWei } from 'web3-utils';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -131,7 +132,7 @@ class SendFlow extends PureComponent {
 		// const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${
 		// 	Routes.mainNetWork.ticker
 		// }`;
-		const fromAccountBalance = `${renderFromTokenMinimalUnit(accounts[fromSelectedAddress].balance, selectedAsset.decimals)} ${getTicker(ticker)}`;
+		const fromAccountBalance = `${fromTokenMinimalUnitString(accounts[fromSelectedAddress].balance?.toString(10), selectedAsset.decimals)} ${getTicker(ticker)}`;
 
 		setTimeout(() => {
 			this.setState({
@@ -229,7 +230,7 @@ class SendFlow extends PureComponent {
 		const { identities, ticker, accounts, selectedAsset } = this.props;
 		const { name } = identities[accountAddress];
 		const { PreferencesController } = Engine.context;
-		const fromAccountBalance = `${renderFromTokenMinimalUnit(accounts[accountAddress].balance, selectedAsset.decimals)} ${getTicker(ticker)}`;
+		const fromAccountBalance = `${fromTokenMinimalUnitString(accounts[accountAddress].balance.toString(10), selectedAsset.decimals)} ${getTicker(ticker)}`;
 		const ens = await doENSReverseLookup(accountAddress);
 		const fromAccountName = ens || name;
 		PreferencesController.setSelectedAddress(accountAddress);

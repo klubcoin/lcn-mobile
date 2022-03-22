@@ -14,7 +14,7 @@ import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { weiToFiat, hexToBN, BNToHex, renderFromTokenMinimalUnitNumber } from '../../../util/number';
+import { weiToFiat, hexToBN, BNToHex, renderFromTokenMinimalUnitNumber, fromTokenMinimalUnit } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -123,7 +123,7 @@ class Dashboard extends PureComponent {
 		const { klubToken } = Routes;
 		let totalToken = 0;
 		for (account of accounts) {
-			totalToken += account?.balance ? +renderFromTokenMinimalUnitNumber(account?.balance, klubToken.decimals) : 0;
+			totalToken += account?.balance ? + fromTokenMinimalUnit(account?.balance.toString(10), klubToken.decimals) : 0;
 		}
 		this.setState({
 			totalToken

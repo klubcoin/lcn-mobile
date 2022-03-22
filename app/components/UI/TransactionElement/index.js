@@ -207,7 +207,7 @@ class TransactionElement extends PureComponent {
 						</ListItem.Body>
 						{Boolean(value) && (
 							<ListItem.Amounts>
-								<ListItem.Amount>{value}</ListItem.Amount>
+								<ListItem.Amount style={{textAlign: 'right'}}>{value}</ListItem.Amount>
 								{isMainNet(chainId) && <ListItem.FiatAmount>{fiatValue}</ListItem.FiatAmount>}
 							</ListItem.Amounts>
 						)}

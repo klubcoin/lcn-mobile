@@ -257,8 +257,7 @@ class AccountOverview extends PureComponent {
 		const { accountLabelEditable, accountLabel } = this.state;
 		const { avatar } = onboardProfile || {};
 
-		const balanceFiat = balance ? `${parseFloat(fromWei(hexToBN(balance)))} ${routes.klubToken.symbol}` : `0x00`; //weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
-
+		const balanceFiat = balance ? `${fromWei(hexToBN(balance))} ${routes.klubToken.symbol}` : `0x00`; //weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
 		return (
 			<View ref={this.scrollViewContainer} collapsable={false}>
 				<ScrollView

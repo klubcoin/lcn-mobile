@@ -7,7 +7,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import contractMap from '@metamask/contract-metadata';
 import ActionSheet from 'react-native-actionsheet';
-import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei } from '../../../util/number';
+import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei, fromTokenMinimalUnit, fromTokenMinimalUnitString } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import AssetElement from '../AssetElement';
 import { connect } from 'react-redux';
@@ -170,12 +170,13 @@ class Tokens extends PureComponent {
 			selectedAddress,
 			accounts
 		} = this.props;
+		// const account = state.engine.backgroundState.PreferencesController.identities;
 		const itemAddress = safeToChecksumAddress(asset.address);
 		const logo = asset.logo || ((contractMap[itemAddress] && contractMap[itemAddress].logo) || undefined);
 		const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
 		const balance =
 			asset.balance ? renderFromWei(asset.balance):
-			(itemAddress in tokenBalances ? renderFromTokenMinimalUnit(tokenBalances[itemAddress], asset.decimals) : 0);
+			(itemAddress in tokenBalances ? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), asset.decimals) : 0);
 		// const balanceFiat =
 		// 	isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
 		// 		? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)

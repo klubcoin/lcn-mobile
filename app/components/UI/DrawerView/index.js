@@ -885,8 +885,9 @@ class DrawerView extends PureComponent {
 			// 		? accounts[selectedAddress].conversion
 			// 		: null;
 		}
+		
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
-		const balanceFiat = account?.balance ? `${parseFloat(fromWei(hexToBN(account?.balance)))} ${routes.klubToken.symbol}` : `0x00`;// weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
+		const balanceFiat = account?.balance ? `${fromWei(hexToBN(account?.balance))} ${routes.klubToken.symbol}` : `0x00`;// weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
 
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'}>
