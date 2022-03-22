@@ -113,9 +113,6 @@ class EditProfile extends PureComponent {
 				.split('-')
 				.slice(1, phone?.split('-').length)
 				.join('-') ?? '';
-		if (!phone) {
-			this.isValidPhoneNumber = false;
-		}
 		this.preData = {
 			phone: phone
 				?.replace('+', '')
@@ -343,7 +340,7 @@ class EditProfile extends PureComponent {
 		// 	showError(strings('profile.missing_phone'));
 		// 	return;
 		// }
-		if ((phone && !REGEX_PHONE_NUMBER.test(phone)) || !this.countryCode) {
+		if (phone && (!REGEX_PHONE_NUMBER.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
 		}
@@ -516,11 +513,13 @@ class EditProfile extends PureComponent {
 										}
 									}}
 									rightItem={
-										this.isValidPhoneNumber ? (
-											<Icon name="check" size={16} color={colors.success} />
-										) : (
-											<Icon name="remove" size={16} color={colors.fontError} />
-										)
+										this.phone || this.countryCode ? (
+											this.isValidPhoneNumber ? (
+												<Icon name="check" size={16} color={colors.success} />
+											) : (
+												<Icon name="remove" size={16} color={colors.fontError} />
+											)
+										) : null
 									}
 								/>
 							</View>
