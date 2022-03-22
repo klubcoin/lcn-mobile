@@ -463,7 +463,7 @@ class Dashboard extends PureComponent {
 					<View style={styles.card}>
 						<View style={styles.row}>
 							<Text style={styles.cardTitle}>{strings('watch_asset_request.token')}</Text>
-							<Text style={styles.extraCardTitle}>+2,4%</Text>
+							{/* <Text style={styles.extraCardTitle}>+2,4%</Text> */}
 						</View>
 						<View style={styles.cardContent}>
 							<Text style={styles.balance}>
@@ -483,7 +483,8 @@ class Dashboard extends PureComponent {
                                 $100,000,000
                             </Text>
                             <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} /> */}
-							<Text style={styles.comingSoon}>{balanceFiat}</Text>
+							{/* <Text style={styles.comingSoon}>{balanceFiat}</Text> */}
+							<Text style={styles.comingSoon}>{strings('coming_soon.coming_soon')}</Text>
 						</View>
 					</View>
 				</View>
