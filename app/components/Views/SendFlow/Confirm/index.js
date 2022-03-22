@@ -363,6 +363,9 @@ class Confirm extends PureComponent {
 		const transactionFeeFiat = weiToFiat(weiTransactionFee, conversionRate, currentCurrency);
 		const parsedTicker = getTicker(ticker);
 		const transactionFee = `${renderFromWei(weiTransactionFee)} ${parsedTicker}`;
+		let errorMessage;
+		const senderBalance = renderFromWei(accounts[fromSelectedAddress].balance);
+		const fee = renderFromWei(weiTransactionFee);
 
 		if (!networkFee) this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } });
 		if (selectedAsset.isETH) {
@@ -381,6 +384,9 @@ class Confirm extends PureComponent {
 				</Text>
 			);
 			transactionTo = to;
+			if (!senderBalance < +fee + +renderFromWei(value)) {
+				errorMessage = strings('transaction.insufficient');
+			}
 		} else if (selectedAsset.tokenId) {
 			fromAccountBalance = `${renderFromWei(accounts[from].balance)} ${parsedTicker}`;
 			const collectibleTransferInformation =
@@ -435,6 +441,9 @@ class Confirm extends PureComponent {
 					{renderFiatAddition(transactionValueFiatNumber, transactionFeeFiatNumber, currentCurrency)}
 				</Text>
 			);
+			if (parseFloat(senderBalance) < parseFloat(fee) + parseFloat(transferValue)) {
+				errorMessage = strings('transaction.insufficient');
+			}
 		}
 
 		this.setState(
@@ -449,11 +458,17 @@ class Confirm extends PureComponent {
 				transactionTotalAmountFiat
 			},
 			() => {
-				this.validateAmount({
-					...this.props.transactionState.transaction,
-					from: fromSelectedAddress,
-					value
-				});
+				if (errorMessage) {
+					this.setState({
+						errorMessage
+					});
+				} else {
+					this.validateAmount({
+						...this.props.transactionState.transaction,
+						from: fromSelectedAddress,
+						value
+					});
+				}
 			}
 		);
 	};
