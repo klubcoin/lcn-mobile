@@ -8,6 +8,8 @@ import { toggleNetworkModal } from '../../../actions/modals';
 import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
 import styles from './styles/index';
+import { RPC } from '../../../constants/network';
+import routes from '../../../common/routes';
 
 /**
  * UI PureComponent that renders inside the navbar
@@ -58,8 +60,12 @@ class NavbarTitle extends PureComponent {
 	render = () => {
 		const { network, title, translate } = this.props;
 		let name = null;
-		const color = (Networks[network.provider.type] && Networks[network.provider.type].color) || null;
+		let color = (Networks[network.provider.type] && Networks[network.provider.type].color) || null;
 
+		if (network.provider.type == RPC && network.provider.chainId == routes.mainNetWork.chainId) {
+			color = colors.blue
+		}
+		
 		if (network.provider.nickname) {
 			name = network.provider.nickname;
 		} else {

@@ -11,6 +11,7 @@ import AnalyticsV2 from '../../../util/analyticsV2';
 import { MAINNET, RPC } from '../../../constants/network';
 import styles from './styles/index';
 import StyledButton from '../StyledButton';
+import routes from '../../../common/routes';
 
 /**
  * View that contains the list of all the available networks
@@ -151,7 +152,7 @@ export class NetworkList extends PureComponent {
 	renderMainnet() {
 		const { provider } = this.props;
 		const { color: mainnetColor, name: mainnetName } = Networks.mainnet;
-		const isMainnet = provider.type === MAINNET ? <Icon name="check" size={15} color={mainnetColor} /> : null;
+		const isMainnet = provider.type === MAINNET || provider.type == RPC && provider.chainId == routes.mainNetWork.chainId ? <Icon name="check" size={15} color={mainnetColor} /> : null;
 
 		return (
 			<View style={styles.mainnetHeader}>

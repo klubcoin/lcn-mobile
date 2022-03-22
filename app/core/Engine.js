@@ -218,6 +218,15 @@ class Engine {
 			network.subscribe(state => {
 				if (state.network !== 'loading' && state.provider.chainId !== currentChainId) {
 					// We should add a state or event emitter saying the provider changed
+					if (state.provider.chainId == '1') { 
+						network.setRpcTarget(
+							Routes.klubToken.rpcUrl,
+							Routes.klubToken.chainId,
+							Routes.klubToken.symbol,
+							Routes.mainNetWork.name,
+						);
+					}
+					
 					setTimeout(() => {
 						this.configureControllersOnNetworkChange();
 						currentChainId = state.provider.chainId;
