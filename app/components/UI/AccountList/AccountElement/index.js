@@ -3,7 +3,7 @@ import Identicon from '../../Identicon';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
-import { renderFromWei } from '../../../../util/number';
+import { hexToBN, fromWei } from '../../../../util/number';
 import { getTicker } from '../../../../util/transactions';
 import { strings } from '../../../../../locales/i18n';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -62,8 +62,7 @@ const styles = StyleSheet.create({
 	accountMain: {
 		flex: 1,
 		flexDirection: 'column',
-		alignItems: 'center',
-		
+		alignItems: 'center'
 	},
 	selectedWrapper: {
 		flex: 0.2,
@@ -168,12 +167,10 @@ class AccountElement extends PureComponent {
 							<Text numberOfLines={1} style={[styles.accountLabel]}>
 								{name?.name ?? `${name}`}
 							</Text>
-							{
-								address && <EthereumAddress address={address} style={styles.address} type={'short'} />
-							}
+							{address && <EthereumAddress address={address} style={styles.address} type={'short'} />}
 							<View style={styles.accountBalanceWrapper}>
 								<Text style={styles.accountBalance}>
-									{updatedBalanceFromStore} {getTicker(ticker)}
+									{parseFloat(fromWei(hexToBN(updatedBalanceFromStore)))} {getTicker(ticker)}
 								</Text>
 								{!!balanceError && (
 									<Text style={[styles.accountBalance, styles.accountBalanceError]}>
