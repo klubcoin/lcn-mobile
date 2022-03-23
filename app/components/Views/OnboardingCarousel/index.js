@@ -14,6 +14,7 @@ import { displayName } from '../../../../app.json';
 import ScaleImage from 'react-native-scalable-image';
 import APIService from '../../../services/APIService';
 import preferences from '../../../store/preferences';
+import { STORED_CONTENT } from '../../../constants/storage';
 
 /**
  * View that is displayed to first time (new) users
@@ -39,7 +40,7 @@ export default class OnboardingCarousel extends PureComponent {
 	}
 
 	async fetchOnboardingData() {
-		const data = await preferences.fetch('onboading');
+		const data = await preferences.fetch(STORED_CONTENT.ONBOARDING);
 		if (data !== null) {
 			this.setState({
 				onboardingData: data
@@ -55,7 +56,7 @@ export default class OnboardingCarousel extends PureComponent {
 					if (a.code.toUpperCase() > b.code.toUpperCase()) return 1;
 					return -1;
 				});
-				preferences.save('onboarding', data);
+				preferences.save(STORED_CONTENT.ONBOARDING, data);
 				this.setState({
 					onboardingData: data
 				});

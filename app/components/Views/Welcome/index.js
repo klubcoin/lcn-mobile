@@ -13,6 +13,7 @@ import { displayName } from '../../../../app.json';
 import ScaleImage from 'react-native-scalable-image';
 import APIService from '../../../services/APIService';
 import preferences from '../../../store/preferences';
+import { STORED_CONTENT } from '../../../constants/storage';
 
 /**
  * View that is displayed to first time (new) users
@@ -37,7 +38,7 @@ export default class Welcome extends PureComponent {
 	}
 
 	async fetchWelcomeData() {
-		const data = await preferences.fetch('welcome');
+		const data = await preferences.fetch(STORED_CONTENT.WELCOME);
 		if (data !== null) {
 			this.setState({
 				title: data.title,
@@ -51,8 +52,8 @@ export default class Welcome extends PureComponent {
 	fetchWelcomeContent() {
 		APIService.getWelcomeContent((success, json) => {
 			if (!!json && Array.isArray(json) && json.length > 0) {
-				const data = json[0]
-				preferences.save('welcome',data)
+				const data = json[0];
+				preferences.save(STORED_CONTENT.WELCOME, data);
 				this.setState({
 					title: data?.title,
 					content: data?.content

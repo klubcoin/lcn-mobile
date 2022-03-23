@@ -8,6 +8,9 @@ import SettingsDrawer from '../../UI/SettingsDrawer';
 import { makeObservable, observable } from 'mobx';
 import APIService from '../../../services/APIService';
 import styles from './styles';
+import { STORED_CONTENT } from '../../../constants/storage';
+import preferences from '../../../store/preferences';
+
 class FAQScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.faq'), navigation);
 
@@ -27,13 +30,19 @@ class FAQScreen extends PureComponent {
 		});
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		const FAQS = await preferences.fetch(STORED_CONTENT.FAQS);
+		if (FAQS) {
+			this.questions = FAQS;
+			this.loading = false;
+		}
 		this.fetchQuestions();
 	}
 
 	async fetchQuestions() {
 		APIService.getFAQs((success, json) => {
 			this.questions = [...json.filter(faq => this.isValidFAQ(faq))];
+			preferences.save(STORED_CONTENT.FAQS, this.questions);
 			this.loading = false;
 		});
 	}
@@ -43,12 +52,7 @@ class FAQScreen extends PureComponent {
 			return false;
 		}
 		const keys = Object.keys(faq);
-		if (
-			!keys.includes('answer') ||
-			!faq.answer ||
-			!keys.includes('question') ||
-			!faq.question
-		) {
+		if (!keys.includes('answer') || !faq.answer || !keys.includes('question') || !faq.question) {
 			return false;
 		}
 		return true;
