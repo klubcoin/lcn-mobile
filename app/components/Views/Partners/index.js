@@ -7,6 +7,8 @@ import PartnerItem from './components/PartnerItem';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import APIService from '../../../services/APIService';
+import { STORED_CONTENT } from '../../../constants/storage';
+import preferences from '../../../store/preferences';
 
 class Partners extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -24,10 +26,14 @@ class Partners extends PureComponent {
 		navigation.navigate('PartnerDetails', { ...data });
 	};
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
 			this.fetchPartnerList();
 		});
+		const PARTNERS = await preferences.fetch(STORED_CONTENT.PARTNERS);
+		if (PARTNERS) {
+			this.partnerList = PARTNERS;
+		}
 	}
 
 	fetchPartnerList() {
@@ -36,6 +42,7 @@ class Partners extends PureComponent {
 				const data = json;
 				data.sort((a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase()));
 				this.partnerList = data;
+				preferences.save(STORED_CONTENT.PARTNERS, data);
 			}
 		});
 	}

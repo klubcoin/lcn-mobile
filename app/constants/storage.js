@@ -27,6 +27,13 @@ export const BACKUP_TYPE = {
 	ALERT: 'ALERT'
 };
 
+export const STORED_CONTENT = {
+	PARTNERS: 'PARTNERS',
+	FAQS: 'FAQS',
+	WELCOME: 'WELCOME',
+	ONBOARDING: 'ONBOARDING'
+};
+
 export const ENCRYPTION_LIB = `${prefix}encryptionLib`;
 
 export const SEED_PHRASE_HINTS = 'seedphraseHints';
