@@ -121,7 +121,9 @@ const styles = StyleSheet.create({
 		borderColor: colors.white
 	},
 	disable: {},
-	disableText: {}
+	disableText: {},
+	qrCode: {},
+	qrCodeText: {}
 });
 
 function getStyles(type) {
@@ -214,6 +216,10 @@ function getStyles(type) {
 		case 'disable':
 			fontStyle = styles.disableText;
 			containerStyle = styles.disable;
+			break;
+		case 'qr-code': 
+			fontStyle = styles.qrCodeText;
+			containerStyle = styles.qrCode;
 			break;
 		default:
 			throw new Error('Unknown button type');

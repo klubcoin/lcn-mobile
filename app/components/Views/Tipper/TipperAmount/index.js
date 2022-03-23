@@ -264,7 +264,7 @@ class TipperAmount extends PureComponent {
                         />
                     </View>
                 )}
-                <View style={styles.assetsWrapper} testID={'searched-asset-results'}>
+                {/* <View style={styles.assetsWrapper} testID={'searched-asset-results'}>
                     <Text style={styles.assetsTitle}>
                         {this.state.searchInputValue
                             ? strings('payment_request.search_results')
@@ -277,7 +277,7 @@ class TipperAmount extends PureComponent {
                         searchQuery={this.state.searchInputValue}
                         emptyMessage={strings('payment_request.search_no_tokens_found')}
                     />
-                </View>
+                </View> */}
                 {userTokens.length > 0 && (
                     <View style={styles.assetsWrapper}>
                         <Text style={styles.assetsTitle}>{strings('payment_request.your_tokens')}</Text>

@@ -7,7 +7,7 @@ import Device from '../../../../../util/Device';
 
 const styles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.purple,
 		flex: 1
 	},
 	contentWrapper: {
@@ -18,13 +18,15 @@ const styles = StyleSheet.create({
 	},
 	titleText: {
 		...fontStyles.bold,
-		fontSize: 24,
+		color: colors.white,
+		fontSize: RFValue(20),
 		marginVertical: 16,
 		alignSelf: 'center'
 	},
 	descriptionText: {
 		...fontStyles.normal,
-		fontSize: 14,
+		color: colors.white,
+		fontSize: RFValue(15),
 		alignSelf: 'center',
 		textAlign: 'center',
 		marginVertical: 8
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
 		marginBottom: 16
 	},
 	blueIcon: {
-		color: colors.white
+		// color: colors.white
 	},
 	iconWrapper: {
 		alignItems: 'center'
@@ -68,7 +70,6 @@ const styles = StyleSheet.create({
 	},
 	blueButtonText: {
 		...fontStyles.bold,
-		color: colors.white,
 		fontSize: 14,
 		marginLeft: 8
 	},
@@ -122,7 +123,8 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		borderWidth: 1,
 		padding: 15
-	}
+	},
+	colorBlue: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

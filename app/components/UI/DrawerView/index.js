@@ -454,8 +454,8 @@ class DrawerView extends PureComponent {
 	};
 
 	gotoTipper = () => {
-		// this.props.navigation.navigate('TipperApp');
-		this.props.navigation.navigate('ComingSoon');
+		this.props.navigation.navigate('TipperApp');
+		// this.props.navigation.navigate('ComingSoon');
 		this.hideDrawer();
 	};
 

@@ -3,7 +3,7 @@ import { colors } from "../../../../../styles/common";
 
 const styles = StyleSheet.create({
     wrapper: {
-        backgroundColor: colors.primaryFox,
+        backgroundColor: colors.purple,
         flex: 1
     },
     title: {

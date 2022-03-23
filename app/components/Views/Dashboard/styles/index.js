@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 	},
 	card: {
 		flex: 1,
-		backgroundColor: colors.purple,
+		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
 		marginRight: 15,
 		paddingHorizontal: 10,

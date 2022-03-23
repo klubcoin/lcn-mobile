@@ -38,7 +38,7 @@ const CustomTabBar = CreateReactClass({
         const { activeTextColor, inactiveTextColor, textStyle, } = this.props;
         const textColor = isTabActive ? activeTextColor : inactiveTextColor;
         const fontWeight = isTabActive ? 'bold' : 'normal';
-        const backgroundColor = isTabActive ? colors.purple : colors.purple500;
+        const backgroundColor = isTabActive ? colors.lightPurple : colors.purple;
         
         return <TouchableWithoutFeedback
             style={{ flex: 1, }}

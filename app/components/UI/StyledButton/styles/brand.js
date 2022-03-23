@@ -187,6 +187,14 @@ const styles = StyleSheet.create({
 	},
 	disableText: {
 		color: colors.success
+	},
+	qrCode: {
+		backgroundColor: colors.lightPurple,
+		borderRadius: 10,
+		paddingVertical: 12
+	},
+	qrCodeText: {
+		color: colors.blue
 	}
 });
 

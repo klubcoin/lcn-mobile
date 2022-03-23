@@ -74,6 +74,7 @@ export const colors = {
 	purple: '#21193d',
 	purple100: '#563fab',
 	purple500: '#19132f',
+	lightPurple: '#2e234c',
 	lightPink: '#fee5e5',
 	navy: 'navy'
 };

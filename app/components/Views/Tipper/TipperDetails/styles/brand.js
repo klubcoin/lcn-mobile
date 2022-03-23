@@ -8,6 +8,9 @@ const styles = StyleSheet.create({
 		color: colors.black,
 		fontSize: 14,
 		marginLeft: 8
+	},
+	colorBlue: {
+		color: colors.blue,
 	}
 });
 

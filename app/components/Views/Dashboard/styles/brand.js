@@ -13,7 +13,7 @@ const brandStyles = StyleSheet.create({
 	},
 	chartBox: {
 		padding: 15,
-		backgroundColor: colors.purple,
+		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
 		marginBottom: 20,
 		height: 250

@@ -48,7 +48,7 @@ const brandStyles = StyleSheet.create({
 		marginRight: 6,
 	},
 	accountWrapper: {
-		backgroundColor: colors.purple,
+		backgroundColor: colors.lightPurple,
 		padding: 20,
 		paddingTop: 12,
 		borderRadius: 10,

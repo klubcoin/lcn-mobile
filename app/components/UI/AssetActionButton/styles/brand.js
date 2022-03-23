@@ -7,7 +7,7 @@ const brandStyles = StyleSheet.create({
 	button: {
 		// marginHorizontal: 5,
 		padding: 10,
-		backgroundColor: colors.purple,
+		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
 		flex: 1,
 	},

@@ -31,7 +31,7 @@ import styles from './styles/index'
  * View to interact with a previously generated payment request link
  */
 class TipperDetails extends PureComponent {
-    static navigationOptions = ({ navigation }) => getPaymentRequestSuccessOptionsTitle(navigation);
+    static navigationOptions = ({ navigation }) => getPaymentRequestSuccessOptionsTitle(navigation, strings('tipper.tipper'));
 
     static propTypes = {
         /**
@@ -139,37 +139,37 @@ class TipperDetails extends PureComponent {
                     <View style={styles.buttonsWrapper}>
                         <View style={styles.buttonsContainer}>
                             <StyledButton
-                                type={'normal'}
+                                type={'qr-code'}
                                 onPress={this.copyAccountToClipboard}
                                 containerStyle={styles.button}
                             >
                                 <View style={styles.buttonContent}>
                                     <View style={styles.buttonIconWrapper}>
-                                        <IonicIcon name={'ios-link'} size={18} color={colors.black} />
+                                        <IonicIcon name={'ios-link'} size={18} color={colors.blue} />
                                     </View>
                                     <View style={styles.buttonTextWrapper}>
-                                        <Text style={styles.buttonText}>
+                                        <Text style={[styles.buttonText, styles.colorBlue]}>
                                             {strings('payment_request.copy_to_clipboard')}
                                         </Text>
                                     </View>
                                 </View>
                             </StyledButton>
                             <StyledButton
-                                type={'normal'}
+                                type={'qr-code'}
                                 onPress={this.showQRModal}
                                 containerStyle={styles.button}
                                 testID={'request-qrcode-button'}
                             >
                                 <View style={styles.buttonContent}>
                                     <View style={styles.buttonIconWrapper}>
-                                        <FontAwesome name={'qrcode'} size={18} color={colors.black} />
+                                        <FontAwesome name={'qrcode'} size={18} color={colors.blue} />
                                     </View>
                                     <View style={styles.buttonTextWrapper}>
-                                        <Text style={styles.buttonText}>{strings('payment_request.qr_code')}</Text>
+                                        <Text style={[styles.buttonText, styles.colorBlue]}>{strings('payment_request.qr_code')}</Text>
                                     </View>
                                 </View>
                             </StyledButton>
-                            <StyledButton type={'blue'} onPress={this.onShare} containerStyle={styles.button}>
+                            <StyledButton type={'normal'} onPress={this.onShare} containerStyle={styles.button}>
                                 <View style={styles.buttonContent}>
                                     <View style={styles.buttonIconWrapper}>
                                         <EvilIcons name="share-apple" size={24} style={styles.blueIcon} />
