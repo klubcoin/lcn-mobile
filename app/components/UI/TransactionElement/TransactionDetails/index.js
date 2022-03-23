@@ -244,7 +244,7 @@ class TransactionDetails extends PureComponent {
 					/>
 				</View>
 
-				{transactionDetails.transactionHash &&
+				{/* {transactionDetails.transactionHash &&
 					transactionObject.status !== 'cancelled' &&
 					rpcBlockExplorer !== NO_RPC_BLOCK_EXPLORER && (
 						<TouchableOpacity onPress={this.viewOnEtherscan} style={styles.touchableViewOnEtherscan}>
@@ -254,7 +254,7 @@ class TransactionDetails extends PureComponent {
 									strings('transactions.view_on_etherscan', { appName: displayName })}
 							</Text>
 						</TouchableOpacity>
-					)}
+					)} */}
 			</DetailsModal.Body>
 		);
 	};
