@@ -14,7 +14,12 @@ import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { weiToFiat, hexToBN, BNToHex, renderFromTokenMinimalUnitNumber, fromTokenMinimalUnit } from '../../../util/number';
+import {
+	weiToFiat,
+	hexToBN,
+	BNToHex,
+	fromTokenMinimalUnit
+} from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -34,7 +39,6 @@ import CustomTabBar from '../../UI/CustomTabBar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { LineChart } from 'react-native-chart-kit';
 import routes from '../../../common/routes';
-import Web3 from 'web3';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Erc20Service from '../../../core/Erc20Service';
 
@@ -123,7 +127,9 @@ class Dashboard extends PureComponent {
 		const { klubToken } = Routes;
 		let totalToken = 0;
 		for (account of accounts) {
-			totalToken += account?.balance ? + fromTokenMinimalUnit(account?.balance.toString(10), klubToken.decimals) : 0;
+			totalToken += account?.balance
+				? +fromTokenMinimalUnit(account?.balance.toString(10), klubToken.decimals)
+				: 0;
 		}
 		this.setState({
 			totalToken
@@ -230,24 +236,24 @@ class Dashboard extends PureComponent {
 
 	addDefaultRpcList = () => {
 		const { PreferencesController } = Engine.context;
-		const { rpcUrl, chainId, symbol} = routes.klubToken;
+		const { rpcUrl, chainId, symbol } = routes.klubToken;
 		const { name, blockExplorerUrl } = routes.mainNetWork;
 
 		PreferencesController.addToFrequentRpcList(rpcUrl, chainId, symbol, name, { blockExplorerUrl });
-	}
+	};
 
 	async getWalletInfo() {
-		const { selectedAddress } = this.props;
-		const { PreferencesController } = Engine.context;
-		const web3 = new Web3();
+		const accounts = this.getAccounts();
+
+		// const { selectedAddress } = this.props;
+		const selectedAddress = accounts[0].address;
+		const { PreferencesController, KeyringController } = Engine.context;
 		const message = `walletInfo,${selectedAddress},${new Date().getTime()}`;
-		const sign = web3.eth.accounts.sign(
-			message,
-			'0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544d8'
-		);
+		const signParams = { from: selectedAddress, data: message };
+		const sign = await KeyringController.signPersonalMessage(signParams);
 		API.postRequest(
 			Routes.walletInfo,
-			[selectedAddress, sign.signature, message],
+			[selectedAddress, sign, message],
 			response => {
 				if (response.result) {
 					const { name } = response.result;
@@ -265,9 +271,9 @@ class Dashboard extends PureComponent {
 									firstname: name2 ? name2.split(' ')[0] : '',
 									lastname: name2
 										? name2
-											.split(' ')
-											.slice(1, name2.split(' ').length)
-											.join(' ')
+												.split(' ')
+												.slice(1, name2.split(' ').length)
+												.join(' ')
 										: '',
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,

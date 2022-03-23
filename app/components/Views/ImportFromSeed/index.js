@@ -30,7 +30,7 @@ import {
 	TRUE
 } from '../../../constants/storage';
 import Logger from '../../../util/Logger';
-import { getPasswordStrengthWord, passwordRequirementsMet, MIN_PASSWORD_LENGTH } from '../../../util/password';
+import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import importAdditionalAccounts from '../../../util/importAdditionalAccounts';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
@@ -41,7 +41,6 @@ import preferences from '../../../store/preferences';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
-import Web3 from 'web3';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -170,16 +169,14 @@ class ImportFromSeed extends PureComponent {
 	}
 
 	async getAccountInfo(selectedAddress, metricsOptIn, onboardingWizard) {
-		const address = selectedAddress.slice(2, selectedAddress.length);
-		const web3 = new Web3();
+		const address = selectedAddress;
 		const message = `walletInfo,${address},${new Date().getTime()}`;
-		const sign = web3.eth.accounts.sign(
-			message,
-			'0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7'
-		);
+		const { KeyringController } = Engine.context;
+		const signParams = { from: address, data: message };
+		const sign = await KeyringController.signPersonalMessage(signParams);
 		Api.postRequest(
 			routes.walletInfo,
-			[address, sign.signature, message],
+			[address, sign, message],
 			response => {
 				if (response.result) {
 					const { name } = response.result?.publicInfo ? JSON.parse(response.result?.publicInfo) : {};
