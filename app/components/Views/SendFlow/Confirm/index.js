@@ -26,7 +26,8 @@ import {
 	isDecimal,
 	toBN,
 	fromTokenMinimalUnit,
-	fromTokenMinimalUnitString
+	fromTokenMinimalUnitString,
+	toWei
 } from '../../../../util/number';
 import { getTicker, decodeTransferData, getNormalizedTxState } from '../../../../util/transactions';
 import StyledButton from '../../../UI/StyledButton';
@@ -196,7 +197,8 @@ class Confirm extends PureComponent {
 		fromAccountModalVisible: false,
 		warningModalVisible: false,
 		mode: REVIEW,
-		over: false
+		over: false,
+		customNetworkFee: {}
 	};
 
 	setNetworkNonce = async () => {
@@ -259,7 +261,15 @@ class Confirm extends PureComponent {
 	};
 
 	getNetworkFee = async () => {
+		const { selectedAsset } = this.props;
 		const result = await new Erc20Service().getFixedFee();
+		const base = Math.pow(10, selectedAsset.decimals);
+		const networkFee = {
+			gas: hexToBN("0x1"),
+			gasPrice: toWei((parseFloat(result) / base).toString()),
+		}
+		this.setState({ customNetworkFee: networkFee });
+		return networkFee;
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -624,6 +634,10 @@ class Confirm extends PureComponent {
 				throw transactionMeta.error;
 			}
 
+			transactionMeta.transaction.gas = this.state.customNetworkFee.gas;
+			transactionMeta.transaction.gasPrice = this.state.customNetworkFee.gasPrice;
+
+			await TransactionController.updateTransaction(transactionMeta);
 			InteractionManager.runAfterInteractions(() => {
 				DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
 				NotificationManager.watchSubmittedTransaction({
