@@ -5,11 +5,11 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.primaryFox
+		backgroundColor: colors.purple
 	},
 	account: {
 		paddingTop: 40,
-		backgroundColor: colors.primaryFox
+		backgroundColor: colors.purple
 	},
 	accountName: {
 		color: colors.white,
@@ -89,7 +89,7 @@ const brandStyles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	iconWrapper: {
-		backgroundColor: colors.purple,
+		backgroundColor: colors.purple500,
 		padding: 5,
 		borderRadius: 8
 	},
