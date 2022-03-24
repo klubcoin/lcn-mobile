@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, BackHandler } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -54,6 +54,7 @@ class VerifyOTP extends PureComponent {
 
 	componentDidMount() {
 		this.sendOTPEmail();
+		BackHandler.addEventListener('hardwareBackPress', () => true);
 	}
 
 	sendOTPEmail() {

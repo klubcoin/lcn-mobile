@@ -18,7 +18,10 @@ import {
 	weiToFiat,
 	hexToBN,
 	BNToHex,
-	fromTokenMinimalUnit
+	renderFromTokenMinimalUnitNumber,
+	fromTokenMinimalUnit,
+	sumFloat,
+	fromWei
 } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
@@ -124,12 +127,9 @@ class Dashboard extends PureComponent {
 
 	fetchTotalTokens() {
 		const accounts = this.getAccounts();
-		const { klubToken } = Routes;
-		let totalToken = 0;
-		for (account of accounts) {
-			totalToken += account?.balance
-				? +fromTokenMinimalUnit(account?.balance.toString(10), klubToken.decimals)
-				: 0;
+		let totalToken = '0';
+		for (let account of accounts) {
+			totalToken = sumFloat(totalToken, account?.balance ? fromWei(hexToBN(account?.balance)) : '0');
 		}
 		this.setState({
 			totalToken
