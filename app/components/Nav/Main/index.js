@@ -670,8 +670,9 @@ const Main = props => {
 		try {
 			const { KeyringController } = Engine.context;
 
-			await KeyringController.submitPassword(password);
 			setPassword('');
+			passwordRef?.current?.setValue('');
+			await KeyringController.exportSeedPhrase(password);
 			setActiveTime(new Date());
 			setPasswordErrorString('');
 			setLock(false);
@@ -705,9 +706,6 @@ const Main = props => {
 			const credentials = await SecureKeychain.getGenericPassword();
 			if (!credentials) return false;
 			setPassword(credentials.password);
-			setTimeout(() => {
-				onLogin();
-			}, 1000);
 			onLogin(credentials.password);
 		} catch (error) {}
 		return true;
