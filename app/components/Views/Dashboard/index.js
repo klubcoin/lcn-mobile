@@ -14,7 +14,15 @@ import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import { weiToFiat, hexToBN, BNToHex, renderFromTokenMinimalUnitNumber, fromTokenMinimalUnit } from '../../../util/number';
+import {
+	weiToFiat,
+	hexToBN,
+	BNToHex,
+	renderFromTokenMinimalUnitNumber,
+	fromTokenMinimalUnit,
+	sumFloat,
+	fromWei
+} from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -120,10 +128,9 @@ class Dashboard extends PureComponent {
 
 	fetchTotalTokens() {
 		const accounts = this.getAccounts();
-		const { klubToken } = Routes;
-		let totalToken = 0;
-		for (account of accounts) {
-			totalToken += account?.balance ? + fromTokenMinimalUnit(account?.balance.toString(10), klubToken.decimals) : 0;
+		let totalToken = '0';
+		for (let account of accounts) {
+			totalToken = sumFloat(totalToken, account?.balance ? fromWei(hexToBN(account?.balance)) : '0');
 		}
 		this.setState({
 			totalToken
@@ -230,11 +237,11 @@ class Dashboard extends PureComponent {
 
 	addDefaultRpcList = () => {
 		const { PreferencesController } = Engine.context;
-		const { rpcUrl, chainId, symbol} = routes.klubToken;
+		const { rpcUrl, chainId, symbol } = routes.klubToken;
 		const { name, blockExplorerUrl } = routes.mainNetWork;
 
 		PreferencesController.addToFrequentRpcList(rpcUrl, chainId, symbol, name, { blockExplorerUrl });
-	}
+	};
 
 	async getWalletInfo() {
 		const { selectedAddress } = this.props;
@@ -265,9 +272,9 @@ class Dashboard extends PureComponent {
 									firstname: name2 ? name2.split(' ')[0] : '',
 									lastname: name2
 										? name2
-											.split(' ')
-											.slice(1, name2.split(' ').length)
-											.join(' ')
+												.split(' ')
+												.slice(1, name2.split(' ').length)
+												.join(' ')
 										: '',
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,

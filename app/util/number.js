@@ -56,6 +56,87 @@ export function fromWei(value = 0, unit = 'ether') {
 	return convert.fromWei(value, unit);
 }
 
+export function sumFloat(value1, value2) {
+	const value1Arr = value1.split('.');
+	const value2Arr = value2.split('.');
+	let sumDecimals = '';
+	let sumIntegers = '';
+	let memDecimal = 0;
+	if (value1Arr.length === 1 && value2Arr.length === 1) {
+		const integer1 = value1Arr[0].split('').reverse();
+		const integer2 = value2Arr[0].split('').reverse();
+		let sumInt = '';
+		let memInt = 0;
+		for (let i = 0; i < Math.max(integer1.length, integer2.length); i++) {
+			sumInt = sumInt + `${(+(integer1[i] ?? 0) + +(integer2[i] ?? 0) + memInt) % 10}`;
+			memInt = Math.floor((+(integer1[i] ?? 0) + +(integer2[i] ?? 0) + memInt) / 10);
+		}
+		if (memInt) {
+			sumInt = sumInt + `${memInt}`;
+		}
+		sumIntegers = sumInt
+			.split('')
+			.reverse()
+			.join('');
+	} else if (value1Arr.length === 1 || value2Arr.length === 1) {
+		sumDecimals = value1Arr.length === 1 ? value2Arr[1] : value1Arr[1];
+		const integer1 = value1Arr[0].split('').reverse();
+		const integer2 = value2Arr[0].split('').reverse();
+		let sumInt = '';
+		let memInt = 0;
+		for (let i = 0; i < Math.max(integer1.length, integer2.length); i++) {
+			sumInt = sumInt + `${(+(integer1[i] ?? 0) + +(integer2[i] ?? 0) + memInt) % 10}`;
+			memInt = Math.floor((+(integer1[i] ?? 0) + +(integer2[i] ?? 0) + memInt) / 10);
+		}
+		if (memInt) {
+			sumInt = sumInt + `${memInt}`;
+		}
+		sumIntegers = sumInt
+			.split('')
+			.reverse()
+			.join('');
+	} else {
+		const decimal1 = `${value1Arr[1]}${'0'.repeat(
+			Math.max(value1Arr[1].length, value2Arr[1].length) - value1Arr[1].length
+		)}`
+			.split('')
+			.reverse();
+		const decimal2 = `${value2Arr[1]}${'0'.repeat(
+			Math.max(value1Arr[1].length, value2Arr[1].length) - value2Arr[1].length
+		)}`
+			.split('')
+			.reverse();
+		let sum = '';
+		let mem = 0;
+		for (let i = 0; i < decimal1.length; i++) {
+			sum = sum + `${(+decimal1[i] + +decimal2[i] + mem) % 10}`;
+			mem = Math.floor((+decimal1[i] + +decimal2[i] + mem) / 10);
+		}
+		memDecimal = mem;
+		sumDecimals = sum
+			.split('')
+			.reverse()
+			.join('');
+		const integer1 = value1Arr[0].split('').reverse();
+		const integer2 = value2Arr[0].split('').reverse();
+		let sumInt = '';
+		let memInt = 0;
+		for (let i = 0; i < Math.max(integer1.length, integer2.length); i++) {
+			sumInt =
+				sumInt + `${(+(integer1[i] ?? 0) + +(integer2[i] ?? 0) + memInt + (i === 0 ? memDecimal : 0)) % 10}`;
+			memInt = Math.floor((+(integer1[i] ?? 0) + +(integer2[i] ?? 0) + memInt) / 10);
+		}
+		if (memInt) {
+			sumInt = sumInt + `${memInt}`;
+		}
+		sumIntegers = sumInt
+			.split('')
+			.reverse()
+			.join('');
+	}
+	return sumDecimals ? `${sumIntegers}.${sumDecimals}` : sumIntegers;
+}
+
 /**
  * Converts token minimal unit to readable string value
  *
