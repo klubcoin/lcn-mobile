@@ -7,7 +7,8 @@ import {
 	Text,
 	View,
 	StyleSheet,
-	InteractionManager
+	InteractionManager,
+	Modal
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -24,6 +25,7 @@ import PreventScreenshot from '../../../core/PreventScreenshot';
 import { displayName } from '../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import QRScanner from '../../UI/QRScanner';
 /**
  * View that's displayed the first time a user receives funds
  */
@@ -38,7 +40,8 @@ export default class ImportPrivateKey extends PureComponent {
 	state = {
 		privateKey: '',
 		loading: false,
-		inputWidth: Device.isAndroid() ? '99%' : undefined
+		inputWidth: Device.isAndroid() ? '99%' : undefined,
+		isScanQR: false
 	};
 
 	componentDidMount = () => {
@@ -60,9 +63,7 @@ export default class ImportPrivateKey extends PureComponent {
 		if (this.state.privateKey === '') {
 			Alert.alert(strings('import_private_key.error_title'), strings('import_private_key.error_empty_message'));
 			this.setState({ loading: false });
-			return;
 		}
-
 		this.setState({ loading: true });
 		// Import private key
 		try {
@@ -90,20 +91,35 @@ export default class ImportPrivateKey extends PureComponent {
 	};
 
 	scanPkey = () => {
-		this.props.navigation.navigate('QRScanner', {
-			onScanSuccess: data => {
-				if (data.private_key) {
-					this.setState({ privateKey: data.private_key }, () => {
-						this.goNext();
-					});
-				} else {
-					Alert.alert(strings('import_private_key.error_title'), strings('import_private_key.error_message'));
-				}
-			}
+		this.setState({ isScanQR: true });
+		// this.props.navigation.navigate('QRScanner', {
+		// 	onScanSuccess: data => {
+		// 		if (data.private_key) {
+		// 			this.setState({ privateKey: data.private_key }, () => {
+		// 				// this.goNext();
+		// 			});
+		// 		} else {
+		// 			Alert.alert(strings('import_private_key.error_title'), strings('import_private_key.error_message'));
+		// 		}
+		// 	}
+		// });
+	};
+
+	onQRScan = response => {
+		const content = response.data;
+
+		if (!content) {
+			this.setState({ isScanQR: false });
+			Alert.alert(strings('import_private_key.error_title'), strings('import_private_key.error_message'));
+			return false;
+		}
+		this.setState({ isScanQR: false, privateKey: content }, () => {
+			this.goNext();
 		});
 	};
 
 	render() {
+		const { isScanQR } = this.state;
 		return (
 			<View style={styles.mainWrapper}>
 				<KeyboardAwareScrollView
@@ -171,6 +187,14 @@ export default class ImportPrivateKey extends PureComponent {
 							)}
 						</StyledButton>
 					</View>
+					<Modal visible={isScanQR}>
+						<QRScanner
+							onBarCodeRead={e => this.onQRScan(e)}
+							onClose={() => {
+								this.setState({ isScanQR: false });
+							}}
+						/>
+					</Modal>
 				</KeyboardAwareScrollView>
 			</View>
 		);
