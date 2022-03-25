@@ -32,6 +32,8 @@ import FileTransferWebRTC from '../../Views/FilesManager/store/FileTransferWebRT
 import { RestoreSecretRequest } from '../../../services/Messages';
 import styles from './styles/index';
 import StyledButton from '../StyledButton';
+import NetInfo from '@react-native-community/netinfo';
+import { showError } from '../../../util/notify';
 
 /**
  * View that contains the list of all the available accounts
@@ -253,6 +255,11 @@ class AccountList extends PureComponent {
 	};
 
 	addAccount = async () => {
+		const state = await NetInfo.fetch();
+		if(!state.isConnected){
+			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
+			return
+		}
 		if (this.state.loading) return;
 		this.mounted && this.setState({ loading: true });
 		const { KeyringController } = Engine.context;
