@@ -150,15 +150,18 @@ class Dashboard extends PureComponent {
 	};
 
 	pollTokenBalances = async () => {
-		const { TokenBalancesController } = Engine.context;
+		const { TokenBalancesController, AssetsContractController } = Engine.context;
 		await TokenBalancesController.updateBalances();
-		const { accounts } = Engine.state.AccountTrackerController;
-		const { selectedAddress } = Engine.state.PreferencesController;
-		const { contractBalances } = Engine.state.TokenBalancesController;
-		if (Object.keys(contractBalances).includes(routes.klubToken.address)) {
-			const account = accounts[selectedAddress];
-			account.balance = BNToHex(contractBalances[routes.klubToken.address]);
-		}
+		const { accounts } = this.props;
+		Object.keys(accounts).forEach(accountAddress => {
+			AssetsContractController.getBalanceOf(routes.klubToken.address, accountAddress)
+				.then(balance => {
+					if (accounts[accountAddress].balance !== BNToHex(balance)) {
+						accounts[accountAddress].balance = BNToHex(balance);
+					}
+				})
+				.catch(err => console.error(err));
+		});
 	};
 
 	getAccounts() {
