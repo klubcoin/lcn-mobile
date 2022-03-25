@@ -148,11 +148,6 @@ const Entry = props => {
 
 	useEffect(() => {
 		async function startApp() {
-			const state = await NetInfo.fetch()
-			if(!state.isConnected){
-				animateAndGoTo('Welcome');
-				return
-			}
 			const existingUser = await AsyncStorage.getItem(EXISTING_USER);
 			try {
 				const currentVersion = await getVersion();
@@ -179,6 +174,11 @@ const Entry = props => {
 			}
 
 			if (existingUser !== null) {
+				const state = await NetInfo.fetch();
+				if (!state.isConnected) {
+					animateAndGoTo('Welcome');
+					return;
+				}
 				unlockKeychain();
 			} else {
 				animateAndGoTo('OnboardingRootNav');
