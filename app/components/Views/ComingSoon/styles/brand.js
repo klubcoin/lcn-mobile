@@ -41,7 +41,7 @@ const brandStyles = StyleSheet.create({
 	},
 	itemText:{
 		color:colors.white,
-		fontSize:14,
+		fontSize:16,
 		 fontWeight:'bold'
 	},
 });

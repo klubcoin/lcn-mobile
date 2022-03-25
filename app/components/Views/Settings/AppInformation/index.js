@@ -18,6 +18,8 @@ import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import AppConstants from '../../../../core/AppConstants';
 import { displayName } from '../../../../../app.json';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import IconFontisto from 'react-native-vector-icons/Fontisto';
+import ScaleImage from 'react-native-scalable-image';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -28,26 +30,7 @@ const styles = StyleSheet.create({
 		paddingRight: 24,
 		paddingVertical: 24
 	},
-	title: {
-		fontSize: 18,
-		textAlign: 'left',
-		marginBottom: 20,
-		...fontStyles.normal,
-		color: colors.white
-	},
-	link: {
-		fontSize: 18,
-		textAlign: 'left',
-		marginBottom: 20,
-		...fontStyles.normal,
-		color: colors.grey000
-	},
-	division: {
-		borderBottomColor: colors.grey400,
-		borderBottomWidth: 1,
-		width: '30%',
-		marginBottom: 20
-	},
+
 	image: {
 		width: 100,
 		height: 100
@@ -66,11 +49,75 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		color: colors.fontSecondary,
 		...fontStyles.normal
+	},
+	buttonTopText: {
+		color: colors.primaryFox,
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	buttonTop: {
+		backgroundColor: colors.white,
+		flexDirection: 'row',
+		borderRadius: 12,
+		marginBottom: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: 12,
+		width: '100%'
+	},
+	space: {
+		height: 30
+	},
+	buttonBottom: {
+		backgroundColor: colors.purple,
+		flexDirection: 'row',
+		borderRadius: 12,
+		marginBottom: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: 12,
+		width: '100%'
+	},
+	buttonIcon: {
+		color: colors.white,
+		marginRight: 12
+	},
+	buttonBottomText: {
+		color: colors.white,
+		fontSize: 16,
+		fontWeight: 'bold'
 	}
 });
 
-const foxImage = require('../../../../images/klubcoin_lighten.png');
-
+const logo = require('../../../../images/klubcoin_lighten.png');
+const logoText = require('../../../../images/klubcoin_text.png');
+const data = [
+	{
+		title: 'klubcoin.net',
+		icon: 'world-o',
+		url: 'https://klubcoin.net'
+	},
+	{
+		title: 'Telegram',
+		icon: 'telegram',
+		url: 'https://t.me/klubcoin'
+	},
+	{
+		title: 'Twitter',
+		icon: 'twitter',
+		url: 'https://twitter.com/klubcoin'
+	},
+	{
+		title: 'Instagram',
+		icon: 'instagram',
+		url: 'https://www.instagram.com/klubcoin'
+	},
+	{
+		title: 'Discord',
+		icon: 'discord',
+		url: 'https://discord.com/invite/h8FptErsN7'
+	}
+];
 /**
  * View that contains app information
  */
@@ -140,33 +187,31 @@ export default class AppInformation extends PureComponent {
 			<SafeAreaView style={styles.wrapper} testID={'app-settings-screen'}>
 				<ScrollView contentContainerStyle={styles.wrapperContent}>
 					<View style={styles.logoWrapper}>
-						<Image source={foxImage} style={styles.image} resizeMethod={'auto'} />
+						<Image source={logo} style={styles.image} resizeMethod={'auto'} />
+						<ScaleImage source={logoText} width={200} />
+						{/* <Image source={logoText} style={styles.image} resizeMethod={'auto'} /> */}
 						<Text style={styles.versionInfo}>{this.state.appInfo}</Text>
 					</View>
-					<Text style={styles.title}>{strings('app_information.links')}</Text>
-					<View style={styles.link}>
-						<TouchableOpacity onPress={this.onPrivacyPolicy} activeOpacity={0.7}>
-							<Text style={styles.link}>{strings('app_information.privacy_policy')}</Text>
+					<TouchableOpacity style={styles.buttonTop} onPress={this.onPrivacyPolicy} activeOpacity={0.7}>
+						<Text style={styles.buttonTopText}>{strings('app_information.privacy_policy')}</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.buttonTop} onPress={this.onTermsOfUse} activeOpacity={0.7}>
+						<Text style={styles.buttonTopText}>{strings('app_information.terms_of_use')}</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.buttonTop} onPress={this.onAttributions} activeOpacity={0.7}>
+						<Text style={styles.buttonTopText}>{strings('app_information.attributions')}</Text>
+					</TouchableOpacity>
+					<View style={styles.space} />
+					{data.map(e => (
+						<TouchableOpacity
+							activeOpacity={0.7}
+							style={styles.buttonBottom}
+							onPress={() => this.goTo(e.url, e.title)}
+						>
+							<IconFontisto name={e.icon} style={styles.buttonIcon} size={20} />
+							<Text style={styles.buttonBottomText}>{e.title}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={this.onTermsOfUse} activeOpacity={0.7}>
-							<Text style={styles.link}>{strings('app_information.terms_of_use')}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={this.onAttributions} activeOpacity={0.7}>
-							<Text style={styles.link}>{strings('app_information.attributions')}</Text>
-						</TouchableOpacity>
-					</View>
-					<View style={styles.division} />
-					<View style={styles.links}>
-						<TouchableOpacity onPress={this.onSupportCenter} activeOpacity={0.7}>
-							<Text style={styles.link}>{strings('app_information.support_center')}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={this.onWebSite} activeOpacity={0.7}>
-							<Text style={styles.link}>{strings('app_information.web_site')}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={this.onContactUs} activeOpacity={0.7}>
-							<Text style={styles.link}>{strings('app_information.contact_us')}</Text>
-						</TouchableOpacity>
-					</View>
+					))}
 				</ScrollView>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>
