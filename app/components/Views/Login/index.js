@@ -166,7 +166,7 @@ class Login extends PureComponent {
 
 	onLogin = async () => {
 		if (!this.state.internetConnect) {
-			showError(strings('import_from_seed.internet_warning'));
+			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 			return;
 		}
 		const onboardEmail = preferences.onboardProfile.email;
@@ -360,7 +360,7 @@ class Login extends PureComponent {
 		try {
 			const credentials = await SecureKeychain.getGenericPassword();
 			if (!this.state.internetConnect) {
-				showError(strings('import_from_seed.internet_warning'));
+				showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 				return true;
 			}
 			if (!credentials) return false;

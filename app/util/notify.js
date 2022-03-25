@@ -10,11 +10,11 @@ export function showSuccess(message) {
 	});
 }
 
-export function showError(message) {
+export function showError(message, subMessage = strings('profile.notice')) {
 	Toast.show({
 		type: 'error',
 		text1: message,
-		text2: strings('profile.notice'),
+		text2: subMessage,
 		visibilityTime: 1000
 	});
 }

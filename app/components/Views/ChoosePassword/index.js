@@ -223,7 +223,7 @@ class ChoosePassword extends PureComponent {
 
 	onPressCreate = async () => {
 		if (!this.state.internetConnect) {
-			showError(strings('import_from_seed.internet_warning'));
+			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 			return;
 		}
 

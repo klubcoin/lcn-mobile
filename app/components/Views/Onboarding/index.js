@@ -410,7 +410,7 @@ class Onboarding extends PureComponent {
 
 	onPressCreate = () => {
 		if (!this.state.internetConnect) {
-			showError(strings('import_from_seed.internet_warning'));
+			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 			return;
 		}
 		const action = () => {
@@ -439,7 +439,7 @@ class Onboarding extends PureComponent {
 
 	onViewPartners = () => {
 		if (!this.state.internetConnect) {
-			showError(strings('import_from_seed.internet_warning'));
+			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 			return;
 		}
 		const { navigation } = this.props;
@@ -461,7 +461,7 @@ class Onboarding extends PureComponent {
 
 	onPressImport = () => {
 		if (!this.state.internetConnect) {
-			showError(strings('import_from_seed.internet_warning'));
+			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 			return;
 		}
 		const action = () => {
