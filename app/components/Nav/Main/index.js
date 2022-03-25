@@ -301,20 +301,28 @@ const Main = props => {
 		setSignMessage(true);
 	};
 
+	useEffect(() => {
+		navigateChangeHandler();
+	}, [props.navigation]);
+
 	const connectionChangeHandler = useCallback(
 		state => {
 			if (!state) return;
 			const { isConnected } = state;
 			// Show the modal once the status changes to offline
-			if (connected && isConnected === false) {
+			if (props.navigation.state.routeName !== 'OfflineModeView' && isConnected === false) {
 				props.navigation.navigate('OfflineModeView');
 			}
-			if (connected !== isConnected && isConnected !== null) {
-				setConnected(isConnected);
-			}
+			setConnected(isConnected);
 		},
 		[connected, setConnected, props.navigation]
 	);
+
+	const navigateChangeHandler = useCallback(() => {
+		if (props.navigation.state.routeName !== 'OfflineModeView' && connected === false) {
+			props.navigation.navigate('OfflineModeView');
+		}
+	}, [connected, setConnected, props.navigation]);
 
 	const checkInfuraAvailability = useCallback(async () => {
 		if (props.providerType !== 'rpc') {
