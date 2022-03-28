@@ -456,7 +456,7 @@ class Amount extends PureComponent {
 				}
 				amountError = weiBalance.gte(weiInput) ? undefined : strings('transaction.insufficient');
 
-				if (weiInput == "0") {
+				if (weiInput == '0') {
 					amountError = strings('transaction.invalid_amount');
 				}
 			} else {
@@ -472,7 +472,6 @@ class Amount extends PureComponent {
 			this.setState({ amountError });
 			return !!amountError;
 		}
-
 	};
 
 	getNetworkFee = async ({ from, to }) => {
@@ -481,11 +480,11 @@ class Amount extends PureComponent {
 		const base = Math.pow(10, selectedAsset.decimals);
 		const networkFee = {
 			gas: hexToBN('0x1'),
-			gasPrice: toWei(parseFloat(result) / base),
-		}
+			gasPrice: toWei(parseFloat(result) / base)
+		};
 		this.setState({ networkFee });
 		return networkFee;
-	}
+	};
 	/**
 	 * Estimate transaction gas with information available
 	 */
@@ -548,8 +547,15 @@ class Amount extends PureComponent {
 		const { contractExchangeRates, conversionRate, currentCurrency, chainId, ticker } = this.props;
 		const { internalPrimaryCurrencyIsCrypto, currentConversion } = this.state;
 		let inputValueConversion, renderableInputValueConversion, hasExchangeRate, comma;
-		// Remove spaces from input
-		inputValue = inputValue && inputValue.replace(/\s+/g, '');
+		// Remove spaces, text, special charactor,... from input
+		inputValue =
+			inputValue &&
+			inputValue
+				.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
+				.replace(/,/g, '.')
+				.replace(/\./, '#')
+				.replace(/\./g, '')
+				.replace(/#/, '.');
 		// Handle semicolon for other languages
 		if (inputValue && inputValue.includes(',')) {
 			comma = true;
@@ -619,7 +625,7 @@ class Amount extends PureComponent {
 		// this.setState({ assetsModalVisible: !assetsModalVisible });
 	};
 
-	handleSelectedAssetBalance = (selectedAsset) => {
+	handleSelectedAssetBalance = selectedAsset => {
 		// const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
 		// if (accounts && accounts[selectedAddress]) {
 		// 	this.setState({
@@ -631,10 +637,12 @@ class Amount extends PureComponent {
 		if (isETH) {
 			currentBalance = `${renderFromWei(accounts[selectedAddress].balance)} ${symbol}`;
 		} else {
-			currentBalance = `${fromTokenMinimalUnitString(contractBalances[selectedAsset.address]?.toString(10), decimals)} ${symbol}`;
+			currentBalance = `${fromTokenMinimalUnitString(
+				contractBalances[selectedAsset.address]?.toString(10),
+				decimals
+			)} ${symbol}`;
 		}
 		this.setState({ currentBalance: currentBalance });
-
 	};
 
 	pickSelectedAsset = selectedAsset => {
@@ -818,6 +826,7 @@ class Amount extends PureComponent {
 							onChangeText={this.onInputChange}
 							keyboardType={'numeric'}
 							placeholder={'0'}
+							maxLength={256}
 							testID={'txn-amount-input'}
 						/>
 					</View>
