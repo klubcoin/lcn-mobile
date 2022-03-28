@@ -351,6 +351,13 @@ class PaymentRequest extends PureComponent {
 	 * @param {string} amount - String containing amount number from input
 	 */
 	updateAmount = amount => {
+		let rawAmount = amount
+			.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
+			.replace(/,/g, '.')
+			.replace(/\./, '#')
+			.replace(/\./g, '')
+			.replace(/#/, '.');
+		this.setState({ amount: rawAmount });
 		const { internalPrimaryCurrency, selectedAsset } = this.state;
 		const { conversionRate, contractExchangeRates, currentCurrency } = this.props;
 		const currencySymbol = currencySymbols[currentCurrency];
@@ -359,27 +366,30 @@ class PaymentRequest extends PureComponent {
 		// If primary currency is not crypo we need to know if there are conversion and exchange rates to handle0,
 		// fiat conversion for the payment request
 		if (internalPrimaryCurrency !== 'ETH' && conversionRate && (exchangeRate || selectedAsset.isETH)) {
-			res = this.handleFiatPrimaryCurrency(amount && amount.replace(',', '.'));
+			res = this.handleFiatPrimaryCurrency(rawAmount && rawAmount.replace(',', '.'));
 		} else {
-			res = this.handleETHPrimaryCurrency(amount && amount.replace(',', '.'));
+			res = this.handleETHPrimaryCurrency(rawAmount && rawAmount.replace(',', '.'));
 		}
 		const { cryptoAmount, symbol } = res;
-		if (amount && amount[0] === currencySymbol) amount = amount.substr(1);
+		if (rawAmount && rawAmount[0] === currencySymbol) rawAmount = rawAmount.substr(1);
 		if (res.secondaryAmount && res.secondaryAmount[0] === currencySymbol)
 			res.secondaryAmount = res.secondaryAmount.substr(1);
-		if (amount && amount === '0') amount = undefined;
+		if (rawAmount && rawAmount === '0') rawAmount = undefined;
 
 		try {
-			if (toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString() == "0" || !cryptoAmount || cryptoAmount === '0') {
-				this.setState({disabledButton: true})
+			if (
+				toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString() == '0' ||
+				!cryptoAmount ||
+				cryptoAmount === '0'
+			) {
+				this.setState({ disabledButton: true });
 			} else {
-				this.setState({disabledButton: false})
+				this.setState({ disabledButton: false });
 			}
-				
 		} catch (error) {
-			this.setState({ disabledButton: true, showError: true })
+			this.setState({ disabledButton: true, showError: true });
 		}
-		this.setState({ amount, cryptoAmount, secondaryAmount: res.secondaryAmount, symbol, showError: false });
+		this.setState({ cryptoAmount, secondaryAmount: res.secondaryAmount, symbol, showError: false });
 	};
 
 	/**
@@ -437,7 +447,6 @@ class PaymentRequest extends PureComponent {
 				navigation && navigation.replace('PaymentRequestSuccess', request);
 			}
 		} catch (e) {
-            console.log("🚀 ~ file: index.js ~ line 429 ~ PaymentRequest ~ e", e)
 			this.setState({ showError: true });
 		}
 	};
@@ -492,6 +501,7 @@ class PaymentRequest extends PureComponent {
 										onSubmitEditing={this.onNext}
 										ref={this.amountInput}
 										testID={'request-amount-input'}
+										maxLength={256}
 									/>
 									<Text style={styles.eth} numberOfLines={1}>
 										{symbol}
