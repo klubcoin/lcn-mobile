@@ -352,11 +352,13 @@ class PaymentRequest extends PureComponent {
 	 */
 	updateAmount = amount => {
 		let rawAmount = amount
-			.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
-			.replace(/,/g, '.')
-			.replace(/\./, '#')
-			.replace(/\./g, '')
-			.replace(/#/, '.');
+			? amount
+					.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
+					.replace(/,/g, '.')
+					.replace(/\./, '#')
+					.replace(/\./g, '')
+					.replace(/#/, '.')
+			: null;
 		this.setState({ amount: rawAmount });
 		const { internalPrimaryCurrency, selectedAsset } = this.state;
 		const { conversionRate, contractExchangeRates, currentCurrency } = this.props;
