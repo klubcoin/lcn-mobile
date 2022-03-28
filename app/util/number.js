@@ -134,7 +134,7 @@ export function sumFloat(value1, value2) {
 			.reverse()
 			.join('');
 	}
-	return sumDecimals ? `${sumIntegers}.${sumDecimals}` : sumIntegers;
+	return sumDecimals && !/^0+$/.test(sumDecimals) ? `${sumIntegers}.${sumDecimals}` : sumIntegers;
 }
 
 /**
