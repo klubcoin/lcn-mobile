@@ -12,10 +12,12 @@ const brandStyles = StyleSheet.create({
 	},
 	assetsTitle: {
 		color: colors.white,
-		marginBottom: 10,
+		marginBottom: 10
 	},
 	container: {
-		backgroundColor: colors.grey
+		backgroundColor: colors.purple,
+		borderWidth: 0,
+		borderRadius:12
 	},
 	input: {
 		backgroundColor: colors.grey,
@@ -25,13 +27,13 @@ const brandStyles = StyleSheet.create({
 		color: colors.white
 	},
 	button: {
-		paddingVertical: 12,
+		paddingVertical: 12
 	},
 	fiatValue: {
 		color: colors.white
 	},
 	currencySymbolSmall: {
-		color: colors.white,
+		color: colors.white
 	}
 });
 

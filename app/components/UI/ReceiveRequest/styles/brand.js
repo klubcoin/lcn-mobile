@@ -4,7 +4,7 @@ import Device from '../../../../util/Device';
 
 const brandStyles = StyleSheet.create({
 	wrapper: {
-		backgroundColor: colors.grey
+		backgroundColor: colors.purple500
 	},
 	copyButton: {
 		color: colors.black

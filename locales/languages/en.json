@@ -1868,7 +1868,8 @@
 		"write_review": "Write review",
 		"additional_info": "Additional information",
 		"provided_by": "Provided by",
-		"developer": "Developer"
+		"developer": "Developer",
+		"anonymous": "anonymous"
 	},
 	"manage_coin": {
 		"scan_qr_to_collect": "Scan QR to collect",
