@@ -53,6 +53,7 @@ import Web3 from 'web3';
 import emojiRegex from 'emoji-regex';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
+import CryptoSignature from '../../../core/CryptoSignature';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -180,7 +181,8 @@ class ChoosePassword extends PureComponent {
 		const publicInfo = JSON.stringify({ name });
 		const privateInfo = JSON.stringify({ emailAddress: email });
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
-		const params = [username, selectedAddress, hash, publicInfo, privateInfo];
+		const signature = await CryptoSignature.signMessage(selectedAddress, privateInfo);
+		const params = [username, selectedAddress, hash, signature, publicInfo, privateInfo];
 		API.postRequest(
 			Routes.walletCreation,
 			params,

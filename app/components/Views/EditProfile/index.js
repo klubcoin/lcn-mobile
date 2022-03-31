@@ -42,6 +42,7 @@ import APIService from '../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
 import { SUCCESS, ALREADY_EXISTS } from '../ProfileOnboard';
+import CryptoSignature from '../../../core/CryptoSignature';
 
 export const REGEX_PHONE_NUMBER = /^[\d]{4,13}$/;
 
@@ -383,7 +384,8 @@ class EditProfile extends PureComponent {
 			const publicInfo = JSON.stringify({ name });
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-			const params = [username, selectedAddress, publicInfo, privateInfo];
+			const signature = await CryptoSignature.signMessage(selectedAddress, publicInfo);
+			const params = [username, selectedAddress, signature, publicInfo, privateInfo];
 			//Update wallet info on server
 			Api.postRequest(
 				routes.walletUpdate,

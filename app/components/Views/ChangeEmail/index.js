@@ -38,6 +38,8 @@ import { SUCCESS } from '../ProfileOnboard';
 import { renderAccountName } from '../../../util/address';
 import Api from '../../../services/api';
 import * as sha3JS from 'js-sha3';
+import { showError } from '../../../util/notify';
+import CryptoSignature from '../../../core/CryptoSignature';
 
 const CHANGE_EMAIL = 'change_email';
 const CONFIRM_PASSWORD = 'confirm_password';
@@ -141,13 +143,14 @@ class ChangeEmail extends PureComponent {
 		const publicInfo = JSON.stringify({ name });
 		const privateInfo = JSON.stringify({ emailAddress: this.state.email, phoneNumber: phone });
 		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-		const params = [username, selectedAddress, publicInfo, privateInfo];
+		const signature = await CryptoSignature.signMessage(selectedAddress, publicInfo);
+		const params = [username, selectedAddress, signature, publicInfo, privateInfo];
 		Api.postRequest(
 			routes.walletUpdate,
 			params,
 			response => {
 				if (response.error) {
-					alert(`${response.error.message}`);
+					showError(response.error.message);
 				} else {
 					this.props.navigation.navigate('VerifyOTP', {
 						email: this.state.email,
