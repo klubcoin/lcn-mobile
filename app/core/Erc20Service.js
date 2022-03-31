@@ -4,8 +4,7 @@ import ContractABIs from './ABIs';
 import routes from '../common/routes';
 
 const contractAddress = routes.klubToken.address;
-const rpcProvider = 'https://testnet.liquichain.io/rpc';
-
+const rpcProvider = routes.mainNetWork.url;
 const contract = () => {
   const { selectedAddress } = Engine.state.PreferencesController;
   const web3 = new Web3(new Web3.providers.HttpProvider(rpcProvider));

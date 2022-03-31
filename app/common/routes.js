@@ -26,7 +26,6 @@ export default {
 		contactUrl: 'https://klubcoin.net/contact',
 	},
 	klubToken: {
-		rpcUrl: `https://testnet.liquichain.io/rpc`,
 		chainId: '1662',
 		address: "0x3Dbe873AC593490A425D70ef206B7F166862461e",
 		symbol: "KLUB",

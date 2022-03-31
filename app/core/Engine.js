@@ -72,7 +72,7 @@ class Engine {
 				infuraProjectId: AppConstants.MM_INFURA_PROJECT_ID || NON_EMPTY,
 				providerConfig: {
 					type: 'rpc',
-					rpcTarget: Routes.klubToken.rpcUrl,
+					rpcTarget: Routes.mainNetWork.url,
 					chainId: Routes.klubToken.chainId,
 					ticker: Routes.klubToken.symbol,
 					nickname: Routes.mainNetWork.name,
@@ -193,7 +193,7 @@ class Engine {
 				}
 			}
 			networkController.setRpcTarget(
-				Routes.klubToken.rpcUrl,
+				Routes.mainNetWork.url,
 				Routes.klubToken.chainId,
 				Routes.klubToken.symbol,
 				Routes.mainNetWork.name,
@@ -220,7 +220,7 @@ class Engine {
 					// We should add a state or event emitter saying the provider changed
 					if (state.provider.chainId == '1') { 
 						network.setRpcTarget(
-							Routes.klubToken.rpcUrl,
+							Routes.mainNetWork.url,
 							Routes.klubToken.chainId,
 							Routes.klubToken.symbol,
 							Routes.mainNetWork.name,
