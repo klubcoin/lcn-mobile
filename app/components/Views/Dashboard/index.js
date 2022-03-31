@@ -44,6 +44,7 @@ import { LineChart } from 'react-native-chart-kit';
 import routes from '../../../common/routes';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Erc20Service from '../../../core/Erc20Service';
+import CryptoSignature from '../../../core/CryptoSignature';
 
 /**
  * Main view for the wallet
@@ -247,13 +248,10 @@ class Dashboard extends PureComponent {
 
 	async getWalletInfo() {
 		const accounts = this.getAccounts();
-
-		// const { selectedAddress } = this.props;
 		const selectedAddress = accounts[0].address;
-		const { PreferencesController, KeyringController } = Engine.context;
+		const { PreferencesController } = Engine.context;
 		const message = `walletInfo,${selectedAddress},${new Date().getTime()}`;
-		const signParams = { from: selectedAddress, data: message };
-		const sign = await KeyringController.signPersonalMessage(signParams);
+		const sign = await CryptoSignature.signStringMessage(selectedAddress, message)
 		API.postRequest(
 			Routes.walletInfo,
 			[selectedAddress, sign, message],

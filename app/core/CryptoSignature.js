@@ -15,6 +15,12 @@ export default class CryptoSignature {
 		const params = { from, data: hash };
 		return await KeyringController.signMessage(params);
 	}
+	static async signStringMessage(from, data) {
+		const { KeyringController } = Engine.context;
+		const hash = sha3JS.keccak_256(data);
+		const params = { from, data: hash };
+		return await KeyringController.signMessage(params);
+	}
 	/**
 	 * 
 	 * @param {*} data which was used to generate signature

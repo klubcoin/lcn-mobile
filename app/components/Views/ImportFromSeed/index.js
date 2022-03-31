@@ -41,6 +41,7 @@ import preferences from '../../../store/preferences';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
+import CryptoSignature from '../../../core/CryptoSignature';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -171,9 +172,8 @@ class ImportFromSeed extends PureComponent {
 	async getAccountInfo(selectedAddress, metricsOptIn, onboardingWizard) {
 		const address = selectedAddress;
 		const message = `walletInfo,${address},${new Date().getTime()}`;
-		const { KeyringController } = Engine.context;
-		const signParams = { from: address, data: message };
-		const sign = await KeyringController.signPersonalMessage(signParams);
+		const sign = await CryptoSignature.signStringMessage(address, message);
+
 		Api.postRequest(
 			routes.walletInfo,
 			[address, sign, message],
