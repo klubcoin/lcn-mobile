@@ -272,9 +272,10 @@ class AccountOverview extends PureComponent {
 							<View style={styles.row}>
 								<TouchableOpacity
 									style={styles.identiconBorder}
-									disabled={onboardingWizard}
+									// disabled={onboardingWizard}
 									onPress={this.toggleAccountsModal}
 									testID={'wallet-account-identicon'}
+									disabled
 								>
 									{!!avatar ? (
 										<RemoteImage

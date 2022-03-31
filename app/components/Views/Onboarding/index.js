@@ -540,7 +540,7 @@ class Onboarding extends PureComponent {
 							{strings('import_wallet.import_from_seed_button')}
 						</StyledButton>
 					</View>
-					<View style={styles.buttonWrapper}>
+					{/* <View style={styles.buttonWrapper}>
 						<StyledButton
 							style={styles.button}
 							type={'normal-padding'}
@@ -549,7 +549,7 @@ class Onboarding extends PureComponent {
 						>
 							{strings('import_wallet.sync_from_browser_extension_button', { appName: displayName })}
 						</StyledButton>
-					</View>
+					</View> */}
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							style={styles.button}

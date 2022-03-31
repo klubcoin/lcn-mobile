@@ -706,14 +706,14 @@ class DrawerView extends PureComponent {
 					icon: this.getIcon('share'),
 					action: this.onShare
 				},
-				{
-					name:
-						(blockExplorer && `${strings('drawer.view_in')} ${blockExplorerName}`) ||
-						strings('drawer.view_in_liquichain', { appName: displayName }),
-					icon: this.getIcon('eye'),
-					// action: this.viewInEtherscan
-					action: this.comingSoon
-				},
+				// {
+				// 	name:
+				// 		(blockExplorer && `${strings('drawer.view_in')} ${blockExplorerName}`) ||
+				// 		strings('drawer.view_in_liquichain', { appName: displayName }),
+				// 	icon: this.getIcon('eye'),
+				// 	// action: this.viewInEtherscan
+				// 	action: this.comingSoon
+				// },
 				{
 					name: strings('drawer.collect'),
 					icon: this.getImageIcon('collect'),
@@ -721,7 +721,7 @@ class DrawerView extends PureComponent {
 					action: this.goToCollect
 				},
 				{
-					name: strings('drawer.receive_tips'),
+				name: strings('drawer.receive_tips'),
 					icon: this.getImageIcon('receiveTip'),
 					selectedIcon: this.getImageIcon('receiveTip'),
 					action: this.gotoTipper
@@ -952,6 +952,7 @@ class DrawerView extends PureComponent {
 									style={styles.accountInfo}
 									onPress={this.toggleAccountsModal}
 									testID={'navbar-account-button'}
+									disabled
 								>
 									<View style={styles.accountNameWrapper}>
 										{account && (
