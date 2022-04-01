@@ -282,14 +282,14 @@ export default class APIService {
 
 	static sendEmailOTP(email, callback) {
 		const data = {
-			basicAuth: adminAuth
+			basicAuth: basicAuth
 		};
 		WebService.sendGetDirect(this.apiSendEmailOTP(email), data, callback);
 	}
 
 	static verifyEmailOTP(email, otp, callback) {
 		const data = {
-			basicAuth: adminAuth,
+			basicAuth: basicAuth,
 			otp
 		};
 		WebService.sendPostDirect(this.apiVerifyEmailOTP(email), data, callback);
