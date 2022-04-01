@@ -1103,7 +1103,7 @@ class DrawerView extends PureComponent {
 					/>
 				</Modal>
 				<Modal
-					isVisible={this.props.accountsModalVisible}
+					isVisible={false}
 					style={styles.bottomModal}
 					onBackdropPress={this.toggleAccountsModal}
 					onBackButtonPress={this.toggleAccountsModal}
