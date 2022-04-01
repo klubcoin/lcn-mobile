@@ -31,7 +31,7 @@ export default {
 	MM_UNIVERSAL_LINK_HOST: Config.UNIVERSAL_LINK,
 	MM_INFURA_PROJECT_ID: 'aece2b99680d44839ec28ff077670ec6',
 	SAI_ADDRESS: '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359',
-	HOMEPAGE_URL: 'https://home.liquichain.io/',
+	HOMEPAGE_URL: 'https://klubcoin.net/',
 	SHORT_HOMEPAGE_URL: 'liquichain.io',
 	ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
 	USER_AGENT: Device.isAndroid()
@@ -74,8 +74,8 @@ export default {
 		TERMS_AND_CONDITIONS: `https://app.klubcoin.net/terms.html`,
 		PRIVACY_POLICY: `https://app.klubcoin.net/privacy.html`,
 		LEARN_MORE: `https://app.klubcoin.net/docs.html`,
-		CONNECTIVITY_ISSUES: 'https://liquichain.io',
-		NFT: 'https://liquichain.io',
+		CONNECTIVITY_ISSUES: 'https://klubcoin.net',
+		NFT: 'https://klubcoin.net',
 		WHY_IT_IMPORTANT: 'https://app.klubcoin.net/why-it-important.html',
 		SUPPORT_CENTER: 'https://app.klubcoin.net/support-center.html'
 	},
