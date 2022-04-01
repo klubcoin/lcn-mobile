@@ -54,7 +54,16 @@ class VerifyOTP extends PureComponent {
 
 	componentDidMount() {
 		this.sendOTPEmail();
-		BackHandler.addEventListener('hardwareBackPress', () => true);
+		BackHandler.addEventListener('hardwareBackPress', this.disableBackAction);
+	}
+
+	componentWillUnmount() {
+		console.log('componentWillUnmount');
+		BackHandler.removeEventListener('hardwareBackPress', this.disableBackAction);
+	}
+
+	disableBackAction() {
+		return true;
 	}
 
 	sendOTPEmail() {
