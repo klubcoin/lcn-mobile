@@ -145,20 +145,20 @@ class DeeplinkManager {
 						case '':
 							break;
 						case 'tip':
-							const receiverAddress = urlObj.pathname.split('/')[2];
-							const value = params['value']
-							const symbol = params['symbol']
-							const isETH = params['isETH'];
-							const decimals = params['decimals'];
-							const tipData = {
-								receiverAddress,
-								value,
-								symbol,
-								isETH,
-								decimals
-							};
+							// const receiverAddress = urlObj.pathname.split('/')[2];
+							// const value = params['value']
+							// const symbol = params['symbol']
+							// const isETH = params['isETH'];
+							// const decimals = params['decimals'];
+							// const tipData = {
+							// 	receiverAddress,
+							// 	value,
+							// 	symbol,
+							// 	isETH,
+							// 	decimals
+							// };
 
-							store.dispatch(showTipperModal(tipData))
+							// store.dispatch(showTipperModal(tipData))
 							break;
 						case 'product':
 							this.handleProductLink(urlObj.pathname);
