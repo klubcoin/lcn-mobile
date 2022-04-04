@@ -77,6 +77,7 @@ const HintModal = ({ onCancel, onConfirm, modalVisible, onRequestClose, value, o
 					placeholderTextColor={colors.grey200}
 					multiline
 					textAlignVertical={'top'}
+					maxLength={256}
 				/>
 			</View>
 		</TouchableWithoutFeedback>
