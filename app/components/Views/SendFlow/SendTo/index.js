@@ -532,7 +532,7 @@ class SendFlow extends PureComponent {
 				<OnboardingScreenWithBg screen={'a'}>
 					<View style={styles.inputWrapper}>
 						<AddressFrom
-							onPressIcon={this.toggleFromAccountModal}
+							// onPressIcon={this.toggleFromAccountModal}
 							fromAccountAddress={fromSelectedAddress}
 							fromAccountName={fromAccountName}
 							fromAccountBalance={fromAccountBalance}
