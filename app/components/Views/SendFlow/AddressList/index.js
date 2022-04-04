@@ -237,7 +237,7 @@ class AddressList extends PureComponent {
 		return (
 			<View style={styles.root}>
 				<ScrollView style={styles.myAccountsWrapper}>
-					{!onlyRenderAddressBook && this.renderMyAccounts()}
+					{/* {!onlyRenderAddressBook && this.renderMyAccounts()} */}
 					{!onlyRenderAddressBook && processedRecentsList}
 					{contactElements.length ? (
 						<FlatList
