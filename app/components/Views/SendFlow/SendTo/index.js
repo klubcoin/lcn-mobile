@@ -9,13 +9,19 @@ import {
 	TextInput,
 	SafeAreaView,
 	InteractionManager,
-	ScrollView
+	ScrollView,
+	Modal as ReactNativeModal
 } from 'react-native';
 import { AddressFrom, AddressTo } from '../AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
 import { connect } from 'react-redux';
-import { fromTokenMinimalUnit, fromTokenMinimalUnitString, renderFromTokenMinimalUnit, renderFromWei } from '../../../../util/number';
+import {
+	fromTokenMinimalUnit,
+	fromTokenMinimalUnitString,
+	renderFromTokenMinimalUnit,
+	renderFromWei
+} from '../../../../util/number';
 import ActionModal from '../../../UI/ActionModal';
 import Engine from '../../../../core/Engine';
 import { isValidAddress, toChecksumAddress } from 'ethereumjs-util';
@@ -41,6 +47,8 @@ import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../../app.json';
 import { fromWei } from 'web3-utils';
+import QRScanner from '../../../UI/QRScanner';
+import { parse } from 'eth-url-parser';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -119,11 +127,21 @@ class SendFlow extends PureComponent {
 		addToAddressToAddressBook: false,
 		alias: undefined,
 		confusableCollection: [],
-		inputWidth: { width: '99%' }
+		inputWidth: { width: '99%' },
+		isScanQR: false
 	};
 
 	componentDidMount = async () => {
-		const { addressBook, selectedAddress, accounts, ticker, network, navigation, providerType, selectedAsset } = this.props;
+		const {
+			addressBook,
+			selectedAddress,
+			accounts,
+			ticker,
+			network,
+			navigation,
+			providerType,
+			selectedAsset
+		} = this.props;
 		const { fromAccountName, fromSelectedAddress } = this.state;
 		// For analytics
 		navigation.setParams({ providerType });
@@ -132,7 +150,10 @@ class SendFlow extends PureComponent {
 		// const fromAccountBalance = `${Helper.demosToLiquichain(accounts[selectedAddress].balance)} ${
 		// 	Routes.mainNetWork.ticker
 		// }`;
-		const fromAccountBalance = `${fromTokenMinimalUnitString(accounts[fromSelectedAddress].balance?.toString(10), selectedAsset.decimals)} ${getTicker(ticker)}`;
+		const fromAccountBalance = `${fromTokenMinimalUnitString(
+			accounts[fromSelectedAddress].balance?.toString(10),
+			selectedAsset.decimals
+		)} ${getTicker(ticker)}`;
 
 		setTimeout(() => {
 			this.setState({
@@ -230,7 +251,10 @@ class SendFlow extends PureComponent {
 		const { identities, ticker, accounts, selectedAsset } = this.props;
 		const { name } = identities[accountAddress];
 		const { PreferencesController } = Engine.context;
-		const fromAccountBalance = `${fromTokenMinimalUnitString(accounts[accountAddress].balance.toString(10), selectedAsset.decimals)} ${getTicker(ticker)}`;
+		const fromAccountBalance = `${fromTokenMinimalUnitString(
+			accounts[accountAddress].balance.toString(10),
+			selectedAsset.decimals
+		)} ${getTicker(ticker)}`;
 		const ens = await doENSReverseLookup(accountAddress);
 		const fromAccountName = ens || name;
 		PreferencesController.setSelectedAddress(accountAddress);
@@ -372,13 +396,22 @@ class SendFlow extends PureComponent {
 	};
 
 	onScan = () => {
-		this.props.navigation.navigate('QRScanner', {
-			onScanSuccess: meta => {
-				if (meta.target_address) {
-					this.onToSelectedAddressChange(meta.target_address);
-				}
+		this.setState({ isScanQR: true });
+	};
+
+	onQRScan = res => {
+		this.setState({ isScanQR: false });
+		const content = res.data;
+		let data = null;
+		if (content.split('ethereum:').length > 1 && !parse(content).function_name) {
+			data = parse(content);
+			const action = 'send-eth';
+			data = { ...data, action };
+			if (data.target_address) {
+				this.onToSelectedAddressChange(data.target_address);
 			}
-		});
+			return;
+		}
 	};
 
 	onTransactionDirectionSet = async () => {
@@ -388,7 +421,7 @@ class SendFlow extends PureComponent {
 			toSelectedAddress,
 			toEnsName,
 			toSelectedAddressName,
-			fromAccountName, 
+			fromAccountName,
 			balanceIsZero
 		} = this.state;
 		const addressError = await this.validateToAddress();
@@ -518,7 +551,8 @@ class SendFlow extends PureComponent {
 			inputWidth,
 			errorContinue,
 			isOnlyWarning,
-			confusableCollection
+			confusableCollection,
+			isScanQR
 		} = this.state;
 
 		const checksummedAddress = toSelectedAddress && toChecksumAddress(toSelectedAddress);
@@ -626,7 +660,7 @@ class SendFlow extends PureComponent {
 											containerStyle={styles.buttonNext}
 											onPress={this.onTransactionDirectionSet}
 											testID={'address-book-next-button'}
-											disabled = {balanceIsZero}
+											disabled={balanceIsZero}
 										>
 											{strings('address_book.next')}
 										</StyledButton>
@@ -635,7 +669,14 @@ class SendFlow extends PureComponent {
 							</View>
 						</View>
 					)}
-
+					<ReactNativeModal visible={isScanQR} style={{ height: '120%' }}>
+						<QRScanner
+							onBarCodeRead={e => this.onQRScan(e)}
+							onClose={() => {
+								this.setState({ isScanQR: false });
+							}}
+						/>
+					</ReactNativeModal>
 					{this.renderFromAccountModal()}
 					{this.renderAddToAddressBookModal()}
 				</OnboardingScreenWithBg>
