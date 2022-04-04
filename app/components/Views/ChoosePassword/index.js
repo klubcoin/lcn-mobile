@@ -169,6 +169,11 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
+
+	async storeTimeSendEmail(email) {
+		AsyncStorage.setItem(email, `${new Date().getTime()}`);
+	}
+
 	async sendAccount() {
 		const { selectedAddress, keyringController } = this.props;
 		if (selectedAddress == null) {
@@ -189,6 +194,7 @@ class ChoosePassword extends PureComponent {
 			response => {
 				if (response.result) {
 					this.continueImport();
+					this.storeTimeSendEmail(email)
 				} else {
 					showError(response?.error?.message ?? strings('import_from_seed.import_wallet_wrong'));
 					// this.continueImport();

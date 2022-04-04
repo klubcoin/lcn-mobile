@@ -11,6 +11,7 @@ import StyledButton from '../../UI/StyledButton';
 import APIService from '../../../services/APIService';
 import { showSuccess } from '../../../util/notify';
 import preferences from '../../../store/preferences';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class VerifyOTP extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -29,6 +30,7 @@ class VerifyOTP extends PureComponent {
 	tooManySendOtp = false;
 	callback = null;
 	resendOTP = false;
+	isSentEmail = false;
 
 	constructor(props) {
 		super(props);
@@ -44,7 +46,8 @@ class VerifyOTP extends PureComponent {
 			incorrentOTP: observable,
 			tooManyVerifyAttempts: observable,
 			tooManySendOtp: observable,
-			resendOTP: observable
+			resendOTP: observable,
+			isSentEmail: observable
 		});
 		const { params } = props.navigation.state;
 		this.email = params?.email;
@@ -52,18 +55,31 @@ class VerifyOTP extends PureComponent {
 		this.callback = params?.callback;
 	}
 
-	componentDidMount() {
-		this.sendOTPEmail();
+	async componentDidMount() {
+		const sentEmail = await AsyncStorage.getItem(this.email);
+		if (sentEmail) {
+			const timeResent = Math.round(60 - (new Date().getTime() - +sentEmail) / 1000);
+			if (timeResent > 0) {
+				this.timingResend = timeResent;
+				this.isSentEmail = true;
+				this.timing();
+			}
+		} else {
+			this.sendOTPEmail();
+		}
 		BackHandler.addEventListener('hardwareBackPress', this.disableBackAction);
 	}
 
 	componentWillUnmount() {
-		console.log('componentWillUnmount');
 		BackHandler.removeEventListener('hardwareBackPress', this.disableBackAction);
 	}
 
 	disableBackAction() {
 		return true;
+	}
+
+	async storeTimeSendEmail() {
+		AsyncStorage.setItem(this.email, `${new Date().getTime()}`);
 	}
 
 	sendOTPEmail() {
@@ -72,6 +88,8 @@ class VerifyOTP extends PureComponent {
 				case 'success':
 					this.resendOTP = false;
 					this.timingResend = 60;
+					this.isSentEmail = false;
+					this.storeTimeSendEmail();
 					this.timing();
 					break;
 				case 'retry_later':
@@ -80,6 +98,9 @@ class VerifyOTP extends PureComponent {
 					break;
 				case 'too_many_requests':
 					this.tooManySendOtp = true;
+					break;
+				case 'too_many_attempts':
+					this.tooManyVerifyAttempts = true;
 					break;
 				case 'already_verified':
 					showSuccess(strings('verify_otp.email_already_verified'));
@@ -179,7 +200,7 @@ class VerifyOTP extends PureComponent {
 				{!this.tooManyVerifyAttempts &&
 					(!this.tooManySendOtp ? (
 						<Text style={styles.textWrapper}>
-							<Text>{strings('verify_otp.not_receive_code')}</Text>
+							{!this.isSentEmail && <Text>{strings('verify_otp.not_receive_code')}</Text>}
 							{this.timingResend > 0 ? (
 								<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
 							) : (
