@@ -508,11 +508,12 @@ class DrawerView extends PureComponent {
 	};
 
 	showHelp = () => {
-		this.goToBrowserUrl(
-			Routes.mainNetWork.helpSupportUrl,
-			strings('drawer.metamask_support', { appName: displayName })
-		);
-		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
+		this.props.navigation.navigate('Help');
+		// this.goToBrowserUrl(
+		// 	Routes.mainNetWork.helpSupportUrl,
+		// 	strings('drawer.metamask_support', { appName: displayName })
+		// );
+		// this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_GET_HELP);
 	};
 
 	goToFAQ = () => {

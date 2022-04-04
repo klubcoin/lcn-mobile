@@ -105,6 +105,7 @@ import Collect from '../../Views/Collect';
 import FAQAnswer from '../../Views/FAQ/FAQAnswer';
 import VerifyOTP from '../../Views/VerifyOTP';
 import ComingSoon from '../../Views/ComingSoon';
+import Help from '../../Views/Settings/Help';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -433,6 +434,9 @@ export default createStackNavigator(
 				},
 				CompanySettings: {
 					screen: AppInformation
+				},
+				Help: {
+					screen: Help
 				},
 				Contacts: {
 					screen: Contacts

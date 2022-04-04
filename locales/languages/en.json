@@ -739,6 +739,15 @@
 		"web_site": "Visit our Website",
 		"contact_us": "Contact Us"
 	},
+	"help": {
+		"title": "Help",
+		"links": "Links",
+		"password_setup": "Password Setup",
+		"secure_your_wallet": "Secure Your Wallet",
+		"visit_our_support_center": "Visit our Support Center",
+		"visit_our_website": "Visit our Website",
+		"contact_us": "Contact Us"
+	},
 	"private_key": {
 		"backup_private_key": "Backup private key",
 		"backup_private_key_desc": "Backup your private key onto your network. You can retrieve it at any time later without worry of losing it.",
