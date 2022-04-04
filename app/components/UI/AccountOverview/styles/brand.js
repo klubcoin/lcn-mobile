@@ -69,7 +69,6 @@ const brandStyles = StyleSheet.create({
 	},
 	balance: {
 		fontSize: RFValue(16),
-		textAlign: 'center',
 		...fontStyles.normal,
 		color: colors.white,
 		marginLeft: 6,
