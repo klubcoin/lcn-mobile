@@ -9,14 +9,14 @@ import {
 	ScrollView,
 	TouchableOpacity
 } from 'react-native';
-import { colors, fontStyles } from '../../../../styles/common';
-import routes from '../../../../common/routes';
+import { colors, fontStyles } from '../../../styles/common';
+import routes from '../../../common/routes';
 import PropTypes from 'prop-types';
-import { strings } from '../../../../../locales/i18n';
-import { getNavigationOptionsTitle } from '../../../UI/Navbar';
-import AppConstants from '../../../../core/AppConstants';
-import { displayName } from '../../../../../app.json';
-import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import { strings } from '../../../../locales/i18n';
+import { getNavigationOptionsTitle } from '../../UI/Navbar';
+import AppConstants from '../../../core/AppConstants';
+import { displayName } from '../../../../app.json';
+import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -68,20 +68,13 @@ const styles = StyleSheet.create({
 	}
 });
 
-const foxImage = require('../../../../images/klubcoin_lighten.png');
+const foxImage = require('../../../images/klubcoin_lighten.png');
 
 /**
  * View that contains app information
  */
 export default class Help extends PureComponent {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('help.title'), navigation);
-
-	static propTypes = {
-		/**
-		/* navigation object required to push new views
-		*/
-		navigation: PropTypes.object
-	};
 
 	goTo = (url, title) => {
 		InteractionManager.runAfterInteractions(() => {
