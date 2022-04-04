@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, TouchableOpacity, InteractionManager } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, InteractionManager, Linking } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getComingSoonNavbarOptions } from '../../UI/Navbar';
@@ -45,7 +45,11 @@ class ComingSoon extends PureComponent {
 	};
 
 	goTo = (url, title) => {
-		InteractionManager.runAfterInteractions(() => {
+		InteractionManager.runAfterInteractions(async () => {
+			if (title === 'Telegram') {
+				await Linking.openURL(url);
+				return;
+			}
 			this.props.navigation.navigate('Webview', {
 				url,
 				title

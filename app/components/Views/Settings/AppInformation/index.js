@@ -7,7 +7,8 @@ import {
 	InteractionManager,
 	View,
 	ScrollView,
-	TouchableOpacity
+	TouchableOpacity,
+	Linking
 } from 'react-native';
 import { getApplicationName, getVersion, getBuildNumber } from 'react-native-device-info';
 import { colors, fontStyles } from '../../../../styles/common';
@@ -144,7 +145,11 @@ export default class AppInformation extends PureComponent {
 	};
 
 	goTo = (url, title) => {
-		InteractionManager.runAfterInteractions(() => {
+		InteractionManager.runAfterInteractions(async () => {
+			if (title === 'Telegram') {
+				await Linking.openURL(url);
+				return;
+			}
 			this.props.navigation.navigate('Webview', {
 				url,
 				title
