@@ -820,9 +820,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "Autenticación requerida",
-		"auth_prompt_desc": "Debes autenticarte para utilizar MetaMask",
+		"auth_prompt_desc": "Debes autenticarte para utilizar {{appName}}",
 		"fingerprint_prompt_title": "Autenticación requerida",
-		"fingerprint_prompt_desc": "Usa tu huella digital para acceder a MetaMask",
+		"fingerprint_prompt_desc": "Usa tu huella digital para acceder a {{appName}}",
 		"fingerprint_prompt_cancel": "Cancelar"
 	},
 	"accountApproval": {

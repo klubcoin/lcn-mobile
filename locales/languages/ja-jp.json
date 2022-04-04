@@ -902,9 +902,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "認証が必要です",
-		"auth_prompt_desc": "MetaMask を使用するには認証を行ってください",
+		"auth_prompt_desc": "{{appName}} を使用するには認証を行ってください",
 		"fingerprint_prompt_title": "認証が必要です",
-		"fingerprint_prompt_desc": "MetaMask のロックを解除するには指紋認証を行ってください",
+		"fingerprint_prompt_desc": "{{appName}} のロックを解除するには指紋認証を行ってください",
 		"fingerprint_prompt_cancel": "キャンセル"
 	},
 	"accountApproval": {

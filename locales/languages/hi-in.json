@@ -902,9 +902,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "प्रमाणीकरण आवश्यक है",
-		"auth_prompt_desc": "MetaMask का उपयोग करने के लिए कृपया प्रमाणित करें",
+		"auth_prompt_desc": "{{appName}} का उपयोग करने के लिए कृपया प्रमाणित करें",
 		"fingerprint_prompt_title": "प्रमाणीकरण आवश्यक है",
-		"fingerprint_prompt_desc": "MetaMask अनलॉक करने के लिए अपने फ़िंगरप्रिंट का उपयोग करें",
+		"fingerprint_prompt_desc": "{{appName}} अनलॉक करने के लिए अपने फ़िंगरप्रिंट का उपयोग करें",
 		"fingerprint_prompt_cancel": "रद्द करें"
 	},
 	"accountApproval": {

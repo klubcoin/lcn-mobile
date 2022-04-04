@@ -902,9 +902,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "인증 필요",
-		"auth_prompt_desc": "MetaMask를 사용하려면 인증하세요.",
+		"auth_prompt_desc": "{{appName}}를 사용하려면 인증하세요.",
 		"fingerprint_prompt_title": "인증 필요",
-		"fingerprint_prompt_desc": "지문을 사용하여 MetaMask 잠금 해제",
+		"fingerprint_prompt_desc": "지문을 사용하여 {{appName}} 잠금 해제",
 		"fingerprint_prompt_cancel": "취소"
 	},
 	"accountApproval": {

@@ -18,7 +18,7 @@ const defaultOptions = {
 	service: 'com.metamask',
 	authenticationPromptTitle: strings('authentication.auth_prompt_title'),
 	authenticationPrompt: { title: strings('authentication.auth_prompt_desc', { appName: displayName }) },
-	authenticationPromptDesc: strings('authentication.auth_prompt_desc'),
+	authenticationPromptDesc: strings('authentication.auth_prompt_desc', { appName: displayName }),
 	fingerprintPromptTitle: strings('authentication.fingerprint_prompt_title'),
 	fingerprintPromptDesc: strings('authentication.fingerprint_prompt_desc', { appName: displayName }),
 	fingerprintPromptCancel: strings('authentication.fingerprint_prompt_cancel')

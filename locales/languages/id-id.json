@@ -902,9 +902,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "Autentikasi diperlukan",
-		"auth_prompt_desc": "Harap autentikasikan untuk menggunakan MetaMask",
+		"auth_prompt_desc": "Harap autentikasikan untuk menggunakan {{appName}}",
 		"fingerprint_prompt_title": "Autentikasi diperlukan",
-		"fingerprint_prompt_desc": "Gunakan sidik jari Anda untuk membuka MetaMask",
+		"fingerprint_prompt_desc": "Gunakan sidik jari Anda untuk membuka {{appName}}",
 		"fingerprint_prompt_cancel": "Batal"
 	},
 	"accountApproval": {

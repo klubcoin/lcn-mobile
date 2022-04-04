@@ -902,9 +902,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "Autenticação obrigatória",
-		"auth_prompt_desc": "Autentique para usar o MetaMask",
+		"auth_prompt_desc": "Autentique para usar o {{appName}}",
 		"fingerprint_prompt_title": "Autenticação obrigatória",
-		"fingerprint_prompt_desc": "Use sua digital para desbloquear o MetaMask",
+		"fingerprint_prompt_desc": "Use sua digital para desbloquear o {{appName}}",
 		"fingerprint_prompt_cancel": "Cancelar"
 	},
 	"accountApproval": {

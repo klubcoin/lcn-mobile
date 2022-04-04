@@ -902,9 +902,9 @@
 	},
 	"authentication": {
 		"auth_prompt_title": "Kinakailangan ang pag-authenticate",
-		"auth_prompt_desc": "Mag-authenticate para magamit ang MetaMask",
+		"auth_prompt_desc": "Mag-authenticate para magamit ang {{appName}}",
 		"fingerprint_prompt_title": "Kinakailangan ang pag-authenticate",
-		"fingerprint_prompt_desc": "Gamitin ang iyong fingerprint para i-unlock ang MetaMask",
+		"fingerprint_prompt_desc": "Gamitin ang iyong fingerprint para i-unlock ang {{appName}}",
 		"fingerprint_prompt_cancel": "Kanselahin"
 	},
 	"accountApproval": {
