@@ -138,7 +138,7 @@ class Dashboard extends PureComponent {
 	}
 
 	componentWillUpdate() {
-		this.fetchTotalTokens();
+		// this.fetchTotalTokens();
 	}
 
 	componentWillUnmount() {
@@ -153,11 +153,16 @@ class Dashboard extends PureComponent {
 		const { TokenBalancesController, AssetsContractController } = Engine.context;
 		await TokenBalancesController.updateBalances();
 		const { accounts } = this.props;
-		Object.keys(accounts).forEach(accountAddress => {
+		Object.keys(accounts).forEach((accountAddress, index) => {
 			AssetsContractController.getBalanceOf(routes.klubToken.address, accountAddress)
 				.then(balance => {
+					console.log(balance);
 					if (accounts[accountAddress].balance !== BNToHex(balance)) {
 						accounts[accountAddress].balance = BNToHex(balance);
+					}
+				}).then(()=>{
+					if(index===Object.keys(accounts).length-1){
+						this.fetchTotalTokens()
 					}
 				})
 				.catch(err => console.error(err));
@@ -210,7 +215,7 @@ class Dashboard extends PureComponent {
 		this.announceOnline();
 		this.addDefaultToken();
 		this.addDefaultRpcList();
-		this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
+		this.pollTokens = setInterval(() => this.pollTokenBalances(), 1000);
 	};
 
 	announceOnline() {
