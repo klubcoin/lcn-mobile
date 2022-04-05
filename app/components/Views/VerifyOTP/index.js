@@ -59,10 +59,12 @@ class VerifyOTP extends PureComponent {
 		const sentEmail = await AsyncStorage.getItem(this.email);
 		if (sentEmail) {
 			const timeResent = Math.round(60 - (new Date().getTime() - +sentEmail) / 1000);
+			this.timingResend = timeResent;
 			if (timeResent > 0) {
-				this.timingResend = timeResent;
 				this.isSentEmail = true;
 				this.timing();
+			} else {
+				this.sendOTPEmail();
 			}
 		} else {
 			this.sendOTPEmail();

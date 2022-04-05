@@ -37,7 +37,6 @@ class VerifyOTPOnboarding extends PureComponent {
 	verifySuccess = false;
 	resendOTP = false;
 	showRemindLaterModal = false;
-	isSentEmail = false;
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
@@ -52,21 +51,14 @@ class VerifyOTPOnboarding extends PureComponent {
 			tooManySendOtp: observable,
 			verifySuccess: observable,
 			resendOTP: observable,
-			showRemindLaterModal: observable,
-			isSentEmail: observable
+			showRemindLaterModal: observable
 		});
 		this.email = preferences?.onboardProfile.email;
 	}
 
 	async componentDidMount() {
-		const sentEmail = await AsyncStorage.getItem(this.email);
-		if (sentEmail) {
-			const timeResent = Math.round(60 - (new Date().getTime() - +sentEmail) / 1000);
-			if (timeResent > 0) {
-				this.timingResend = timeResent;
-				this.isSentEmail = true;
-			}
-		}
+		this.timingResend = 60;
+		this.storeTimeSendEmail();
 		this.timing();
 	}
 
@@ -82,7 +74,6 @@ class VerifyOTPOnboarding extends PureComponent {
 					this.timingResend = 60;
 					this.storeTimeSendEmail();
 					this.timing();
-					this.isSentEmail = false;
 					break;
 				case 'retry_later':
 					this.timingResend = 60;
@@ -172,7 +163,7 @@ class VerifyOTPOnboarding extends PureComponent {
 					{!this.tooManyVerifyAttempts &&
 						(!this.tooManySendOtp ? (
 							<Text style={styles.textWrapper}>
-								{!this.isSentEmail && <Text>{strings('verify_otp.not_receive_code')}</Text>}
+								<Text>{strings('verify_otp.not_receive_code')}</Text>
 								{this.timingResend > 0 ? (
 									<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
 								) : (

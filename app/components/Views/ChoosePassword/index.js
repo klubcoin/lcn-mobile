@@ -194,7 +194,7 @@ class ChoosePassword extends PureComponent {
 			response => {
 				if (response.result) {
 					this.continueImport();
-					this.storeTimeSendEmail(email)
+					// this.storeTimeSendEmail(email)
 				} else {
 					showError(response?.error?.message ?? strings('import_from_seed.import_wallet_wrong'));
 					// this.continueImport();
