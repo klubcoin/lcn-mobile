@@ -974,7 +974,7 @@ class Confirm extends PureComponent {
 					<View style={styles.buttonNextWrapper}>
 						<StyledButton
 							type={'normal'}
-							disabled={!gasEstimationReady || Boolean(errorMessage)}
+							disabled={!gasEstimationReady || Boolean(errorMessage) || transactionConfirmed}
 							containerStyle={styles.buttonNext}
 							onPress={this.onNext}
 							testID={'txn-confirm-send-button'}
