@@ -19,6 +19,7 @@ import {
 	renderFromWei,
 	renderFromTokenMinimalUnit,
 	weiToFiat,
+	fromWei,
 	balanceToFiat,
 	weiToFiatNumber,
 	balanceToFiatNumber,
@@ -375,7 +376,7 @@ class Confirm extends PureComponent {
 		const parsedTicker = getTicker(ticker);
 		const transactionFee = `${renderFromWei(weiTransactionFee)} ${parsedTicker}`;
 		let errorMessage;
-		const senderBalance = renderFromWei(accounts[fromSelectedAddress].balance);
+		const senderBalance = fromWei(accounts[fromSelectedAddress].balance);
 		const fee = renderFromWei(weiTransactionFee);
 
 		if (!networkFee) this.setState({ networkFee: { gas, gasPrice, weiTransactionFee } });

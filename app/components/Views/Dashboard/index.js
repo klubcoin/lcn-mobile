@@ -207,7 +207,7 @@ class Dashboard extends PureComponent {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 			AssetsDetectionController.detectAssets();
 			// AccountTrackerController.refresh();
-			this.getBalance();
+			this.pollTokenBalances();
 			this.getWalletInfo();
 			this.mounted = true;
 		});
@@ -617,7 +617,7 @@ class Dashboard extends PureComponent {
 			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
 				<ScrollView
 					style={styles.wrapper}
-					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
+					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.pollTokenBalances} />}
 				>
 					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
 				</ScrollView>
