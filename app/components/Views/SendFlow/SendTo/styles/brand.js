@@ -8,6 +8,11 @@ const brandStyles = StyleSheet.create({
 	},
 	inputWrapper: {
 		paddingVertical: 20,
+	},
+	warning:{
+		color:'red',
+		fontSize:14,
+		marginLeft:12
 	}
 });
 

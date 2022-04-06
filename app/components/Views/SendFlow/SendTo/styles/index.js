@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
 	},
 	warningIcon: {
 		marginRight: 8
-	}
+	},
+	warning: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

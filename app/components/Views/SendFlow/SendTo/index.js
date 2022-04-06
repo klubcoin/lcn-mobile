@@ -49,6 +49,7 @@ import { displayName } from '../../../../../app.json';
 import { fromWei } from 'web3-utils';
 import QRScanner from '../../../UI/QRScanner';
 import { parse } from 'eth-url-parser';
+import { showError } from '../../../../util/notify';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -128,7 +129,8 @@ class SendFlow extends PureComponent {
 		alias: undefined,
 		confusableCollection: [],
 		inputWidth: { width: '99%' },
-		isScanQR: false
+		isScanQR: false,
+		isValidInputAddress: true
 	};
 
 	componentDidMount = async () => {
@@ -270,9 +272,13 @@ class SendFlow extends PureComponent {
 	};
 
 	onToSelectedAddressChange = async toSelectedAddress => {
-		console.log({
-			toSelectedAddress
-		});
+		/^0x[0-9a-fA-Z]{0,40}$/.test(toSelectedAddress) || toSelectedAddress === '' || toSelectedAddress === '0'
+			? this.setState({
+					isValidInputAddress: true
+			  })
+			: this.setState({
+					isValidInputAddress: false
+			  });
 		const { AssetsContractController } = Engine.context;
 		const { addressBook, network, identities, providerType } = this.props;
 		const networkAddressBook = addressBook[network] || {};
@@ -411,6 +417,8 @@ class SendFlow extends PureComponent {
 				this.onToSelectedAddressChange(data.target_address);
 			}
 			return;
+		} else {
+			showError(strings('address_book.unrecognized_public_address'));
 		}
 	};
 
@@ -552,7 +560,8 @@ class SendFlow extends PureComponent {
 			errorContinue,
 			isOnlyWarning,
 			confusableCollection,
-			isScanQR
+			isScanQR,
+			isValidInputAddress
 		} = this.state;
 
 		const checksummedAddress = toSelectedAddress && toChecksumAddress(toSelectedAddress);
@@ -586,6 +595,9 @@ class SendFlow extends PureComponent {
 							inputWidth={inputWidth}
 							confusableCollection={(!existingContact && confusableCollection) || []}
 						/>
+						{!isValidInputAddress && !toSelectedAddressReady && (
+							<Text style={styles.warning}>{strings('address_book.unrecognized_public_address')}</Text>
+						)}
 					</View>
 					{!toSelectedAddressReady ? (
 						<AddressList
