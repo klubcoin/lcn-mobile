@@ -225,13 +225,13 @@ export const AddressFrom = props => {
 					)} ${fromAccountBalance}`}</Text>
 				</View>
 
-				{!!onPressIcon && (
+				{/* {!!onPressIcon && (
 					<TouchableOpacity onPress={onPressIcon} style={styles.iconWrapper}>
 						<View style={styles.dropdownIconWrapper}>
 						<Icon name="angle-down" size={30} style={[styles.dropdownIcon, highlighted ? styles.iconHighlighted : styles.iconOpaque]} />
 						</View>
 					</TouchableOpacity>
-				)}
+				)} */}
 			</View>
 		</View>
 	);
