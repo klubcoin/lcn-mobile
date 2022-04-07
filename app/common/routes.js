@@ -1,5 +1,6 @@
 import { displayName } from '../../app.json';
 import Config from "react-native-config";
+import { getContractAddress } from '../core/Erc20Service';
 
 export default {
 	jsonRPC: 'jsonrpc',
@@ -27,7 +28,7 @@ export default {
 	},
 	klubToken: {
 		chainId: '1662',
-		address: "0x3Dbe873AC593490A425D70ef206B7F166862461e",
+		address: () => getContractAddress(),
 		symbol: "KLUB",
 		decimals: 18,
 		image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"

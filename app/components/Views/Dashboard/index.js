@@ -45,7 +45,6 @@ import routes from '../../../common/routes';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Erc20Service from '../../../core/Erc20Service';
 import CryptoSignature from '../../../core/CryptoSignature';
-
 /**
  * Main view for the wallet
  */
@@ -154,7 +153,7 @@ class Dashboard extends PureComponent {
 		await TokenBalancesController.updateBalances();
 		const { accounts } = this.props;
 		Object.keys(accounts).forEach((accountAddress, index) => {
-			AssetsContractController.getBalanceOf(routes.klubToken.address, accountAddress)
+			AssetsContractController.getBalanceOf(routes.klubToken.address(), accountAddress)
 				.then(balance => {
 					console.log(balance);
 					if (accounts[accountAddress].balance !== BNToHex(balance)) {
@@ -238,9 +237,12 @@ class Dashboard extends PureComponent {
 	addDefaultToken = async () => {
 		const { AssetsController } = Engine.context;
 		const { tokens } = Engine.state.AssetsController;
-		const { address, symbol, decimals, image } = routes.klubToken;
-		const exists = tokens.find(e => e.address == address);
-		if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
+		const { symbol, decimals, image } = routes.klubToken;
+		const address = routes.klubToken.address();
+		if (address) {
+			const exists = tokens.find(e => e.address == address);
+			if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
+		}
 	};
 
 	addDefaultRpcList = () => {

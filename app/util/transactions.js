@@ -10,6 +10,7 @@ import { hexToBN } from './number';
 import AppConstants from '../core/AppConstants';
 import { isMainnetByChainId } from './networks';
 import routes from '../common/routes';
+import { getContractAddress } from '../core/Erc20Service';
 const { SAI_ADDRESS } = AppConstants;
 
 export const TOKEN_METHOD_TRANSFER = 'transfer';
@@ -352,7 +353,7 @@ export function getTicker(ticker) {
  * @returns {object} - ETH object
  */
 export function getEther(ticker) {
-	return routes.klubToken;
+	return {...routes.klubToken, address: getContractAddress()};
 	// return {
 	// 	name: 'Ether',
 	// 	address: '',

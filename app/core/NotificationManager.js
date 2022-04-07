@@ -217,9 +217,9 @@ class NotificationManager {
 		const { accounts } = Engine.state.AccountTrackerController;
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const { contractBalances } = Engine.state.TokenBalancesController;
-		if (Object.keys(contractBalances).includes(routes.klubToken.address)) {
+		if (Object.keys(contractBalances).includes(routes.klubToken.address())) {
 			const account = accounts[selectedAddress];
-			account.balance = BNToHex(contractBalances[routes.klubToken.address]);
+			account.balance = BNToHex(contractBalances[routes.klubToken.address()]);
 		}
 	}
 

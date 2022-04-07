@@ -130,7 +130,7 @@ export default class TipperModal extends PureComponent {
 			from: this.transaction.from,
 			gas: BNToHex(this.transaction.gas),
 			gasPrice: BNToHex(this.transaction.gasPrice),
-			to: routes.klubToken.address,
+			to: routes.klubToken.address(),
 			value: BNToHex(BigNumber('0'))
 		};
 	};
@@ -161,7 +161,7 @@ export default class TipperModal extends PureComponent {
 		BNToHex(value);
 		const estimation = await this.estimateGas({
 			data,
-			to: routes.klubToken.address,
+			to: routes.klubToken.address(),
 			value: BNToHex(BigNumber('0')),
 			from: selectedAddress
 		});
@@ -174,7 +174,7 @@ export default class TipperModal extends PureComponent {
 		this.customNetworkFee = networkFee;
 		const { gas, gasPrice } = estimation;
 
-		this.transaction = { data, to: routes.klubToken.address, value, from: selectedAddress, gas, gasPrice };
+		this.transaction = { data, to: routes.klubToken.address(), value, from: selectedAddress, gas, gasPrice };
 		this.loading = false;
 	};
 

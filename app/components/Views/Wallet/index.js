@@ -116,13 +116,15 @@ class Wallet extends PureComponent {
         }
     };
 
-
     addDefaultToken = async () => {
         const { AssetsController } = Engine.context;
         const { tokens } = Engine.state.AssetsController;
-        const { address, symbol, decimals, image } = routes.klubToken;
-        const exists = tokens.find(e => e.address == address);
-        if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
+        const { symbol, decimals, image } = routes.klubToken;
+        const address = routes.klubToken.address();
+        if (address) {
+            const exists = tokens.find(e => e.address == address);
+            if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
+        }
     };
 
     clearBalanceInterval = () => {
@@ -135,9 +137,9 @@ class Wallet extends PureComponent {
         const { accounts } = Engine.state.AccountTrackerController;
         const { selectedAddress } = Engine.state.PreferencesController;
         const { contractBalances } = Engine.state.TokenBalancesController;
-        if (Object.keys(contractBalances).includes(routes.klubToken.address)) {
+        if (Object.keys(contractBalances).includes(routes.klubToken.address())) {
             const account = accounts[selectedAddress];
-            account.balance = BNToHex(contractBalances[routes.klubToken.address]);
+            account.balance = BNToHex(contractBalances[routes.klubToken.address()]);
         }
     }
 
