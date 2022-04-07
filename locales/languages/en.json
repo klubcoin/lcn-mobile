@@ -1126,6 +1126,8 @@
 		"add_input_placeholder": "Public address (0x), or ENS",
 		"between_account": "Transfer between my accounts",
 		"others": "Others",
+		"unrecognized_public_address": "Unrecognized public address!",
+		"unrecognized_qr_code": "Unrecognized QR Code!",
 		"memo": "Memo"
 	},
 	"transaction_submitted": {

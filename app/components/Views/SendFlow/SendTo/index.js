@@ -50,6 +50,8 @@ import { fromWei } from 'web3-utils';
 import QRScanner from '../../../UI/QRScanner';
 import { parse } from 'eth-url-parser';
 import { showError } from '../../../../util/notify';
+import SharedDeeplinkManager from '../../../../core/DeeplinkManager';
+import AppConstants from '../../../../core/AppConstants';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -408,7 +410,10 @@ class SendFlow extends PureComponent {
 	onQRScan = res => {
 		this.setState({ isScanQR: false });
 		const content = res.data;
-		let data = null;
+		if (!content) {
+			showError(strings('address_book.unrecognized_qr_code'));
+			return;
+		}
 		if (content.split('ethereum:').length > 1 && !parse(content).function_name) {
 			data = parse(content);
 			const action = 'send-eth';
@@ -417,9 +422,15 @@ class SendFlow extends PureComponent {
 				this.onToSelectedAddressChange(data.target_address);
 			}
 			return;
-		} else {
-			showError(strings('address_book.unrecognized_public_address'));
 		}
+		if (content.split('ethereum:').length > 1) {
+			const handledByDeeplink = SharedDeeplinkManager.parse(content, {
+				origin: AppConstants.DEEPLINKS.ORIGIN_QR_CODE,
+				onHandled: () => this.props.navigation.pop(2)
+			});
+			return;
+		}
+		showError(strings('address_book.unrecognized_qr_code'));
 	};
 
 	onTransactionDirectionSet = async () => {
