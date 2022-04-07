@@ -1277,7 +1277,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H48MFKU69U;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "LiquichainStaging copy2-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Info-Production.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1310,7 +1310,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H48MFKU69U;
 				ENABLE_BITCODE = YES;
-				INFOPLIST_FILE = "LiquichainStaging copy2-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Info-Production.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

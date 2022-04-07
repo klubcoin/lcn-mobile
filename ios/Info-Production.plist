@@ -69,6 +69,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Application requires access to photo to upload your avatar</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Application requires camera access to scan QR code address</string>
 	<key>NSFaceIDUsageDescription</key>
