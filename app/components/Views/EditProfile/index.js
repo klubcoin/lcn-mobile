@@ -404,7 +404,12 @@ class EditProfile extends PureComponent {
 							email,
 							phone
 						};
-						preferences.setOnboardProfile(profile);
+						preferences
+							.getOnboardProfile()
+							.then(value => {
+								preferences.setOnboardProfile(Object.assign(value, profile));
+							})
+							.catch(e => console.log('profile onboarding error', e));
 						setOnboardProfile(profile);
 						this.preData = {
 							email,
