@@ -185,7 +185,7 @@ class Settings extends PureComponent {
 								)}
 							</View>
 						</View>
-						<View style={styles.setting}>
+						{/* <View style={styles.setting}>
 							<Text style={styles.title}>{strings('app_settings.search_engine')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.engine_desc')}</Text>
 							<View style={styles.picker}>
@@ -198,7 +198,7 @@ class Settings extends PureComponent {
 									/>
 								)}
 							</View>
-						</View>
+						</View> */}
 						<View style={styles.setting}>
 							<Text style={styles.title}>{strings('app_settings.hide_zero_balance_tokens_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.hide_zero_balance_tokens_desc')}</Text>
