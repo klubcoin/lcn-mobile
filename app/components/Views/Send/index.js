@@ -186,16 +186,16 @@ class Send extends PureComponent {
 		this.checkForDeeplinks();
 	}
 
-	getNetworkFee = async (selectedAsset) => {
+	getNetworkFee = async selectedAsset => {
 		const result = await new Erc20Service().getFixedFee();
 		const base = Math.pow(10, selectedAsset.decimals);
 		const networkFee = {
-			gas: hexToBN("0x1"),
-			gasPrice: toWei((parseFloat(result) / base).toString()),
-		}
+			gas: hexToBN('0x1'),
+			gasPrice: toWei((parseFloat(result) / base).toString())
+		};
 		this.setState({ networkFee });
 		return networkFee;
-	}
+	};
 
 	/**
 	 * Cancels transaction and sets mounted to false
@@ -653,7 +653,7 @@ class Send extends PureComponent {
 	renderLoader() {
 		return (
 			<View style={styles.loader}>
-				<ActivityIndicator size="small" />
+				<ActivityIndicator size="small" color={colors.white} />
 			</View>
 		);
 	}

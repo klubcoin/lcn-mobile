@@ -725,7 +725,7 @@ class Settings extends PureComponent {
 											total: privateKeyBackupStats.partCount
 										})}
 									</Text>
-									<ActivityIndicator />
+									<ActivityIndicator color={colors.white} />
 								</View>
 							)}
 						</View>

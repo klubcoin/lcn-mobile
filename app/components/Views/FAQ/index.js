@@ -10,6 +10,7 @@ import APIService from '../../../services/APIService';
 import styles from './styles';
 import { STORED_CONTENT } from '../../../constants/storage';
 import preferences from '../../../store/preferences';
+import { colors } from '../../../styles/common';
 
 class FAQScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.faq'), navigation);
@@ -63,7 +64,7 @@ class FAQScreen extends PureComponent {
 			<OnboardingScreenWithBg screen="a">
 				{this.loading ? (
 					<View style={styles.loading}>
-						<ActivityIndicator />
+						<ActivityIndicator color={colors.white} />
 					</View>
 				) : (
 					<ScrollView style={styles.wrapper}>

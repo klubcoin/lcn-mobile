@@ -1136,7 +1136,7 @@ function SwapsQuotesView({
 					>
 						{isInFetch ? (
 							<>
-								<ActivityIndicator size="small" />
+								<ActivityIndicator size="small" color={colors.white} />
 								<Text> {strings('swaps.fetching_new_quotes')}</Text>
 							</>
 						) : (

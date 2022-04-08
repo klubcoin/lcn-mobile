@@ -101,7 +101,7 @@ class TransactionReviewFeeCard extends PureComponent {
 		const { gasEstimationReady } = this.props;
 		return !gasEstimationReady ? (
 			<View style={styles.loader}>
-				<ActivityIndicator size="small" />
+				<ActivityIndicator size="small" color={colors.white} />
 			</View>
 		) : (
 			children

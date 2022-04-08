@@ -500,7 +500,7 @@ class Onboarding extends PureComponent {
 	renderLoader = () => (
 		<View style={styles.wrapper}>
 			<View style={styles.loader}>
-				<ActivityIndicator size="small" />
+				<ActivityIndicator size="small" color={colors.white} />
 				<Text style={styles.loadingText}>{this.props.loadingMsg}</Text>
 			</View>
 		</View>

@@ -442,7 +442,7 @@ function SwapsAmountView({
 					pointerEvents={disabledView ? 'none' : 'auto'}
 				>
 					{isInitialLoadingTokens ? (
-						<ActivityIndicator size="small" />
+						<ActivityIndicator size="small" color={colors.white} />
 					) : (
 						<TokenSelectButton
 							label={strings('swaps.select_a_token')}
@@ -513,7 +513,7 @@ function SwapsAmountView({
 				</View>
 				<View style={styles.tokenButtonContainer}>
 					{isInitialLoadingTokens ? (
-						<ActivityIndicator size="small" />
+						<ActivityIndicator size="small" color={colors.white} />
 					) : (
 						<TokenSelectButton
 							label={strings('swaps.select_a_token')}

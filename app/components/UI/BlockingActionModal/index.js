@@ -33,7 +33,7 @@ export default function BlockingActionModal({ children, modalVisible, isLoadingA
 			<View style={styles.modalView}>
 				<View style={baseStyles.flexGrow}>
 					{children}
-					{isLoadingAction && <ActivityIndicator style={styles.loader} size={'small'} />}
+					{isLoadingAction && <ActivityIndicator color={colors.white} style={styles.loader} size={'small'} />}
 				</View>
 			</View>
 		</Modal>

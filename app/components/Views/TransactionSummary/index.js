@@ -29,7 +29,7 @@ export default class TransactionSummary extends PureComponent {
 		const { gasEstimationReady } = this.props;
 		return !gasEstimationReady ? (
 			<View style={styles.loader}>
-				<ActivityIndicator size="small" />
+				<ActivityIndicator size="small" color={colors.white} />
 			</View>
 		) : (
 			children
@@ -105,7 +105,7 @@ export default class TransactionSummary extends PureComponent {
 						{strings('transaction.total_amount')}
 					</Text>
 					{this.renderIfGastEstimationReady(
-						<Text small bold primary upper style={{ flex: 1, textAlign: 'right'}}>
+						<Text small bold primary upper style={{ flex: 1, textAlign: 'right' }}>
 							{totalAmount}
 						</Text>
 					)}

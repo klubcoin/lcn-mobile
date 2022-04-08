@@ -260,7 +260,7 @@ class ChangeEmail extends PureComponent {
 
 	renderLoader = () => (
 		<View style={styles.loader}>
-			<ActivityIndicator size="small" />
+			<ActivityIndicator size="small" color={'white'}  />
 		</View>
 	);
 
