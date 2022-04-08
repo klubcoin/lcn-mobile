@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
 		width: '100%',
 		borderWidth: 3,
 		borderColor: colors.blue,
-		borderRadius: 10
+		borderRadius: 10,
+		overflow: 'hidden'
 	},
 	button: {
 		marginTop: 20
