@@ -679,6 +679,7 @@
 		"network_symbol_placeholder": "Symbol (optional)",
 		"network_block_explorer_label": "Block Explorer URL",
 		"network_block_explorer_placeholder": "Block Explorer URL (optional)",
+		"unrecognized_block_explorer_url":"Unrecognized Block Explorer URL",
 		"network_chain_id_warning": "Invalid Chain ID",
 		"network_other_networks": "Other Networks",
 		"network_rpc_networks": "RPC Networks",
