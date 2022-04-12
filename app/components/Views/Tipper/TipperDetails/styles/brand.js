@@ -10,7 +10,11 @@ const styles = StyleSheet.create({
 		marginLeft: 8
 	},
 	colorBlue: {
-		color: colors.blue,
+		color: colors.blue
+	},
+	qrCodeWrapper: {
+		alignSelf: 'center',
+		marginBottom: 20
 	}
 });
 
