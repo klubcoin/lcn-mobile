@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	profile: {
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	avatarView: {
 		borderRadius: 60,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 	buttons: {
 		flexDirection: 'row',
 		justifyContent: 'center',
-		marginVertical: 20,
+		marginVertical: 20
 	},
 	accept: {
 		width: 160
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 		paddingHorizontal: 16,
-		marginTop: 16,
+		marginTop: 16
 	},
 	input: {
 		...fontStyles.normal,
@@ -110,7 +110,11 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(12),
 		color: colors.red,
 		textAlign: 'center'
-	}
+	},
+	transactionHeaderTitle: {},
+	transactionHeaderIcon: {},
+	transactionHeaderName: {},
+	enterAmount: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

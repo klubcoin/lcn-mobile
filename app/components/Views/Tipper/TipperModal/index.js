@@ -226,7 +226,16 @@ export default class TipperModal extends PureComponent {
 	};
 
 	updateAmount = value => {
-		if (!value) value = 0;
+		value = `${value}`
+			.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
+			.replace(/,/g, '.')
+			.replace(/\./, '#')
+			.replace(/\./g, '')
+			.replace(/#/, '.');
+		if (value[1] !== '.') {
+			value = value.replace(/0/, '');
+		}
+		if (!value) value = '0';
 		this.amount = value;
 		const { isETH } = this.tipData;
 		if (isETH) {
@@ -274,12 +283,20 @@ export default class TipperModal extends PureComponent {
 		return (
 			<View style={styles.root}>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-					<TransactionHeader currentPageInformation={meta} />
+					<TransactionHeader
+						currentPageInformation={meta}
+						titleStyle={styles.transactionHeaderTitle}
+						iconStyle={styles.transactionHeaderIcon}
+						nameStyle={styles.transactionHeaderName}
+					/>
 					<View style={styles.heading}>
 						<Text style={styles.message}>{message}</Text>
 					</View>
 					<View style={{ flex: 1 }}>
 						{this.renderProfile()}
+						<Text style={styles.enterAmount}>
+							{strings('tipper.enter_amount', { symbol: tipData.symbol })}
+						</Text>
 						{this.renderInput()}
 						{this.renderBalance()}
 					</View>

@@ -103,12 +103,13 @@ const TransactionHeader = props => {
 	 */
 	const renderSecureIcon = () => {
 		if (originIsDeeplink) return null;
+		const { iconStyle } = props;
 		const { url, origin } = props.currentPageInformation;
 		const name =
 			getUrlObj(originIsWalletConnect ? origin.split(WALLET_CONNECT_ORIGIN)[1] : url).protocol === 'https:'
 				? 'lock'
 				: 'warning';
-		return <FontAwesome name={name} size={15} style={styles.secureIcon} />;
+		return <FontAwesome name={name} size={15} style={[styles.secureIcon, iconStyle]} />;
 	};
 
 	const renderTopIcon = () => {
@@ -144,12 +145,13 @@ const TransactionHeader = props => {
 
 	const renderTitle = () => {
 		const { url, currentEnsName, spenderAddress, origin } = props.currentPageInformation;
+		const { titleStyle } = props;
 		let title = '';
 		if (originIsDeeplink) title = renderShortAddress(spenderAddress);
 		else if (originIsWalletConnect) title = getHost(origin.split(WALLET_CONNECT_ORIGIN)[1]);
 		else title = getHost(currentEnsName || url || origin);
 
-		return <Text style={styles.domainUrl}>{title}</Text>;
+		return <Text style={[styles.domainUrl, titleStyle]}>{title}</Text>;
 	};
 
 	return (
@@ -161,7 +163,9 @@ const TransactionHeader = props => {
 			</View>
 			<View style={styles.networkContainer}>
 				{renderNetworkStatusIndicator()}
-				<Text style={styles.network}>{props.nickname || networkList[props.networkType]?.shortName}</Text>
+				<Text style={[styles.network, props.nameStyle]}>
+					{props.nickname || networkList[props.networkType]?.shortName}
+				</Text>
 			</View>
 		</View>
 	);

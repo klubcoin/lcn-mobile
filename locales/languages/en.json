@@ -2042,6 +2042,7 @@
 		"tip_for": "Tip {{amount}} {{symbol}} for {{account}}",
 		"tip": "Tip",
 		"current_balance": "Your current balance: {{balance}}",
+		"enter_amount": "Enter The {{symbol}} tip you want to send:",
 		"tip_through_qr": "Get a tip through QR code"
 	},
 	"paypal_checkout": {
