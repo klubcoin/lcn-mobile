@@ -73,6 +73,7 @@ class EditProfile extends PureComponent {
 	isValidEmail = true;
 	isValidPhoneNumber = true;
 	isCheckingEmail = false;
+	isChangedAvatar = false;
 
 	constructor(props) {
 		super(props);
@@ -94,7 +95,8 @@ class EditProfile extends PureComponent {
 			timeoutCheckUniqueEmail: observable,
 			isValidEmail: observable,
 			isValidPhoneNumber: observable,
-			isCheckingEmail: observable
+			isCheckingEmail: observable,
+			isChangedAvatar: observable
 		});
 	}
 
@@ -113,7 +115,7 @@ class EditProfile extends PureComponent {
 				?.replace('+', '')
 				.split('-')
 				.slice(1, phone?.split('-').length)
-				.join('-') ?? '';
+				.join('-') ?? undefined;
 		this.preData = {
 			phone: phone
 				?.replace('+', '')
@@ -121,7 +123,9 @@ class EditProfile extends PureComponent {
 				.slice(1, phone?.split('-').length)
 				.join('-'),
 			countryCode: phone?.replace('+', '').split('-')[0],
-			email
+			email,
+			firstname,
+			lastname
 		};
 	}
 
@@ -179,6 +183,7 @@ class EditProfile extends PureComponent {
 								.then(image => {
 									this.isViewModal = false;
 									this.avatar = image.path;
+									this.isChangedAvatar = true;
 								})
 								.catch(err => {
 									this.notiMessage = strings('profile.grant_permission_gallery_notification');
@@ -204,6 +209,7 @@ class EditProfile extends PureComponent {
 						.then(image => {
 							this.isViewModal = false;
 							this.avatar = image.path;
+							this.isChangedAvatar = true;
 						})
 						.catch(err => {
 							this.notiMessage = strings('profile.grant_permission_gallery_notification');
@@ -224,6 +230,7 @@ class EditProfile extends PureComponent {
 				.then(image => {
 					this.isViewModal = false;
 					this.avatar = image.path;
+					this.isChangedAvatar = true;
 				})
 				.catch(err => {
 					this.notiMessage = strings('profile.grant_permission_gallery_notification');
@@ -262,6 +269,7 @@ class EditProfile extends PureComponent {
 			.then(image => {
 				this.isViewModal = false;
 				this.avatar = image.path;
+				this.isChangedAvatar = true;
 			})
 			.catch(err => {
 				this.notiMessage = strings('profile.grant_permission_camera_notification');
@@ -414,8 +422,11 @@ class EditProfile extends PureComponent {
 						this.preData = {
 							email,
 							phone: this.phone,
-							countryCode: this.countryCode
+							countryCode: this.countryCode,
+							firstname,
+							lastname
 						};
+						this.isChangedAvatar = false;
 					}
 					this.isLoading = false;
 				},
@@ -431,6 +442,13 @@ class EditProfile extends PureComponent {
 	}
 
 	render() {
+		let isChangedProfile =
+			this.isChangedAvatar ||
+			this.preData.countryCode !== this.countryCode ||
+			this.preData.phone !== this.phone ||
+			this.preData.email !== this.email ||
+			this.preData.firstname !== this.firstname ||
+			this.preData.lastname !== this.lastname;
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
@@ -534,7 +552,12 @@ class EditProfile extends PureComponent {
 								type={'white'}
 								onPress={this.onPressUpdate.bind(this)}
 								containerStyle={styles.next}
-								disabled={this.isLoading || !this.isValidEmail || !this.isValidPhoneNumber}
+								disabled={
+									this.isLoading ||
+									!this.isValidEmail ||
+									!this.isValidPhoneNumber ||
+									!isChangedProfile
+								}
 							>
 								{strings('wallet.update_profile').toUpperCase()}
 							</StyledButton>
