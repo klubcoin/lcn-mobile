@@ -742,6 +742,7 @@
 	"help": {
 		"title": "Help",
 		"links": "Links",
+		"help_support_links": "Help & Support Links",
 		"password_setup": "Password Setup",
 		"secure_your_wallet": "Secure Your Wallet",
 		"visit_our_support_center": "Visit our Support Center",

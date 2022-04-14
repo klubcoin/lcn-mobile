@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import routes from '../../../common/routes';
-import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import AppConstants from '../../../core/AppConstants';
@@ -28,11 +27,12 @@ const styles = StyleSheet.create({
 		paddingVertical: 24
 	},
 	title: {
-		fontSize: 18,
+		fontSize: 22,
 		textAlign: 'left',
 		marginBottom: 20,
 		...fontStyles.normal,
-		color: colors.white
+		color: colors.blue,
+		fontWeight: 'bold'
 	},
 	link: {
 		fontSize: 18,
@@ -122,7 +122,7 @@ export default class Help extends PureComponent {
 					<View style={styles.logoWrapper}>
 						<Image source={foxImage} style={styles.image} resizeMethod={'auto'} />
 					</View>
-					<Text style={styles.title}>{strings('help.links')}</Text>
+					<Text style={styles.title}>{strings('help.help_support_links')}</Text>
 					<View style={styles.link}>
 						<TouchableOpacity onPress={this.onPasswordSetup} activeOpacity={0.7}>
 							<Text style={styles.link}>{strings('help.password_setup')}</Text>
