@@ -52,7 +52,14 @@ class PartnerDetails extends PureComponent {
 				<View style={styles.wrapper}>
 					<Text style={styles.title}>{this.name}</Text>
 					<Text style={styles.desc}>{this.description}</Text>
-					{this.image && <PartnerImage source={APIService.apiGetPartnerIcon(this.image)} style={styles.partnerImage} />}
+					{this.image && (
+						<PartnerImage
+							source={APIService.apiGetPartnerIcon(this.image)}
+							height={300}
+							width={'100%'}
+							style={styles.partnerImage}
+						/>
+					)}
 					<View style={styles.button}>
 						<StyledButton
 							type={'normal-padding'}

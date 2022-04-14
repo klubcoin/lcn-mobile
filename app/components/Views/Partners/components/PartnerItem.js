@@ -27,7 +27,12 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 	return (
 		<TouchableOpacity activeOpacity={0.7} style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
 			<View style={styles.imgWrapper}>
-				<PartnerImage source={APIService.apiGetPartnerIcon(imageSrc)} style={styles.img} />
+				<PartnerImage
+					source={APIService.apiGetPartnerIcon(imageSrc)}
+					style={styles.img}
+					width={150}
+					height={50}
+				/>
 			</View>
 		</TouchableOpacity>
 	);
