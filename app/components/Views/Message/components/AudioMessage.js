@@ -11,7 +11,7 @@ const AudioMessage = ({ name, path, incoming, loading }) => {
     <View style={styles.root}>
       <Text style={[styles.name, sender && styles.textWhite]}>{name}</Text>
       <View style={styles.media}>
-        {loading ? <ActivityIndicator /> : <MediaPlayer source={path} visible={!!path} />}
+        {loading ? <ActivityIndicator color={colors.white} /> : <MediaPlayer source={path} visible={!!path} />}
       </View>
     </View>
   )

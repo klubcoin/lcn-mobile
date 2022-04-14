@@ -155,7 +155,6 @@ class Dashboard extends PureComponent {
 		Object.keys(accounts).forEach((accountAddress, index) => {
 			AssetsContractController.getBalanceOf(routes.klubToken.address(), accountAddress)
 				.then(balance => {
-					console.log(balance);
 					if (accounts[accountAddress].balance !== BNToHex(balance)) {
 						accounts[accountAddress].balance = BNToHex(balance);
 					}
@@ -597,7 +596,7 @@ class Dashboard extends PureComponent {
 	renderLoader() {
 		return (
 			<View style={styles.loader}>
-				<ActivityIndicator size="small" />
+				<ActivityIndicator size="small" color={colors.white} />
 			</View>
 		);
 	}

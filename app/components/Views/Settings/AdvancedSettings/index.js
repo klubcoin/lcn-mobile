@@ -177,7 +177,7 @@ class AdvancedSettings extends PureComponent {
 								onCancelPress={this.cancelResetAccount}
 								onRequestClose={this.cancelResetAccount}
 								onConfirmPress={this.resetAccount}
-								confirmButtonMode='normal'
+								confirmButtonMode="normal"
 								cancelButtonMode="normal"
 								actionContainerStyle={styles.modalActionView}
 							>
@@ -215,7 +215,7 @@ class AdvancedSettings extends PureComponent {
 										/>
 									) : (
 										<View style={styles.ipfsGatewayLoadingWrapper}>
-											<ActivityIndicator size="small" />
+											<ActivityIndicator size="small" color={colors.white} />
 										</View>
 									)}
 								</View>

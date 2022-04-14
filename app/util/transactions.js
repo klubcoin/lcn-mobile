@@ -69,12 +69,12 @@ const reviewActionKeys = {
  * Object containing all known action keys, to be used in transactions list
  */
 const actionKeys = {
-	[SEND_TOKEN_ACTION_KEY]: strings('transactions.sent_tokens'),
-	[TRANSFER_FROM_ACTION_KEY]: strings('transactions.sent_collectible'),
-	[DEPLOY_CONTRACT_ACTION_KEY]: strings('transactions.contract_deploy'),
-	[SMART_CONTRACT_INTERACTION_ACTION_KEY]: strings('transactions.smart_contract_interaction'),
-	[SWAPS_TRANSACTION_ACTION_KEY]: strings('transactions.swaps_transaction'),
-	[APPROVE_ACTION_KEY]: strings('transactions.approve')
+	[SEND_TOKEN_ACTION_KEY]: () => strings('transactions.sent_tokens'),
+	[TRANSFER_FROM_ACTION_KEY]: () => strings('transactions.sent_collectible'),
+	[DEPLOY_CONTRACT_ACTION_KEY]: () => strings('transactions.contract_deploy'),
+	[SMART_CONTRACT_INTERACTION_ACTION_KEY]: () => strings('transactions.smart_contract_interaction'),
+	[SWAPS_TRANSACTION_ACTION_KEY]: () => strings('transactions.swaps_transaction'),
+	[APPROVE_ACTION_KEY]: () => strings('transactions.approve')
 };
 
 /**
@@ -314,7 +314,7 @@ export async function getActionKey(tx, selectedAddress, ticker, chainId) {
 	const transactionActionKey = actionKeys[actionKey];
 
 	if (transactionActionKey) {
-		return transactionActionKey;
+		return transactionActionKey();
 	}
 
 	return actionKey;
@@ -353,7 +353,7 @@ export function getTicker(ticker) {
  * @returns {object} - ETH object
  */
 export function getEther(ticker) {
-	return {...routes.klubToken, address: getContractAddress()};
+	return { ...routes.klubToken, address: getContractAddress() };
 	// return {
 	// 	name: 'Ether',
 	// 	address: '',

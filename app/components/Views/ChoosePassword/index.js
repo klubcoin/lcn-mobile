@@ -182,10 +182,10 @@ class ChoosePassword extends PureComponent {
 		const { avatar, firstname, lastname, email } = preferences.onboardProfile;
 		const { username } = this.props.navigation.state.params;
 		const name = `${firstname} ${lastname}`;
-		const avatarb64 = await RNFS.readFile(avatar, 'base64');
+		// const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const publicInfo = JSON.stringify({ name });
 		const privateInfo = JSON.stringify({ emailAddress: email });
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo + avatarb64);
+		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo );
 		const signature = await CryptoSignature.signMessage(selectedAddress, privateInfo);
 		const params = [username, selectedAddress, hash, signature, publicInfo, privateInfo];
 		API.postRequest(

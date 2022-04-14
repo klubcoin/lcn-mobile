@@ -20,7 +20,7 @@ const FileMessage = ({ name, path, uri, incoming, loading }) => {
       <TouchableOpacity style={styles.body} onPress={onShare}>
         <Icon name={'file'} size={24} style={[styles.icon, incoming && styles.highlight]} />
         <Text style={[styles.name, sender && styles.textWhite]}>{name}</Text>
-        {loading && <ActivityIndicator />}
+        {loading && <ActivityIndicator color={colors.white} />}
       </TouchableOpacity>
     </View>
   )

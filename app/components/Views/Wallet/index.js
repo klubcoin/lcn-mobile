@@ -366,7 +366,7 @@ class Wallet extends PureComponent {
     renderLoader() {
         return (
             <View style={styles.loader}>
-                <ActivityIndicator size="small" />
+                <ActivityIndicator size="small" color={colors.white} />
             </View>
         );
     }

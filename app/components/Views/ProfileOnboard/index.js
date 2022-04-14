@@ -294,10 +294,10 @@ class ProfileOnboard extends PureComponent {
 		const lastname = this.lastname.trim();
 		const email = this.email.trim();
 		const username = this.username.trim();
-		if (!this.avatar) {
-			showError(strings('profile.missing_photo'));
-			return;
-		}
+		// if (!this.avatar) {
+		// 	showError(strings('profile.missing_photo'));
+		// 	return;
+		// }
 		if (!firstname) {
 			showError(strings('profile.missing_name'));
 			return;
@@ -482,8 +482,7 @@ class ProfileOnboard extends PureComponent {
 									!this.isValidEmail ||
 									!this.isValidUsername ||
 									!this.firstname ||
-									!this.lastname ||
-									!this.avatar
+									!this.lastname 
 								}
 							>
 								{strings('choose_password.continue')}

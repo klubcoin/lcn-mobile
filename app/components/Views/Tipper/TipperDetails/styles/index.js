@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		padding: 15
 	},
-	colorBlue: {}
+	colorBlue: {},
+	qrCodeWrapper: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

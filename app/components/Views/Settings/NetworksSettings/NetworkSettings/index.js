@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View, TextInput, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
@@ -81,11 +81,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column',
 		alignSelf: 'flex-end'
+	},
+	error: {
+		color: colors.red,
+		fontSize: 14,
+		marginTop: 6
 	}
 });
 
 const allNetworks = getAllNetworks();
 const allNetworksblockExplorerUrl = `https://api.infura.io/v1/jsonrpc/`;
+const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
 /**
  * Main view for app configurations
  */
@@ -450,6 +456,7 @@ class NetworkSettings extends PureComponent {
 			enableAction,
 			inputWidth
 		} = this.state;
+		console.log(!!blockExplorerUrl && !urlRegex.test(blockExplorerUrl));
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.wrapper} testID={'new-rpc-screen'}>
@@ -550,6 +557,11 @@ class NetworkSettings extends PureComponent {
 								onSubmitEditing={this.addRpcUrl}
 								maxLength={256}
 							/>
+							{!!blockExplorerUrl && !urlRegex.test(blockExplorerUrl) && (
+								<Text style={styles.error}>
+									{strings('app_settings.unrecognized_block_explorer_url')}
+								</Text>
+							)}
 						</View>
 						{(addMode || editable) && (
 							<View style={styles.buttonsWrapper}>
@@ -559,7 +571,12 @@ class NetworkSettings extends PureComponent {
 										onPress={this.addRpcUrl}
 										testID={'network-add-button'}
 										containerStyle={styles.syncConfirm}
-										disabled={!enableAction || this.disabledByRpcUrl() || this.disabledByChainId()}
+										disabled={
+											!enableAction ||
+											this.disabledByRpcUrl() ||
+											this.disabledByChainId() ||
+											(!!blockExplorerUrl && !urlRegex.test(blockExplorerUrl))
+										}
 									>
 										{editable
 											? strings('app_settings.network_save')

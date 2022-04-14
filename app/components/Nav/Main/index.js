@@ -617,7 +617,7 @@ const Main = props => {
 
 	const renderLoader = () => (
 		<View style={styles.loader}>
-			<ActivityIndicator size="small" />
+			<ActivityIndicator size="small" color={colors.white}  />
 		</View>
 	);
 
