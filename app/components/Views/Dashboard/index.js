@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { PureComponent } from 'react';
 import {
 	RefreshControl,
@@ -14,15 +15,7 @@ import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import {
-	weiToFiat,
-	hexToBN,
-	BNToHex,
-	renderFromTokenMinimalUnitNumber,
-	fromTokenMinimalUnit,
-	sumFloat,
-	fromWei
-} from '../../../util/number';
+import { weiToFiat, hexToBN, BNToHex, sumFloat, fromWei } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -36,37 +29,22 @@ import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
-import Device from '../../../util/Device';
 import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { LineChart } from 'react-native-chart-kit';
 import routes from '../../../common/routes';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Erc20Service from '../../../core/Erc20Service';
 import CryptoSignature from '../../../core/CryptoSignature';
+import { Chart, VerticalAxis, HorizontalAxis, Line, Area } from 'react-native-responsive-linechart';
+import moment from 'moment';
+
 /**
  * Main view for the wallet
  */
 
 // TODO: Remove this hardcode data.
-const DummyData = [
-	10 * 100,
-	20 * 100,
-	40 * 100,
-	40 * 100,
-	40 * 100,
-	14 * 100,
-	40 * 100,
-	40 * 100,
-	40 * 100,
-	50 * 100,
-	40 * 100,
-	100 * 100,
-	40 * 100,
-	40 * 100
-];
-const CurrenIndex = 5;
+
 export const SIGN_KEY = '0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7';
 
 class Dashboard extends PureComponent {
@@ -118,7 +96,8 @@ class Dashboard extends PureComponent {
 	state = {
 		refreshing: false,
 		currentConversion: null,
-		totalToken: 0
+		totalToken: 0,
+		chartData: []
 	};
 
 	accountOverviewRef = React.createRef();
@@ -141,6 +120,7 @@ class Dashboard extends PureComponent {
 	}
 
 	componentWillUnmount() {
+		this.mounted = false;
 		this.clearBalanceInterval();
 	}
 
@@ -158,9 +138,10 @@ class Dashboard extends PureComponent {
 					if (accounts[accountAddress].balance !== BNToHex(balance)) {
 						accounts[accountAddress].balance = BNToHex(balance);
 					}
-				}).then(()=>{
-					if(index===Object.keys(accounts).length-1){
-						this.fetchTotalTokens()
+				})
+				.then(() => {
+					if (index === Object.keys(accounts).length - 1) {
+						this.fetchTotalTokens();
 					}
 				})
 				.catch(err => console.error(err));
@@ -199,6 +180,20 @@ class Dashboard extends PureComponent {
 		}
 	}
 
+	featchChartData = () => {
+		APIService.getChartData(
+			'KLC',
+			'USD',
+			new Date().setDate(new Date().getDate() - 1),
+			new Date(),
+			(success, json) => {
+				if (success && json?.data) {
+					this.setState({ chartData: json.data });
+				}
+			}
+		);
+	};
+
 	componentDidMount = () => {
 		messageStore.setActiveChatPeerId(null);
 		requestAnimationFrame(async () => {
@@ -213,6 +208,7 @@ class Dashboard extends PureComponent {
 		this.announceOnline();
 		this.addDefaultToken();
 		this.addDefaultRpcList();
+		this.featchChartData();
 		this.pollTokens = setInterval(() => this.pollTokenBalances(), 1000);
 	};
 
@@ -257,7 +253,7 @@ class Dashboard extends PureComponent {
 		const selectedAddress = accounts[0].address;
 		const { PreferencesController } = Engine.context;
 		const message = `walletInfo,${selectedAddress},${new Date().getTime()}`;
-		const sign = await CryptoSignature.signStringMessage(selectedAddress, message)
+		const sign = await CryptoSignature.signStringMessage(selectedAddress, message);
 		API.postRequest(
 			Routes.walletInfo,
 			[selectedAddress, sign, message],
@@ -368,10 +364,6 @@ class Dashboard extends PureComponent {
 		// // }
 	};
 
-	componentWillUnmount() {
-		this.mounted = false;
-	}
-
 	renderTabBar() {
 		return (
 			<CustomTabBar
@@ -404,6 +396,115 @@ class Dashboard extends PureComponent {
 			<View style={styles.title}>
 				<Text style={styles.titleText}>{title}</Text>
 			</View>
+		);
+	};
+
+	renderChart = () => {
+		const { chartData } = this.state;
+		if (!chartData || chartData.length === 0) return;
+		const data = chartData.map(e => ({ x: e.timestamp, y: e.value }));
+		const minY = Math.min(...data.map(e => e.y));
+		const maxY = Math.max(...data.map(e => e.y));
+		const CustomTooltip = props => {
+			const { position, value: valueData } = props;
+			const { x, y } = position;
+			const { x: timestamp, y: value } = valueData;
+			const percentChange = chartData.find(e => e.timestamp === timestamp).percentChange;
+			return (
+				<>
+					<View style={[styles.dataPointWrapper, { top: y + 14, left: x + 16 }]}>
+						<Icon name="circle-o" style={styles.dataPointIcon} />
+					</View>
+					<View style={[styles.dataPointVerticalContainer, { left: x + 22 }]}>
+						<View style={styles.dataPointVerticalWrapper}>
+							<View style={styles.dataPointVerticalDasher} />
+						</View>
+					</View>
+					<View
+						style={[
+							styles.dataViewWrapper,
+							{
+								top: y > 80 ? y - 80 : y + 40,
+								left: x > 135 ? x - 135 : x
+							}
+						]}
+					>
+						<Text style={styles.dataViewTime}>{moment(timestamp).format('MMMM DD, YYYY hh:mm A')}</Text>
+						<View style={styles.dataViewBalanceWrapper}>
+							<Text style={styles.dataViewBalance}>Balance</Text>
+							<Text style={styles.dataViewPercentChange}> {percentChange}%</Text>
+						</View>
+						<Text style={styles.dataViewValue}>{`$ ${value}`}</Text>
+					</View>
+				</>
+			);
+		};
+		return (
+			<Chart
+				style={{ width: 330, height: 260 }}
+				xDomain={{
+					min: Math.min(...data.map(e => e.x)),
+					max: Math.max(...data.map(e => e.x))
+				}}
+				yDomain={{
+					min: minY,
+					max: maxY
+				}}
+				config={{
+					insetY: 10
+				}}
+				padding={{ left: 20, bottom: 20, top: 20 }}
+			>
+				<VerticalAxis
+					tickCount={10}
+					theme={{
+						axis: { visible: false },
+						ticks: { visible: false },
+						grid: {
+							stroke: {
+								color: colors.white000,
+								dashArray: [8]
+							}
+						},
+						labels: { visible: false }
+					}}
+				/>
+				<HorizontalAxis
+					tickCount={15}
+					theme={{
+						axis: { visible: false },
+						ticks: { visible: false },
+						grid: {
+							stroke: {
+								color: colors.white000,
+								dashArray: [8]
+							}
+						},
+						labels: { visible: false }
+					}}
+				/>
+				<Line
+					data={data}
+					smoothing="cubic-spline"
+					theme={{
+						stroke: {
+							color: colors.blue,
+							width: 2
+						}
+					}}
+					tooltipComponent={<CustomTooltip />}
+				/>
+				<Area
+					data={data}
+					smoothing="cubic-spline"
+					theme={{
+						gradient: {
+							from: { color: colors.blue, opacity: 0.5 },
+							to: { color: colors.blue, opacity: 0 }
+						}
+					}}
+				/>
+			</Chart>
 		);
 	};
 
@@ -447,7 +548,6 @@ class Dashboard extends PureComponent {
 				name: 'Tipper',
 				uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
 			},
-			name: 'Tipper',
 			uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
 		};
 
@@ -511,58 +611,26 @@ class Dashboard extends PureComponent {
 					</View>
 				</View>
 
-				{/* Chart */}
 				{this.renderTitle(strings('dashboard.chart'))}
 
 				{/* //TODO: Wait to implement API for real data and feature */}
-				<View style={styles.chartBox}>
-					<Text style={styles.comingSoon}>{strings('receive_request.coming_soon')}</Text>
-					{/* <LineChart
-						onDataPointClick={({ index, dateSet }) => {
-							console.log(
-								'🚀 ~ file: index.js ~ line 415 ~ Dashboard ~ renderContent ~ dateSet',
-								dateSet
-							);
-							console.log(index);
-						}}
-						data={{
-							datasets: [
-								{
-									data: DummyData
-								}
-							]
-						}}
-						width={Device.getDeviceWidth() - 35 * 2}
-						height={Device.getDeviceWidth() - 35 * 2}
-						withOuterLines={false}
-						withHorizontalLabels={false}
-						fromZero={true}
-						segments={Math.round(DummyData.length / 2)}
-						hidePointsAtIndex={[...Array(DummyData.length).keys()].filter(i => i != CurrenIndex)}
-						chartConfig={{
-							color: (opacity = 1) => colors.blue,
-							labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-							backgroundGradientFrom: colors.purple,
-							backgroundGradientTo: colors.purple,
-							fillShadowGradient: colors.blue,
-							fillShadowGradientOpacity: 0.4,
-							strokeWidth: 1.4,
-							propsForDots: {
-								stroke: colors.white,
-								strokeWidth: 2,
-								fill: colors.black
-							},
-							propsForBackgroundLines: {
-								strokeDasharray: 5,
-								strokeDashoffset: 1,
-								stroke: colors.white000
-							}
-						}}
-						style={{
-							paddingRight: 5,
-							paddingBottom: -35 * 2
-						}}
-					/> */}
+				<View style={styles.chartContainer}>
+					<View style={styles.chartHeader}>
+						<View style={styles.chartTimelineWrapper}>
+							{['1w', '1m', '6m', '3m', '1y'].map(e => (
+								<TouchableOpacity activeOpacity={0.7} style={styles.chartTimelineButton}>
+									<Text style={styles.chartTimelineText}>{e}</Text>
+								</TouchableOpacity>
+							))}
+						</View>
+						<TouchableOpacity style={styles.currencyWrapper} activeOpacity={0.7}>
+							<Text style={styles.currencyText}>{'EUR'}</Text>
+							<Icon name="chevron-down" style={styles.currencyIcon} />
+						</TouchableOpacity>
+					</View>
+					<View style={styles.chartWrapper}>
+						{this.state.chartData && this.state.chartData.length !== 0 && this.renderChart()}
+					</View>
 				</View>
 
 				{/* Action button */}
@@ -571,7 +639,7 @@ class Dashboard extends PureComponent {
 						style={styles.btn}
 						activeOpacity={0.7}
 						onPress={() => {
-							this.props.navigation.navigate('ComingSoon');
+							this.props.navigation.navigate('PurchaseMethods');
 						}}
 					>
 						<Text style={styles.btnText}>{strings('dashboard.buy_more')}</Text>
@@ -618,7 +686,9 @@ class Dashboard extends PureComponent {
 			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
 				<ScrollView
 					style={styles.wrapper}
-					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.pollTokenBalances} />}
+					refreshControl={
+						<RefreshControl refreshing={this.state.refreshing} onRefresh={this.pollTokenBalances} />
+					}
 				>
 					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
 				</ScrollView>

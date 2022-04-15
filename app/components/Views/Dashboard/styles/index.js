@@ -80,7 +80,26 @@ const styles = StyleSheet.create({
 		color: colors.purple
 	},
 	comingSoon: {},
-	chartBox: {}
+	chartContainer: {},
+	chartWrapper: {},
+	chartHeader: {},
+	chartTimelineWrapper: {},
+	chartTimelineButton: {},
+	chartTimelineText: {},
+	currencyWrapper: {},
+	currencyText: {},
+	currencyIcon: {},
+	dataPointWrapper: {},
+	dataPointIcon: {},
+	dataPointVerticalContainer: {},
+	dataPointVerticalWrapper: {},
+	dataPointVerticalDasher: {},
+	dataViewWrapper: {},
+	dataViewTime: {},
+	dataViewBalanceWrapper: {},
+	dataViewBalance: {},
+	dataViewPercentChange: {},
+	dataViewValue: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

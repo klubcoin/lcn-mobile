@@ -227,6 +227,7 @@
 		"react-native-reanimated": "^1.13.2",
 		"react-native-render-html": "^6.3.1",
 		"react-native-responsive-fontsize": "^0.5.1",
+		"react-native-responsive-linechart": "^5.7.1",
 		"react-native-safe-area-context": "^3.1.9",
 		"react-native-scalable-image": "^1.1.0",
 		"react-native-screens": "^2.16.1",
