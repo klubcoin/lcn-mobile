@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import * as base64 from 'base-64';
@@ -7,8 +7,6 @@ import * as RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import { sha256 } from '../../../../core/CryptoSignature';
 import { basicAuth } from '../../../../services/APIService';
-import ContentLoader from 'react-native-content-loader';
-import { Rect } from 'react-native-svg';
 import { colors } from '../../../../styles/common';
 
 class PartnerImage extends Component {
@@ -82,15 +80,9 @@ class PartnerImage extends Component {
 			<View style={style}>
 				<View style={styles.contentLoader}>
 					{!this.isLoadedImg && (
-						<ContentLoader
-							primaryColor={colors.lightPurple}
-							secondaryColor={colors.purple500}
-							height={height}
-							width={width}
-							duration={'1500'}
-						>
-							<Rect x="0" y="0" rx="8" ry="8" width={width} height={height} />
-						</ContentLoader>
+						<View style={styles.loadingWrapper}>
+							<ActivityIndicator size="small" color={colors.white} />
+						</View>
 					)}
 				</View>
 				<Image
@@ -117,6 +109,10 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		left: 0,
 		right: 0
+	},
+	loadingWrapper: {
+		height: '100%',
+		justifyContent: 'center'
 	}
 });
 
