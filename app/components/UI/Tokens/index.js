@@ -132,7 +132,7 @@ class Tokens extends PureComponent {
 	renderEmpty = () => (
 		<View style={styles.emptyView}>
 			<Text style={styles.text}>{strings('wallet.no_tokens')}</Text>
-			{this.renderFooter()}
+			{/* {this.renderFooter()} */}
 		</View>
 	);
 
@@ -301,7 +301,7 @@ class Tokens extends PureComponent {
 			<View>
 				{tokensToDisplay.map(item => this.renderItem(item))}
 				{/* {this.renderBuyLCN()} */}
-				{this.renderFooter()}
+				{/* {this.renderFooter()} */}
 			</View>
 		);
 	}
