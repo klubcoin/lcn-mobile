@@ -215,9 +215,9 @@ class NetworksSettings extends PureComponent {
 			<OnboardingScreenWithBg screen="a">
 				<ScrollView style={styles.networksWrapper}>
 					{this.renderMainnet()}
-					<Text style={styles.sectionLabel}>{strings('app_settings.network_other_networks')}</Text>
+					{/* <Text style={styles.sectionLabel}>{strings('app_settings.network_other_networks')}</Text>
 						{this.renderOtherNetworks()}
-						{this.renderRpcNetworksView()}
+						{this.renderRpcNetworksView()} */}
 				</ScrollView>
 				<StyledButton
 					type="normal"

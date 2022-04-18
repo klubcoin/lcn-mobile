@@ -299,6 +299,8 @@
 		"network_error": "Network error!",
 		"no_connection": "No internet connection. Please try again.",
 		"wallet_not_created": "This wallet was never created on the app!",
+		"error_title": "Ooops! something went wrong...",
+		"error_message": "We couldn't import that seed phrase. Please make sure you entered it correctly.",
 		"import_wallet_wrong": "Something were wrong! Please try again."
 	},
 	"bottom_tab_bar": {
@@ -416,8 +418,8 @@
 	"dashboard": {
 		"title": "Dashboard",
 		"chart": "Chart",
-		"buy_more": "Buy more Klub Coins",
-		"spend_coin": "Spend your Klub Coins"
+		"buy_more": "Buy more KLUBs",
+		"spend_coin": "Spend your KLUBs"
 	},
 	"welcome": {
 		"go_to_my_wallet": "Go to my wallet",

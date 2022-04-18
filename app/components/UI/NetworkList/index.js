@@ -152,7 +152,10 @@ export class NetworkList extends PureComponent {
 	renderMainnet() {
 		const { provider } = this.props;
 		const { color: mainnetColor, name: mainnetName } = Networks.mainnet;
-		const isMainnet = provider.type === MAINNET || provider.type == RPC && provider.chainId == routes.mainNetWork.chainId ? <Icon name="check" size={15} color={mainnetColor} /> : null;
+		const isMainnet =
+			provider.type === MAINNET || (provider.type == RPC && provider.chainId == routes.mainNetWork.chainId) ? (
+				<Icon name="check" size={15} color={mainnetColor} />
+			) : null;
 
 		return (
 			<View style={styles.mainnetHeader}>
@@ -184,13 +187,13 @@ export class NetworkList extends PureComponent {
 			<ScrollView style={styles.networksWrapper} testID={'other-networks-scroll'}>
 				{this.renderMainnet()}
 
-				<View style={styles.otherNetworksHeader}>
+				{/* <View style={styles.otherNetworksHeader}>
 					<Text style={styles.otherNetworksText} testID={'other-network-name'}>
 						{strings('networks.other_networks')}
 					</Text>
 				</View>
 				{this.renderOtherNetworks()}
-				{this.renderRpcNetworks()}
+				{this.renderRpcNetworks()} */}
 			</ScrollView>
 			<View style={styles.footer}>
 				<StyledButton containerStyle={styles.footerButton} type={'normal'} onPress={this.closeModal}>
