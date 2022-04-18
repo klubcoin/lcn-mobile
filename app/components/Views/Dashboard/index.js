@@ -105,7 +105,8 @@ class Dashboard extends PureComponent {
 		selectedTimeline: '1w',
 		selectedCurrency: '',
 		isChangeCurrency: false,
-		totalBalance: '0'
+		totalBalance: '0',
+		isFetchingChartData: false
 	};
 
 	accountOverviewRef = React.createRef();
@@ -118,8 +119,8 @@ class Dashboard extends PureComponent {
 		for (let account of accounts) {
 			totalToken = sumFloat(totalToken, account?.balance ? fromWei(hexToBN(account?.balance)) : '0');
 		}
-		const { chartData } = this.state;
-		if (chartData && chartData.length > 0) {
+		const { chartData, isFetchingChartData } = this.state;
+		if (chartData && chartData.length > 0 && !isFetchingChartData) {
 			const bigNumberTotalToken = new BigNumber(totalToken);
 			const totalBalance = bigNumberTotalToken.multipliedBy(chartData[chartData.length - 1].value);
 			this.setState({ totalBalance });
@@ -220,7 +221,7 @@ class Dashboard extends PureComponent {
 		}
 		APIService.getChartData('KLC', selectCurrency.toUpperCase(), fromDate, toDate, (success, json) => {
 			if (success && json?.data) {
-				this.setState({ chartData: json.data });
+				this.setState({ chartData: json.data, isFetchingChartData: false });
 			}
 		});
 	};
@@ -346,13 +347,13 @@ class Dashboard extends PureComponent {
 
 	onChangeCurrency = currency => {
 		const { selectedTimeline } = this.state;
-		this.setState({ selectedCurrency: currency, isChangeCurrency: false });
+		this.setState({ selectedCurrency: currency, isChangeCurrency: false, isFetchingChartData: true });
 		this.featchChartData(currency, selectedTimeline);
 	};
 
 	onChangeTimeline = timeline => {
 		const { selectedCurrency } = this.state;
-		this.setState({ selectedTimeline: timeline });
+		this.setState({ selectedTimeline: timeline, isFetchingChartData: true });
 		this.featchChartData(selectedCurrency, timeline);
 	};
 
@@ -589,7 +590,8 @@ class Dashboard extends PureComponent {
 			selectedCurrency,
 			isChangeCurrency,
 			chartData,
-			totalBalance
+			totalBalance,
+			isFetchingChartData
 		} = this.state;
 		//TODO: need to remove fixed code for TIPPER app
 		const tipper = {
@@ -736,7 +738,15 @@ class Dashboard extends PureComponent {
 							<Icon name="chevron-down" style={styles.currencyIcon} />
 						</TouchableOpacity>
 					</View>
-					<View style={styles.chartWrapper}>{chartData && chartData.length !== 0 && this.renderChart()}</View>
+					<View style={styles.chartWrapper}>
+						{chartData && chartData.length !== 0 && !isFetchingChartData ? (
+							this.renderChart()
+						) : (
+							<View style={styles.activityIndicatorWrapper}>
+								<ActivityIndicator size={'small'} color={'white'} />
+							</View>
+						)}
+					</View>
 				</View>
 
 				{/* Action button */}

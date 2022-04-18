@@ -149,6 +149,10 @@ const brandStyles = StyleSheet.create({
 		color: colors.white,
 		...fontStyles.bold,
 		paddingRight: 15
+	},
+	activityIndicatorWrapper: {
+		height: '100%',
+		justifyContent: 'center'
 	}
 });
 
