@@ -451,7 +451,7 @@
 		"remove_network_title": "Anda ingin menghapus jaringan ini?",
 		"remove_network": "Hapus",
 		"cancel_remove_network": "Batal",
-		"info_title": "Tentang MetaMask",
+		"info_title": "Tentang {{appName}}",
 		"experimental_title": "Eksperimental",
 		"experimental_desc": "WalletConnect & banyak lagi...",
 		"legal_title": "Legal",
