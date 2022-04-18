@@ -103,7 +103,9 @@ const styles = StyleSheet.create({
 	modalWrapper: {},
 	modalScrollView: {},
 	modalItemContainer: {},
-	modalItemIcon: {}
+	modalItemIcon: {},
+	totalBalanceCard: {},
+	totalBalanceText: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

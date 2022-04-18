@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 
@@ -134,6 +135,20 @@ const brandStyles = StyleSheet.create({
 	modalItemIcon: {
 		color: colors.success,
 		marginRight: 12
+	},
+	totalBalanceCard: {
+		flex: 1,
+		backgroundColor: colors.lightPurple,
+		borderRadius: 10,
+		paddingHorizontal: 10,
+		paddingVertical: 20,
+		height: '100%'
+	},
+	totalBalanceText: {
+		fontSize: RFValue(16),
+		color: colors.white,
+		...fontStyles.bold,
+		paddingRight: 15
 	}
 });
 

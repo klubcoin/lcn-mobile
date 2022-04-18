@@ -40,6 +40,7 @@ import { Chart, VerticalAxis, HorizontalAxis, Line, Area } from 'react-native-re
 import moment from 'moment';
 import infuraCurrencies from '../../../util/infura-conversion.json';
 import Modal from 'react-native-modal';
+import BigNumber from 'bignumber.js';
 
 /**
  * Main view for the wallet
@@ -103,7 +104,8 @@ class Dashboard extends PureComponent {
 		chartData: [],
 		selectedTimeline: '1w',
 		selectedCurrency: '',
-		isChangeCurrency: false
+		isChangeCurrency: false,
+		totalBalance: '0'
 	};
 
 	accountOverviewRef = React.createRef();
@@ -112,9 +114,15 @@ class Dashboard extends PureComponent {
 
 	fetchTotalTokens() {
 		const accounts = this.getAccounts();
-		let totalToken = '0';
+		let totalToken = '';
 		for (let account of accounts) {
 			totalToken = sumFloat(totalToken, account?.balance ? fromWei(hexToBN(account?.balance)) : '0');
+		}
+		const { chartData } = this.state;
+		if (chartData && chartData.length > 0) {
+			const bigNumberTotalToken = new BigNumber(totalToken);
+			const totalBalance = bigNumberTotalToken.multipliedBy(chartData[chartData.length - 1].value);
+			this.setState({ totalBalance });
 		}
 		this.setState({
 			totalToken
@@ -575,7 +583,14 @@ class Dashboard extends PureComponent {
 			ticker
 		} = this.props;
 
-		const { currentConversion, selectedTimeline, selectedCurrency, isChangeCurrency } = this.state;
+		const {
+			currentConversion,
+			selectedTimeline,
+			selectedCurrency,
+			isChangeCurrency,
+			chartData,
+			totalBalance
+		} = this.state;
 		//TODO: need to remove fixed code for TIPPER app
 		const tipper = {
 			image:
@@ -649,18 +664,36 @@ class Dashboard extends PureComponent {
 						</View>
 					</View>
 
-					<View style={[styles.card, { marginRight: 0 }]}>
+					<View style={styles.totalBalanceCard}>
 						<View style={styles.row}>
 							<Text style={styles.cardTitle}>{strings('watch_asset_request.balance')}</Text>
-							{/* <Text style={styles.extraCardTitle}>+2,4%</Text> */}
+							{chartData && chartData.length !== 0 && (
+								<Text style={styles.extraCardTitle}>{`${
+									chartData[chartData.length - 1].percentChange
+								}%`}</Text>
+							)}
 						</View>
 						<View style={[styles.cardContent, styles.row]}>
-							{/* <Text style={[styles.balance, { paddingRight: 15 }]}>
-                                $100,000,000
-                            </Text>
-                            <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} /> */}
+							<Text style={styles.totalBalanceText}>
+								{selectedCurrency === 'usd'
+									? `$${totalBalance}`
+									: selectedCurrency === 'eur'
+									? `€${totalBalance}`
+									: `${totalBalance} ${selectedCurrency.toUpperCase()}`}
+							</Text>
+							<Icon
+								name="chevron-down"
+								size={12}
+								color={colors.white}
+								style={styles.arrowIcon}
+								onPress={() => {
+									this.setState({
+										isChangeCurrency: true
+									});
+								}}
+							/>
 							{/* <Text style={styles.comingSoon}>{balanceFiat}</Text> */}
-							<Text style={styles.comingSoon}>{strings('coming_soon.coming_soon')}</Text>
+							{/* <Text style={styles.comingSoon}>{strings('coming_soon.coming_soon')}</Text> */}
 						</View>
 					</View>
 				</View>
@@ -703,9 +736,7 @@ class Dashboard extends PureComponent {
 							<Icon name="chevron-down" style={styles.currencyIcon} />
 						</TouchableOpacity>
 					</View>
-					<View style={styles.chartWrapper}>
-						{this.state.chartData && this.state.chartData.length !== 0 && this.renderChart()}
-					</View>
+					<View style={styles.chartWrapper}>{chartData && chartData.length !== 0 && this.renderChart()}</View>
 				</View>
 
 				{/* Action button */}
