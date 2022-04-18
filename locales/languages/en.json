@@ -299,6 +299,8 @@
 		"network_error": "Network error!",
 		"no_connection": "No internet connection. Please try again.",
 		"wallet_not_created": "This wallet was never created on the app!",
+		"error_title": "Ooops! something went wrong...",
+		"error_message": "We couldn't import that seed phrase. Please make sure you entered it correctly.",
 		"import_wallet_wrong": "Something were wrong! Please try again."
 	},
 	"bottom_tab_bar": {
@@ -679,7 +681,7 @@
 		"network_symbol_placeholder": "Symbol (optional)",
 		"network_block_explorer_label": "Block Explorer URL",
 		"network_block_explorer_placeholder": "Block Explorer URL (optional)",
-		"unrecognized_block_explorer_url":"Unrecognized Block Explorer URL",
+		"unrecognized_block_explorer_url": "Unrecognized Block Explorer URL",
 		"network_chain_id_warning": "Invalid Chain ID",
 		"network_other_networks": "Other Networks",
 		"network_rpc_networks": "RPC Networks",
