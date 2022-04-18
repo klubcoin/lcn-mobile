@@ -33,8 +33,8 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 	};
 
 	const goToAddCollectible = () => {
-		navigation.navigate('ComingSoon')
-		return
+		navigation.navigate('ComingSoon');
+		return;
 		navigation.push('AddAsset', { assetType: 'collectible' });
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_ADD_COLLECTIBLES);
@@ -97,7 +97,10 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 		[collectibleContracts, renderFavoriteCollectibles, renderCollectibleContract]
 	);
 
-	const goToLearnMore = () => navigation.navigate('SimpleWebview', { url: AppConstants.URLS.NFT });
+	const goToLearnMore = () => {
+		navigation.navigate('ComingSoon');
+		// navigation.navigate('SimpleWebview', { url: AppConstants.URLS.NFT });
+	};
 
 	const renderEmpty = () => (
 		<View style={styles.emptyView}>
