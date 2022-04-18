@@ -741,7 +741,7 @@ class Settings extends PureComponent {
 							</StyledButton>
 						</View>
 						<Heading>{strings('app_settings.privacy_heading')}</Heading>
-						<View style={[styles.setting, styles.firstSetting]} testID={'clear-privacy-section'}>
+						{/* <View style={[styles.setting, styles.firstSetting]} testID={'clear-privacy-section'}>
 							<Text style={styles.title}>{strings('app_settings.clear_privacy_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.clear_privacy_desc')}</Text>
 							<StyledButton
@@ -787,7 +787,7 @@ class Settings extends PureComponent {
 									ios_backgroundColor={colors.grey000}
 								/>
 							</View>
-						</View>
+						</View> */}
 						<View style={styles.setting} testID={'metametrics-section'}>
 							<Text style={styles.title}>{strings('app_settings.metametrics_title')}</Text>
 							<Text style={styles.desc}>
@@ -818,7 +818,7 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 					</View>
-					<View style={styles.setting} testID={'reveal-private-key-section'}>
+					{/* <View style={styles.setting} testID={'reveal-private-key-section'}>
 						<Text style={styles.title}>
 							{strings('reveal_credential.private_key_title_for_account', {
 								accountName: account.name?.name || account?.name
@@ -832,62 +832,58 @@ class Settings extends PureComponent {
 						<StyledButton type="normal" onPress={this.goToExportPrivateKey} containerStyle={styles.confirm}>
 							{strings('reveal_credential.show_private_key')}
 						</StyledButton>
-					</View>
-					<View style={styles.setting}>
+					</View> */}
+					{/* <View style={styles.setting}>
 						<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
 						<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
 						<StyledButton type="normal" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
 							{strings('private_key.backup_private_key')}
 						</StyledButton>
-						{!!privateKeyBackupStats && (
-							<View style={{ flexDirection: 'row' }}>
-								<Text style={styles.desc}>
-									{strings('private_key.sending_backup_progress', {
-										progress: privateKeyBackupStats.currentPart + 1,
-										total: privateKeyBackupStats.partCount
-									})}
-								</Text>
-							</View>
-						)}
-						<ActionModal
-							modalVisible={browserHistoryModalVisible}
-							confirmText={strings('app_settings.clear')}
-							cancelText={strings('app_settings.reset_account_cancel_button')}
-							onCancelPress={this.toggleClearBrowserHistoryModal}
-							onRequestClose={this.toggleClearBrowserHistoryModal}
-							onConfirmPress={this.clearBrowserHistory}
-						>
-							<View style={styles.modalView}>
-								<Text style={styles.modalTitle}>
-									{strings('app_settings.clear_browser_history_modal_title')}
-								</Text>
-								<Text style={styles.modalText}>
-									{strings('app_settings.clear_browser_history_modal_message')}
-								</Text>
-							</View>
-						</ActionModal>
-						<ActionModal
-							modalVisible={cookiesModalVisible}
-							confirmText={strings('app_settings.clear')}
-							cancelText={strings('app_settings.reset_account_cancel_button')}
-							onCancelPress={this.toggleClearCookiesModal}
-							onRequestClose={this.toggleClearCookiesModal}
-							onConfirmPress={this.clearCookies}
-							modalStyle={styles.modal}
-							actionContainerStyle={styles.modalActionView}
-							cancelButtonMode="normal"
-						>
-							<View style={styles.modalView}>
-								<Text style={styles.modalTitle}>
-									{strings('app_settings.clear_cookies_modal_title')}
-								</Text>
-								<Text style={styles.modalText}>
-									{strings('app_settings.clear_cookies_modal_message')}
-								</Text>
-							</View>
-						</ActionModal>
-						{this.renderHint()}
-					</View>
+					</View> */}
+					{!!privateKeyBackupStats && (
+						<View style={{ flexDirection: 'row' }}>
+							<Text style={styles.desc}>
+								{strings('private_key.sending_backup_progress', {
+									progress: privateKeyBackupStats.currentPart + 1,
+									total: privateKeyBackupStats.partCount
+								})}
+							</Text>
+						</View>
+					)}
+					{/* <ActionModal
+						modalVisible={browserHistoryModalVisible}
+						confirmText={strings('app_settings.clear')}
+						cancelText={strings('app_settings.reset_account_cancel_button')}
+						onCancelPress={this.toggleClearBrowserHistoryModal}
+						onRequestClose={this.toggleClearBrowserHistoryModal}
+						onConfirmPress={this.clearBrowserHistory}
+					>
+						<View style={styles.modalView}>
+							<Text style={styles.modalTitle}>
+								{strings('app_settings.clear_browser_history_modal_title')}
+							</Text>
+							<Text style={styles.modalText}>
+								{strings('app_settings.clear_browser_history_modal_message')}
+							</Text>
+						</View>
+					</ActionModal>
+					<ActionModal
+						modalVisible={cookiesModalVisible}
+						confirmText={strings('app_settings.clear')}
+						cancelText={strings('app_settings.reset_account_cancel_button')}
+						onCancelPress={this.toggleClearCookiesModal}
+						onRequestClose={this.toggleClearCookiesModal}
+						onConfirmPress={this.clearCookies}
+						modalStyle={styles.modal}
+						actionContainerStyle={styles.modalActionView}
+						cancelButtonMode="normal"
+					>
+						<View style={styles.modalView}>
+							<Text style={styles.modalTitle}>{strings('app_settings.clear_cookies_modal_title')}</Text>
+							<Text style={styles.modalText}>{strings('app_settings.clear_cookies_modal_message')}</Text>
+						</View>
+					</ActionModal> */}
+					{this.renderHint()}
 				</ScrollView>
 			</OnboardingScreenWithBg>
 		);
