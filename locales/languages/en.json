@@ -418,8 +418,8 @@
 	"dashboard": {
 		"title": "Dashboard",
 		"chart": "Chart",
-		"buy_more": "Buy more Klub Coins",
-		"spend_coin": "Spend your Klub Coins"
+		"buy_more": "Buy more KLUBs",
+		"spend_coin": "Spend your KLUBs"
 	},
 	"welcome": {
 		"go_to_my_wallet": "Go to my wallet",
