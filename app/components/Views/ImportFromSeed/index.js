@@ -1,6 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, ActivityIndicator, Alert, TouchableOpacity, Text, View, TextInput, SafeAreaView } from 'react-native';
+import {
+	Switch,
+	ActivityIndicator,
+	Alert,
+	TouchableOpacity,
+	Text,
+	View,
+	TextInput,
+	SafeAreaView,
+	Modal
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
@@ -42,6 +52,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
 import CryptoSignature from '../../../core/CryptoSignature';
+import QRScanner from '../../UI/QRScanner';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -100,8 +111,12 @@ class ImportFromSeed extends PureComponent {
 			specialCharacter: false
 		},
 		isBlurPassword: false,
-		internetConnect: true
+		internetConnect: true,
+		isScanQR: false
 	};
+
+	hideSeedPhraseRef = React.createRef();
+	seedPhraseRef = React.createRef();
 
 	passwordInput = React.createRef();
 	confirmPasswordInput = React.createRef();
@@ -385,25 +400,22 @@ class ImportFromSeed extends PureComponent {
 
 	onQrCodePress = () => {
 		setTimeout(this.toggleHideSeedPhraseInput, 100);
-		this.props.navigation.navigate('QRScanner', {
-			onScanSuccess: ({ seed = undefined }) => {
-				if (seed) {
-					this.setState({ seed });
-				} else {
-					Alert.alert(
-						strings('import_from_seed.invalid_qr_code_title'),
-						strings('import_from_seed.invalid_qr_code_message')
-					);
-				}
-				this.toggleHideSeedPhraseInput();
-			},
-			onScanError: error => {
-				this.toggleHideSeedPhraseInput();
-			}
-		});
+		this.setState({ isScanQR: true });
 	};
 
 	seedphraseInputFocused = () => this.setState({ seedphraseInputFocused: !this.state.seedphraseInputFocused });
+
+	onQRScan = response => {
+		const content = response.data;
+		if (!content) {
+			this.setState({ isScanQR: false });
+			Alert.alert(strings('import_from_seed.error_title'), strings('import_from_seed.error_message'));
+			return false;
+		}
+		this.setState({ isScanQR: false, seed: content });
+		this.hideSeedPhraseRef?.current?.setValue(content);
+		this.seedPhraseRef?.current?.setValue(content);
+	};
 
 	checkValidPassword(password) {
 		this.setState({
@@ -443,7 +455,8 @@ class ImportFromSeed extends PureComponent {
 			hideSeedPhraseInput,
 			isValidPassword,
 			isBlurPassword,
-			validatePassword
+			validatePassword,
+			isScanQR
 		} = this.state;
 
 		const passwordStrengthWord = getPasswordStrengthWord(passwordStrength);
@@ -484,6 +497,7 @@ class ImportFromSeed extends PureComponent {
 									placeholderTextColor={colors.grey300}
 									onSubmitEditing={this.jumpToPassword}
 									lineWidth={0}
+									ref={this.hideSeedPhraseRef}
 									activeLineWidth={0}
 								/>
 							) : (
@@ -509,6 +523,7 @@ class ImportFromSeed extends PureComponent {
 									}
 									autoCapitalize="none"
 									autoCorrect={false}
+									ref={ref => (this.seedPhraseRef = ref)}
 									onFocus={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
 									onBlur={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
 								/>
@@ -692,6 +707,14 @@ class ImportFromSeed extends PureComponent {
 						/>
 					</View>
 				</SafeAreaView>
+				<Modal visible={isScanQR}>
+					<QRScanner
+						onBarCodeRead={e => this.onQRScan(e)}
+						onClose={() => {
+							this.setState({ isScanQR: false });
+						}}
+					/>
+				</Modal>
 			</OnboardingScreenWithBg>
 		);
 	}
