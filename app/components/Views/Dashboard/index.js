@@ -38,6 +38,8 @@ import Erc20Service from '../../../core/Erc20Service';
 import CryptoSignature from '../../../core/CryptoSignature';
 import { Chart, VerticalAxis, HorizontalAxis, Line, Area } from 'react-native-responsive-linechart';
 import moment from 'moment';
+import infuraCurrencies from '../../../util/infura-conversion.json';
+import Modal from 'react-native-modal';
 
 /**
  * Main view for the wallet
@@ -47,6 +49,7 @@ import moment from 'moment';
 
 export const SIGN_KEY = '0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7';
 
+const timeline = ['1w', '1m', '3m', '6m', '1y'];
 class Dashboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getWalletNavbarOptions('dashboard.title', navigation);
 
@@ -97,7 +100,10 @@ class Dashboard extends PureComponent {
 		refreshing: false,
 		currentConversion: null,
 		totalToken: 0,
-		chartData: []
+		chartData: [],
+		selectedTimeline: '1w',
+		selectedCurrency: '',
+		isChangeCurrency: false
 	};
 
 	accountOverviewRef = React.createRef();
@@ -180,21 +186,43 @@ class Dashboard extends PureComponent {
 		}
 	}
 
-	featchChartData = () => {
-		APIService.getChartData(
-			'KLC',
-			'USD',
-			new Date().setDate(new Date().getDate() - 1),
-			new Date(),
-			(success, json) => {
-				if (success && json?.data) {
-					this.setState({ chartData: json.data });
-				}
+	featchChartData = (selectCurrency, selectedTimeline) => {
+		const toDate = new Date();
+		let fromDate = null;
+		switch (selectedTimeline) {
+			case '1w':
+				fromDate = new Date(moment().subtract(7, 'days'));
+				break;
+			case '1m':
+				fromDate = new Date(moment().subtract(1, 'months'));
+				break;
+			case '3m':
+				fromDate = new Date(moment().subtract(3, 'months'));
+				break;
+			case '6m':
+				fromDate = new Date(moment().subtract(6, 'months'));
+				break;
+			case '1y':
+				fromDate = new Date(moment().subtract(1, 'years'));
+				break;
+			default: {
+				fromDate = new Date(moment().subtract(7, 'days'));
+				break;
 			}
-		);
+		}
+		APIService.getChartData('KLC', selectCurrency.toUpperCase(), fromDate, toDate, (success, json) => {
+			if (success && json?.data) {
+				this.setState({ chartData: json.data });
+			}
+		});
 	};
 
 	componentDidMount = () => {
+		const { currentCurrency } = this.props;
+		const { selectedTimeline } = this.state;
+		this.setState({
+			selectedCurrency: currentCurrency
+		});
 		messageStore.setActiveChatPeerId(null);
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
@@ -208,7 +236,7 @@ class Dashboard extends PureComponent {
 		this.announceOnline();
 		this.addDefaultToken();
 		this.addDefaultRpcList();
-		this.featchChartData();
+		this.featchChartData(currentCurrency, selectedTimeline);
 		this.pollTokens = setInterval(() => this.pollTokenBalances(), 1000);
 	};
 
@@ -293,6 +321,32 @@ class Dashboard extends PureComponent {
 			}
 		);
 	}
+
+	onCloseModal = () => {
+		this.setState({ isChangeCurrency: false });
+	};
+
+	sortedCurrencies = infuraCurrencies.objects.sort((a, b) =>
+		a.quote.code.toLocaleLowerCase().localeCompare(b.quote.code.toLocaleLowerCase())
+	);
+
+	infuraCurrencyOptions = this.sortedCurrencies.map(({ quote: { code, name } }) => ({
+		label: `${code.toUpperCase()} - ${name}`,
+		key: code,
+		value: code
+	}));
+
+	onChangeCurrency = currency => {
+		const { selectedTimeline } = this.state;
+		this.setState({ selectedCurrency: currency, isChangeCurrency: false });
+		this.featchChartData(currency, selectedTimeline);
+	};
+
+	onChangeTimeline = timeline => {
+		const { selectedCurrency } = this.state;
+		this.setState({ selectedTimeline: timeline });
+		this.featchChartData(selectedCurrency, timeline);
+	};
 
 	getCurrentConversion = () => {
 		API.getRequest(
@@ -412,13 +466,13 @@ class Dashboard extends PureComponent {
 			const percentChange = chartData.find(e => e.timestamp === timestamp).percentChange;
 			return (
 				<>
-					<View style={[styles.dataPointWrapper, { top: y + 14, left: x + 16 }]}>
-						<Icon name="circle-o" style={styles.dataPointIcon} />
-					</View>
 					<View style={[styles.dataPointVerticalContainer, { left: x + 22 }]}>
 						<View style={styles.dataPointVerticalWrapper}>
 							<View style={styles.dataPointVerticalDasher} />
 						</View>
+					</View>
+					<View style={[styles.dataPointWrapper, { top: y + 14, left: x + 16 }]}>
+						<Icon name="circle-o" style={styles.dataPointIcon} />
 					</View>
 					<View
 						style={[
@@ -521,7 +575,7 @@ class Dashboard extends PureComponent {
 			ticker
 		} = this.props;
 
-		const { currentConversion } = this.state;
+		const { currentConversion, selectedTimeline, selectedCurrency, isChangeCurrency } = this.state;
 		//TODO: need to remove fixed code for TIPPER app
 		const tipper = {
 			image:
@@ -617,14 +671,35 @@ class Dashboard extends PureComponent {
 				<View style={styles.chartContainer}>
 					<View style={styles.chartHeader}>
 						<View style={styles.chartTimelineWrapper}>
-							{['1w', '1m', '6m', '3m', '1y'].map(e => (
-								<TouchableOpacity activeOpacity={0.7} style={styles.chartTimelineButton}>
-									<Text style={styles.chartTimelineText}>{e}</Text>
+							{timeline.map(e => (
+								<TouchableOpacity
+									activeOpacity={0.7}
+									style={styles.chartTimelineButton}
+									onPress={() => {
+										this.onChangeTimeline(e);
+									}}
+								>
+									<Text
+										style={[
+											styles.chartTimelineText,
+											e === selectedTimeline && styles.chartSelectedTimelineText
+										]}
+									>
+										{e}
+									</Text>
 								</TouchableOpacity>
 							))}
 						</View>
-						<TouchableOpacity style={styles.currencyWrapper} activeOpacity={0.7}>
-							<Text style={styles.currencyText}>{'EUR'}</Text>
+						<TouchableOpacity
+							onPress={() => {
+								this.setState({
+									isChangeCurrency: true
+								});
+							}}
+							style={styles.currencyWrapper}
+							activeOpacity={0.7}
+						>
+							<Text style={styles.currencyText}>{selectedCurrency.toUpperCase()}</Text>
 							<Icon name="chevron-down" style={styles.currencyIcon} />
 						</TouchableOpacity>
 					</View>
@@ -657,6 +732,35 @@ class Dashboard extends PureComponent {
 						<Text style={styles.btnText}>{strings('dashboard.spend_coin')}</Text>
 					</TouchableOpacity>
 				</View>
+				<Modal
+					isVisible={isChangeCurrency}
+					animationIn="slideInUp"
+					animationOut="slideOutDown"
+					style={styles.modalContainer}
+					backdropOpacity={0.7}
+					animationInTiming={600}
+					animationOutTiming={600}
+					swipeDirection={'down'}
+					propagateSwipe
+					onBackdropPress={this.onCloseModal}
+					onBackButtonPress={this.onCloseModal}
+				>
+					<View style={styles.modalWrapper}>
+						<ScrollView style={styles.modalScrollView}>
+							{this.infuraCurrencyOptions.map(e => (
+								<TouchableOpacity
+									style={styles.modalItemContainer}
+									onPress={() => this.onChangeCurrency(e.value)}
+								>
+									<Text>{e.label}</Text>
+									{selectedCurrency === e.value && (
+										<Icon style={styles.modalItemIcon} name={'check'} />
+									)}
+								</TouchableOpacity>
+							))}
+						</ScrollView>
+					</View>
+				</Modal>
 			</View>
 		);
 	}

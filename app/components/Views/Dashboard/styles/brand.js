@@ -35,6 +35,9 @@ const brandStyles = StyleSheet.create({
 		borderRadius: 6,
 		marginRight: 10
 	},
+	chartSelectedTimelineText: {
+		color: colors.blue
+	},
 	chartTimelineText: {
 		fontSize: 12,
 		fontWeight: 'bold',
@@ -53,7 +56,8 @@ const brandStyles = StyleSheet.create({
 	},
 	dataPointWrapper: {
 		position: 'absolute',
-		backgroundColor: colors.purple
+		backgroundColor: colors.purple,
+		borderRadius: 100
 	},
 	dataPointIcon: {
 		color: colors.white,
@@ -62,23 +66,19 @@ const brandStyles = StyleSheet.create({
 	dataPointVerticalContainer: {
 		marginLeft: '-100%',
 		height: 1,
-		padding: 1,
-		transform: [
-			{
-				rotate: '90deg'
-			}
-		]
+		padding: 1
 	},
 	dataPointVerticalWrapper: {
-		width: 800,
-		height: 2,
+		width: 2,
+		height: 800,
 		overflow: 'hidden',
 		alignSelf: 'center'
 	},
 	dataPointVerticalDasher: {
-		width: 800,
+		height: 800,
 		borderWidth: 2,
 		borderStyle: 'dashed',
+		borderRadius: 1,
 		borderColor: colors.blue
 	},
 	dataViewWrapper: {
@@ -109,6 +109,31 @@ const brandStyles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: 'bold',
 		marginTop: 4
+	},
+	modalContainer: {
+		alignItems: 'center'
+	},
+	modalWrapper: {
+		backgroundColor: 'white',
+		width: '80%',
+		maxHeight: '70%',
+		paddingVertical: 12,
+		borderRadius: 12
+	},
+	modalScrollView: {
+		paddingHorizontal: 12
+	},
+	modalItemContainer: {
+		paddingVertical: 12,
+		borderBottomWidth: 1,
+		borderBottomColor: colors.grey100,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center'
+	},
+	modalItemIcon: {
+		color: colors.success,
+		marginRight: 12
 	}
 });
 
