@@ -219,7 +219,7 @@ class NetworksSettings extends PureComponent {
 						{this.renderOtherNetworks()}
 						{this.renderRpcNetworksView()} */}
 				</ScrollView>
-				<StyledButton
+				{/* <StyledButton
 					type="normal"
 					onPress={this.onAddNetwork}
 					containerStyle={styles.syncConfirm}
@@ -227,7 +227,7 @@ class NetworksSettings extends PureComponent {
 					style={styles.addNetworkText}
 				>
 					{strings('app_settings.network_add_network')}
-				</StyledButton>
+				</StyledButton> */}
 				<ActionSheet
 					ref={this.createActionSheetRef}
 					title={strings('app_settings.remove_network_title')}
