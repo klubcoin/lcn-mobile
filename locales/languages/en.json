@@ -949,6 +949,7 @@
 		"continueError": "I understand the risks, continue",
 		"confusable_title": "Check the recipient address",
 		"confusable_msg": "We have detected a confusable character in the ENS name. Check the ENS name to avoid a potential scam.",
+		"unrecognized_token": "Unrecognized token.",
 		"can_not_send_same_account": "Can not send to the same account"
 	},
 	"custom_gas": {
