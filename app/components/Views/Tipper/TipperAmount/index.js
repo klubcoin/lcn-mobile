@@ -161,11 +161,11 @@ class TipperAmount extends PureComponent {
 		}
 	};
 
-	componentDidUpdate = () => {
-		InteractionManager.runAfterInteractions(() => {
-			this.amountInput.current && this.amountInput.current.focus();
-		});
-	};
+	// componentDidUpdate = () => {
+	// 	InteractionManager.runAfterInteractions(() => {
+	// 		this.amountInput.current && this.amountInput.current.focus();
+	// 	});
+	// };
 
 	/**
 	 * Go to asset selection view and modify navbar accordingly
