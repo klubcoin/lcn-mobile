@@ -447,8 +447,8 @@ class DrawerView extends PureComponent {
 	};
 
 	gotoManageCoin = () => {
-		// this.props.navigation.navigate('ManageCoinFlow');
-		this.props.navigation.navigate('ComingSoon');
+		this.props.navigation.navigate('ManageCoinFlow');
+		// this.props.navigation.navigate('ComingSoon');
 		this.hideDrawer();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_MANAGE_COIN);
 	};

@@ -244,7 +244,10 @@ export default createStackNavigator(
 					}),
 					ManageCoinFlow: {
 						screen: createStackNavigator({
-							ManageCoin: ManageCoin
+							ManageCoin: ManageCoin,
+							ComingSoon: {
+								screen: ComingSoon
+							}
 						})
 					}
 				},
