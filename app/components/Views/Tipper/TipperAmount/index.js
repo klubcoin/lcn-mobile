@@ -141,7 +141,9 @@ class TipperAmount extends PureComponent {
 		showError: false,
 		inputWidth: { width: '99%' },
 		viewTipModal: false,
-		tipData: {}
+		tipData: {},
+		disabledButton: false,
+		errorMessage: ''
 	};
 
 	/**
@@ -361,6 +363,10 @@ class TipperAmount extends PureComponent {
 					.replace(/\./g, '')
 					.replace(/#/, '.')
 			: null;
+		let convertAmount =
+			rawAmount?.split('.')[0] +
+			(rawAmount?.split('.').length > 1 ? '.' + rawAmount?.split('.')[1].replace(/0*$/, '') : '');
+		this.setState({ amount: rawAmount });
 		this.setState({ amount: rawAmount });
 		const { internalPrimaryCurrency, selectedAsset } = this.state;
 		const { conversionRate, contractExchangeRates, currentCurrency } = this.props;
@@ -370,15 +376,29 @@ class TipperAmount extends PureComponent {
 		// If primary currency is not crypo we need to know if there are conversion and exchange rates to handle0,
 		// fiat conversion for the payment request
 		if (internalPrimaryCurrency !== 'ETH' && conversionRate && (exchangeRate || selectedAsset.isETH)) {
-			res = this.handleFiatPrimaryCurrency(rawAmount && rawAmount.replace(',', '.'));
+			res = this.handleFiatPrimaryCurrency(convertAmount && convertAmount.replace(',', '.'));
 		} else {
-			res = this.handleETHPrimaryCurrency(rawAmount && rawAmount.replace(',', '.'));
+			res = this.handleETHPrimaryCurrency(convertAmount && convertAmount.replace(',', '.'));
 		}
 		const { cryptoAmount, symbol } = res;
-		if (rawAmount && rawAmount[0] === currencySymbol) rawAmount = rawAmount.substr(1);
+		if (convertAmount && convertAmount[0] === currencySymbol) convertAmount = convertAmount.substr(1);
 		if (res.secondaryAmount && res.secondaryAmount[0] === currencySymbol)
 			res.secondaryAmount = res.secondaryAmount.substr(1);
-		if (rawAmount && rawAmount === '0') rawAmount = undefined;
+		if (convertAmount && convertAmount === '0') convertAmount = undefined;
+
+		try {
+			if (
+				toTokenMinimalUnit(cryptoAmount, selectedAsset.decimals).toString() == '0' ||
+				!cryptoAmount ||
+				cryptoAmount === '0'
+			) {
+				this.setState({ disabledButton: true });
+			} else {
+				this.setState({ disabledButton: false });
+			}
+		} catch (error) {
+			this.setState({ disabledButton: true, showError: true });
+		}
 		this.setState({ cryptoAmount, secondaryAmount: res.secondaryAmount, symbol, showError: false });
 	};
 
@@ -472,6 +492,20 @@ class TipperAmount extends PureComponent {
 	/**
 	 * Renders a view that allows user to set payment request amount
 	 */
+
+	onValidateAmount = () => {
+		const { amount } = this.state;
+		if (!amount || /^[0.]*$/.test(amount)) {
+			this.setState({ errorMessage: strings('payment_request.invalid_amount') });
+			return;
+		}
+		if (amount.split('.').length > 1 && amount.split('.')[1].replace(/0*$/, '').length > 18) {
+			this.setState({ errorMessage: strings('payment_request.error_decimal_amount') });
+			return;
+		}
+		this.setState({ errorMessage: '' });
+	};
+
 	renderEnterAmount = () => {
 		const { conversionRate, contractExchangeRates, currentCurrency, navigation } = this.props;
 		const {
@@ -481,7 +515,9 @@ class TipperAmount extends PureComponent {
 			cryptoAmount,
 			showError,
 			selectedAsset,
-			internalPrimaryCurrency
+			internalPrimaryCurrency,
+			errorMessage,
+			disabledButton
 		} = this.state;
 		const onRequest = navigation && navigation.getParam('onRequest', false);
 		const currencySymbol = currencySymbols[currentCurrency];
@@ -520,6 +556,7 @@ class TipperAmount extends PureComponent {
 										ref={this.amountInput}
 										testID={'request-amount-input'}
 										maxLength={256}
+										onBlur={this.onValidateAmount}
 									/>
 									<Text style={styles.eth} numberOfLines={1}>
 										{symbol}
@@ -554,9 +591,11 @@ class TipperAmount extends PureComponent {
 							)}
 						</View>
 					</View>
-					{showError && (
+					{(showError || !!errorMessage) && (
 						<View style={styles.errorWrapper}>
-							<Text style={styles.errorText}>{strings('payment_request.request_error')}</Text>
+							<Text style={styles.errorText}>
+								{errorMessage ?? strings('payment_request.request_error')}
+							</Text>
 						</View>
 					)}
 				</View>
@@ -574,7 +613,7 @@ class TipperAmount extends PureComponent {
 							type={'normal'}
 							onPress={this.onNext}
 							containerStyle={[styles.button]}
-							disabled={!cryptoAmount || cryptoAmount === '0'}
+							disabled={disabledButton}
 						>
 							{!!onRequest ? strings('payment_request.send') : strings('payment_request.next')}
 						</StyledButton>
