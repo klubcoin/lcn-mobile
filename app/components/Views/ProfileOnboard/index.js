@@ -372,6 +372,8 @@ class ProfileOnboard extends PureComponent {
 			emailErrorText = strings('profile.email_used');
 		} else if (this.emailFocused & !this.email) {
 			emailErrorText = strings('profile.email_required');
+		} else if (this.emailFocused && !validator.isEmail(this.email)) {
+			emailErrorText = strings('profile.invalid_email');
 		}
 
 		if (!!this.username && !this.isCheckingUsername && !this.isValidUsername) {
@@ -479,10 +481,7 @@ class ProfileOnboard extends PureComponent {
 								onPress={this.onNext.bind(this)}
 								containerStyle={styles.next}
 								disabled={
-									!this.isValidEmail ||
-									!this.isValidUsername ||
-									!this.firstname ||
-									!this.lastname 
+									!this.isValidEmail || !this.isValidUsername || !this.firstname || !this.lastname
 								}
 							>
 								{strings('choose_password.continue')}

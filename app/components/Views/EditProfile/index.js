@@ -74,6 +74,9 @@ class EditProfile extends PureComponent {
 	isValidPhoneNumber = true;
 	isCheckingEmail = false;
 	isChangedAvatar = false;
+	nameErrorText = '';
+	surnameErrorText = '';
+	phoneErrorText = '';
 
 	constructor(props) {
 		super(props);
@@ -96,7 +99,10 @@ class EditProfile extends PureComponent {
 			isValidEmail: observable,
 			isValidPhoneNumber: observable,
 			isCheckingEmail: observable,
-			isChangedAvatar: observable
+			isChangedAvatar: observable,
+			nameErrorText: observable,
+			surnameErrorText: observable,
+			phoneErrorText: observable
 		});
 	}
 
@@ -486,6 +492,13 @@ class EditProfile extends PureComponent {
 									placeholder={strings('profile.name')}
 									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
+									onBlur={() => {
+										this.nameErrorText = !this.firstname ? strings('profile.name_required') : '';
+									}}
+									onFocus={() => {
+										this.nameErrorText = '';
+									}}
+									errorText={this.nameErrorText}
 								/>
 								<TextField
 									value={this.lastname}
@@ -493,6 +506,15 @@ class EditProfile extends PureComponent {
 									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
+									onBlur={() => {
+										this.surnameErrorText = !this.lastname
+											? strings('profile.surname_required')
+											: '';
+									}}
+									onFocus={() => {
+										this.surnameErrorText = '';
+									}}
+									errorText={this.surnameErrorText}
 								/>
 								<TextField
 									value={this.email}
@@ -536,6 +558,7 @@ class EditProfile extends PureComponent {
 										if (!this.countryCode) {
 											showError(strings('profile.select_country_code_first'));
 										}
+										this.phoneErrorText = '';
 									}}
 									rightItem={
 										this.phone || this.countryCode ? (
@@ -546,7 +569,15 @@ class EditProfile extends PureComponent {
 											)
 										) : null
 									}
+									onBlur={() =>
+										(this.phoneErrorText = !this.phone
+											? strings('profile.missing_phone')
+											: !REGEX_PHONE_NUMBER.test(this.phone)
+											? strings('profile.invalid_phone')
+											: '')
+									}
 								/>
+								{!!this.phoneErrorText && <Text style={styles.errorText}>{this.phoneErrorText}</Text>}
 							</View>
 							<StyledButton
 								type={'white'}
@@ -556,7 +587,9 @@ class EditProfile extends PureComponent {
 									this.isLoading ||
 									!this.isValidEmail ||
 									!this.isValidPhoneNumber ||
-									!isChangedProfile
+									!isChangedProfile ||
+									!this.firstname ||
+									!this.lastname
 								}
 							>
 								{strings('wallet.update_profile').toUpperCase()}

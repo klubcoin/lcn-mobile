@@ -18,6 +18,7 @@ export default class PhoneTextField extends Component {
 			onPressCountryCode,
 			countryCode = '',
 			onFocus,
+			onBlur,
 			rightItem = null
 		} = this.props;
 		return (
@@ -38,8 +39,9 @@ export default class PhoneTextField extends Component {
 							keyboardType={keyboardType}
 							autoCapitalize={autoCapitalize}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
-						{rightItem && rightItem }
+						{rightItem && rightItem}
 					</View>
 				</View>
 			</View>

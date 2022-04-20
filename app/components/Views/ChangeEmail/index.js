@@ -260,7 +260,7 @@ class ChangeEmail extends PureComponent {
 
 	renderLoader = () => (
 		<View style={styles.loader}>
-			<ActivityIndicator size="small" color={'white'}  />
+			<ActivityIndicator size="small" color={'white'} />
 		</View>
 	);
 
@@ -325,8 +325,10 @@ class ChangeEmail extends PureComponent {
 		let emailErrorText = '';
 		if (!!email && validator.isEmail(email) && !isCheckingEmail && !isValidEmail) {
 			emailErrorText = strings('profile.email_used');
-		} else if (emailFocused & !email) {
+		} else if (emailFocused && !email) {
 			emailErrorText = strings('profile.email_required');
+		} else if (emailFocused && !validator.isEmail(email)) {
+			emailErrorText = strings('profile.invalid_email');
 		}
 
 		return (

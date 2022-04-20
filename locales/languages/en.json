@@ -950,6 +950,7 @@
 		"confusable_title": "Check the recipient address",
 		"confusable_msg": "We have detected a confusable character in the ENS name. Check the ENS name to avoid a potential scam.",
 		"unrecognized_token": "Unrecognized token.",
+		"error_decimal_amount": "Amount allowed is only up to 18 decimals.",
 		"can_not_send_same_account": "Can not send to the same account"
 	},
 	"custom_gas": {
@@ -1519,6 +1520,8 @@
 		"send": "Send",
 		"with_credit_card": "With Credit/Debit Card",
 		"base_from": "Fees vary based from {{typeText}}",
+		"error_decimal_amount": "Amount allowed is only up to 18 decimals.",
+		"invalid_amount": "Invalid amount",
 		"buy_with": "Buy {{displayName}} with {{typeText}}"
 	},
 	"receive_request": {

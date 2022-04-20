@@ -21,10 +21,11 @@ export default class TextField extends Component {
 			rightItem = null,
 			textInputWrapperStyle,
 			onBlur,
-			onFocus
+			onFocus,
+			errorText
 		} = this.props;
 		return (
-			<View style={containerStyle}>
+			<View style={[styles.textInputContainer, containerStyle]}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
 				<View style={[styles.textInputWrapper, textInputWrapperStyle]}>
 					<TextInput
@@ -42,6 +43,7 @@ export default class TextField extends Component {
 					/>
 					{rightItem && rightItem}
 				</View>
+				{!!errorText && <Text style={styles.errorText}>{errorText}</Text>}
 			</View>
 		);
 	}

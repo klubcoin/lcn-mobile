@@ -284,9 +284,12 @@ class Amount extends PureComponent {
 			maxFiatInput
 		} = this.state;
 
+		const convertInputValue =
+			inputValue.split('.')[0] +
+			(inputValue.split('.').length > 1 ? '.' + inputValue.split('.')[1].replace(/0*$/, '') : '');
 		let value;
 		if (internalPrimaryCurrencyIsCrypto || !hasExchangeRate) {
-			value = inputValue;
+			value = convertInputValue;
 		} else {
 			value = inputValueConversion;
 			if (maxFiatInput) {
@@ -297,7 +300,7 @@ class Amount extends PureComponent {
 			}
 		}
 		if (value && value.includes(',')) {
-			value = inputValue.replace(',', '.');
+			value = convertInputValue.replace(',', '.');
 		}
 
 		if (!selectedAsset.tokenId && this.validateAmount(value)) {
@@ -445,6 +448,10 @@ class Amount extends PureComponent {
 		const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
 		const { estimatedTotalGas } = this.state;
 		let weiBalance, weiInput, amountError;
+		if (inputValue.split('.').length > 1 && inputValue.split('.')[1].replace(/0*$/, '').length > 18) {
+			this.setState({ amountError: strings('transaction.error_decimal_amount') });
+			return true;
+		}
 		try {
 			if (isDecimal(inputValue)) {
 				if (selectedAsset.isETH) {
