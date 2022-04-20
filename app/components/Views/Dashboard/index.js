@@ -494,7 +494,7 @@ class Dashboard extends PureComponent {
 					>
 						<Text style={styles.dataViewTime}>{moment(timestamp).format('MMMM DD, YYYY hh:mm A')}</Text>
 						<View style={styles.dataViewBalanceWrapper}>
-							<Text style={styles.dataViewBalance}>Balance</Text>
+							<Text style={styles.dataViewBalance}>{strings('transaction.balance')}</Text>
 							<Text style={styles.dataViewPercentChange}> {percentChange}%</Text>
 						</View>
 						<Text style={styles.dataViewValue}>{`$ ${value}`}</Text>
@@ -683,17 +683,17 @@ class Dashboard extends PureComponent {
 									? `€${totalBalance}`
 									: `${totalBalance} ${selectedCurrency.toUpperCase()}`}
 							</Text>
-							<Icon
-								name="chevron-down"
-								size={12}
-								color={colors.white}
-								style={styles.arrowIcon}
+							<TouchableOpacity
+								style={styles.arrowIconButton}
+								activeOpacity={0.7}
 								onPress={() => {
 									this.setState({
 										isChangeCurrency: true
 									});
 								}}
-							/>
+							>
+								<Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} />
+							</TouchableOpacity>
 							{/* <Text style={styles.comingSoon}>{balanceFiat}</Text> */}
 							{/* <Text style={styles.comingSoon}>{strings('coming_soon.coming_soon')}</Text> */}
 						</View>

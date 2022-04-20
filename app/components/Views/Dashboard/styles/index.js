@@ -106,7 +106,9 @@ const styles = StyleSheet.create({
 	modalItemIcon: {},
 	totalBalanceCard: {},
 	totalBalanceText: {},
-	activityIndicatorWrapper: {}
+	activityIndicatorWrapper: {},
+	arrowIcon: {},
+	arrowIconButton: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

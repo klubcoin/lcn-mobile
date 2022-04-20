@@ -77,7 +77,7 @@ const brandStyles = StyleSheet.create({
 	},
 	dataPointVerticalDasher: {
 		height: 800,
-		borderWidth: 2,
+		borderWidth: 3,
 		borderStyle: 'dashed',
 		borderRadius: 1,
 		borderColor: colors.blue
@@ -148,11 +148,16 @@ const brandStyles = StyleSheet.create({
 		fontSize: RFValue(16),
 		color: colors.white,
 		...fontStyles.bold,
-		paddingRight: 15
+		paddingRight: 15,
+		flex: 1
 	},
 	activityIndicatorWrapper: {
 		height: '100%',
 		justifyContent: 'center'
+	},
+	arrowIcon: {},
+	arrowIconButton: {
+		padding: 4
 	}
 });
 
