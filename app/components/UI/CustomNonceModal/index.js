@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
-import { StyleSheet, View, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ModalDragger from '../../Base/ModalDragger';
 import Text from '../../Base/Text';
@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles/index';
+import TrackingTextInput from '../TrackingTextInput';
 
 const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 	const [nonce, onChangeText] = React.useState(nonceValue);
@@ -51,7 +52,7 @@ const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 							{strings('transaction.edit_transaction_nonce')}
 						</Text>
 						<View style={styles.nonceInputContainer}>
-							<TextInput
+							<TrackingTextInput
 								// disable keyboard for now
 								showSoftInputOnFocus={false}
 								keyboardType="numeric"

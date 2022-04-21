@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Dimensions, Image, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import styles from './styles';
@@ -28,6 +28,7 @@ import Logger from '../../../../util/Logger';
 import AppConstants from '../../../../core/AppConstants';
 import HtmlView from '../../MarketPlace/components/HtmlView';
 import Lightbox from 'react-native-lightbox';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -61,7 +62,7 @@ class MarketProduct extends PureComponent {
 			vendorProfile: observable,
 			reviews: observable,
 			rating: observable,
-			buyerWalletAddressDict: observable,
+			buyerWalletAddressDict: observable
 		});
 
 		this.product = props.navigation.getParam('product');
@@ -99,7 +100,7 @@ class MarketProduct extends PureComponent {
 	handleGroupShare = async () => {
 		const group = this.props.navigation.getParam('group');
 		if (group) this.openChat(group);
-	}
+	};
 
 	fetchReviews = async () => {
 		if (this.reviews.length == 0) {
@@ -112,9 +113,7 @@ class MarketProduct extends PureComponent {
 					}
 				}
 			});
-		}
-		else
-			this.handleReviewState();
+		} else this.handleReviewState();
 	};
 
 	handleReviewState = () => {
@@ -125,7 +124,7 @@ class MarketProduct extends PureComponent {
 			this.product.reviews = this.reviews.filter(e => e.productCode === uuid);
 			this.getReviewProfiles();
 		}
-	}
+	};
 
 	calRating = () => {
 		const { reviews } = this.product;
@@ -135,12 +134,10 @@ class MarketProduct extends PureComponent {
 		var totalReview = BigNumber(reviews.length);
 
 		reviews.forEach(e => {
-			if (e.rating)
-				totalScore = totalScore.plus(BigNumber(e.rating))
+			if (e.rating) totalScore = totalScore.plus(BigNumber(e.rating));
 		});
 		return totalScore.dividedBy(totalReview);
-
-	}
+	};
 
 	getReviewProfiles = () => {
 		const { reviews } = this.product;
@@ -151,19 +148,22 @@ class MarketProduct extends PureComponent {
 
 		this.buyerWalletAddressDict = buyerAddresses.reduce((prev, current, index) => {
 			if (!this.buyerWalletAddressDict[current]) {
-				prev[current] = null
+				prev[current] = null;
 				return prev;
 			}
 			return this.buyerWalletAddressDict;
-		}, {})
+		}, {});
 
-		buyerAddresses.slice(0, maxReviews).forEach(e => !this.buyerWalletAddressDict[e] && this.getWalletInfo(e)
-			.then(res => this.buyerWalletAddressDict[res.address] = res)
-			.catch(e => console.log('error:', e))
-		)
-	}
+		buyerAddresses.slice(0, maxReviews).forEach(
+			e =>
+				!this.buyerWalletAddressDict[e] &&
+				this.getWalletInfo(e)
+					.then(res => (this.buyerWalletAddressDict[res.address] = res))
+					.catch(e => console.log('error:', e))
+		);
+	};
 
-	getWalletInfo = async (address) => {
+	getWalletInfo = async address => {
 		return new Promise((resolve, reject) =>
 			Api.postRequest(
 				routes.walletInfo,
@@ -176,7 +176,8 @@ class MarketProduct extends PureComponent {
 					}
 				},
 				error => reject(error)
-			));
+			)
+		);
 	};
 
 	fetchOtherProducts = () => {
@@ -217,10 +218,10 @@ class MarketProduct extends PureComponent {
 
 	renderImage = ({ item }) => {
 		return (
-			<Lightbox >
+			<Lightbox>
 				<StoreImage style={styles.image} address={this.product.wallet} path={item} local={this.isOwner} />
 			</Lightbox>
-		)
+		);
 	};
 
 	decreaseQuantity = () => {
@@ -247,11 +248,11 @@ class MarketProduct extends PureComponent {
 				<TouchableOpacity style={styles.adjustQuantity} activeOpacity={0.6} onPress={this.decreaseQuantity}>
 					<Icon style={styles.quantityIcon} name={'minus'} size={RFPercentage(2)} />
 				</TouchableOpacity>
-				<TextInput
+				<TrackingTextInput
 					value={`${this.quantity}`}
 					onChangeText={text => {
-						const cleanNumber = text?.replace(/[^0-9]/g, "") || 0;
-						this.quantity = parseInt(cleanNumber)
+						const cleanNumber = text?.replace(/[^0-9]/g, '') || 0;
+						this.quantity = parseInt(cleanNumber);
 					}}
 					style={styles.quantity}
 					keyboardType={'numeric'}
@@ -282,7 +283,7 @@ class MarketProduct extends PureComponent {
 		}).catch(err => {
 			Logger.log('Error while trying to share product', err);
 		});
-	}
+	};
 
 	// //TODO: remove addReview function (because it's just for testing)
 	// addReview = () => {
@@ -362,7 +363,7 @@ class MarketProduct extends PureComponent {
 		const { profile } = vendor || {
 			profile: {
 				storeName: this.vendorProfile?.name,
-				phone: this.vendorProfile?.publicInfo?.shippingAddress?.phone,
+				phone: this.vendorProfile?.publicInfo?.shippingAddress?.phone
 			}
 		};
 
@@ -386,8 +387,8 @@ class MarketProduct extends PureComponent {
 	onSeeAllReviews = () => {
 		const { reviews } = this.product;
 
-		this.props.navigation.navigate('MarketProductReview', { "reviews": reviews })
-	}
+		this.props.navigation.navigate('MarketProductReview', { reviews: reviews });
+	};
 
 	renderReviews = () => {
 		const { reviews } = this.product;
@@ -402,7 +403,8 @@ class MarketProduct extends PureComponent {
 						<View>
 							<View style={styles.reviewRow}>
 								<Text style={styles.user}>
-									{this.buyerWalletAddressDict[e.buyerWalletAddress]?.name || strings('market.anonymous')}
+									{this.buyerWalletAddressDict[e.buyerWalletAddress]?.name ||
+										strings('market.anonymous')}
 								</Text>
 								<View style={{ flexDirection: 'row' }}>
 									<Rating
@@ -419,12 +421,14 @@ class MarketProduct extends PureComponent {
 						</View>
 					))
 				)}
-				{
-					reviews?.length > maxReviews && <TouchableOpacity style={styles.seeAllWrapper} onPress={this.onSeeAllReviews}>
-						<Text style={styles.seeAll}>{strings('market.see_all_reviews', { "amount": reviews.length })} </Text>
-						<Icon name={"chevron-right"} style={styles.seeAll} size={RFPercentage(2)} />
+				{reviews?.length > maxReviews && (
+					<TouchableOpacity style={styles.seeAllWrapper} onPress={this.onSeeAllReviews}>
+						<Text style={styles.seeAll}>
+							{strings('market.see_all_reviews', { amount: reviews.length })}{' '}
+						</Text>
+						<Icon name={'chevron-right'} style={styles.seeAll} size={RFPercentage(2)} />
 					</TouchableOpacity>
-				}
+				)}
 			</View>
 		);
 	};
@@ -454,12 +458,12 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
-	onPressProduct = (item) => {
+	onPressProduct = item => {
 		if (item.uuid === this.product.uuid) return;
 
 		this.product = item;
 		this.handleReviewState();
-	}
+	};
 
 	renderRecentProductSlide = ({ item }) => {
 		const { index } = item;
@@ -485,7 +489,12 @@ class MarketProduct extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => this.onPressProduct(e)}
 						>
-							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} local={this.isOwner} />
+							<StoreImage
+								style={{ width, height: width }}
+								address={this.product?.wallet}
+								path={images[0]}
+								local={this.isOwner}
+							/>
 							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
@@ -526,7 +535,12 @@ class MarketProduct extends PureComponent {
 							style={{ width, alignItems: 'center' }}
 							onPress={() => this.onPressProduct(e)}
 						>
-							<StoreImage style={{ width, height: width }} address={this.product?.wallet} path={images[0]} local={this.isOwner} />
+							<StoreImage
+								style={{ width, height: width }}
+								address={this.product?.wallet}
+								path={images[0]}
+								local={this.isOwner}
+							/>
 							<Text numberOfLines={2} style={styles.rpTitle}>
 								{title}
 							</Text>
@@ -597,7 +611,7 @@ class MarketProduct extends PureComponent {
 		);
 	};
 
-	openChat = async (group) => {
+	openChat = async group => {
 		const { uuid, title, wallet, signature } = this.product || {};
 		const address = await CryptoSignature.recoverMessageSignature(uuid + title + wallet, signature);
 		if (address.toLocaleLowerCase() != wallet.toLocaleLowerCase()) {

@@ -111,6 +111,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
+import { EXCEPTION_ACTIVE_APP } from '../../UI/TrackingTextInput';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -203,6 +204,7 @@ const Main = props => {
 	const [password, setPassword] = useState('');
 	const [passwordErrorString, setPasswordErrorString] = useState('');
 	const [lockType, setLockType] = useState({ biometric: false, passcode: false });
+	const [lockTime, setLockTime] = useState(props.lockTime + 5000);
 
 	const passwordRef = useRef();
 
@@ -240,35 +242,50 @@ const Main = props => {
 			PanResponder.create({
 				onStartShouldSetPanResponder: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onMoveShouldSetPanResponder: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onStartShouldSetPanResponderCapture: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onMoveShouldSetPanResponderCapture: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onPanResponderTerminationRequest: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onShouldBlockNativeResponder: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				}
 			})
 		);
-	}, []);
+	}, [props.lockTime]);
 
 	useEffect(() => {
 		if (props.lockTime >= 0) {
-			const timeout = setTimeout(() => {
+			const timeout = setTimeout(async () => {
+				const exceptionActiveApp = await AsyncStorage.getItem(EXCEPTION_ACTIVE_APP);
+				const currentTime = new Date().getTime();
+				if (!!exceptionActiveApp) {
+					if (+exceptionActiveApp + props.lockTime + 5000 > currentTime) {
+						setLockTime(+exceptionActiveApp + props.lockTime + 5000 - currentTime);
+						return;
+					}
+				}
+				setLockTime(props.lockTime + 5000);
 				setLock(true);
 				setPasswordErrorString('');
-			}, props.lockTime + 5000);
+			}, lockTime);
 			return () => clearTimeout(timeout);
 		}
-	}, [activeTime, props.lockTime]);
+	}, [activeTime, lockTime, props.lockTime]);
 
 	const usePrevious = value => {
 		const ref = useRef();
@@ -617,7 +634,7 @@ const Main = props => {
 
 	const renderLoader = () => (
 		<View style={styles.loader}>
-			<ActivityIndicator size="small" color={colors.white}  />
+			<ActivityIndicator size="small" color={colors.white} />
 		</View>
 	);
 

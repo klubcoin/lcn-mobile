@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, TextInput, Dimensions, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions, Text } from 'react-native';
 import { colors } from '../../../../styles/common';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 const { width } = Dimensions.get('screen');
-export default function OTPInput({ style, value, onChange, disable  }) {
+export default function OTPInput({ style, value, onChange, disable }) {
 	const styles = StyleSheet.create({
 		wrapper: {
 			flex: 1,
@@ -59,7 +60,7 @@ export default function OTPInput({ style, value, onChange, disable  }) {
 			style={[styles.wrapper, style]}
 			underlayColor={colors.grey}
 		>
-			<TextInput
+			<TrackingTextInput
 				style={styles.input}
 				maxLength={6}
 				keyboardType={'number-pad'}

@@ -5,7 +5,6 @@ import {
 	Text,
 	Dimensions,
 	SafeAreaView,
-	TextInput,
 	Image,
 	TouchableOpacity,
 	ActivityIndicator
@@ -30,6 +29,7 @@ import CookieManager from '@react-native-community/cookies';
 import { colors } from '../../../../../styles/common';
 import { strings } from '../../../../../../locales/i18n';
 import styles from '../../../../Views/MarketPlace/ShoppingCart/styles';
+import TrackingTextInput from '../../../TrackingTextInput';
 
 const height = Math.round(Dimensions.get('window').height);
 const width = Math.round(Dimensions.get('window').width);
@@ -362,7 +362,7 @@ function PayPal({ selectedAddress, ...props }) {
 						{strings('paypal_checkout.you_pay')}
 					</Text>
 
-					<TextInput
+					<TrackingTextInput
 						placeholder={'0.00'}
 						style={{
 							fontSize: 24,

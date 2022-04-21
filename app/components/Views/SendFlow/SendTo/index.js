@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {
 	View,
 	TouchableOpacity,
-	TextInput,
 	SafeAreaView,
 	InteractionManager,
 	ScrollView,
@@ -52,6 +51,7 @@ import { parse } from 'eth-url-parser';
 import { showError } from '../../../../util/notify';
 import SharedDeeplinkManager from '../../../../core/DeeplinkManager';
 import AppConstants from '../../../../core/AppConstants';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -476,7 +476,7 @@ class SendFlow extends PureComponent {
 							<Text style={styles.addTextSubtitle}>{strings('address_book.enter_an_alias')}</Text>
 							<View style={styles.addInputWrapper}>
 								<View style={styles.input}>
-									<TextInput
+									<TrackingTextInput
 										autoFocus
 										autoCapitalize="none"
 										autoCorrect={false}

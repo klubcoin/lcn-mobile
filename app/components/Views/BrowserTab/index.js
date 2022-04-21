@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
 	Text,
 	StyleSheet,
-	TextInput,
 	View,
 	TouchableWithoutFeedback,
 	Alert,
@@ -68,6 +67,7 @@ import RPCMethods from '../../../core/RPCMethods';
 import AddCustomNetwork from '../../UI/AddCustomNetwork';
 import SwitchCustomNetwork from '../../UI/SwitchCustomNetwork';
 import { trackErrorAsAnalytics } from '../../../util/analyticsV2';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const { HOMEPAGE_URL, USER_AGENT, NOTIFICATION_NAMES } = AppConstants;
 const HOMEPAGE_HOST = routes.mainNetWork.hostDomain.replace(/http(s)?:\/\//, '');
@@ -1398,7 +1398,7 @@ export const BrowserTab = props => {
 				useNativeDriver
 			>
 				<View style={styles.urlModalContent} testID={'url-modal'}>
-					<TextInput
+					<TrackingTextInput
 						keyboardType="web-search"
 						ref={inputRef}
 						autoCapitalize="none"

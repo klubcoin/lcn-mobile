@@ -1,15 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	ScrollView,
-	TextInput,
-	StyleSheet,
-	Text,
-	View,
-	TouchableOpacity,
-	InteractionManager,
-	Alert
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { swapsUtils } from '@metamask/swaps-controller';
 import { connect } from 'react-redux';
@@ -45,6 +36,7 @@ import Helper from 'common/Helper';
 import RemoteImage from '../../Base/RemoteImage';
 import styles from './styles/index';
 import routes from '../../../common/routes';
+import TrackingTextInput from '../TrackingTextInput';
 
 /**
  * View that's part of the <Wallet /> component
@@ -288,7 +280,7 @@ class AccountOverview extends PureComponent {
 								</TouchableOpacity>
 								<View ref={this.editableLabelRef} style={styles.data} collapsable={false}>
 									{accountLabelEditable ? (
-										<TextInput
+										<TrackingTextInput
 											style={[
 												styles.label,
 												styles.labelInput,

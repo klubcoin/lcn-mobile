@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
 import Text from '../../../Base/Text';
 import StyledButton from '../../StyledButton';
@@ -8,6 +8,7 @@ import { strings } from '../../../../../locales/i18n';
 import ConnectHeader from '../../ConnectHeader';
 import Device from '../../../../util/Device';
 import ErrorMessage from '../../../Views/SendFlow/ErrorMessage';
+import TrackingTextInput from '../../TrackingTextInput';
 
 export const MINIMUM_VALUE = '1';
 
@@ -202,7 +203,7 @@ function EditPermission({
 						<Text style={styles.sectionExplanationText}>
 							{strings('spend_limit_edition.max_spend_limit')}
 						</Text>
-						<TextInput
+						<TrackingTextInput
 							autoCapitalize="none"
 							keyboardType="numeric"
 							autoCorrect={false}

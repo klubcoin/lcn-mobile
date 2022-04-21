@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
-import { Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import React from 'react';
 import ActionModal from '../../UI/ActionModal';
 import Icon from 'react-native-vector-icons/Octicons';
 import { strings } from '../../../../locales/i18n';
 import { colors, fontStyles } from '../../../styles/common';
+import TrackingTextInput from '../TrackingTextInput';
 
 const styles = StyleSheet.create({
 	hintWrapper: {
@@ -69,7 +70,7 @@ const HintModal = ({ onCancel, onConfirm, modalVisible, onRequestClose, value, o
 				</View>
 				<Text style={styles.leaveHint}>{strings('manual_backup_step_3.leave_hint')}</Text>
 				<Text style={styles.noSeedphrase}>{strings('manual_backup_step_3.no_seedphrase')}</Text>
-				<TextInput
+				<TrackingTextInput
 					style={styles.hintInput}
 					value={value}
 					placeholder={strings('manual_backup_step_3.example')}

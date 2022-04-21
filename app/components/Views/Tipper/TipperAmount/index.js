@@ -1,13 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-	SafeAreaView,
-	TextInput,
-	Text,
-	View,
-	TouchableOpacity,
-	KeyboardAvoidingView,
-	InteractionManager
-} from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, InteractionManager } from 'react-native';
 import { connect } from 'react-redux';
 import { getPaymentRequestOptionsTitle } from '../../../UI/Navbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -41,6 +33,7 @@ import styles from './styles/index';
 import { baseStyles } from '../../../../styles/common';
 import { colors } from '../../../../styles/common';
 import AppConstants from '../../../../core/AppConstants';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -242,7 +235,7 @@ class TipperAmount extends PureComponent {
 				</View>
 				{chainId === '1' && (
 					<View style={styles.searchWrapper}>
-						<TextInput
+						<TrackingTextInput
 							style={[styles.searchInput, inputWidth]}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -541,7 +534,7 @@ class TipperAmount extends PureComponent {
 									{internalPrimaryCurrency !== 'ETH' && (
 										<Text style={styles.currencySymbol}>{currencySymbol}</Text>
 									)}
-									<TextInput
+									<TrackingTextInput
 										autoCapitalize="none"
 										autoCorrect={false}
 										keyboardType="numeric"

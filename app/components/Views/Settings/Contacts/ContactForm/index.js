@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../../../styles/common';
 import PropTypes from 'prop-types';
 import { getEditableOptions } from '../../../../UI/Navbar';
@@ -14,6 +14,7 @@ import { isENS, renderShortAddress } from '../../../../../util/address';
 import ErrorMessage from '../../../SendFlow/ErrorMessage';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import ActionSheet from 'react-native-actionsheet';
+import TrackingTextInput from '../../../../UI/TrackingTextInput';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -143,7 +144,13 @@ class ContactForm extends PureComponent {
 			const networkAddressBook = addressBook[network] || {};
 			const address = this.props.navigation.getParam('address', '');
 			const contact = networkAddressBook[address] || identities[address];
-			this.setState({ address, name: contact?.name?.name || contact?.name, memo: contact?.memo, addressReady: true, editable: false });
+			this.setState({
+				address,
+				name: contact?.name?.name || contact?.name,
+				memo: contact?.memo,
+				addressReady: true,
+				editable: false
+			});
 			navigation && navigation.setParams({ dispatch: this.onEdit, mode: EDIT });
 		}
 	};
@@ -258,7 +265,7 @@ class ContactForm extends PureComponent {
 				<KeyboardAwareScrollView style={styles.informationWrapper}>
 					<View style={styles.scrollWrapper}>
 						<Text style={styles.label}>{strings('address_book.name')}</Text>
-						<TextInput
+						<TrackingTextInput
 							editable={this.state.editable}
 							autoCapitalize={'none'}
 							autoCorrect={false}
@@ -280,7 +287,7 @@ class ContactForm extends PureComponent {
 						<Text style={styles.label}>{strings('address_book.address')}</Text>
 						<View style={[styles.input, editable ? {} : styles.textInputDisaled]}>
 							<View style={styles.inputWrapper}>
-								<TextInput
+								<TrackingTextInput
 									editable={editable}
 									autoCapitalize={'none'}
 									autoCorrect={false}
@@ -308,7 +315,7 @@ class ContactForm extends PureComponent {
 						<Text style={styles.label}>{strings('address_book.memo')}</Text>
 						<View style={[styles.input, editable ? {} : styles.textInputDisaled]}>
 							<View style={styles.inputWrapper}>
-								<TextInput
+								<TrackingTextInput
 									multiline
 									editable={editable}
 									autoCapitalize={'none'}

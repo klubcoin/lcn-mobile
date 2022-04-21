@@ -1,15 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	KeyboardAvoidingView,
-	ActivityIndicator,
-	Text,
-	View,
-	TextInput,
-	SafeAreaView,
-	ScrollView,
-	Image
-} from 'react-native';
+import { KeyboardAvoidingView, ActivityIndicator, Text, View, SafeAreaView, ScrollView, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -40,6 +31,7 @@ import Api from '../../../services/api';
 import * as sha3JS from 'js-sha3';
 import { showError } from '../../../util/notify';
 import CryptoSignature from '../../../core/CryptoSignature';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const CHANGE_EMAIL = 'change_email';
 const CONFIRM_PASSWORD = 'confirm_password';
@@ -287,7 +279,7 @@ class ChangeEmail extends PureComponent {
 								/>
 							) : (
 								<>
-									<TextInput
+									<TrackingTextInput
 										style={styles.confirm_input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}

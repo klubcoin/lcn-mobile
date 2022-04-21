@@ -1,11 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-    RefreshControl,
-    ScrollView,
-    InteractionManager,
-    ActivityIndicator,
-    View,
-} from 'react-native';
+import { RefreshControl, ScrollView, InteractionManager, ActivityIndicator, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -31,7 +25,7 @@ import { setOnlinePeerWallets } from '../../../actions/contacts';
 import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
 import styles from './styles/index';
-import CustomTabBar from '../../UI/CustomTabBar'
+import CustomTabBar from '../../UI/CustomTabBar';
 import { setSelectedAsset } from '../../../actions/transaction';
 import routes from '../../../common/routes';
 import Erc20Service from '../../../core/Erc20Service';
@@ -40,385 +34,386 @@ import Erc20Service from '../../../core/Erc20Service';
  * Main view for the wallet
  */
 class Wallet extends PureComponent {
-    static navigationOptions = ({ navigation }) => getWalletNavbarOptions('wallet.title', navigation);
+	static navigationOptions = ({ navigation }) => getWalletNavbarOptions('wallet.title', navigation);
 
-    static propTypes = {
-        /**
-         * Map of accounts to information objects including balances
-         */
-        accounts: PropTypes.object,
-        /**
-         * ETH to current currency conversion rate
-         */
-        conversionRate: PropTypes.number,
-        /**
-         * Currency code of the currently-active currency
-         */
-        currentCurrency: PropTypes.string,
-        /**
+	static propTypes = {
+		/**
+		 * Map of accounts to information objects including balances
+		 */
+		accounts: PropTypes.object,
+		/**
+		 * ETH to current currency conversion rate
+		 */
+		conversionRate: PropTypes.number,
+		/**
+		 * Currency code of the currently-active currency
+		 */
+		currentCurrency: PropTypes.string,
+		/**
         /* navigation object required to push new views
         */
-        navigation: PropTypes.object,
-        /**
-         * An object containing each identity in the format address => account
-         */
-        identities: PropTypes.object,
-        /**
-         * A string that represents the selected address
-         */
-        selectedAddress: PropTypes.string,
-        /**
-         * An array that represents the user tokens
-         */
-        tokens: PropTypes.array,
-        /**
-         * An array that represents the user collectibles
-         */
-        collectibles: PropTypes.array,
-        /**
-         * Current provider ticker
-         */
-        ticker: PropTypes.string,
-        /**
-         * Current onboarding wizard step
-         */
-        wizardStep: PropTypes.number
-    };
+		navigation: PropTypes.object,
+		/**
+		 * An object containing each identity in the format address => account
+		 */
+		identities: PropTypes.object,
+		/**
+		 * A string that represents the selected address
+		 */
+		selectedAddress: PropTypes.string,
+		/**
+		 * An array that represents the user tokens
+		 */
+		tokens: PropTypes.array,
+		/**
+		 * An array that represents the user collectibles
+		 */
+		collectibles: PropTypes.array,
+		/**
+		 * Current provider ticker
+		 */
+		ticker: PropTypes.string,
+		/**
+		 * Current onboarding wizard step
+		 */
+		wizardStep: PropTypes.number
+	};
 
-    state = {
-        refreshing: false,
-        currentConversion: null
-    };
+	state = {
+		refreshing: false,
+		currentConversion: null
+	};
 
-    accountOverviewRef = React.createRef();
+	accountOverviewRef = React.createRef();
 
-    mounted = false;
+	mounted = false;
 
-    componentDidMount = () => {
-        this.addDefaultToken();
-        messageStore.setActiveChatPeerId(null);
-        requestAnimationFrame(async () => {
-            const { AssetsDetectionController, AccountTrackerController } = Engine.context;
-            AssetsDetectionController.detectAssets();
-            // AccountTrackerController.refresh();
-            this.getBalance();
-            this.getWalletInfo();
-            this.mounted = true;
-        });
-        this.getCurrentConversion();
-        this.announceOnline();
-        this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
-    };
+	componentDidMount = () => {
+		this.addDefaultToken();
+		messageStore.setActiveChatPeerId(null);
+		requestAnimationFrame(async () => {
+			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
+			AssetsDetectionController.detectAssets();
+			// AccountTrackerController.refresh();
+			this.getBalance();
+			this.getWalletInfo();
+			this.mounted = true;
+		});
+		this.getCurrentConversion();
+		this.announceOnline();
+		this.pollTokens = setInterval(() => this.pollTokenBalances(), 300);
+	};
 
-    componentDidUpdate = prevProps => {
-        if (this.props != prevProps) {
-            this.addDefaultToken();
-        }
-    };
+	componentDidUpdate = prevProps => {
+		if (this.props != prevProps) {
+			this.addDefaultToken();
+		}
+	};
 
-    addDefaultToken = async () => {
-        const { AssetsController } = Engine.context;
-        const { tokens } = Engine.state.AssetsController;
-        const { symbol, decimals, image } = routes.klubToken;
-        const address = routes.klubToken.address();
-        if (address) {
-            const exists = tokens.find(e => e.address == address);
-            if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
-        }
-    };
+	addDefaultToken = async () => {
+		const { AssetsController } = Engine.context;
+		const { tokens } = Engine.state.AssetsController;
+		const { symbol, decimals, image } = routes.klubToken;
+		const address = routes.klubToken.address();
+		if (address) {
+			const exists = tokens.find(e => e.address == address);
+			if (!exists) await AssetsController.addToken(address, symbol, decimals, image);
+		}
+	};
 
-    clearBalanceInterval = () => {
-        if (this.pollTokens) clearInterval(this.pollTokens);
-    }
+	clearBalanceInterval = () => {
+		if (this.pollTokens) clearInterval(this.pollTokens);
+	};
 
-    pollTokenBalances = async () => {
-        const { TokenBalancesController } = Engine.context;
-        await TokenBalancesController.updateBalances();
-        const { accounts } = Engine.state.AccountTrackerController;
-        const { selectedAddress } = Engine.state.PreferencesController;
-        const { contractBalances } = Engine.state.TokenBalancesController;
-        if (Object.keys(contractBalances).includes(routes.klubToken.address())) {
-            const account = accounts[selectedAddress];
-            account.balance = BNToHex(contractBalances[routes.klubToken.address()]);
-        }
-    }
+	pollTokenBalances = async () => {
+		const { TokenBalancesController } = Engine.context;
+		await TokenBalancesController.updateBalances();
+		const { accounts } = Engine.state.AccountTrackerController;
+		const { selectedAddress } = Engine.state.PreferencesController;
+		const { contractBalances } = Engine.state.TokenBalancesController;
+		if (Object.keys(contractBalances).includes(routes.klubToken.address())) {
+			const account = accounts[selectedAddress];
+			account.balance = BNToHex(contractBalances[routes.klubToken.address()]);
+		}
+	};
 
-    announceOnline() {
-        const { selectedAddress, updateOnlinePeerWallets } = this.props;
-        const peerId = stripHexPrefix(selectedAddress);
+	announceOnline() {
+		const { selectedAddress, updateOnlinePeerWallets } = this.props;
+		const peerId = stripHexPrefix(selectedAddress);
 
-        APIService.announcePeerOnlineStatus(peerId, (success, json) => {
-            if (success && json.peers) {
-                updateOnlinePeerWallets(json.peers);
-            }
-        });
-    }
+		APIService.announcePeerOnlineStatus(peerId, (success, json) => {
+			if (success && json.peers) {
+				updateOnlinePeerWallets(json.peers);
+			}
+		});
+	}
 
-    async getWalletInfo() {
-        const { selectedAddress } = this.props;
-        const { PreferencesController } = Engine.context;
+	async getWalletInfo() {
+		const { selectedAddress } = this.props;
+		const { PreferencesController } = Engine.context;
 
-        API.postRequest(
-            Routes.walletInfo,
-            [selectedAddress],
-            response => {
-                if (response.result) {
-                    const { name, publicInfo } = response.result;
-                    PreferencesController.setAccountLabel(selectedAddress, name);
-                    preferences.getOnboardProfile()
-                        .then(value => preferences.setOnboardProfile(Object.assign(value, { publicInfo })))
-                        .catch(e => console.log('profile onboarding error', e));
-                }
-            },
-            error => {
-                console.warn('error wallet info', error);
-            }
-        );
-    }
+		API.postRequest(
+			Routes.walletInfo,
+			[selectedAddress],
+			response => {
+				if (response.result) {
+					const { name, publicInfo } = response.result;
+					PreferencesController.setAccountLabel(selectedAddress, name);
+					preferences
+						.getOnboardProfile()
+						.then(value => preferences.setOnboardProfile(Object.assign(value, { publicInfo })))
+						.catch(e => console.log('profile onboarding error', e));
+				}
+			},
+			error => {
+				console.warn('error wallet info', error);
+			}
+		);
+	}
 
-    getCurrentConversion = () => {
-        API.getRequest(
-            Routes.getConversions,
-            response => {
-                if (response.data.length > 0) {
-                    this.setState({
-                        currentConversion: response.data[0].to
-                    });
-                }
-            },
-            error => {
-                console.log(error);
-            }
-        );
-    };
+	getCurrentConversion = () => {
+		API.getRequest(
+			Routes.getConversions,
+			response => {
+				if (response.data.length > 0) {
+					this.setState({
+						currentConversion: response.data[0].to
+					});
+				}
+			},
+			error => {
+				console.log(error);
+			}
+		);
+	};
 
-    onRefresh = async () => {
-        requestAnimationFrame(async () => {
-            this.setState({ refreshing: true });
-            const {
-                AssetsDetectionController,
-                AccountTrackerController,
-                CurrencyRateController,
-                TokenRatesController
-            } = Engine.context;
-            const actions = [
-                AssetsDetectionController.detectAssets(),
-                AccountTrackerController.refresh(),
-                CurrencyRateController.start(),
-                TokenRatesController.poll()
-            ];
-            await Promise.all(actions);
-            this.setState({ refreshing: false });
-        });
-    };
+	onRefresh = async () => {
+		requestAnimationFrame(async () => {
+			this.setState({ refreshing: true });
+			const {
+				AssetsDetectionController,
+				AccountTrackerController,
+				CurrencyRateController,
+				TokenRatesController
+			} = Engine.context;
+			const actions = [
+				AssetsDetectionController.detectAssets(),
+				AccountTrackerController.refresh(),
+				CurrencyRateController.start(),
+				TokenRatesController.poll()
+			];
+			await Promise.all(actions);
+			this.setState({ refreshing: false });
+		});
+	};
 
-    getBalance = async () => {
-        const { selectedAddress } = this.props;
-        const result = await new Erc20Service().getBalance(selectedAddress);
-        console.log("🚀 ~ file: index.js ~ line 216 ~ Wallet ~ getBalance= ~ result", result)
-        // const { accounts, selectedAddress, identities } = this.props;
-        // // for(const account in accounts){
-        // let params = [selectedAddress];
-        // await API.postRequest(
-        //     Routes.getBalance,
-        //     params,
-        //     response => {
-        //         // console.log(parseInt(response.result, 16))
-        //         const balance = response.result;
-        //         accounts[selectedAddress] = {
-        //             balance: balance,
-        //             conversion: this.state.currentConversion
-        //         };
-        //         const { AccountTrackerController } = Engine.context;
-        //         AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
-        //     },
-        //     error => {
-        //         console.log(error.message);
-        //     }
-        // );
-        // }
-    };
+	getBalance = async () => {
+		const { selectedAddress } = this.props;
+		const result = await new Erc20Service().getBalance(selectedAddress);
+		console.log('🚀 ~ file: index.js ~ line 216 ~ Wallet ~ getBalance= ~ result', result);
+		// const { accounts, selectedAddress, identities } = this.props;
+		// // for(const account in accounts){
+		// let params = [selectedAddress];
+		// await API.postRequest(
+		//     Routes.getBalance,
+		//     params,
+		//     response => {
+		//         // console.log(parseInt(response.result, 16))
+		//         const balance = response.result;
+		//         accounts[selectedAddress] = {
+		//             balance: balance,
+		//             conversion: this.state.currentConversion
+		//         };
+		//         const { AccountTrackerController } = Engine.context;
+		//         AccountTrackerController.update({ accounts: Object.assign({}, accounts) });
+		//     },
+		//     error => {
+		//         console.log(error.message);
+		//     }
+		// );
+		// }
+	};
 
-    componentWillUnmount() {
-        this.mounted = false;
-        this.clearBalanceInterval();
-    }
+	componentWillUnmount() {
+		this.mounted = false;
+		this.clearBalanceInterval();
+	}
 
-    renderTabBar() {
-        return (
-            <CustomTabBar
-                underlineStyle={styles.tabUnderlineStyle}
-                activeTextColor={colors.white}
-                inactiveTextColor={colors.fontTertiary}
-                backgroundColor={colors.transparent}
-                tabStyle={styles.tabStyle}
-                textStyle={styles.textStyle}
-            />
-        );
-    }
+	renderTabBar() {
+		return (
+			<CustomTabBar
+				underlineStyle={styles.tabUnderlineStyle}
+				activeTextColor={colors.white}
+				inactiveTextColor={colors.fontTertiary}
+				backgroundColor={colors.transparent}
+				tabStyle={styles.tabStyle}
+				textStyle={styles.textStyle}
+			/>
+		);
+	}
 
-    onChangeTab = obj => {
-        InteractionManager.runAfterInteractions(() => {
-            if (obj.ref.props.tabLabel === strings('wallet.tokens')) {
-                Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_TOKENS);
-            } else {
-                Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_COLLECTIBLES);
-            }
-        });
+	onChangeTab = obj => {
+		InteractionManager.runAfterInteractions(() => {
+			if (obj.ref.props.tabLabel === strings('wallet.tokens')) {
+				Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_TOKENS);
+			} else {
+				Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_COLLECTIBLES);
+			}
+		});
+	};
 
-    };
+	onRef = ref => {
+		this.accountOverviewRef = ref;
+	};
 
-    onRef = ref => {
-        this.accountOverviewRef = ref;
-    };
+	renderContent() {
+		const {
+			accounts,
+			conversionRate,
+			currentCurrency,
+			identities,
+			selectedAddress,
+			tokens,
+			collectibles,
+			navigation,
+			ticker
+		} = this.props;
 
-    renderContent() {
-        const {
-            accounts,
-            conversionRate,
-            currentCurrency,
-            identities,
-            selectedAddress,
-            tokens,
-            collectibles,
-            navigation,
-            ticker
-        } = this.props;
+		const { currentConversion } = this.state;
 
-        const { currentConversion } = this.state;
+		//TODO: need to remove fixed code for TIPPER app
+		const tipper = {
+			image:
+				'https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg',
+			name: 'Tipper',
+			address: '0x8a61a394-7813-1234-9797-ee8016b1356d-test',
+			application: {
+				creationDate: 1636070400000,
+				description: 'Tipper app',
+				hexCode: '4321123412341234123412341234123412344366-test',
+				iconUrl:
+					'https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg',
+				name: 'Tipper',
+				shortCode: 'Tipper',
+				uuid: '7fe9443a-203a-48a2-a8f4-61118fafe738-test',
+				version: '1.0'
+			},
+			description: 'Get a tip from community',
+			iconUrl:
+				'https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg',
+			instance: {
+				description: 'Get a tip from community',
+				iconUrl: 'https://docs.liquichain.io/media/app/liquimart.png',
+				name: 'Tipper',
+				uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
+			},
+			name: 'Tipper',
+			uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
+		};
 
-        //TODO: need to remove fixed code for TIPPER app
-        const tipper = {
-            "image": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
-            "name": "Tipper",
-            "address": "0x8a61a394-7813-1234-9797-ee8016b1356d-test",
-            "application": {
-                "creationDate": 1636070400000,
-                "description": "Tipper app",
-                "hexCode": "4321123412341234123412341234123412344366-test",
-                "iconUrl": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
-                "name": "Tipper",
-                "shortCode": "Tipper",
-                "uuid": "7fe9443a-203a-48a2-a8f4-61118fafe738-test",
-                "version": "1.0"
-            },
-            "description": "Get a tip from community",
-            "iconUrl": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
-            "instance": {
-                "description": "Get a tip from community",
-                "iconUrl": "https://docs.liquichain.io/media/app/liquimart.png",
-                "name": "Tipper",
-                "uuid": "8a61a394-7813-4046-9797-ee8016b1356d-test"
-            },
-            "name": "Tipper",
-            "uuid": "8a61a394-7813-4046-9797-ee8016b1356d-test"
-        };
+		let balance = 0;
+		let assets = tokens;
 
-        let balance = 0;
-        let assets = tokens;
+		if (selectedAddress && accounts) {
+			balance = accounts[selectedAddress].balance;
+			// balance = "0x00"
+			assets = [
+				// {
+				//     name: 'Liquichain',
+				//     symbol: getTicker(ticker),
+				//     isETH: true,
+				//     balance,
+				//     balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
+				//     logo: '../images/klubcoin.png'
+				// },
+				// tipper,
+				...tokens
+			];
+		} else {
+			assets = tokens;
+		}
 
+		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
 
-        if (selectedAddress && accounts) {
-            balance = accounts[selectedAddress].balance;
-            // balance = "0x00"
-            assets = [
-                // {
-                //     name: 'Liquichain',
-                //     symbol: getTicker(ticker),
-                //     isETH: true,
-                //     balance,
-                //     balanceFiat: weiToFiat(hexToBN(balance), currentConversion?.value, currentConversion?.currency),
-                //     logo: '../images/klubcoin.png'
-                // },
-                // tipper,
-                ...tokens
-            ];
-        } else {
-            assets = tokens;
-        }
+		return (
+			<View style={styles.wrapper}>
+				{selectedAddress && account && (
+					<AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
+				)}
+				<View style={styles.tabWrapper}>
+					<ScrollableTabView
+						renderTabBar={this.renderTabBar}
+						// eslint-disable-next-line react/jsx-no-bind
+						onChangeTab={obj => this.onChangeTab(obj)}
+					>
+						<Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
+						<CollectibleContracts
+							navigation={navigation}
+							tabLabel={strings('wallet.collectibles')}
+							collectibles={collectibles}
+						/>
+					</ScrollableTabView>
+				</View>
+			</View>
+		);
+	}
 
-        const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
+	renderLoader() {
+		return (
+			<View style={styles.loader}>
+				<ActivityIndicator size="small" color={colors.white} />
+			</View>
+		);
+	}
 
-        return (
-            <View style={styles.wrapper}>
-                {selectedAddress && account && (
-                    <AccountOverview account={account} navigation={navigation} onRef={this.onRef} />
-                )}
-                <View style={styles.tabWrapper}>
-                    <ScrollableTabView
-                        renderTabBar={this.renderTabBar}
-                        // eslint-disable-next-line react/jsx-no-bind
-                        onChangeTab={obj => this.onChangeTab(obj)}
-                    >
-                        <Tokens navigation={navigation} tabLabel={'TOKENS'} tokens={assets} />
-                        <CollectibleContracts
-                            navigation={navigation}
-                            tabLabel={strings('wallet.collectibles')}
-                            collectibles={collectibles}
-                        />
-                    </ScrollableTabView>
-                </View>
+	/**
+	 * Return current step of onboarding wizard if not step 5 nors 0
+	 */
+	renderOnboardingWizard = () => {
+		const { wizardStep } = this.props;
+		return (
+			[1, 2, 3, 4].includes(wizardStep) && (
+				<OnboardingWizard navigation={this.props.navigation} coachmarkRef={this.accountOverviewRef} />
+			)
+		);
+	};
 
-            </View>
-        );
-    }
-
-    renderLoader() {
-        return (
-            <View style={styles.loader}>
-                <ActivityIndicator size="small" color={colors.white} />
-            </View>
-        );
-    }
-
-    /**
-     * Return current step of onboarding wizard if not step 5 nors 0
-     */
-    renderOnboardingWizard = () => {
-        const { wizardStep } = this.props;
-        return (
-            [1, 2, 3, 4].includes(wizardStep) && (
-                <OnboardingWizard navigation={this.props.navigation} coachmarkRef={this.accountOverviewRef} />
-            )
-        );
-    };
-
-    render = () => (
-        <ErrorBoundary view="Wallet">
-            <View style={baseStyles.flexGrow} testID={'wallet-screen'}>
-                <ScrollView
-                    style={styles.wrapper}
-                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
-                >
-                    {this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
-                </ScrollView>
-                {/* {this.renderOnboardingWizard()} */}
-            </View>
-        </ErrorBoundary>
-    );
+	render = () => (
+		<ErrorBoundary view="Wallet">
+			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
+				<ScrollView
+					style={styles.wrapper}
+					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
+				>
+					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
+				</ScrollView>
+				{/* {this.renderOnboardingWizard()} */}
+			</View>
+		</ErrorBoundary>
+	);
 }
 
 const mapStateToProps = state => ({
-    accounts: state.engine.backgroundState.AccountTrackerController.accounts,
-    conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
-    currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
-    identities: state.engine.backgroundState.PreferencesController.identities,
-    selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
-    tokens: state.engine.backgroundState.AssetsController.tokens,
-    tokenBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
-    collectibles: state.engine.backgroundState.AssetsController.collectibles,
-    ticker: state.engine.backgroundState.NetworkController.provider.ticker,
-    wizardStep: state.wizard.step
+	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
+	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate,
+	currentCurrency: state.engine.backgroundState.CurrencyRateController.currentCurrency,
+	identities: state.engine.backgroundState.PreferencesController.identities,
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+	tokens: state.engine.backgroundState.AssetsController.tokens,
+	tokenBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
+	collectibles: state.engine.backgroundState.AssetsController.collectibles,
+	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
+	wizardStep: state.wizard.step
 });
 
 const mapDispatchToProps = dispatch => ({
-    showTransactionNotification: args => dispatch(showTransactionNotification(args)),
-    hideCurrentNotification: () => dispatch(hideCurrentNotification()),
-    updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers)),
-    setSelectedAsset: selectedAddress => dispatch(setSelectedAsset(selectedAddress))
+	showTransactionNotification: args => dispatch(showTransactionNotification(args)),
+	hideCurrentNotification: () => dispatch(hideCurrentNotification()),
+	updateOnlinePeerWallets: peers => dispatch(setOnlinePeerWallets(peers)),
+	setSelectedAsset: selectedAddress => dispatch(setSelectedAsset(selectedAddress))
 });
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(Wallet);

@@ -6,7 +6,6 @@ import {
 	Alert,
 	Text,
 	View,
-	TextInput,
 	SafeAreaView,
 	StyleSheet,
 	TouchableOpacity
@@ -24,6 +23,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import zxcvbn from 'zxcvbn';
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import { displayName } from '../../../../app.json';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -267,7 +267,7 @@ class ChoosePasswordSimple extends PureComponent {
 								>
 									{strings('choose_password.password')}
 								</Animated.Text>
-								<TextInput
+								<TrackingTextInput
 									style={styles.input}
 									value={this.state.password}
 									onChangeText={this.onPasswordChange} // eslint-disable-line  react/jsx-no-bind
@@ -330,7 +330,7 @@ class ChoosePasswordSimple extends PureComponent {
 								>
 									{strings('choose_password.confirm_password')}
 								</Animated.Text>
-								<TextInput
+								<TrackingTextInput
 									ref={this.confirmPasswordInput}
 									style={styles.input}
 									value={this.state.confirmPassword}

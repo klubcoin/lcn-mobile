@@ -3,7 +3,6 @@ import {
 	Alert,
 	ActivityIndicator,
 	TouchableOpacity,
-	TextInput,
 	Text,
 	View,
 	StyleSheet,
@@ -26,6 +25,7 @@ import { displayName } from '../../../../app.json';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import QRScanner from '../../UI/QRScanner';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 /**
  * View that's displayed the first time a user receives funds
  */
@@ -150,7 +150,7 @@ export default class ImportPrivateKey extends PureComponent {
 							<View style={styles.subtitleText}>
 								<Text style={styles.subtitleText}>{strings('import_private_key.subtitle')}</Text>
 							</View>
-							<TextInput
+							<TrackingTextInput
 								value={this.state.privateKey}
 								numberOfLines={3}
 								multiline

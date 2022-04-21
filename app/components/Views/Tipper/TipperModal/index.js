@@ -4,7 +4,6 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
-	TextInput,
 	Alert,
 	InteractionManager,
 	DeviceEventEmitter,
@@ -33,6 +32,7 @@ import NotificationManager from '../../../../core/NotificationManager';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getGasPriceByChainId } from '../../../../util/custom-gas';
 import Erc20Service from '../../../../core/Erc20Service';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 export default class TipperModal extends PureComponent {
 	static propTypes = {
@@ -334,7 +334,7 @@ export default class TipperModal extends PureComponent {
 
 		return (
 			<View style={styles.amountInput}>
-				<TextInput
+				<TrackingTextInput
 					autoCapitalize="none"
 					autoCorrect={false}
 					keyboardType="numeric"

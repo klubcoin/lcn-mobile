@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, Image } from 'react-native';
+import { Switch, ActivityIndicator, Alert, Text, View, SafeAreaView, Image } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -54,6 +54,7 @@ import emojiRegex from 'emoji-regex';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import CryptoSignature from '../../../core/CryptoSignature';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -628,7 +629,7 @@ class ChoosePassword extends PureComponent {
 															{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
 														</Text> */}
 												</View>
-												<TextInput
+												<TrackingTextInput
 													style={[styles.input, inputWidth]}
 													value={password}
 													onChangeText={this.onPasswordChange}
@@ -724,7 +725,7 @@ class ChoosePassword extends PureComponent {
 												<Text style={styles.hintLabel}>
 													{strings('choose_password.confirm_password')}
 												</Text>
-												<TextInput
+												<TrackingTextInput
 													ref={this.confirmPasswordInput}
 													style={[styles.input, inputWidth]}
 													value={confirmPassword}

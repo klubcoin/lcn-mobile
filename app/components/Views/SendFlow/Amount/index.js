@@ -6,7 +6,6 @@ import {
 	SafeAreaView,
 	View,
 	TouchableOpacity,
-	TextInput,
 	KeyboardAvoidingView,
 	FlatList,
 	InteractionManager,
@@ -61,6 +60,7 @@ import API from 'services/api';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import Erc20Service from '../../../../core/Erc20Service';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 const { hexToBN, BNToHex } = util;
 
@@ -825,7 +825,7 @@ class Amount extends PureComponent {
 						{!internalPrimaryCurrencyIsCrypto && !!inputValue && (
 							<Text style={styles.inputCurrencyText}>{`${getCurrencySymbol(currentCurrency)} `}</Text>
 						)}
-						<TextInput
+						<TrackingTextInput
 							ref={this.amountInput}
 							style={styles.textInput}
 							placeholderTextColor={colors.fontSecondary}

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import TrackingTextInput from '../TrackingTextInput';
 
 export default class PhoneTextField extends Component {
 	render() {
@@ -30,7 +30,7 @@ export default class PhoneTextField extends Component {
 						<Icon name="caret-down" style={styles.dropdownIcon} />
 					</TouchableOpacity>
 					<View style={styles.textInputWrapper}>
-						<TextInput
+						<TrackingTextInput
 							style={styles.textInput}
 							value={value}
 							placeholder={placeholder}

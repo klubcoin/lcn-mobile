@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList, SafeAreaView, TextInput, View } from 'react-native';
+import { FlatList, SafeAreaView, View } from 'react-native';
 import { colors } from '../../../styles/common';
 import { PropTypes } from 'prop-types';
 import { strings } from '../../../../locales/i18n';
@@ -26,6 +26,7 @@ import Text from '../../Base/Text';
 import { refWebRTC } from '../../../services/WebRTC';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const EDIT = 'edit';
 
@@ -149,7 +150,7 @@ class Contacts extends PureComponent {
 
 	getPeerInfo = address => {
 		const webrtc = refWebRTC();
-		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, (data) => {
+		webrtc.once(`${WalletProfile().action}:${address.toLowerCase()}`, data => {
 			if (!data.profile) return true;
 			Object.assign(this.data.data, data.profile);
 			this.setState({ data: data.profile });
@@ -174,7 +175,11 @@ class Contacts extends PureComponent {
 		const { selectedAddress, identities, toggleFriendRequestQR } = this.props;
 		const account = identities[selectedAddress];
 
-		const data = LiquichainNameCard(selectedAddress, account.name?.name || account?.name, FriendRequestTypes.Request);
+		const data = LiquichainNameCard(
+			selectedAddress,
+			account.name?.name || account?.name,
+			FriendRequestTypes.Request
+		);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		const base64Content = base64.encode(JSON.stringify(data));
 
@@ -230,7 +235,11 @@ class Contacts extends PureComponent {
 		const { selectedAddress, identities } = this.props;
 		const account = identities[selectedAddress];
 		const to = this.data.data.from;
-		const data = LiquichainNameCard(selectedAddress, account.name?.name || account?.name, FriendRequestTypes.Accept);
+		const data = LiquichainNameCard(
+			selectedAddress,
+			account.name?.name || account?.name,
+			FriendRequestTypes.Accept
+		);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		refWebRTC().sendToPeer(to, data);
 		this.props.navigation.goBack();
@@ -289,7 +298,11 @@ class Contacts extends PureComponent {
 
 		const { selectedAddress, identities } = this.props;
 		const account = identities[selectedAddress];
-		const data = LiquichainNameCard(selectedAddress, account.name?.name || account?.name, FriendRequestTypes.Revoke);
+		const data = LiquichainNameCard(
+			selectedAddress,
+			account.name?.name || account?.name,
+			FriendRequestTypes.Revoke
+		);
 		data.signature = await CryptoSignature.signMessage(selectedAddress, JSON.stringify(data.data));
 		refWebRTC().sendToPeer(address, data);
 	};
@@ -328,7 +341,10 @@ class Contacts extends PureComponent {
 		contacts.filter(e => {
 			const { searchQuery } = this.state;
 			const query = searchQuery.toLocaleLowerCase();
-			return (e.name?.name ?? e.name).toLocaleLowerCase().includes(query) || e.address.toLocaleLowerCase().includes(query);
+			return (
+				(e.name?.name ?? e.name).toLocaleLowerCase().includes(query) ||
+				e.address.toLocaleLowerCase().includes(query)
+			);
 		});
 
 	render() {
@@ -347,7 +363,7 @@ class Contacts extends PureComponent {
 				<SafeAreaView style={styles.wrapper} testID={'contacts-screen'}>
 					<View style={styles.searchSection}>
 						<Icon name="search" size={22} style={styles.icon} color={colors.white} />
-						<TextInput
+						<TrackingTextInput
 							style={styles.textInput}
 							value={searchQuery}
 							placeholder={`${strings('contacts.search')}...`}

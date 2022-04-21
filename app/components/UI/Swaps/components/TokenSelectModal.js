@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TextInput, SafeAreaView, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, SafeAreaView, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,6 +18,7 @@ import Text from '../../../Base/Text';
 import ListItem from '../../../Base/ListItem';
 import ModalDragger from '../../../Base/ModalDragger';
 import TokenIcon from './TokenIcon';
+import TrackingTextInput from '../../TrackingTextInput';
 
 const styles = StyleSheet.create({
 	modal: {
@@ -192,7 +193,7 @@ function TokenSelectModal({
 				<TouchableWithoutFeedback onPress={handleSearchPress}>
 					<View style={styles.inputWrapper}>
 						<Icon name="ios-search" size={20} style={styles.searchIcon} />
-						<TextInput
+						<TrackingTextInput
 							ref={searchInput}
 							style={styles.input}
 							placeholder={strings('swaps.search_token')}

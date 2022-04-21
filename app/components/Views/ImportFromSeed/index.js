@@ -1,16 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	Switch,
-	ActivityIndicator,
-	Alert,
-	TouchableOpacity,
-	Text,
-	View,
-	TextInput,
-	SafeAreaView,
-	Modal
-} from 'react-native';
+import { Switch, ActivityIndicator, Alert, TouchableOpacity, Text, View, SafeAreaView, Modal } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
@@ -53,6 +43,7 @@ import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
 import CryptoSignature from '../../../core/CryptoSignature';
 import QRScanner from '../../UI/QRScanner';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -501,7 +492,7 @@ class ImportFromSeed extends PureComponent {
 									activeLineWidth={0}
 								/>
 							) : (
-								<TextInput
+								<TrackingTextInput
 									value={seed}
 									numberOfLines={3}
 									style={[

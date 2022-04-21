@@ -1,13 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-	SafeAreaView,
-	TextInput,
-	Text,
-	View,
-	TouchableOpacity,
-	KeyboardAvoidingView,
-	InteractionManager
-} from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, InteractionManager } from 'react-native';
 import { connect } from 'react-redux';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import { getPaymentRequestOptionsTitle } from '../../UI/Navbar';
@@ -41,6 +33,7 @@ import { getTicker } from '../../../util/transactions';
 import { toLowerCaseCompare } from '../../../util/general';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
+import TrackingTextInput from '../TrackingTextInput';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -238,7 +231,7 @@ class PaymentRequest extends PureComponent {
 				</View>
 				{chainId === '1' && (
 					<View style={styles.searchWrapper}>
-						<TextInput
+						<TrackingTextInput
 							style={[styles.searchInput, inputWidth]}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -507,7 +500,7 @@ class PaymentRequest extends PureComponent {
 									{internalPrimaryCurrency !== 'ETH' && (
 										<Text style={styles.currencySymbol}>{currencySymbol}</Text>
 									)}
-									<TextInput
+									<TrackingTextInput
 										autoCapitalize="none"
 										autoCorrect={false}
 										keyboardType="numeric"

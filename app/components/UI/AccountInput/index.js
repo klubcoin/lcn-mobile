@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Identicon from '../Identicon';
 import PropTypes from 'prop-types';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Keyboard } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { connect } from 'react-redux';
 import { renderShortAddress, isENS } from '../../../util/address';
@@ -16,6 +16,7 @@ import { isValidAddress } from 'ethereumjs-util';
 import Device from '../../../util/Device';
 import EthereumAddress from '../EthereumAddress';
 import AppConstants from '../../../core/AppConstants';
+import TrackingTextInput from '../TrackingTextInput';
 
 const styles = StyleSheet.create({
 	root: {
@@ -381,7 +382,7 @@ class AccountInput extends PureComponent {
 					</TouchableOpacity>
 					<View style={styles.inputContainer}>
 						<View style={styles.toContainer}>
-							<TextInput
+							<TrackingTextInput
 								autoCapitalize="none"
 								autoCorrect={false}
 								onChangeText={this.onChange}

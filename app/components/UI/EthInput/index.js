@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Keyboard, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { connect } from 'react-redux';
 import {
@@ -26,6 +26,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Device from '../../../util/Device';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { toLowerCaseCompare } from '../../../util/general';
+import TrackingTextInput from '../TrackingTextInput';
 
 const styles = StyleSheet.create({
 	root: {
@@ -514,7 +515,7 @@ class EthInput extends PureComponent {
 				<View style={styles.icon}>{image}</View>
 				<View style={styles.ethContainer}>
 					<View style={[styles.split, !secondaryAmount ? styles.splitNoSecondaryAmount : {}]}>
-						<TextInput
+						<TrackingTextInput
 							autoCapitalize="none"
 							autoCorrect={false}
 							editable={this.state.inputEnabled}

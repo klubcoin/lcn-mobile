@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, TextInput, View, StyleSheet, InteractionManager } from 'react-native';
+import { Text, View, StyleSheet, InteractionManager } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import Engine from '../../../core/Engine';
 import PropTypes from 'prop-types';
@@ -9,6 +9,7 @@ import ActionView from '../ActionView';
 import { isSmartContractAddress } from '../../../util/transactions';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import styles from './styles/index';
+import TrackingTextInput from '../TrackingTextInput';
 
 /**
  * Copmonent that provides ability to add custom tokens.
@@ -183,7 +184,7 @@ export default class AddCustomToken extends PureComponent {
 					<View>
 						<View style={styles.rowWrapper}>
 							<Text style={styles.tokenAddress}>{strings('token.token_address')}</Text>
-							<TextInput
+							<TrackingTextInput
 								style={styles.textInput}
 								placeholder={'0x...'}
 								placeholderTextColor={colors.grey100}
@@ -200,7 +201,7 @@ export default class AddCustomToken extends PureComponent {
 						</View>
 						<View style={styles.rowWrapper}>
 							<Text style={styles.tokenAddress}>{strings('token.token_symbol')}</Text>
-							<TextInput
+							<TrackingTextInput
 								style={styles.textInput}
 								placeholder={'GNO'}
 								placeholderTextColor={colors.grey100}
@@ -216,7 +217,7 @@ export default class AddCustomToken extends PureComponent {
 						</View>
 						<View style={styles.rowWrapper}>
 							<Text style={styles.tokenAddress}>{strings('token.token_precision')}</Text>
-							<TextInput
+							<TrackingTextInput
 								style={styles.textInput}
 								value={this.state.decimals}
 								keyboardType="numeric"

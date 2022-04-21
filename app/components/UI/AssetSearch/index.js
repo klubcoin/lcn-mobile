@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
@@ -7,6 +7,7 @@ import contractMap from '@metamask/contract-metadata';
 import Fuse from 'fuse.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { toLowerCaseCompare } from '../../../util/general';
+import TrackingTextInput from '../TrackingTextInput';
 
 const styles = StyleSheet.create({
 	searchSection: {
@@ -80,7 +81,7 @@ export default class AssetSearch extends PureComponent {
 		return (
 			<View style={styles.searchSection} testID={'add-searched-token-screen'}>
 				<Icon name="search" size={22} style={styles.icon} color={colors.white} />
-				<TextInput
+				<TrackingTextInput
 					style={[styles.textInput, { width: inputWidth }]}
 					value={searchQuery}
 					placeholder={strings('token.search_tokens_placeholder')}

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { strings } from '../../../../locales/i18n';
 import { colors } from '../../../styles/common';
+import TrackingTextInput from '../TrackingTextInput';
 import styles from './styles/index';
 
 export const MAX_LENGTH_INPUT = 256;
@@ -28,7 +27,7 @@ export default class TextField extends Component {
 			<View style={[styles.textInputContainer, containerStyle]}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
 				<View style={[styles.textInputWrapper, textInputWrapperStyle]}>
-					<TextInput
+					<TrackingTextInput
 						style={styles.textInput}
 						value={value}
 						placeholder={placeholder}
