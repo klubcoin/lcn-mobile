@@ -1,5 +1,14 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, View, Image, StyleSheet, Text, ScrollView, InteractionManager } from 'react-native';
+import {
+	TouchableOpacity,
+	View,
+	Image,
+	StyleSheet,
+	Text,
+	ScrollView,
+	InteractionManager,
+	PanResponder
+} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -67,6 +76,7 @@ import routes from '../../../common/routes';
 import { BNToHex, fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
+import { EXCEPTION_ACTIVE_APP } from '../TrackingTextInput';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -207,6 +217,34 @@ class DrawerView extends PureComponent {
 		showProtectWalletModal: undefined,
 		file: '',
 		time: new Date()
+	};
+
+	constructor(props) {
+		super(props);
+		this._panResponder = PanResponder.create({
+			onStartShouldSetPanResponder: () => {
+				this.onTrackingDrawerAction();
+			},
+			onMoveShouldSetPanResponder: () => {
+				this.onTrackingDrawerAction();
+			},
+			onStartShouldSetPanResponderCapture: () => {
+				this.onTrackingDrawerAction();
+			},
+			onMoveShouldSetPanResponderCapture: () => {
+				this.onTrackingDrawerAction();
+			},
+			onPanResponderTerminationRequest: () => {
+				this.onTrackingDrawerAction();
+			},
+			onShouldBlockNativeResponder: () => {
+				this.onTrackingDrawerAction();
+			}
+		});
+	}
+
+	onTrackingDrawerAction = () => {
+		AsyncStorage.setItem(EXCEPTION_ACTIVE_APP, `${new Date().getTime()}`);
 	};
 
 	browserSectionRef = React.createRef();
@@ -722,7 +760,7 @@ class DrawerView extends PureComponent {
 					action: this.goToCollect
 				},
 				{
-				name: strings('drawer.receive_tips'),
+					name: strings('drawer.receive_tips'),
 					icon: this.getImageIcon('receiveTip'),
 					selectedIcon: this.getImageIcon('receiveTip'),
 					action: this.gotoTipper
@@ -886,12 +924,14 @@ class DrawerView extends PureComponent {
 			// 		? accounts[selectedAddress].conversion
 			// 		: null;
 		}
-		
+
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
-		const balanceFiat = account?.balance ? `${fromWei(hexToBN(account?.balance))} ${routes.klubToken.symbol}` : `0x00`;// weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
+		const balanceFiat = account?.balance
+			? `${fromWei(hexToBN(account?.balance))} ${routes.klubToken.symbol}`
+			: `0x00`; // weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
 
 		return (
-			<View style={styles.wrapper} testID={'drawer-screen'}>
+			<View style={styles.wrapper} testID={'drawer-screen'} {...this._panResponder.panHandlers}>
 				<ScrollView>
 					{/* <View style={styles.header}>
 						<View style={styles.metamaskLogo}>
