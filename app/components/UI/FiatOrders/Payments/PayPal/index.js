@@ -29,6 +29,7 @@ import CookieManager from '@react-native-community/cookies';
 import { colors } from '../../../../../styles/common';
 import { strings } from '../../../../../../locales/i18n';
 import styles from '../../../../Views/MarketPlace/ShoppingCart/styles';
+import Config from 'react-native-config';
 import TrackingTextInput from '../../../TrackingTextInput';
 
 const height = Math.round(Dimensions.get('window').height);
@@ -200,7 +201,7 @@ function PayPal({ selectedAddress, ...props }) {
 		if (url && url.includes('error')) {
 			console.log('navigate to PurchaseMethods');
 			// props.navigation.navigate('PurchaseMethods')
-		} else if (url && url.includes('https://account2.liquichain.io')) {
+		} else if (url && url.includes(Config.SERVER_ADDRESS)) {
 			capturePayPalOrder(url);
 		} else {
 			// unknown url
