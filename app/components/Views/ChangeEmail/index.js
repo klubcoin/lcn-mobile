@@ -131,13 +131,14 @@ class ChangeEmail extends PureComponent {
 		const { identities } = Engine.state.PreferencesController;
 		const { selectedAddress } = this.props;
 		const username = renderAccountName(selectedAddress, identities);
+		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { firstname, lastname, phone } = preferences?.onboardProfile ?? {};
 		const name = `${firstname} ${lastname}`;
 		const publicInfo = JSON.stringify({ name });
 		const privateInfo = JSON.stringify({ emailAddress: this.state.email, phoneNumber: phone });
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-		const signature = await CryptoSignature.signMessage(selectedAddress, publicInfo);
-		const params = [username, selectedAddress, signature, publicInfo, privateInfo];
+		const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
+		const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);
+		const params = [username, lowerCaseSelectedAddress, signature, publicInfo, privateInfo];
 		Api.postRequest(
 			routes.walletUpdate,
 			params,

@@ -281,12 +281,13 @@ class Dashboard extends PureComponent {
 	async getWalletInfo() {
 		const accounts = this.getAccounts();
 		const selectedAddress = accounts[0].address;
+		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { PreferencesController } = Engine.context;
-		const message = `walletInfo,${selectedAddress},${new Date().getTime()}`;
-		const sign = await CryptoSignature.signStringMessage(selectedAddress, message);
+		const message = `walletInfo,${lowerCaseSelectedAddress},${new Date().getTime()}`;
+		const sign = await CryptoSignature.signStringMessage(lowerCaseSelectedAddress, message);
 		API.postRequest(
 			Routes.walletInfo,
-			[selectedAddress, sign, message],
+			[lowerCaseSelectedAddress, sign, message],
 			response => {
 				if (response.result) {
 					const { name } = response.result;

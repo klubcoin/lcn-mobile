@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { colors } from '../../../../styles/common';
 import * as FileIcons from '../../../../util/file-icons';

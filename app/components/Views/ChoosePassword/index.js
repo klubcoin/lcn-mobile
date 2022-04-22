@@ -170,25 +170,25 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
-
 	async storeTimeSendEmail(email) {
 		AsyncStorage.setItem(email, `${new Date().getTime()}`);
 	}
 
 	async sendAccount() {
-		const { selectedAddress, keyringController } = this.props;
+		const { selectedAddress } = this.props;
 		if (selectedAddress == null) {
 			return;
 		}
+		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { avatar, firstname, lastname, email } = preferences.onboardProfile;
 		const { username } = this.props.navigation.state.params;
 		const name = `${firstname} ${lastname}`;
 		// const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const publicInfo = JSON.stringify({ name });
 		const privateInfo = JSON.stringify({ emailAddress: email });
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo );
-		const signature = await CryptoSignature.signMessage(selectedAddress, privateInfo);
-		const params = [username, selectedAddress, hash, signature, publicInfo, privateInfo];
+		const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
+		const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, privateInfo);
+		const params = [username, lowerCaseSelectedAddress, hash, signature, publicInfo, privateInfo];
 		API.postRequest(
 			Routes.walletCreation,
 			params,

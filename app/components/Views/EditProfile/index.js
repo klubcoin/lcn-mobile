@@ -393,13 +393,14 @@ class EditProfile extends PureComponent {
 				this.time = new Date();
 			}
 
+			const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 			const name = `${firstname} ${lastname}`;
 			// const avatarb64 = await RNFS.readFile(path, 'base64');
 			const publicInfo = JSON.stringify({ name });
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
-			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-			const signature = await CryptoSignature.signMessage(selectedAddress, publicInfo);
-			const params = [username, selectedAddress, signature, publicInfo, privateInfo];
+			const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
+			const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);
+			const params = [username, lowerCaseSelectedAddress, signature, publicInfo, privateInfo];
 			//Update wallet info on server
 			Api.postRequest(
 				routes.walletUpdate,

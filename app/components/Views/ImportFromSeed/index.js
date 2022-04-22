@@ -176,7 +176,7 @@ class ImportFromSeed extends PureComponent {
 	}
 
 	async getAccountInfo(selectedAddress, metricsOptIn, onboardingWizard) {
-		const address = selectedAddress;
+		const address = selectedAddress.toLowerCase();
 		const message = `walletInfo,${address},${new Date().getTime()}`;
 		const sign = await CryptoSignature.signStringMessage(address, message);
 
