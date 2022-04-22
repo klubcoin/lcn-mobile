@@ -19,6 +19,7 @@ import { strings } from '../../../../../locales/i18n';
 import { protectWalletModalVisible } from '../../../../actions/user';
 import styles from './styles/index';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { captureRef } from 'react-native-view-shot';
 
 /**
  * View to interact with a previously generated payment request link
@@ -94,13 +95,15 @@ class TipperDetails extends PureComponent {
 		});
 	};
 
-	onShareQRCode = () => {
-		this.qrCodeRef.toDataURL(data => {
-			Share.open({
-				url: `data:image/png;base64,${data}`
-			}).catch(err => {
-				Logger.log('Error while trying to share payment request', err);
-			});
+	onShareQRCode = async () => {
+		const path = await captureRef(this.QRCodeWrapperRef, {
+			quality: 1,
+			format: 'png'
+		});
+		Share.open({
+			url: path
+		}).catch(err => {
+			Logger.log('Error while trying to share payment request', err);
 		});
 	};
 
@@ -141,7 +144,12 @@ class TipperDetails extends PureComponent {
 							{link}
 						</Text>
 					</View>
-					<View style={styles.qrCodeWrapper}>
+					<View
+						style={styles.qrCodeWrapper}
+						ref={ref => {
+							this.QRCodeWrapperRef = ref;
+						}}
+					>
 						{!!this.state.qrLink && (
 							<QRCode
 								value={this.state.qrLink}

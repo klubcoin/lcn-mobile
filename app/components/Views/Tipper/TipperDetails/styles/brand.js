@@ -3,11 +3,11 @@ import { colors, fontStyles } from '../../../../../styles/common';
 
 const styles = StyleSheet.create({
 	// overwrite theme for brand here
-	contentWrapper:{
-		paddingVertical:0,
-	},	
-	scrollViewContainer:{
-		paddingVertical:24,
+	contentWrapper: {
+		paddingVertical: 0
+	},
+	scrollViewContainer: {
+		paddingVertical: 24
 	},
 	buttonText: {
 		...fontStyles.bold,
@@ -20,7 +20,9 @@ const styles = StyleSheet.create({
 	},
 	qrCodeWrapper: {
 		alignSelf: 'center',
-		marginBottom: 20
+		marginBottom: 20,
+		padding: 12,
+		backgroundColor: colors.white
 	}
 });
 
