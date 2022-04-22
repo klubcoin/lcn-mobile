@@ -220,8 +220,6 @@ class AccountOverview extends PureComponent {
 	};
 
 	onBuy = () => {
-		this.props.navigation.navigate('ComingSoon');
-		return;
 		this.props.navigation.navigate('PurchaseMethods');
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_BUY_ETH);
