@@ -1,38 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import {
-	View,
-	Text,
-	Dimensions,
-	SafeAreaView,
-	Image,
-	TouchableOpacity,
-	ActivityIndicator
-} from 'react-native';
+import { View, Text, Dimensions, SafeAreaView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getPayPalNavbar } from '../../../../UI/Navbar';
-import ScreenView from '../../components/ScreenView';
-import Title from '../../components/Title';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import API from 'services/api';
 import Routes from 'common/routes';
 import Engine from '@core/Engine';
-import { renderAccountName } from '@util/address';
-import { renderFromWei, weiToFiat, hexToBN } from '@util/number';
-import { getTicker } from '@util/transactions';
 import { WebView } from 'react-native-webview';
-import { BaseController } from '@metamask/controllers';
 import { NavigationActions, StackActions } from 'react-navigation';
 import CookieManager from '@react-native-community/cookies';
 import { colors } from '../../../../../styles/common';
 import { strings } from '../../../../../../locales/i18n';
-import styles from '../../../../Views/MarketPlace/ShoppingCart/styles';
+import styles from './styles';
 import Config from 'react-native-config';
 import TrackingTextInput from '../../../TrackingTextInput';
 import TrackingScrollView from '../../../TrackingScrollView';
 
-const height = Math.round(Dimensions.get('window').height);
 const width = Math.round(Dimensions.get('window').width);
 function PayPal({ selectedAddress, ...props }) {
 	const [from, setFrom] = useState({
@@ -46,7 +31,6 @@ function PayPal({ selectedAddress, ...props }) {
 	const [selected, setSelected] = useState(null);
 	const [currencies, setCurrencies] = useState([]);
 	const [errorMessage, setErrorMessage] = useState(null);
-	const { AssetsDetectionController, AccountTrackerController } = Engine.context;
 	const [payPalUrl, setPayPalUrl] = useState(null);
 	const [orderId, setOrderId] = useState(null);
 	const [isLoading, setLoading] = useState(false);
@@ -78,7 +62,7 @@ function PayPal({ selectedAddress, ...props }) {
 	manageCurrencies = () => {
 		for (var i = 0; i < currencies.length; i++) {
 			let item = currencies[i];
-			if (item.from.currency == from.currency && item.to.currency == to.currency) {
+			if (item.from.currency === from.currency && item.to.currency === to.currency) {
 				setSelected(item);
 				break;
 			}
@@ -139,7 +123,7 @@ function PayPal({ selectedAddress, ...props }) {
 								(orderResponse.links || (orderResponse.links && orderResponse.links.length > 0))
 							) {
 								orderResponse.links.map(item => {
-									if (item.rel == 'approve') {
+									if (item.rel === 'approve') {
 										console.log('load link', item.href);
 										setPayPalUrl(item.href);
 									}
@@ -167,7 +151,7 @@ function PayPal({ selectedAddress, ...props }) {
 			Routes.paypalPaymentCapture + '/' + orderId,
 			{},
 			response => {
-				if (response.status == 200) {
+				if (response.status === 200) {
 					// success
 					console.log('success paypal transactions');
 					// const navigationAction = NavigationActions.navigate({
@@ -209,7 +193,7 @@ function PayPal({ selectedAddress, ...props }) {
 		}
 	};
 
-	payWithPayPal = () => {
+	const payWithPayPal = () => {
 		if (from == null || selected == null) {
 			setErrorMessage('Fields are required');
 			return;
@@ -242,7 +226,7 @@ function PayPal({ selectedAddress, ...props }) {
 				if (response && response.links.length > 0) {
 					setOrderId(response.id);
 					response.links.map(item => {
-						if (item.rel == 'approve') {
+						if (item.rel === 'approve') {
 							console.log('load link', item.href);
 							setPayPalUrl(item.href);
 						}
@@ -257,78 +241,31 @@ function PayPal({ selectedAddress, ...props }) {
 		);
 	};
 
-	stepper = () => {
+	const stepper = () => {
 		return (
-			<View
-				style={{
-					borderLeftColor: colors.grey050,
-					borderLeftWidth: 5,
-					paddingLeft: 10
-				}}
-			>
-				<View
-					style={{
-						paddingTop: 10,
-						paddingBottom: 10
-					}}
-				>
+			<View style={styles.stepperWrapper}>
+				<View style={styles.stepperCheckout}>
 					<Text style={{ color: colors.white }}>{strings('paypal_checkout.using_payment_method')}</Text>
-					<TouchableOpacity
-						style={{
-							marginTop: 10
-						}}
-					>
-						<View
-							style={{
-								padding: 10,
-								width: '50%',
-								flexDirection: 'row',
-								backgroundColor: colors.purple,
-								borderRadius: 12,
-								alignItems: 'center'
-							}}
-						>
+					<TouchableOpacity style={styles.stepperButton}>
+						<View style={styles.stepperButtonContent}>
 							<Icon name={'paypal'} size={22} color={colors.white} />
-							<Text
-								style={{
-									paddingLeft: 10,
-									color: colors.white
-								}}
-							>
-								{strings('paypal_checkout.paypal')}
-							</Text>
+							<Text style={styles.stepperButtonText}>{strings('paypal_checkout.paypal')}</Text>
 						</View>
 					</TouchableOpacity>
 				</View>
 
-				<TouchableOpacity
-					style={{
-						paddingTop: 10,
-						paddingBottom: 10,
-						color: colors.white
-					}}
-				>
+				<TouchableOpacity style={styles.seeCalculationButton}>
 					<Text style={{ color: colors.white }}>{strings('paypal_checkout.see_calculation')}</Text>
 				</TouchableOpacity>
 
 				{from && (
-					<TouchableOpacity
-						style={{
-							paddingTop: 10,
-							paddingBottom: 10
-						}}
-					>
+					<TouchableOpacity style={styles.amountButton}>
 						<Text style={{ color: colors.white }}>{from.amount + ' ' + from.currency}</Text>
 					</TouchableOpacity>
 				)}
 
 				{selected && from && (
-					<TouchableOpacity
-						style={{
-							paddingTop: 10,
-							paddingBottom: 10
-						}}
-					>
+					<TouchableOpacity style={styles.selectedAmountButton}>
 						<Text>{from.amount * selected.to.value + ' ' + selected.to.currency}</Text>
 					</TouchableOpacity>
 				)}
@@ -336,25 +273,10 @@ function PayPal({ selectedAddress, ...props }) {
 		);
 	};
 
-	amount = () => {
+	const amount = () => {
 		return (
-			<View
-				style={{
-					backgroundColor: colors.purple,
-					borderRadius: 12,
-					paddingLeft: 10,
-					paddingRight: 10,
-					flexDirection: 'row',
-					marginTop: 20
-				}}
-			>
-				<View
-					style={{
-						width: '70%',
-						paddingTop: 10,
-						paddingBottom: 10
-					}}
-				>
+			<View style={styles.amountWrapper}>
+				<View style={styles.amountContent}>
 					<Text
 						style={{
 							color: colors.white
@@ -365,10 +287,8 @@ function PayPal({ selectedAddress, ...props }) {
 
 					<TrackingTextInput
 						placeholder={'0.00'}
-						style={{
-							fontSize: 24,
-							color: colors.white
-						}}
+						placeholderTextColor={colors.grey300}
+						style={styles.amountTextInput}
 						value={`${from.amount}`}
 						keyboardType={'numeric'}
 						onChangeText={input => {
@@ -385,47 +305,15 @@ function PayPal({ selectedAddress, ...props }) {
 						}}
 					/>
 				</View>
-				<View
-					style={{
-						borderLeftWidth: 1,
-						borderLeftColor: colors.grey050,
-						width: '30%',
-						alignItems: 'center',
-						justifyContent: 'center'
-					}}
-				>
-					{from && (
-						<Text
-							style={{
-								fontSize: 24,
-								color: colors.purple100
-							}}
-						>
-							{from.currency}
-						</Text>
-					)}
-				</View>
+				<View style={styles.amountButton2}>{from && <Text style={styles.fromText}>{from.currency}</Text>}</View>
 			</View>
 		);
 	};
-	receive = () => {
+
+	const receive = () => {
 		return (
-			<View
-				style={{
-					backgroundColor: colors.purple,
-					borderRadius: 12,
-					paddingLeft: 10,
-					paddingRight: 10,
-					flexDirection: 'row'
-				}}
-			>
-				<View
-					style={{
-						width: '60%',
-						paddingTop: 10,
-						paddingBottom: 10
-					}}
-				>
+			<View style={styles.receiveWrapper}>
+				<View style={styles.receiveContent}>
 					<Text
 						style={{
 							color: colors.white
@@ -434,51 +322,12 @@ function PayPal({ selectedAddress, ...props }) {
 						{strings('paypal_checkout.receive_estimate')}
 					</Text>
 
-					<Text
-						style={{
-							fontSize: 24,
-							color: colors.white,
-							paddingTop: 10,
-							paddingBottom: 10
-						}}
-					>
-						{from.amount * selected.to.value}
-					</Text>
+					<Text style={styles.receiveText}>{from.amount * selected.to.value}</Text>
 				</View>
-				<View
-					style={{
-						borderLeftWidth: 1,
-						borderLeftColor: colors.grey050,
-						width: '40%',
-						paddingTop: 10,
-						paddingBottom: 10
-					}}
-				>
-					<View
-						style={{
-							alignItems: 'center',
-							justifyContent: 'center',
-							flexDirection: 'row',
-							flex: 1
-						}}
-					>
-						<Image
-							source={require('images/logo.png')}
-							style={{
-								width: 30,
-								height: 30
-							}}
-						/>
-						{to && (
-							<Text
-								style={{
-									fontSize: 24,
-									color: colors.purple100
-								}}
-							>
-								{to.currency}
-							</Text>
-						)}
+				<View style={styles.receiveButton}>
+					<View style={styles.receiveRightContent}>
+						<Image source={require('images/logo.png')} style={styles.icon} />
+						{to && <Text style={styles.currencyText}>{to.currency}</Text>}
 					</View>
 					{/*
             network && (
@@ -495,45 +344,15 @@ function PayPal({ selectedAddress, ...props }) {
 	};
 
 	return (
-		<SafeAreaView
-			style={{
-				flex: 1,
-				width: '100%',
-				height: '100%',
-				// backgroundColor:'red'
-				backgroundColor: colors.primaryFox
-			}}
-		>
+		<SafeAreaView style={styles.container}>
 			{payPalUrl == null && isLoading == false && (
 				<TrackingScrollView style={{}} showsVerticalScrollIndicator={false}>
-					<View
-						style={{
-							paddingLeft: 20,
-							paddingRight: 20
-						}}
-					>
+					<View style={styles.titleContainer}>
 						<View>
-							<Text
-								style={{
-									width: '100%',
-									paddingLeft: 20,
-									paddingRight: 20,
-									paddingTop: 20,
-									textAlign: 'center',
-									color: colors.white
-								}}
-							>
-								{strings('paypal_checkout.buy_crypto')}
-							</Text>
+							<Text style={styles.titleWrapper}>{strings('paypal_checkout.buy_crypto')}</Text>
 
 							{selected && amount()}
-							<View
-								style={{
-									marginLeft: 40
-								}}
-							>
-								{stepper()}
-							</View>
+							<View style={styles.stepperContainer}>{stepper()}</View>
 							{selected && receive()}
 						</View>
 					</View>
@@ -548,16 +367,7 @@ function PayPal({ selectedAddress, ...props }) {
 					thirdPartyCookiesEnabled={true}
 					incognito={true}
 					renderLoading={() => (
-						<View
-							style={{
-								flex: 1,
-								justifyContent: 'center',
-								alignItems: 'center',
-								height: '100%',
-								width: '100%',
-								top: -(height * 0.25)
-							}}
-						>
+						<View style={styles.webView}>
 							<ActivityIndicator size="large" color={colors.purple100} />
 						</View>
 					)}
@@ -579,27 +389,9 @@ function PayPal({ selectedAddress, ...props }) {
 				/>
 			)}
 			{selected && from && from.amount > 0 && payPalUrl == null && (
-				<View
-					style={{
-						position: 'absolute',
-						bottom: 10,
-						width: '100%',
-						paddingLeft: 20,
-						paddingRight: 20
-					}}
-				>
+				<View style={styles.fromWrapper}>
 					<TouchableOpacity
-						style={{
-							borderRadius: 25,
-							height: 50,
-							backgroundColor: colors.purple100,
-							borderColor: colors.purple100,
-							borderWidth: 1,
-							alignItems: 'center',
-							justifyContent: 'center',
-							marginTop: 25,
-							width: '100%'
-						}}
+						style={styles.fromButton}
 						onPress={() => {
 							payWithPayPal();
 						}}
@@ -615,13 +407,7 @@ function PayPal({ selectedAddress, ...props }) {
 				</View>
 			)}
 			{isLoading && (
-				<View
-					style={{
-						flex: 1,
-						alignItems: 'center',
-						justifyContent: 'center'
-					}}
-				>
+				<View style={styles.fromLoading}>
 					<ActivityIndicator size="large" color={colors.purple100} />
 				</View>
 			)}
@@ -636,8 +422,7 @@ PayPal.propTypes = {
 	chainId: PropTypes.string,
 	ticker: PropTypes.string,
 	currentCurrency: PropTypes.string,
-	tokens: PropTypes.array,
-	currentCurrency: PropTypes.string
+	tokens: PropTypes.array
 };
 
 PayPal.navigationOptions = ({ navigation }) => getPayPalNavbar(navigation);
