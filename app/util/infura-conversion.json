@@ -4,14 +4,16 @@
 			"symbol": "etheur",
 			"quote": {
 				"code": "eur",
-				"name": "Euro"
+				"name": "Euro",
+				"symbol": "€"
 			}
 		},
 		{
 			"symbol": "ethusd",
 			"quote": {
 				"code": "usd",
-				"name": "United States Dollar"
+				"name": "United States Dollar",
+				"symbol": "$"
 			}
 		}
 	]

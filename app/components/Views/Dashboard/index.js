@@ -333,10 +333,11 @@ class Dashboard extends PureComponent {
 		a.quote.code.toLocaleLowerCase().localeCompare(b.quote.code.toLocaleLowerCase())
 	);
 
-	infuraCurrencyOptions = this.sortedCurrencies.map(({ quote: { code, name } }) => ({
+	infuraCurrencyOptions = this.sortedCurrencies.map(({ quote: { code, name, symbol } }) => ({
 		label: `${code.toUpperCase()} - ${name}`,
 		key: code,
-		value: code
+		value: code,
+		symbol
 	}));
 
 	onChangeCurrency = currency => {
@@ -457,7 +458,7 @@ class Dashboard extends PureComponent {
 	};
 
 	renderChart = () => {
-		const { chartData } = this.state;
+		const { chartData, selectedCurrency } = this.state;
 		if (!chartData || chartData.length === 0) return;
 		const data = chartData.map(e => ({ x: e.timestamp, y: e.value }));
 		const minY = Math.min(...data.map(e => e.y));
@@ -466,15 +467,14 @@ class Dashboard extends PureComponent {
 			const { position, value: valueData } = props;
 			const { x, y } = position;
 			const { x: timestamp, y: value } = valueData;
-			const percentChange = chartData.find(e => e.timestamp === timestamp).percentChange;
 			return (
 				<>
-					<View style={[styles.dataPointVerticalContainer, { left: x + 22 }]}>
+					<View style={[styles.dataPointVerticalContainer, { left: x + 20 }]}>
 						<View style={styles.dataPointVerticalWrapper}>
 							<View style={styles.dataPointVerticalDasher} />
 						</View>
 					</View>
-					<View style={[styles.dataPointWrapper, { top: y + 14, left: x + 16 }]}>
+					<View style={[styles.dataPointWrapper, { top: y + 14, left: x + 14 }]}>
 						<Icon name="circle-o" style={styles.dataPointIcon} />
 					</View>
 					<View
@@ -488,10 +488,13 @@ class Dashboard extends PureComponent {
 					>
 						<Text style={styles.dataViewTime}>{moment(timestamp).format('MMMM DD, YYYY hh:mm A')}</Text>
 						<View style={styles.dataViewBalanceWrapper}>
-							<Text style={styles.dataViewBalance}>{strings('transaction.balance')}</Text>
-							<Text style={styles.dataViewPercentChange}> {percentChange}%</Text>
+							<Text style={styles.dataViewBalance}>{`${selectedCurrency.toUpperCase()} / ${
+								Routes.klubToken.symbol
+							}`}</Text>
+							<Text style={styles.dataViewValue}>{`${
+								this.infuraCurrencyOptions.find(e => e.key === selectedCurrency)?.symbol
+							} ${value}`}</Text>
 						</View>
-						<Text style={styles.dataViewValue}>{`$ ${value}`}</Text>
 					</View>
 				</>
 			);
@@ -670,13 +673,9 @@ class Dashboard extends PureComponent {
 							)}
 						</View>
 						<View style={[styles.cardContent, styles.row]}>
-							<Text style={styles.totalBalanceText}>
-								{selectedCurrency === 'usd'
-									? `$${totalBalance}`
-									: selectedCurrency === 'eur'
-									? `€${totalBalance}`
-									: `${totalBalance} ${selectedCurrency.toUpperCase()}`}
-							</Text>
+							<Text style={styles.totalBalanceText}>{`${
+								this.infuraCurrencyOptions.find(e => e.key === selectedCurrency)?.symbol
+							}${totalBalance}`}</Text>
 							<TouchableOpacity
 								style={styles.arrowIconButton}
 								activeOpacity={0.7}

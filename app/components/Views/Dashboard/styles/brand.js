@@ -87,8 +87,8 @@ const brandStyles = StyleSheet.create({
 		backgroundColor: colors.purple500,
 		borderRadius: 12,
 		padding: 12,
-		width: 180,
-		height: 80
+		width: 170,
+		height: 70
 	},
 	dataViewTime: {
 		color: colors.white,
@@ -97,19 +97,19 @@ const brandStyles = StyleSheet.create({
 	dataViewBalanceWrapper: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginTop: 4
+		marginTop: 10,
+		alignItems: 'center'
 	},
 	dataViewBalance: {
-		color: colors.white
+		color: colors.blue
 	},
 	dataViewPercentChange: {
 		color: colors.pink
 	},
 	dataViewValue: {
-		color: colors.white,
+		color: colors.blue,
 		fontSize: 16,
-		fontWeight: 'bold',
-		marginTop: 4
+		fontWeight: 'bold'
 	},
 	modalContainer: {
 		alignItems: 'center'
