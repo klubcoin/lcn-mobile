@@ -2044,6 +2044,14 @@
 		"canceled": "Canceled",
 		"refunded": "Refunded"
 	},
+	"trade": {
+		"trade_methods": "Trade Methods",
+		"trade_description": "Klub Coin does not offer direct trading, to trade your Klub Coin tokens you need to use one of our listing partner.",
+		"kucoin": "KuCoin",
+		"kucoin_description": "KuCoin is a secure exchange where you can trade Klub Coin",
+		"trade": "Trade",
+		"with": "with"
+	},
 	"tipper": {
 		"tipper": "Tipper",
 		"tip_link_desc1": "Your tip link is ready to send!",

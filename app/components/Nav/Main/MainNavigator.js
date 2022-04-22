@@ -106,6 +106,7 @@ import FAQAnswer from '../../Views/FAQ/FAQAnswer';
 import VerifyOTP from '../../Views/VerifyOTP';
 import ComingSoon from '../../Views/ComingSoon';
 import Help from '../../Views/Help';
+import Trade from '../../Views/Trade';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -577,6 +578,7 @@ export default createStackNavigator(
 				PaymentMethodApplePay: { screen: PaymentMethodApplePay },
 				TransakFlow: { screen: TransakWebView },
 				PurchaseMethods: { screen: PurchaseMethods },
+				Trade: { screen: Trade },
 				BuyWithPayPal: { screen: PayPal }
 			})
 		},

@@ -467,7 +467,6 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 }
 
 export function getOnboardingWithoutBackNavbarOptions(navigation) {
-
 	return {
 		headerStyle: {
 			shadowColor: colors.transparent,
@@ -863,6 +862,23 @@ export function getPurchaseMethodNavbar(navigation) {
 			// </TouchableOpacity>
 			<View />
 		),
+		headerStyle: {
+			backgroundColor: colors.white
+		}
+	};
+}
+
+export function getTradeNavbar(navigation) {
+	const rightAction = navigation.dismiss;
+
+	return {
+		headerTitle: <Text style={[styles.centeredTitle]}>{strings('trade.trade_methods')}</Text>,
+		headerLeft: (
+			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} color={colors.white} style={styles.backIcon} />
+			</TouchableOpacity>
+		),
+		headerRight: <View />,
 		headerStyle: {
 			backgroundColor: colors.white
 		}

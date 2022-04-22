@@ -219,6 +219,10 @@ class AccountOverview extends PureComponent {
 		});
 	};
 
+	onTrade = () => {
+		this.props.navigation.navigate('Trade');
+	};
+
 	onBuy = () => {
 		this.props.navigation.navigate('PurchaseMethods');
 		InteractionManager.runAfterInteractions(() => {
@@ -356,6 +360,7 @@ class AccountOverview extends PureComponent {
 									// showInfo('This feature in under maintain');
 									this.props.navigation.navigate('ComingSoon');
 								}}
+								// onPress={this.onTrade}
 								label={strings('asset_overview.trade')}
 								lastIcon
 							/>
