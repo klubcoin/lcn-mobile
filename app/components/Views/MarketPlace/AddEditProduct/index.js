@@ -1,7 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
@@ -28,6 +28,7 @@ import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { showError, showSuccess } from '../../../../util/notify';
 import { refStoreService } from '../../MarketPlace/store/StoreService';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -324,7 +325,7 @@ export class MarketAddEditProduct extends PureComponent {
 		return (
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
-				<ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+				<TrackingScrollView contentContainerStyle={{ paddingBottom: 80 }}>
 					<Text style={styles.heading}>{strings('market.product_title')}</Text>
 					<TrackingTextInput
 						value={this.title}
@@ -430,7 +431,7 @@ export class MarketAddEditProduct extends PureComponent {
 							</StyledButton>
 						)}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 
 				{this.renderCategoryModal()}
 				{this.renderAddTagModal()}

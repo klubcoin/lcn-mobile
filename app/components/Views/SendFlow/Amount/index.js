@@ -8,8 +8,7 @@ import {
 	TouchableOpacity,
 	KeyboardAvoidingView,
 	FlatList,
-	InteractionManager,
-	ScrollView
+	InteractionManager
 } from 'react-native';
 import { connect } from 'react-redux';
 import { setSelectedAsset, prepareTransaction, setTransactionObject } from '../../../../actions/transaction';
@@ -61,6 +60,7 @@ import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import Erc20Service from '../../../../core/Erc20Service';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const { hexToBN, BNToHex } = util;
 
@@ -902,7 +902,7 @@ class Amount extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.wrapper} testID={'amount-screen'}>
-					<ScrollView style={styles.scrollWrapper}>
+					<TrackingScrollView style={styles.scrollWrapper}>
 						<View style={styles.inputWrapper}>
 							<View style={styles.actionsWrapper}>
 								<View style={styles.actionBorder} />
@@ -939,7 +939,7 @@ class Amount extends PureComponent {
 							</View>
 							{selectedAsset.tokenId ? this.renderCollectibleInput() : this.renderTokenInput()}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 
 					<KeyboardAvoidingView
 						style={styles.nextActionWrapper}

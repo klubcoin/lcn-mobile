@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { makeObservable, observable } from 'mobx';
 import {
-	ScrollView,
 	ActivityIndicator,
 	RefreshControl,
 	StyleSheet,
@@ -30,6 +29,7 @@ import moment from 'moment';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { addHexPrefix } from '@walletconnect/utils';
+import TrackingScrollView from '../TrackingScrollView';
 
 const ROW_HEIGHT = (Device.isIos() ? 95 : 100) + StyleSheet.hairlineWidth;
 
@@ -212,7 +212,7 @@ class Transactions extends PureComponent {
 						if (!hashArr.includes(addHexPrefix(e.hash))) {
 							hashArr.push(addHexPrefix(e.hash));
 						}
-						
+
 						const transaction = transactions.find(t => t.transactionHash == e.hash);
 						if (transaction) return transaction;
 
@@ -286,17 +286,15 @@ class Transactions extends PureComponent {
 
 	renderEmpty = () => (
 		<OnboardingScreenWithBg screen="a">
-			<ScrollView
-				refreshControl={<RefreshControl
-					refreshing={this.state.refreshing}
-					onRefresh={this.onRefresh} />}
+			<TrackingScrollView
+				refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
 				contentContainerStyle={styles.centerScrollview}
 			>
 				{this.props.header ? this.props.header : null}
 				<View style={styles.emptyContainer}>
 					<Text style={styles.text}>{strings('wallet.no_transactions')}</Text>
 				</View>
-			</ScrollView>
+			</TrackingScrollView>
 		</OnboardingScreenWithBg>
 	);
 
@@ -381,14 +379,13 @@ class Transactions extends PureComponent {
 			return this.renderEmpty();
 		}
 
-
 		const { submittedTransactions, confirmedTransactions, header } = this.props;
 		const { cancelConfirmDisabled, speedUpConfirmDisabled } = this.state;
 		const transactions = this.uses3rdPartyAPI
 			? this.transactions
 			: submittedTransactions && submittedTransactions.length
-				? submittedTransactions.concat(confirmedTransactions)
-				: this.props.transactions;
+			? submittedTransactions.concat(confirmedTransactions)
+			: this.props.transactions;
 
 		transactions.sort((a, b) => b.time - a.time);
 

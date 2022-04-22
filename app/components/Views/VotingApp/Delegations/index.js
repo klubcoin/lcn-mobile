@@ -1,16 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import {
-	View,
-	Text,
-	StyleSheet,
-	KeyboardAvoidingView,
-	FlatList,
-	ScrollView,
-	TouchableOpacity,
-	Dimensions
-} from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import Drawer from 'react-native-drawer';
 import { strings } from '../../../../../locales/i18n';
 import { colors } from '../../../../styles/common';
@@ -26,6 +17,7 @@ import moment from 'moment';
 import Toast from 'react-native-toast-message';
 import ConfirmModal from '../../../UI/ConfirmModal';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -287,7 +279,7 @@ export class Delegations extends PureComponent {
 				<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
 					{this.renderNavBar()}
 
-					<ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+					<TrackingScrollView contentContainerStyle={{ paddingBottom: 80 }}>
 						<View style={styles.searchSection}>
 							{!this.searchQuery && (
 								<View style={styles.placeHolder}>
@@ -321,7 +313,7 @@ export class Delegations extends PureComponent {
 								renderItem={data => this.renderInactiveItem(data)}
 							/>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					{this.renderConfirmDelete()}
 				</KeyboardAvoidingView>
 			</Drawer>

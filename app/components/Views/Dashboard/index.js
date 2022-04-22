@@ -1,14 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { PureComponent } from 'react';
-import {
-	RefreshControl,
-	ScrollView,
-	InteractionManager,
-	ActivityIndicator,
-	Text,
-	View,
-	TouchableOpacity
-} from 'react-native';
+import { RefreshControl, InteractionManager, ActivityIndicator, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { colors, baseStyles } from '../../../styles/common';
@@ -41,6 +33,7 @@ import moment from 'moment';
 import infuraCurrencies from '../../../util/infura-conversion.json';
 import Modal from 'react-native-modal';
 import BigNumber from 'bignumber.js';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 /**
  * Main view for the wallet
@@ -787,7 +780,7 @@ class Dashboard extends PureComponent {
 					onBackButtonPress={this.onCloseModal}
 				>
 					<View style={styles.modalWrapper}>
-						<ScrollView style={styles.modalScrollView}>
+						<TrackingScrollView style={styles.modalScrollView}>
 							{this.infuraCurrencyOptions.map(e => (
 								<TouchableOpacity
 									style={styles.modalItemContainer}
@@ -799,7 +792,7 @@ class Dashboard extends PureComponent {
 									)}
 								</TouchableOpacity>
 							))}
-						</ScrollView>
+						</TrackingScrollView>
 					</View>
 				</Modal>
 			</View>
@@ -829,14 +822,14 @@ class Dashboard extends PureComponent {
 	render = () => (
 		<ErrorBoundary view="Wallet">
 			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
-				<ScrollView
+				<TrackingScrollView
 					style={styles.wrapper}
 					refreshControl={
 						<RefreshControl refreshing={this.state.refreshing} onRefresh={this.pollTokenBalances} />
 					}
 				>
 					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
-				</ScrollView>
+				</TrackingScrollView>
 				{/* {this.renderOnboardingWizard()} */}
 			</View>
 		</ErrorBoundary>

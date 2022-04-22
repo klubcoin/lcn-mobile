@@ -1,7 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
@@ -20,6 +20,7 @@ import preferences from '../../../../store/preferences';
 import Geolocation from '@react-native-community/geolocation';
 import isEmail from 'validator/lib/isEmail';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export class ShippingInfo extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -198,7 +199,7 @@ export class ShippingInfo extends PureComponent {
 		return (
 			<KeyboardAvoidingView style={styles.root} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
-				<ScrollView contentContainerStyle={styles.scroll}>
+				<TrackingScrollView contentContainerStyle={styles.scroll}>
 					<Text style={styles.desc}>{strings('market.shipping_info_desc')}</Text>
 
 					<Text style={styles.heading}>{strings('market.name')}</Text>
@@ -286,7 +287,7 @@ export class ShippingInfo extends PureComponent {
 							{strings('market.cancel')}
 						</StyledButton>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</KeyboardAvoidingView>
 		);
 	}

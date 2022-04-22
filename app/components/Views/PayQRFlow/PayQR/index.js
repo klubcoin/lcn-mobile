@@ -3,7 +3,7 @@ import { colors } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
 import PropTypes from 'prop-types';
 import { makeObservable, observable } from 'mobx';
-import { StyleSheet, View, SafeAreaView, InteractionManager, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, View, SafeAreaView, InteractionManager, ActivityIndicator, Alert } from 'react-native';
 import { AddressFrom } from '../../SendFlow/AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
@@ -26,6 +26,7 @@ import StyledButton from '../../../UI/StyledButton';
 import APIService from '../../../../services/APIService';
 import NotificationManager from '../../../../core/NotificationManager';
 import { displayName } from '../../../../../app.json';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const { hexToBN } = util;
 const styles = StyleSheet.create({
@@ -251,7 +252,7 @@ class PayQR extends PureComponent {
 						fromAccountBalance={fromAccountBalance}
 					/>
 				</View>
-				<ScrollView>
+				<TrackingScrollView>
 					<OrderSummary
 						amount={order.amount}
 						orderNumber={order.orderNumber}
@@ -272,7 +273,7 @@ class PayQR extends PureComponent {
 							/>
 						</View>
 					)}
-				</ScrollView>
+				</TrackingScrollView>
 
 				<View style={styles.buttonNextWrapper}>
 					<StyledButton

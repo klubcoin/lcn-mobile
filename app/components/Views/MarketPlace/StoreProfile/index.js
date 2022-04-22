@@ -1,13 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-	KeyboardAvoidingView,
-	ScrollView,
-	TouchableOpacity,
-	View,
-	Image,
-	Text,
-	SafeAreaView,
-} from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, View, Image, Text, SafeAreaView } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import drawables from '../../../../common/drawables';
@@ -20,6 +12,7 @@ import store from '../../MarketPlace/store';
 import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 class StoreProfile extends PureComponent {
 	profile = {};
@@ -79,7 +72,7 @@ class StoreProfile extends PureComponent {
 			orderPayment,
 			deliveryPayment,
 			defaultCurrency,
-			coords,
+			coords
 		} = this.profile;
 
 		return (
@@ -87,7 +80,7 @@ class StoreProfile extends PureComponent {
 				{this.renderNavBar()}
 				<View style={styles.topBody} />
 				<View>
-					<ScrollView>
+					<TrackingScrollView>
 						<View style={styles.body}>
 							<TouchableOpacity onPress={this.onEdit} style={styles.editIcon}>
 								<Icon name={'edit'} size={RFPercentage(2)} />
@@ -105,7 +98,8 @@ class StoreProfile extends PureComponent {
 								</Text>
 								<Text style={styles.header}>{strings('market.store_location')}</Text>
 								<Text style={styles.location}>
-									{strings('market.coordinate')}: {coords ? `${coords.latitude}, ${coords.longitude}` : ''}
+									{strings('market.coordinate')}:{' '}
+									{coords ? `${coords.latitude}, ${coords.longitude}` : ''}
 								</Text>
 								<Text style={styles.header}>{strings('market.payment_term')}</Text>
 								<Text style={styles.contact}>
@@ -131,8 +125,12 @@ class StoreProfile extends PureComponent {
 								)}
 							</View>
 						</View>
-					</ScrollView>
-					<Image source={{ uri: 'file://' + logoStore || drawables.noImage }} style={styles.logo} resizeMode={'cover'} />
+					</TrackingScrollView>
+					<Image
+						source={{ uri: 'file://' + logoStore || drawables.noImage }}
+						style={styles.logo}
+						resizeMode={'cover'}
+					/>
 				</View>
 			</KeyboardAvoidingView>
 		);

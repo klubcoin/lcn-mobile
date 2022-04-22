@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Dimensions, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import styles from './styles';
@@ -29,6 +29,7 @@ import AppConstants from '../../../../core/AppConstants';
 import HtmlView from '../../MarketPlace/components/HtmlView';
 import Lightbox from 'react-native-lightbox';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -634,7 +635,7 @@ class MarketProduct extends PureComponent {
 		return (
 			<View style={styles.root}>
 				{this.renderNavBar()}
-				<ScrollView nestedScrollEnabled>
+				<TrackingScrollView nestedScrollEnabled>
 					<View style={[styles.header, isTablet() && { flexDirection: 'row' }]}>
 						<View style={styles.carousel}>
 							<Carousel
@@ -671,7 +672,7 @@ class MarketProduct extends PureComponent {
 						{this.renderRecentlyViewedProducts()}
 						{this.renderOtherProducts()}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				{this.renderEditButton()}
 				{this.renderChatButton()}
 			</View>

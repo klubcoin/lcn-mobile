@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Easing, Animated, SafeAreaView, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Easing, Animated, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { baseStyles, colors } from '../../../styles/common';
@@ -19,6 +19,7 @@ import { favoritesCollectiblesObjectSelector, isCollectibleInFavorites } from '.
 import Share from 'react-native-share';
 import { PanGestureHandler, gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import AppConstants from '../../../core/AppConstants';
+import TrackingScrollView from '../TrackingScrollView';
 
 const ANIMATION_VELOCITY = 250;
 const HAS_NOTCH = Device.hasNotch();
@@ -355,13 +356,16 @@ const CollectibleOverview = ({
 								</View>
 							)}
 							{renderScrollableDescription ? (
-								<ScrollView bounces={false} style={[styles.description, styles.scrollableDescription]}>
+								<TrackingScrollView
+									bounces={false}
+									style={[styles.description, styles.scrollableDescription]}
+								>
 									<TouchableWithoutFeedback>
 										<Text noMargin black style={styles.collectibleDescription}>
 											{collectible.description}
 										</Text>
 									</TouchableWithoutFeedback>
-								</ScrollView>
+								</TrackingScrollView>
 							) : (
 								gestureHandlerWrapper(
 									<View style={styles.description}>

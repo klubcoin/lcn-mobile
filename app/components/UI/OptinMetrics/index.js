@@ -5,7 +5,6 @@ import {
 	Text,
 	StyleSheet,
 	TouchableOpacity,
-	ScrollView,
 	BackHandler,
 	Alert,
 	InteractionManager
@@ -27,6 +26,7 @@ import { ONBOARDING_WIZARD, METRICS_OPT_IN, DENIED, AGREED } from '../../../cons
 import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	root: {
@@ -238,7 +238,7 @@ class OptinMetrics extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.root} testID={'metaMetrics-OptIn'}>
-					<ScrollView style={styles.root}>
+					<TrackingScrollView style={styles.root}>
 						<View style={styles.wrapper}>
 							<Text style={styles.title}>
 								{strings('privacy_policy.description_title', { appName: displayName })}
@@ -271,7 +271,7 @@ class OptinMetrics extends PureComponent {
 								{strings('privacy_policy.agree')}
 							</StyledButton>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

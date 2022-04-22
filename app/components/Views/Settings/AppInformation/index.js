@@ -6,7 +6,6 @@ import {
 	Text,
 	InteractionManager,
 	View,
-	ScrollView,
 	TouchableOpacity,
 	Linking
 } from 'react-native';
@@ -21,6 +20,7 @@ import { displayName } from '../../../../../app.json';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
 import ScaleImage from 'react-native-scalable-image';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -190,7 +190,7 @@ export default class AppInformation extends PureComponent {
 	render = () => (
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.wrapper} testID={'app-settings-screen'}>
-				<ScrollView contentContainerStyle={styles.wrapperContent}>
+				<TrackingScrollView contentContainerStyle={styles.wrapperContent}>
 					<View style={styles.logoWrapper}>
 						<Image source={logo} style={styles.image} resizeMethod={'auto'} />
 						<ScaleImage source={logoText} width={200} />
@@ -217,7 +217,7 @@ export default class AppInformation extends PureComponent {
 							<Text style={styles.buttonBottomText}>{e.title}</Text>
 						</TouchableOpacity>
 					))}
-				</ScrollView>
+				</TrackingScrollView>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>
 	);

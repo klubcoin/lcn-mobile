@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Dimensions, SafeAreaView, View, ScrollView, Text, InteractionManager, TouchableOpacity } from 'react-native';
+import { Dimensions, SafeAreaView, View, Text, InteractionManager, TouchableOpacity } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { connect } from 'react-redux';
 import { colors, fontStyles } from '../../../../styles/common';
@@ -18,6 +18,7 @@ import { renderNumber } from '../../../../util/number';
 import { strings } from '../../../../../locales/i18n';
 import { protectWalletModalVisible } from '../../../../actions/user';
 import styles from './styles/index';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 /**
  * View to interact with a previously generated payment request link
@@ -123,7 +124,7 @@ class TipperDetails extends PureComponent {
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'send-link-screen'}>
-				<ScrollView style={styles.contentWrapper} contentContainerStyle={styles.scrollViewContainer}>
+				<TrackingScrollView style={styles.contentWrapper} contentContainerStyle={styles.scrollViewContainer}>
 					<View style={styles.iconWrapper}>
 						<EvilIcons name="share-apple" size={54} style={styles.icon} />
 					</View>
@@ -201,7 +202,7 @@ class TipperDetails extends PureComponent {
 							</StyledButton>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				<Modal
 					isVisible={qrModalVisible}
 					onBackdropPress={this.closeQRModal}

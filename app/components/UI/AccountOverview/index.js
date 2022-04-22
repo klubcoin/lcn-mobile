@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { swapsUtils } from '@metamask/swaps-controller';
 import { connect } from 'react-redux';
@@ -37,6 +37,7 @@ import RemoteImage from '../../Base/RemoteImage';
 import styles from './styles/index';
 import routes from '../../../common/routes';
 import TrackingTextInput from '../TrackingTextInput';
+import TrackingScrollView from '../TrackingScrollView';
 
 /**
  * View that's part of the <Wallet /> component
@@ -252,7 +253,7 @@ class AccountOverview extends PureComponent {
 		const balanceFiat = balance ? `${fromWei(hexToBN(balance))} ${routes.klubToken.symbol}` : `0x00`; //weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
 		return (
 			<View ref={this.scrollViewContainer} collapsable={false}>
-				<ScrollView
+				<TrackingScrollView
 					bounces={false}
 					keyboardShouldPersistTaps={'never'}
 					style={styles.scrollView}
@@ -375,7 +376,7 @@ class AccountOverview extends PureComponent {
 							)*/}
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

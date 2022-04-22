@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, ActivityIndicator, Text, View, SafeAreaView, ScrollView, Image } from 'react-native';
+import { KeyboardAvoidingView, ActivityIndicator, Text, View, SafeAreaView, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -32,6 +32,7 @@ import * as sha3JS from 'js-sha3';
 import { showError } from '../../../util/notify';
 import CryptoSignature from '../../../core/CryptoSignature';
 import TrackingTextInput from '../../UI/TrackingTextInput';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const CHANGE_EMAIL = 'change_email';
 const CONFIRM_PASSWORD = 'confirm_password';
@@ -412,13 +413,13 @@ class ChangeEmail extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.mainWrapper}>
-					<ScrollView
+					<TrackingScrollView
 						contentContainerStyle={styles.scrollviewWrapper}
 						style={styles.mainWrapper}
 						testID={'account-backup-step-4-screen'}
 					>
 						{view === CHANGE_EMAIL ? this.renderChangeEmail() : this.renderConfirmPassword()}
-					</ScrollView>
+					</TrackingScrollView>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

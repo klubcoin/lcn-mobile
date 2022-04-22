@@ -1,15 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import {
-	View,
-	Text,
-	StyleSheet,
-	KeyboardAvoidingView,
-	ScrollView,
-	TouchableOpacity,
-	ActivityIndicator
-} from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
@@ -24,6 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import ConfirmModal from '../../../UI/ConfirmModal';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	navBar: {
@@ -298,7 +291,7 @@ export class ProposalAddEdit extends PureComponent {
 		return (
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
-				<ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+				<TrackingScrollView contentContainerStyle={{ paddingBottom: 80 }}>
 					<Text style={styles.headingTitle}>{strings('voting.proposal')}</Text>
 					<View style={styles.line} />
 
@@ -372,7 +365,7 @@ export class ProposalAddEdit extends PureComponent {
 							</StyledButton>
 						)}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 
 				{this.renderCategoryModal()}
 				{this.renderVoteTypeModal()}

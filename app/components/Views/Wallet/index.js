@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { RefreshControl, ScrollView, InteractionManager, ActivityIndicator, View } from 'react-native';
+import { RefreshControl, InteractionManager, ActivityIndicator, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -29,6 +29,7 @@ import CustomTabBar from '../../UI/CustomTabBar';
 import { setSelectedAsset } from '../../../actions/transaction';
 import routes from '../../../common/routes';
 import Erc20Service from '../../../core/Erc20Service';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 /**
  * Main view for the wallet
@@ -381,12 +382,12 @@ class Wallet extends PureComponent {
 	render = () => (
 		<ErrorBoundary view="Wallet">
 			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
-				<ScrollView
+				<TrackingScrollView
 					style={styles.wrapper}
 					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.getBalance} />}
 				>
 					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
-				</ScrollView>
+				</TrackingScrollView>
 				{/* {this.renderOnboardingWizard()} */}
 			</View>
 		</ErrorBoundary>

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, TouchableOpacity, InteractionManager, Linking } from 'react-native';
+import { Text, TouchableOpacity, InteractionManager, Linking } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getComingSoonNavbarOptions } from '../../UI/Navbar';
@@ -7,6 +7,7 @@ import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
 import ScaleImage from 'react-native-scalable-image';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const onboarding_carousel_klubcoin = require('../../../images/klubcoin.png'); // eslint-disable-line
 const klubcoin_text = require('../../../images/klubcoin_text.png');
@@ -60,7 +61,7 @@ class ComingSoon extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView contentContainerStyle={styles.scrollView}>
+				<TrackingScrollView contentContainerStyle={styles.scrollView}>
 					<ScaleImage style={styles.image} source={onboarding_carousel_klubcoin} width={160} />
 					<ScaleImage style={styles.imageText} source={klubcoin_text} width={220} />
 					<Text style={styles.text1}>{strings(`coming_soon.coming_soon`)}...</Text>
@@ -75,7 +76,7 @@ class ComingSoon extends PureComponent {
 							<Text style={styles.itemText}>{e.title}</Text>
 						</TouchableOpacity>
 					))}
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	}

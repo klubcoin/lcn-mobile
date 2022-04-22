@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { connect } from 'react-redux';
 import {
@@ -27,6 +27,7 @@ import Device from '../../../util/Device';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { toLowerCaseCompare } from '../../../util/general';
 import TrackingTextInput from '../TrackingTextInput';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	root: {
@@ -381,7 +382,11 @@ class EthInput extends PureComponent {
 		const assetsList = assetsLists[assetType]();
 		return (
 			<ElevatedView borderRadius={4} elevation={10} style={styles.root}>
-				<ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps={'handled'} nestedScrollEnabled>
+				<TrackingScrollView
+					style={styles.scrollContainer}
+					keyboardShouldPersistTaps={'handled'}
+					nestedScrollEnabled
+				>
 					<View style={styles.optionList}>
 						{assetsList.map((asset, i) => (
 							<View key={i} style={styles.selectableAsset}>
@@ -391,7 +396,7 @@ class EthInput extends PureComponent {
 							</View>
 						))}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</ElevatedView>
 		);
 	};

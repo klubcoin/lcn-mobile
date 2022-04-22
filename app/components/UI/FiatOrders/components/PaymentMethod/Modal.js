@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,7 @@ import { strings } from '../../../../../../locales/i18n';
 import Title from '../Title';
 import { colors } from '../../../../../styles/common';
 import StyledButton from '../../../StyledButton';
+import TrackingScrollView from '../../../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	modalView: {
@@ -81,9 +82,9 @@ const PaymentMethodModal = ({ isVisible, title, dismiss, children }) => (
 					<CloseIcon />
 				</TouchableOpacity>
 			</View>
-			<ScrollView style={styles.body}>
+			<TrackingScrollView style={styles.body}>
 				<View onStartShouldSetResponder={() => true}>{children}</View>
-			</ScrollView>
+			</TrackingScrollView>
 			<View style={styles.action}>
 				<StyledButton type="blue" onPress={dismiss} containerStyle={[styles.button]}>
 					{strings('fiat_on_ramp.purchase_method_modal_close')}

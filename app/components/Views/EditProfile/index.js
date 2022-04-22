@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
 	KeyboardAvoidingView,
-	ScrollView,
 	TouchableOpacity,
 	View,
 	Text,
@@ -43,6 +42,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
 import { SUCCESS, ALREADY_EXISTS } from '../ProfileOnboard';
 import CryptoSignature from '../../../core/CryptoSignature';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 export const REGEX_PHONE_NUMBER = /^[\d]{4,13}$/;
 
@@ -458,7 +458,7 @@ class EditProfile extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
-					<ScrollView>
+					<TrackingScrollView>
 						<View style={styles.body}>
 							<TouchableOpacity
 								activeOpacity={0.5}
@@ -595,7 +595,7 @@ class EditProfile extends PureComponent {
 								{strings('wallet.update_profile').toUpperCase()}
 							</StyledButton>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					{this.showCountryCodePicker && (
 						<CountrySearchModal
 							placeholder={strings('profile.search')}

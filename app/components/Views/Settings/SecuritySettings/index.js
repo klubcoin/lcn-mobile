@@ -4,7 +4,6 @@ import {
 	Alert,
 	Switch,
 	Text,
-	ScrollView,
 	View,
 	ActivityIndicator,
 	TouchableOpacity,
@@ -58,6 +57,7 @@ import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import ledgerAccessories from '../../../../images/ledger_accessories.jpg';
 import ScaleImage from 'react-native-scalable-image';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const isIos = Device.isIos();
 const { width } = Dimensions.get('window');
@@ -544,7 +544,7 @@ class Settings extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView
+				<TrackingScrollView
 					style={styles.wrapper}
 					contentContainerStyle={styles.wrapperContainer}
 					testID={'security-settings-scrollview'}
@@ -884,7 +884,7 @@ class Settings extends PureComponent {
 						</View>
 					</ActionModal> */}
 					{this.renderHint()}
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	};

@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Text, Dimensions, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 const Colors = {
 	primary: '#370e75',
@@ -319,7 +320,7 @@ export default class PayPal extends React.Component {
 					flex: 1
 				}}
 			>
-				<ScrollView style={{}} showsVerticalScrollIndicator={false}>
+				<TrackingScrollView style={{}} showsVerticalScrollIndicator={false}>
 					<View
 						style={{
 							paddingLeft: 20,
@@ -348,7 +349,7 @@ export default class PayPal extends React.Component {
 						</View>
 						{selected && this.receive()}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				<View
 					style={{
 						position: 'absolute',

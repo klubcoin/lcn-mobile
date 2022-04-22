@@ -1,20 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	ScrollView,
-	TouchableOpacity,
-	StyleSheet,
-	Text,
-	View,
-	SafeAreaView,
-	InteractionManager,
-	Image
-} from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, SafeAreaView, InteractionManager, Image } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
 import { connect } from 'react-redux';
 import { isMainNet } from '../../../util/networks';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -158,7 +150,7 @@ class CollectibleContractInformation extends PureComponent {
 						{name}
 					</Text>
 				</View>
-				<ScrollView style={styles.informationWrapper}>
+				<TrackingScrollView style={styles.informationWrapper}>
 					{description && (
 						<View style={styles.row}>
 							<Text style={styles.label}>{strings('asset_overview.description')}</Text>
@@ -185,7 +177,7 @@ class CollectibleContractInformation extends PureComponent {
 							</TouchableOpacity>
 						</View>
 					)}
-				</ScrollView>
+				</TrackingScrollView>
 
 				<View style={styles.footer}>
 					<TouchableOpacity style={styles.footerButton} onPress={this.closeModal}>

@@ -1,0 +1,38 @@
+import AsyncStorage from '@react-native-community/async-storage';
+import React, { Component } from 'react';
+import { ScrollView } from 'react-native';
+
+export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
+
+export default class TrackingScrollView extends Component {
+	ref = React.createRef();
+
+	flashScrollIndicators = () => {
+		this.ref.current.flashScrollIndicators();
+	};
+
+	scrollTo = option => {
+		this.ref.current.scrollTo(option);
+	};
+
+	scrollToEnd = option => {
+		this.ref.current.scrollToEnd(option);
+	};
+
+	onTrackingScroll = () => {
+		AsyncStorage.setItem(EXCEPTION_ACTIVE_APP, `${new Date().getTime()}`);
+	};
+
+	render() {
+		return (
+			<ScrollView
+				{...this.props}
+				onScroll={() => {
+					this.onTrackingScroll();
+					this.props.onTrackingScroll && this.props.onTrackingScroll();
+				}}
+				ref={this.ref}
+			/>
+		);
+	}
+}

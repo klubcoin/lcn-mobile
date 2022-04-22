@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Text, Dimensions, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { getPurchaseMethodNavbar } from '../../../../UI/Navbar';
 import ScreenView from '../../components/ScreenView';
 import Title from '../../components/Title';
@@ -10,9 +10,9 @@ import styles from './styles/index';
 import { displayName } from '../../../../../../app.json';
 import PaymentMethodItem from './PurchaseMethod';
 import drawables from '../../../../../common/drawables';
+import TrackingScrollView from '../../../TrackingScrollView';
 
 function Purchase({ selectedAddress, ...props }) {
-	
 	const onBuy = () => {
 		props.navigation.navigate('BuyWithPayPal');
 	};
@@ -22,11 +22,21 @@ function Purchase({ selectedAddress, ...props }) {
 			{/* <ScreenView> */}
 			<Title />
 			<SafeAreaView style={styles.wrapper}>
-				<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-					<PaymentMethodItem onBuy={onBuy} displayName={displayName} image={require('../../../../../images/paypal_logo.png')} typeText={'PayPal'} />
+				<TrackingScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+					<PaymentMethodItem
+						onBuy={onBuy}
+						displayName={displayName}
+						image={require('../../../../../images/paypal_logo.png')}
+						typeText={'PayPal'}
+					/>
 
-					<PaymentMethodItem onBuy={onBuy} displayName={displayName} image={drawables.wyrn} typeText={'wyre'.toUpperCase()} />
-				</ScrollView>
+					<PaymentMethodItem
+						onBuy={onBuy}
+						displayName={displayName}
+						image={drawables.wyrn}
+						typeText={'wyre'.toUpperCase()}
+					/>
+				</TrackingScrollView>
 			</SafeAreaView>
 			{/* </ScreenView> */}
 		</OnboardingScreenWithBg>

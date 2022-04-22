@@ -8,7 +8,6 @@ import {
 	Text,
 	View,
 	SafeAreaView,
-	ScrollView,
 	Image,
 	InteractionManager
 } from 'react-native';
@@ -41,6 +40,7 @@ import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TrackingTextInput from '../../UI/TrackingTextInput';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 const RESET_PASSWORD = 'reset_password';
@@ -688,13 +688,13 @@ class ResetPassword extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.mainWrapper}>
-					<ScrollView
+					<TrackingScrollView
 						contentContainerStyle={styles.scrollviewWrapper}
 						style={styles.mainWrapper}
 						testID={'account-backup-step-4-screen'}
 					>
 						{view === RESET_PASSWORD ? this.renderResetPassword() : this.renderConfirmPassword()}
-					</ScrollView>
+					</TrackingScrollView>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { makeObservable, observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -15,6 +15,7 @@ import ModalSelector from "../../../UI/AddCustomTokenOrApp/ModalSelector";
 import { refStoreService } from "../../MarketPlace/store/StoreService";
 import store from "../../MarketPlace/store";
 import { OrderStatuses } from "../../MarketPlace/store/StoreMessages";
+import TrackingScrollView from "../../../UI/TrackingScrollView";
 
 
 export const OrderStatus = () => ({
@@ -243,13 +244,13 @@ class OrderDetails extends PureComponent {
 							<Icon style={styles.editIcon} name={'pen'} size={18} />
 						</TouchableOpacity>
 					</View>
-					<ScrollView>
+					<TrackingScrollView>
 						<View style={styles.sectionsWrapper}>
 							{this.renderDates()}
 							{this.renderShippingInfo()}
 							{this.renderProducts()}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				</View>
 				{this.renderFooter()}
 				{this.renderStatusOptions()}

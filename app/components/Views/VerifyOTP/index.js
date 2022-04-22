@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, View, TouchableOpacity, BackHandler } from 'react-native';
+import { Text, View, TouchableOpacity, BackHandler } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -12,6 +12,7 @@ import APIService from '../../../services/APIService';
 import { showSuccess } from '../../../util/notify';
 import preferences from '../../../store/preferences';
 import AsyncStorage from '@react-native-community/async-storage';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 class VerifyOTP extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -246,7 +247,7 @@ class VerifyOTP extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					{this.email && this.email !== '' && this.renderEmailOtp()}
 					{this.phone && this.phone !== '' && this.renderPhoneOtp()}
 					<View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', padding: 12 }}>
@@ -260,7 +261,7 @@ class VerifyOTP extends PureComponent {
 							{strings('verify_otp.proceed_to_settings')}
 						</StyledButton>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	}

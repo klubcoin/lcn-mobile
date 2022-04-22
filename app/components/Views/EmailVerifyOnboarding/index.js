@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-community/async-storage';
 import StyledButton from '../../UI/StyledButton';
@@ -14,6 +14,7 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const EmailVerifyOnboarding = props => {
 	const [showRemindLaterModal, setRemindLaterModal] = useState(false);
@@ -86,7 +87,7 @@ const EmailVerifyOnboarding = props => {
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.mainWrapper}>
 				<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={4} />
-				<ScrollView
+				<TrackingScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
 					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
@@ -138,7 +139,7 @@ const EmailVerifyOnboarding = props => {
 							</View>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				{/* {Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />} */}
 				<SkipVerifyEmailModal
 					modalVisible={showRemindLaterModal}

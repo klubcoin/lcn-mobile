@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-	StyleSheet,
-	View,
-	Text,
-	ScrollView,
-	TouchableWithoutFeedback,
-	Alert,
-	KeyboardAvoidingView
-} from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Alert, KeyboardAvoidingView } from 'react-native';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import { colors, fontStyles } from '../../../styles/common';
@@ -17,7 +9,7 @@ import * as FilesReader from '../../../util/files-reader';
 import TransferFileModal from './components/TransferFileModal';
 import { connect } from 'react-redux';
 import preferences from '../../../store/preferences';
-import fileShareStore from '../FilesManager/store'
+import fileShareStore from '../FilesManager/store';
 import FileItem from './components/FileItem';
 import uuid from 'react-native-uuid';
 import { SwipeRow } from 'react-native-swipe-list-view';
@@ -27,7 +19,7 @@ import FileTransfer from './Transfer.service';
 import SearchBar from '../../Base/SearchBar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
-
+import TrackingScrollView from '../../UI/TrackingScrollView';
 const swipeOffset = Device.getDeviceWidth() / 2;
 
 class FilesManager extends Component {
@@ -293,11 +285,11 @@ class FilesManager extends Component {
 								value={this.state.searchQuery}
 								onChange={this.handleSearch}
 							/>
-							<ScrollView style={{ marginBottom: 100 }}>
+							<TrackingScrollView style={{ marginBottom: 100 }}>
 								{this.renderFileSections(statuses.process)}
 								{this.renderFileSections(statuses.failed)}
 								{this.renderFileSections(statuses.success)}
-							</ScrollView>
+							</TrackingScrollView>
 							<CustomButton
 								title={strings('file.transfer_other_files')}
 								onPress={this.onPickFiles}

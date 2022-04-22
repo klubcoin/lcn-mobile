@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import StyledButton from '../../UI/StyledButton';
@@ -7,6 +7,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import URL from 'url-parse';
 import { displayName } from '../../../../app.json';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	warningIcon: {
@@ -120,7 +121,7 @@ export default class PhishingModal extends PureComponent {
 							{strings('phishing.ethereum_phishing_detection', { appName: displayName })}
 						</Text>
 					</View>
-					<ScrollView
+					<TrackingScrollView
 						style={styles.phishingModalInfo}
 						contentContainerStyle={styles.phishingModalInfoContent}
 					>
@@ -153,7 +154,7 @@ export default class PhishingModal extends PureComponent {
 								{strings('phishing.file_an_issue')}
 							</Text>
 						</Text>
-					</ScrollView>
+					</TrackingScrollView>
 				</View>
 				<View style={styles.phishingFooter}>
 					<StyledButton

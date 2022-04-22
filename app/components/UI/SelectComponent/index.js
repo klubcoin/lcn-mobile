@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Picker } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Picker } from 'react-native';
 import { fontStyles, colors, baseStyles } from '../../../styles/common';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 import IconCheck from 'react-native-vector-icons/MaterialCommunityIcons';
 import Device from '../../../util/Device';
+import TrackingScrollView from '../TrackingScrollView';
 
 const PickerItem = Picker.Item;
 const ROW_HEIGHT = 35;
@@ -191,7 +192,7 @@ export default class SelectComponent extends PureComponent {
 					<View style={styles.accesoryBar}>
 						<Text style={styles.label}>{this.props.label}</Text>
 					</View>
-					<ScrollView style={styles.list} ref={this.scrollView}>
+					<TrackingScrollView style={styles.list} ref={this.scrollView}>
 						<View style={styles.listWrapper}>
 							{this.props.options.map(option => (
 								<TouchableOpacity
@@ -209,7 +210,7 @@ export default class SelectComponent extends PureComponent {
 								</TouchableOpacity>
 							))}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				</View>
 			</Modal>
 		</View>

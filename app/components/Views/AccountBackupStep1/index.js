@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-community/async-storage';
 import StyledButton from '../../UI/StyledButton';
@@ -15,6 +15,7 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import SkipAccountSecurityModal from '../../UI/SkipAccountSecurityModal';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 /**
  * View that's shown during the first step of
@@ -100,7 +101,7 @@ const AccountBackupStep1 = props => {
 	return (
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.mainWrapper}>
-				<ScrollView
+				<TrackingScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
 					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
@@ -154,7 +155,7 @@ const AccountBackupStep1 = props => {
 							</View>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				{Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />}
 				<SkipAccountSecurityModal
 					modalVisible={showRemindLaterModal}

@@ -8,7 +8,6 @@ import {
 	TouchableOpacity,
 	SafeAreaView,
 	InteractionManager,
-	ScrollView,
 	Modal as ReactNativeModal
 } from 'react-native';
 import { AddressFrom, AddressTo } from '../AddressInputs';
@@ -52,6 +51,7 @@ import { showError } from '../../../../util/notify';
 import SharedDeeplinkManager from '../../../../core/DeeplinkManager';
 import AppConstants from '../../../../core/AppConstants';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -618,7 +618,7 @@ class SendFlow extends PureComponent {
 						/>
 					) : (
 						<View style={styles.nextActionWrapper}>
-							<ScrollView>
+							<TrackingScrollView>
 								{addressError && (
 									<View style={styles.addressErrorWrapper} testID={'address-error'}>
 										<ErrorMessage
@@ -674,7 +674,7 @@ class SendFlow extends PureComponent {
 										/>
 									</View>
 								)}
-							</ScrollView>
+							</TrackingScrollView>
 							<View style={styles.footerContainer} testID={'no-eth-message'}>
 								{!errorContinue && (
 									<View style={styles.buttonNextWrapper}>

@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { colors, fontStyles, baseStyles } from '../../../../styles/common';
 import WebsiteIcon from '../../WebsiteIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { strings } from '../../../../../locales/i18n';
 import Device from '../../../../util/Device';
 import { getHost } from '../../../../util/browser';
+import TrackingScrollView from '../../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	expandedRoot: {
@@ -94,11 +95,11 @@ export default class ExpandedMessage extends PureComponent {
 						{strings('signature_request.message_from')} {title}
 					</Text>
 				</View>
-				<ScrollView style={styles.scrollView}>
+				<TrackingScrollView style={styles.scrollView}>
 					<TouchableWithoutFeedback>
 						<View>{renderMessage()}</View>
 					</TouchableWithoutFeedback>
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

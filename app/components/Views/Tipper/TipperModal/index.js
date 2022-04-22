@@ -29,10 +29,10 @@ import * as sha3JS from 'js-sha3';
 import { WalletDevice } from '@metamask/controllers';
 import TransactionTypes from '../../../../core/TransactionTypes';
 import NotificationManager from '../../../../core/NotificationManager';
-import { ScrollView } from 'react-native-gesture-handler';
 import { getGasPriceByChainId } from '../../../../util/custom-gas';
 import Erc20Service from '../../../../core/Erc20Service';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export default class TipperModal extends PureComponent {
 	static propTypes = {
@@ -282,7 +282,7 @@ export default class TipperModal extends PureComponent {
 		})}?`;
 		return (
 			<View style={styles.root}>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<TransactionHeader
 						currentPageInformation={meta}
 						titleStyle={styles.transactionHeaderTitle}
@@ -301,7 +301,7 @@ export default class TipperModal extends PureComponent {
 						{this.renderBalance()}
 					</View>
 					{this.renderActions()}
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Text, View, ScrollView, StyleSheet, Image, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, Dimensions } from 'react-native';
 import StyledButton from '../../UI/StyledButton';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
@@ -15,6 +15,7 @@ import ScaleImage from 'react-native-scalable-image';
 import APIService from '../../../services/APIService';
 import preferences from '../../../store/preferences';
 import { STORED_CONTENT } from '../../../constants/storage';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 /**
  * View that is displayed to first time (new) users
@@ -79,7 +80,7 @@ export default class OnboardingCarousel extends PureComponent {
 		return (
 			<View style={baseStyles.flexGrow} testID={'onboarding-carousel-screen'}>
 				<OnboardingScreenWithBg screen={'carousel'}>
-					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
+					<TrackingScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>
 							<ScaleImage
 								source={klubcoin_text}
@@ -126,7 +127,7 @@ export default class OnboardingCarousel extends PureComponent {
 								))}
 							</View>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					<View style={styles.ctas}>
 						<View style={styles.ctaWrapper}>
 							<StyledButton

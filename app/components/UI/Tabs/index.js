@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { InteractionManager, Dimensions, View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { InteractionManager, Dimensions, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import TabThumbnail from './TabThumbnail';
 import { colors, fontStyles } from '../../../styles/common';
 import Device from '../../../util/Device';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const THUMB_VERTICAL_MARGIN = 15;
 const NAVBAR_SIZE = Device.isIphoneX() ? 88 : 64;
@@ -209,7 +210,7 @@ export default class Tabs extends PureComponent {
 	}
 	renderTabs(tabs, activeTab) {
 		return (
-			<ScrollView style={styles.tabs} contentContainerStyle={styles.tabsContent} ref={this.scrollview}>
+			<TrackingScrollView style={styles.tabs} contentContainerStyle={styles.tabsContent} ref={this.scrollview}>
 				{tabs.map(tab => (
 					// eslint-disable-next-line react/jsx-key
 					<TabThumbnail
@@ -221,7 +222,7 @@ export default class Tabs extends PureComponent {
 						onSwitch={this.onSwitch}
 					/>
 				))}
-			</ScrollView>
+			</TrackingScrollView>
 		);
 	}
 

@@ -5,7 +5,6 @@ import {
 	SafeAreaView,
 	View,
 	Alert,
-	ScrollView,
 	TouchableOpacity,
 	ActivityIndicator,
 	DeviceEventEmitter
@@ -67,6 +66,7 @@ import { removeFavoriteCollectible } from '../../../../actions/collectibles';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import Erc20Service from '../../../../core/Erc20Service';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const EDIT = 'edit';
 const EDIT_NONCE = 'edit_nonce';
@@ -903,7 +903,7 @@ class Confirm extends PureComponent {
 						body={<Text style={styles.text}>{strings('transaction.confusable_msg')}</Text>}
 					/>
 
-					<ScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
+					<TrackingScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
 						{!selectedAsset.tokenId ? (
 							<View style={styles.amountWrapper}>
 								<Text style={styles.textAmountLabel}>{strings('transaction.amount')}</Text>
@@ -970,7 +970,7 @@ class Confirm extends PureComponent {
 								</TouchableOpacity>
 							)}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					<View style={styles.buttonNextWrapper}>
 						<StyledButton
 							type={'normal'}

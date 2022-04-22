@@ -1,16 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import {
-	View,
-	Text,
-	StyleSheet,
-	KeyboardAvoidingView,
-	FlatList,
-	ScrollView,
-	TouchableOpacity,
-	Dimensions
-} from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import Drawer from 'react-native-drawer';
 import { strings } from '../../../../../locales/i18n';
 import { colors } from '../../../../styles/common';
@@ -24,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -199,7 +191,7 @@ export class Proposals extends PureComponent {
 				<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
 					{this.renderNavBar()}
 
-					<ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+					<TrackingScrollView contentContainerStyle={{ paddingBottom: 80 }}>
 						<View style={styles.searchSection}>
 							{!this.searchQuery && (
 								<View style={styles.placeHolder}>
@@ -223,7 +215,7 @@ export class Proposals extends PureComponent {
 								renderItem={data => this.renderItem(data)}
 							/>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				</KeyboardAvoidingView>
 			</Drawer>
 		);

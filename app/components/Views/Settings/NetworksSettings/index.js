@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import ActionSheet from 'react-native-actionsheet';
 import { colors, fontStyles } from '../../../../styles/common';
@@ -11,6 +11,7 @@ import StyledButton from '../../../UI/StyledButton';
 import Engine from '../../../../core/Engine';
 import { MAINNET, RPC } from '../../../../constants/network';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	networksWrapper: {
@@ -213,12 +214,12 @@ class NetworksSettings extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView style={styles.networksWrapper}>
+				<TrackingScrollView style={styles.networksWrapper}>
 					{this.renderMainnet()}
 					{/* <Text style={styles.sectionLabel}>{strings('app_settings.network_other_networks')}</Text>
 						{this.renderOtherNetworks()}
 						{this.renderRpcNetworksView()} */}
-				</ScrollView>
+				</TrackingScrollView>
 				{/* <StyledButton
 					type="normal"
 					onPress={this.onAddNetwork}

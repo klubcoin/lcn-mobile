@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import StyledButton from '../../../UI/StyledButton';
 import { colors, fontStyles } from '../../../../styles/common';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { strings } from '../../../../../locales/i18n';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -54,7 +55,7 @@ class ExperimentalSettings extends PureComponent {
 	};
 
 	render = () => (
-		<ScrollView style={styles.wrapper}>
+		<TrackingScrollView style={styles.wrapper}>
 			<View style={styles.setting}>
 				<View>
 					<Text style={styles.title}>{strings('experimental_settings.wallet_connect_dapps')}</Text>
@@ -68,7 +69,7 @@ class ExperimentalSettings extends PureComponent {
 					</StyledButton>
 				</View>
 			</View>
-		</ScrollView>
+		</TrackingScrollView>
 	);
 }
 

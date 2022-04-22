@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Engine from '../../../core/Engine';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { InteractionManager, ScrollView, TouchableOpacity, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { InteractionManager, TouchableOpacity, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import Networks, { getAllNetworks, isSafeChainId } from '../../../util/networks';
@@ -12,6 +12,7 @@ import { MAINNET, RPC } from '../../../constants/network';
 import styles from './styles/index';
 import StyledButton from '../StyledButton';
 import routes from '../../../common/routes';
+import TrackingScrollView from '../TrackingScrollView';
 
 /**
  * View that contains the list of all the available networks
@@ -184,7 +185,7 @@ export class NetworkList extends PureComponent {
 					{strings('networks.title')}
 				</Text>
 			</View>
-			<ScrollView style={styles.networksWrapper} testID={'other-networks-scroll'}>
+			<TrackingScrollView style={styles.networksWrapper} testID={'other-networks-scroll'}>
 				{this.renderMainnet()}
 
 				{/* <View style={styles.otherNetworksHeader}>
@@ -194,7 +195,7 @@ export class NetworkList extends PureComponent {
 				</View>
 				{this.renderOtherNetworks()}
 				{this.renderRpcNetworks()} */}
-			</ScrollView>
+			</TrackingScrollView>
 			<View style={styles.footer}>
 				<StyledButton containerStyle={styles.footerButton} type={'normal'} onPress={this.closeModal}>
 					<Text style={styles.closeButton}>{strings('networks.close').toUpperCase()}</Text>

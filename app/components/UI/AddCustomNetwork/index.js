@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import StyledButton from '../StyledButton';
-import { StyleSheet, View, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Linking } from 'react-native';
 import TransactionHeader from '../TransactionHeader';
 import { strings } from '../../../../locales/i18n';
 import { colors, fontStyles } from '../../../styles/common';
@@ -12,6 +12,7 @@ import Alert from '../../Base/Alert';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Text from '../../Base/Text';
 import { displayName } from '../../../../app.json';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	root: {
@@ -259,7 +260,7 @@ const AddCustomNetwork = ({ customNetworkInformation, currentPageInformation, on
 	};
 
 	const renderApproval = () => (
-		<ScrollView>
+		<TrackingScrollView>
 			<TransactionHeader currentPageInformation={currentPageInformation} />
 			<Text centered bold primary noMargin style={styles.intro}>
 				{strings('add_custom_network.title')}
@@ -305,7 +306,7 @@ const AddCustomNetwork = ({ customNetworkInformation, currentPageInformation, on
 					{strings('spend_limit_edition.approve')}
 				</StyledButton>
 			</View>
-		</ScrollView>
+		</TrackingScrollView>
 	);
 
 	return <View style={styles.root}>{viewDetails ? renderDetails() : renderApproval()}</View>;

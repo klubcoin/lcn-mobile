@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View, ScrollView, Image, Modal } from 'react-native';
+import { Text, View, Image, Modal } from 'react-native';
 import StyledButton from '../../UI/StyledButton';
 import { baseStyles } from '../../../styles/common';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -11,6 +11,7 @@ import QRScanner from '../../UI/QRScanner';
 import SharedDeeplinkManager from '../../../core/DeeplinkManager';
 import AppConstants from '../../../core/AppConstants';
 import { showError } from '../../../util/notify';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 class ManageCoin extends PureComponent {
 	state = {
@@ -112,9 +113,9 @@ class ManageCoin extends PureComponent {
 		return (
 			<View style={baseStyles.flexGrow} testID={'onboarding-screen'}>
 				<OnboardingScreenWithBg screen={'c'}>
-					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
+					<TrackingScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>{this.renderContent()}</View>
-					</ScrollView>
+					</TrackingScrollView>
 					<View style={styles.termsAndConditions}>
 						<TermsAndConditions navigation={this.props.navigation} />
 					</View>

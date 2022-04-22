@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, ScrollView, RefreshControl, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Alert, RefreshControl, FlatList, StyleSheet, Text, View } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import ActionSheet from 'react-native-actionsheet';
 import Engine from '../../../core/Engine';
 import CollectibleMedia from '../CollectibleMedia';
 import AssetElement from '../AssetElement';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -81,11 +82,11 @@ export default class Collectibles extends PureComponent {
 	collectibleToRemove = null;
 
 	renderEmpty = () => (
-		<ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} />}>
+		<TrackingScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} />}>
 			<View style={styles.emptyView}>
 				<Text style={styles.text}>{strings('wallet.no_collectibles')}</Text>
 			</View>
-		</ScrollView>
+		</TrackingScrollView>
 	);
 
 	onItemPress = collectible => {

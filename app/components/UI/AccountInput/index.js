@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Identicon from '../Identicon';
 import PropTypes from 'prop-types';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Keyboard } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Keyboard } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { connect } from 'react-redux';
 import { renderShortAddress, isENS } from '../../../util/address';
@@ -17,6 +17,7 @@ import Device from '../../../util/Device';
 import EthereumAddress from '../EthereumAddress';
 import AppConstants from '../../../core/AppConstants';
 import TrackingTextInput from '../TrackingTextInput';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	root: {
@@ -324,7 +325,11 @@ class AccountInput extends PureComponent {
 		const visibleOptions = this.getVisibleOptions(this.state.value);
 		return (
 			<ElevatedView borderRadius={4} elevation={10}>
-				<ScrollView style={styles.componentContainer} keyboardShouldPersistTaps={'handled'} nestedScrollEnabled>
+				<TrackingScrollView
+					style={styles.componentContainer}
+					keyboardShouldPersistTaps={'handled'}
+					nestedScrollEnabled
+				>
 					<View style={styles.optionList}>
 						{Object.keys(visibleOptions).map(address =>
 							this.renderOption(visibleOptions[address], () => {
@@ -332,7 +337,7 @@ class AccountInput extends PureComponent {
 							})
 						)}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</ElevatedView>
 		);
 	}

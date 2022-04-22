@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, Image, StyleSheet, ScrollView, View } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, View } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 
 import PaymentMethod from '../components/PaymentMethod';
@@ -9,6 +9,7 @@ import Text from '../../../Base/Text';
 import ModalHandler from '../../../Base/ModalHandler';
 import StyledButton from '../../StyledButton';
 import Device from '../../../../util/Device';
+import TrackingScrollView from '../../TrackingScrollView';
 
 const style = StyleSheet.create({
 	logo: {
@@ -62,7 +63,7 @@ const TransakPaymentMethod = ({ onPress }) => (
 							>
 								<Text modal>{strings('fiat_on_ramp.transak_modal_text')}</Text>
 								<View style={style.countryList}>
-									<ScrollView contentContainerStyle={style.countryList}>
+									<TrackingScrollView contentContainerStyle={style.countryList}>
 										<View style={style.countryCol}>
 											<Text primary>Algeria 🇩🇿</Text>
 											<Text primary>Argentina 🇦🇷</Text>
@@ -126,7 +127,7 @@ const TransakPaymentMethod = ({ onPress }) => (
 											<Text primary>Vietnam 🇻🇳</Text>
 											<Text primary>USA 🇺🇸</Text>
 										</View>
-									</ScrollView>
+									</TrackingScrollView>
 								</View>
 							</PaymentMethod.Modal>
 						</>

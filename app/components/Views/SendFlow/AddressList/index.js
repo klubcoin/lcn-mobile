@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { safeToChecksumAddress } from '../../../../util/address';
@@ -12,6 +12,7 @@ import {
 	TRANSFER_FROM_FUNCTION_SIGNATURE
 } from '../../../../util/transactions';
 import styles from './styles/index';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const LabelElement = label => (
 	<View key={label} style={styles.labelElementWrapper}>
@@ -236,7 +237,7 @@ class AddressList extends PureComponent {
 		const { onlyRenderAddressBook } = this.props;
 		return (
 			<View style={styles.root}>
-				<ScrollView style={styles.myAccountsWrapper}>
+				<TrackingScrollView style={styles.myAccountsWrapper}>
 					{/* {!onlyRenderAddressBook && this.renderMyAccounts()} */}
 					{!onlyRenderAddressBook && processedRecentsList}
 					{contactElements.length ? (
@@ -246,7 +247,7 @@ class AddressList extends PureComponent {
 							renderItem={this.renderElement}
 						/>
 					) : null}
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	};

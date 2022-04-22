@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, View, SafeAreaView } from 'react-native';
+import { Text, View, SafeAreaView } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -19,6 +19,7 @@ import preferences from '../../../../app/store/preferences';
 import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
 import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 class VerifyOTPOnboarding extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -249,10 +250,10 @@ class VerifyOTPOnboarding extends PureComponent {
 				<SafeAreaView style={styles.mainWrapper}>
 					<View style={styles.wrapper}>
 						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={5} />
-						<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+						<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 							{!this.verifySuccess && this.renderEmailOtp()}
 							{this.verifySuccess && this.renderCongratulations()}
-						</ScrollView>
+						</TrackingScrollView>
 					</View>
 					{/* <SkipVerifyEmailModal
 						modalVisible={this.showRemindLaterModal && !this.verifySuccess}

@@ -1,15 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	Image,
-	ActivityIndicator,
-	InteractionManager,
-	Text,
-	View,
-	ScrollView,
-	StyleSheet,
-	BackHandler
-} from 'react-native';
+import { Image, ActivityIndicator, InteractionManager, Text, View, StyleSheet, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { colors, fontStyles, baseStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
@@ -31,6 +22,7 @@ import {
 	METRICS_OPT_IN,
 	TRUE
 } from '../../../constants/storage';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	scroll: {
@@ -158,7 +150,7 @@ class CreateWallet extends PureComponent {
 		return (
 			<View style={baseStyles.flexGrow} testID={'create-wallet-screen'}>
 				<OnboardingScreenWithBg screen={'d'}>
-					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
+					<TrackingScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>
 							<View style={styles.foxWrapper}>
 								<Image
@@ -171,7 +163,7 @@ class CreateWallet extends PureComponent {
 							<Text style={styles.title}>{strings('create_wallet.title')}</Text>
 							<Text style={styles.subtitle}>{strings('create_wallet.subtitle')}</Text>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				</OnboardingScreenWithBg>
 			</View>
 		);

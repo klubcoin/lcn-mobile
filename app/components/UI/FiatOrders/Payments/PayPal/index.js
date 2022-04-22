@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
 	View,
-	ScrollView,
 	Text,
 	Dimensions,
 	SafeAreaView,
@@ -31,6 +30,7 @@ import { strings } from '../../../../../../locales/i18n';
 import styles from '../../../../Views/MarketPlace/ShoppingCart/styles';
 import Config from 'react-native-config';
 import TrackingTextInput from '../../../TrackingTextInput';
+import TrackingScrollView from '../../../TrackingScrollView';
 
 const height = Math.round(Dimensions.get('window').height);
 const width = Math.round(Dimensions.get('window').width);
@@ -505,7 +505,7 @@ function PayPal({ selectedAddress, ...props }) {
 			}}
 		>
 			{payPalUrl == null && isLoading == false && (
-				<ScrollView style={{}} showsVerticalScrollIndicator={false}>
+				<TrackingScrollView style={{}} showsVerticalScrollIndicator={false}>
 					<View
 						style={{
 							paddingLeft: 20,
@@ -537,7 +537,7 @@ function PayPal({ selectedAddress, ...props }) {
 							{selected && receive()}
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			)}
 
 			{payPalUrl !== null && (

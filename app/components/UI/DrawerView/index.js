@@ -1,14 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-	TouchableOpacity,
-	View,
-	Image,
-	StyleSheet,
-	Text,
-	ScrollView,
-	InteractionManager,
-	PanResponder
-} from 'react-native';
+import { TouchableOpacity, View, Image, StyleSheet, Text, InteractionManager, PanResponder } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -77,6 +68,7 @@ import { BNToHex, fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
 import { EXCEPTION_ACTIVE_APP } from '../TrackingTextInput';
+import TrackingScrollView from '../TrackingScrollView';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -932,7 +924,7 @@ class DrawerView extends PureComponent {
 
 		return (
 			<View style={styles.wrapper} testID={'drawer-screen'} {...this._panResponder.panHandlers}>
-				<ScrollView>
+				<TrackingScrollView>
 					{/* <View style={styles.header}>
 						<View style={styles.metamaskLogo}>
 							<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
@@ -1122,7 +1114,7 @@ class DrawerView extends PureComponent {
 								)
 						)}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				<Modal
 					isVisible={this.props.networkModalVisible}
 					onBackdropPress={this.toggleNetworksModal}
