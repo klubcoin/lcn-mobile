@@ -216,6 +216,7 @@
 		"missing_name": "Name is missing",
 		"missing_surname": "Surname is missing",
 		"missing_phone": "Phone is missing",
+		"missing_country_code": "Country code is missing",
 		"missing_email": "Email is missing",
 		"email_used": "This email is already in use. Please enter another email!",
 		"name_required": "Name is required!",

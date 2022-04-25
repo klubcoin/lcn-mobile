@@ -168,11 +168,22 @@ class EditProfile extends PureComponent {
 
 	onPhoneNumberChange = (countryCode, phoneNumber) => {
 		this.phone = phoneNumber;
-		if (!REGEX_PHONE_NUMBER.test(phoneNumber)) {
+		this.onCheckPhoneNumberError();
+		if (!REGEX_PHONE_NUMBER.test(phoneNumber) || !this.countryCode) {
 			this.isValidPhoneNumber = false;
 			return;
 		}
 		this.isValidPhoneNumber = true;
+	};
+
+	onCheckPhoneNumberError = () => {
+		this.phoneErrorText = !this.countryCode
+			? strings('profile.missing_country_code')
+			: !this.phone
+			? strings('profile.missing_phone')
+			: !REGEX_PHONE_NUMBER.test(this.phone)
+			? strings('profile.invalid_phone')
+			: '';
 	};
 
 	onPickImage() {
@@ -546,11 +557,11 @@ class EditProfile extends PureComponent {
 									label={strings('profile.phone')}
 									placeholder={strings('profile.phone')}
 									onChangeText={text => {
+										this.onPhoneNumberChange(this.countryCode, text);
 										if (!this.countryCode) {
 											showError(strings('profile.select_country_code_first'));
 											return;
 										}
-										this.onPhoneNumberChange(this.countryCode, text);
 									}}
 									keyboardType="number-pad"
 									countryCode={this.countryCode}
@@ -570,13 +581,7 @@ class EditProfile extends PureComponent {
 											)
 										) : null
 									}
-									onBlur={() =>
-										(this.phoneErrorText = !this.phone
-											? strings('profile.missing_phone')
-											: !REGEX_PHONE_NUMBER.test(this.phone)
-											? strings('profile.invalid_phone')
-											: '')
-									}
+									onBlur={this.onCheckPhoneNumberError}
 								/>
 								{!!this.phoneErrorText && <Text style={styles.errorText}>{this.phoneErrorText}</Text>}
 							</View>
