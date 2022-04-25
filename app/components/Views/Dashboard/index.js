@@ -43,7 +43,7 @@ import TrackingScrollView from '../../UI/TrackingScrollView';
 
 export const SIGN_KEY = '0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7';
 
-const timeline = ['1w', '1m', '3m', '6m', '1y'];
+const timeline = ['1d', '1w', '1m', '6m', '1y', 'all'];
 class Dashboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getWalletNavbarOptions('dashboard.title', navigation);
 
@@ -95,7 +95,7 @@ class Dashboard extends PureComponent {
 		currentConversion: null,
 		totalToken: 0,
 		chartData: [],
-		selectedTimeline: '1w',
+		selectedTimeline: '1d',
 		selectedCurrency: '',
 		isChangeCurrency: false,
 		totalBalance: '0',
@@ -192,20 +192,23 @@ class Dashboard extends PureComponent {
 		const toDate = new Date();
 		let fromDate = null;
 		switch (selectedTimeline) {
+			case '1d':
+				fromDate = new Date(moment().subtract(1, 'days'));
+				break;
 			case '1w':
 				fromDate = new Date(moment().subtract(7, 'days'));
 				break;
 			case '1m':
 				fromDate = new Date(moment().subtract(1, 'months'));
 				break;
-			case '3m':
-				fromDate = new Date(moment().subtract(3, 'months'));
-				break;
 			case '6m':
 				fromDate = new Date(moment().subtract(6, 'months'));
 				break;
 			case '1y':
 				fromDate = new Date(moment().subtract(1, 'years'));
+				break;
+			case 'all':
+				fromDate = new Date(moment().subtract(100, 'years'));
 				break;
 			default: {
 				fromDate = new Date(moment().subtract(7, 'days'));
