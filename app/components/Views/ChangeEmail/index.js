@@ -223,25 +223,30 @@ class ChangeEmail extends PureComponent {
 			clearTimeout(this.timeoutCheckUniqueEmail);
 		}
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
-			APIService.checkUniqueFieldInWallet('email', val.trim(), this.state.selectedAddress, (success, json) => {
-				if (this.state.email.trim() !== val.trim()) {
-					this.setState({
-						isCheckingEmail: false
-					});
-					return;
+			APIService.checkUniqueFieldInWallet(
+				'email',
+				val.trim(),
+				this.state.selectedAddress.toLowerCase(),
+				(success, json) => {
+					if (this.state.email.trim() !== val.trim()) {
+						this.setState({
+							isCheckingEmail: false
+						});
+						return;
+					}
+					if (json === SUCCESS) {
+						this.setState({
+							isCheckingEmail: false,
+							isValidEmail: true
+						});
+					} else {
+						this.setState({
+							isCheckingEmail: false,
+							isValidEmail: false
+						});
+					}
 				}
-				if (json === SUCCESS) {
-					this.setState({
-						isCheckingEmail: false,
-						isValidEmail: true
-					});
-				} else {
-					this.setState({
-						isCheckingEmail: false,
-						isValidEmail: false
-					});
-				}
-			});
+			);
 		}, 2000);
 	};
 
