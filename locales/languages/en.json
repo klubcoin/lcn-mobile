@@ -2064,13 +2064,27 @@
 		"tip_through_qr": "Get a tip through QR code"
 	},
 	"paypal_checkout": {
+		"menu": "Menu",
+		"support": "Support",
+		"privacy_policy": "Privacy Policy",
+		"terms_of_service": "Terms of Service",
 		"buy_crypto": "Buy Crypto to your wallet",
+		"buy_token_to_wallet": "Buy {{token}} to your wallet",
 		"using_payment_method": "Using payment method",
 		"paypal": "PayPal",
 		"see_calculation": "See calculation",
+		"hide_calculation": "Hide calculation",
+		"paypal_fee": "PayPal fee",
+		"token_fee": "{{token}} fee",
+		"network_exchange_fee": "Network / Exchange fee",
+		"total_fees": "Total fees",
 		"receive_estimate": "Receive(estimate)",
 		"you_pay": "You pay",
-		"proceed_checkout": "Proceed Checkout"
+		"proceed_checkout": "Proceed to Checkout",
+		"token_wallet_address": "{{token}} WALLET ADDRESS",
+		"buy_token": "Buy {{token}}",
+		"order_details": "ORDER DETAILS",
+		"total": "Total"
 	},
 	"lock_modal": {
 		"title": "Authenticate to continue!"

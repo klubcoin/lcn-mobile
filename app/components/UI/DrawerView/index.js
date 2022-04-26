@@ -417,11 +417,8 @@ class DrawerView extends PureComponent {
 		});
 	};
 
-	onReceive = () => {
-		this.props.navigation.navigate('ComingSoon');
-		return;
-		this.toggleReceiveModal();
-		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_RECEIVE);
+	onBuy = () => {
+		this.props.navigation.navigate('PurchaseMethods');
 	};
 
 	onSend = async () => {
@@ -1034,7 +1031,7 @@ class DrawerView extends PureComponent {
 						</StyledButton>
 						<StyledButton
 							type={'normal'}
-							onPress={this.onReceive}
+							onPress={this.onBuy}
 							containerStyle={[styles.button, styles.rightButton]}
 							testID={'drawer-receive-button'}
 						>
