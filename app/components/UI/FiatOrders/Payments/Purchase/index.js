@@ -33,8 +33,8 @@ function Purchase({ selectedAddress, ...props }) {
 					<PaymentMethodItem
 						onBuy={onBuy}
 						displayName={displayName}
-						image={drawables.wyrn}
-						typeText={'wyre'.toUpperCase()}
+						image={require('../../../../../images/stripe.png')}
+						typeText={'Stripe'}
 					/>
 				</TrackingScrollView>
 			</SafeAreaView>
