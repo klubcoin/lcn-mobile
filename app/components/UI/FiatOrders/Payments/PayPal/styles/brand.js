@@ -12,7 +12,11 @@ const brandStyles = StyleSheet.create({
 	},
 	titleContainer: {
 		paddingLeft: 20,
-		paddingRight: 20
+		paddingRight: 20,
+		backgroundColor: colors.purple,
+		paddingBottom: 20,
+		margin: 10,
+		borderRadius: 12
 	},
 	titleWrapper: {
 		flexDirection: 'row',
@@ -70,7 +74,8 @@ const brandStyles = StyleSheet.create({
 	stepperWrapper: {
 		borderLeftColor: colors.blue,
 		borderLeftWidth: 2,
-		paddingLeft: 24
+		paddingLeft: 24,
+		paddingBottom: 12
 	},
 	stepperCheckout: {
 		paddingTop: 10,

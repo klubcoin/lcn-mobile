@@ -331,21 +331,6 @@ function PayPal({ selectedAddress, ...props }) {
 					<Text style={styles.tokenText}>{to.currency}</Text>
 					<Text style={styles.markTitleText}>{strings('paypal_checkout.total_fees')}</Text>
 				</View>
-				{/* <TouchableOpacity style={styles.seeCalculationButton}>
-					<Text style={{ color: colors.white }}>{strings('paypal_checkout.see_calculation')}</Text>
-				</TouchableOpacity>
-
-				{from && (
-					<TouchableOpacity style={styles.amountButton}>
-						<Text style={{ color: colors.white }}>{from.amount + ' ' + from.currency}</Text>
-					</TouchableOpacity>
-				)} */}
-
-				{selected && from && (
-					<TouchableOpacity style={styles.selectedAmountButton}>
-						<Text>{from.amount * selected.to.value + ' ' + selected.to.currency}</Text>
-					</TouchableOpacity>
-				)}
 			</View>
 		);
 	};
@@ -427,7 +412,7 @@ function PayPal({ selectedAddress, ...props }) {
 		return (
 			<>
 				{payPalUrl == null && isLoading == false && (
-					<TrackingScrollView style={{}} showsVerticalScrollIndicator={false}>
+					<TrackingScrollView showsVerticalScrollIndicator={false}>
 						<View style={styles.titleContainer}>
 							<View style={styles.titleWrapper}>
 								<Text style={styles.title}>{strings('paypal_checkout.buy_crypto')}</Text>
@@ -616,20 +601,20 @@ function PayPal({ selectedAddress, ...props }) {
 								<Text style={styles.confirmTotalRight}>{`${from.amount} ${from.currency}`}</Text>
 							</View>
 						</View>
-						<View style={styles.fromWrapper}>
-							<StyledButton
-								type="normal"
-								onPress={() => {
-									payWithPayPal();
-								}}
-							>
-								<Text style={styles.buttonText}>
-									{strings('paypal_checkout.buy_token', { token: to.currency })}
-								</Text>
-							</StyledButton>
-						</View>
 					</TrackingScrollView>
 				)}
+				<View style={styles.fromWrapper}>
+					<StyledButton
+						type="normal"
+						onPress={() => {
+							payWithPayPal();
+						}}
+					>
+						<Text style={styles.buttonText}>
+							{strings('paypal_checkout.buy_token', { token: to.currency })}
+						</Text>
+					</StyledButton>
+				</View>
 				{payPalUrl !== null && (
 					<WebView
 						source={{ uri: payPalUrl }}
@@ -670,7 +655,6 @@ function PayPal({ selectedAddress, ...props }) {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			{/* {isViewMenu ? renderMenu() : true ? renderConfirm() : renderContent()} */}
 			{isViewMenu ? renderMenu() : isConfirm ? renderConfirm() : renderContent()}
 		</SafeAreaView>
 	);
