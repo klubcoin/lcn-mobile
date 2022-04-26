@@ -376,6 +376,12 @@ const brandStyles = StyleSheet.create({
 	confirmTotalRight: {
 		color: colors.white,
 		fontWeight: 'bold'
+	},
+	collapsibleWrapper: {
+		marginLeft: -40
+	},
+	collapsible: {
+		marginLeft: 40
 	}
 });
 

@@ -72,7 +72,9 @@ const styles = StyleSheet.create({
 	confirmContentLeft: {},
 	confirmContentRight: {},
 	confirmTotalLeft: {},
-	confirmTotalRight: {}
+	confirmTotalRight: {},
+	collapsibleWrapper: {},
+	collapsible: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

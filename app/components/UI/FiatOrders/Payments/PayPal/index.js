@@ -294,25 +294,29 @@ function PayPal({ selectedAddress, ...props }) {
 								: strings('paypal_checkout.see_calculation')}
 						</Text>
 					</View>
-					<Collapsible collapsed={!viewFeeCalculation}>
-						<View style={styles.sRow}>
-							<View style={styles.sMark} />
-							<Text style={styles.markText}>{`${paypalFee} ${from.currency}`}</Text>
-							<Text style={styles.markTitleText}>{strings('paypal_checkout.paypal_fee')}</Text>
-						</View>
-						<View style={styles.sRow}>
-							<View style={styles.sMark} />
-							<Text style={styles.markText}>{`${tokenFee} ${from.currency}`}</Text>
-							<Text style={styles.markTitleText}>
-								{strings('paypal_checkout.token_fee', { token: Routes.mainNetWork.coin })}
-							</Text>
-						</View>
-						<View style={styles.sRow}>
-							<View style={styles.sMark} />
-							<Text style={styles.markText}>{`${networkFee} ${from.currency}`}</Text>
-							<Text style={styles.markTitleText}>{strings('paypal_checkout.network_exchange_fee')}</Text>
-						</View>
-					</Collapsible>
+					<View style={styles.collapsibleWrapper}>
+						<Collapsible collapsed={!viewFeeCalculation} style={styles.collapsible}>
+							<View style={styles.sRow}>
+								<View style={styles.sMark} />
+								<Text style={styles.markText}>{`${paypalFee} ${from.currency}`}</Text>
+								<Text style={styles.markTitleText}>{strings('paypal_checkout.paypal_fee')}</Text>
+							</View>
+							<View style={styles.sRow}>
+								<View style={styles.sMark} />
+								<Text style={styles.markText}>{`${tokenFee} ${from.currency}`}</Text>
+								<Text style={styles.markTitleText}>
+									{strings('paypal_checkout.token_fee', { token: Routes.mainNetWork.coin })}
+								</Text>
+							</View>
+							<View style={styles.sRow}>
+								<View style={styles.sMark} />
+								<Text style={styles.markText}>{`${networkFee} ${from.currency}`}</Text>
+								<Text style={styles.markTitleText}>
+									{strings('paypal_checkout.network_exchange_fee')}
+								</Text>
+							</View>
+						</Collapsible>
+					</View>
 				</View>
 
 				<View style={styles.mRow}>
