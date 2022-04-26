@@ -574,10 +574,10 @@ export default createStackNavigator(
 		},
 		FiatOnRamp: {
 			screen: createStackNavigator({
+				PurchaseMethods: { screen: PurchaseMethods },
 				PaymentMethodSelector: { screen: PaymentMethodSelector },
 				PaymentMethodApplePay: { screen: PaymentMethodApplePay },
 				TransakFlow: { screen: TransakWebView },
-				PurchaseMethods: { screen: PurchaseMethods },
 				Trade: { screen: Trade },
 				BuyWithPayPal: { screen: PayPal }
 			})

@@ -824,7 +824,7 @@ export function getPaymentSelectorMethodNavbar(navigation) {
 }
 
 export function getPayPalNavbar(navigation) {
-	const rightAction = navigation.dismiss;
+	const rightAction = () => navigation.goBack();
 
 	return {
 		headerTitle: <Text style={styles.centeredTitle}>PayPal Checkout</Text>,
