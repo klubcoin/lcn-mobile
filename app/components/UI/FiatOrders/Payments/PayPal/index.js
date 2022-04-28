@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-	View,
-	Text,
-	Dimensions,
-	SafeAreaView,
-	Image,
-	TouchableOpacity,
-	ActivityIndicator,
-	Modal as ReactNativeModal
-} from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import { View, Text, SafeAreaView, Image, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { getPayPalNavbar } from '../../../../UI/Navbar';
@@ -35,7 +26,10 @@ import StyledButton from '../../../../UI/StyledButton';
 import DashedLine from 'react-native-dashed-line';
 import BigNumber from 'bignumber.js';
 
-const width = Math.round(Dimensions.get('window').width);
+const FLAGS = {
+	USD: require('../../../../../images/usa-flag.png'),
+	EUR: require('../../../../../images/eu-flag.png')
+};
 
 const menuData = [
 	{
@@ -80,6 +74,8 @@ function PayPal({ selectedAddress, ...props }) {
 	const [networkFee, setNetworkFee] = useState(1.44);
 	const [totalFee, setTotalFee] = useState(11.42);
 	const [isConfirm, setIsConfirm] = useState(false);
+	const [isViewInfoRate, setIsViewInfoRate] = useState(false);
+	const [isViewFullAddress, setIsViewFullAddress] = useState(false);
 
 	useEffect(() => {
 		setFrom(pre => ({ ...pre, currency: props.currentCurrency.toUpperCase() }));
@@ -264,6 +260,11 @@ function PayPal({ selectedAddress, ...props }) {
 		});
 	};
 
+	const onPressAddress = () => {
+		Clipboard.setString(selectedAddress.selectedAddress);
+		setIsViewFullAddress(pre => !pre);
+	};
+
 	const renderStepper = () => {
 		return (
 			<View style={styles.stepperWrapper}>
@@ -333,7 +334,16 @@ function PayPal({ selectedAddress, ...props }) {
 					</View>
 					<Text style={styles.markText}>{`${priceOneToken} ${from.currency} = 1`}</Text>
 					<Text style={styles.tokenText}>{to.currency}</Text>
-					<Text style={styles.markTitleText}>{strings('paypal_checkout.total_fees')}</Text>
+					<Text style={styles.markTitleText}>{strings('paypal_checkout.rate')}</Text>
+					<TouchableOpacity
+						style={styles.iButton}
+						activeOpacity={0.7}
+						onPress={() => {
+							setIsViewInfoRate(true);
+						}}
+					>
+						<Icon name="info" style={styles.iIcon} />
+					</TouchableOpacity>
 				</View>
 			</View>
 		);
@@ -358,11 +368,22 @@ function PayPal({ selectedAddress, ...props }) {
 						value={`${from.amount}`}
 						keyboardType={'numeric'}
 						onChangeText={input => {
+							const convertInputValue = input
+								.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
+								.replace(/,/g, '.')
+								.replace(/\./, '#')
+								.replace(/\./g, '')
+								.replace(/#/, '.');
+							const convertInputAmount =
+								convertInputValue.split('.')[0] +
+								(convertInputValue.split('.').length > 1
+									? '.' + convertInputValue.split('.')[1].slice(0, 2)
+									: '');
 							const bigNumberPrice = new BigNumber(selected.to.value);
-							const toAmount = bigNumberPrice.multipliedBy(input ? input : '0');
+							const toAmount = bigNumberPrice.multipliedBy(convertInputAmount ? convertInputAmount : '0');
 							setFrom({
 								...from,
-								amount: input
+								amount: convertInputAmount
 							});
 							if (selected && selected.to) {
 								setTo({
@@ -374,6 +395,7 @@ function PayPal({ selectedAddress, ...props }) {
 					/>
 				</View>
 				<View style={styles.amountButton2}>
+					<Image source={FLAGS[from.currency]} style={{ width: 24, height: 24, marginHorizontal: 6 }} />
 					{from && <Text style={styles.fromText}>{from.currency}</Text>}
 					<TouchableOpacity style={styles.dropdownButton} activeOpacity={0.7} onPress={onOpenModal}>
 						<Icon name="chevron-down" style={styles.dropdownIcon} />
@@ -394,7 +416,7 @@ function PayPal({ selectedAddress, ...props }) {
 							color: colors.white
 						}}
 					>
-						{strings('paypal_checkout.menu')}
+						{strings('paypal_checkout.receive_estimate')}
 					</Text>
 
 					<Text style={styles.receiveText}>{to.amount}</Text>
@@ -404,7 +426,8 @@ function PayPal({ selectedAddress, ...props }) {
 						<Image source={require('images/logo.png')} style={styles.icon} />
 						{to && <Text style={styles.currencyText}>{to.currency}</Text>}
 					</View>
-					<View style={[styles.networkWrapper, { backgroundColor: mainnetColor }]}>
+					<View style={styles.networkWrapper}>
+						<View style={[styles.networkColor, { backgroundColor: mainnetColor }]} />
 						<Text style={styles.networkTitle}>{mainnetName}</Text>
 					</View>
 				</View>
@@ -416,7 +439,7 @@ function PayPal({ selectedAddress, ...props }) {
 		return (
 			<>
 				{payPalUrl == null && isLoading == false && (
-					<TrackingScrollView showsVerticalScrollIndicator={false}>
+					<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContainer}>
 						<View style={styles.titleContainer}>
 							<View style={styles.titleWrapper}>
 								<Text style={styles.title}>{strings('paypal_checkout.buy_crypto')}</Text>
@@ -433,8 +456,23 @@ function PayPal({ selectedAddress, ...props }) {
 							<View style={styles.stepperContainer}>{renderStepper()}</View>
 							{selected && renderReceive()}
 						</View>
-					</TrackingScrollView>
+						<View style={styles.fromWrapper}>
+							<StyledButton
+								type="normal"
+								onPress={() => {
+									setIsConfirm(true);
+								}}
+								disabled={!(selected && from && from.amount > 0 && payPalUrl == null)}
+							>
+								<Text style={styles.buttonText}>{strings('paypal_checkout.proceed_checkout')}</Text>
+							</StyledButton>
+						</View>
+					</ScrollView>
 				)}
+
+				{/* {selected && from && from.amount > 0 && payPalUrl == null && ( */}
+				{/* )} */}
+
 				<Modal
 					isVisible={isChangeCurrency}
 					animationIn="slideInUp"
@@ -463,19 +501,18 @@ function PayPal({ selectedAddress, ...props }) {
 					</View>
 				</Modal>
 
-				{selected && from && from.amount > 0 && payPalUrl == null && (
-					<View style={styles.fromWrapper}>
-						<StyledButton
-							type="normal"
-							onPress={() => {
-								// payWithPayPal();
-								setIsConfirm(true);
-							}}
-						>
-							<Text style={styles.buttonText}>{strings('paypal_checkout.proceed_checkout')}</Text>
-						</StyledButton>
+				<Modal
+					// transparent
+					visible={isViewInfoRate}
+					onBackdropPress={() => {
+						setIsViewInfoRate(false);
+					}}
+					style={styles.iModal}
+				>
+					<View style={styles.iContent}>
+						<Text style={styles.iText}>{strings('paypal_checkout.rate_info')}</Text>
 					</View>
-				)}
+				</Modal>
 				{isLoading && (
 					<View style={styles.fromLoading}>
 						<ActivityIndicator size="large" color={colors.purple100} />
@@ -531,7 +568,10 @@ function PayPal({ selectedAddress, ...props }) {
 		return (
 			<>
 				{payPalUrl === null && isLoading == false && (
-					<TrackingScrollView showsVerticalScrollIndicator={false}>
+					<TrackingScrollView
+						showsVerticalScrollIndicator={false}
+						contentContainerStyle={styles.scrollViewContainer}
+					>
 						<View style={styles.titleContainer}>
 							<View style={styles.titleWrapper}>
 								<TouchableOpacity
@@ -558,20 +598,25 @@ function PayPal({ selectedAddress, ...props }) {
 								</Text>
 								<View style={styles.confirmTopNameWrapper}>
 									<View style={styles.confirmNameMarker} />
-									<Text style={styles.confirmTokenName}>KlubCoin</Text>
+									<Text style={styles.confirmTokenName}>{Routes.mainNetWork.coin}</Text>
 								</View>
-								<View style={[styles.networkWrapper, { backgroundColor: mainnetColor }]}>
+								<View style={styles.networkWrapper}>
+									<View style={[styles.networkColor, { backgroundColor: mainnetColor }]} />
 									<Text style={styles.networkTitle}>{mainnetName}</Text>
 								</View>
 							</View>
-							<View style={styles.addressWrapper}>
-								<TrackingScrollView style={styles.addressScroll} horizontal>
-									<Text style={styles.address} numberOfLines={1}>
-										{selectedAddress.selectedAddress}
-									</Text>
-								</TrackingScrollView>
+							<TouchableOpacity
+								style={styles.addressWrapper}
+								activeOpacity={0.7}
+								onPress={onPressAddress}
+							>
+								{/* <TrackingScrollView style={styles.addressScroll} horizontal> */}
+								<Text style={styles.address} numberOfLines={isViewFullAddress ? 10 : 1}>
+									{selectedAddress.selectedAddress}
+								</Text>
+								{/* </TrackingScrollView> */}
 								<Image source={require('images/logo.png')} style={styles.icon} />
-							</View>
+							</TouchableOpacity>
 							<Text style={styles.confirmSectionTitle}>{strings('paypal_checkout.order_details')}</Text>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
@@ -605,20 +650,20 @@ function PayPal({ selectedAddress, ...props }) {
 								<Text style={styles.confirmTotalRight}>{`${from.amount} ${from.currency}`}</Text>
 							</View>
 						</View>
+						<View style={styles.fromWrapper}>
+							<StyledButton
+								type="normal"
+								onPress={() => {
+									payWithPayPal();
+								}}
+							>
+								<Text style={styles.buttonText}>
+									{strings('paypal_checkout.buy_token', { token: to.currency })}
+								</Text>
+							</StyledButton>
+						</View>
 					</TrackingScrollView>
 				)}
-				<View style={styles.fromWrapper}>
-					<StyledButton
-						type="normal"
-						onPress={() => {
-							payWithPayPal();
-						}}
-					>
-						<Text style={styles.buttonText}>
-							{strings('paypal_checkout.buy_token', { token: to.currency })}
-						</Text>
-					</StyledButton>
-				</View>
 				{payPalUrl !== null && (
 					<WebView
 						source={{ uri: payPalUrl }}

@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
 	menuItemRightIcon: {},
 	tokenText: {},
 	networkWrapper: {},
+	networkColor: {},
 	networkTitle: {},
 	buttonText: {},
 	confirmTopWrapper: {},
@@ -74,7 +75,13 @@ const styles = StyleSheet.create({
 	confirmTotalLeft: {},
 	confirmTotalRight: {},
 	collapsibleWrapper: {},
-	collapsible: {}
+	collapsible: {},
+	scrollViewContainer: {},
+	iButton: {},
+	iIcon: {},
+	iModal: {},
+	iContent: {},
+	iText: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

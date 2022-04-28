@@ -827,18 +827,13 @@ export function getPayPalNavbar(navigation) {
 	const rightAction = () => navigation.goBack();
 
 	return {
-		headerTitle: <Text style={styles.centeredTitle}>PayPal Checkout</Text>,
+		headerTitle: <Text style={styles.centeredTitle}>{strings('paypal_checkout.title')}</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} color={colors.black} />
+				<Icon name={'arrow-left'} size={16} color={colors.black} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
-		// headerRight: (
-		// 	// eslint-disable-next-line react/jsx-no-bind
-		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
-		// 		<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
-		// 	</TouchableOpacity>
-		// ),
+		headerRight: <View />,
 		headerStyle: {
 			backgroundColor: colors.white
 		}

@@ -2064,11 +2064,12 @@
 		"tip_through_qr": "Get a tip through QR code"
 	},
 	"paypal_checkout": {
+		"title": "PayPal Checkout",
 		"menu": "Menu",
 		"support": "Support",
 		"privacy_policy": "Privacy Policy",
 		"terms_of_service": "Terms of Service",
-		"buy_crypto": "Buy Crypto to your wallet",
+		"buy_crypto": "Buy crypto to your wallet",
 		"buy_token_to_wallet": "Buy {{token}} to your wallet",
 		"using_payment_method": "Using payment method",
 		"paypal": "PayPal",
@@ -2078,12 +2079,14 @@
 		"token_fee": "{{token}} fee",
 		"network_exchange_fee": "Network / Exchange fee",
 		"total_fees": "Total fees",
-		"receive_estimate": "Receive(estimate)",
+		"rate": "Rate",
+		"receive_estimate": "You receive (estimate)",
 		"you_pay": "You pay",
 		"proceed_checkout": "Proceed to Checkout",
 		"token_wallet_address": "{{token}} WALLET ADDRESS",
 		"buy_token": "Buy {{token}}",
 		"order_details": "ORDER DETAILS",
+		"rate_info": "The floating rate shown here is an estimate and the rate you receive will de determined at the time when your payment is settled. The time taken for your payment can vary depending on currency and your PayPal account.",
 		"total": "Total"
 	},
 	"lock_modal": {

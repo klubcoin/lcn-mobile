@@ -49,11 +49,11 @@ const brandStyles = StyleSheet.create({
 		top: -(height * 0.25)
 	},
 	fromWrapper: {
-		position: 'absolute',
-		bottom: 30,
 		width: '100%',
 		paddingLeft: 20,
-		paddingRight: 20
+		paddingRight: 20,
+		marginBottom: 30,
+		marginTop: 20
 	},
 	fromButton: {
 		borderRadius: 25,
@@ -75,7 +75,8 @@ const brandStyles = StyleSheet.create({
 		borderLeftColor: colors.blue,
 		borderLeftWidth: 2,
 		paddingLeft: 24,
-		paddingBottom: 12
+		paddingBottom: 12,
+		overflow: 'visible'
 	},
 	stepperCheckout: {
 		paddingTop: 10,
@@ -122,7 +123,7 @@ const brandStyles = StyleSheet.create({
 		marginTop: 20
 	},
 	amountContent: {
-		width: '70%',
+		flex: 1,
 		paddingTop: 10,
 		paddingBottom: 10
 	},
@@ -133,13 +134,12 @@ const brandStyles = StyleSheet.create({
 	amountButton2: {
 		borderLeftWidth: 2,
 		borderLeftColor: colors.blue,
-		width: '30%',
 		alignItems: 'center',
 		justifyContent: 'center',
 		flexDirection: 'row'
 	},
 	fromText: {
-		fontSize: 24,
+		fontSize: 20,
 		color: colors.white,
 		fontWeight: 'bold'
 	},
@@ -211,7 +211,8 @@ const brandStyles = StyleSheet.create({
 	mRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingVertical: 12
+		paddingVertical: 12,
+		overflow: 'visible'
 	},
 	markIcon: {
 		fontSize: 16,
@@ -292,11 +293,19 @@ const brandStyles = StyleSheet.create({
 		marginLeft: 4
 	},
 	networkWrapper: {
-		padding: 8,
-		flex: 1,
+		padding: 6,
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderRadius: 6
+		borderRadius: 6,
+		backgroundColor: 'white'
+	},
+	networkColor: {
+		opacity: 0.2,
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0
 	},
 	networkTitle: {
 		color: colors.black,
@@ -342,7 +351,8 @@ const brandStyles = StyleSheet.create({
 		overflow: 'hidden',
 		alignItems: 'center',
 		marginTop: 12,
-		marginBottom: 36
+		marginBottom: 36,
+		paddingVertical: 8
 	},
 	addressScroll: {
 		paddingVertical: 12
@@ -382,6 +392,37 @@ const brandStyles = StyleSheet.create({
 	},
 	collapsible: {
 		marginLeft: 40
+	},
+	scrollViewContainer: {
+		flexGrow: 1,
+		justifyContent: 'space-between'
+	},
+	iButton: {
+		width: 20,
+		height: 20,
+		borderRadius: 20,
+		marginLeft: 6,
+		backgroundColor: colors.blue,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	iIcon: {
+		fontSize: 12
+	},
+	iModal: {
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	iContent: {
+		backgroundColor: colors.black,
+		width: '60%',
+		padding: 12,
+		borderRadius: 12
+	},
+	iText: {
+		color: colors.white,
+		textAlign: 'center',
+		fontSize: 16
 	}
 });
 
