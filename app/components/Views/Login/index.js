@@ -114,7 +114,7 @@ class Login extends PureComponent {
 	emailFieldRef = React.createRef();
 
 	async componentDidMount() {
-		unsubscribe = NetInfo.addEventListener(state => {
+		const unsubscribe = NetInfo.addEventListener(state => {
 			this.setState({
 				internetConnect: state.isConnected
 			});
@@ -150,8 +150,8 @@ class Login extends PureComponent {
 
 				try {
 					if (enabled && !previouslyDisabled) {
-						const hasCredentials = await this.tryBiometric();
-						this.setState({ hasCredentials });
+						// const hasCredentials = await this.tryBiometric();
+						this.setState({ hasCredentials: true });
 					}
 				} catch (e) {
 					console.warn(e);
