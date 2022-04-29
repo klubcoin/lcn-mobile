@@ -266,9 +266,9 @@ class Confirm extends PureComponent {
 		const result = await new Erc20Service().getFixedFee();
 		const base = Math.pow(10, selectedAsset.decimals);
 		const networkFee = {
-			gas: hexToBN("0x1"),
-			gasPrice: toWei((parseFloat(result) / base).toString()),
-		}
+			gas: hexToBN('0x1'),
+			gasPrice: toWei((parseFloat(result) / base).toString())
+		};
 		this.setState({ customNetworkFee: networkFee });
 		return networkFee;
 	};
@@ -870,11 +870,9 @@ class Confirm extends PureComponent {
 
 		const AdressToComponentWrap = () =>
 			!existingContact && confusableCollection.length ? (
-				<TouchableOpacity onPress={this.toggleWarningModal}>
-					<AdressToComponent />
-				</TouchableOpacity>
+				<TouchableOpacity onPress={this.toggleWarningModal}>{AdressToComponent()}</TouchableOpacity>
 			) : (
-				<AdressToComponent />
+				AdressToComponent()
 			);
 
 		const is_main_net = isMainNet(network);
@@ -893,7 +891,7 @@ class Confirm extends PureComponent {
 							fromAccountName={fromAccountName}
 							fromAccountBalance={fromAccountBalance}
 						/>
-						<AdressToComponentWrap />
+						{AdressToComponentWrap()}
 					</View>
 
 					<InfoModal
