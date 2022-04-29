@@ -145,20 +145,20 @@ class DeeplinkManager {
 						case '':
 							break;
 						case 'tip':
-							// const receiverAddress = urlObj.pathname.split('/')[2];
-							// const value = params['value']
-							// const symbol = params['symbol']
-							// const isETH = params['isETH'];
-							// const decimals = params['decimals'];
-							// const tipData = {
-							// 	receiverAddress,
-							// 	value,
-							// 	symbol,
-							// 	isETH,
-							// 	decimals
-							// };
+							const receiverAddress = urlObj.pathname.split('/')[2];
+							const value = params['value'];
+							const symbol = params['symbol'];
+							const isETH = params['isETH'];
+							const decimals = params['decimals'];
+							const tipData = {
+								receiverAddress,
+								value,
+								symbol,
+								isETH,
+								decimals
+							};
 
-							// store.dispatch(showTipperModal(tipData))
+							store.dispatch(showTipperModal(tipData));
 							break;
 						case 'product':
 							this.handleProductLink(urlObj.pathname);
@@ -192,10 +192,7 @@ class DeeplinkManager {
 				break;
 			case 'klubcoin':
 				handled();
-				this.handleEthereumUrl(
-					url.replace(`klubcoin://send/`, 'ethereum:'),
-					origin
-				);
+				this.handleEthereumUrl(url.replace(`klubcoin://send/`, 'ethereum:'), origin);
 				break;
 			// Specific to the browser screen
 			// For ex. navigate to a specific dapp
@@ -231,7 +228,7 @@ class DeeplinkManager {
 		return true;
 	}
 
-	handleProductLink = async (path) => {
+	handleProductLink = async path => {
 		const parts = path.split('/');
 		const vendorAddr = parts[2];
 		const productId = parts[3];
@@ -242,7 +239,7 @@ class DeeplinkManager {
 			setTimeout(() => this.handleProductLink(path), 1000);
 			return;
 		}
-		storeService.addListener((message) => {
+		storeService.addListener(message => {
 			if (message && message.uuid && message.data != 1) {
 				const { uuid, data } = message;
 				if (productId == uuid) {
@@ -252,7 +249,7 @@ class DeeplinkManager {
 			}
 		});
 		storeService.fetchProduct(productId, vendorAddr);
-	}
+	};
 }
 
 let instance = null;
