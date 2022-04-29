@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { getPurchaseMethodNavbar } from '../../../../UI/Navbar';
-import ScreenView from '../../components/ScreenView';
 import Title from '../../components/Title';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,36 +8,37 @@ import OnboardingScreenWithBg from '../../../OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../../../app.json';
 import PaymentMethodItem from './PurchaseMethod';
-import drawables from '../../../../../common/drawables';
 import TrackingScrollView from '../../../TrackingScrollView';
 
 function Purchase({ selectedAddress, ...props }) {
-	const onBuy = () => {
+	const onBuyWithPayPal = () => {
 		props.navigation.navigate('BuyWithPayPal');
+	};
+
+	const onBuyWithStripe = () => {
+		props.navigation.navigate('BuyWithStripe');
 	};
 
 	return (
 		<OnboardingScreenWithBg screen="a">
-			{/* <ScreenView> */}
 			<Title />
 			<SafeAreaView style={styles.wrapper}>
 				<TrackingScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 					<PaymentMethodItem
-						onBuy={onBuy}
+						onBuy={onBuyWithPayPal}
 						displayName={displayName}
 						image={require('../../../../../images/paypal_logo.png')}
 						typeText={'PayPal'}
 					/>
 
 					<PaymentMethodItem
-						onBuy={onBuy}
+						onBuy={onBuyWithStripe}
 						displayName={displayName}
 						image={require('../../../../../images/stripe.png')}
 						typeText={'Stripe'}
 					/>
 				</TrackingScrollView>
 			</SafeAreaView>
-			{/* </ScreenView> */}
 		</OnboardingScreenWithBg>
 	);
 }

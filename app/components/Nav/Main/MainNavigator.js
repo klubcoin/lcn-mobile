@@ -53,6 +53,7 @@ import ActivityView from '../../Views/ActivityView';
 import SwapsAmountView from '../../UI/Swaps';
 import SwapsQuotesView from '../../UI/Swaps/QuotesView';
 import PayPal from '../../UI/FiatOrders/Payments/PayPal';
+import Stripe from '../../UI/FiatOrders/Payments/Stripe';
 import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase';
 import PayQR from '../../Views/PayQRFlow/PayQR';
 import VotingApp from '../../Views/VotingApp';
@@ -579,7 +580,8 @@ export default createStackNavigator(
 				PaymentMethodApplePay: { screen: PaymentMethodApplePay },
 				TransakFlow: { screen: TransakWebView },
 				Trade: { screen: Trade },
-				BuyWithPayPal: { screen: PayPal }
+				BuyWithPayPal: { screen: PayPal },
+				BuyWithStripe: { screen: Stripe }
 			})
 		},
 		Swaps: {
