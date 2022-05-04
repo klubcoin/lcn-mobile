@@ -59,13 +59,11 @@ import ledgerAccessories from '../../../../images/ledger_accessories.jpg';
 import ScaleImage from 'react-native-scalable-image';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
 import APIService from '../../../../services/APIService';
-import Modal from 'react-native-modal';
-import WarningExistingUserModal from '../../../UI/WarningExistingUserModal';
 
 const isIos = Device.isIos();
 const { width } = Dimensions.get('window');
 
-const BLOCK_TIME = 7200000;
+export const BLOCK_TIME = 7200000;
 
 const Heading = ({ children, first }) => (
 	<View style={[styles.setting, first && styles.firstSetting]}>
@@ -169,7 +167,7 @@ class Settings extends PureComponent {
 		emailVerified: preferences?.onboardProfile?.emailVerified,
 		isBlockedEmail: false,
 		blockEmailTime: 0,
-		blockTimerRemaning: '',
+		blockTimerRemaning: ''
 	};
 
 	autolockOptions = [
