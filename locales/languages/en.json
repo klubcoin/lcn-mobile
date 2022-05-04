@@ -731,7 +731,11 @@
 		"invalid_number_leading_zeros": "Invalid number. Remove any leading zeros.",
 		"invalid_number_range": "Invalid number. Enter a number between 1 and %{maxSafeChainId}",
 		"hide_zero_balance_tokens_title": "Hide Tokens Without Balance",
-		"hide_zero_balance_tokens_desc": "Prevents tokens with no balance from displaying in your token listing."
+		"hide_zero_balance_tokens_desc": "Prevents tokens with no balance from displaying in your token listing.",
+		"email_verification_blocked": "Email Verification Blocked",
+		"email_verification_blocked_content": "You're currently blocked on verifying your email due to exceeding maximum failed attempts. Please try again later.",
+		"remaining": "Remaining",
+		"ok": "OK"
 	},
 	"app_information": {
 		"title": "Information",

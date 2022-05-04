@@ -42,6 +42,7 @@ export default class APIService {
 	static apiSendEmailOTP = email => `${APIService.routeMeveoAPI()}/rest/emailOtp/${email}`;
 	static apiVerifyEmailOTP = email => `${APIService.routeMeveoAPI()}/rest/verifyOtp/${email}`;
 	static apiGetChartData = (from, to) => `${APIService.routeMeveoAPI()}/rest/exchangeRate/${from}/${to}`;
+	static apiOtpStatus = email => `${APIService.routeMeveoAPI()}/rest/otpStatus/${email}`;
 
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
@@ -302,5 +303,12 @@ export default class APIService {
 			to: timeTo
 		};
 		WebService.sendGetDirect(this.apiGetChartData(from, to), data, callback);
+	}
+
+	static getOtpStatus(email, callback) {
+		const data = {
+			basicAuth: basicAuth
+		};
+		WebService.sendGetDirect(this.apiOtpStatus(email), data, callback);
 	}
 }
