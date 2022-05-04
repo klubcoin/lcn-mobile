@@ -3,6 +3,7 @@
 		{
 			"symbol": "etheur",
 			"quote": {
+				"lang": "en-US",
 				"code": "eur",
 				"name": "Euro",
 				"symbol": "€"
@@ -11,6 +12,7 @@
 		{
 			"symbol": "ethusd",
 			"quote": {
+				"lang": "en-US",
 				"code": "usd",
 				"name": "United States Dollar",
 				"symbol": "$"

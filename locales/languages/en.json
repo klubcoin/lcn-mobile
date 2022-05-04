@@ -2086,6 +2086,8 @@
 		"token_wallet_address": "{{token}} WALLET ADDRESS",
 		"buy_token": "Buy {{token}}",
 		"order_details": "ORDER DETAILS",
+		"maximum_boundary_error_text": "Cannot enter more than {{value}}.",
+		"minimum_boundary_error_text": "Cannot enter less than {{value}}.",
 		"rate_info": "The floating rate shown here is an estimate and the rate you receive will de determined at the time when your payment is settled. The time taken for your payment can vary depending on currency and your PayPal account.",
 		"total": "Total"
 	},

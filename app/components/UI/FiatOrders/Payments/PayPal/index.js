@@ -25,6 +25,7 @@ import Networks from '../../../../../util/networks';
 import StyledButton from '../../../../UI/StyledButton';
 import DashedLine from 'react-native-dashed-line';
 import BigNumber from 'bignumber.js';
+import { showError } from '../../../../../util/notify';
 
 const FLAGS = {
 	USD: require('../../../../../images/usa-flag.png'),
@@ -48,6 +49,17 @@ const menuData = [
 		url: 'https://www.paypal.com/us/webapps/mpp/ua/cryptocurrencies-tnc'
 	}
 ];
+
+const boundary = {
+	USD: {
+		min: 30,
+		max: 100000
+	},
+	EUR: {
+		min: 40,
+		max: 100000
+	}
+};
 
 function PayPal({ selectedAddress, ...props }) {
 	const [from, setFrom] = useState({
@@ -85,11 +97,12 @@ function PayPal({ selectedAddress, ...props }) {
 		setCurrencyData(
 			infuraCurrencies.objects
 				.sort((a, b) => a.quote.code.toLocaleLowerCase().localeCompare(b.quote.code.toLocaleLowerCase()))
-				.map(({ quote: { code, name, symbol } }) => ({
+				.map(({ quote: { code, name, symbol, lang } }) => ({
 					label: `${code.toUpperCase()} - ${name}`,
 					key: code.toUpperCase(),
 					value: code.toUpperCase(),
-					symbol
+					symbol,
+					lang
 				}))
 		);
 	}, []);
@@ -130,7 +143,8 @@ function PayPal({ selectedAddress, ...props }) {
 		setIsChangeCurrency(true);
 	};
 	const onChangeCurrency = value => {
-		setFrom(pre => ({ ...pre, currency: value }));
+		setFrom(pre => ({ ...pre, currency: value, amount: 0 }));
+		setTo(pre => ({ ...pre, amount: 0 }));
 		onCloseModal();
 	};
 
@@ -381,6 +395,21 @@ function PayPal({ selectedAddress, ...props }) {
 									: '');
 							const bigNumberPrice = new BigNumber(selected.to.value);
 							const toAmount = bigNumberPrice.multipliedBy(convertInputAmount ? convertInputAmount : '0');
+							if (+convertInputAmount > boundary[from.currency]?.max) {
+								showError(
+									strings('paypal_checkout.maximum_boundary_error_text', {
+										value: boundary[from.currency]?.max.toLocaleString(
+											currencyData.find(e => e.key === from.currency).lang,
+											{
+												style: 'currency',
+												currency: from.currency,
+												maximumSignificantDigits: 3
+											}
+										)
+									})
+								);
+								return;
+							}
 							setFrom({
 								...from,
 								amount: convertInputAmount
@@ -460,6 +489,21 @@ function PayPal({ selectedAddress, ...props }) {
 							<StyledButton
 								type="normal"
 								onPress={() => {
+									if (from.amount < +boundary[from.currency].min) {
+										showError(
+											strings('paypal_checkout.minimum_boundary_error_text', {
+												value: boundary[from.currency]?.min.toLocaleString(
+													currencyData.find(e => e.key === from.currency).lang,
+													{
+														style: 'currency',
+														currency: from.currency,
+														maximumSignificantDigits: 3
+													}
+												)
+											})
+										);
+										return;
+									}
 									setIsConfirm(true);
 								}}
 								disabled={!(selected && from && from.amount > 0 && payPalUrl == null)}
