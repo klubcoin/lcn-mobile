@@ -2,7 +2,7 @@
  * Common styles and variables
  */
 
-import ccolors from "../common/colors";
+import ccolors from '../common/colors';
 
 /**
  * Map of color names to HEX values
@@ -16,6 +16,7 @@ export const colors = {
 	primaryFox: '#110d21',
 	primaryFox100: 'rgba(55, 14, 117, 0.1)',
 	black: '#000000',
+	black95: 'rgba(0, 0, 0, 0.95)',
 	white: '#FFFFFF',
 	white100: '#F9FAFB',
 	white000: 'rgba(255, 255, 255, 0.1)',

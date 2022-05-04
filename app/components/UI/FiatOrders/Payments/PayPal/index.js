@@ -26,6 +26,7 @@ import StyledButton from '../../../../UI/StyledButton';
 import DashedLine from 'react-native-dashed-line';
 import BigNumber from 'bignumber.js';
 import { showError } from '../../../../../util/notify';
+import { showAlert } from '../../../../../actions/alert';
 
 const FLAGS = {
 	USD: require('../../../../../images/usa-flag.png'),
@@ -275,8 +276,17 @@ function PayPal({ selectedAddress, ...props }) {
 	};
 
 	const onPressAddress = () => {
-		Clipboard.setString(selectedAddress.selectedAddress);
 		setIsViewFullAddress(pre => !pre);
+	};
+
+	const onLongPressAddress = () => {
+		Clipboard.setString(selectedAddress.selectedAddress);
+		props.showAlert({
+			isVisible: true,
+			autodismiss: 1500,
+			content: 'clipboard-alert',
+			data: { msg: strings('account_details.account_copied_to_clipboard') }
+		});
 	};
 
 	const renderStepper = () => {
@@ -343,6 +353,11 @@ function PayPal({ selectedAddress, ...props }) {
 				</View>
 
 				<View style={styles.mRow}>
+					{isViewInfoRate && (
+						<View style={styles.iContent}>
+							<Text style={styles.iText}>{strings('paypal_checkout.rate_info')}</Text>
+						</View>
+					)}
 					<View style={styles.mMark}>
 						<IconFontAwesome5 name="divide" style={styles.markIcon} />
 					</View>
@@ -353,7 +368,7 @@ function PayPal({ selectedAddress, ...props }) {
 						style={styles.iButton}
 						activeOpacity={0.7}
 						onPress={() => {
-							setIsViewInfoRate(true);
+							setIsViewInfoRate(pre => !pre);
 						}}
 					>
 						<Icon name="info" style={styles.iIcon} />
@@ -545,7 +560,7 @@ function PayPal({ selectedAddress, ...props }) {
 					</View>
 				</Modal>
 
-				<Modal
+				{/* <Modal
 					// transparent
 					visible={isViewInfoRate}
 					onBackdropPress={() => {
@@ -556,7 +571,7 @@ function PayPal({ selectedAddress, ...props }) {
 					<View style={styles.iContent}>
 						<Text style={styles.iText}>{strings('paypal_checkout.rate_info')}</Text>
 					</View>
-				</Modal>
+				</Modal> */}
 				{isLoading && (
 					<View style={styles.fromLoading}>
 						<ActivityIndicator size="large" color={colors.purple100} />
@@ -653,6 +668,7 @@ function PayPal({ selectedAddress, ...props }) {
 								style={styles.addressWrapper}
 								activeOpacity={0.7}
 								onPress={onPressAddress}
+								onLongPress={onLongPressAddress}
 							>
 								{/* <TrackingScrollView style={styles.addressScroll} horizontal> */}
 								<Text style={styles.address} numberOfLines={isViewFullAddress ? 10 : 1}>
@@ -764,7 +780,9 @@ PayPal.propTypes = {
 };
 
 PayPal.navigationOptions = ({ navigation }) => getPayPalNavbar(navigation);
-
+const mapDispatchToProps = dispatch => ({
+	showAlert: config => dispatch(showAlert(config))
+});
 const mapStateToProps = state => ({
 	provider: state.engine.backgroundState.NetworkController.provider,
 	tokens: state.engine.backgroundState.AssetsController.tokens,
@@ -777,4 +795,7 @@ const mapStateToProps = state => ({
 	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate
 });
 
-export default connect(mapStateToProps)(PayPal);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(PayPal);

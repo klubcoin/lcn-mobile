@@ -414,8 +414,13 @@ const brandStyles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	iContent: {
-		backgroundColor: colors.black,
-		width: '60%',
+		position: 'absolute',
+		width: '80%',
+		left: 0,
+		right: 0,
+		zIndex: 1,
+		bottom: 40,
+		backgroundColor: colors.black95,
 		padding: 12,
 		borderRadius: 12
 	},
