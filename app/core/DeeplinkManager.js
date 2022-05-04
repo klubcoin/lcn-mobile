@@ -192,7 +192,56 @@ class DeeplinkManager {
 				break;
 			case 'klubcoin':
 				handled();
-				this.handleEthereumUrl(url.replace(`klubcoin://send/`, 'ethereum:'), origin);
+				switch (urlObj.hostname) {
+					case 'wc':
+						params && params.uri && WalletConnect.newSession(params.uri, params.redirectUrl, false);
+						break;
+					case 'dapp':
+						this.handleBrowserUrl(
+							urlObj.href.replace(`https://${MM_UNIVERSAL_LINK_HOST}/dapp/`, 'https://'),
+							browserCallBack
+						);
+						break;
+					case 'send':
+						this.handleEthereumUrl(
+							urlObj.href.replace(`https://${MM_UNIVERSAL_LINK_HOST}/send/`, 'ethereum:'),
+							origin
+						);
+						break;
+					case 'approve':
+						this.handleEthereumUrl(
+							urlObj.href.replace(`https://${MM_UNIVERSAL_LINK_HOST}/approve/`, 'ethereum:'),
+							origin
+						);
+						break;
+					case 'payment':
+					case 'focus':
+					case '':
+						break;
+					case 'tip':
+						const receiverAddress = urlObj.pathname.split('/')[1];
+						const value = params['value'];
+						const symbol = params['symbol'];
+						const isETH = params['isETH'];
+						const decimals = params['decimals'];
+						const tipData = {
+							receiverAddress,
+							value,
+							symbol,
+							isETH,
+							decimals
+						};
+
+						store.dispatch(showTipperModal(tipData));
+						break;
+					case 'product':
+						this.handleProductLink(urlObj.pathname);
+						break;
+					default:
+						Alert.alert(strings('deeplink.not_supported'));
+				}
+				// handled();
+				// this.handleEthereumUrl(url.replace(`klubcoin://send/`, 'ethereum:'), origin);
 				break;
 			// Specific to the browser screen
 			// For ex. navigate to a specific dapp
