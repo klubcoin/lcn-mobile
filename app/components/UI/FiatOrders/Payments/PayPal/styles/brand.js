@@ -428,6 +428,11 @@ const brandStyles = StyleSheet.create({
 		color: colors.white,
 		textAlign: 'center',
 		fontSize: 16
+	},
+	flag: {
+		width: 24,
+		height: 24,
+		marginHorizontal: 6
 	}
 });
 

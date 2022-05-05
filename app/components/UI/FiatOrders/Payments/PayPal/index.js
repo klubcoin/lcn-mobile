@@ -54,11 +54,13 @@ const menuData = [
 const boundary = {
 	USD: {
 		min: 30,
-		max: 100000
+		max: 100000,
+		default: 200
 	},
 	EUR: {
-		min: 40,
-		max: 100000
+		min: 20,
+		max: 90000,
+		default: 300
 	}
 };
 
@@ -91,7 +93,10 @@ function PayPal({ selectedAddress, ...props }) {
 	const [isViewFullAddress, setIsViewFullAddress] = useState(false);
 
 	useEffect(() => {
-		setFrom(pre => ({ ...pre, currency: props.currentCurrency.toUpperCase() }));
+		setFrom(pre => ({
+			currency: props.currentCurrency.toUpperCase(),
+			amount: boundary[props.currentCurrency.toUpperCase()].default
+		}));
 	}, [props.currentCurrency]);
 
 	useEffect(() => {
@@ -133,6 +138,17 @@ function PayPal({ selectedAddress, ...props }) {
 	});
 
 	useEffect(() => {
+		if (selected && selected?.to) {
+			const bigNumberPrice = new BigNumber(selected.to.value);
+			const toAmount = bigNumberPrice.multipliedBy(from.amount ? from.amount : '0');
+			setTo(pre => ({
+				...pre,
+				amount: +toAmount
+			}));
+		}
+	}, [selected, from.value, from.currency, from.amount]);
+
+	useEffect(() => {
 		manageCurrencies();
 	}, [currencies, from.currency, manageCurrencies]);
 
@@ -144,8 +160,7 @@ function PayPal({ selectedAddress, ...props }) {
 		setIsChangeCurrency(true);
 	};
 	const onChangeCurrency = value => {
-		setFrom(pre => ({ ...pre, currency: value, amount: 0 }));
-		setTo(pre => ({ ...pre, amount: 0 }));
+		setFrom({ currency: value, amount: boundary[value].default });
 		onCloseModal();
 	};
 
@@ -276,7 +291,18 @@ function PayPal({ selectedAddress, ...props }) {
 	};
 
 	const onPressAddress = () => {
-		setIsViewFullAddress(pre => !pre);
+		setIsViewFullAddress(pre => {
+			if (!pre) {
+				Clipboard.setString(selectedAddress.selectedAddress);
+				props.showAlert({
+					isVisible: true,
+					autodismiss: 1500,
+					content: 'clipboard-alert',
+					data: { msg: strings('account_details.account_copied_to_clipboard') }
+				});
+			}
+			return !pre;
+		});
 	};
 
 	const onLongPressAddress = () => {
@@ -408,8 +434,6 @@ function PayPal({ selectedAddress, ...props }) {
 								(convertInputValue.split('.').length > 1
 									? '.' + convertInputValue.split('.')[1].slice(0, 2)
 									: '');
-							const bigNumberPrice = new BigNumber(selected.to.value);
-							const toAmount = bigNumberPrice.multipliedBy(convertInputAmount ? convertInputAmount : '0');
 							if (+convertInputAmount > boundary[from.currency]?.max) {
 								showError(
 									strings('paypal_checkout.maximum_boundary_error_text', {
@@ -425,21 +449,15 @@ function PayPal({ selectedAddress, ...props }) {
 								);
 								return;
 							}
-							setFrom({
-								...from,
+							setFrom(pre => ({
+								...pre,
 								amount: convertInputAmount
-							});
-							if (selected && selected.to) {
-								setTo({
-									...to,
-									amount: +toAmount
-								});
-							}
+							}));
 						}}
 					/>
 				</View>
 				<View style={styles.amountButton2}>
-					<Image source={FLAGS[from.currency]} style={{ width: 24, height: 24, marginHorizontal: 6 }} />
+					<Image source={FLAGS[from.currency]} style={styles.flag} />
 					{from && <Text style={styles.fromText}>{from.currency}</Text>}
 					<TouchableOpacity style={styles.dropdownButton} activeOpacity={0.7} onPress={onOpenModal}>
 						<Icon name="chevron-down" style={styles.dropdownIcon} />

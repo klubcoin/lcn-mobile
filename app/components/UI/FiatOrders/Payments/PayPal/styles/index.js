@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
 	iIcon: {},
 	iModal: {},
 	iContent: {},
-	iText: {}
+	iText: {},
+	flag: {}
 });
 
 export default assignNestedObj(styles, brandStyles);
