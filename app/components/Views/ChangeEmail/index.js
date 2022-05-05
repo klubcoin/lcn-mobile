@@ -177,7 +177,7 @@ class ChangeEmail extends PureComponent {
 				this.setState({
 					isLoading: false,
 					isBlockedEmail: true,
-					blockEmailTime: json.creationDate
+					blockEmailTime: json.lastAttemptDate
 				});
 				this.coundown();
 				return;
