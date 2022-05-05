@@ -130,6 +130,7 @@ class Dashboard extends PureComponent {
 	componentWillUnmount() {
 		this.mounted = false;
 		this.clearBalanceInterval();
+		this.focusListener.remove();
 	}
 
 	clearBalanceInterval = () => {
@@ -243,6 +244,17 @@ class Dashboard extends PureComponent {
 		this.addDefaultRpcList();
 		this.featchChartData(currentCurrency, selectedTimeline);
 		this.pollTokens = setInterval(() => this.pollTokenBalances(), 1000);
+		this.focusListener = this.props.navigation.addListener('didFocus', () => {
+			const { currentCurrency: newCurrentCurrency } = this.props;
+			const { selectedTimeline: newSelectedTimeline, selectedCurrency } = this.state;
+			if (selectedCurrency !== newCurrentCurrency) {
+				this.setState({
+					selectedCurrency: newCurrentCurrency,
+					isFetchingChartData: true
+				});
+				this.featchChartData(newCurrentCurrency, newSelectedTimeline);
+			}
+		});
 	};
 
 	announceOnline() {
