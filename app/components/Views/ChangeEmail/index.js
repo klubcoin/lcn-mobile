@@ -192,8 +192,7 @@ class ChangeEmail extends PureComponent {
 		const username = renderAccountName(selectedAddress, identities);
 		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { firstname, lastname, phone } = preferences?.onboardProfile ?? {};
-		const name = `${firstname} ${lastname}`;
-		const publicInfo = JSON.stringify({ name });
+		const publicInfo = JSON.stringify({ firstname, lastname });
 		const privateInfo = JSON.stringify({ emailAddress: this.state.email, phoneNumber: phone });
 		const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
 		const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);

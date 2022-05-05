@@ -405,9 +405,8 @@ class EditProfile extends PureComponent {
 			}
 
 			const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
-			const name = `${firstname} ${lastname}`;
 			// const avatarb64 = await RNFS.readFile(path, 'base64');
-			const publicInfo = JSON.stringify({ name });
+			const publicInfo = JSON.stringify({ firstname, lastname });
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
 			const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
 			const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);

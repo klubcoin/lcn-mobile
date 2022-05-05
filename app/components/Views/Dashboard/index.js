@@ -307,7 +307,9 @@ class Dashboard extends PureComponent {
 				if (response.result) {
 					const { name } = response.result;
 
-					const { name: name2 } = response.result?.publicInfo ? JSON.parse(response.result?.publicInfo) : {};
+					const { firstname, lastname } = response.result?.publicInfo
+						? JSON.parse(response.result?.publicInfo)
+						: {};
 					const { emailAddress, phoneNumber } = response.result?.privateInfo
 						? JSON.parse(response.result?.privateInfo)
 						: {};
@@ -317,13 +319,8 @@ class Dashboard extends PureComponent {
 						.then(value => {
 							preferences.setOnboardProfile(
 								Object.assign(value, {
-									firstname: name2 ? name2.split(' ')[0] : '',
-									lastname: name2
-										? name2
-												.split(' ')
-												.slice(1, name2.split(' ').length)
-												.join(' ')
-										: '',
+									firstname: firstname,
+									lastname: lastname,
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,
 									emailVerified: emailAddress?.verified === 'true',

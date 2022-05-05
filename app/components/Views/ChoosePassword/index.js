@@ -182,9 +182,8 @@ class ChoosePassword extends PureComponent {
 		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { avatar, firstname, lastname, email } = preferences.onboardProfile;
 		const { username } = this.props.navigation.state.params;
-		const name = `${firstname} ${lastname}`;
 		// const avatarb64 = await RNFS.readFile(avatar, 'base64');
-		const publicInfo = JSON.stringify({ name });
+		const publicInfo = JSON.stringify({ firstname, lastname });
 		const privateInfo = JSON.stringify({ emailAddress: email });
 		const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
 		const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, privateInfo);
