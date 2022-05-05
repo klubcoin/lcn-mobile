@@ -59,7 +59,7 @@ class VerifyOTP extends PureComponent {
 	async componentDidMount() {
 		const sentEmail = await AsyncStorage.getItem(this.email);
 		if (sentEmail) {
-			const timeResent = Math.round(60 - (new Date().getTime() - +sentEmail) / 1000);
+			const timeResent = Math.ceil(60 - (new Date().getTime() - +sentEmail) / 1000);
 			this.timingResend = timeResent;
 			if (timeResent > 0) {
 				this.isSentEmail = true;
@@ -74,6 +74,7 @@ class VerifyOTP extends PureComponent {
 	}
 
 	componentWillUnmount() {
+		clearInterval(this.interval);
 		BackHandler.removeEventListener('hardwareBackPress', this.disableBackAction);
 	}
 
@@ -81,8 +82,8 @@ class VerifyOTP extends PureComponent {
 		return true;
 	}
 
-	async storeTimeSendEmail() {
-		AsyncStorage.setItem(this.email, `${new Date().getTime()}`);
+	async storeTimeSendEmail(time) {
+		AsyncStorage.setItem(this.email, `${time}`);
 	}
 
 	sendOTPEmail() {
@@ -90,14 +91,11 @@ class VerifyOTP extends PureComponent {
 			switch (response) {
 				case 'success':
 					this.resendOTP = false;
-					this.timingResend = 60;
 					this.isSentEmail = false;
-					this.storeTimeSendEmail();
-					this.timing();
+					this.verifyEmail();
 					break;
 				case 'retry_later':
-					this.timingResend = 60;
-					this.timing();
+					this.verifyEmail();
 					break;
 				case 'too_many_requests':
 					this.tooManySendOtp = true;
@@ -125,6 +123,18 @@ class VerifyOTP extends PureComponent {
 			}
 		});
 	}
+
+	verifyEmail = () => {
+		APIService.getOtpStatus(this.email, (success, json) => {
+			if (!!json?.creationDate) {
+				this.storeTimeSendEmail(json?.creationDate);
+				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+				this.timing();
+			} else {
+				this.timingResend = 0;
+			}
+		});
+	};
 
 	verifyOTPEmail() {
 		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {

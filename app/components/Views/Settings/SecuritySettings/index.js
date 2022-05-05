@@ -267,7 +267,7 @@ class Settings extends PureComponent {
 	};
 
 	coundown = () => {
-		const { isBlockedEmail, blockEmailTime } = this.state;
+		const { blockEmailTime } = this.state;
 		const startCoundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
 		let startHour = Math.floor(startCoundownTime / 3600000);
 		let startMinute = Math.floor((startCoundownTime % 3600000) / 60000);
