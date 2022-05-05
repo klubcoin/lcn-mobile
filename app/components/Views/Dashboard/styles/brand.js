@@ -21,7 +21,9 @@ const brandStyles = StyleSheet.create({
 		height: 290
 	},
 	chartWrapper: {
-		overflow: 'hidden'
+		overflow: 'hidden',
+		paddingRight: 20,
+		paddingBottom: 20
 	},
 	chartHeader: {
 		flexDirection: 'row',

@@ -504,7 +504,7 @@ class Dashboard extends PureComponent {
 		};
 		return (
 			<Chart
-				style={{ width: 330, height: 260 }}
+				style={{ width: '100%', height: 260 }}
 				xDomain={{
 					min: Math.min(...data.map(e => e.x)),
 					max: Math.max(...data.map(e => e.x))
