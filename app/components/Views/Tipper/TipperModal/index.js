@@ -91,7 +91,6 @@ export default class TipperModal extends PureComponent {
 
 	componentDidMount() {
 		this.initData();
-		this.prepareTransaction();
 	}
 
 	initData = () => {
@@ -188,6 +187,8 @@ export default class TipperModal extends PureComponent {
 		const { visible, hideModal } = this.props;
 
 		try {
+			await this.prepareTransaction();
+		 
 			const transaction = this.prepareTransactionToSend();
 			// return
 			const { result, transactionMeta } = await TransactionController.addTransaction(
