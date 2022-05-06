@@ -355,6 +355,7 @@ export default class TipperModal extends PureComponent {
 					value={this.amount}
 					ref={this.amountInput}
 					testID={'request-amount-input'}
+					maxLength={256}
 				/>
 
 				<Text style={styles.eth}>{symbol}</Text>
