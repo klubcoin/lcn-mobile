@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { connect } from 'react-redux';
 import WebsiteIcon from '../WebsiteIcon';
@@ -12,7 +12,7 @@ import { renderShortAddress } from '../../../util/address';
 import { WALLET_CONNECT_ORIGIN } from '../../../util/walletconnect';
 
 const { ORIGIN_DEEPLINK, ORIGIN_QR_CODE } = AppConstants.DEEPLINKS;
-
+const KLUB_LOGO = require('../../../images/logo.png');
 const styles = StyleSheet.create({
 	transactionHeader: {
 		justifyContent: 'center',
@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
 	deeplinkIcon: {
 		alignSelf: 'center',
 		lineHeight: 56
+	},
+	klubLogo: {
+		width: 56,
+		height: 56
 	}
 });
 
@@ -132,15 +136,17 @@ const TransactionHeader = props => {
 			url = origin.split(WALLET_CONNECT_ORIGIN)[1];
 			iconTitle = getHost(url);
 		}
-		return (
-			<WebsiteIcon
-				style={styles.domainLogo}
-				viewStyle={styles.assetLogo}
-				title={iconTitle}
-				url={currentEnsName || url}
-				icon={icon}
-			/>
-		);
+
+		return <Image source={KLUB_LOGO} style={styles.klubLogo} />;
+		// return (
+		// 	<WebsiteIcon
+		// 		style={styles.domainLogo}
+		// 		viewStyle={styles.assetLogo}
+		// 		title={iconTitle}
+		// 		url={currentEnsName || url}
+		// 		icon={icon}
+		// 	/>
+		// );
 	};
 
 	const renderTitle = () => {
