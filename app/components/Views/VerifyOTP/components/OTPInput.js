@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Text } from 'react-native';
 import { colors } from '../../../../styles/common';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
@@ -47,6 +47,12 @@ export default function OTPInput({ style, value, onChange, disable = false }) {
 	// 	if (text.length > 6) return;
 	// 	setOtp(text);
 	// };
+
+	useEffect(() => {
+		if (disable) {
+			inputRef.current.blur();
+		}
+	}, [disable]);
 
 	const onFocus = () => {
 		inputRef.current.focus();
