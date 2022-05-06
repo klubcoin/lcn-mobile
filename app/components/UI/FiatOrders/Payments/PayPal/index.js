@@ -422,6 +422,18 @@ function PayPal({ selectedAddress, ...props }) {
 						style={styles.amountTextInput}
 						value={`${from.amount}`}
 						keyboardType={'numeric'}
+						onBlur={() => {
+							if (from.amount < +boundary[from.currency].min) {
+								showError(
+									strings('paypal_checkout.minimum_boundary_error_text', {
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+											boundary[from.currency]?.min
+										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+									})
+								);
+								setFrom(pre => ({ ...pre, amount: boundary[from.currency]?.min }));
+							}
+						}}
 						onChangeText={input => {
 							const convertInputValue = input
 								.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
@@ -437,14 +449,9 @@ function PayPal({ selectedAddress, ...props }) {
 							if (+convertInputAmount > boundary[from.currency]?.max) {
 								showError(
 									strings('paypal_checkout.maximum_boundary_error_text', {
-										value: boundary[from.currency]?.max.toLocaleString(
-											currencyData.find(e => e.key === from.currency).lang,
-											{
-												style: 'currency',
-												currency: from.currency,
-												maximumSignificantDigits: 3
-											}
-										)
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+											boundary[from.currency]?.max
+										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 									})
 								);
 								return;
@@ -525,14 +532,9 @@ function PayPal({ selectedAddress, ...props }) {
 									if (from.amount < +boundary[from.currency].min) {
 										showError(
 											strings('paypal_checkout.minimum_boundary_error_text', {
-												value: boundary[from.currency]?.min.toLocaleString(
-													currencyData.find(e => e.key === from.currency).lang,
-													{
-														style: 'currency',
-														currency: from.currency,
-														maximumSignificantDigits: 3
-													}
-												)
+												value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+													boundary[from.currency]?.min
+												}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 											})
 										);
 										return;
