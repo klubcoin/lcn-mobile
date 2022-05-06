@@ -313,15 +313,15 @@ class Dashboard extends PureComponent {
 					const { emailAddress, phoneNumber } = response.result?.privateInfo
 						? JSON.parse(response.result?.privateInfo)
 						: {};
-
-					const currentFirstname = firstname ?? name2 ? name2.split(' ')[0] : '';
-					const currentLastname =
-						lastname ?? name2
-							? name2
-									.split(' ')
-									.slice(1, name2.split(' ').length)
-									.join(' ')
-							: '';
+					const currentFirstname = firstname ? firstname : name2 ? name2.split(' ')[0] : '';
+					const currentLastname = lastname
+						? lastname
+						: name2
+						? name2
+								.split(' ')
+								.slice(1, name2.split(' ').length)
+								.join(' ')
+						: '';
 
 					PreferencesController.setAccountLabel(selectedAddress, name);
 					preferences
