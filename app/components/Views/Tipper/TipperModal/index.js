@@ -227,22 +227,29 @@ export default class TipperModal extends PureComponent {
 	};
 
 	updateAmount = value => {
-		value = `${value}`
+		let newValue = value;
+		newValue = `${newValue}`
 			.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
 			.replace(/,/g, '.')
 			.replace(/\./, '#')
 			.replace(/\./g, '')
 			.replace(/#/, '.');
-		if (value[1] !== '.') {
-			value = value.replace(/0/, '');
+		if (newValue[1] !== '.') {
+			newValue = value.replace(/0/, '');
 		}
-		if (!value) value = '0';
-		this.amount = value;
+		if (!newValue) {
+			newValue = '0';
+		}
+		const newNumbers = newValue.split('.');
+		if (newNumbers.length > 1) {
+			newValue = `${newNumbers[0]}.${newNumbers[1].slice(0, Math.min(18, newNumbers[1].length))}`;
+		}
+		this.amount = newValue;
 		const { isETH } = this.tipData;
 		if (isETH) {
-			this.tipData.value = toWei(value).toString();
+			this.tipData.value = toWei(newValue).toString();
 		} else {
-			this.tipData.value = toTokenMinimalUnit(value, this.tipData.decimals).toString();
+			this.tipData.value = toTokenMinimalUnit(newValue, this.tipData.decimals).toString();
 		}
 	};
 
@@ -340,7 +347,6 @@ export default class TipperModal extends PureComponent {
 					autoCapitalize="none"
 					autoCorrect={false}
 					keyboardType="numeric"
-					multiline={true}
 					onChangeText={value => this.updateAmount(value.replace(',', '.'))}
 					placeholder={strings('payment_request.amount_placeholder')}
 					placeholderTextColor={colors.grey100}
