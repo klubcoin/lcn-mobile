@@ -34,6 +34,7 @@ import Erc20Service from '../../../../core/Erc20Service';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Identicon from '../../../UI/Identicon';
 
 export default class TipperModal extends PureComponent {
 	static propTypes = {
@@ -323,7 +324,8 @@ export default class TipperModal extends PureComponent {
 			<View style={styles.profile}>
 				<View style={styles.avatarView}>
 					{/* <RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${tipData?.avatar}` }} /> */}
-					<Ionicons name="person" style={styles.avatar} />
+					{/* <Ionicons name="person" style={styles.avatar} /> */}
+					<Identicon diameter={50} address={tipData?.receiverAddress} />
 				</View>
 				<TouchableOpacity activeOpacity={0.6} onPress={this.toggleAddress}>
 					<EthereumAddress
