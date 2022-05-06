@@ -2060,11 +2060,12 @@
 	"tipper": {
 		"tipper": "Tipper",
 		"tip_link_desc1": "Your tip link is ready to send!",
-		"tip_link_desc2": "Put this link to your social media to get the tip",
+		"tip_link_desc2": "Share this link on your social medias to receive tips",
 		"tip_for": "Tip {{amount}} {{symbol}} for {{account}}",
 		"tip": "Tip",
 		"current_balance": "Your current balance: {{balance}}",
 		"enter_amount": "Enter The {{symbol}} tip you want to send:",
+		"send_qr_cdoe": "Send QR Code",
 		"tip_through_qr": "Get a tip through QR code"
 	},
 	"paypal_checkout": {

@@ -39,6 +39,15 @@ const styles = StyleSheet.create({
 		color: colors.white,
 		alignSelf: 'center',
 		marginTop: 20
+	},
+	avatar: {
+		fontSize: 40,
+		margin: 10,
+		color: colors.blue
+	},
+	avatarView: {
+		backgroundColor: colors.purple500,
+		borderWidth: 0
 	}
 });
 

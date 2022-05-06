@@ -11,9 +11,9 @@ const brandStyles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	item: {
-		backgroundColor: colors.purple,
-		borderRadius: 10,
-		borderWidth: 0,
+		backgroundColor: colors.lightPurple,
+		borderRadius: 12,
+		borderWidth: 0
 	}
 });
 

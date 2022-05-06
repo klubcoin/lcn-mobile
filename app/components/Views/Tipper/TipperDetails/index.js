@@ -3,7 +3,7 @@ import { Dimensions, SafeAreaView, View, Text, InteractionManager, TouchableOpac
 import Clipboard from '@react-native-community/clipboard';
 import { connect } from 'react-redux';
 import { colors, fontStyles } from '../../../../styles/common';
-import { getPaymentRequestSuccessOptionsTitle } from '../../../UI/Navbar';
+import { getTipRequestOptionsTitle } from '../../../UI/Navbar';
 import PropTypes from 'prop-types';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import StyledButton from '../../../UI/StyledButton';
@@ -25,8 +25,7 @@ import { captureRef } from 'react-native-view-shot';
  * View to interact with a previously generated payment request link
  */
 class TipperDetails extends PureComponent {
-	static navigationOptions = ({ navigation }) =>
-		getPaymentRequestSuccessOptionsTitle(navigation, strings('tipper.tipper'));
+	static navigationOptions = ({ navigation }) => getTipRequestOptionsTitle(navigation);
 
 	static propTypes = {
 		/**
@@ -173,7 +172,7 @@ class TipperDetails extends PureComponent {
 										<IonicIcon name={'ios-link'} size={18} color={colors.blue} />
 									</View>
 									<View style={styles.buttonTextWrapper}>
-										<Text style={[styles.buttonText, styles.colorBlue]}>
+										<Text style={styles.buttonText}>
 											{strings('payment_request.copy_to_clipboard')}
 										</Text>
 									</View>
@@ -190,9 +189,7 @@ class TipperDetails extends PureComponent {
 										<FontAwesome name={'qrcode'} size={18} color={colors.blue} />
 									</View>
 									<View style={styles.buttonTextWrapper}>
-										<Text style={[styles.buttonText, styles.colorBlue]}>
-											{strings('payment_request.qr_code')}
-										</Text>
+										<Text style={styles.buttonText}>{strings('tipper.send_qr_cdoe')}</Text>
 									</View>
 								</View>
 							</StyledButton>

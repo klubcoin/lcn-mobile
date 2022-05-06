@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, InteractionManager } from 'react-native';
 import { connect } from 'react-redux';
-import { getPaymentRequestOptionsTitle } from '../../../UI/Navbar';
+import { getTipRequestOptionsTitle } from '../../../UI/Navbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import contractMap from '@metamask/contract-metadata';
 import Fuse from 'fuse.js';
@@ -34,6 +34,7 @@ import { baseStyles } from '../../../../styles/common';
 import { colors } from '../../../../styles/common';
 import AppConstants from '../../../../core/AppConstants';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -78,7 +79,7 @@ const MODE_AMOUNT = 'amount';
  * View to generate a payment request link
  */
 class TipperAmount extends PureComponent {
-	static navigationOptions = ({ navigation }) => getPaymentRequestOptionsTitle(strings('tipper.tipper'), navigation);
+	static navigationOptions = ({ navigation }) => getTipRequestOptionsTitle(navigation);
 
 	static propTypes = {
 		/**
@@ -621,12 +622,14 @@ class TipperAmount extends PureComponent {
 
 		return (
 			<SafeAreaView style={styles.wrapper}>
-				<KeyboardAwareScrollView
-					style={styles.contentWrapper}
-					contentContainerStyle={styles.scrollViewContainer}
-				>
-					{mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount()}
-				</KeyboardAwareScrollView>
+				<OnboardingScreenWithBg screen="a">
+					<KeyboardAwareScrollView
+						style={styles.contentWrapper}
+						contentContainerStyle={styles.scrollViewContainer}
+					>
+						{mode === MODE_SELECT ? this.renderSelectAssets() : this.renderEnterAmount()}
+					</KeyboardAwareScrollView>
+				</OnboardingScreenWithBg>
 			</SafeAreaView>
 		);
 	}

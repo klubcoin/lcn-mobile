@@ -11,9 +11,9 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		...fontStyles.bold,
-		color: colors.black,
-		fontSize: 14,
-		marginLeft: 8
+		color: colors.blue,
+		fontSize: 16,
+		marginLeft: 12
 	},
 	colorBlue: {
 		color: colors.blue
@@ -23,6 +23,13 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		padding: 12,
 		backgroundColor: colors.white
+	},
+	descriptionText: {
+		color: colors.grey100
+	},
+	blueButtonText: {
+		fontSize: 16,
+		marginLeft: 12
 	}
 });
 

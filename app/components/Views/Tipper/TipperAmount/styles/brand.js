@@ -27,6 +27,24 @@ const styles = StyleSheet.create({
 	errorText: {
 		alignSelf: 'flex-start',
 		color: colors.red
+	},
+	container: {
+		backgroundColor: colors.lightPurple,
+		borderWidth: 0,
+		borderRadius: 12
+	},
+	input: {
+		backgroundColor: colors.lightPurple,
+		color: colors.white,
+		flex: 1
+	},
+	amounts: {
+		flex: 1,
+		maxWidth: '100%'
+	},
+	ethContainer: {},
+	eth: {
+		color: colors.white
 	}
 });
 

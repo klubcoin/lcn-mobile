@@ -207,6 +207,40 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
 	};
 }
 
+export function getTipRequestOptionsTitle(navigation) {
+	const goBack = navigation.getParam('dispatch', undefined);
+	return {
+		headerTitleStyle: {
+			fontSize: 20,
+			color: colors.black,
+			...fontStyles.normal
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Image
+					source={klubcoin_text}
+					style={styles.metamaskName}
+					resizeMethod={'auto'}
+					resizeMode={'contain'}
+				/>
+			</View>
+		),
+		headerTintColor: colors.blue,
+		headerLeft: goBack ? (
+			<TouchableOpacity onPress={goBack} style={styles.backButton} testID={'request-search-asset-back-button'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		) : (
+			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		),
+		headerStyle: {
+			backgroundColor: colors.white
+		}
+	};
+}
+
 /**
  * Function that returns the navigation options
  * This is used by payment request view showing close button

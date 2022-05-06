@@ -37,13 +37,7 @@ const styles = StyleSheet.create({
 		padding: 2,
 		borderColor: colors.blue
 	},
-	avatar: {
-		width: 60,
-		height: 60,
-		borderRadius: 30,
-		overflow: 'hidden',
-		alignSelf: 'center'
-	},
+	avatar: {},
 	address: {
 		marginTop: 10,
 		paddingHorizontal: 16,
