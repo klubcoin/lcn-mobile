@@ -185,16 +185,26 @@ class ImportFromSeed extends PureComponent {
 			[address, sign, message],
 			response => {
 				if (response.result) {
-					const { firstname, lastname } = response.result?.publicInfo
+					const { firstname, lastname, name } = response.result?.publicInfo
 						? JSON.parse(response.result?.publicInfo)
 						: {};
 					const { emailAddress, phoneNumber } = response.result?.privateInfo
 						? JSON.parse(response.result?.privateInfo)
 						: {};
+
+					const currentFirstname = firstname ?? name ? name.split(' ')[0] : '';
+					const currentLastname =
+						lastname ?? name
+							? name
+									.split(' ')
+									.slice(1, name.split(' ').length)
+									.join(' ')
+							: '';
+
 					preferences.setOnboardProfile({
 						avatar: '',
-						firstname: firstname,
-						lastname: lastname,
+						firstname: currentFirstname,
+						lastname: currentLastname,
 						email: emailAddress?.value,
 						phone: phoneNumber?.value,
 						emailVerified: emailAddress?.verified === 'true',

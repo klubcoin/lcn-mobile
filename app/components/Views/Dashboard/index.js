@@ -307,20 +307,30 @@ class Dashboard extends PureComponent {
 				if (response.result) {
 					const { name } = response.result;
 
-					const { firstname, lastname } = response.result?.publicInfo
+					const { firstname, lastname, name: name2 } = response.result?.publicInfo
 						? JSON.parse(response.result?.publicInfo)
 						: {};
 					const { emailAddress, phoneNumber } = response.result?.privateInfo
 						? JSON.parse(response.result?.privateInfo)
 						: {};
+
+					const currentFirstname = firstname ?? name2 ? name2.split(' ')[0] : '';
+					const currentLastname =
+						lastname ?? name2
+							? name2
+									.split(' ')
+									.slice(1, name2.split(' ').length)
+									.join(' ')
+							: '';
+
 					PreferencesController.setAccountLabel(selectedAddress, name);
 					preferences
 						.getOnboardProfile()
 						.then(value => {
 							preferences.setOnboardProfile(
 								Object.assign(value, {
-									firstname: firstname,
-									lastname: lastname,
+									firstname: currentFirstname,
+									lastname: currentLastname,
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,
 									emailVerified: emailAddress?.verified === 'true',
