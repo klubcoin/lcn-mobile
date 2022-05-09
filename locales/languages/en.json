@@ -2164,5 +2164,24 @@
 	"coming_soon": {
 		"coming_soon": "Coming Soon",
 		"stay_in_touch_with_us": "Stay in touch with us :"
+	},
+	"purchase_order_details": {
+		"title": "Purchase Order Details",
+		"amount_to_pay": "amount to pay",
+		"order_details": "order details",
+		"order_ref_no": "Order Ref. No.",
+		"amount": "Amount",
+		"token_fee": "{{token}} fee",
+		"total": "Total",
+		"order_placed_via": "Order placed via",
+		"pay_now": "Pay Now",
+		"cancel": "Cancel",
+		"successfull_purchase_order": "Successful Purchase Order",
+		"congratulations": "Congratulations",
+		"congratulations_detail_1": "You've successfully verified your Online Purchase Order and paid via {{symbol}}!",
+		"congratulations_detail_2": "You may visit more of our ",
+		"congratulations_detail_3": "Partners' Online Stores",
+		"congratulations_detail_4": " to purchase exclusive items using your {{symbol}} tokens!",
+		"done": "Done"
 	}
 }

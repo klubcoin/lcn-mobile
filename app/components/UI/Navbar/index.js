@@ -777,6 +777,14 @@ export function getWalletNavbarOptions(title, navigation) {
 	};
 }
 
+export function getPurchaseOrderDetailsNavbarOptions(title, navigation) {
+	return {
+		headerTitle: <NavbarTitle title={title} />,
+		headerLeft: <View />,
+		headerRight: <View />
+	};
+}
+
 /**
  * Function that returns the navigation options containing title and network indicator
  *

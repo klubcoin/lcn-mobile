@@ -38,17 +38,19 @@ class ManageCoin extends PureComponent {
 	};
 
 	onScanQRPayRead = response => {
-		const content = response.data;
+
+		// const content = response.data;
 		this.setState({ isScanQrPay: false });
-		console.log('🚀 ~ file: index.js ~ line 42 ~ ManageCoin ~ content', content);
-		if (content.includes('https://') || content.includes('http://')) {
-			showError(strings('manage_coin.scan_qr_pay_error_title'), strings('manage_coin.scan_qr_pay_error_message'));
-			return;
-		}
-		const handledByDeeplink = SharedDeeplinkManager.parse(content, {
-			origin: AppConstants.DEEPLINKS.ORIGIN_QR_CODE,
-			onHandled: () => this.props.navigation.pop(2)
-		});
+		// console.log('🚀 ~ file: index.js ~ line 42 ~ ManageCoin ~ content', content);
+		// if (content.includes('https://') || content.includes('http://')) {
+		// 	showError(strings('manage_coin.scan_qr_pay_error_title'), strings('manage_coin.scan_qr_pay_error_message'));
+		// 	return;
+		// }
+		// const handledByDeeplink = SharedDeeplinkManager.parse(content, {
+		// 	origin: AppConstants.DEEPLINKS.ORIGIN_QR_CODE,
+		// 	onHandled: () => this.props.navigation.pop(2)
+		// });
+		this.props.navigation.navigate('PurchaseOrderDetails');
 	};
 
 	renderContent() {

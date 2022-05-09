@@ -108,6 +108,8 @@ import VerifyOTP from '../../Views/VerifyOTP';
 import ComingSoon from '../../Views/ComingSoon';
 import Help from '../../Views/Help';
 import Trade from '../../Views/Trade';
+import PurchaseOrderDetails from '../../Views/PurchaseOrderDetails';
+import PurchaseSuccess from '../../Views/PurchaseSuccess';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -249,6 +251,15 @@ export default createStackNavigator(
 							ManageCoin: ManageCoin,
 							ComingSoon: {
 								screen: ComingSoon
+							},
+							PurchaseOrderDetails: {
+								screen: PurchaseOrderDetails
+							},
+							PurchaseSuccess: {
+								screen: PurchaseSuccess
+							},
+							Partners: {
+								screen: Partners
 							}
 						})
 					}
