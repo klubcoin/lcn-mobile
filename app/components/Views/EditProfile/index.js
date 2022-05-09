@@ -67,7 +67,10 @@ class EditProfile extends PureComponent {
 	preData = {
 		phone: '',
 		countryCode: '',
-		email: ''
+		phoneNumber: '',
+		email: '',
+		firstname: '',
+		lastname: ''
 	};
 	timeoutCheckUniqueEmail = null;
 	isValidEmail = true;
@@ -129,10 +132,48 @@ class EditProfile extends PureComponent {
 				.slice(1, phone?.split('-').length)
 				.join('-'),
 			countryCode: phone?.replace('+', '').split('-')[0],
+			phoneNumber: phone,
 			email,
 			firstname,
 			lastname
 		};
+	}
+	componentDidUpdate() {
+		this.updateProfile();
+	}
+
+	updateProfile() {
+		const { firstname, lastname, email, phone } = preferences?.onboardProfile ?? {};
+		if (
+			!this.isChangeProfile &&
+			(firstname !== this.preData.firstname ||
+				lastname !== this.preData.lastname ||
+				email !== this.preData.email ||
+				phone !== this.preData.phoneNumber)
+		) {
+			this.firstname = firstname;
+			this.lastname = lastname;
+			this.email = email;
+			this.countryCode = phone?.replace('+', '').split('-')[0];
+			this.phone =
+				phone
+					?.replace('+', '')
+					.split('-')
+					.slice(1, phone?.split('-').length)
+					.join('-') ?? undefined;
+			this.preData = {
+				phone: phone
+					?.replace('+', '')
+					.split('-')
+					.slice(1, phone?.split('-').length)
+					.join('-'),
+				countryCode: phone?.replace('+', '').split('-')[0],
+				phoneNumber: phone,
+				email,
+				firstname,
+				lastname
+			};
+		}
 	}
 
 	onEmailChange = val => {
@@ -466,6 +507,7 @@ class EditProfile extends PureComponent {
 			this.preData.email !== this.email ||
 			this.preData.firstname !== this.firstname ||
 			this.preData.lastname !== this.lastname;
+
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
