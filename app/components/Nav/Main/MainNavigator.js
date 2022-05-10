@@ -110,6 +110,9 @@ import Help from '../../Views/Help';
 import Trade from '../../Views/Trade';
 import PurchaseOrderDetails from '../../Views/PurchaseOrderDetails';
 import PurchaseSuccess from '../../Views/PurchaseSuccess';
+import ChatList from '../../Views/ChatList';
+import NewChat from '../../Views/NewChat';
+import ChatMessage from '../../Views/ChatMessage';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -205,6 +208,15 @@ export default createStackNavigator(
 						},
 						Collect: {
 							screen: Collect
+						},
+						ChatList: {
+							screen: ChatList
+						},
+						NewChat: {
+							screen: NewChat
+						},
+						ChatMessage: {
+							screen: ChatMessage
 						}
 					}),
 					VotingAppHome: createDrawerNavigator({

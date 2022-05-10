@@ -1884,7 +1884,13 @@
 		"video": "a video file",
 		"file": "a file",
 		"failed_to_send": "Failed to send",
-		"retry": "Retry"
+		"retry": "Retry",
+		"chat": "Chat",
+		"new_chat": "New Chat",
+		"to": "To :",
+		"search_desc": "Search, public address (0x), or ENS",
+		"chat_text": "Chat text...",
+		"send_message":"Send Message"
 	},
 	"market": {
 		"title": "Market",

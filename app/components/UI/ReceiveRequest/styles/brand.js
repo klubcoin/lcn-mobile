@@ -8,6 +8,10 @@ const brandStyles = StyleSheet.create({
 	},
 	copyButton: {
 		color: colors.black
+	},
+	qrWrapper: {
+		padding: 10,
+		backgroundColor: colors.white
 	}
 });
 

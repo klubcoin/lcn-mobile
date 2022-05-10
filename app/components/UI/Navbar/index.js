@@ -500,6 +500,63 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	};
 }
 
+export function geChatListNavbarOptions(navigation) {
+	const navigationPop = () => navigation.pop();
+
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			// marginTop: Device.isIos() ? 20 : 0,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Image
+					source={klubcoin_text}
+					style={styles.metamaskName}
+					resizeMethod={'auto'}
+					resizeMode={'contain'}
+				/>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
+	};
+}
+
+export function geChatNavbarOptions(navigation) {
+	const navigationBack = () => navigation.navigate('ChatList');
+
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			// marginTop: Device.isIos() ? 20 : 0,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Text style={styles.header}>{strings('chat.chat')}</Text>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		headerLeft: (
+			<TouchableOpacity onPress={navigationBack} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
+	};
+}
+
 export function getOnboardingWithoutBackNavbarOptions(navigation) {
 	return {
 		headerStyle: {

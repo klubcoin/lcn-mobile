@@ -473,6 +473,11 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_PARTNERS);
 	};
 
+	gotoChat = () => {
+		this.props.navigation.navigate('ChatList');
+		this.hideDrawer();
+	};
+
 	gotoManageCoin = () => {
 		this.props.navigation.navigate('ManageCoinFlow');
 		// this.props.navigation.navigate('ComingSoon');
@@ -762,8 +767,7 @@ class DrawerView extends PureComponent {
 				{
 					name: strings('drawer.chat'),
 					icon: this.getIonIcon('chatbox'),
-					// action: this.onShare
-					action: this.comingSoon
+					action: this.gotoChat
 				}
 			],
 			[
