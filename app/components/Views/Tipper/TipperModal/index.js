@@ -389,14 +389,14 @@ export default class TipperModal extends PureComponent {
 	renderActions() {
 		const { confirmLabel, cancelLabel } = this.props;
 		const { value } = this.tipData;
-
+		const disableSend = this.loading || this.tipping || value === '0' || !!this.errorMessage;
 		return (
 			<View style={styles.buttons}>
 				<StyledButton
-					type={!!this.errorMessage || value == 0 ? 'cancel' : 'normal'}
+					type={'normal'}
 					containerStyle={styles.accept}
 					onPress={!this.errorMessage && value !== 0 && !this.processing ? () => this.onConfirm() : null}
-					disabled={this.loading || this.tipping}
+					disabled={disableSend}
 				>
 					{this.loading || this.tipping ? <ActivityIndicator color={colors.white} /> : confirmLabel}
 				</StyledButton>
