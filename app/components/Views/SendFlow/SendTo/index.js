@@ -3,13 +3,7 @@ import { colors, baseStyles } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
 import AddressList from '../AddressList';
 import PropTypes from 'prop-types';
-import {
-	View,
-	TouchableOpacity,
-	SafeAreaView,
-	InteractionManager,
-	Modal as ReactNativeModal
-} from 'react-native';
+import { View, TouchableOpacity, SafeAreaView, InteractionManager, Modal as ReactNativeModal } from 'react-native';
 import { AddressFrom, AddressTo } from '../AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
@@ -415,7 +409,7 @@ class SendFlow extends PureComponent {
 			return;
 		}
 		if (content.split('ethereum:').length > 1 && !parse(content).function_name) {
-			data = parse(content);
+			let data = parse(content);
 			const action = 'send-eth';
 			data = { ...data, action };
 			if (data.target_address) {

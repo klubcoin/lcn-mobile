@@ -20,8 +20,8 @@ const brandStyles = StyleSheet.create({
 		borderRadius: 12
 	},
 	input: {
-		backgroundColor: colors.grey,
-		color: colors.white
+		color: colors.white,
+		backgroundColor: colors.transparent
 	},
 	eth: {
 		color: colors.white

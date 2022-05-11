@@ -12,10 +12,14 @@ import SharedDeeplinkManager from '../../../core/DeeplinkManager';
 import AppConstants from '../../../core/AppConstants';
 import { showError } from '../../../util/notify';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { connect } from 'react-redux';
+import { newAssetTransaction } from '../../../actions/transaction';
+import { getEther } from '../../../util/transactions';
 
 class ManageCoin extends PureComponent {
 	state = {
-		isScanQrPay: false
+		isScanQrPay: false,
+		isScanQrTip: false
 	};
 
 	static navigationOptions = ({ navigation }) =>
@@ -30,15 +34,16 @@ class ManageCoin extends PureComponent {
 	};
 
 	onScanQRToTip = () => {
-		this.props.navigation.navigate('ComingSoon');
+		this.setState({ isScanQrTip: true });
 	};
 
 	onSendToFriend = () => {
-		this.props.navigation.navigate('ComingSoon');
+		const { newAssetTransaction, navigation, ticker } = this.props;
+		newAssetTransaction(getEther(ticker));
+		navigation.navigate('SendFlowView');
 	};
 
 	onScanQRPayRead = response => {
-
 		// const content = response.data;
 		this.setState({ isScanQrPay: false });
 		// console.log('🚀 ~ file: index.js ~ line 42 ~ ManageCoin ~ content', content);
@@ -51,6 +56,29 @@ class ManageCoin extends PureComponent {
 		// 	onHandled: () => this.props.navigation.pop(2)
 		// });
 		this.props.navigation.navigate('PurchaseOrderDetails');
+	};
+
+	onScanQRTipRead = response => {
+		this.setState({ isScanQrTip: false });
+		const content = response.data;
+		if (
+			content &&
+			content.split('//') &&
+			content.split('//')[1] &&
+			content.split('//')[1].split('/') &&
+			content.split('//')[1].split('/')[1] === 'tip'
+		) {
+			const handledByDeeplink = SharedDeeplinkManager.parse(content, {
+				origin: AppConstants.DEEPLINKS.ORIGIN_QR_CODE,
+				onHandled: () => this.props.navigation.pop(2)
+			});
+
+			if (handledByDeeplink) {
+				this.mounted = false;
+				return;
+			}
+		}
+		showError(strings('manage_coin.scan_qr_tip_error_title'), strings('manage_coin.scan_qr_tip_error_message'));
 	};
 
 	renderContent() {
@@ -111,7 +139,7 @@ class ManageCoin extends PureComponent {
 	}
 
 	render() {
-		const { isScanQrPay } = this.state;
+		const { isScanQrPay, isScanQrTip } = this.state;
 		return (
 			<View style={baseStyles.flexGrow} testID={'onboarding-screen'}>
 				<OnboardingScreenWithBg screen={'c'}>
@@ -129,10 +157,28 @@ class ManageCoin extends PureComponent {
 							}}
 						/>
 					</Modal>
+					<Modal visible={isScanQrTip}>
+						<QRScanner
+							onBarCodeRead={this.onScanQRTipRead}
+							onClose={() => {
+								this.setState({ isScanQrTip: false });
+							}}
+						/>
+					</Modal>
 				</OnboardingScreenWithBg>
 			</View>
 		);
 	}
 }
+const mapStateToProps = state => ({
+	ticker: state.engine.backgroundState.NetworkController.provider.ticker
+});
 
-export default ManageCoin;
+const mapDispatchToProps = dispatch => ({
+	newAssetTransaction: selectedAsset => dispatch(newAssetTransaction(selectedAsset))
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ManageCoin);

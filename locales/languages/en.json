@@ -2044,7 +2044,9 @@
 		"remain": "Remain",
 		"pay_rest": "Pay the rest",
 		"scan_qr_pay_error_title": "Ooops! something went wrong...",
+		"scan_qr_tip_error_title": "Ooops! something went wrong...",
 		"scan_qr_pay_error_message": "We couldn't resolve that QR. Please make sure it was created it correctly.",
+		"scan_qr_tip_error_message": "We couldn't resolve that QR. Please make sure it was created it correctly.",
 		"no_description": "No description"
 	},
 	"order": {
