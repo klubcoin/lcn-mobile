@@ -26,10 +26,11 @@ export default class TrackingScrollView extends Component {
 	render() {
 		return (
 			<ScrollView
+				scrollEventThrottle={0}
 				{...this.props}
-				onScroll={() => {
+				onScroll={e => {
 					this.onTrackingScroll();
-					this.props.onTrackingScroll && this.props.onTrackingScroll();
+					this.props.onScroll && this.props.onScroll(e);
 				}}
 				ref={this.ref}
 			/>
