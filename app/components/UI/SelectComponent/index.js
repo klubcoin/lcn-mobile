@@ -65,15 +65,15 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		flexDirection: 'row',
 		height: ROW_HEIGHT,
-		alignItems:'center'
+		alignItems: 'center'
 	},
 	optionLabel: {
 		flex: 1,
 		fontSize: 14,
-		...fontStyles.normal,
+		...fontStyles.normal
 	},
 	icon: {
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
 	},
 	listWrapper: {
 		flex: 1,
@@ -217,6 +217,7 @@ export default class SelectComponent extends PureComponent {
 	);
 
 	render = () => (
-		<View style={baseStyles.flexGrow}>{Device.isAndroid() ? this.renderAndroid() : this.renderIOS()}</View>
+		// <View style={baseStyles.flexGrow}>{Device.isAndroid() ? this.renderAndroid() : this.renderIOS()}</View>
+		<View style={baseStyles.flexGrow}>{this.renderIOS()}</View>
 	);
 }
