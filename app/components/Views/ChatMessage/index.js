@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Image,
 	View,
@@ -9,7 +9,8 @@ import {
 	Text,
 	PermissionsAndroid,
 	Platform,
-	Dimensions
+	Dimensions,
+	ActivityIndicator
 } from 'react-native';
 import { colors } from '../../../styles/common';
 import PropTypes from 'prop-types';
@@ -20,12 +21,13 @@ import { connect } from 'react-redux';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import moment from 'moment';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import ImageView from 'react-native-image-viewing';
 import TrackingTextInput from '../../UI/TrackingTextInput';
-import TrackingScrollView from '../../UI/TrackingScrollView';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 const styles = StyleSheet.create({
 	root: {
@@ -87,47 +89,48 @@ const styles = StyleSheet.create({
 	},
 	meMessageWrapper: {
 		backgroundColor: colors.lightPurple,
-		marginTop: 16,
+		// marginTop: 16,
 		borderRadius: 12,
 		maxWidth: '70%',
 		alignSelf: 'flex-end',
-		padding: 12
+		padding: 8
 	},
 	youMessageWrapper: {
 		backgroundColor: colors.lightPurple,
-		marginTop: 16,
+		// marginTop: 16,
 		borderRadius: 12,
 		maxWidth: '70%',
-		padding: 12
+		padding: 8
 	},
 	meTime: {
 		color: colors.blue,
-		fontSize: 12,
-		fontWeight: '700',
-		marginBottom: 6
+		fontSize: 10,
+		fontWeight: '700'
 	},
 	youTime: {
 		color: colors.pink,
-		fontSize: 12,
-		fontWeight: '700',
-		marginBottom: 6
+		fontSize: 10,
+		fontWeight: '700'
 	},
 	meMessage: {
-		color: colors.white,
-		marginBottom: 6
+		color: colors.white
 	},
 	youMessage: {
-		color: colors.white,
-		marginBottom: 6
+		color: colors.white
 	},
 	footer: {
 		flexDirection: 'row',
-		padding: 12
+		backgroundColor: colors.primaryFox,
+		paddingVertical: 12
 	},
 	cameraButton: {
 		padding: 8,
 		borderRadius: 12,
-		backgroundColor: colors.lightPurple
+		backgroundColor: colors.lightPurple,
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 40,
+		alignSelf: 'flex-end'
 	},
 	cameraIcon: {
 		fontSize: 24,
@@ -140,15 +143,18 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 6,
 		borderRadius: 12,
 		flexDirection: 'row',
-		alignItems: 'center'
+		maxHeight: 110
 	},
 	chatInput: {
 		flex: 1,
 		color: colors.white,
-		padding: 0
+		padding: 0,
+		marginVertical: 6
+		// backgroundColor: 'red'
 	},
 	sendButton: {
-		padding: 8
+		padding: 8,
+		alignSelf: 'flex-end'
 	},
 	sendIcon: {
 		fontSize: 24,
@@ -209,6 +215,16 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		width: (width - 64) * 0.7,
 		height: (width - 64) * 0.7
+	},
+	chatContent: {
+		flex: 1
+	},
+	chatFooter: {
+		height: 20
+	},
+	scrollToBottomIcon: {
+		fontSize: 24,
+		color: colors.pink
 	}
 });
 
@@ -222,44 +238,236 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 		address: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0',
 		messages: [
 			{
-				from: selectedAddress,
-				time: 1648041775938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.Last'
+				_id: '1',
+				createdAt: 1648041775938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.Last',
+				user: {
+					_id: selectedAddress
+				}
 			},
 			{
-				from: selectedAddress,
-				time: 1648041745938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: '2',
+				createdAt: 1648041745938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: selectedAddress
+				}
 			},
 			{
-				from: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0',
-				time: 1648041695938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: '3',
+				createdAt: 1648041695938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
 			},
 			{
-				from: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0',
-				time: 1648041655938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: '4',
+				createdAt: 1648041655938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '5'
+				}
 			},
 			{
-				from: selectedAddress,
-				time: 1648041645938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: selectedAddress,
+				createdAt: 1648041645938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: selectedAddress
+				}
 			},
 			{
-				from: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0',
-				time: 1648041595938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: '6',
+				createdAt: 1648041595938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
 			},
 			{
-				from: selectedAddress,
-				time: 1648041495938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: '7',
+				createdAt: 1648041495938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: selectedAddress
+				}
 			},
 			{
-				from: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0',
-				time: 1648041485938,
-				message: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+				_id: '8',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '9',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '10',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '11',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '12',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '13',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '14',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '15',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '16',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '17',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '18',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '19',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '20',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '21',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '22',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '23',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '24',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '25',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '26',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '27',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '28',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
+			},
+			{
+				_id: '29',
+				createdAt: 164041485938,
+				text: 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.',
+				user: {
+					_id: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0'
+				}
 			}
 		]
 	};
@@ -272,18 +480,13 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 	const [isViewImage, setIsViewImage] = useState(false);
 	const [images, setImages] = useState([]);
 	const [image, setImage] = useState('');
-
-	let scrollViewRef = useRef();
+	const [countMessage, setCountMessage] = useState(10);
 
 	useEffect(() => {
 		BackHandler.addEventListener('hardwareBackPress', onBack);
 		return () => {
 			BackHandler.removeEventListener('hardwareBackPress', onBack);
 		};
-	}, []);
-
-	useEffect(() => {
-		scrollViewRef.current.scrollToEnd();
 	}, []);
 
 	useEffect(() => {
@@ -312,18 +515,14 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 		);
 	};
 
-	const scrollToEnd = () => {
-		scrollViewRef?.current?.scrollToEnd({ animated: true });
-	};
-
 	const onViewImage = img => {
 		setImage(img);
 		setIsViewImage(true);
 	};
 
 	const renderMe = data => {
-		const { time, message: itemMessage, image: itemImage } = data;
-		const chatTime = moment(time);
+		const { createdAt, text: itemMessage, image: itemImage } = data;
+		const chatTime = moment(createdAt);
 		return (
 			<View style={styles.meMessageWrapper}>
 				<Text style={styles.meTime}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
@@ -348,8 +547,8 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 	};
 
 	const renderYou = data => {
-		const { time, message: itemMessage, image: itemImage } = data;
-		const chatTime = moment(time);
+		const { createdAt, text: itemMessage, image: itemImage } = data;
+		const chatTime = moment(createdAt);
 		return (
 			<View style={styles.youMessageWrapper}>
 				<Text style={styles.youTime}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
@@ -377,28 +576,31 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 	const onSend = () => {
 		setMessages(pre => [
 			{
-				from: selectedAddress,
-				time: new Date().getTime(),
-				message
+				_id: new Date().getTime(),
+				user: {
+					_id: selectedAddress
+				},
+				createdAt: new Date().getTime(),
+				text: message
 			},
 			...pre
 		]);
-		scrollViewRef.current.scrollToEnd();
 		setMessage('');
 	};
 
 	const onSendImage = path => {
 		setMessages(pre => [
 			{
-				from: selectedAddress,
-				time: new Date().getTime(),
+				_id: new Date().getTime(),
+				user: {
+					_id: selectedAddress
+				},
+				createdAt: new Date().getTime(),
 				image: path
 			},
 			...pre
 		]);
-		setTimeout(() => {
-			scrollViewRef.current.scrollToEnd();
-		}, 500);
+		setTimeout(() => {}, 500);
 	};
 
 	const onPickImage = () => {
@@ -551,32 +753,68 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 					</View>
 				</View>
 				{renderLine()}
-				<TrackingScrollView
-					style={styles.container}
-					ref={scrollViewRef}
-					contentContainerStyle={styles.scrollViewContainer}
-					onLayout={scrollToEnd}
-				>
-					{messages.map(mess => (mess.from === selectedAddress ? renderMe(mess) : renderYou(mess)))}
-				</TrackingScrollView>
-			</View>
-			<View style={styles.footer}>
-				<TouchableOpacity onPress={() => setIsViewModal(true)} activeOpacity={0.7} style={styles.cameraButton}>
-					<EntypoIcon name={'camera'} style={styles.cameraIcon} />
-				</TouchableOpacity>
-				<View style={styles.chatWrapper}>
-					<TrackingTextInput
-						style={styles.chatInput}
-						value={message}
-						onChangeText={setMessage}
-						placeholder={strings('chat.chat_text')}
-						placeholderTextColor={colors.grey200}
+				<View style={styles.chatContent}>
+					<GiftedChat
+						messages={messages.slice(0, Math.min(countMessage, messages.length))}
+						onSend={messages => onSend(messages)}
+						user={{
+							_id: selectedAddress
+						}}
+						renderAvatar={null}
+						renderBubble={mess => {
+							return mess.currentMessage.user._id === selectedAddress
+								? renderMe(mess.currentMessage)
+								: renderYou(mess.currentMessage);
+						}}
+						renderChatFooter={() => {
+							return <View style={styles.chatFooter} />;
+						}}
+						infiniteScroll
+						scrollToBottom
+						scrollToBottomComponent={() => {
+							return <Icon name={'arrow-down'} style={styles.scrollToBottomIcon} />;
+						}}
+						loadEarlier
+						onLoadEarlier={() => {
+							setCountMessage(pre => (pre < messages.length ? pre + 15 : pre));
+						}}
+						renderLoadEarlier={() => {
+							return <ActivityIndicator color={colors.white} />;
+						}}
+						renderComposer={() => {
+							return (
+								<View style={styles.footer}>
+									<TouchableOpacity
+										onPress={() => setIsViewModal(true)}
+										activeOpacity={0.7}
+										style={styles.cameraButton}
+									>
+										<EntypoIcon name={'camera'} style={styles.cameraIcon} />
+									</TouchableOpacity>
+									<View style={styles.chatWrapper}>
+										<TrackingTextInput
+											style={styles.chatInput}
+											value={message}
+											onChangeText={setMessage}
+											placeholder={strings('chat.chat_text')}
+											placeholderTextColor={colors.grey200}
+											multiline
+											textAlignVertical={'center'}
+										/>
+										{!!message && (
+											<TouchableOpacity
+												onPress={onSend}
+												activeOpacity={0.7}
+												style={styles.sendButton}
+											>
+												<Ionicons name={'send'} style={styles.sendIcon} />
+											</TouchableOpacity>
+										)}
+									</View>
+								</View>
+							);
+						}}
 					/>
-					{!!message && (
-						<TouchableOpacity onPress={onSend} activeOpacity={0.7} style={styles.sendButton}>
-							<Ionicons name={'send'} style={styles.sendIcon} />
-						</TouchableOpacity>
-					)}
 				</View>
 			</View>
 			<Modal visible={isViewModal} animationType="fade" transparent style={styles.modal}>
