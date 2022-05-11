@@ -237,7 +237,7 @@ export default class TipperModal extends PureComponent {
 			.replace(/\./g, '')
 			.replace(/#/, '.');
 		if (newValue[1] !== '.') {
-			newValue = value.replace(/0/, '');
+			newValue = newValue.replace(/^0/, '');
 		}
 		if (!newValue) {
 			newValue = '0';
