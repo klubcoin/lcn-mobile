@@ -6,7 +6,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getNavigationWithoutBackOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
-import OTPInput from './components/OTPInput';
+import OTPInput from '../../UI/OTPInput';
 import StyledButton from '../../UI/StyledButton';
 import APIService from '../../../services/APIService';
 import { showSuccess } from '../../../util/notify';

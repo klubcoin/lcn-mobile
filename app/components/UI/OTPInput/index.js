@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Text } from 'react-native';
-import { colors } from '../../../../styles/common';
-import TrackingTextInput from '../../../UI/TrackingTextInput';
+import { colors } from '../../../styles/common';
+import TrackingTextInput from '../TrackingTextInput';
 
 const { width } = Dimensions.get('screen');
 export default function OTPInput({ style, value, onChange, disable = false }) {

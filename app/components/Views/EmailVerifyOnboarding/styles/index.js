@@ -83,7 +83,15 @@ const styles = StyleSheet.create({
 	},
 	ctaContainer: {
 		marginBottom: 30
-	}
+	},
+	areYouSure: {},
+	warningIcon: {},
+	emailBlockedTitle: {},
+	emailBlockedContent: {},
+	emailBlockedCoundown: {},
+	emailBlockedRemaining: {},
+	closeModalButton: {},
+	closeModalIcon: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

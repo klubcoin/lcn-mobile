@@ -6,7 +6,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getOnboardingWithoutBackNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
-import OTPInput from './components/OTPInput';
+import OTPInput from '../../UI/OTPInput';
 import StyledButton from '../../UI/StyledButton';
 import APIService from '../../../services/APIService';
 import OnboardingProgress from '../../UI/OnboardingProgress';
@@ -58,13 +58,11 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	async componentDidMount() {
-		this.timingResend = 60;
-		this.storeTimeSendEmail();
-		this.timing();
+		this.sendOTPEmail();
 	}
 
-	async storeTimeSendEmail() {
-		AsyncStorage.setItem(this.email, `${new Date().getTime()}`);
+	async storeTimeSendEmail(time) {
+		AsyncStorage.setItem(this.email, `${time}`);
 	}
 
 	sendOTPEmail() {
@@ -72,13 +70,10 @@ class VerifyOTPOnboarding extends PureComponent {
 			switch (response) {
 				case 'success':
 					this.resendOTP = false;
-					this.timingResend = 60;
-					this.storeTimeSendEmail();
-					this.timing();
+					this.verifyEmail();
 					break;
 				case 'retry_later':
-					this.timingResend = 60;
-					this.timing();
+					this.verifyEmail();
 					break;
 				case 'too_many_attempts':
 					this.tooManyVerifyAttempts = true;
@@ -95,6 +90,19 @@ class VerifyOTPOnboarding extends PureComponent {
 			}
 		});
 	}
+
+	verifyEmail = () => {
+		APIService.getOtpStatus(this.email, (success, json) => {
+			if (!!json?.creationDate) {
+				this.storeTimeSendEmail(json?.creationDate);
+				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+				this.timing();
+			} else {
+				this.timingResend = 0;
+			}
+		});
+	};
+
 	verifyOTPEmail() {
 		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {
 			this.otpEmail = '';
