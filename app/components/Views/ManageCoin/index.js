@@ -78,7 +78,7 @@ class ManageCoin extends PureComponent {
 				return;
 			}
 		}
-		showError(strings('manage_coin.scan_qr_tip_error_title'), strings('manage_coin.scan_qr_tip_error_message'));
+		showError(strings('manage_coin.scan_qr_tip_error_title'));
 	};
 
 	renderContent() {
