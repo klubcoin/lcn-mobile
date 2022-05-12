@@ -939,11 +939,11 @@ export function getPayPalNavbar(navigation) {
 	};
 }
 
-export function getStripeNavbar(navigation) {
+export function getWyreNavbar(navigation) {
 	const rightAction = () => navigation.goBack();
 
 	return {
-		headerTitle: <Text style={styles.centeredTitle}>{strings('stripe_checkout.title')}</Text>,
+		headerTitle: <Text style={styles.centeredTitle}>{strings('wyre_checkout.title')}</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
 				<Icon name={'arrow-left'} size={16} color={colors.black} style={styles.backIcon} />

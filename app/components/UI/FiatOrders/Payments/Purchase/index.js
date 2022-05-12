@@ -15,7 +15,7 @@ function Purchase({ selectedAddress, ...props }) {
 		props.navigation.navigate('BuyWithPayPal');
 	};
 
-	const onBuyWithStripe = () => {
+	const onBuyWithWyre = () => {
 		props.navigation.navigate('BuyWithStripe');
 	};
 
@@ -31,12 +31,12 @@ function Purchase({ selectedAddress, ...props }) {
 						typeText={'PayPal'}
 					/>
 
-					{/* <PaymentMethodItem
-						onBuy={onBuyWithStripe}
+					<PaymentMethodItem
+						onBuy={onBuyWithWyre}
 						displayName={displayName}
-						image={require('../../../../../images/stripe.png')}
-						typeText={'Stripe'}
-					/> */}
+						image={require('../../../../../images/wyre.png')}
+						typeText={'Wyre'}
+					/>
 				</TrackingScrollView>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>

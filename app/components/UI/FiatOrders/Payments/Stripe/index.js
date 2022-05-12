@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, Image, TouchableOpacity, ActivityIndicator, P
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { getStripeNavbar } from '../../../../UI/Navbar';
+import { getWyreNavbar } from '../../../../UI/Navbar';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import API from 'services/api';
@@ -38,22 +38,22 @@ const APPLE_PAY_LOGO = require('../../../../../images/ApplePayLogo.png');
 const menuData = [
 	{
 		icon: 'question-circle-o',
-		title: strings('stripe_checkout.support'),
-		url: 'https://stripe.com/en-fr/contact'
+		title: strings('wyre_checkout.support'),
+		url: 'https://support.sendwyre.com/hc/en-us'
 	},
 	{
 		icon: 'lock',
-		title: strings('stripe_checkout.privacy_policy'),
-		url: 'https://stripe.com/privacy-center/legal'
+		title: strings('wyre_checkout.privacy_policy'),
+		url: 'https://www.sendwyre.com/legal/privacy-policy'
 	},
 	{
 		icon: 'file-text-o',
-		title: strings('stripe_checkout.terms_of_service'),
-		url: 'https://stripe.com/ssa'
+		title: strings('wyre_checkout.terms_of_service'),
+		url: 'https://www.sendwyre.com/legal/rewards-terms'
 	}
 ];
 
-function Stripe({ selectedAddress, ...props }) {
+function Wyre({ selectedAddress, ...props }) {
 	const [from, setFrom] = useState({
 		currency: 'USD',
 		amount: 0
@@ -65,7 +65,7 @@ function Stripe({ selectedAddress, ...props }) {
 	const [selected, setSelected] = useState(null);
 	const [currencies, setCurrencies] = useState([]);
 	const [errorMessage, setErrorMessage] = useState(null);
-	const [stripeUrl, setStripeUrl] = useState(null);
+	const [wyreUrl, setWyreUrl] = useState(null);
 	const [orderId, setOrderId] = useState(null);
 	const [viewFeeCalculation, setViewFeeCalculation] = useState(false);
 	const [isChangeCurrency, setIsChangeCurrency] = useState(false);
@@ -73,11 +73,11 @@ function Stripe({ selectedAddress, ...props }) {
 	const [isLoading, setLoading] = useState(false);
 	const [isViewMenu, setIsViewMenu] = useState(false);
 	const [priceOneToken, setPriceOneToken] = useState(0);
-	const [stripeFee, setStripeFee] = useState(7.98);
+	const [wyreFee, setWyreFee] = useState(7.98);
 	const [tokenFee, setTokenFee] = useState(45.96);
 	const [networkFee, setNetworkFee] = useState(1.44);
 	const [totalFee, setTotalFee] = useState(11.42);
-	const [isCheckoutStripe, setIsCheckoutStripe] = useState(false);
+	const [isCheckoutWyre, setIsCheckoutWyre] = useState(false);
 	const [isConfirm, setIsConfirm] = useState(false);
 	const [isViewInfoRate, setIsViewInfoRate] = useState(false);
 	const [isViewFullAddress, setIsViewFullAddress] = useState(false);
@@ -168,7 +168,7 @@ function Stripe({ selectedAddress, ...props }) {
 		setIsViewMenu(isView);
 	};
 
-	const captureStripeOrder = url => {
+	const captureWyreOrder = url => {
 		if (orderId == null) {
 			return;
 		}
@@ -179,7 +179,7 @@ function Stripe({ selectedAddress, ...props }) {
 			response => {
 				if (response.status === 200) {
 					// success
-					console.log('success Stripe transactions');
+					console.log('success Wyre transactions');
 					// const navigationAction = NavigationActions.navigate({
 					//   routeName: 'Home',
 					//   action: StackActions.reset({
@@ -191,7 +191,7 @@ function Stripe({ selectedAddress, ...props }) {
 					props.navigation.push('Home');
 				} else {
 					// should alert an error here
-					console.log('error Stripe transactions');
+					console.log('error Wyre transactions');
 					// props.navigation.navigate('PurchaseMethods')
 					props.navigation.push('Home');
 				}
@@ -212,14 +212,14 @@ function Stripe({ selectedAddress, ...props }) {
 			console.log('navigate to PurchaseMethods');
 			// props.navigation.navigate('PurchaseMethods')
 		} else if (url && url.includes(Config.SERVER_ADDRESS)) {
-			captureStripeOrder(url);
+			captureWyreOrder(url);
 		} else {
 			// unknown url
-			// captureStripeOrder()
+			// captureWyreOrder()
 		}
 	};
 
-	const payWithStripe = () => {
+	const payWithWyre = () => {
 		if (from == null || selected == null) {
 			setErrorMessage('Fields are required');
 			return;
@@ -234,7 +234,7 @@ function Stripe({ selectedAddress, ...props }) {
 			return;
 		}
 
-		setIsCheckoutStripe(true);
+		setIsCheckoutWyre(true);
 	};
 
 	const onViewMenuContent = (title, url) => {
@@ -265,29 +265,29 @@ function Stripe({ selectedAddress, ...props }) {
 						</TouchableOpacity>
 						<Text style={styles.markText}>
 							{viewFeeCalculation
-								? strings('stripe_checkout.hide_calculation')
-								: strings('stripe_checkout.see_calculation')}
+								? strings('wyre_checkout.hide_calculation')
+								: strings('wyre_checkout.see_calculation')}
 						</Text>
 					</View>
 					<View style={styles.collapsibleWrapper}>
 						<Collapsible collapsed={!viewFeeCalculation} style={styles.collapsible}>
 							<View style={styles.sRow}>
 								<View style={styles.sMark} />
-								<Text style={styles.markText}>{`${stripeFee} ${from.currency}`}</Text>
-								<Text style={styles.markTitleText}>{strings('stripe_checkout.stripe_fee')}</Text>
+								<Text style={styles.markText}>{`${wyreFee} ${from.currency}`}</Text>
+								<Text style={styles.markTitleText}>{strings('wyre_checkout.wyre_fee')}</Text>
 							</View>
 							<View style={styles.sRow}>
 								<View style={styles.sMark} />
 								<Text style={styles.markText}>{`${tokenFee} ${from.currency}`}</Text>
 								<Text style={styles.markTitleText}>
-									{strings('stripe_checkout.token_fee', { token: Routes.mainNetWork.coin })}
+									{strings('wyre_checkout.token_fee', { token: Routes.mainNetWork.coin })}
 								</Text>
 							</View>
 							<View style={styles.sRow}>
 								<View style={styles.sMark} />
 								<Text style={styles.markText}>{`${networkFee} ${from.currency}`}</Text>
 								<Text style={styles.markTitleText}>
-									{strings('stripe_checkout.network_exchange_fee')}
+									{strings('wyre_checkout.network_exchange_fee')}
 								</Text>
 							</View>
 						</Collapsible>
@@ -299,7 +299,7 @@ function Stripe({ selectedAddress, ...props }) {
 						<Icon name="minus" style={styles.markIcon} />
 					</View>
 					<Text style={styles.markText}>{`${totalFee} ${from.currency}`}</Text>
-					<Text style={styles.markTitleText}>{strings('stripe_checkout.total_fees')}</Text>
+					<Text style={styles.markTitleText}>{strings('wyre_checkout.total_fees')}</Text>
 				</View>
 
 				<View style={styles.mRow}>
@@ -308,7 +308,7 @@ function Stripe({ selectedAddress, ...props }) {
 					</View>
 					<Text style={styles.markText}>{`${priceOneToken} ${from.currency} = 1`}</Text>
 					<Text style={styles.tokenText}>{to.currency}</Text>
-					<Text style={styles.markTitleText}>{strings('stripe_checkout.rate')}</Text>
+					<Text style={styles.markTitleText}>{strings('wyre_checkout.rate')}</Text>
 					<TouchableOpacity
 						style={styles.iButton}
 						activeOpacity={0.7}
@@ -332,7 +332,7 @@ function Stripe({ selectedAddress, ...props }) {
 							color: colors.white
 						}}
 					>
-						{strings('stripe_checkout.you_pay')}
+						{strings('wyre_checkout.you_pay')}
 					</Text>
 
 					<TrackingTextInput
@@ -390,7 +390,7 @@ function Stripe({ selectedAddress, ...props }) {
 							color: colors.white
 						}}
 					>
-						{strings('stripe_checkout.receive_estimate')}
+						{strings('wyre_checkout.receive_estimate')}
 					</Text>
 
 					<Text style={styles.receiveText}>{to.amount}</Text>
@@ -412,14 +412,14 @@ function Stripe({ selectedAddress, ...props }) {
 	const renderContent = () => {
 		return (
 			<>
-				{stripeUrl == null && isLoading == false && (
+				{wyreUrl == null && isLoading == false && (
 					<TrackingScrollView
 						showsVerticalScrollIndicator={false}
 						contentContainerStyle={styles.scrollViewContainer}
 					>
 						<View style={styles.titleContainer}>
 							<View style={styles.titleWrapper}>
-								<Text style={styles.title}>{strings('stripe_checkout.buy_crypto')}</Text>
+								<Text style={styles.title}>{strings('wyre_checkout.buy_crypto')}</Text>
 								<TouchableOpacity
 									activeOpacity={0.7}
 									style={styles.menuButton}
@@ -439,15 +439,15 @@ function Stripe({ selectedAddress, ...props }) {
 								onPress={() => {
 									setIsConfirm(true);
 								}}
-								disabled={!(selected && from && from.amount > 0 && stripeUrl == null)}
+								disabled={!(selected && from && from.amount > 0 && wyreUrl == null)}
 							>
-								<Text style={styles.buttonText}>{strings('stripe_checkout.proceed_checkout')}</Text>
+								<Text style={styles.buttonText}>{strings('wyre_checkout.proceed_checkout')}</Text>
 							</StyledButton>
 						</View>
 					</TrackingScrollView>
 				)}
 
-				{/* {selected && from && from.amount > 0 && stripeUrl == null && ( */}
+				{/* {selected && from && from.amount > 0 && wyreUrl == null && ( */}
 				{/* )} */}
 
 				<Modal
@@ -487,7 +487,7 @@ function Stripe({ selectedAddress, ...props }) {
 					style={styles.iModal}
 				>
 					<View style={styles.iContent}>
-						<Text style={styles.iText}>{strings('stripe_checkout.rate_info')}</Text>
+						<Text style={styles.iText}>{strings('wyre_checkout.rate_info')}</Text>
 					</View>
 				</Modal>
 				{isLoading && (
@@ -517,7 +517,7 @@ function Stripe({ selectedAddress, ...props }) {
 			<TrackingScrollView style={{}} showsVerticalScrollIndicator={false}>
 				<View style={styles.titleContainer}>
 					<View style={styles.titleWrapper}>
-						<Text style={styles.title}>{strings('stripe_checkout.buy_crypto')}</Text>
+						<Text style={styles.title}>{strings('wyre_checkout.buy_crypto')}</Text>
 						<TouchableOpacity
 							activeOpacity={0.7}
 							style={styles.menuButton}
@@ -544,7 +544,7 @@ function Stripe({ selectedAddress, ...props }) {
 		const { color: mainnetColor, name: mainnetName } = Networks.mainnet;
 		return (
 			<>
-				{stripeUrl === null && isLoading == false && (
+				{wyreUrl === null && isLoading == false && (
 					<TrackingScrollView
 						showsVerticalScrollIndicator={false}
 						contentContainerStyle={styles.scrollViewContainer}
@@ -559,7 +559,7 @@ function Stripe({ selectedAddress, ...props }) {
 									<Icon name="arrow-left" style={styles.menuIcon} />
 								</TouchableOpacity>
 								<Text style={styles.title}>
-									{strings('stripe_checkout.buy_token_to_wallet', { token: to.currency })}
+									{strings('wyre_checkout.buy_token_to_wallet', { token: to.currency })}
 								</Text>
 								<TouchableOpacity
 									activeOpacity={0.7}
@@ -571,7 +571,7 @@ function Stripe({ selectedAddress, ...props }) {
 							</View>
 							<View style={styles.confirmTopWrapper}>
 								<Text style={styles.confirmSectionTitle}>
-									{strings('stripe_checkout.token_wallet_address', { token: to.currency })}
+									{strings('wyre_checkout.token_wallet_address', { token: to.currency })}
 								</Text>
 								<View style={styles.confirmTopNameWrapper}>
 									<View style={styles.confirmNameMarker} />
@@ -594,7 +594,7 @@ function Stripe({ selectedAddress, ...props }) {
 								{/* </TrackingScrollView> */}
 								<Image source={require('images/logo.png')} style={styles.icon} />
 							</TouchableOpacity>
-							<Text style={styles.confirmSectionTitle}>{strings('stripe_checkout.order_details')}</Text>
+							<Text style={styles.confirmSectionTitle}>{strings('wyre_checkout.order_details')}</Text>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
 								<Text style={styles.confirmContentLeft}>{`${to.amount} ${
@@ -604,26 +604,26 @@ function Stripe({ selectedAddress, ...props }) {
 							</View>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
-								<Text style={styles.confirmContentLeft}>{strings('stripe_checkout.stripe_fee')}</Text>
-								<Text style={styles.confirmContentRight}>{`${stripeFee} ${from.currency}`}</Text>
+								<Text style={styles.confirmContentLeft}>{strings('wyre_checkout.wyre_fee')}</Text>
+								<Text style={styles.confirmContentRight}>{`${wyreFee} ${from.currency}`}</Text>
 							</View>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
 								<Text style={styles.confirmContentLeft}>
-									{strings('stripe_checkout.token_fee', { token: Routes.mainNetWork.coin })}
+									{strings('wyre_checkout.token_fee', { token: Routes.mainNetWork.coin })}
 								</Text>
 								<Text style={styles.confirmContentRight}>{`${tokenFee} ${from.currency}`}</Text>
 							</View>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
 								<Text style={styles.confirmContentLeft}>
-									{strings('stripe_checkout.network_exchange_fee')}
+									{strings('wyre_checkout.network_exchange_fee')}
 								</Text>
 								<Text style={styles.confirmContentRight}>{`${networkFee} ${from.currency}`}</Text>
 							</View>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
-								<Text style={styles.confirmTotalLeft}>{strings('stripe_checkout.total')}</Text>
+								<Text style={styles.confirmTotalLeft}>{strings('wyre_checkout.total')}</Text>
 								<Text style={styles.confirmTotalRight}>{`${from.amount} ${from.currency}`}</Text>
 							</View>
 						</View>
@@ -631,19 +631,19 @@ function Stripe({ selectedAddress, ...props }) {
 							<StyledButton
 								type="normal"
 								onPress={() => {
-									payWithStripe();
+									payWithWyre();
 								}}
 							>
 								<Text style={styles.buttonText}>
-									{strings('stripe_checkout.buy_token', { token: to.currency })}
+									{strings('wyre_checkout.buy_token', { token: to.currency })}
 								</Text>
 							</StyledButton>
 						</View>
 					</TrackingScrollView>
 				)}
-				{stripeUrl !== null && (
+				{wyreUrl !== null && (
 					<WebView
-						source={{ uri: stripeUrl }}
+						source={{ uri: wyreUrl }}
 						startInLoadingState={true}
 						javaScriptEnabled={true}
 						thirdPartyCookiesEnabled={true}
@@ -689,12 +689,12 @@ function Stripe({ selectedAddress, ...props }) {
 							<TouchableOpacity
 								activeOpacity={0.7}
 								style={styles.menuButton}
-								onPress={() => setIsCheckoutStripe(false)}
+								onPress={() => setIsCheckoutWyre(false)}
 							>
 								<Icon name="arrow-left" style={styles.menuIcon} />
 							</TouchableOpacity>
 							<Text style={styles.title}>
-								{strings('stripe_checkout.stripe_payment', { token: to.currency })}
+								{strings('wyre_checkout.wyre_payment', { token: to.currency })}
 							</Text>
 							<TouchableOpacity
 								activeOpacity={0.7}
@@ -711,11 +711,11 @@ function Stripe({ selectedAddress, ...props }) {
 							<View style={styles.sectionLineWrapper}>
 								<View style={styles.sectionLine} />
 							</View>
-							<Text style={styles.sectionText}>{strings('stripe_checkout.or_pay_witth_card')}</Text>
+							<Text style={styles.sectionText}>{strings('wyre_checkout.or_pay_witth_card')}</Text>
 						</View>
-						<Text style={styles.label}>{strings('stripe_checkout.email')}</Text>
+						<Text style={styles.label}>{strings('wyre_checkout.email')}</Text>
 						<TrackingTextInput style={[styles.emailInput, isIOS ? styles.inputIOS : styles.inputAndroid]} />
-						<Text style={styles.label}>{strings('stripe_checkout.card_infomation')}</Text>
+						<Text style={styles.label}>{strings('wyre_checkout.card_infomation')}</Text>
 						<View style={styles.cardInfoWrapper}>
 							<View style={styles.cardNumberWrapper}>
 								<TrackingTextInput
@@ -734,7 +734,7 @@ function Stripe({ selectedAddress, ...props }) {
 							<View style={styles.cardInfoBottomWrapper}>
 								<TrackingTextInput
 									style={[styles.mmYY, isIOS ? styles.inputIOS : styles.inputAndroid]}
-									placeholder={strings('stripe_checkout.mm_yy')}
+									placeholder={strings('wyre_checkout.mm_yy')}
 									placeholderTextColor={colors.grey300}
 									value={cardInfo.expiredDate}
 									onChangeText={e => {
@@ -749,7 +749,7 @@ function Stripe({ selectedAddress, ...props }) {
 								<View style={[styles.cardCVCWrapper, isIOS ? styles.inputIOS : styles.inputAndroid]}>
 									<TrackingTextInput
 										style={styles.cardCVC}
-										placeholder={strings('stripe_checkout.cvc')}
+										placeholder={strings('wyre_checkout.cvc')}
 										placeholderTextColor={colors.grey300}
 										keyboardType="numeric"
 										value={cardInfo.cvc}
@@ -760,7 +760,7 @@ function Stripe({ selectedAddress, ...props }) {
 								</View>
 							</View>
 						</View>
-						<Text style={styles.label}>{strings('stripe_checkout.name_of_card')}</Text>
+						<Text style={styles.label}>{strings('wyre_checkout.name_of_card')}</Text>
 						<TrackingTextInput
 							style={[styles.emailInput, isIOS ? styles.inputIOS : styles.inputAndroid]}
 							value={cardInfo.name}
@@ -769,7 +769,7 @@ function Stripe({ selectedAddress, ...props }) {
 							}}
 							autoCapitalize="characters"
 						/>
-						<Text style={styles.label}>{strings('stripe_checkout.country_or_region')}</Text>
+						<Text style={styles.label}>{strings('wyre_checkout.country_or_region')}</Text>
 						<TouchableOpacity
 							style={styles.countryWrapper}
 							activeOpacity={0.7}
@@ -784,7 +784,7 @@ function Stripe({ selectedAddress, ...props }) {
 					<View style={styles.fromWrapper}>
 						<StyledButton type="normal" onPress={() => {}}>
 							<Text style={styles.buttonText}>
-								{strings('stripe_checkout.pay', { token: to.currency })}
+								{strings('wyre_checkout.pay', { token: to.currency })}
 							</Text>
 						</StyledButton>
 					</View>
@@ -837,7 +837,7 @@ function Stripe({ selectedAddress, ...props }) {
 		<SafeAreaView style={styles.container}>
 			{isViewMenu
 				? renderMenu()
-				: isCheckoutStripe
+				: isCheckoutWyre
 				? renderCheckout()
 				: isConfirm
 				? renderConfirm()
@@ -846,7 +846,7 @@ function Stripe({ selectedAddress, ...props }) {
 	);
 }
 
-Stripe.propTypes = {
+Wyre.propTypes = {
 	selectedAddress: PropTypes.any,
 	accounts: PropTypes.object,
 	identities: PropTypes.object,
@@ -856,7 +856,7 @@ Stripe.propTypes = {
 	tokens: PropTypes.array
 };
 
-Stripe.navigationOptions = ({ navigation }) => getStripeNavbar(navigation);
+Wyre.navigationOptions = ({ navigation }) => getWyreNavbar(navigation);
 
 const mapStateToProps = state => ({
 	provider: state.engine.backgroundState.NetworkController.provider,
@@ -870,4 +870,4 @@ const mapStateToProps = state => ({
 	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate
 });
 
-export default connect(mapStateToProps)(Stripe);
+export default connect(mapStateToProps)(Wyre);

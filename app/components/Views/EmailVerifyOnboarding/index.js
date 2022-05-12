@@ -53,7 +53,6 @@ const EmailVerifyOnboarding = props => {
 	useEffect(() => {
 		if (isCoundown) {
 			const intevalCoundown = setInterval(() => {
-				console.log('111');
 				const coundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
 				let hour = Math.floor(coundownTime / 3600000);
 				let minute = Math.floor((coundownTime % 3600000) / 60000);
