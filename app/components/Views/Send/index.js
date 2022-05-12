@@ -271,9 +271,9 @@ class Send extends PureComponent {
 			this.props.navigation.navigate('SendFlowView');
 			return;
 		}
-		if (chain_id) {
-			this.handleNetworkSwitch(chain_id);
-		}
+		// if (chain_id) {
+		// 	this.handleNetworkSwitch(chain_id);
+		// }
 
 		let newTxMeta = {};
 		switch (action) {

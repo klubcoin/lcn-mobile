@@ -203,16 +203,10 @@ class DeeplinkManager {
 						);
 						break;
 					case 'send':
-						this.handleEthereumUrl(
-							urlObj.href.replace(`https://${MM_UNIVERSAL_LINK_HOST}/send/`, 'ethereum:'),
-							origin
-						);
+						this.handleEthereumUrl(urlObj.href.replace('klubcoin://send/', 'ethereum:'), origin);
 						break;
 					case 'approve':
-						this.handleEthereumUrl(
-							urlObj.href.replace(`https://${MM_UNIVERSAL_LINK_HOST}/approve/`, 'ethereum:'),
-							origin
-						);
+						this.handleEthereumUrl(urlObj.href.replace('klubcoin://approve/', 'ethereum:'), origin);
 						break;
 					case 'payment':
 					case 'focus':
