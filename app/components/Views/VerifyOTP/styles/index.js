@@ -9,12 +9,13 @@ const styles = StyleSheet.create({
 	resendButton: {},
 	resendText: {},
 	textWrapper: {},
-	resendText: {},
 	errorText: {},
 	errorTextBold: {},
 	errorText2: {},
 	text: {},
-	skipButton: {}
+	skipButton: {},
+	loadingWrapper: {},
+	loadingWrapper1: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

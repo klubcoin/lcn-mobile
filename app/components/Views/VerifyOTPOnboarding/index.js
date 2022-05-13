@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View, SafeAreaView } from 'react-native';
+import { Text, View, SafeAreaView, ActivityIndicator } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -20,6 +20,7 @@ import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
 import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { colors } from '../../../styles/common';
 
 class VerifyOTPOnboarding extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -38,6 +39,9 @@ class VerifyOTPOnboarding extends PureComponent {
 	verifySuccess = false;
 	resendOTP = false;
 	showRemindLaterModal = false;
+	sendingOTP = false;
+	gettingEmailStatus = false;
+
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
@@ -52,7 +56,9 @@ class VerifyOTPOnboarding extends PureComponent {
 			tooManySendOtp: observable,
 			verifySuccess: observable,
 			resendOTP: observable,
-			showRemindLaterModal: observable
+			showRemindLaterModal: observable,
+			sendingOTP: observable,
+			gettingEmailStatus: observable
 		});
 		this.email = preferences?.onboardProfile.email;
 	}
@@ -66,7 +72,10 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	sendOTPEmail() {
+		if (this.sendEmailOTP) return;
+		this.sendingOTP = true;
 		APIService.sendEmailOTP(this.email, (success, response) => {
+			this.sendingOTP = false;
 			switch (response) {
 				case 'success':
 					this.resendOTP = false;
@@ -92,7 +101,9 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	verifyEmail = () => {
+		this.gettingEmailStatus = true;
 		APIService.getOtpStatus(this.email, (success, json) => {
+			this.gettingEmailStatus = false;
 			if (!!json?.creationDate) {
 				this.storeTimeSendEmail(json?.creationDate);
 				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
@@ -125,6 +136,7 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	timing() {
+		clearInterval(this.interval);
 		this.interval = setInterval(() => {
 			this.timingResend = this.timingResend - 1;
 			if (this.timingResend <= 0) {
@@ -171,16 +183,26 @@ class VerifyOTPOnboarding extends PureComponent {
 					/>
 					{!this.tooManyVerifyAttempts &&
 						(!this.tooManySendOtp ? (
-							<Text style={styles.textWrapper}>
-								<Text>{strings('verify_otp.not_receive_code')}</Text>
-								{this.timingResend > 0 ? (
-									<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
-								) : (
-									<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
-										{strings('verify_otp.resend_now')}
-									</Text>
-								)}
-							</Text>
+							this.sendingOTP ? (
+								<View style={styles.loadingWrapper1}>
+									<ActivityIndicator color={colors.white} size={'small'} />
+								</View>
+							) : (
+								<Text style={styles.textWrapper}>
+									<Text>{strings('verify_otp.not_receive_code')}</Text>
+									{this.gettingEmailStatus ? (
+										<View style={styles.loadingWrapper}>
+											<ActivityIndicator color={colors.white} />
+										</View>
+									) : this.timingResend > 0 ? (
+										<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
+									) : (
+										<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
+											{strings('verify_otp.resend_now')}
+										</Text>
+									)}
+								</Text>
+							)
 						) : (
 							<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
 						))}
