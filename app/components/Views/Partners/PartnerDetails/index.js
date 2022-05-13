@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View, Image, Linking, Alert } from 'react-native';
+import { Text, View, Linking, Alert } from 'react-native';
 import { observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
@@ -7,8 +7,7 @@ import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { strings } from '../../../../../locales/i18n';
 import StyledButton from '../../../UI/StyledButton';
 import styles from './styles/index';
-import APIService, { basicAuth } from '../../../../services/APIService';
-import * as base64 from 'base-64';
+import APIService from '../../../../services/APIService';
 import PartnerImage from '../components/PartnerImage';
 
 class PartnerDetails extends PureComponent {
@@ -17,26 +16,24 @@ class PartnerDetails extends PureComponent {
 	};
 	name = '';
 	description = '';
-	icon = '';
 	image = '';
 	websiteUrl = '';
+
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
 			name: observable,
 			description: observable,
-			icon: observable,
 			websiteUrl: observable,
 			image: observable
 		});
 		const { params } = this.props.navigation.state;
 		this.name = params?.name ?? '';
 		this.description = params?.description ?? '';
-		this.icon = params?.icon ?? '';
 		this.websiteUrl = params?.websiteUrl ?? '';
 		this.image = params?.image ?? '';
-		// console.log(this.props.navigation);
 	}
+
 	async onViewPartners() {
 		const supported = await Linking.canOpenURL(this.websiteUrl);
 
@@ -46,6 +43,7 @@ class PartnerDetails extends PureComponent {
 			Alert.alert(`Don't know how to open this URL: ${this.websiteUrl}`);
 		}
 	}
+
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">

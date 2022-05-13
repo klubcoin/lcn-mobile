@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, View, Image, StyleSheet, Text, InteractionManager, PanResponder } from 'react-native';
+import { TouchableOpacity, View, Image, Text, InteractionManager, PanResponder } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,7 +11,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { hasBlockExplorer, findBlockExplorerForRpc, getBlockExplorerName, isMainNet } from '../../../util/networks';
 import Identicon from '../Identicon';
 import StyledButton from '../StyledButton';
@@ -31,13 +31,11 @@ import { showAlert } from '../../../actions/alert';
 import { getEtherscanAddressUrl, getEtherscanBaseUrl } from '../../../util/etherscan';
 import Engine from '../../../core/Engine';
 import Logger from '../../../util/Logger';
-import Device from '../../../util/Device';
 import OnboardingWizard from '../OnboardingWizard';
 import ReceiveRequest from '../ReceiveRequest';
 import Analytics from '../../../core/Analytics';
 import AppConstants from '../../../core/AppConstants';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import URL from 'url-parse';
 import EthereumAddress from '../EthereumAddress';
 import { getEther } from '../../../util/transactions';
 import { newAssetTransaction } from '../../../actions/transaction';
@@ -49,7 +47,6 @@ import InvalidCustomNetworkAlert from '../InvalidCustomNetworkAlert';
 import { RPC } from '../../../constants/network';
 import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorState } from '../../../util/general';
 import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
-import Colors from 'common/colors';
 import Helper from 'common/Helper';
 import Routes from '../../../common/routes';
 import ConfirmLogout from '../ConfirmLogout';
@@ -64,7 +61,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
 import * as RNFS from 'react-native-fs';
 import routes from '../../../common/routes';
-import { BNToHex, fromWei, weiToFiat } from '../../../util/number';
+import {  fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
 import { EXCEPTION_ACTIVE_APP } from '../TrackingTextInput';
@@ -1030,7 +1027,6 @@ class DrawerView extends PureComponent {
 							testID={'drawer-send-button'}
 						>
 							<View style={styles.buttonContent}>
-								{/* {this.getIcon('paper-plane', 16, Colors.primary)} */}
 								<Text style={styles.buttonText}>{strings('drawer.send_button').toUpperCase()}</Text>
 							</View>
 						</StyledButton>
@@ -1041,7 +1037,6 @@ class DrawerView extends PureComponent {
 							testID={'drawer-receive-button'}
 						>
 							<View style={styles.buttonContent}>
-								{/* {this.getIcon('dollar', 16, Colors.primary)} */}
 								<Text style={styles.buttonText}>
 									{strings('asset_overview.buy_button').toUpperCase()}
 								</Text>

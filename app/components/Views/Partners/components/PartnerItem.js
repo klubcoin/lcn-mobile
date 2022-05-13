@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../../styles/common';
-import APIService, { basicAuth } from '../../../../services/APIService';
-import * as base64 from 'base-64';
+import APIService from '../../../../services/APIService';
 import PartnerImage from './PartnerImage';
 
 export default function PartnerItem({ imageSrc, onItemPress }) {

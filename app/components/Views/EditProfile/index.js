@@ -40,7 +40,7 @@ import emojiRegex from 'emoji-regex';
 import APIService from '../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
-import { SUCCESS, ALREADY_EXISTS } from '../ProfileOnboard';
+import { SUCCESS } from '../ProfileOnboard';
 import CryptoSignature from '../../../core/CryptoSignature';
 import TrackingScrollView from '../../UI/TrackingScrollView';
 

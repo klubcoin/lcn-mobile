@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { swapsUtils } from '@metamask/swaps-controller';
 import { connect } from 'react-redux';
@@ -16,10 +16,8 @@ import { protectWalletModalVisible } from '../../../actions/user';
 import { toggleAccountsModal, toggleReceiveModal } from '../../../actions/modals';
 import { newAssetTransaction } from '../../../actions/transaction';
 
-import Device from '../../../util/Device';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import { renderFiat, balanceToFiat, hexToBN, weiToFiat, fromWei } from '../../../util/number';
-import { showInfo } from '../../../util/notify';
+import { hexToBN, weiToFiat, fromWei } from '../../../util/number';
 
 import { renderAccountName } from '../../../util/address';
 import { isMainNet } from '../../../util/networks';
@@ -29,7 +27,7 @@ import { isSwapsAllowed } from '../Swaps/utils';
 import Identicon from '../Identicon';
 import AssetActionButton from '../AssetActionButton';
 import EthereumAddress from '../EthereumAddress';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import Helper from 'common/Helper';
@@ -361,7 +359,6 @@ class AccountOverview extends PureComponent {
 							<AssetActionButton
 								icon="trade"
 								onPress={() => {
-									// showInfo('This feature in under maintain');
 									this.props.navigation.navigate('ComingSoon');
 								}}
 								// onPress={this.onTrade}

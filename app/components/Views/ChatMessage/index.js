@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
 	},
 	meMessageWrapper: {
 		backgroundColor: colors.lightPurple,
-		// marginTop: 16,
 		borderRadius: 12,
 		maxWidth: '70%',
 		alignSelf: 'flex-end',
@@ -150,7 +149,6 @@ const styles = StyleSheet.create({
 		color: colors.white,
 		padding: 0,
 		marginVertical: 6
-		// backgroundColor: 'red'
 	},
 	sendButton: {
 		padding: 8,
@@ -613,8 +611,6 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 								.then(image => {
 									setIsViewModal(false);
 									onSendImage(image.path);
-									// this.avatar = image.path;
-									// this.isChangedAvatar = true;
 								})
 								.catch(err => {
 									console.warn(err);
@@ -637,8 +633,6 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 						.then(image => {
 							setIsViewModal(false);
 							onSendImage(image.path);
-							// this.avatar = image.path;
-							// this.isChangedAvatar = true;
 						})
 						.catch(err => {
 							console.warn(err);
@@ -658,8 +652,6 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 				.then(image => {
 					setIsViewModal(false);
 					onSendImage(image.path);
-					// this.avatar = image.path;
-					// this.isChangedAvatar = true;
 				})
 				.catch(err => {
 					console.warn(err);
@@ -695,8 +687,6 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 			.then(image => {
 				setIsViewModal(false);
 				onSendImage(image.path);
-				// this.avatar = image.path;
-				// this.isChangedAvatar = true;
 			})
 			.catch(err => {
 				console.warn(err);

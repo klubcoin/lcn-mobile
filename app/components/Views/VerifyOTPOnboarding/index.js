@@ -14,11 +14,10 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import Emoji from 'react-native-emoji';
 import Confetti from '../../UI/Confetti';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../constants/storage';
+import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
 import preferences from '../../../../app/store/preferences';
 import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
-import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
 import TrackingScrollView from '../../UI/TrackingScrollView';
 import { colors } from '../../../styles/common';
 
@@ -38,7 +37,6 @@ class VerifyOTPOnboarding extends PureComponent {
 	verifySuccess = false;
 	verifySuccess = false;
 	resendOTP = false;
-	showRemindLaterModal = false;
 	sendingOTP = false;
 	gettingEmailStatus = false;
 
@@ -56,7 +54,6 @@ class VerifyOTPOnboarding extends PureComponent {
 			tooManySendOtp: observable,
 			verifySuccess: observable,
 			resendOTP: observable,
-			showRemindLaterModal: observable,
 			sendingOTP: observable,
 			gettingEmailStatus: observable
 		});
@@ -222,7 +219,6 @@ class VerifyOTPOnboarding extends PureComponent {
 						type={'normal'}
 						containerStyle={styles.skipButton}
 						onPress={() => {
-							// this.showRemindLaterModal = true;
 							this.props.navigation.navigate('HomeNav');
 							this.props.navigation.popToTop();
 							this.props.navigation.goBack(null);
@@ -236,9 +232,6 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	async onDone() {
-		// this.props.navigation.navigate('HomeNav');
-		// this.props.navigation.popToTop();
-		// this.props.navigation.goBack(null);
 		const onboardingWizard = await AsyncStorage.getItem(ONBOARDING_WIZARD);
 		// Check if user passed through metrics opt-in screen
 		const metricsOptIn = await AsyncStorage.getItem(METRICS_OPT_IN);
@@ -263,9 +256,6 @@ class VerifyOTPOnboarding extends PureComponent {
 				<Text style={styles.congratulations}>{strings('verify_otp.congratulations')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text1')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text2')}</Text>
-				{/* <Text style={styles.learnMore} onPress={() => this.onLearnMore()}>
-					{strings('verify_otp.learn_more')}
-				</Text> */}
 				<View style={styles.footer}>
 					<StyledButton type={'normal'} onPress={() => this.onDone()}>
 						{strings('verify_otp.done')}
@@ -285,16 +275,6 @@ class VerifyOTPOnboarding extends PureComponent {
 							{this.verifySuccess && this.renderCongratulations()}
 						</TrackingScrollView>
 					</View>
-					{/* <SkipVerifyEmailModal
-						modalVisible={this.showRemindLaterModal && !this.verifySuccess}
-						onCancel={() => {
-							this.showRemindLaterModal = false;
-						}}
-						onConfirm={() => {
-							this.showRemindLaterModal = false;
-							this.onDone();
-						}}
-					/> */}
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import API from 'services/api';
 import Routes from 'common/routes';
-import Engine from '@core/Engine';
 import { WebView } from 'react-native-webview';
 import { NavigationActions, StackActions } from 'react-navigation';
 import CookieManager from '@react-native-community/cookies';

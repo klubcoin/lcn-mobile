@@ -12,11 +12,6 @@ const brandStyles = StyleSheet.create({
 		fontWeight: '700'
 	},
 	resendButton: {},
-	resendText: {
-		color: colors.white,
-		fontSize: 20,
-		fontWeight: 'bold'
-	},
 	textWrapper: {
 		fontSize: 16,
 		color: colors.white,

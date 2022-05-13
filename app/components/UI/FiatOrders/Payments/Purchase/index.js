@@ -16,7 +16,7 @@ function Purchase({ selectedAddress, ...props }) {
 	};
 
 	const onBuyWithWyre = () => {
-		props.navigation.navigate('BuyWithStripe');
+		props.navigation.navigate('BuyWithWyre');
 	};
 
 	return (

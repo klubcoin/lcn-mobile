@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, InteractionManager } from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { getTipRequestOptionsTitle } from '../../../UI/Navbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -120,8 +120,6 @@ class TipperAmount extends PureComponent {
 		ticker: PropTypes.string
 	};
 
-	amountInput = React.createRef();
-
 	state = {
 		searchInputValue: '',
 		results: [],
@@ -134,8 +132,6 @@ class TipperAmount extends PureComponent {
 		symbol: undefined,
 		showError: false,
 		inputWidth: { width: '99%' },
-		viewTipModal: false,
-		tipData: {},
 		disabledButton: false,
 		errorMessage: ''
 	};
@@ -157,15 +153,6 @@ class TipperAmount extends PureComponent {
 		}
 	};
 
-	// componentDidUpdate = () => {
-	// 	InteractionManager.runAfterInteractions(() => {
-	// 		this.amountInput.current && this.amountInput.current.focus();
-	// 	});
-	// };
-
-	/**
-	 * Go to asset selection view and modify navbar accordingly
-	 */
 	goToAssetSelection = () => {
 		const { navigation } = this.props;
 		navigation && navigation.setParams({ mode: MODE_SELECT, dispatch: undefined });
@@ -478,7 +465,6 @@ class TipperAmount extends PureComponent {
 				navigation && navigation.replace('TipperDetails', request);
 			}
 		} catch (e) {
-			console.log('error123', e);
 			this.setState({ showError: true });
 		}
 	};
@@ -547,7 +533,6 @@ class TipperAmount extends PureComponent {
 										style={styles.input}
 										value={amount}
 										onSubmitEditing={this.onNext}
-										ref={this.amountInput}
 										testID={'request-amount-input'}
 										maxLength={256}
 										onBlur={this.onValidateAmount}
@@ -618,7 +603,7 @@ class TipperAmount extends PureComponent {
 	};
 
 	render() {
-		const { mode, tipData, viewTipModal } = this.state;
+		const { mode } = this.state;
 
 		return (
 			<SafeAreaView style={styles.wrapper}>

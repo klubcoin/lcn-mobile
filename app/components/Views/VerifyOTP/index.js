@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View, TouchableOpacity, BackHandler, ActivityIndicator } from 'react-native';
+import { Text, View, BackHandler, ActivityIndicator } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -21,9 +21,7 @@ class VerifyOTP extends PureComponent {
 	};
 	partnerList = [];
 	otpEmail = '';
-	otpPhone = '';
 	email = '';
-	phone = '';
 	timingResend = 0;
 	interval = null;
 	resendAble = true;
@@ -41,9 +39,7 @@ class VerifyOTP extends PureComponent {
 		makeObservable(this, {
 			partnerList: observable,
 			otpEmail: observable,
-			otpPhone: observable,
 			email: observable,
-			phone: observable,
 			timingResend: observable,
 			interval: observable,
 			resendAble: observable,
@@ -57,7 +53,6 @@ class VerifyOTP extends PureComponent {
 		});
 		const { params } = props.navigation.state;
 		this.email = params?.email;
-		this.phone = params?.phone;
 		this.callback = params?.callback;
 	}
 
@@ -193,10 +188,6 @@ class VerifyOTP extends PureComponent {
 		this.otpEmail = text.replace(/\D/g, '');
 	}
 
-	setOtpPhone(text) {
-		this.otpPhone = text.replace(/\D/g, '');
-	}
-
 	renderEmailOtp() {
 		return (
 			<View style={styles.wrapper}>
@@ -257,30 +248,12 @@ class VerifyOTP extends PureComponent {
 			</View>
 		);
 	}
-	renderPhoneOtp() {
-		return (
-			<View style={styles.wrapper}>
-				<Text style={styles.title}>{`${strings('verify_otp.verify_otp')} ${
-					this.phone.split('-')[0]
-				}-${this.phone
-					.split('-')[1]
-					.split('')
-					.fill('*', 2, 9)
-					.join('')}`}</Text>
-				<OTPInput value={this.otpPhone} onChange={text => this.setOtpPhone(text)} />
-				<TouchableOpacity style={styles.resendButton} activeOpacity={0.7}>
-					<Text style={styles.resendText}>{strings('verify_otp.resend_code').toUpperCase()}</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
 
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					{this.email && this.email !== '' && this.renderEmailOtp()}
-					{this.phone && this.phone !== '' && this.renderPhoneOtp()}
 					<View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', padding: 12 }}>
 						<StyledButton
 							type={'normal'}

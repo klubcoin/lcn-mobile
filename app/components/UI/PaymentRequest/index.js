@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, InteractionManager } from 'react-native';
 import { connect } from 'react-redux';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors, baseStyles } from '../../../styles/common';
 import { getPaymentRequestOptionsTitle } from '../../UI/Navbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import contractMap from '@metamask/contract-metadata';
@@ -120,8 +120,6 @@ class PaymentRequest extends PureComponent {
 		ticker: PropTypes.string
 	};
 
-	amountInput = React.createRef();
-
 	state = {
 		searchInputValue: '',
 		results: [],
@@ -152,12 +150,6 @@ class PaymentRequest extends PureComponent {
 			this.goToAmountInput(receiveAsset);
 		}
 	};
-
-	// componentDidUpdate = () => {
-	// 	InteractionManager.runAfterInteractions(() => {
-	// 		this.amountInput.current && this.amountInput.current.focus();
-	// 	});
-	// };
 
 	/**
 	 * Go to asset selection view and modify navbar accordingly
@@ -512,7 +504,6 @@ class PaymentRequest extends PureComponent {
 										style={styles.input}
 										value={amount}
 										onSubmitEditing={this.onNext}
-										ref={this.amountInput}
 										testID={'request-amount-input'}
 										maxLength={256}
 										onBlur={this.onValidateAmount}
