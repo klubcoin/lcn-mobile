@@ -95,6 +95,7 @@ export default class StyledButton extends PureComponent {
 				onPressOut={onPressOut}
 				style={[...fontStyle, styles[`${formattedTypes}Text`], style]}
 				containerStyle={[...containerStyle, styles[formattedTypes], this.props.containerStyle]}
+				activeOpacity={0.6}
 			>
 				{children}
 			</Button>

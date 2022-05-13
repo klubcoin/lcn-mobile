@@ -964,6 +964,7 @@ class DrawerView extends PureComponent {
 									style={styles.identiconWrapper}
 									onPress={this.toggleEditWalletName}
 									testID={'navbar-account-identicon'}
+									activeOpacity={0.6}
 								>
 									<View style={styles.identiconBorder}>
 										{!!avatar ? (
@@ -1079,6 +1080,7 @@ class DrawerView extends PureComponent {
 														this.browserSectionRef
 													}
 													onPress={() => item.action()} // eslint-disable-line
+													activeOpacity={0.6}
 												>
 													{item.icon ? (
 														item.routeNames && item.routeNames.includes(currentRoute) ? (

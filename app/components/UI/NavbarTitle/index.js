@@ -80,7 +80,7 @@ class NavbarTitle extends PureComponent {
 			<TouchableOpacity
 				onPress={this.openNetworkList}
 				style={styles.wrapper}
-				activeOpacity={this.props.disableNetwork ? 1 : 0.2}
+				activeOpacity={this.props.disableNetwork ? 1 : 0.6}
 				testID={'open-networks-button'}
 			>
 				{title ? (

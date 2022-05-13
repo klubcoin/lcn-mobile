@@ -152,6 +152,7 @@ class NetworksSettings extends PureComponent {
 				onPress={() => this.onPress(network)} // eslint-disable-line
 				onLongPress={() => isCustomRPC && this.showRemoveMenu(network)} // eslint-disable-line
 				testID={'select-network'}
+				activeOpacity={0.7}
 			>
 				<View style={styles.network}>
 					<View style={[styles.networkIcon, color ? { backgroundColor: color } : styles.otherNetworkIcon]} />
@@ -183,7 +184,7 @@ class NetworksSettings extends PureComponent {
 		const { frequentRpcList } = this.props;
 		if (frequentRpcList.length > 0) {
 			return (
-				<View testID={'rpc-networks'} style={{marginTop: 10}}>
+				<View testID={'rpc-networks'} style={{ marginTop: 10 }}>
 					<Text style={styles.sectionLabel}>{strings('app_settings.network_rpc_networks')}</Text>
 					{this.renderRpcNetworks()}
 				</View>
@@ -199,6 +200,7 @@ class NetworksSettings extends PureComponent {
 					style={styles.network}
 					key={`network-${MAINNET}`}
 					onPress={() => this.onPress(MAINNET)} // eslint-disable-line
+					activeOpacity={0.6}
 				>
 					<View style={styles.itemRoot}>
 						<View style={[styles.networkIcon, { backgroundColor: mainnetColor }]} />

@@ -83,8 +83,11 @@ function AssetActionButton({ onPress, icon, label, disabled, lastIcon = false })
 			onPress={onPress}
 			style={[styles.button, disabled && styles.disabledButton, { marginRight: lastIcon ? 0 : 6 }]}
 			disabled={disabled}
+			activeOpacity={0.6}
 		>
-			<View style={styles.buttonIconWrapper}>{icon && (typeof icon === 'string' ? getImageIcon(icon) : icon)}</View>
+			<View style={styles.buttonIconWrapper}>
+				{icon && (typeof icon === 'string' ? getImageIcon(icon) : icon)}
+			</View>
 			<View style={styles.textWrapperStyle}>
 				{/* {getLabelIcon(icon)} */}
 				<Text centered style={styles.buttonText} numberOfLines={1}>

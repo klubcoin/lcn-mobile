@@ -330,7 +330,11 @@ class AccountOverview extends PureComponent {
 								<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
 							)} */}
 
-							<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
+							<TouchableOpacity
+								style={styles.addressWrapper}
+								onPress={this.copyAccountToClipboard}
+								activeOpacity={0.6}
+							>
 								<EthereumAddress address={address} style={styles.address} type={'short'} />
 							</TouchableOpacity>
 						</View>

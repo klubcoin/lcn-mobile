@@ -216,7 +216,11 @@ class Settings extends PureComponent {
 							<Text style={styles.title}>{strings('app_settings.accounts_identicon_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.accounts_identicon_desc')}</Text>
 							<View style={styles.identicon_container}>
-								<TouchableOpacity onPress={() => setUseBlockieIcon(false)} style={styles.identicon_row}>
+								<TouchableOpacity
+									onPress={() => setUseBlockieIcon(false)}
+									style={styles.identicon_row}
+									activeOpacity={0.6}
+								>
 									<View style={[styles.border, !useBlockieIcon && styles.selected]}>
 										<Jazzicon size={diameter} address={selectedAddress} />
 									</View>
@@ -224,7 +228,11 @@ class Settings extends PureComponent {
 										{strings('app_settings.jazzicons')}
 									</Text>
 								</TouchableOpacity>
-								<TouchableOpacity onPress={() => setUseBlockieIcon(true)} style={styles.identicon_row}>
+								<TouchableOpacity
+									onPress={() => setUseBlockieIcon(true)}
+									style={styles.identicon_row}
+									activeOpacity={0.6}
+								>
 									<View style={[styles.border, useBlockieIcon && styles.selected]}>
 										<Image source={{ uri: toDataUrl(selectedAddress) }} style={styles.blockie} />
 									</View>

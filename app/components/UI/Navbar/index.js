@@ -674,9 +674,7 @@ export function getComingSoonNavbarOptions(navigation) {
 			shadowColor: colors.white,
 			elevation: 0,
 			backgroundColor: colors.white,
-			borderBottomWidth: 0,
-			height: 50,
-			marginTop: 20
+			borderBottomWidth: 0
 		},
 		headerTitle: (
 			<View style={styles.optinHeaderLeft}>

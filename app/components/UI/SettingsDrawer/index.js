@@ -32,7 +32,7 @@ const defaultProps = {
 };
 
 const SettingsDrawer = ({ title, description, noBorder, onPress, warning }) => (
-	<TouchableOpacity onPress={onPress}>
+	<TouchableOpacity onPress={onPress} activeOpacity={0.6}>
 		<View style={noBorder ? [styles.root, styles.noBorder] : styles.root}>
 			<View style={styles.content}>
 				{title && <Text style={styles.title}>{title}</Text>}
