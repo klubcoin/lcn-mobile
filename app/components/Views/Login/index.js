@@ -164,7 +164,7 @@ class Login extends PureComponent {
 		this.mounted = false;
 	}
 
-	onLogin = async () => {
+	onLogin = async ({ hasCredentials = false }) => {
 		if (!this.state.internetConnect) {
 			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
 			return;
@@ -181,10 +181,10 @@ class Login extends PureComponent {
 		const locked = !passwordRequirementsMet(password);
 		if (locked) this.setState({ error: strings('login.invalid_email_or_password') });
 		if (this.state.loading || locked) return;
-		this.handleLogin(password);
+		this.handleLogin(password, hasCredentials);
 	};
 
-	handleLogin = async password => {
+	handleLogin = async (password, hasCredentials) => {
 		try {
 			this.setState({ loading: true, error: null });
 			const { KeyringController } = Engine.context;
@@ -197,12 +197,14 @@ class Login extends PureComponent {
 				await recreateVaultWithSamePassword(password, this.props.selectedAddress);
 				await AsyncStorage.setItem(ENCRYPTION_LIB, ORIGINAL);
 			}
-			if (this.state.rememberMe) {
-				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
-			} else if (this.state.biometryChoice && this.state.biometryType) {
-				await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
-			} else {
-				await SecureKeychain.resetGenericPassword();
+			if (!hasCredentials) {
+				if (this.state.rememberMe) {
+					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
+				} else if (this.state.biometryChoice && this.state.biometryType) {
+					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
+				} else {
+					await SecureKeychain.resetGenericPassword();
+				}
 			}
 
 			// Get onboarding wizard state
@@ -357,6 +359,7 @@ class Login extends PureComponent {
 		const { current: emailField } = this.emailFieldRef;
 		field.blur();
 		emailField.blur();
+		const { hasCredentials, rememberMe } = this.state;
 		try {
 			const credentials = await SecureKeychain.getGenericPassword();
 			if (!this.state.internetConnect) {
@@ -371,7 +374,7 @@ class Login extends PureComponent {
 			emailField.setValue(preferences?.onboardProfile?.email);
 			field.blur();
 			emailField.blur();
-			this.onLogin();
+			this.onLogin({ hasCredentials: hasCredentials && !rememberMe });
 		} catch (error) {
 			Logger.log(error);
 		}
