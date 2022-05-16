@@ -188,30 +188,32 @@ export default class SelectComponent extends PureComponent {
 				style={styles.modal}
 				useNativeDriver
 			>
-				<View style={styles.modalView}>
-					<View style={styles.accesoryBar}>
-						<Text style={styles.label}>{this.props.label}</Text>
-					</View>
-					<TrackingScrollView style={styles.list} ref={this.scrollView}>
-						<View style={styles.listWrapper}>
-							{this.props.options.map(option => (
-								<TouchableOpacity
-									// eslint-disable-next-line react/jsx-no-bind
-									onPress={() => this.onValueChange(option.value)}
-									style={styles.optionButton}
-									key={option.key}
-								>
-									<Text style={styles.optionLabel} numberOfLines={1}>
-										{option.label}
-									</Text>
-									{this.props.selectedValue === option.value ? (
-										<IconCheck style={styles.icon} name="check" size={24} color={colors.blue} />
-									) : null}
-								</TouchableOpacity>
-							))}
+				{this.state.pickerVisible && (
+					<View style={styles.modalView}>
+						<View style={styles.accesoryBar}>
+							<Text style={styles.label}>{this.props.label}</Text>
 						</View>
-					</TrackingScrollView>
-				</View>
+						<TrackingScrollView style={styles.list} ref={this.scrollView}>
+							<View style={styles.listWrapper}>
+								{this.props.options.map(option => (
+									<TouchableOpacity
+										// eslint-disable-next-line react/jsx-no-bind
+										onPress={() => this.onValueChange(option.value)}
+										style={styles.optionButton}
+										key={option.key}
+									>
+										<Text style={styles.optionLabel} numberOfLines={1}>
+											{option.label}
+										</Text>
+										{this.props.selectedValue === option.value ? (
+											<IconCheck style={styles.icon} name="check" size={24} color={colors.blue} />
+										) : null}
+									</TouchableOpacity>
+								))}
+							</View>
+						</TrackingScrollView>
+					</View>
+				)}
 			</Modal>
 		</View>
 	);
