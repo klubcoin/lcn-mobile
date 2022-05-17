@@ -729,6 +729,7 @@ class Dashboard extends PureComponent {
 						<View style={styles.chartTimelineWrapper}>
 							{timeline.map(e => (
 								<TouchableOpacity
+									key={e}
 									activeOpacity={0.7}
 									style={styles.chartTimelineButton}
 									onPress={() => {
@@ -811,6 +812,7 @@ class Dashboard extends PureComponent {
 						<TrackingScrollView style={styles.modalScrollView}>
 							{this.infuraCurrencyOptions.map(e => (
 								<TouchableOpacity
+									key={e.key}
 									style={styles.modalItemContainer}
 									onPress={() => this.onChangeCurrency(e.value)}
 								>

@@ -947,13 +947,13 @@ class Confirm extends PureComponent {
 						/>
 						{errorMessage && (
 							<View style={styles.errorWrapper}>
-								<TouchableOpacity onPress={errorPress}>
+								<View>
 									<Text style={styles.error}>{errorMessage}</Text>
 									{/* only show buy more on mainnet */}
 									{over && is_main_net && (
 										<Text style={[styles.error, styles.underline]}>{errorLinkText}</Text>
 									)}
-								</TouchableOpacity>
+								</View>
 							</View>
 						)}
 						{!!warningGasPriceHigh && (
