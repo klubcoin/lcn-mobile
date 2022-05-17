@@ -7,11 +7,11 @@ import {
 	Text,
 	View,
 	SafeAreaView,
-	StyleSheet,
 	Image,
 	InteractionManager,
 	TouchableWithoutFeedback,
-	Keyboard
+	Keyboard,
+	Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -53,10 +53,9 @@ import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
+import { requestMultiple, PERMISSIONS } from 'react-native-permissions';
 
 const isTextDelete = text => tlc(text) === 'delete';
-const deviceHeight = Device.getDeviceHeight();
-const breakPoint = deviceHeight < 700;
 
 const PASSCODE_NOT_SET_ERROR = strings('login.passcode_not_set_error');
 const WRONG_PASSWORD_ERROR = strings('login.wrong_password_error');
@@ -184,6 +183,12 @@ class Login extends PureComponent {
 		this.handleLogin(password, hasCredentials);
 	};
 
+	requestBiometricIOS() {
+		if (Platform.OS === 'ios') {
+			requestMultiple([PERMISSIONS.IOS.FACE_ID]);
+		}
+	}
+
 	handleLogin = async (password, hasCredentials) => {
 		try {
 			this.setState({ loading: true, error: null });
@@ -199,9 +204,11 @@ class Login extends PureComponent {
 			}
 			if (!hasCredentials) {
 				if (this.state.rememberMe) {
-					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME);
+					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.REMEMBER_ME, true);
+					this.requestBiometricIOS();
 				} else if (this.state.biometryChoice && this.state.biometryType) {
-					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS);
+					await SecureKeychain.setGenericPassword(password, SecureKeychain.TYPES.BIOMETRICS, true);
+					this.requestBiometricIOS();
 				} else {
 					await SecureKeychain.resetGenericPassword();
 				}
