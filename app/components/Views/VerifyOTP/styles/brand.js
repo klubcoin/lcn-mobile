@@ -15,8 +15,7 @@ const brandStyles = StyleSheet.create({
 	textWrapper: {
 		fontSize: 16,
 		color: colors.white,
-		marginTop: 15,
-		lineHeight: 15
+		marginTop: 15
 	},
 	text: {},
 	resendText: {
