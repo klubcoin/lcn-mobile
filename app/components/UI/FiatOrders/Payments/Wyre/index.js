@@ -24,14 +24,18 @@ import Networks from '../../../../../util/networks';
 import StyledButton from '../../../../UI/StyledButton';
 import DashedLine from 'react-native-dashed-line';
 import BigNumber from 'bignumber.js';
+import { showError } from '../../../../../util/notify';
+import { showAlert } from '../../../../../actions/alert';
 import ScaleImage from 'react-native-scalable-image';
 import Countries from '../../../../../util/countries.json';
+import validator from 'validator';
 
 const FLAGS = {
 	USD: require('../../../../../images/usa-flag.png'),
 	EUR: require('../../../../../images/eu-flag.png')
 };
 
+const WYRE_LOGO = require('../../../../../images/wyre.png');
 const APPLE_PAY_LOGO = require('../../../../../images/ApplePayLogo.png');
 
 const menuData = [
@@ -50,6 +54,74 @@ const menuData = [
 		title: strings('wyre_checkout.terms_of_service'),
 		url: 'https://www.sendwyre.com/legal/rewards-terms'
 	}
+];
+
+const boundary = {
+	USD: {
+		min: 30,
+		max: 100000,
+		default: 200
+	},
+	EUR: {
+		min: 20,
+		max: 90000,
+		default: 300
+	}
+};
+
+// Wyre Non-operational Countries
+// https://support.sendwyre.com/hc/en-us/articles/360055233754-Geographic-Restrictions-
+
+const NON_OPERATIONSAL_COUNTRIES = [
+	'Afghanistan',
+	'American Samoa',
+	'Angola',
+	'Anguilla',
+	'Barbados',
+	'Belarus',
+	'Bosnia and Herzegovina',
+	'Central African Republic',
+	'Congo',
+	"Cote D'Ivoire",
+	'Cuba',
+	'Ecuador',
+	'Eritrea',
+	'Ethiopia',
+	'Fiji',
+	'Guam',
+	'Guinea-Bissau',
+	'Guyana',
+	'Haiti',
+	'Iran',
+	'Iraq',
+	'Kosovo',
+	'Lebanon',
+	'Liberia',
+	'Libya',
+	'Macedonia',
+	'Myanmar',
+	'Nigeria',
+	'North-Korea',
+	'Palau',
+	'Panama',
+	'Papua New Guinea',
+	'Russia',
+	'Samoa',
+	'Serbia',
+	'Seychelles',
+	'Somalia',
+	'Sudan',
+	'Syria',
+	'Trinidad and Tobago',
+	'Turkey',
+	'Turkmenistan',
+	'Ukraine',
+	'US Virgin Islands',
+	'Uzbekistan',
+	'Vanuatu',
+	'Venezuela',
+	'Yemen',
+	'Zimbabwe'
 ];
 
 function Wyre({ selectedAddress, ...props }) {
@@ -89,20 +161,42 @@ function Wyre({ selectedAddress, ...props }) {
 		name: '',
 		country: ''
 	});
+	const [emailError, setEmailError] = useState({
+		isError: false,
+		errorMessage: ''
+	});
+	const [cardInfoError, setCardInfoError] = useState({
+		isCardNumberError: false,
+		isExpiredDateError: false,
+		isCVCError: false,
+		errorMessage: ''
+	});
+	const [cardNameError, setCardNameError] = useState({
+		isError: false,
+		errorMessage: false
+	});
+	const [countryError, setCountryError] = useState({
+		isError: false,
+		errorMessage: false
+	});
 
 	useEffect(() => {
-		setFrom(pre => ({ ...pre, currency: props.currentCurrency.toUpperCase() }));
+		setFrom(pre => ({
+			currency: props.currentCurrency.toUpperCase(),
+			amount: boundary[props.currentCurrency.toUpperCase()].default
+		}));
 	}, [props.currentCurrency]);
 
 	useEffect(() => {
 		setCurrencyData(
 			infuraCurrencies.objects
 				.sort((a, b) => a.quote.code.toLocaleLowerCase().localeCompare(b.quote.code.toLocaleLowerCase()))
-				.map(({ quote: { code, name, symbol } }) => ({
+				.map(({ quote: { code, name, symbol, lang } }) => ({
 					label: `${code.toUpperCase()} - ${name}`,
 					key: code.toUpperCase(),
 					value: code.toUpperCase(),
-					symbol
+					symbol,
+					lang
 				}))
 		);
 	}, []);
@@ -132,6 +226,17 @@ function Wyre({ selectedAddress, ...props }) {
 	});
 
 	useEffect(() => {
+		if (selected && selected?.to) {
+			const bigNumberPrice = new BigNumber(selected.to.value);
+			const toAmount = bigNumberPrice.multipliedBy(from.amount ? from.amount : '0');
+			setTo(pre => ({
+				...pre,
+				amount: +toAmount
+			}));
+		}
+	}, [selected, from.value, from.currency, from.amount]);
+
+	useEffect(() => {
 		manageCurrencies();
 	}, [currencies, from.currency, manageCurrencies]);
 
@@ -143,7 +248,7 @@ function Wyre({ selectedAddress, ...props }) {
 		setIsChangeCurrency(true);
 	};
 	const onChangeCurrency = value => {
-		setFrom(pre => ({ ...pre, currency: value }));
+		setFrom({ currency: value, amount: boundary[value].default });
 		onCloseModal();
 	};
 
@@ -167,6 +272,156 @@ function Wyre({ selectedAddress, ...props }) {
 		setIsViewMenu(isView);
 	};
 
+	const checkEmailError = () => {
+		const isEmailError = !validator.isEmail(cardInfo.email.trim());
+		setEmailError({
+			isError: isEmailError,
+			errorMessage: !cardInfo.email
+				? strings('wyre_checkout.missing_email')
+				: isEmailError
+				? strings('wyre_checkout.invalid_email')
+				: ''
+		});
+		return isEmailError;
+	};
+
+	const cleanEmailError = () => {
+		setEmailError({ isError: false, errorMessage: '' });
+	};
+
+	const checkCardInfoError = () => {
+		const isCardNumberError = cardInfo.number.length < 19;
+		const isExpiredDateError = checkExpiredDateError(cardInfo.expiredDate);
+		const isCVCError = cardInfo.cvc.length < 3;
+		const errorMessage = !cardInfo.number
+			? strings('wyre_checkout.missing_card_number')
+			: isCardNumberError
+			? strings('wyre_checkout.invalid_card_number')
+			: !cardInfo.expiredDate
+			? strings('wyre_checkout.missing_expired_date')
+			: isExpiredDateError
+			? strings('wyre_checkout.invalid_expired_date')
+			: !cardInfo.cvc
+			? strings('wyre_checkout.missing_cvc')
+			: isCVCError
+			? strings('wyre_checkout.invalid_cvc')
+			: '';
+		setCardInfoError({
+			isCardNumberError,
+			isExpiredDateError,
+			isCVCError,
+			errorMessage
+		});
+		return isCardNumberError || isExpiredDateError || isCVCError;
+	};
+
+	const cleanCardInfoError = field => {
+		setCardInfoError(pre => ({
+			...pre,
+			[field]: false,
+			errorMessage: ''
+		}));
+	};
+
+	const checkCardNameError = () => {
+		setCardNameError({
+			isError: !cardInfo.name,
+			errorMessage: !cardInfo.name ? strings('wyre_checkout.missing_name_of_card') : ''
+		});
+		return !cardInfo.name;
+	};
+
+	const cleanCardNameError = () => {
+		setEmailError({ isError: false, errorMessage: '' });
+	};
+
+	const checkCountryError = () => {
+		setCountryError({
+			isError: !cardInfo.country,
+			errorMessage: !cardInfo.country ? strings('wyre_checkout.missing_country_or_region') : ''
+		});
+		return !cardInfo.country;
+	};
+
+	const cleanCountryError = () => {
+		setCountryError({ isError: false, errorMessage: '' });
+	};
+
+	const checkExpiredDateError = expiredDate => {
+		const month = expiredDate.split(' / ')[0];
+		const year = expiredDate.split(' / ')[1];
+		if (!['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].includes(month)) {
+			return true;
+		}
+		if (!year || year.length !== 2) {
+			return true;
+		}
+		return false;
+	};
+
+	const onPay = () => {
+		const isEmailError = checkEmailError();
+		const isCardInfoError = checkCardInfoError();
+		const isCardNameError = checkCardNameError();
+		const isCountryError = checkCountryError();
+		if (isEmailError || isCardInfoError || isCardNameError || isCountryError) {
+			return;
+		}
+	};
+
+	const onChangeEmail = email => {
+		setCardInfo(pre => ({ ...pre, email }));
+	};
+
+	const onChangeCardNumber = cardNumber => {
+		const rawData = cardNumber.replace(/[^\w]|_|[a-zA-Z]/g, '');
+
+		setCardInfo(pre => ({ ...pre, number: rawData.replace(/.{4}/g, '$& ').slice(0, 19) }));
+	};
+
+	const onChangeExpiredDate = expiredDate => {
+		setCardInfo(pre => {
+			const preExpiredDate = pre.expiredDate;
+			let month = expiredDate.split(' / ')[0]?.replace(/[^\w]|_|[a-zA-Z]/g, '');
+			let year = expiredDate
+				.split(' / ')[1]
+				?.replace(/[^\w]|_|[a-zA-Z]/g, '')
+				.slice(0, 2);
+
+			console.log({ month, year });
+
+			const preMonth = preExpiredDate.split(' / ')[0];
+			if (['2', '3', '4', '5', '6', '7', '8', '9'].includes(month)) {
+				month = `0${month}`;
+			}
+			if (month.length > 2 && typeof year === 'undefined') {
+				year = month.slice(2, 4)?.replace(/[^\w]|_|[a-zA-Z]/g, '');
+				month = month.slice(0, 2);
+			}
+			if (+month > 12) {
+				month = month[0];
+			}
+			if (typeof year !== 'undefined' && year.length > 2) {
+				year = year.slice(0, 2);
+			}
+			if (typeof year === 'undefined' && month.length === 2 && preMonth.length < 2) {
+				year = '';
+			}
+			return {
+				...pre,
+				expiredDate: typeof year !== 'undefined' ? [month, year].join(' / ') : month
+			};
+		});
+	};
+
+	const onChangeCVC = cvc => {
+		setCardInfo(pre => ({ ...pre, cvc: cvc.replace(/[^\w]|_|[a-zA-Z]/g, '') }));
+	};
+
+	const onChangeCardName = name => {
+		setCardInfo(pre => ({ ...pre, name: name.toUpperCase() }));
+	};
+
 	const captureWyreOrder = url => {
 		if (orderId == null) {
 			return;
@@ -178,7 +433,7 @@ function Wyre({ selectedAddress, ...props }) {
 			response => {
 				if (response.status === 200) {
 					// success
-					console.log('success Wyre transactions');
+					console.log('success wyre transactions');
 					// const navigationAction = NavigationActions.navigate({
 					//   routeName: 'Home',
 					//   action: StackActions.reset({
@@ -190,7 +445,7 @@ function Wyre({ selectedAddress, ...props }) {
 					props.navigation.push('Home');
 				} else {
 					// should alert an error here
-					console.log('error Wyre transactions');
+					console.log('error wyre transactions');
 					// props.navigation.navigate('PurchaseMethods')
 					props.navigation.push('Home');
 				}
@@ -244,14 +499,44 @@ function Wyre({ selectedAddress, ...props }) {
 	};
 
 	const onPressAddress = () => {
+		setIsViewFullAddress(pre => {
+			if (!pre) {
+				Clipboard.setString(selectedAddress.selectedAddress);
+				props.showAlert({
+					isVisible: true,
+					autodismiss: 1500,
+					content: 'clipboard-alert',
+					data: { msg: strings('account_details.account_copied_to_clipboard') }
+				});
+			}
+			return !pre;
+		});
+	};
+
+	const onLongPressAddress = () => {
 		Clipboard.setString(selectedAddress.selectedAddress);
-		setIsViewFullAddress(pre => !pre);
+		props.showAlert({
+			isVisible: true,
+			autodismiss: 1500,
+			content: 'clipboard-alert',
+			data: { msg: strings('account_details.account_copied_to_clipboard') }
+		});
 	};
 
 	const renderStepper = () => {
 		return (
 			<View style={styles.stepperWrapper}>
 				<View style={styles.stepperCheckout}>
+					<View style={styles.sRow}>
+						<View style={styles.sMark} />
+						<Text style={styles.markText}>{strings('wyre_checkout.using_payment_method')}</Text>
+					</View>
+					<TouchableOpacity style={styles.stepperButton} activeOpacity={0.7}>
+						<View style={styles.stepperButtonContent}>
+							<Image source={WYRE_LOGO} style={styles.logo} />
+							<Text style={styles.stepperButtonText}>{strings('wyre_checkout.wyre')}</Text>
+						</View>
+					</TouchableOpacity>
 					<View style={styles.mRow}>
 						<TouchableOpacity
 							style={styles.mMark}
@@ -302,6 +587,11 @@ function Wyre({ selectedAddress, ...props }) {
 				</View>
 
 				<View style={styles.mRow}>
+					{isViewInfoRate && (
+						<View style={styles.iContent}>
+							<Text style={styles.iText}>{strings('wyre_checkout.rate_info')}</Text>
+						</View>
+					)}
 					<View style={styles.mMark}>
 						<IconFontAwesome5 name="divide" style={styles.markIcon} />
 					</View>
@@ -312,7 +602,7 @@ function Wyre({ selectedAddress, ...props }) {
 						style={styles.iButton}
 						activeOpacity={0.7}
 						onPress={() => {
-							setIsViewInfoRate(true);
+							setIsViewInfoRate(pre => !pre);
 						}}
 					>
 						<Icon name="info" style={styles.iIcon} />
@@ -340,6 +630,18 @@ function Wyre({ selectedAddress, ...props }) {
 						style={styles.amountTextInput}
 						value={`${from.amount}`}
 						keyboardType={'numeric'}
+						onBlur={() => {
+							if (from.amount < +boundary[from.currency].min) {
+								showError(
+									strings('wyre_checkout.minimum_boundary_error_text', {
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+											boundary[from.currency]?.min
+										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+									})
+								);
+								setFrom(pre => ({ ...pre, amount: boundary[from.currency]?.min }));
+							}
+						}}
 						onChangeText={input => {
 							const convertInputValue = input
 								.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
@@ -352,23 +654,25 @@ function Wyre({ selectedAddress, ...props }) {
 								(convertInputValue.split('.').length > 1
 									? '.' + convertInputValue.split('.')[1].slice(0, 2)
 									: '');
-							const bigNumberPrice = new BigNumber(selected.to.value);
-							const toAmount = bigNumberPrice.multipliedBy(convertInputAmount ? convertInputAmount : '0');
-							setFrom({
-								...from,
-								amount: convertInputAmount
-							});
-							if (selected && selected.to) {
-								setTo({
-									...to,
-									amount: +toAmount
-								});
+							if (+convertInputAmount > boundary[from.currency]?.max) {
+								showError(
+									strings('wyre_checkout.maximum_boundary_error_text', {
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+											boundary[from.currency]?.max
+										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+									})
+								);
+								return;
 							}
+							setFrom(pre => ({
+								...pre,
+								amount: convertInputAmount
+							}));
 						}}
 					/>
 				</View>
 				<View style={styles.amountButton2}>
-					<Image source={FLAGS[from.currency]} style={{ width: 24, height: 24, marginHorizontal: 6 }} />
+					<Image source={FLAGS[from.currency]} style={styles.flag} />
 					{from && <Text style={styles.fromText}>{from.currency}</Text>}
 					<TouchableOpacity style={styles.dropdownButton} activeOpacity={0.7} onPress={onOpenModal}>
 						<Icon name="chevron-down" style={styles.dropdownIcon} />
@@ -436,6 +740,16 @@ function Wyre({ selectedAddress, ...props }) {
 							<StyledButton
 								type="normal"
 								onPress={() => {
+									if (from.amount < +boundary[from.currency].min) {
+										showError(
+											strings('wyre_checkout.minimum_boundary_error_text', {
+												value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+													boundary[from.currency]?.min
+												}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+											})
+										);
+										return;
+									}
 									setIsConfirm(true);
 								}}
 								disabled={!(selected && from && from.amount > 0 && wyreUrl == null)}
@@ -477,7 +791,7 @@ function Wyre({ selectedAddress, ...props }) {
 					</View>
 				</Modal>
 
-				<Modal
+				{/* <Modal
 					// transparent
 					visible={isViewInfoRate}
 					onBackdropPress={() => {
@@ -488,7 +802,7 @@ function Wyre({ selectedAddress, ...props }) {
 					<View style={styles.iContent}>
 						<Text style={styles.iText}>{strings('wyre_checkout.rate_info')}</Text>
 					</View>
-				</Modal>
+				</Modal> */}
 				{isLoading && (
 					<View style={styles.fromLoading}>
 						<ActivityIndicator size="large" color={colors.purple100} />
@@ -585,6 +899,7 @@ function Wyre({ selectedAddress, ...props }) {
 								style={styles.addressWrapper}
 								activeOpacity={0.7}
 								onPress={onPressAddress}
+								onLongPress={onLongPressAddress}
 							>
 								{/* <TrackingScrollView style={styles.addressScroll} horizontal> */}
 								<Text style={styles.address} numberOfLines={isViewFullAddress ? 10 : 1}>
@@ -703,85 +1018,124 @@ function Wyre({ selectedAddress, ...props }) {
 								<Icon name="bars" style={styles.menuIcon} />
 							</TouchableOpacity>
 						</View>
-						<TouchableOpacity style={styles.buttonIPay} activeOpacity={0.7}>
-							<ScaleImage source={APPLE_PAY_LOGO} style={styles.iPayIcon} />
-						</TouchableOpacity>
-						<View style={styles.sectionWrapper}>
-							<View style={styles.sectionLineWrapper}>
-								<View style={styles.sectionLine} />
-							</View>
-							<Text style={styles.sectionText}>{strings('wyre_checkout.or_pay_witth_card')}</Text>
-						</View>
+						{Platform.OS === 'ios' && (
+							<>
+								<TouchableOpacity style={styles.buttonIPay} activeOpacity={0.7}>
+									<ScaleImage source={APPLE_PAY_LOGO} style={styles.iPayIcon} />
+								</TouchableOpacity>
+								<View style={styles.sectionWrapper}>
+									<View style={styles.sectionLineWrapper}>
+										<View style={styles.sectionLine} />
+									</View>
+									<Text style={styles.sectionText}>{strings('wyre_checkout.or_pay_witth_card')}</Text>
+								</View>
+							</>
+						)}
 						<Text style={styles.label}>{strings('wyre_checkout.email')}</Text>
-						<TrackingTextInput style={[styles.emailInput, isIOS ? styles.inputIOS : styles.inputAndroid]} />
+						<TrackingTextInput
+							style={[
+								styles.emailInput,
+								isIOS ? styles.inputIOS : styles.inputAndroid,
+								emailError.isError && styles.errorInput
+							]}
+							value={cardInfo.email}
+							onChangeText={onChangeEmail}
+							onBlur={checkEmailError}
+							onFocus={cleanEmailError}
+						/>
+						{!!emailError.errorMessage && <Text style={styles.errorText}>{emailError.errorMessage}</Text>}
 						<Text style={styles.label}>{strings('wyre_checkout.card_infomation')}</Text>
 						<View style={styles.cardInfoWrapper}>
 							<View style={styles.cardNumberWrapper}>
 								<TrackingTextInput
-									style={[styles.cardNumber, isIOS ? styles.inputIOS : styles.inputAndroid]}
+									style={[
+										styles.cardNumber,
+										isIOS ? styles.inputIOS : styles.inputAndroid,
+										cardInfoError.isCardNumberError && styles.errorInput
+									]}
 									placeholder={'1234 1234 1234 1234'}
 									placeholderTextColor={colors.grey300}
 									value={cardInfo.number}
-									onChangeText={e => {
-										setCardInfo(pre => {
-											const rawData = e.replace(/[^\w]|_|[a-zA-Z]/g, '');
-											return { ...pre, number: rawData.replace(/.{1,4}/g, ' $&') };
-										});
-									}}
+									maxLength={19}
+									onChangeText={onChangeCardNumber}
+									onBlur={checkCardInfoError}
+									onFocus={() => cleanCardInfoError('isCardNumberError')}
 								/>
 							</View>
 							<View style={styles.cardInfoBottomWrapper}>
 								<TrackingTextInput
-									style={[styles.mmYY, isIOS ? styles.inputIOS : styles.inputAndroid]}
+									style={[
+										styles.mmYY,
+										isIOS ? styles.inputIOS : styles.inputAndroid,
+										cardInfoError.isExpiredDateError && styles.errorInput
+									]}
 									placeholder={strings('wyre_checkout.mm_yy')}
 									placeholderTextColor={colors.grey300}
 									value={cardInfo.expiredDate}
-									onChangeText={e => {
-										setCardInfo(pre => {
-											return {
-												...pre,
-												expiredDate: e
-											};
-										});
-									}}
+									onChangeText={onChangeExpiredDate}
+									onBlur={checkCardInfoError}
+									maxLength={7}
+									onFocus={() => cleanCardInfoError('isExpiredDateError')}
 								/>
-								<View style={[styles.cardCVCWrapper, isIOS ? styles.inputIOS : styles.inputAndroid]}>
+								<View
+									style={[
+										styles.cardCVCWrapper,
+										isIOS ? styles.inputIOS : styles.inputAndroid,
+										cardInfoError.isCVCError && styles.errorInput
+									]}
+								>
 									<TrackingTextInput
 										style={styles.cardCVC}
 										placeholder={strings('wyre_checkout.cvc')}
 										placeholderTextColor={colors.grey300}
 										keyboardType="numeric"
 										value={cardInfo.cvc}
-										onChangeText={e => {
-											setCardInfo(pre => ({ ...pre, cvc: e.replace(/[^\w]|_|[a-zA-Z]/g, '') }));
-										}}
+										maxLength={3}
+										onChangeText={onChangeCVC}
+										onBlur={checkCardInfoError}
+										onFocus={() => cleanCardInfoError('isCVCError')}
 									/>
 								</View>
 							</View>
 						</View>
+						{!!cardInfoError.errorMessage && (
+							<Text style={styles.errorText}>{cardInfoError.errorMessage}</Text>
+						)}
 						<Text style={styles.label}>{strings('wyre_checkout.name_of_card')}</Text>
 						<TrackingTextInput
-							style={[styles.emailInput, isIOS ? styles.inputIOS : styles.inputAndroid]}
+							style={[
+								styles.emailInput,
+								isIOS ? styles.inputIOS : styles.inputAndroid,
+								cardNameError.isError && styles.errorInput
+							]}
 							value={cardInfo.name}
-							onChangeText={e => {
-								setCardInfo(pre => ({ ...pre, name: e.toUpperCase() }));
-							}}
+							onChangeText={onChangeCardName}
 							autoCapitalize="characters"
+							onBlur={checkCardNameError}
+							onFocus={cleanCardNameError}
+							maxLength={256}
 						/>
+						{!!cardNameError.errorMessage && (
+							<Text style={styles.errorText}>{cardNameError.errorMessage}</Text>
+						)}
 						<Text style={styles.label}>{strings('wyre_checkout.country_or_region')}</Text>
 						<TouchableOpacity
-							style={styles.countryWrapper}
+							style={[styles.countryWrapper, countryError.isError && styles.errorInput]}
 							activeOpacity={0.7}
 							onPress={() => {
 								setIsChangeCountry(true);
+								cleanCountryError();
 							}}
 						>
 							<Text style={styles.country}>{cardInfo.country}</Text>
 							<Icon name="chevron-down" style={styles.countryDropdownIcon} />
 						</TouchableOpacity>
+						{!!countryError.errorMessage && (
+							<Text style={styles.errorText}>{countryError.errorMessage}</Text>
+						)}
 					</View>
 					<View style={styles.fromWrapper}>
-						<StyledButton type="normal" onPress={() => {}}>
+						<StyledButton type="normal" onPress={onPay}>
 							<Text style={styles.buttonText}>
 								{strings('wyre_checkout.pay', { token: to.currency })}
 							</Text>
@@ -800,21 +1154,25 @@ function Wyre({ selectedAddress, ...props }) {
 					propagateSwipe
 					onBackdropPress={() => {
 						setIsChangeCountry(false);
+						checkCountryError();
 					}}
 					onBackButtonPress={() => {
 						setIsChangeCountry(false);
+						checkCountryError();
 					}}
 				>
 					<View style={styles.modalWrapper}>
 						<TrackingScrollView>
-							{Countries.map(e => {
+							{Countries.filter(e => !NON_OPERATIONSAL_COUNTRIES.includes(e.name)).map(e => {
 								return (
 									<TouchableOpacity
+										key={e.code}
 										style={styles.countryItemWrapper}
 										activeOpacity={0.7}
 										onPress={() => {
 											setCardInfo(pre => ({ ...pre, country: e.name }));
 											setIsChangeCountry(false);
+											cleanCountryError();
 										}}
 									>
 										<View style={styles.countryItem}>
@@ -856,7 +1214,9 @@ Wyre.propTypes = {
 };
 
 Wyre.navigationOptions = ({ navigation }) => getWyreNavbar(navigation);
-
+const mapDispatchToProps = dispatch => ({
+	showAlert: config => dispatch(showAlert(config))
+});
 const mapStateToProps = state => ({
 	provider: state.engine.backgroundState.NetworkController.provider,
 	tokens: state.engine.backgroundState.AssetsController.tokens,
@@ -869,4 +1229,7 @@ const mapStateToProps = state => ({
 	conversionRate: state.engine.backgroundState.CurrencyRateController.conversionRate
 });
 
-export default connect(mapStateToProps)(Wyre);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Wyre);

@@ -414,8 +414,13 @@ const brandStyles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	iContent: {
-		backgroundColor: colors.black,
-		width: '60%',
+		position: 'absolute',
+		width: '80%',
+		left: 0,
+		right: 0,
+		zIndex: 1,
+		bottom: 40,
+		backgroundColor: colors.black95,
 		padding: 12,
 		borderRadius: 12
 	},
@@ -423,6 +428,16 @@ const brandStyles = StyleSheet.create({
 		color: colors.white,
 		textAlign: 'center',
 		fontSize: 16
+	},
+	flag: {
+		width: 24,
+		height: 24,
+		marginHorizontal: 6
+	},
+	logo: {
+		width: 22,
+		height: 22,
+		tintColor: colors.white
 	},
 	inputAndroid: {
 		paddingHorizontal: 12
@@ -485,7 +500,8 @@ const brandStyles = StyleSheet.create({
 		borderWidth: 2,
 		borderColor: colors.blue,
 		borderRadius: 10,
-		width: '100%'
+		width: '100%',
+		overflow: 'hidden'
 	},
 	cardNumberWrapper: {
 		borderBottomWidth: 2,
@@ -496,6 +512,13 @@ const brandStyles = StyleSheet.create({
 	cardNumber: {
 		flex: 1,
 		color: colors.white
+	},
+	errorInput: {
+		backgroundColor: 'rgba(215, 58, 73,0.6)'
+	},
+	errorText: {
+		color: colors.red,
+		marginTop: 10
 	},
 	cardInfoBottomWrapper: {
 		flexDirection: 'row'

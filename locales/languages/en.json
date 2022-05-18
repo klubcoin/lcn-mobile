@@ -1890,7 +1890,7 @@
 		"to": "To :",
 		"search_desc": "Search, public address (0x), or ENS",
 		"chat_text": "Chat text...",
-		"send_message":"Send Message"
+		"send_message": "Send Message"
 	},
 	"market": {
 		"title": "Market",
@@ -2136,8 +2136,20 @@
 		"token_wallet_address": "{{token}} WALLET ADDRESS",
 		"buy_token": "Buy {{token}}",
 		"order_details": "ORDER DETAILS",
+		"maximum_boundary_error_text": "Cannot enter more than {{value}}.",
+		"minimum_boundary_error_text": "Cannot enter less than {{value}}.",
 		"rate_info": "The floating rate shown here is an estimate and the rate you receive will be determined at the time when your payment is settled. The time taken for your payment can vary depending on currency and your Wyre account.",
-		"total": "Total"
+		"total": "Total",
+		"missing_email": "Missing Email.",
+		"invalid_email": "Invalid Email.",
+		"missing_card_number": "Missing Card Number.",
+		"invalid_card_number": "Invalid Card Number.",
+		"missing_expired_date": "Missing Expired Date.",
+		"invalid_expired_date": "Invalid Expired Date.",
+		"missing_cvc": "Missing CVC.",
+		"invalid_cvc": "Invalid CVC.",
+		"missing_name_of_card": "Missing Name of Card.",
+		"missing_country_or_region": "Missing Country or Region."
 	},
 	"lock_modal": {
 		"title": "Authenticate to continue!"

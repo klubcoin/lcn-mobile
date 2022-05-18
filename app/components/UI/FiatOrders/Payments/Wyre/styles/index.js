@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../../../../styles/common';
 import { assignNestedObj } from '../../../../../../util/object';
 import brandStyles from './brand';
 
@@ -83,6 +82,8 @@ const styles = StyleSheet.create({
 	iModal: {},
 	iContent: {},
 	iText: {},
+	flag: {},
+	logo: {},
 	inputAndroid: {},
 	inputIOS: {},
 	buttonIPay: {},
@@ -105,7 +106,9 @@ const styles = StyleSheet.create({
 	countryDropdownIcon: {},
 	countryItemWrapper: {},
 	countryItem: {},
-	countryText: {}
+	countryText: {},
+	errorInput: {},
+	errorText: {}
 });
 
 export default assignNestedObj(styles, brandStyles);
