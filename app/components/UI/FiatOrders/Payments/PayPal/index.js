@@ -328,7 +328,7 @@ function PayPal({ selectedAddress, ...props }) {
 							<Text style={styles.stepperButtonText}>{strings('paypal_checkout.paypal')}</Text>
 						</View>
 					</TouchableOpacity>
-					<View style={styles.mRow}>
+					{/* <View style={styles.mRow}>
 						<TouchableOpacity
 							style={styles.mMark}
 							activeOpacity={1}
@@ -366,16 +366,16 @@ function PayPal({ selectedAddress, ...props }) {
 								</Text>
 							</View>
 						</Collapsible>
-					</View>
+					</View> */}
 				</View>
 
-				<View style={styles.mRow}>
+				{/* <View style={styles.mRow}>
 					<View style={styles.mMark}>
 						<Icon name="minus" style={styles.markIcon} />
 					</View>
 					<Text style={styles.markText}>{`${totalFee} ${from.currency}`}</Text>
 					<Text style={styles.markTitleText}>{strings('paypal_checkout.total_fees')}</Text>
-				</View>
+				</View> */}
 
 				<View style={styles.mRow}>
 					{isViewInfoRate && (
@@ -704,7 +704,7 @@ function PayPal({ selectedAddress, ...props }) {
 								} @ ${priceOneToken} ${from.currency}`}</Text>
 								<Text style={styles.confirmContentRight}>{`${from.amount} ${from.currency}`}</Text>
 							</View>
-							{renderDasher()}
+							{/* {renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
 								<Text style={styles.confirmContentLeft}>{strings('paypal_checkout.paypal_fee')}</Text>
 								<Text style={styles.confirmContentRight}>{`${paypalFee} ${from.currency}`}</Text>
@@ -722,7 +722,7 @@ function PayPal({ selectedAddress, ...props }) {
 									{strings('paypal_checkout.network_exchange_fee')}
 								</Text>
 								<Text style={styles.confirmContentRight}>{`${networkFee} ${from.currency}`}</Text>
-							</View>
+							</View> */}
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
 								<Text style={styles.confirmTotalLeft}>{strings('paypal_checkout.total')}</Text>
