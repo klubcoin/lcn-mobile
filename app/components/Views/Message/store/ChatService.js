@@ -27,25 +27,31 @@ export default class ChatService {
 					if (!profile) {
 						const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
 						const name = `${firstname} ${lastname}`;
-						const avatarb64 = await RNFS.readFile(avatar, 'base64');
+						const hasAvatar = avatar && await RNFS.exists(avatar);
+						const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
 						const webrtc = refWebRTC();
 						webrtc.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));
 					}
 				}
 			} else {
-				const conversation = (await store.getChatMessages(peerId)) || { messages: [], isRead: false };
+				const group = data.message?.group;
+				const conversation = (await store.getChatMessages(group || peerId)) || { messages: [], isRead: false };
 
-				conversation.messages.unshift(data.message);
-				store.saveChatMessages(peerId, conversation);
+				const ids = conversation.messages.map(e => e?._id);
+				if (!ids.includes(data.message?._id)) {
+					conversation.messages.unshift(data.message);
+					store.saveChatMessages(group || peerId, conversation);
+				}
 			}
 		} else if (data.action == ChatProfile().action) {
 			await preferences.setPeerProfile(peerId, data.profile);
 		} else if (data.action == JoinFile().action) {
 			FileTransferWebRTC.joinFile(data).then(async path => {
-				const conversation = await store.getChatMessages(peerId);
+				const group = data.uuid;
+				const conversation = await store.getChatMessages(group || peerId);
 				const { messages } = conversation || { messages: [] };
 
-				const message = messages.find(e => {
+				const message = messages?.find(e => {
 					const { payload } = e;
 					if (payload && payload.action == ChatFile().action) {
 						return payload.name == data.name;
@@ -55,7 +61,7 @@ export default class ChatService {
 				if (message) {
 					message.payload.uri = `file://${path}`;
 					message.payload.loading = false;
-					store.saveChatMessages(peerId, { messages });
+					store.saveChatMessages(group || peerId, { messages });
 				}
 				DeviceEventEmitter.emit('FileTransReceived', { data, path });
 			});
