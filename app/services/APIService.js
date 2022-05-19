@@ -2,6 +2,8 @@ import moment from 'moment';
 import config from '../config';
 import WebService from './WebService';
 import Config from 'react-native-config';
+import Api from './api';
+import routes from '../common/routes';
 
 export const basicAuth = Config.BASIC_AUTH;
 export const adminAuth = Config.ADMIN_AUTH;
@@ -44,9 +46,7 @@ export default class APIService {
 	static apiGetChartData = (from, to) => `${APIService.routeMeveoAPI()}/rest/exchangeRate/${from}/${to}`;
 	static apiOtpStatus = email => `${APIService.routeMeveoAPI()}/rest/otpStatus/${email}`;
 
-	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
-		config.googleApi.key
-	}`;
+	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${config.googleApi.key}`;
 	static apiFAQs = () => APIService.routePersistenceAPI() + 'FrequentlyAskedQuestion';
 
 	static announcePeerOnlineStatus(peerId, callback) {
@@ -310,5 +310,14 @@ export default class APIService {
 			basicAuth: basicAuth
 		};
 		WebService.sendGetDirect(this.apiOtpStatus(email), data, callback);
+	}
+
+	static getWalletInfo(address, callback) {
+		Api.postRequest(
+			routes.walletInfo,
+			[address],
+			response => callback && callback(true, response),
+			error => callback && callback(false, error)
+		)
 	}
 }
