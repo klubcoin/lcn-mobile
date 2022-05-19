@@ -1,15 +1,19 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import { addHexPrefix } from 'ethereumjs-util';
 import { makeAutoObservable } from 'mobx';
 
 export const kChatMessages = 'ChatMessages';
+export const kConversationInfos = 'ConversationInfos';
 
 const keys = [
 	kChatMessages,
+	kConversationInfos
 ];
 
 class Storage {
 	storage = {};
 	chatConversations = {};
+	conversationInfos = {}
 
 	// session variables
 	activeChatPeerId = null;
@@ -36,6 +40,11 @@ class Storage {
 		switch (key) {
 			case kChatMessages:
 				this.chatConversations = data || {};
+				//this.save(kChatMessages, {})
+				break;
+			case kConversationInfos:
+				this.conversationInfos = data || {};
+				//this.save(kConversationInfos, {})
 				break;
 		}
 	}
@@ -50,8 +59,32 @@ class Storage {
 	}
 
 	async saveChatMessages(address, messages) {
-		this.chatConversations[address] = messages;
+		const peerAddress = `${address}`;
+		this.chatConversations[peerAddress] = messages;
+		const info = this.conversationInfos[peerAddress] || {};
+		const peers = info.peers || [];
+		if (!peers.includes(peerAddress)) peers.push(peerAddress);
+		this.conversationInfos[peerAddress] = { ...info, peers }
 		await this.save(kChatMessages, this.chatConversations);
+		await this.save(kConversationInfos, this.conversationInfos);
+	}
+
+	async saveConversationPeers(group, peers) {
+		const info = this.conversationInfos[group] || {};
+		const peersArr = [...new Set([...peers.filter(e => !!e).map(e => addHexPrefix(e))])];
+		this.conversationInfos[group] = { ...info, peers: peersArr };
+		await this.save(kConversationInfos, this.conversationInfos);
+	}
+
+	async deleteConversationPeers(groupId) {
+		delete this.conversationInfos[groupId];
+		await this.save(kConversationInfos, this.conversationInfos);
+	}
+
+	async setNameGroup(group, name) {
+		const info = this.conversationInfos[group] || {};
+		this.conversationInfos[group] = { ...info, name };
+		await this.save(kConversationInfos, this.conversationInfos);
 	}
 
 	async getChatMessages(address) {
