@@ -237,6 +237,7 @@
 		"react-native-sensors": "5.3.0",
 		"react-native-share": "^5.2.2",
 		"react-native-snap-carousel": "^3.9.1",
+		"react-native-sound": "^0.11.2",
 		"react-native-splash-screen": "git+https://github.com/MetaMask/react-native-splash-screen.git",
 		"react-native-step-indicator": "^1.0.3",
 		"react-native-svg": "^12.1.1",
