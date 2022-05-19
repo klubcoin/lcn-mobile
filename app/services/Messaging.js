@@ -4,12 +4,12 @@ const WS_URL = 'wss://account2.liquichain.io/meveo/ws/liquichain';
 
 export const Register = (address) => ({
   action: 'register',
-  account: address,
+  account: address?.toLowerCase(),
 });
 
 export const Message = (to, data) => ({
   action: 'message',
-  to,
+  to: to?.toLowerCase(),
   message: JSON.stringify(data),
 });
 
@@ -37,7 +37,7 @@ export default class Messaging {
   _events = {};
 
   constructor(address) {
-    this._walletAddress = address.toLowerCase();
+    this._walletAddress = `${address}`;
   }
 
   on = (evt, callback) => {
@@ -86,7 +86,7 @@ export default class Messaging {
   }
 
   _onError = (data) => {
-    // console.warn('WS onError', data)
+    console.warn('WS onError', data)
     this._onEvent(WSEvent.error, data);
   }
 
