@@ -9,7 +9,7 @@ import { testID } from '../../../../util/Logger';
 import marketStore from '../../MarketPlace/store'
 import { addHexPrefix } from '@walletconnect/utils';
 import drawables from '../../../../common/drawables';
-import { getWalletProfile } from '../../../../util/account'
+import APIService from '../../../../services/APIService';
 import preferences from '../../../../store/preferences';
 
 const StatusColors = {
@@ -29,11 +29,20 @@ export default class MessageItem extends Component {
 	getCreatorProfile = async () => {
 		const { creator } = this.props.recipient;
 		const creatorAddress = creator && addHexPrefix(creator?.uuid);
-		const creatorProfile = await getWalletProfile(creatorAddress);
+		const creatorProfile = await this.getWalletProfile(creatorAddress);
 		this.setState({ creatorProfile });
 	}
 
-
+	getWalletProfile = async (address) => {
+		return new Promise((resolve) => {
+			APIService.getWalletInfo(address, (success, json) => {
+				if (success && json) {
+					preferences.setPeerProfile(address, json.result);
+					resolve(json.result);
+				}
+			})
+		})
+	};
 
 	renderAvatar = () => {
 		const { recipient } = this.props;
