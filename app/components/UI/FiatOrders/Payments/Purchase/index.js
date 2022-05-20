@@ -31,12 +31,12 @@ function Purchase({ selectedAddress, ...props }) {
 						typeText={'PayPal'}
 					/>
 
-					<PaymentMethodItem
+					{/* <PaymentMethodItem
 						onBuy={onBuyWithWyre}
 						displayName={displayName}
 						image={require('../../../../../images/wyre.png')}
 						typeText={'Wyre'}
-					/>
+					/> */}
 				</TrackingScrollView>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>

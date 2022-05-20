@@ -555,7 +555,7 @@ class Onboarding extends PureComponent {
 							style={styles.button}
 							type={'white-padding'}
 							onPress={this.onViewPartners}
-							testID={'onboarding-import-button'}
+							testID={'onboarding-check-our-partner'}
 						>
 							{strings('onboarding.view_partners')}
 						</StyledButton>
