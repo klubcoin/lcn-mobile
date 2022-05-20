@@ -35,6 +35,7 @@ import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Identicon from '../../../UI/Identicon';
+import { testID } from '../../../../util/Logger';
 
 export default class TipperModal extends PureComponent {
 	static propTypes = {
@@ -188,7 +189,7 @@ export default class TipperModal extends PureComponent {
 
 		try {
 			await this.prepareTransaction();
-		 
+
 			const transaction = this.prepareTransactionToSend();
 			// return
 			const { result, transactionMeta } = await TransactionController.addTransaction(
@@ -347,6 +348,7 @@ export default class TipperModal extends PureComponent {
 		return (
 			<View style={styles.amountInput}>
 				<TrackingTextInput
+					{...testID('tipper-modal-amount-field')}
 					autoCapitalize="none"
 					autoCorrect={false}
 					keyboardType="numeric"
@@ -397,6 +399,7 @@ export default class TipperModal extends PureComponent {
 					containerStyle={styles.accept}
 					onPress={!this.errorMessage && value !== 0 && !this.processing ? () => this.onConfirm() : null}
 					disabled={disableSend}
+					testID={'tipper-modal-confirm-button'}
 				>
 					{this.loading || this.tipping ? <ActivityIndicator color={colors.white} /> : confirmLabel}
 				</StyledButton>
@@ -405,6 +408,7 @@ export default class TipperModal extends PureComponent {
 					disabled={this.tipping}
 					containerStyle={styles.reject}
 					onPress={this.onCancel.bind(this)}
+					testID={'tipper-modal-cancel-button'}
 				>
 					{cancelLabel}
 				</StyledButton>

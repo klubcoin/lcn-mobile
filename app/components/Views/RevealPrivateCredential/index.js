@@ -22,6 +22,7 @@ import preferences from '../../../store/preferences';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TrackingTextInput from '../../UI/TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 const WRONG_PASSWORD_ERROR = 'Error: Decrypt failed';
 
@@ -214,6 +215,7 @@ class RevealPrivateCredential extends PureComponent {
 											</Text>
 											<View style={styles.seedPhraseView}>
 												<TrackingTextInput
+													{...testID('reveal-private-credential-private-credential-field')}
 													value={privateCredential}
 													numberOfLines={3}
 													multiline
@@ -260,6 +262,7 @@ class RevealPrivateCredential extends PureComponent {
 											{strings('reveal_credential.enter_password')}
 										</Text>
 										<TrackingTextInput
+											{...testID('reveal-private-credential-password-field')}
 											style={styles.input}
 											testID={'private-credential-password-text-input'}
 											placeholder={'Password'}

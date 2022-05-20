@@ -42,6 +42,7 @@ import TrackingTextInput from '../../UI/TrackingTextInput';
 import TrackingScrollView from '../../UI/TrackingScrollView';
 import ActionModal from '../../UI/ActionModal';
 import { BLOCK_TIME } from '../Settings/SecuritySettings';
+import { testID } from '../../../util/Logger';
 
 const CHANGE_EMAIL = 'change_email';
 const CONFIRM_PASSWORD = 'confirm_password';
@@ -345,12 +346,12 @@ class ChangeEmail extends PureComponent {
 							) : (
 								<>
 									<TrackingTextInput
+										{...testID('change-email-password-field')}
 										style={styles.confirm_input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
 										onChangeText={this.onPasswordChange}
 										onSubmitEditing={() => this.tryUnlock()}
-										testID={'private-credential-password-text-input'}
 										autoCapitalize="none"
 										secureTextEntry
 									/>
@@ -359,10 +360,10 @@ class ChangeEmail extends PureComponent {
 									)}
 									<View style={styles.buttonWrapper}>
 										<StyledButton
+											testID={'change-email-confirm-button'}
 											containerStyle={styles.button}
 											type={'normal'}
 											onPress={() => this.tryUnlock()}
-											testID={'submit-button'}
 										>
 											{strings('manual_backup_step_1.confirm')}
 										</StyledButton>
@@ -454,6 +455,7 @@ class ChangeEmail extends PureComponent {
 												emailFocused: true
 											});
 										}}
+										testID={'change-email-text-field'}
 									/>
 									{!!emailErrorText && <Text style={styles.errorText}>{emailErrorText}</Text>}
 								</View>
@@ -463,9 +465,9 @@ class ChangeEmail extends PureComponent {
 
 							<View style={styles.ctaWrapper}>
 								<StyledButton
+									testID={'change-email-verify-button'}
 									type={'normal'}
 									onPress={() => this.onPressUpdate()}
-									testID={'submit-button'}
 									disabled={loading || !isValidEmail}
 								>
 									{isLoading ? (

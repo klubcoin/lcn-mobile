@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { colors } from '../../../styles/common';
+import { testID } from '../../../util/Logger';
 import TrackingTextInput from '../TrackingTextInput';
 import styles from './styles/index';
 
@@ -21,7 +22,8 @@ export default class TextField extends Component {
 			textInputWrapperStyle,
 			onBlur,
 			onFocus,
-			errorText
+			errorText,
+			testID: testId
 		} = this.props;
 		return (
 			<View style={[styles.textInputContainer, containerStyle]}>
@@ -39,6 +41,7 @@ export default class TextField extends Component {
 						editable={!disabled}
 						onBlur={() => onBlur && onBlur()}
 						onFocus={() => onFocus && onFocus()}
+						{...testID(testId ? testId : '')}
 					/>
 					{rightItem && rightItem}
 				</View>

@@ -139,6 +139,7 @@ class PaymentRequestSuccess extends PureComponent {
 						<View style={styles.buttonsWrapper}>
 							<View style={styles.buttonsContainer}>
 								<StyledButton
+									testID={'payment-request-success-component-copy-to-clipboard-button'}
 									type={'normal'}
 									onPress={this.copyAccountToClipboard}
 									containerStyle={styles.button}
@@ -155,10 +156,10 @@ class PaymentRequestSuccess extends PureComponent {
 									</View>
 								</StyledButton>
 								<StyledButton
+									testID={'payment-request-success-component-qr-code-button'}
 									type={'normal'}
 									onPress={this.showQRModal}
 									containerStyle={styles.button}
-									testID={'request-qrcode-button'}
 								>
 									<View style={styles.buttonContent}>
 										<View style={styles.buttonIconWrapper}>
@@ -169,7 +170,12 @@ class PaymentRequestSuccess extends PureComponent {
 										</View>
 									</View>
 								</StyledButton>
-								<StyledButton type={'white'} onPress={this.onShare} containerStyle={styles.button}>
+								<StyledButton
+									testID={'payment-request-success-component-send-link-button'}
+									type={'white'}
+									onPress={this.onShare}
+									containerStyle={styles.button}
+								>
 									<View style={styles.buttonContent}>
 										<View style={styles.buttonIconWrapper}>
 											<EvilIcons name="share-apple" size={24} style={styles.blueIcon} />

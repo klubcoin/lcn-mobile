@@ -53,7 +53,12 @@ class Partners extends PureComponent {
 				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					{this.partnerList.length > 0 &&
 						this.partnerList.map((e, index) => (
-							<PartnerItem imageSrc={e.icon} onItemPress={() => this.gotoDetails(e)} key={index} />
+							<PartnerItem
+								testID={`partners-screen-partner-item-${index}`}
+								imageSrc={e.icon}
+								onItemPress={() => this.gotoDetails(e)}
+								key={index}
+							/>
 						))}
 				</TrackingScrollView>
 			</OnboardingScreenWithBg>

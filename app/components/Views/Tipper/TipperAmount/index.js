@@ -35,6 +35,7 @@ import { colors } from '../../../../styles/common';
 import AppConstants from '../../../../core/AppConstants';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import { testID } from '../../../../util/Logger';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -224,6 +225,7 @@ class TipperAmount extends PureComponent {
 				{chainId === '1' && (
 					<View style={styles.searchWrapper}>
 						<TrackingTextInput
+							{...testID('tipper-amount-search-assets-field')}
 							style={[styles.searchInput, inputWidth]}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -522,6 +524,7 @@ class TipperAmount extends PureComponent {
 										<Text style={styles.currencySymbol}>{currencySymbol}</Text>
 									)}
 									<TrackingTextInput
+										{...testID('tipper-amount-amount-field')}
 										autoCapitalize="none"
 										autoCorrect={false}
 										keyboardType="numeric"
@@ -585,7 +588,12 @@ class TipperAmount extends PureComponent {
 					enabled={Device.isIos()}
 				>
 					<View style={styles.buttonsContainer}>
-						<StyledButton type={'white'} onPress={this.onReset} containerStyle={[styles.button]}>
+						<StyledButton
+							type={'white'}
+							onPress={this.onReset}
+							containerStyle={[styles.button]}
+							testID={'request-tipper-reset-button'}
+						>
 							{strings('payment_request.reset')}
 						</StyledButton>
 						<StyledButton
@@ -593,6 +601,7 @@ class TipperAmount extends PureComponent {
 							onPress={this.onNext}
 							containerStyle={[styles.button]}
 							disabled={disabledButton}
+							testID={'request-tipper-next-button'}
 						>
 							{!!onRequest ? strings('payment_request.send') : strings('payment_request.next')}
 						</StyledButton>

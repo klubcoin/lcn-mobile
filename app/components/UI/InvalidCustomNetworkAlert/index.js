@@ -81,12 +81,20 @@ const InvalidCustomNetworkAlert = props => {
 					</Text>
 				</View>
 				<View style={styles.button}>
-					<StyledButton type={'confirm'} onPress={goToEditNetwork}>
+					<StyledButton
+						testID={'invalid-custom-network-alert-component-edit-network-button'}
+						type={'confirm'}
+						onPress={goToEditNetwork}
+					>
 						{strings('invalid_network.edit_network_button')}
 					</StyledButton>
 				</View>
 				<View style={styles.button}>
-					<StyledButton onPress={closeModal} type={'cancel'}>
+					<StyledButton
+						testID={'invalid-custom-network-alert-component-cancel-button'}
+						onPress={closeModal}
+						type={'cancel'}
+					>
 						{strings('invalid_network.cancel')}
 					</StyledButton>
 				</View>

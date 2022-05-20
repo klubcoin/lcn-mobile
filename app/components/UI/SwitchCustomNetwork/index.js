@@ -120,18 +120,18 @@ const SwitchCustomNetwork = ({ customNetworkInformation, currentPageInformation,
 			) : null}
 			<View style={styles.actionContainer(type === 'new')}>
 				<StyledButton
+					testID={'switch-custom-network-cancel-button'}
 					type={'cancel'}
 					onPress={cancel}
 					containerStyle={[styles.button, styles.cancel]}
-					testID={'connect-cancel-button'}
 				>
 					{strings('switch_custom_network.cancel')}
 				</StyledButton>
 				<StyledButton
+					testID={'switch-custom-network-switch-button'}
 					type={'confirm'}
 					onPress={confirm}
 					containerStyle={[styles.button, styles.confirm]}
-					testID={'connect-approve-button'}
 				>
 					{strings('switch_custom_network.switch')}
 				</StyledButton>

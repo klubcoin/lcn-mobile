@@ -29,7 +29,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import AppConstants from '../../../core/AppConstants';
 import OnboardingProgress from '../../UI/OnboardingProgress';
 import zxcvbn from 'zxcvbn';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import { ONBOARDING, PREVIOUS_SCREEN } from '../../../constants/navigation';
 import {
 	EXISTING_USER,
@@ -597,6 +597,7 @@ class ChoosePassword extends PureComponent {
 											style={styles.button}
 											type={'normal'}
 											onPress={this.onUsePassword}
+											testID={'choose-password-setup-local-account-button'}
 										>
 											{strings('choose_password.setup_local_account')}
 										</StyledButton>
@@ -645,6 +646,7 @@ class ChoosePassword extends PureComponent {
 														this.setState({ isBlurPassword: false });
 													}}
 													maxLength={MAX_LENGTH_INPUT}
+													{...testID('choose-password-password-field')}
 												/>
 												<Text style={styles.passwordValidateTitle}>
 													{strings(`choose_password.password_validate_title`)}
@@ -732,11 +734,11 @@ class ChoosePassword extends PureComponent {
 													secureTextEntry={secureTextEntry}
 													placeholder={''}
 													placeholderTextColor={colors.grey100}
-													testID={'input-password-confirm'}
 													onSubmitEditing={this.onPressCreate}
 													returnKeyType={'done'}
 													autoCapitalize="none"
 													maxLength={MAX_LENGTH_INPUT}
+													{...testID('choose-password-password-confirm-field')}
 												/>
 												<View style={styles.showMatchingPasswords}>
 													{passwordsMatch ? (
@@ -759,7 +761,7 @@ class ChoosePassword extends PureComponent {
 													onTintColor={colors.blue}
 													tintColors={{ true: colors.blue }}
 													boxType="square"
-													testID={'password-understand-box'}
+													{...testID('choose-password-understand-box')}
 												/>
 												<Text
 													style={styles.label}
@@ -778,9 +780,9 @@ class ChoosePassword extends PureComponent {
 
 										<View style={styles.ctaWrapper}>
 											<StyledButton
+												testID={'choose-password-create-button'}
 												type={'white'}
 												onPress={this.onPressCreate}
-												testID={'submit-button'}
 												disabled={!canSubmit}
 											>
 												{strings('choose_password.create_button').toUpperCase()}

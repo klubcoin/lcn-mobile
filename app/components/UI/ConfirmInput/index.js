@@ -8,6 +8,7 @@ import StyledButton from '../StyledButton';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 /**
  * PureComponent that renders confirm actions
@@ -62,6 +63,7 @@ export default class ConfirmInput extends PureComponent {
 					</View>
 					<View style={styles.body}>
 						<TrackingTextInput
+							{...testID('confirm-input-text-field')}
 							autoCapitalize="sentences"
 							autoCorrect={false}
 							onChangeText={this.onChange}
@@ -75,6 +77,7 @@ export default class ConfirmInput extends PureComponent {
 						/>
 						<View style={styles.actionRow}>
 							<StyledButton
+								testID={'confirm-input-component-cancel-button'}
 								type={'cancel'}
 								onPress={this.onCancel.bind(this)}
 								containerStyle={styles.actionButton}
@@ -82,6 +85,7 @@ export default class ConfirmInput extends PureComponent {
 								{cancelLabel || strings('action_view.cancel')}
 							</StyledButton>
 							<StyledButton
+								testID={'confirm-input-component-confirm-button'}
 								type={'normal'}
 								onPress={this.onConfirm.bind(this)}
 								containerStyle={styles.actionButton}

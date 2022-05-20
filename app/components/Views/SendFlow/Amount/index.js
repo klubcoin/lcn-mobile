@@ -61,6 +61,7 @@ import styles from './styles/index';
 import Erc20Service from '../../../../core/Erc20Service';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const { hexToBN, BNToHex } = util;
 
@@ -826,6 +827,7 @@ class Amount extends PureComponent {
 							<Text style={styles.inputCurrencyText}>{`${getCurrencySymbol(currentCurrency)} `}</Text>
 						)}
 						<TrackingTextInput
+							{...testID('send-flow-amount-amount-field')}
 							ref={this.amountInput}
 							style={styles.textInput}
 							placeholderTextColor={colors.fontSecondary}

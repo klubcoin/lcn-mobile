@@ -4,6 +4,7 @@ import { colors } from '../../../styles/common';
 import styles from './styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 export default class PhoneTextField extends Component {
 	render() {
@@ -31,6 +32,7 @@ export default class PhoneTextField extends Component {
 					</TouchableOpacity>
 					<View style={styles.textInputWrapper}>
 						<TrackingTextInput
+							{...testID('phone-text-field-text-field')}
 							style={styles.textInput}
 							value={value}
 							placeholder={placeholder}

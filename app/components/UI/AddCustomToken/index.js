@@ -10,6 +10,7 @@ import { isSmartContractAddress } from '../../../util/transactions';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import styles from './styles/index';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 /**
  * Copmonent that provides ability to add custom tokens.
@@ -185,13 +186,13 @@ export default class AddCustomToken extends PureComponent {
 						<View style={styles.rowWrapper}>
 							<Text style={styles.tokenAddress}>{strings('token.token_address')}</Text>
 							<TrackingTextInput
+								{...testID('add-custom-token-address-field')}
 								style={styles.textInput}
 								placeholder={'0x...'}
 								placeholderTextColor={colors.grey100}
 								value={this.state.address}
 								onChangeText={this.onAddressChange}
 								onBlur={this.onAddressBlur}
-								testID={'input-token-address'}
 								onSubmitEditing={this.jumpToAssetSymbol}
 								returnKeyType={'next'}
 							/>
@@ -202,13 +203,13 @@ export default class AddCustomToken extends PureComponent {
 						<View style={styles.rowWrapper}>
 							<Text style={styles.tokenAddress}>{strings('token.token_symbol')}</Text>
 							<TrackingTextInput
+								{...testID('add-custom-token-symbol-field')}
 								style={styles.textInput}
 								placeholder={'GNO'}
 								placeholderTextColor={colors.grey100}
 								value={this.state.symbol}
 								onChangeText={this.onSymbolChange}
 								onBlur={this.validateCustomTokenSymbol}
-								testID={'input-token-symbol'}
 								ref={this.assetSymbolInput}
 								onSubmitEditing={this.jumpToAssetPrecision}
 								returnKeyType={'next'}
@@ -218,6 +219,7 @@ export default class AddCustomToken extends PureComponent {
 						<View style={styles.rowWrapper}>
 							<Text style={styles.tokenAddress}>{strings('token.token_precision')}</Text>
 							<TrackingTextInput
+								{...testID('add-custom-token-custom-token-decimal-field')}
 								style={styles.textInput}
 								value={this.state.decimals}
 								keyboardType="numeric"
@@ -226,7 +228,6 @@ export default class AddCustomToken extends PureComponent {
 								placeholderTextColor={colors.grey100}
 								onChangeText={this.onDecimalsChange}
 								onBlur={this.validateCustomTokenDecimals}
-								testID={'input-token-decimals'}
 								ref={this.assetPrecisionInput}
 								onSubmitEditing={this.addToken}
 								returnKeyType={'done'}

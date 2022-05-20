@@ -211,6 +211,8 @@ class VerifyOTP extends PureComponent {
 							this.verifyOTPEmail();
 						}
 					}}
+					containerTestId={'verify-otp-container-otp-input'}
+					textFieldTestId={'verify-otp-text-field-otp-input'}
 				/>
 				{!this.tooManyVerifyAttempts &&
 					(!this.tooManySendOtp ? (
@@ -261,6 +263,7 @@ class VerifyOTP extends PureComponent {
 							onPress={() => {
 								this.props.navigation.navigate('SecuritySettings');
 							}}
+							testID={'verify-otp-proceed-to-settings'}
 						>
 							{strings('verify_otp.proceed_to_settings')}
 						</StyledButton>

@@ -1025,7 +1025,12 @@ function SwapsQuotesView({
 					</Text>
 				</View>
 				<View style={styles.bottomSection}>
-					<StyledButton type="blue" containerStyle={styles.ctaButton} onPress={handleRetryFetchQuotes}>
+					<StyledButton
+						testID={'quotes-view-component-error-action-button'}
+						type="blue"
+						containerStyle={styles.ctaButton}
+						onPress={handleRetryFetchQuotes}
+					>
 						{errorAction}
 					</StyledButton>
 				</View>

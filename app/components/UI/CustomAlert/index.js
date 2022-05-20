@@ -103,7 +103,11 @@ export default class CustomAlert extends PureComponent {
 						{this.props.children}
 					</View>
 					<View style={styles.footer}>
-						<StyledButton type={'confirm'} onPress={this.props.onPress}>
+						<StyledButton
+							testID={'custom-alert-component-confirm-button'}
+							type={'confirm'}
+							onPress={this.props.onPress}
+						>
 							{this.props.buttonText}
 						</StyledButton>
 					</View>

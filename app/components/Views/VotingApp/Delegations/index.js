@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import ConfirmModal from '../../../UI/ConfirmModal';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -288,6 +289,7 @@ export class Delegations extends PureComponent {
 								</View>
 							)}
 							<TrackingTextInput
+								{...testID('delegations-search-query-field')}
 								style={styles.textInput}
 								value={this.searchQuery}
 								placeholderTextColor={colors.grey100}

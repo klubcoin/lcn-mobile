@@ -29,6 +29,7 @@ import { showAlert } from '../../../../../actions/alert';
 import ScaleImage from 'react-native-scalable-image';
 import Countries from '../../../../../util/countries.json';
 import validator from 'validator';
+import { testID } from '../../../../../util/Logger';
 
 const FLAGS = {
 	USD: require('../../../../../images/usa-flag.png'),
@@ -625,6 +626,7 @@ function Wyre({ selectedAddress, ...props }) {
 					</Text>
 
 					<TrackingTextInput
+						{...testID('payment-wyre-amount-field')}
 						placeholder={'0.00'}
 						placeholderTextColor={colors.grey300}
 						style={styles.amountTextInput}
@@ -738,6 +740,7 @@ function Wyre({ selectedAddress, ...props }) {
 						</View>
 						<View style={styles.fromWrapper}>
 							<StyledButton
+								testID={'wyre-component-proceed-checkout-button'}
 								type="normal"
 								onPress={() => {
 									if (from.amount < +boundary[from.currency].min) {
@@ -943,6 +946,7 @@ function Wyre({ selectedAddress, ...props }) {
 						</View>
 						<View style={styles.fromWrapper}>
 							<StyledButton
+								testID={'wyre-component-buy-token-button'}
 								type="normal"
 								onPress={() => {
 									payWithWyre();
@@ -1033,6 +1037,7 @@ function Wyre({ selectedAddress, ...props }) {
 						)}
 						<Text style={styles.label}>{strings('wyre_checkout.email')}</Text>
 						<TrackingTextInput
+							{...testID('payment-wyre-email-field')}
 							style={[
 								styles.emailInput,
 								isIOS ? styles.inputIOS : styles.inputAndroid,
@@ -1048,6 +1053,7 @@ function Wyre({ selectedAddress, ...props }) {
 						<View style={styles.cardInfoWrapper}>
 							<View style={styles.cardNumberWrapper}>
 								<TrackingTextInput
+									{...testID('payment-wyre-card-number-field')}
 									style={[
 										styles.cardNumber,
 										isIOS ? styles.inputIOS : styles.inputAndroid,
@@ -1064,6 +1070,7 @@ function Wyre({ selectedAddress, ...props }) {
 							</View>
 							<View style={styles.cardInfoBottomWrapper}>
 								<TrackingTextInput
+									{...testID('payment-wyre-expired-date-field')}
 									style={[
 										styles.mmYY,
 										isIOS ? styles.inputIOS : styles.inputAndroid,
@@ -1085,6 +1092,7 @@ function Wyre({ selectedAddress, ...props }) {
 									]}
 								>
 									<TrackingTextInput
+										{...testID('payment-wyre-cvc-field')}
 										style={styles.cardCVC}
 										placeholder={strings('wyre_checkout.cvc')}
 										placeholderTextColor={colors.grey300}
@@ -1103,6 +1111,7 @@ function Wyre({ selectedAddress, ...props }) {
 						)}
 						<Text style={styles.label}>{strings('wyre_checkout.name_of_card')}</Text>
 						<TrackingTextInput
+							{...testID('payment-wyre-email-field')}
 							style={[
 								styles.emailInput,
 								isIOS ? styles.inputIOS : styles.inputAndroid,
@@ -1135,7 +1144,7 @@ function Wyre({ selectedAddress, ...props }) {
 						)}
 					</View>
 					<View style={styles.fromWrapper}>
-						<StyledButton type="normal" onPress={onPay}>
+						<StyledButton testID={'wyre-component-pay-button'} type="normal" onPress={onPay}>
 							<Text style={styles.buttonText}>
 								{strings('wyre_checkout.pay', { token: to.currency })}
 							</Text>

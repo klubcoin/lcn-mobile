@@ -14,7 +14,7 @@ import URL from 'url-parse';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BigNumber from 'bignumber.js';
 import { jsonRpcRequest } from '../../../../../util/jsonRpcRequest';
-import Logger from '../../../../../util/Logger';
+import Logger, { testID } from '../../../../../util/Logger';
 import { isPrefixedFormattedHexString } from '../../../../../util/number';
 import AppConstants from '../../../../../core/AppConstants';
 import AnalyticsV2 from '../../../../../util/analyticsV2';
@@ -472,6 +472,7 @@ class NetworkSettings extends PureComponent {
 
 							<Text style={styles.label}>{strings('app_settings.network_name_label')}</Text>
 							<TrackingTextInput
+								{...testID('network-settings-network-name-field')}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
 								autoCorrect={false}
@@ -486,6 +487,7 @@ class NetworkSettings extends PureComponent {
 							/>
 							<Text style={styles.label}>{strings('app_settings.network_rpc_url_label')}</Text>
 							<TrackingTextInput
+								{...testID('network-settings-rpc-url-field')}
 								ref={this.inputRpcURL}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
@@ -508,6 +510,7 @@ class NetworkSettings extends PureComponent {
 
 							<Text style={styles.label}>{strings('app_settings.network_chain_id_label')}</Text>
 							<TrackingTextInput
+								{...testID('network-settings-chain-id-field')}
 								ref={this.inputChainId}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
@@ -531,6 +534,7 @@ class NetworkSettings extends PureComponent {
 
 							<Text style={styles.label}>{strings('app_settings.network_symbol_label')}</Text>
 							<TrackingTextInput
+								{...testID('network-settings-symbol-field')}
 								ref={this.inputSymbol}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
@@ -546,6 +550,7 @@ class NetworkSettings extends PureComponent {
 							/>
 							<Text style={styles.label}>{strings('app_settings.network_block_explorer_label')}</Text>
 							<TrackingTextInput
+								{...testID('network-settings-block-explorer-url-field')}
 								ref={this.inputBlockExplorerURL}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}

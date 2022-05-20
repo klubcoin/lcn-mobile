@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { colors } from '../../../../styles/common';
 import StyledButton from '../../StyledButton';
 import { strings } from '../../../../../locales/i18n';
+import { testID } from '../../../../util/Logger';
 
 const styles = StyleSheet.create({
 	viewWrapper: {
@@ -63,7 +64,9 @@ export default function ActionContent({
 	viewContainerStyle,
 	actionContainerStyle,
 	childrenContainerStyle,
-	verticalButtons
+	verticalButtons,
+	confirmTestId,
+	cancelTestId
 }) {
 	return (
 		<View style={[styles.viewWrapper, viewWrapperStyle]}>
@@ -82,6 +85,7 @@ export default function ActionContent({
 							type={cancelButtonMode}
 							onPress={onCancelPress}
 							containerStyle={[styles.button, !verticalButtons && styles.buttonHorizontal]}
+							{...testID(confirmTestId ?? '')}
 						>
 							{cancelText}
 						</StyledButton>
@@ -93,6 +97,7 @@ export default function ActionContent({
 							onPress={onConfirmPress}
 							containerStyle={[styles.button, !verticalButtons && styles.buttonHorizontal]}
 							disabled={confirmDisabled}
+							{...testID(confirmTestId ?? '')}
 						>
 							{confirmText}
 						</StyledButton>

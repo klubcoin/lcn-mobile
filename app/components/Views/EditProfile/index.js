@@ -538,6 +538,7 @@ class EditProfile extends PureComponent {
 									label={strings('choose_password.username')}
 									placeholder={strings('choose_password.username')}
 									onChangeText={text => (this.username = text.replace(this.regex, ''))}
+									testId={'edit-profile-username-field'}
 								/>
 								<TextField
 									value={this.firstname}
@@ -552,6 +553,7 @@ class EditProfile extends PureComponent {
 										this.nameErrorText = '';
 									}}
 									errorText={this.nameErrorText}
+									testId={'edit-profile-name-field'}
 								/>
 								<TextField
 									value={this.lastname}
@@ -568,6 +570,7 @@ class EditProfile extends PureComponent {
 										this.surnameErrorText = '';
 									}}
 									errorText={this.surnameErrorText}
+									testId={'edit-profile-surname-field'}
 								/>
 								<TextField
 									value={this.email}
@@ -586,6 +589,7 @@ class EditProfile extends PureComponent {
 											<Icon name="remove" size={16} color={colors.fontError} />
 										)
 									}
+									testId={'edit-profile-email-field'}
 								/>
 								{!!this.email &&
 									validator.isEmail(this.email) &&
@@ -627,6 +631,7 @@ class EditProfile extends PureComponent {
 								{!!this.phoneErrorText && <Text style={styles.errorText}>{this.phoneErrorText}</Text>}
 							</View>
 							<StyledButton
+								testID={'edit-profile-update-profile-button'}
 								type={'white'}
 								onPress={this.onPressUpdate.bind(this)}
 								containerStyle={styles.next}
@@ -666,6 +671,7 @@ class EditProfile extends PureComponent {
 						>
 							<View style={styles.contentModal}>
 								<StyledButton
+									testID={'edit-profile-select-image-button'}
 									type={'normal'}
 									onPress={this.onPickImage.bind(this)}
 									containerStyle={styles.buttonModal}
@@ -673,6 +679,7 @@ class EditProfile extends PureComponent {
 									{strings('profile.select_image')}
 								</StyledButton>
 								<StyledButton
+									testID={'edit-profile-take-a-picture-button'}
 									type={'normal'}
 									onPress={this.onTakePicture.bind(this)}
 									containerStyle={styles.buttonModal}
@@ -687,6 +694,7 @@ class EditProfile extends PureComponent {
 							<View style={styles.notiContentModal}>
 								<Text style={styles.notiContentText}>{this.notiMessage}</Text>
 								<StyledButton
+									testID={'edit-profile-close-button'}
 									type={'normal'}
 									onPress={() => {
 										this.notiPermissionCamera = false;

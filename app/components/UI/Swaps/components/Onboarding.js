@@ -102,7 +102,12 @@ function Onboarding({ setHasOnboarded }) {
 				</View>
 			</View>
 			<View style={styles.actionButtonWrapper}>
-				<StyledButton type="confirm" containerStyle={styles.actionButton} onPress={handleStartSwapping}>
+				<StyledButton
+					testID={'onboarding-component-start-swapping-button'}
+					type="confirm"
+					containerStyle={styles.actionButton}
+					onPress={handleStartSwapping}
+				>
 					{strings('swaps.onboarding.start_swapping')}
 				</StyledButton>
 			</View>

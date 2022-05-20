@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, BackHandler } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-community/async-storage';
 import StyledButton from '../../UI/StyledButton';
@@ -16,6 +16,7 @@ import SkipAccountSecurityModal from '../../UI/SkipAccountSecurityModal';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 /**
  * View that's shown during the first step of
@@ -130,7 +131,7 @@ const AccountBackupStep1 = props => {
 											style={styles.remindLaterButton}
 											onPress={showRemindLater}
 											hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
-											testID={'remind-me-later-button'}
+											{...testID('account-backup-step-1-remind-me-late-button')}
 										>
 											<Text style={styles.remindLaterText}>
 												{strings('account_backup_step_1.remind_me_later')}
@@ -144,10 +145,10 @@ const AccountBackupStep1 = props => {
 							)}
 							<View style={styles.ctaContainer}>
 								<StyledButton
+									testID={'account-backup-step-1-next-buttonÏ'}
 									containerStyle={styles.button}
 									type={'normal-padding'}
 									onPress={goNext}
-									testID={'submit-button'}
 								>
 									{strings('account_backup_step_1.cta_text').toUpperCase()}
 								</StyledButton>

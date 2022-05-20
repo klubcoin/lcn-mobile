@@ -26,6 +26,7 @@ import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import QRScanner from '../../UI/QRScanner';
 import TrackingTextInput from '../../UI/TrackingTextInput';
+import { testID } from '../../../util/Logger';
 /**
  * View that's displayed the first time a user receives funds
  */
@@ -151,6 +152,7 @@ export default class ImportPrivateKey extends PureComponent {
 								<Text style={styles.subtitleText}>{strings('import_private_key.subtitle')}</Text>
 							</View>
 							<TrackingTextInput
+								{...testID('import-private-key-private-key-field')}
 								value={this.state.privateKey}
 								numberOfLines={3}
 								multiline
@@ -175,10 +177,10 @@ export default class ImportPrivateKey extends PureComponent {
 					</View>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
+							testID={'import-private-key-import-button'}
 							containerStyle={styles.button}
 							type={'normal'}
 							onPress={this.goNext}
-							testID={'import-button'}
 						>
 							{this.state.loading ? (
 								<ActivityIndicator size="small" color="white" />

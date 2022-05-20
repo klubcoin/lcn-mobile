@@ -22,7 +22,7 @@ import SettingsNotification from '../../../UI/SettingsNotification';
 import { clearHistory } from '../../../../actions/browser';
 import { clearHosts, setPrivacyMode, setThirdPartyApiMode } from '../../../../actions/privacy';
 import { colors } from '../../../../styles/common';
-import Logger from '../../../../util/Logger';
+import Logger, { testID } from '../../../../util/Logger';
 import Device from '../../../../util/Device';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { setLockTime } from '../../../../actions/settings';
@@ -629,7 +629,11 @@ class Settings extends PureComponent {
 									)}
 								</Text>
 								{hintText && seedphraseBackedUp ? (
-									<TouchableOpacity style={styles.viewHint} onPress={this.toggleHint}>
+									<TouchableOpacity
+										style={styles.viewHint}
+										onPress={this.toggleHint}
+										{...testID('security-settings-toggle-hint')}
+									>
 										<Text style={[styles.warningText, styles.warningBold]}>
 											{strings('app_settings.view_hint')}
 										</Text>
@@ -637,12 +641,18 @@ class Settings extends PureComponent {
 								) : null}
 							</SettingsNotification>
 							{!seedphraseBackedUp ? (
-								<StyledButton type="white" onPress={this.manualBackup} containerStyle={styles.confirm}>
+								<StyledButton
+									testID={'security-settings-backup-now'}
+									type="white"
+									onPress={this.manualBackup}
+									containerStyle={styles.confirm}
+								>
 									{strings('app_settings.back_up_now')}
 								</StyledButton>
 							) : (
 								<View style={styles.protect}>
 									<StyledButton
+										testID={'security-settings-backup-again'}
 										type="normal"
 										onPress={this.manualBackup}
 										containerStyle={[styles.confirm, styles.col]}
@@ -653,7 +663,7 @@ class Settings extends PureComponent {
 										type="warning"
 										onPress={this.goToRevealPrivateCredential}
 										containerStyle={[styles.confirm, styles.col]}
-										testID={'reveal-seed-button'}
+										testID={'security-settings-reveal-secret-recovery-phrase'}
 									>
 										{strings('reveal_credential.seed_phrase_title')}
 									</StyledButton>
@@ -666,6 +676,7 @@ class Settings extends PureComponent {
 							<View style={styles.protect}>
 								{emailVerified ? (
 									<StyledButton
+										testID={'security-settings-email-verified'}
 										type={'disable'}
 										containerStyle={[styles.verifyEmailButton, styles.confirm, styles.col]}
 										disable={true}
@@ -674,6 +685,7 @@ class Settings extends PureComponent {
 									</StyledButton>
 								) : (
 									<StyledButton
+										testID={'security-settings-verify-your-email'}
 										type={'warning'}
 										onPress={this.verifyEmail}
 										containerStyle={[styles.verifyEmailButton, styles.confirm, styles.col]}
@@ -682,6 +694,7 @@ class Settings extends PureComponent {
 									</StyledButton>
 								)}
 								<StyledButton
+									testID={'security-settings-change-email'}
 									type={'normal'}
 									onPress={this.changeEmail}
 									containerStyle={[styles.verifyEmailButton, styles.confirm, styles.col]}
@@ -695,7 +708,12 @@ class Settings extends PureComponent {
 							<Text style={styles.desc}>
 								{strings('password_reset.password_desc', { appName: displayName })}
 							</Text>
-							<StyledButton type="normal" onPress={this.resetPassword} containerStyle={styles.confirm}>
+							<StyledButton
+								testID={'security-settings-change-password'}
+								type="normal"
+								onPress={this.resetPassword}
+								containerStyle={styles.confirm}
+							>
 								{strings('password_reset.change_password')}
 							</StyledButton>
 						</View>
@@ -724,6 +742,7 @@ class Settings extends PureComponent {
 										value={this.state.biometryChoice}
 										trackColor={{ true: colors.blue, false: colors.grey200 }}
 										ios_backgroundColor={colors.grey000}
+										{...testID('security-settings-toggle-biometric')}
 									/>
 								</View>
 							</View>
@@ -741,6 +760,7 @@ class Settings extends PureComponent {
 										value={this.state.passcodeChoice}
 										trackColor={{ true: colors.blue, false: colors.grey200 }}
 										ios_backgroundColor={colors.grey000}
+										{...testID('security-settings-toggle-sign-in-with-passcode')}
 									/>
 								</View>
 							</View>
@@ -755,6 +775,7 @@ class Settings extends PureComponent {
 								{strings('reveal_credential.private_key_warning', { accountName: account.name })}
 							</Text>
 							<StyledButton
+								testID={'security-settings-show-private-key'}
 								type="normal"
 								onPress={this.goToExportPrivateKey}
 								containerStyle={styles.confirm}
@@ -765,7 +786,12 @@ class Settings extends PureComponent {
 						<View style={styles.setting}>
 							<Text style={styles.title}>{strings('private_key.backup_private_key')}</Text>
 							<Text style={styles.desc}>{strings('private_key.backup_private_key_desc')}</Text>
-							<StyledButton type="normal" onPress={this.backupPrivateKey} containerStyle={styles.confirm}>
+							<StyledButton
+								testID={'security-settings-backup-private-key'}
+								type="normal"
+								onPress={this.backupPrivateKey}
+								containerStyle={styles.confirm}
+							>
 								{strings('private_key.backup_private_key')}
 							</StyledButton>
 							{!!privateKeyBackupStats && (
@@ -784,6 +810,7 @@ class Settings extends PureComponent {
 							<Text style={styles.title}>{strings('private_key.recover_private_key')}</Text>
 							<Text style={styles.desc}>{strings('private_key.recover_private_key_desc')}</Text>
 							<StyledButton
+								testID={'security-settings-recover-private-key'}
 								type="normal"
 								onPress={this.recoverPrivateKey}
 								containerStyle={styles.confirm}
@@ -851,6 +878,7 @@ class Settings extends PureComponent {
 									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
 									testID={'metametrics-switch'}
+									{...testID('security-settings-toggle-metrics-opt-in')}
 								/>
 							</View>
 						</View>
@@ -865,6 +893,7 @@ class Settings extends PureComponent {
 									onValueChange={this.toggleThirdPartyAPI}
 									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
+									{...testID('security-settings-toggle-third-party-api')}
 								/>
 							</View>
 						</View>
@@ -948,6 +977,7 @@ class Settings extends PureComponent {
 								style={styles.closeModalButton}
 								activeOpacity={0.7}
 								onPress={this.onHideEmailBlocked}
+								{...testID('security-settings-hide-email-blocked')}
 							>
 								<Icon name="close" style={styles.closeModalIcon} />
 							</TouchableOpacity>

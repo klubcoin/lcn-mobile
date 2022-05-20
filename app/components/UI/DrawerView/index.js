@@ -30,7 +30,7 @@ import {
 import { showAlert } from '../../../actions/alert';
 import { getEtherscanAddressUrl, getEtherscanBaseUrl } from '../../../util/etherscan';
 import Engine from '../../../core/Engine';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import OnboardingWizard from '../OnboardingWizard';
 import ReceiveRequest from '../ReceiveRequest';
 import Analytics from '../../../core/Analytics';
@@ -61,7 +61,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
 import * as RNFS from 'react-native-fs';
 import routes from '../../../common/routes';
-import {  fromWei, weiToFiat } from '../../../util/number';
+import { fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
 import { EXCEPTION_ACTIVE_APP } from '../TrackingTextInput';
@@ -878,7 +878,11 @@ class DrawerView extends PureComponent {
 						: strings('protect_your_wallet_modal.body_for_seedphrase')}
 				</Text>
 				<View style={styles.protectWalletButtonWrapper}>
-					<StyledButton type={'confirm'} onPress={this.onSecureWalletModalAction}>
+					<StyledButton
+						testID={'drawer-view-component-protect-wallet-button'}
+						type={'confirm'}
+						onPress={this.onSecureWalletModalAction}
+					>
 						{strings('protect_your_wallet_modal.button')}
 					</StyledButton>
 				</View>
@@ -960,8 +964,8 @@ class DrawerView extends PureComponent {
 								<TouchableOpacity
 									style={styles.identiconWrapper}
 									onPress={this.toggleEditWalletName}
-									testID={'navbar-account-identicon'}
 									activeOpacity={0.6}
+									{...testID('drawer-account-identicon')}
 								>
 									<View style={styles.identiconBorder}>
 										{!!avatar ? (
@@ -1021,20 +1025,22 @@ class DrawerView extends PureComponent {
 					</View>
 					<View style={styles.buttons}>
 						<StyledButton
+							testID={'drawer-view-component-send-button'}
 							type={'pink'}
 							onPress={this.onSend}
 							containerStyle={[styles.button, styles.leftButton]}
-							testID={'drawer-send-button'}
+							{...testID('drawer-send-button')}
 						>
 							<View style={styles.buttonContent}>
 								<Text style={styles.buttonText}>{strings('drawer.send_button').toUpperCase()}</Text>
 							</View>
 						</StyledButton>
 						<StyledButton
+							testID={'drawer-view-component-receive-button'}
 							type={'normal'}
 							onPress={this.onBuy}
 							containerStyle={[styles.button, styles.rightButton]}
-							testID={'drawer-receive-button'}
+							{...testID('drawer-receive-button')}
 						>
 							<View style={styles.buttonContent}>
 								<Text style={styles.buttonText}>
@@ -1076,6 +1082,7 @@ class DrawerView extends PureComponent {
 													}
 													onPress={() => item.action()} // eslint-disable-line
 													activeOpacity={0.6}
+													{...testID(`drawer-item-${i}-${j}`)}
 												>
 													{item.icon ? (
 														item.routeNames && item.routeNames.includes(currentRoute) ? (

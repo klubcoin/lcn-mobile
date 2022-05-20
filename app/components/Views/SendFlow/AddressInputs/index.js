@@ -12,6 +12,7 @@ import { hasZeroWidthPoints } from '../../../../util/validators';
 import styles from './styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import { testID } from '../../../../util/Logger';
 
 const AddressName = ({ toAddressName, confusableCollection = [] }) => {
 	if (confusableCollection.length) {
@@ -76,6 +77,7 @@ export const AddressTo = props => {
 				<View style={[styles.selectWrapper, highlighted ? styles.borderHighlighted : styles.borderOpaque]}>
 					<View style={styles.input}>
 						<TrackingTextInput
+							{...testID('send-flow-address-input-field')}
 							ref={inputRef}
 							autoCapitalize="none"
 							autoCorrect={false}

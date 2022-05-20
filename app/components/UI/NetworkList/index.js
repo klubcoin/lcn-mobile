@@ -197,7 +197,12 @@ export class NetworkList extends PureComponent {
 				{this.renderRpcNetworks()} */}
 			</TrackingScrollView>
 			<View style={styles.footer}>
-				<StyledButton containerStyle={styles.footerButton} type={'normal'} onPress={this.closeModal}>
+				<StyledButton
+					testID={'network-list-component-close-button'}
+					containerStyle={styles.footerButton}
+					type={'normal'}
+					onPress={this.closeModal}
+				>
 					<Text style={styles.closeButton}>{strings('networks.close').toUpperCase()}</Text>
 				</StyledButton>
 				{/* <TouchableOpacity style={styles.footerButton} onPress={this.closeModal}>

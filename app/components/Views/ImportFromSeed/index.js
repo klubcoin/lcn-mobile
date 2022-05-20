@@ -9,7 +9,7 @@ import { passwordSet, seedphraseBackedUp } from '../../../actions/user';
 import { setLockTime } from '../../../actions/settings';
 import StyledButton from '../../UI/StyledButton';
 import Engine from '../../../core/Engine';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import SecureKeychain from '../../../core/SecureKeychain';
 import AppConstants from '../../../core/AppConstants';
@@ -29,7 +29,7 @@ import {
 	METRICS_OPT_IN,
 	TRUE
 } from '../../../constants/storage';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
 import importAdditionalAccounts from '../../../util/importAdditionalAccounts';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -351,6 +351,7 @@ class ImportFromSeed extends PureComponent {
 					<View style={styles.biometricTop}>
 						<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
 						<Switch
+							{...testID('import-from-seed-remember-me-switch')}
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 							value={this.state.rememberMe}
 							style={styles.biometrySwitch}
@@ -363,6 +364,7 @@ class ImportFromSeed extends PureComponent {
 							{strings(`biometrics.enable_${this.state.biometryType.toLowerCase()}`)}
 						</Text>
 						<Switch
+							{...testID('import-from-seed-biometric-switch')}
 							onValueChange={this.updateBiometryChoice}
 							value={this.state.biometryChoice}
 							style={styles.biometrySwitch}
@@ -378,6 +380,7 @@ class ImportFromSeed extends PureComponent {
 			<View style={styles.biometrics}>
 				<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
 				<Switch
+					{...testID('import-from-seed-remember-me-2-switch')}
 					onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 					value={this.state.rememberMe}
 					style={styles.biometrySwitch}
@@ -471,7 +474,11 @@ class ImportFromSeed extends PureComponent {
 									<Text style={styles.label}>{strings('choose_password.seed_phrase')}</Text>
 								</View>
 								<View style={[styles.fieldCol, styles.fieldColRight]}>
-									<TouchableOpacity onPress={this.toggleHideSeedPhraseInput}>
+									<TouchableOpacity
+										onPress={this.toggleHideSeedPhraseInput}
+										activeOpacity={0.7}
+										{...testID('import-from-seed-toggle-show-hide-seed-phrase')}
+									>
 										<Text style={styles.label}>
 											{strings(`choose_password.${hideSeedPhraseInput ? 'show' : 'hide'}`)}
 										</Text>
@@ -500,6 +507,7 @@ class ImportFromSeed extends PureComponent {
 								/>
 							) : (
 								<TrackingTextInput
+									{...testID('import-from-seed-seed-phrase-field')}
 									value={seed}
 									numberOfLines={3}
 									style={[
@@ -526,7 +534,12 @@ class ImportFromSeed extends PureComponent {
 									onBlur={(!hideSeedPhraseInput && this.seedphraseInputFocused) || null}
 								/>
 							)}
-							<TouchableOpacity style={styles.qrCode} onPress={this.onQrCodePress}>
+							<TouchableOpacity
+								style={styles.qrCode}
+								onPress={this.onQrCodePress}
+								activeOpacity={0.7}
+								{...testID('import-from-seed-qr-code')}
+							>
 								<Icon name="qrcode" size={20} color={colors.fontSecondary} />
 							</TouchableOpacity>
 							<View style={styles.field}>
@@ -535,7 +548,11 @@ class ImportFromSeed extends PureComponent {
 										<Text style={styles.label}>{strings('import_from_seed.new_password')}</Text>
 									</View>
 									<View style={[styles.fieldCol, styles.fieldColRight]}>
-										<TouchableOpacity onPress={this.toggleShowHide}>
+										<TouchableOpacity
+											onPress={this.toggleShowHide}
+											activeOpacity={0.7}
+											{...testID('import-from-seed-toggle-show-hide-password')}
+										>
 											<Text style={styles.label}>
 												{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
 											</Text>
@@ -684,9 +701,9 @@ class ImportFromSeed extends PureComponent {
 
 							<View style={styles.ctaWrapper}>
 								<StyledButton
+									testID={'import-from-seed-import-button'}
 									type={'normal'}
 									onPress={this.onPressImport}
-									testID={'submit'}
 									disabled={!(password !== '' && isValidPassword && password === confirmPassword)}
 								>
 									{loading ? (

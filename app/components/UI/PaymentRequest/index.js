@@ -34,6 +34,7 @@ import { toLowerCaseCompare } from '../../../util/general';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -224,6 +225,7 @@ class PaymentRequest extends PureComponent {
 				{chainId === '1' && (
 					<View style={styles.searchWrapper}>
 						<TrackingTextInput
+							{...testID('payment-request-search-field')}
 							style={[styles.searchInput, inputWidth]}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -493,6 +495,7 @@ class PaymentRequest extends PureComponent {
 										<Text style={styles.currencySymbol}>{currencySymbol}</Text>
 									)}
 									<TrackingTextInput
+										{...testID('payment-request-amount-field')}
 										autoCapitalize="none"
 										autoCorrect={false}
 										keyboardType="numeric"
@@ -556,10 +559,16 @@ class PaymentRequest extends PureComponent {
 					enabled={Device.isIos()}
 				>
 					<View style={styles.buttonsContainer}>
-						<StyledButton type={'white'} onPress={this.onReset} containerStyle={[styles.button]}>
+						<StyledButton
+							testID={'payment-request-component-reset-button'}
+							type={'white'}
+							onPress={this.onReset}
+							containerStyle={[styles.button]}
+						>
 							{strings('payment_request.reset')}
 						</StyledButton>
 						<StyledButton
+							testID={'payment-request-component-next-button'}
 							type={'normal'}
 							onPress={this.onNext}
 							containerStyle={[styles.button]}

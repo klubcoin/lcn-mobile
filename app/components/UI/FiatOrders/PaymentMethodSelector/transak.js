@@ -137,7 +137,12 @@ const TransakPaymentMethod = ({ onPress }) => (
 		</PaymentMethod.Content>
 		{Device.isAndroid() && (
 			<View>
-				<StyledButton type={'blue'} containerStyle={style.cta} onPress={onPress}>
+				<StyledButton
+					testID={'payment-method-selector-component-transak-cta-button'}
+					type={'blue'}
+					containerStyle={style.cta}
+					onPress={onPress}
+				>
 					{strings('fiat_on_ramp.transak_cta')}
 				</StyledButton>
 			</View>

@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Text } from 'react-native';
 import { colors } from '../../../styles/common';
+import { testID } from '../../../util/Logger';
 import TrackingTextInput from '../TrackingTextInput';
 
 const { width } = Dimensions.get('screen');
-export default function OTPInput({ style, value, onChange, disable = false }) {
+export default function OTPInput({ style, value, onChange, disable = false, containerTestId, textFieldTestId }) {
 	const styles = StyleSheet.create({
 		wrapper: {
 			flex: 1,
@@ -65,6 +66,7 @@ export default function OTPInput({ style, value, onChange, disable = false }) {
 			onPress={onFocus}
 			style={[styles.wrapper, style]}
 			underlayColor={colors.grey}
+			{...testID(containerTestId)}
 		>
 			<TrackingTextInput
 				style={styles.input}
@@ -73,6 +75,7 @@ export default function OTPInput({ style, value, onChange, disable = false }) {
 				ref={inputRef}
 				value={value}
 				onChangeText={text => onChange(text)}
+				{...testID(textFieldTestId)}
 			/>
 			{[0, 1, 2, 3, 4, 5].map(e => (
 				<View activeOpacity={0.7} style={[styles.item, value.length === e ? styles.activeItem : null]}>

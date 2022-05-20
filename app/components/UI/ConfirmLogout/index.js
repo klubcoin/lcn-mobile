@@ -45,6 +45,7 @@ export default class ConfirmLogout extends PureComponent {
 				<View style={styles.body}>
 					<View style={styles.actionRow}>
 						<StyledButton
+							testID={'confirm-logout-component-confirm-button'}
 							type={'danger'}
 							onPress={this.onConfirm.bind(this)}
 							containerStyle={styles.actionButton}
@@ -53,6 +54,7 @@ export default class ConfirmLogout extends PureComponent {
 						</StyledButton>
 
 						<StyledButton
+							testID={'confirm-logout-component-cancel-button'}
 							type={'normal'}
 							onPress={this.onCancel.bind(this)}
 							containerStyle={styles.actionButton}

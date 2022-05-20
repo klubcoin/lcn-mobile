@@ -14,6 +14,7 @@ import { parse } from 'eth-url-parser';
 import { isValidAddress } from 'ethereumjs-util';
 import TrackingTextInput from '../../UI/TrackingTextInput';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -177,6 +178,7 @@ const NewChat = ({ navigation }) => {
 				<Text style={styles.to}>{strings('chat.to')}</Text>
 				<View style={styles.inputWrapper}>
 					<TrackingTextInput
+						{...testID('new-chat-address-field')}
 						value={address}
 						onChangeText={setAddress}
 						style={styles.input}
@@ -189,6 +191,7 @@ const NewChat = ({ navigation }) => {
 				</View>
 			</TrackingScrollView>
 			<StyledButton
+				testID={'new-chat-senbd-meessage-button'}
 				type="normal"
 				containerStyle={styles.sendButton}
 				onPress={onChat}

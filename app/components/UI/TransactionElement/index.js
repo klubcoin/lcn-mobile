@@ -231,6 +231,7 @@ class TransactionElement extends PureComponent {
 
 	renderCancelButton = () => (
 		<StyledButton
+			testID={'transaction-element-cancel-button'}
 			type={'cancel'}
 			containerStyle={styles.actionContainerStyle}
 			style={styles.actionStyle}
@@ -260,6 +261,7 @@ class TransactionElement extends PureComponent {
 
 	renderSpeedUpButton = () => (
 		<StyledButton
+			testID={'transaction-element-speedup-button'}
 			type={'white'}
 			containerStyle={[styles.actionContainerStyle, styles.speedupActionContainerStyle]}
 			style={styles.actionStyle}

@@ -7,7 +7,13 @@ import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import contractMap from '@metamask/contract-metadata';
 import ActionSheet from 'react-native-actionsheet';
-import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei, fromTokenMinimalUnit, fromTokenMinimalUnitString } from '../../../util/number';
+import {
+	renderFromTokenMinimalUnit,
+	balanceToFiat,
+	renderFromWei,
+	fromTokenMinimalUnit,
+	fromTokenMinimalUnitString
+} from '../../../util/number';
 import Engine from '../../../core/Engine';
 import AssetElement from '../AssetElement';
 import { connect } from 'react-redux';
@@ -98,29 +104,32 @@ class Tokens extends PureComponent {
 	async fetchApps() {
 		//TODO: need to remove fixed code for TIPPER app
 		const tipper = {
-			"image": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
-			"name": "Tipper",
-			"address": "0x8a61a394-7813-1234-9797-ee8016b1356d-test",
-			"application": {
-				"creationDate": 1636070400000,
-				"description": "Tipper app",
-				"hexCode": "4321123412341234123412341234123412344366-test",
-				"iconUrl": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
-				"name": "Tipper",
-				"shortCode": "Tipper",
-				"uuid": "7fe9443a-203a-48a2-a8f4-61118fafe738-test",
-				"version": "1.0"
+			image:
+				'https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg',
+			name: 'Tipper',
+			address: '0x8a61a394-7813-1234-9797-ee8016b1356d-test',
+			application: {
+				creationDate: 1636070400000,
+				description: 'Tipper app',
+				hexCode: '4321123412341234123412341234123412344366-test',
+				iconUrl:
+					'https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg',
+				name: 'Tipper',
+				shortCode: 'Tipper',
+				uuid: '7fe9443a-203a-48a2-a8f4-61118fafe738-test',
+				version: '1.0'
 			},
-			"description": "Get a tip from community",
-			"iconUrl": "https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg",
-			"instance": {
-				"description": "Get a tip from community",
-				"iconUrl": "https://docs.liquichain.io/media/app/liquimart.png",
-				"name": "Tipper",
-				"uuid": "8a61a394-7813-4046-9797-ee8016b1356d-test"
+			description: 'Get a tip from community',
+			iconUrl:
+				'https://user-images.githubusercontent.com/16066404/77041853-a2044100-69e0-11ea-8da6-d64822a2c72a.jpg',
+			instance: {
+				description: 'Get a tip from community',
+				iconUrl: 'https://docs.liquichain.io/media/app/liquimart.png',
+				name: 'Tipper',
+				uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
 			},
-			"name": "Tipper",
-			"uuid": "8a61a394-7813-4046-9797-ee8016b1356d-test"
+			name: 'Tipper',
+			uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
 		};
 
 		await preferences.fetch(kAppList);
@@ -174,9 +183,11 @@ class Tokens extends PureComponent {
 		const itemAddress = safeToChecksumAddress(asset.address);
 		const logo = asset.logo || ((contractMap[itemAddress] && contractMap[itemAddress].logo) || undefined);
 		const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
-		const balance =
-			asset.balance ? renderFromWei(asset.balance):
-			(itemAddress in tokenBalances ? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), asset.decimals) : 0);
+		const balance = asset.balance
+			? renderFromWei(asset.balance)
+			: itemAddress in tokenBalances
+			? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), asset.decimals)
+			: 0;
 		// const balanceFiat =
 		// 	isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
 		// 		? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
@@ -193,10 +204,8 @@ class Tokens extends PureComponent {
 
 		// const balanceValue = `${balance} ${Routes.mainNetWork.ticker}`;
 		//TODO: remove this condition
-		if (asset.name == "Tipper")
-			var app = asset;
-		else
-			var app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
+		if (asset.name == 'Tipper') var app = asset;
+		else var app = this.savedApps.find(e => e.address == `${asset.address}`.toLowerCase());
 		// render balances according to primary currency
 		let mainBalance, secondaryBalance;
 		if (app && app.name) {
@@ -225,31 +234,30 @@ class Tokens extends PureComponent {
 				onLongPress={asset.isETH ? null : this.showRemoveMenu}
 				asset={asset}
 			>
-				{
-					app ? (
-						<View style={styles.row}>
+				{app ? (
+					<View style={styles.row}>
+						<TokenImage asset={asset} containerStyle={styles.ethLogo} />
+						<View style={styles.app}>
+							<Text style={styles.name}>{mainBalance}</Text>
+							<Text style={styles.desc}>{secondaryBalance}</Text>
+						</View>
+					</View>
+				) : (
+					<View style={styles.row}>
+						{asset.isETH ? (
+							<NetworkMainAssetLogo big style={styles.ethLogo} testID={'eth-logo'} />
+						) : (
 							<TokenImage asset={asset} containerStyle={styles.ethLogo} />
-							<View style={styles.app}>
-								<Text style={styles.name}>{mainBalance}</Text>
-								<Text style={styles.desc}>{secondaryBalance}</Text>
-							</View>
-						</View>
-					) : (
-						<View style={styles.row}>
-							{asset.isETH ? (
-								<NetworkMainAssetLogo big style={styles.ethLogo} testID={'eth-logo'} />
-							) : (
-								<TokenImage asset={asset} containerStyle={styles.ethLogo} />
-							)}
+						)}
 
-							<View style={styles.balances} testID={'balance'}>
-								<Text style={styles.balance}>{mainBalance}</Text>
-								<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
-									{secondaryBalance}
-								</Text>
-							</View>
+						<View style={styles.balances} testID={'balance'}>
+							<Text style={styles.balance}>{mainBalance}</Text>
+							<Text style={[styles.balanceFiat, asset?.balanceError && styles.balanceFiatTokenError]}>
+								{secondaryBalance}
+							</Text>
 						</View>
-					)}
+					</View>
+				)}
 			</AssetElement>
 		);
 	};
@@ -280,7 +288,12 @@ class Tokens extends PureComponent {
 				{!ethBalance && !hasTokensBalance && (
 					<Text style={styles.tokensHomeText}>{strings('wallet.ready_to_explore')}</Text>
 				)}
-				<StyledButton type="normal" onPress={this.goToBuy} containerStyle={styles.tokensHomeButton}>
+				<StyledButton
+					testID={'tokens-component-buy-token-button'}
+					type="normal"
+					onPress={this.goToBuy}
+					containerStyle={styles.tokensHomeButton}
+				>
 					Buy {Routes.mainNetWork.ticker}
 				</StyledButton>
 			</View>

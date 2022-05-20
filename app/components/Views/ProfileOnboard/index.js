@@ -35,6 +35,7 @@ import APIService from '../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 export const SUCCESS = 'success';
 export const ALREADY_EXISTS = 'already_exists';
@@ -389,6 +390,7 @@ class ProfileOnboard extends PureComponent {
 					<TrackingScrollView>
 						<View style={styles.body}>
 							<TouchableOpacity
+								{...testID('profile-onboard-avatar')}
 								activeOpacity={0.5}
 								style={styles.avatarView}
 								onPress={() => this.onOpenModal()}
@@ -414,6 +416,7 @@ class ProfileOnboard extends PureComponent {
 									onBlur={() => {
 										this.nameFocused = true;
 									}}
+									testID={'profile-onboard-name-field'}
 								/>
 								{!!nameErrorText && <Text style={styles.errorText}>{nameErrorText}</Text>}
 								<TextField
@@ -430,6 +433,7 @@ class ProfileOnboard extends PureComponent {
 									onBlur={() => {
 										this.surnameFocused = true;
 									}}
+									testID={'profile-onboard-surname-field'}
 								/>
 								{!!surnameErrorText && <Text style={styles.errorText}>{surnameErrorText}</Text>}
 								<TextField
@@ -452,6 +456,7 @@ class ProfileOnboard extends PureComponent {
 									onBlur={() => {
 										this.emailFocused = true;
 									}}
+									testID={'profile-onboard-email-field'}
 								/>
 								{!!emailErrorText && <Text style={styles.errorText}>{emailErrorText}</Text>}
 								<TextField
@@ -473,10 +478,12 @@ class ProfileOnboard extends PureComponent {
 									onBlur={() => {
 										this.usernameFocused = true;
 									}}
+									testID={'profile-onboard-username-field'}
 								/>
 								{!!usernameErrorText && <Text style={styles.errorText}>{usernameErrorText}</Text>}
 							</View>
 							<StyledButton
+								testID={'profile-onboard-continue-button'}
 								type={'normal'}
 								onPress={this.onNext.bind(this)}
 								containerStyle={styles.next}
@@ -488,7 +495,13 @@ class ProfileOnboard extends PureComponent {
 							</StyledButton>
 						</View>
 					</TrackingScrollView>
-					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
+					<Modal
+						visible={this.isViewModal}
+						animationType="fade"
+						transparent
+						style={styles.modal}
+						{...testID('profile-onboard-select-avatar-modal-background')}
+					>
 						<TouchableOpacity
 							style={styles.centerModal}
 							onPress={() => {
@@ -498,6 +511,7 @@ class ProfileOnboard extends PureComponent {
 						>
 							<View style={styles.contentModal}>
 								<StyledButton
+									testID={'profile-onboard-select-image'}
 									type={'normal'}
 									onPress={this.onPickImage.bind(this)}
 									containerStyle={styles.buttonModal}
@@ -505,6 +519,7 @@ class ProfileOnboard extends PureComponent {
 									{strings('profile.select_image')}
 								</StyledButton>
 								<StyledButton
+									testID={'profile-onboard-take-a-picture'}
 									type={'normal'}
 									onPress={this.onTakePicture.bind(this)}
 									containerStyle={styles.buttonModal}
@@ -519,6 +534,7 @@ class ProfileOnboard extends PureComponent {
 							<View style={styles.notiContentModal}>
 								<Text style={styles.notiContentText}>{this.notiMessage}</Text>
 								<StyledButton
+									testID={'profile-onboard-noti-permission-camera-close-button'}
 									type={'normal'}
 									onPress={() => {
 										this.notiPermissionCamera = false;

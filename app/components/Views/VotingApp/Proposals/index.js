@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -204,6 +205,7 @@ export class Proposals extends PureComponent {
 								value={this.searchQuery}
 								placeholderTextColor={colors.grey100}
 								onChangeText={this.handleSearch}
+								{...testID('proposals-search-query')}
 							/>
 						</View>
 

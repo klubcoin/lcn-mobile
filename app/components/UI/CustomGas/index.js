@@ -18,6 +18,7 @@ import { isMainnetByChainId } from '../../../util/networks';
 import { displayName } from '../../../../app.json';
 import styles from './styles/index';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 /**
  * PureComponent that renders a selector to choose either fast, average or slow gas fee
@@ -284,11 +285,10 @@ class CustomGas extends PureComponent {
 			});
 		} catch (error) {
 			this.setState({
-				customGasLimitBN: new BN ('0'),
+				customGasLimitBN: new BN('0')
 			});
-            console.log("🚀 ~ file: index.js ~ line 285 ~ CustomGas ~ error", error)
+			console.log('🚀 ~ file: index.js ~ line 285 ~ CustomGas ~ error', error);
 		}
-	
 	};
 
 	onGasPriceChange = value => {
@@ -514,6 +514,7 @@ class CustomGas extends PureComponent {
 				<View style={styles.valueRow}>
 					<Text style={styles.advancedOptionsText}>{strings('custom_gas.gas_limit')}</Text>
 					<TrackingTextInput
+						{...testID('custom-gas-gas-limit-field')}
 						keyboardType="numeric"
 						style={styles.gasInput}
 						onChangeText={this.onGasLimitChange}
@@ -524,6 +525,7 @@ class CustomGas extends PureComponent {
 				<View style={styles.valueRow}>
 					<Text style={styles.advancedOptionsText}>{strings('custom_gas.gas_price')}</Text>
 					<TrackingTextInput
+						{...testID('custom-gas-gas-price-field')}
 						keyboardType="numeric"
 						style={warningGasPriceHigh ? styles.gasInputError : styles.gasInput}
 						onChangeText={this.onGasPriceChange}
@@ -617,6 +619,7 @@ class CustomGas extends PureComponent {
 
 				<Animated.View style={Device.isIos() && buttonStyle}>
 					<StyledButton
+						testID={'custom-gas-component-save-button'}
 						disabled={
 							/*eslint-disable */
 							advancedCustomGas
@@ -627,7 +630,6 @@ class CustomGas extends PureComponent {
 						}
 						type={'confirm'}
 						onPress={this.saveCustomGasSelection}
-						testID={'custom-gas-save-button'}
 					>
 						{strings('custom_gas.save')}
 					</StyledButton>

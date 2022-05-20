@@ -30,7 +30,7 @@ import SecureKeychain from '../../../core/SecureKeychain';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AppConstants from '../../../core/AppConstants';
 import zxcvbn from 'zxcvbn';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import { ONBOARDING, PREVIOUS_SCREEN } from '../../../constants/navigation';
 import { EXISTING_USER, TRUE, BIOMETRY_CHOICE_DISABLED } from '../../../constants/storage';
 import { getPasswordStrengthWord, passwordRequirementsMet } from '../../../util/password';
@@ -439,6 +439,7 @@ class ResetPassword extends PureComponent {
 							) : (
 								<>
 									<TrackingTextInput
+										{...testID('reset-password-password-field')}
 										style={styles.confirm_input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
@@ -453,10 +454,10 @@ class ResetPassword extends PureComponent {
 									)}
 									<View style={styles.buttonWrapper}>
 										<StyledButton
+											testID={'reset-password-confirm-button'}
 											containerStyle={styles.button}
 											type={'normal'}
 											onPress={() => this.tryUnlock()}
-											testID={'submit-button'}
 										>
 											{strings('manual_backup_step_1.confirm')}
 										</StyledButton>
@@ -531,6 +532,7 @@ class ResetPassword extends PureComponent {
 										{strings(`reset_password.${secureTextEntry ? 'show' : 'hide'}`)}
 									</Text>
 									<TrackingTextInput
+										{...testID('reset-password-new-password-field')}
 										style={[styles.input, inputWidth]}
 										value={password}
 										onChangeText={this.onPasswordChangeWithValidate}
@@ -618,6 +620,7 @@ class ResetPassword extends PureComponent {
 								<View style={styles.field}>
 									<Text style={styles.hintLabel}>{strings('reset_password.confirm_password')}</Text>
 									<TrackingTextInput
+										{...testID('reset-password-confirm-new-password-field')}
 										ref={this.confirmPasswordInput}
 										style={[styles.input, inputWidth]}
 										value={confirmPassword}
@@ -667,9 +670,9 @@ class ResetPassword extends PureComponent {
 
 							<View style={styles.ctaWrapper}>
 								<StyledButton
+									testID={'reset-password-reset-button'}
 									type={'normal'}
 									onPress={this.onPressCreate}
-									testID={'submit-button'}
 									disabled={!canSubmit}
 								>
 									{strings('reset_password.reset_button')}

@@ -8,6 +8,7 @@ import Fuse from 'fuse.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { toLowerCaseCompare } from '../../../util/general';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	searchSection: {
@@ -82,12 +83,12 @@ export default class AssetSearch extends PureComponent {
 			<View style={styles.searchSection} testID={'add-searched-token-screen'}>
 				<Icon name="search" size={22} style={styles.icon} color={colors.white} />
 				<TrackingTextInput
+					{...testID('asset-search-search-query-field')}
 					style={[styles.textInput, { width: inputWidth }]}
 					value={searchQuery}
 					placeholder={strings('token.search_tokens_placeholder')}
 					placeholderTextColor={colors.grey300}
 					onChangeText={this.handleSearch}
-					testID={'input-search-asset'}
 				/>
 			</View>
 		);

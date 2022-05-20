@@ -18,8 +18,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Button from 'react-native-button';
 import Engine from '../../../core/Engine';
 import StyledButton from '../../UI/StyledButton';
-import AnimatedFox from 'react-native-animated-fox';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import SecureKeychain from '../../../core/SecureKeychain';
 import FadeOutOverlay from '../../UI/FadeOutOverlay';
@@ -30,7 +29,7 @@ import { OutlinedTextField, FilledTextField } from 'react-native-material-textfi
 import BiometryButton from '../../UI/BiometryButton';
 import { recreateVaultWithSamePassword } from '../../../core/Vault';
 import preferences from '../../../../app/store/preferences';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import {
 	BIOMETRY_CHOICE_DISABLED,
 	ONBOARDING_WIZARD,
@@ -314,6 +313,7 @@ class Login extends PureComponent {
 					<View style={styles.biometricTop}>
 						<Text style={styles.biometryLabel}>{strings(`choose_password.remember_me`)}</Text>
 						<Switch
+							{...testID('login-remember-me-switch')}
 							onValueChange={rememberMe => this.setState({ rememberMe })} // eslint-disable-line react/jsx-no-bind
 							value={this.state.rememberMe}
 							style={styles.biometrySwitch}
@@ -326,6 +326,7 @@ class Login extends PureComponent {
 							{strings(`biometrics.enable_${this.state.biometryType.toLowerCase()}`)}
 						</Text>
 						<Switch
+							{...testID('login-biometric-switch')}
 							onValueChange={biometryChoice => this.updateBiometryChoice(biometryChoice)} // eslint-disable-line react/jsx-no-bind
 							value={this.state.biometryChoice}
 							style={styles.biometrySwitch}
@@ -346,6 +347,7 @@ class Login extends PureComponent {
 					style={styles.biometrySwitch}
 					trackColor={{ true: colors.blue, false: colors.grey200 }}
 					ios_backgroundColor={colors.grey300}
+					{...testID('login-remember-me-2-switch')}
 				/>
 			</View>
 		);
@@ -406,6 +408,8 @@ class Login extends PureComponent {
 				onCancelPress={this.onCancelPress}
 				onRequestClose={this.toggleWarningModal}
 				onConfirmPress={this.toggleWarningModal}
+				confirmTestId={'login-confirm-continue-delete-button'}
+				cancelTestId={'login-cancel-continue-delete-button'}
 			>
 				<View style={styles.areYouSure}>
 					<Icon style={styles.warningIcon} size={46} color={colors.red} name="exclamation-triangle" />
@@ -431,6 +435,8 @@ class Login extends PureComponent {
 				onRequestClose={this.toggleDeleteModal}
 				onConfirmPress={this.toggleDeleteModal}
 				onSubmitEditing={this.submitDelete}
+				confirmTestId={'login-confirm-delete-button'}
+				cancelTestId={'login-cancel-delete-button'}
 			>
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View style={styles.areYouSure}>
@@ -450,6 +456,7 @@ class Login extends PureComponent {
 							onSubmitEditing={this.submitDelete}
 							lineWidth={0}
 							activeLineWidth={0}
+							{...testID('login-delete-input')}
 						/>
 						{this.state.showDeleteWarning && (
 							<Text style={styles.deleteWarningMsg}>{strings('login.cant_proceed')}</Text>
@@ -487,7 +494,7 @@ class Login extends PureComponent {
 											inputContainerStyle={styles.inputContainer}
 											placeholder={strings('login.type_here') + '...'}
 											placeholderTextColor={'white'}
-											testID={'login-password-input'}
+											{...testID('login-email-input')}
 											returnKeyType={'done'}
 											autoCapitalize="none"
 											ref={this.emailFieldRef}
@@ -510,6 +517,7 @@ class Login extends PureComponent {
 														)
 													}
 													type={this.state.biometryType}
+													testID={'login-biometric-email-field'}
 												/>
 											)}
 										/>
@@ -521,7 +529,7 @@ class Login extends PureComponent {
 											inputContainerStyle={styles.inputContainer}
 											placeholder={strings('login.password')}
 											placeholderTextColor={'white'}
-											testID={'login-password-input'}
+											{...testID('login-password-input')}
 											returnKeyType={'done'}
 											autoCapitalize="none"
 											secureTextEntry
@@ -544,6 +552,7 @@ class Login extends PureComponent {
 														)
 													}
 													type={this.state.biometryType}
+													testID={'login-biometric-password-field'}
 												/>
 											)}
 										/>
@@ -552,13 +561,17 @@ class Login extends PureComponent {
 									{this.renderSwitch()}
 
 									{!!this.state.error && (
-										<Text style={styles.errorMsg} testID={'invalid-password-error'}>
+										<Text style={styles.errorMsg} {...testID('invalid-password-error')}>
 											{this.state.error}
 										</Text>
 									)}
 
-									<View style={styles.ctaWrapper} testID={'log-in-button'}>
-										<StyledButton type={'normal-padding'} onPress={this.onLogin}>
+									<View style={styles.ctaWrapper} testID={'log-in-button-wrapper'}>
+										<StyledButton
+											testID={'login-button'}
+											type={'normal-padding'}
+											onPress={this.onLogin}
+										>
 											{this.state.loading ? (
 												<ActivityIndicator size="small" color="white" />
 											) : (
@@ -571,7 +584,11 @@ class Login extends PureComponent {
 
 							<View style={styles.footer}>
 								<Text style={styles.cant}>{strings('login.go_back')}</Text>
-								<Button style={styles.goBack} onPress={this.toggleWarningModal}>
+								<Button
+									style={styles.goBack}
+									onPress={this.toggleWarningModal}
+									{...testID('login-reset-wallet-button')}
+								>
 									{strings('login.reset_wallet')}
 								</Button>
 							</View>

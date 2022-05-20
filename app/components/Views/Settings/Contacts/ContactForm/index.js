@@ -15,6 +15,7 @@ import ErrorMessage from '../../../SendFlow/ErrorMessage';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import ActionSheet from 'react-native-actionsheet';
 import TrackingTextInput from '../../../../UI/TrackingTextInput';
+import { testID } from '../../../../../util/Logger';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -266,6 +267,7 @@ class ContactForm extends PureComponent {
 					<View style={styles.scrollWrapper}>
 						<Text style={styles.label}>{strings('address_book.name')}</Text>
 						<TrackingTextInput
+							{...testID('contact-form-nickname-field')}
 							editable={this.state.editable}
 							autoCapitalize={'none'}
 							autoCorrect={false}
@@ -288,6 +290,7 @@ class ContactForm extends PureComponent {
 						<View style={[styles.input, editable ? {} : styles.textInputDisaled]}>
 							<View style={styles.inputWrapper}>
 								<TrackingTextInput
+									{...testID('contact-form-address-field')}
 									editable={editable}
 									autoCapitalize={'none'}
 									autoCorrect={false}
@@ -316,6 +319,7 @@ class ContactForm extends PureComponent {
 						<View style={[styles.input, editable ? {} : styles.textInputDisaled]}>
 							<View style={styles.inputWrapper}>
 								<TrackingTextInput
+									{...testID('contact-form-memo-field')}
 									multiline
 									editable={editable}
 									autoCapitalize={'none'}

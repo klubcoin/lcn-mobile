@@ -34,6 +34,7 @@ import infuraCurrencies from '../../../util/infura-conversion.json';
 import Modal from 'react-native-modal';
 import BigNumber from 'bignumber.js';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 /**
  * Main view for the wallet
@@ -712,6 +713,7 @@ class Dashboard extends PureComponent {
 										isChangeCurrency: true
 									});
 								}}
+								{...testID('dashboard-balance-change-currency')}
 							>
 								<Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} />
 							</TouchableOpacity>
@@ -735,6 +737,7 @@ class Dashboard extends PureComponent {
 									onPress={() => {
 										this.onChangeTimeline(e);
 									}}
+									{...testID(`dashboard-chart-timeline-${e}`)}
 								>
 									<Text
 										style={[
@@ -755,6 +758,7 @@ class Dashboard extends PureComponent {
 							}}
 							style={styles.currencyWrapper}
 							activeOpacity={0.7}
+							{...testID('dashboard-chart-change-currency')}
 						>
 							<Text style={styles.currencyText}>{selectedCurrency.toUpperCase()}</Text>
 							<Icon name="chevron-down" style={styles.currencyIcon} />
@@ -779,6 +783,7 @@ class Dashboard extends PureComponent {
 						onPress={() => {
 							this.props.navigation.navigate('PurchaseMethods');
 						}}
+						{...testID('dashboard-buy-more_token_button')}
 					>
 						<Text style={styles.btnText}>{strings('dashboard.buy_more')}</Text>
 					</TouchableOpacity>
@@ -791,6 +796,7 @@ class Dashboard extends PureComponent {
 						onPress={() => {
 							this.props.navigation.navigate('Partners');
 						}}
+						{...testID('dashboard-spend-token-button')}
 					>
 						<Text style={styles.btnText}>{strings('dashboard.spend_coin')}</Text>
 					</TouchableOpacity>
@@ -807,6 +813,7 @@ class Dashboard extends PureComponent {
 					propagateSwipe
 					onBackdropPress={this.onCloseModal}
 					onBackButtonPress={this.onCloseModal}
+					{...testID('dashboard-currency-list-modal')}
 				>
 					<View style={styles.modalWrapper}>
 						<TrackingScrollView style={styles.modalScrollView}>
@@ -815,6 +822,7 @@ class Dashboard extends PureComponent {
 									key={e.key}
 									style={styles.modalItemContainer}
 									onPress={() => this.onChangeCurrency(e.value)}
+									{...testID(`dashboard-currency-item-${e.key}`)}
 								>
 									<Text>{e.label}</Text>
 									{selectedCurrency === e.value && (

@@ -5,7 +5,7 @@ import { colors, fontStyles } from '../../../../styles/common';
 import StyledButton from '../../StyledButton';
 import { strings } from '../../../../../locales/i18n';
 import onboardingStyles from '../styles';
-import styles from './styles/index'
+import styles from './styles/index';
 
 export default class Coachmark extends PureComponent {
 	static propTypes = {
@@ -132,6 +132,7 @@ export default class Coachmark extends PureComponent {
 		return (
 			<View style={styles.progress}>
 				<StyledButton
+					testID={'coachmark-component-progress-back-button'}
 					containerStyle={[styles.progressButton, styles.leftProgessButton]}
 					type={'transparent'}
 					onPress={this.onBack}
@@ -145,6 +146,7 @@ export default class Coachmark extends PureComponent {
 				</View>
 
 				<StyledButton
+					testID={'coachmark-component-progress-next-button'}
 					containerStyle={[styles.progressButton, styles.rightProgessButton]}
 					type={'normal'}
 					onPress={this.onNext}
@@ -163,18 +165,18 @@ export default class Coachmark extends PureComponent {
 	renderActionButtons = () => (
 		<View style={styles.actions}>
 			<StyledButton
+				testID={'coachmark-component-action-back-button'}
 				containerStyle={styles.actionButton}
 				type={'transparent'}
 				onPress={this.onBack}
-				testID={'onboarding-wizard-back-button'}
 			>
 				{strings('onboarding_wizard.coachmark.action_back')}
 			</StyledButton>
 			<StyledButton
+				testID={'coachmark-component-action-next-button'}
 				containerStyle={styles.actionButton}
 				type={'normal'}
 				onPress={this.onNext}
-				testID={'onboarding-wizard-next-button'}
 			>
 				{strings('onboarding_wizard.coachmark.action_next')}
 			</StyledButton>

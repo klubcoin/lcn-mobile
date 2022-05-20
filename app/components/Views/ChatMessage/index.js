@@ -28,6 +28,7 @@ import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import ImageView from 'react-native-image-viewing';
 import TrackingTextInput from '../../UI/TrackingTextInput';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	root: {
@@ -783,6 +784,7 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 									</TouchableOpacity>
 									<View style={styles.chatWrapper}>
 										<TrackingTextInput
+											{...testID('chat-message-chat-text-field')}
 											style={styles.chatInput}
 											value={message}
 											onChangeText={setMessage}
@@ -816,10 +818,20 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 					activeOpacity={1}
 				>
 					<View style={styles.contentModal}>
-						<StyledButton type={'normal'} onPress={onPickImage} containerStyle={styles.buttonModal}>
+						<StyledButton
+							testID={'chat-message-select-image-button'}
+							type={'normal'}
+							onPress={onPickImage}
+							containerStyle={styles.buttonModal}
+						>
 							{strings('profile.select_image')}
 						</StyledButton>
-						<StyledButton type={'normal'} onPress={onTakePicture} containerStyle={styles.buttonModal}>
+						<StyledButton
+							testID={'chat-message-take-a-picture-button'}
+							type={'normal'}
+							onPress={onTakePicture}
+							containerStyle={styles.buttonModal}
+						>
 							{strings('profile.take_a_picture')}
 						</StyledButton>
 					</View>
@@ -830,6 +842,7 @@ const ChatMessage = ({ navigation, selectedAddress }) => {
 					<View style={styles.notiContentModal}>
 						<Text style={styles.notiContentText}>{notiMessage}</Text>
 						<StyledButton
+							testID={'chat-message-close-button'}
 							type={'normal'}
 							onPress={() => {
 								setNotiPermissionCamera(false);

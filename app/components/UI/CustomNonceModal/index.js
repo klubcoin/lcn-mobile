@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles/index';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 	const [nonce, onChangeText] = React.useState(nonceValue);
@@ -53,6 +54,7 @@ const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 						</Text>
 						<View style={styles.nonceInputContainer}>
 							<TrackingTextInput
+								{...testID('custom-nonce-modal-input-field')}
 								// disable keyboard for now
 								showSoftInputOnFocus={false}
 								keyboardType="numeric"
@@ -106,10 +108,16 @@ const CustomModalNonce = ({ proposedNonce, nonceValue, close, save }) => {
 						</View>
 					</View>
 					<View style={styles.actionRow}>
-						<StyledButton type={'normal'} containerStyle={styles.actionButton} onPress={close}>
+						<StyledButton
+							testID={'custom-nonce-modal-component-cancel-button'}
+							type={'normal'}
+							containerStyle={styles.actionButton}
+							onPress={close}
+						>
 							{strings('transaction.cancel')}
 						</StyledButton>
 						<StyledButton
+							testID={'custom-nonce-modal-component-save-button'}
 							type={'blue'}
 							onPress={() => saveAndClose(nonce)}
 							containerStyle={styles.actionButton}

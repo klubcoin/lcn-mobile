@@ -84,17 +84,20 @@ class Settings extends PureComponent {
 						description={strings('app_settings.general_desc')}
 						onPress={this.onPressGeneral}
 						title={strings('app_settings.general_title')}
+						testID={'setting-general-section'}
 					/>
 					<SettingsDrawer
 						description={strings('app_settings.security_desc')}
 						onPress={this.onPressSecurity}
 						title={strings('app_settings.security_title')}
 						warning={!seedphraseBackedUp}
+						testID={'setting-security-and-privacy-section'}
 					/>
 					<SettingsDrawer
 						description={strings('app_settings.advanced_desc')}
 						onPress={this.onPressAdvanced}
 						title={strings('app_settings.advanced_title')}
+						testID={'setting-advanced-section'}
 					/>
 					{/* <SettingsDrawer
 						description={strings('app_settings.contacts_desc')}
@@ -105,6 +108,7 @@ class Settings extends PureComponent {
 						title={strings('app_settings.networks_title')}
 						description={strings('app_settings.networks_desc')}
 						onPress={this.onPressNetworks}
+						testID={'setting-networks-section'}
 					/>
 					{/* <SettingsDrawer
 						title={strings('app_settings.experimental_title')}
@@ -114,6 +118,7 @@ class Settings extends PureComponent {
 					<SettingsDrawer
 						title={strings('app_settings.info_title', { appName: displayName })}
 						onPress={this.onPressInfo}
+						testID={'setting-about-app-section'}
 					/>
 				</TrackingScrollView>
 			</OnboardingScreenWithBg>

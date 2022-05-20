@@ -105,7 +105,12 @@ const PurchaseSuccess = ({ navigation }) => {
 						})}
 					</Text>
 				</Text>
-				<StyledButton type={'normal'} containerStyle={styles.doneButton} onPress={onDone}>
+				<StyledButton
+					testID={'purchase-success-done-button'}
+					type={'normal'}
+					containerStyle={styles.doneButton}
+					onPress={onDone}
+				>
 					<Text style={styles.done}>{strings('purchase_order_details.done')}</Text>
 				</StyledButton>
 			</View>

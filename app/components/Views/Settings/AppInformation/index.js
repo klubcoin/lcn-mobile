@@ -21,6 +21,7 @@ import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
 import ScaleImage from 'react-native-scalable-image';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -197,13 +198,28 @@ export default class AppInformation extends PureComponent {
 						{/* <Image source={logoText} style={styles.image} resizeMethod={'auto'} /> */}
 						<Text style={styles.versionInfo}>{this.state.appInfo}</Text>
 					</View>
-					<TouchableOpacity style={styles.buttonTop} onPress={this.onPrivacyPolicy} activeOpacity={0.7}>
+					<TouchableOpacity
+						style={styles.buttonTop}
+						onPress={this.onPrivacyPolicy}
+						activeOpacity={0.7}
+						{...testID('app-information-privacy-policy')}
+					>
 						<Text style={styles.buttonTopText}>{strings('app_information.privacy_policy')}</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.buttonTop} onPress={this.onTermsOfUse} activeOpacity={0.7}>
+					<TouchableOpacity
+						style={styles.buttonTop}
+						onPress={this.onTermsOfUse}
+						activeOpacity={0.7}
+						{...testID('app-information-term-of-use')}
+					>
 						<Text style={styles.buttonTopText}>{strings('app_information.terms_of_use')}</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.buttonTop} onPress={this.onAttributions} activeOpacity={0.7}>
+					<TouchableOpacity
+						style={styles.buttonTop}
+						onPress={this.onAttributions}
+						activeOpacity={0.7}
+						{...testID('app-information-attributions')}
+					>
 						<Text style={styles.buttonTopText}>{strings('app_information.attributions')}</Text>
 					</TouchableOpacity>
 					<View style={styles.space} />
@@ -212,6 +228,7 @@ export default class AppInformation extends PureComponent {
 							activeOpacity={0.7}
 							style={styles.buttonBottom}
 							onPress={() => this.goTo(e.url, e.title)}
+							{...testID(`app-infomation-${e.title}`)}
 						>
 							<IconFontisto name={e.icon} style={styles.buttonIcon} size={20} />
 							<Text style={styles.buttonBottomText}>{e.title}</Text>

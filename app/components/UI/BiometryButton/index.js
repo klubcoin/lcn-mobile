@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../../styles/common';
+import { testID } from '../../../util/Logger';
 
 const styles = {
 	fixCenterIcon: {
@@ -44,11 +45,11 @@ const renderIcon = type => {
 	return <Ionicons color={colors.white} style={styles.fixCenterIcon} size={28} name="ios-finger-print" />;
 };
 
-const BiometryButton = ({ onPress, hidden, type }) => {
+const BiometryButton = ({ onPress, hidden, type, testID: testId }) => {
 	if (hidden) return null;
 
 	return (
-		<TouchableOpacity hitSlop={styles.hitSlop} onPress={onPress}>
+		<TouchableOpacity hitSlop={styles.hitSlop} onPress={onPress} {...testID(testId)}>
 			{renderIcon(type)}
 		</TouchableOpacity>
 	);

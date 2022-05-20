@@ -250,10 +250,20 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 						</View>
 					</View>
 					<View style={styles.actionsWrapper}>
-						<StyledButton type={'normal'} containerStyle={styles.actionButton} onPress={onPurchase}>
+						<StyledButton
+							testID={'purchase-order-detail-pay-now-button'}
+							type={'normal'}
+							containerStyle={styles.actionButton}
+							onPress={onPurchase}
+						>
 							<Text style={styles.payNow}>{strings('purchase_order_details.pay_now')}</Text>
 						</StyledButton>
-						<StyledButton type={'warning'} containerStyle={styles.actionButton} onPress={onCancel}>
+						<StyledButton
+							testID={'purchase-order-detail-cancel-button'}
+							type={'warning'}
+							containerStyle={styles.actionButton}
+							onPress={onCancel}
+						>
 							<Text style={styles.cancel}>{strings('purchase_order_details.cancel')}</Text>
 						</StyledButton>
 					</View>

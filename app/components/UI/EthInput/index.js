@@ -28,6 +28,7 @@ import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import { toLowerCaseCompare } from '../../../util/general';
 import TrackingTextInput from '../TrackingTextInput';
 import TrackingScrollView from '../TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	root: {

@@ -38,7 +38,9 @@ export default function ActionModal({
 	childrenContainerStyle,
 	verticalButtons,
 	propagateSwipe,
-	cancelButtonDisabled
+	cancelButtonDisabled,
+	confirmTestId,
+	cancelTestId
 }) {
 	return (
 		<Modal
@@ -69,6 +71,8 @@ export default function ActionModal({
 				actionContainerStyle={actionContainerStyle}
 				childrenContainerStyle={childrenContainerStyle}
 				verticalButtons={verticalButtons}
+				confirmTestId={confirmTestId}
+				cancelTestId={cancelTestId}
 			>
 				{children}
 			</ActionContent>

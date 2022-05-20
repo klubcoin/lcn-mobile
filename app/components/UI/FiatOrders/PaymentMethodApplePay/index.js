@@ -260,6 +260,7 @@ function PaymentMethodApplePay({
 				<Keypad currency="usd" onChange={handleKeypadChange} value={amount} />
 				<View style={styles.buttonContainer}>
 					<StyledButton
+						testID={'payment-method-apple-pay-component-buy-with-button'}
 						type="blue"
 						disabled={disabledButton}
 						containerStyle={styles.applePayButton}

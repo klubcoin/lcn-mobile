@@ -26,6 +26,7 @@ import DashedLine from 'react-native-dashed-line';
 import BigNumber from 'bignumber.js';
 import { showError } from '../../../../../util/notify';
 import { showAlert } from '../../../../../actions/alert';
+import { testID } from '../../../../../util/Logger';
 
 const FLAGS = {
 	USD: require('../../../../../images/usa-flag.png'),
@@ -416,6 +417,7 @@ function PayPal({ selectedAddress, ...props }) {
 					</Text>
 
 					<TrackingTextInput
+						{...testID('payment-paypal-amount-field')}
 						placeholder={'0.00'}
 						placeholderTextColor={colors.grey300}
 						style={styles.amountTextInput}
@@ -526,6 +528,7 @@ function PayPal({ selectedAddress, ...props }) {
 						</View>
 						<View style={styles.fromWrapper}>
 							<StyledButton
+								testID={'paypal-component-proceed-checkout-button'}
 								type="normal"
 								onPress={() => {
 									if (from.amount < +boundary[from.currency].min) {
@@ -731,6 +734,7 @@ function PayPal({ selectedAddress, ...props }) {
 						</View>
 						<View style={styles.fromWrapper}>
 							<StyledButton
+								testID={'paypal-component-buy-token-button'}
 								type="normal"
 								onPress={() => {
 									payWithPayPal();

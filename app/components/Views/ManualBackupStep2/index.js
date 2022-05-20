@@ -1,17 +1,17 @@
 import React, { PureComponent } from 'react';
-import { InteractionManager, Alert, Text, TouchableOpacity, View, SafeAreaView, StyleSheet } from 'react-native';
+import { InteractionManager, Alert, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import PropTypes from 'prop-types';
 import OnboardingProgress from '../../UI/OnboardingProgress';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import ActionView from '../../UI/ActionView';
 import { strings } from '../../../../locales/i18n';
 import { connect } from 'react-redux';
 import { seedphraseBackedUp } from '../../../actions/user';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Device from '../../../util/Device';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import { testID } from '../../../util/Logger';
 
 /**
  * View that's shown during the fifth step of
@@ -169,6 +169,7 @@ class ManualBackupStep2 extends PureComponent {
 						i === currentIndex && styles.currentWord,
 						confirmedWords[i].word && styles.confirmedWord
 					]}
+					{...testID(`manual-backup-step-2-word-${i}`)}
 				>
 					<Text style={styles.word}>{word}</Text>
 				</TouchableOpacity>
@@ -186,6 +187,7 @@ class ManualBackupStep2 extends PureComponent {
 				onPress={() => this.selectWord(word, i)}
 				style={[styles.selectableWord, selected && styles.selectedWord]}
 				key={`selectableWord_${i}`}
+				{...testID(`manual-backup-step-2-word-selected-${i}`)}
 			>
 				<Text style={[styles.selectableWordText, selected && styles.selectedWordText]}>{word}</Text>
 			</TouchableOpacity>

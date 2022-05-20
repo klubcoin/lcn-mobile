@@ -158,6 +158,7 @@ export default class PhishingModal extends PureComponent {
 				</View>
 				<View style={styles.phishingFooter}>
 					<StyledButton
+						testID={'phishing-modal-component-back-to-safety-button'}
 						type={'neutral'}
 						onPress={this.props.goBackToSafety}
 						style={styles.backToSafetyText}

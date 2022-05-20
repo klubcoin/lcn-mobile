@@ -177,6 +177,8 @@ class VerifyOTPOnboarding extends PureComponent {
 								this.verifyOTPEmail();
 							}
 						}}
+						containerTestId={'verify-otp-onboarding-container-otp-input'}
+						textFieldTestId={'verify-otp-onboarding-text-field-otp-input'}
 					/>
 					{!this.tooManyVerifyAttempts &&
 						(!this.tooManySendOtp ? (
@@ -223,6 +225,7 @@ class VerifyOTPOnboarding extends PureComponent {
 							this.props.navigation.popToTop();
 							this.props.navigation.goBack(null);
 						}}
+						testID={'verify-otp-onboarding-proceed-to-dashboard'}
 					>
 						{strings('verify_otp.proceed_to_dashboard')}
 					</StyledButton>
@@ -257,7 +260,11 @@ class VerifyOTPOnboarding extends PureComponent {
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text1')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text2')}</Text>
 				<View style={styles.footer}>
-					<StyledButton type={'normal'} onPress={() => this.onDone()}>
+					<StyledButton
+						type={'normal'}
+						onPress={() => this.onDone()}
+						testID={'verify-otp-onboarding-on-done'}
+					>
 						{strings('verify_otp.done')}
 					</StyledButton>
 				</View>

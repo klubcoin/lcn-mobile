@@ -255,18 +255,18 @@ class OptinMetrics extends PureComponent {
 
 						<View style={styles.actionContainer}>
 							<StyledButton
+								testID={'optim-metrics-component-decline-button'}
 								containerStyle={[styles.button, styles.cancel]}
 								type={'cancel'}
 								onPress={this.onCancel}
-								testID={'cancel-button'}
 							>
 								{strings('privacy_policy.decline')}
 							</StyledButton>
 							<StyledButton
+								testID={'optim-metrics-component-agree-button'}
 								containerStyle={[styles.button, styles.confirm]}
 								type={'normal'}
 								onPress={this.onConfirm}
-								testID={'agree-button'}
 							>
 								{strings('privacy_policy.agree')}
 							</StyledButton>

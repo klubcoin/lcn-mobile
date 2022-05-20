@@ -19,7 +19,7 @@ import Share from 'react-native-share';
 import ConfirmModal from '../../UI/ConfirmModal';
 import AddressElement from '../SendFlow/AddressElement';
 import FriendMessageOverview from './widgets/FriendMessageOverview';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import Text from '../../Base/Text';
@@ -364,6 +364,7 @@ class Contacts extends PureComponent {
 					<View style={styles.searchSection}>
 						<Icon name="search" size={22} style={styles.icon} color={colors.white} />
 						<TrackingTextInput
+							{...testID('contact-search-query-field')}
 							style={styles.textInput}
 							value={searchQuery}
 							placeholder={`${strings('contacts.search')}...`}

@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import { strings } from '../../../../locales/i18n';
 import { colors, fontStyles } from '../../../styles/common';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	hintWrapper: {
@@ -71,6 +72,7 @@ const HintModal = ({ onCancel, onConfirm, modalVisible, onRequestClose, value, o
 				<Text style={styles.leaveHint}>{strings('manual_backup_step_3.leave_hint')}</Text>
 				<Text style={styles.noSeedphrase}>{strings('manual_backup_step_3.no_seedphrase')}</Text>
 				<TrackingTextInput
+					{...testID('hint-modal-hint-input-field')}
 					style={styles.hintInput}
 					value={value}
 					placeholder={strings('manual_backup_step_3.example')}

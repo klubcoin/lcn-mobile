@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Alert, BackHandler, Text, View, SafeAreaView, StyleSheet, Keyboard, TouchableOpacity } from 'react-native';
+import { Alert, BackHandler, Text, View, SafeAreaView, Keyboard, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { colors, fontStyles } from '../../../styles/common';
-import routes from '../../../common/routes';
 import Emoji from 'react-native-emoji';
 import AsyncStorage from '@react-native-community/async-storage';
 import OnboardingProgress from '../../UI/OnboardingProgress';
@@ -20,6 +18,7 @@ import styles from './styles/index';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { displayName } from '../../../../app.json';
 import AppConstants from '../../../core/AppConstants';
+import { testID } from '../../../util/Logger';
 
 const hardwareBackPress = () => ({});
 const HARDWARE_BACK_PRESS = 'hardwareBackPress';
@@ -164,7 +163,7 @@ class ManualBackupStep3 extends PureComponent {
 							<Text style={[styles.baseText, styles.successText]}>
 								{strings('manual_backup_step_3.success')}
 							</Text>
-							<TouchableOpacity onPress={this.toggleHint}>
+							<TouchableOpacity onPress={this.toggleHint} {...testID('manual-backup-step-3-hint-button')}>
 								<Text style={[styles.baseText, styles.hintText]}>
 									{strings('manual_backup_step_3.hint')}
 								</Text>
@@ -172,7 +171,7 @@ class ManualBackupStep3 extends PureComponent {
 							<Text style={[styles.baseText, styles.recoverText]}>
 								{strings('manual_backup_step_3.recover', { appName: displayName })}
 							</Text>
-							<TouchableOpacity onPress={this.learnMore}>
+							<TouchableOpacity onPress={this.learnMore} {...testID('manual-backup-step-3-learn-button')}>
 								<Text style={[styles.baseText, styles.learnText]}>
 									{strings('manual_backup_step_3.learn')}
 								</Text>

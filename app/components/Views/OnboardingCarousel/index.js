@@ -133,7 +133,7 @@ export default class OnboardingCarousel extends PureComponent {
 							<StyledButton
 								type={'normal'}
 								onPress={this.onPresGetStarted}
-								testID={'onboarding-get-started-button'}
+								testID={'onboarding-carousel-get-started-button'}
 								accessibilityLabel={'onboarding-get-started-button'}
 							>
 								{strings('onboarding_carousel.get_started').toUpperCase()}

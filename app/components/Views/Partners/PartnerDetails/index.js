@@ -62,7 +62,7 @@ class PartnerDetails extends PureComponent {
 						<StyledButton
 							type={'normal-padding'}
 							onPress={() => this.onViewPartners()}
-							testID={'onboarding-import-button'}
+							testID={'partner-detail-go-to-website-button'}
 						>
 							{strings('onboarding.website').toUpperCase()}
 						</StyledButton>

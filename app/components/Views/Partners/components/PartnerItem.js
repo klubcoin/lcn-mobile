@@ -3,8 +3,9 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import PartnerImage from './PartnerImage';
+import { testID } from '../../../../util/Logger';
 
-export default function PartnerItem({ imageSrc, onItemPress }) {
+export default function PartnerItem({ imageSrc, onItemPress, testID: testId }) {
 	const styles = StyleSheet.create({
 		wrapper: {
 			flex: 1,
@@ -24,7 +25,13 @@ export default function PartnerItem({ imageSrc, onItemPress }) {
 		}
 	});
 	return (
-		<TouchableOpacity activeOpacity={0.7} style={styles.wrapper} onPress={onItemPress} underlayColor={colors.grey}>
+		<TouchableOpacity
+			{...testID(testId)}
+			activeOpacity={0.7}
+			style={styles.wrapper}
+			onPress={onItemPress}
+			underlayColor={colors.grey}
+		>
 			<View style={styles.imgWrapper}>
 				<PartnerImage
 					source={APIService.apiGetPartnerIcon(imageSrc)}

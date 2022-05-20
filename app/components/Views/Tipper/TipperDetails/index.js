@@ -166,6 +166,7 @@ class TipperDetails extends PureComponent {
 								type={'qr-code'}
 								onPress={this.copyAccountToClipboard}
 								containerStyle={styles.button}
+								testID={'tipper-detail-copy-to-clipboard'}
 							>
 								<View style={styles.buttonContent}>
 									<View style={styles.buttonIconWrapper}>
@@ -182,7 +183,7 @@ class TipperDetails extends PureComponent {
 								type={'qr-code'}
 								onPress={this.onShareQRCode}
 								containerStyle={styles.button}
-								testID={'request-qrcode-button'}
+								testID={'tipper-detail-send-qr-code'}
 							>
 								<View style={styles.buttonContent}>
 									<View style={styles.buttonIconWrapper}>
@@ -193,7 +194,12 @@ class TipperDetails extends PureComponent {
 									</View>
 								</View>
 							</StyledButton>
-							<StyledButton type={'normal'} onPress={this.onShare} containerStyle={styles.button}>
+							<StyledButton
+								type={'normal'}
+								onPress={this.onShare}
+								containerStyle={styles.button}
+								testID={'tipper-detail-send-link'}
+							>
 								<View style={styles.buttonContent}>
 									<View style={styles.buttonIconWrapper}>
 										<EvilIcons name="share-apple" size={24} style={styles.blueIcon} />

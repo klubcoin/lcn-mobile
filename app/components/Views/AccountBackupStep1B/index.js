@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, Image, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, Image } from 'react-native';
 import PropTypes from 'prop-types';
-import routes from '../../../common/routes';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
 import StyledButton from '../../UI/StyledButton';
@@ -18,6 +17,7 @@ import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import AppConstants from '../../../core/AppConstants';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 const explain_backup_seedphrase = require('../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
 
@@ -70,7 +70,11 @@ const AccountBackupStep1B = props => {
 									</Text>
 								</Text>
 							</View>
-							<TouchableOpacity onPress={showWhySecureWallet} style={styles.centerContent}>
+							<TouchableOpacity
+								onPress={showWhySecureWallet}
+								style={styles.centerContent}
+								{...testID('account-backup-step-1b-why-important-button')}
+							>
 								<Icon name="info-circle" style={styles.infoIcon} color={colors.blue} />
 								<Text style={styles.whyImportantText}>
 									{strings('account_backup_step_1B.why_important')}
@@ -97,10 +101,10 @@ const AccountBackupStep1B = props => {
 							<Text style={styles.paragraph}>• {strings('account_backup_step_1B.tips_3')}</Text>
 
 							<StyledButton
+								testID={'account-backup-step-1b-next-button'}
 								containerStyle={styles.button}
 								type={'normal'}
 								onPress={goNext}
-								testID={'submit-button'}
 							>
 								{strings('account_backup_step_1B.cta_text')}
 							</StyledButton>
@@ -125,6 +129,7 @@ const AccountBackupStep1B = props => {
 								onPress={hideWhySecureWallet}
 								style={styles.secureModalXButton}
 								hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
+								{...testID('account-backup-step-1b-secure-modal-close-button')}
 							>
 								<Icon name="times" style={styles.secureModalXIcon} />
 							</TouchableOpacity>
@@ -144,6 +149,7 @@ const AccountBackupStep1B = props => {
 								style={styles.remindLaterButton}
 								onPress={learnMore}
 								hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
+								{...testID('account-backup-step-1b-learn-more-button')}
 							>
 								<Text style={styles.learnMoreText}>{strings('account_backup_step_1B.learn_more')}</Text>
 							</TouchableOpacity>

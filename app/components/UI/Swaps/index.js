@@ -614,6 +614,7 @@ function SwapsAmountView({
 					<View style={styles.column}>
 						<View style={styles.ctaContainer}>
 							<StyledButton
+								testID={'swaps-component-get-quotes-button'}
 								type="blue"
 								onPress={handleGetQuotesPress}
 								containerStyle={styles.cta}

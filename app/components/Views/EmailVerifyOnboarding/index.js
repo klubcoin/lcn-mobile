@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, BackHandler } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-community/async-storage';
 import StyledButton from '../../UI/StyledButton';
@@ -21,6 +21,7 @@ import ActionModal from '../../UI/ActionModal';
 import { colors } from '../../../styles/common';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BLOCK_TIME } from '../Settings/SecuritySettings';
+import { testID } from '../../../util/Logger';
 
 const EmailVerifyOnboarding = props => {
 	const [showRemindLaterModal, setRemindLaterModal] = useState(false);
@@ -168,6 +169,7 @@ const EmailVerifyOnboarding = props => {
 											onPress={showRemindLater}
 											hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
 											testID={'remind-me-later-button'}
+											{...testID('email-verify-onboarding-remind-me-late-button')}
 										>
 											<Text style={styles.remindLaterText}>
 												{strings('email_verify_onboarding.remind_me_later')}
@@ -181,10 +183,10 @@ const EmailVerifyOnboarding = props => {
 							)}
 							<View style={styles.ctaContainer}>
 								<StyledButton
+									testID={'email-verify-onboarding-next-button'}
 									containerStyle={styles.button}
 									type={'normal-padding'}
 									onPress={goNext}
-									testID={'submit-button'}
 								>
 									{strings('email_verify_onboarding.cta_text').toUpperCase()}
 								</StyledButton>
@@ -209,6 +211,7 @@ const EmailVerifyOnboarding = props => {
 							style={styles.closeModalButton}
 							activeOpacity={0.7}
 							onPress={onHideEmailBlocked}
+							{...testID('email-verify-onboarding-close-button')}
 						>
 							<Icon name="close" style={styles.closeModalIcon} />
 						</TouchableOpacity>

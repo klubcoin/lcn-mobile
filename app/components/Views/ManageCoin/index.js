@@ -95,19 +95,19 @@ class ManageCoin extends PureComponent {
 				<View style={styles.createWrapper}>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
+							testID={'manage-coin-scan-qr-to-collect'}
 							containerStyle={styles.button}
 							type={'pink-padding'}
 							onPress={this.onScanQRToCollect}
-							testID={'create-wallet-button'}
 						>
 							{strings('manage_coin.scan_qr_to_collect').toUpperCase()}
 						</StyledButton>
 					</View>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
+							testID={'manage-coin-scan-qr-to-pay'}
 							type={'normal-padding'}
 							onPress={this.onScanQRToPay}
-							testID={'import-wallet-import-from-seed-button'}
 							containerStyle={styles.button}
 						>
 							{strings('manage_coin.scan_qr_to_pay').toUpperCase()}
@@ -115,20 +115,20 @@ class ManageCoin extends PureComponent {
 					</View>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
+							testID={'manage-coin-scan-qr-to-tip'}
 							containerStyle={styles.button}
 							type={'normal-padding'}
 							onPress={this.onScanQRToTip}
-							testID={'onboarding-import-button'}
 						>
 							{strings('manage_coin.scan_qr_to_tip').toUpperCase()}
 						</StyledButton>
 					</View>
 					<View style={styles.buttonWrapper}>
 						<StyledButton
+							testID={'manage-coin-send-to-friend'}
 							containerStyle={styles.button}
 							type={'white-padding'}
 							onPress={this.onSendToFriend}
-							testID={'onboarding-import-button'}
 						>
 							{strings('manage_coin.send_to_friend').toUpperCase()}
 						</StyledButton>

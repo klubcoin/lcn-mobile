@@ -53,7 +53,9 @@ export default function WarningExistingUserModal({
 	onConfirmPress,
 	children,
 	cancelText,
-	confirmText
+	confirmText,
+	confirmTestId,
+	cancelTestId
 }) {
 	return (
 		<ActionModal
@@ -67,6 +69,8 @@ export default function WarningExistingUserModal({
 			cancelButtonMode={'warning'}
 			confirmButtonMode={'normal'}
 			verticalButtons
+			confirmTestId={confirmTestId}
+			cancelTestId={cancelTestId}
 		>
 			{(children && children) || <Default />}
 		</ActionModal>

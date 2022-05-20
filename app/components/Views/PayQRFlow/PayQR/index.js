@@ -277,6 +277,7 @@ class PayQR extends PureComponent {
 
 				<View style={styles.buttonNextWrapper}>
 					<StyledButton
+						testID={'pay-qr-pay-button'}
 						type={'confirm'}
 						disabled={balanceIsZero}
 						containerStyle={styles.buttonNext}

@@ -7,6 +7,7 @@ import styles from './styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 export default class CountrySearchModal extends Component {
 	searchText = '';
@@ -72,6 +73,7 @@ export default class CountrySearchModal extends Component {
 						<View style={styles.inputView}>
 							<View style={styles.inputInner}>
 								<TrackingTextInput
+									{...testID('country-search-search-field')}
 									autoFocus={true}
 									value={this.searchText}
 									style={styles.search}

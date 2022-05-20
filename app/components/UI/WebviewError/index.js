@@ -100,7 +100,7 @@ export default class WebviewError extends PureComponent {
 					) : null}
 				</View>
 				<View style={styles.buttonWrapper}>
-					<StyledButton type={'confirm'} onPress={this.onReload}>
+					<StyledButton testID={'web-view-error-confirm-button'} type={'confirm'} onPress={this.onReload}>
 						{strings('webview_error.try_again')}
 					</StyledButton>
 				</View>

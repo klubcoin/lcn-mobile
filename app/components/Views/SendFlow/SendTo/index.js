@@ -46,6 +46,7 @@ import SharedDeeplinkManager from '../../../../core/DeeplinkManager';
 import AppConstants from '../../../../core/AppConstants';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -471,6 +472,7 @@ class SendFlow extends PureComponent {
 							<View style={styles.addInputWrapper}>
 								<View style={styles.input}>
 									<TrackingTextInput
+										{...testID('send-to-alias-field')}
 										autoFocus
 										autoCapitalize="none"
 										autoCorrect={false}

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		backgroundColor: colors.purple,
 		marginBottom: 30,
-		color:colors.white
+		color: colors.white
 	},
 	ctaWrapper: {
 		marginTop: 10
@@ -97,11 +97,14 @@ export default class EnterPasswordSimple extends PureComponent {
 								</View>
 								<View style={styles.ctaWrapper}>
 									<StyledButton
+										testID={'import-password-simple-confirm-button'}
 										type={'normal'}
 										onPress={this.onPressConfirm}
-										testID={'submit-button'}
 										disabled={
-											!(this.state.password !== '' || !passwordRequirementsMet(this.state.password))
+											!(
+												this.state.password !== '' ||
+												!passwordRequirementsMet(this.state.password)
+											)
 										}
 									>
 										{this.state.loading ? (

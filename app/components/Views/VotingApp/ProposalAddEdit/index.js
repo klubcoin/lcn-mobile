@@ -17,6 +17,7 @@ import Toast from 'react-native-toast-message';
 import ConfirmModal from '../../../UI/ConfirmModal';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const styles = StyleSheet.create({
 	navBar: {
@@ -320,10 +321,12 @@ export class ProposalAddEdit extends PureComponent {
 							borderColor: colors.grey400,
 							borderWidth: StyleSheet.hairlineWidth
 						}}
+						{...testID('proposal-add-edit-title-field')}
 					/>
 
 					<Text style={styles.heading}>{strings('voting.proposal_content')}</Text>
 					<TrackingTextInput
+						{...testID('proposal-add-edit-content-field')}
 						multiline={true}
 						numberOfLines={5}
 						value={this.content}

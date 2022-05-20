@@ -424,7 +424,7 @@ class Onboarding extends PureComponent {
 
 	onPressSync = () => {
 		this.props.navigation.navigate('ComingSoon');
-		return
+		return;
 		const { existingUser } = this.state;
 		const action = () =>
 			setTimeout(() => {
@@ -526,7 +526,7 @@ class Onboarding extends PureComponent {
 							style={styles.button}
 							type={'pink-padding'}
 							onPress={this.onPressCreate}
-							testID={'create-wallet-button'}
+							testID={'onboarding-create-wallet-button'}
 						>
 							{strings('onboarding.start_exploring_now').toUpperCase()}
 						</StyledButton>
@@ -535,7 +535,7 @@ class Onboarding extends PureComponent {
 						<StyledButton
 							type={'normal-padding'}
 							onPress={this.onPressImport}
-							testID={'import-wallet-import-from-seed-button'}
+							testID={'onboarding-import-wallet-import-from-seed-button'}
 						>
 							{strings('import_wallet.import_from_seed_button')}
 						</StyledButton>

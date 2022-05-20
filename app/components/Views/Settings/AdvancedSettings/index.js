@@ -14,7 +14,7 @@ import { getApplicationName, getVersion, getBuildNumber } from 'react-native-dev
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
 import { Buffer } from 'buffer';
-import Logger from '../../../../util/Logger';
+import Logger, { testID } from '../../../../util/Logger';
 import ipfsGateways from '../../../../util/ipfs-gateways.json';
 import SelectComponent from '../../../UI/SelectComponent';
 import { timeoutFetch } from '../../../../util/general';
@@ -229,6 +229,7 @@ class AdvancedSettings extends PureComponent {
 										onValueChange={setShowHexData}
 										trackColor={{ true: colors.blue, false: colors.grey200 }}
 										ios_backgroundColor={colors.grey000}
+										{...testID('advanced-settings-show-hex-data-switch')}
 									/>
 								</View>
 							</View>
@@ -241,6 +242,7 @@ class AdvancedSettings extends PureComponent {
 										onValueChange={setShowCustomNonce}
 										trackColor={{ true: colors.blue, false: colors.grey200 }}
 										ios_backgroundColor={colors.grey000}
+										{...testID('advanced-settings-customize-transaction-nonce')}
 									/>
 								</View>
 							</View>

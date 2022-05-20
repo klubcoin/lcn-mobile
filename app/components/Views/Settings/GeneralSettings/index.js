@@ -21,6 +21,7 @@ import Jazzicon from 'react-native-jazzicon';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const diameter = 40;
 const spacing = 8;
@@ -209,6 +210,7 @@ class Settings extends PureComponent {
 									onValueChange={this.toggleHideZeroBalanceTokens}
 									trackColor={{ true: colors.blue, false: colors.grey200 }}
 									ios_backgroundColor={colors.grey000}
+									{...testID('general-settings-toggle-hide-zero-balance-tokens')}
 								/>
 							</View>
 						</View>
@@ -220,6 +222,7 @@ class Settings extends PureComponent {
 									onPress={() => setUseBlockieIcon(false)}
 									style={styles.identicon_row}
 									activeOpacity={0.6}
+									{...testID('general-settings-avatar-jazzicons')}
 								>
 									<View style={[styles.border, !useBlockieIcon && styles.selected]}>
 										<Jazzicon size={diameter} address={selectedAddress} />
@@ -232,6 +235,7 @@ class Settings extends PureComponent {
 									onPress={() => setUseBlockieIcon(true)}
 									style={styles.identicon_row}
 									activeOpacity={0.6}
+									{...testID('general-settings-avatar-blockies')}
 								>
 									<View style={[styles.border, useBlockieIcon && styles.selected]}>
 										<Image source={{ uri: toDataUrl(selectedAddress) }} style={styles.blockie} />

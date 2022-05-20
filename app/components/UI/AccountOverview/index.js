@@ -36,6 +36,7 @@ import styles from './styles/index';
 import routes from '../../../common/routes';
 import TrackingTextInput from '../TrackingTextInput';
 import TrackingScrollView from '../TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 /**
  * View that's part of the <Wallet /> component
@@ -282,6 +283,7 @@ class AccountOverview extends PureComponent {
 								<View ref={this.editableLabelRef} style={styles.data} collapsable={false}>
 									{accountLabelEditable ? (
 										<TrackingTextInput
+											{...testID('account-overview-account-label-field')}
 											style={[
 												styles.label,
 												styles.labelInput,
@@ -294,7 +296,6 @@ class AccountOverview extends PureComponent {
 											onChangeText={this.onAccountLabelChange}
 											onSubmitEditing={this.setAccountLabel}
 											onBlur={this.setAccountLabel}
-											testID={'account-label-text-input'}
 											value={accountLabel}
 											selectTextOnFocus
 											ref={this.input}

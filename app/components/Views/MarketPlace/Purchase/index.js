@@ -387,6 +387,7 @@ class MarketPurchase extends PureComponent {
 
 					<View style={styles.buttonNextWrapper}>
 						<StyledButton
+							testID={'purchase-confirm-button'}
 							type={'confirm'}
 							disabled={balanceIsZero}
 							containerStyle={styles.buttonNext}

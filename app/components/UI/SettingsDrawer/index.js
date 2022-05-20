@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import SettingsNotification from '../SettingsNotification';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
+import { testID } from '../../../util/Logger';
 
 const propTypes = {
 	title: PropTypes.string,
@@ -31,8 +32,8 @@ const defaultProps = {
 	onPress: undefined
 };
 
-const SettingsDrawer = ({ title, description, noBorder, onPress, warning }) => (
-	<TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+const SettingsDrawer = ({ title, description, noBorder, onPress, warning, testID: testId }) => (
+	<TouchableOpacity onPress={onPress} activeOpacity={0.6} {...testID(testId)}>
 		<View style={noBorder ? [styles.root, styles.noBorder] : styles.root}>
 			<View style={styles.content}>
 				{title && <Text style={styles.title}>{title}</Text>}

@@ -3,7 +3,6 @@ import {
 	Text,
 	View,
 	SafeAreaView,
-	StyleSheet,
 	ActivityIndicator,
 	InteractionManager,
 	KeyboardAvoidingView,
@@ -11,7 +10,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors, baseStyles } from '../../../styles/common';
 import preferences from '../../../store/preferences';
 import StyledButton from '../../UI/StyledButton';
 import OnboardingProgress from '../../UI/OnboardingProgress';
@@ -19,7 +18,6 @@ import { strings } from '../../../../locales/i18n';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import { BlurView } from '@react-native-community/blur';
 import ActionView from '../../UI/ActionView';
-import Device from '../../../util/Device';
 import Engine from '../../../core/Engine';
 import PreventScreenshot from '../../../core/PreventScreenshot';
 import SecureKeychain from '../../../core/SecureKeychain';
@@ -35,6 +33,7 @@ import {
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TrackingTextInput from '../../UI/TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 /**
  * View that's shown during the second step of
@@ -135,7 +134,11 @@ export class ManualBackupStep1 extends PureComponent {
 
 	renderSeedPhraseConcealer = () => (
 		<React.Fragment>
-			<TouchableOpacity onPress={this.revealSeedPhrase} style={styles.touchableOpacity}>
+			<TouchableOpacity
+				onPress={this.revealSeedPhrase}
+				style={styles.touchableOpacity}
+				{...testID('manual-backup-step-1-seed-phrase-background')}
+			>
 				<BlurView blurType="light" blurAmount={5} style={styles.blurView} />
 				<View style={styles.seedPhraseConcealer}>
 					<FeatherIcons name="eye-off" size={24} style={styles.icon} />
@@ -143,8 +146,8 @@ export class ManualBackupStep1 extends PureComponent {
 					<Text style={styles.watching}>{strings('manual_backup_step_1.watching')}</Text>
 					<View style={styles.viewButtonWrapper}>
 						<StyledButton
+							testID={'mutual-backup-step-1-view-button'}
 							type={'view'}
-							testID={'view-button'}
 							onPress={this.revealSeedPhrase}
 							containerStyle={styles.viewButtonContainer}
 						>
@@ -184,17 +187,17 @@ export class ManualBackupStep1 extends PureComponent {
 										onChangeText={this.onPasswordChange}
 										secureTextEntry
 										onSubmitEditing={this.tryUnlock}
-										testID={'private-credential-password-text-input'}
+										{...testID('manual-backup-step-1-password')}
 									/>
 									{warningIncorrectPassword && (
 										<Text style={styles.warningMessageText}>{warningIncorrectPassword}</Text>
 									)}
 									<View style={styles.buttonWrapper}>
 										<StyledButton
+											testID={'mutual-backup-step-1-confirm-buttonÏ'}
 											containerStyle={styles.button}
 											type={'normal'}
 											onPress={this.tryUnlock}
-											testID={'submit-button'}
 										>
 											{strings('manual_backup_step_1.confirm')}
 										</StyledButton>

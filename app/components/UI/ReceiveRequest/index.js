@@ -183,11 +183,11 @@ class ReceiveRequest extends PureComponent {
 									<QRCode
 										value={`ethereum:${this.props.selectedAddress}`}
 										size={Dimensions.get('window').width / 2}
-                                        logo={drawables.logo}
-                                        logoSize={50} 
-                                        logoBackgroundColor='black'
-                                        logoBorderRadius={100}
-                                        logoMargin={5}
+										logo={drawables.logo}
+										logoSize={50}
+										logoBackgroundColor="black"
+										logoBorderRadius={100}
+										logoMargin={5}
 									/>
 								</TouchableOpacity>
 								<Modal
@@ -228,15 +228,20 @@ class ReceiveRequest extends PureComponent {
 					</TouchableOpacity>
 					<View style={styles.actionRow}>
 						{allowedToBuy(this.props.network) && (
-							<StyledButton type={'normal'} containerStyle={styles.actionButton} onPress={this.onBuy}>
+							<StyledButton
+								testID={'receive-request-component-buy-token-button'}
+								type={'normal'}
+								containerStyle={styles.actionButton}
+								onPress={this.onBuy}
+							>
 								{strings('fiat_on_ramp.buy_eth', { appName: displayName })}
 							</StyledButton>
 						)}
 						<StyledButton
+							testID={'receive-request-component-request-payment-button'}
 							type={'white'}
 							onPress={this.onReceive}
 							containerStyle={styles.actionButton}
-							testID={'request-payment-button'}
 						>
 							{strings('receive_request.request_payment')}
 						</StyledButton>

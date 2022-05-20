@@ -13,6 +13,7 @@ import AnalyticsV2 from '../../../util/analyticsV2';
 import { toLowerCaseCompare } from '../../../util/general';
 import styles from './styles/index';
 import TrackingTextInput from '../TrackingTextInput';
+import { testID } from '../../../util/Logger';
 
 /**
  * PureComponent that provides ability to add custom collectibles.
@@ -173,6 +174,7 @@ class AddCustomCollectible extends PureComponent {
 						<View style={styles.rowWrapper}>
 							<Text style={styles.label}>{strings('collectible.collectible_address')}</Text>
 							<TrackingTextInput
+								{...testID('add-custom-collectible-address-field')}
 								style={[
 									styles.textInput,
 									this.state.inputWidth ? { width: this.state.inputWidth } : {}
@@ -182,7 +184,6 @@ class AddCustomCollectible extends PureComponent {
 								value={this.state.address}
 								onChangeText={this.onAddressChange}
 								onBlur={this.validateCustomCollectibleAddress}
-								testID={'input-collectible-address'}
 								onSubmitEditing={this.jumpToAssetTokenId}
 							/>
 							<Text style={styles.warningText} testID={'collectible-address-warning'}>
@@ -192,6 +193,7 @@ class AddCustomCollectible extends PureComponent {
 						<View style={styles.rowWrapper}>
 							<Text style={styles.label}>{strings('collectible.collectible_token_id')}</Text>
 							<TrackingTextInput
+								{...testID('add-custom-token-decimal-field')}
 								style={[
 									styles.textInput,
 									this.state.inputWidth ? { width: this.state.inputWidth } : {}
@@ -200,7 +202,6 @@ class AddCustomCollectible extends PureComponent {
 								keyboardType="numeric"
 								onChangeText={this.onTokenIdChange}
 								onBlur={this.validateCustomCollectibleTokenId}
-								testID={'input-token-decimals'}
 								ref={this.assetTokenIdInput}
 								onSubmitEditing={this.addCollectible}
 								returnKeyType={'done'}
