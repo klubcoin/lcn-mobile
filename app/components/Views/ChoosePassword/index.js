@@ -635,7 +635,6 @@ class ChoosePassword extends PureComponent {
 													onChangeText={this.onPasswordChange}
 													secureTextEntry={secureTextEntry}
 													placeholder=""
-													testID="input-password"
 													onSubmitEditing={this.jumpToConfirmPassword}
 													returnKeyType="next"
 													autoCapitalize="none"

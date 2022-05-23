@@ -472,7 +472,7 @@ class SendFlow extends PureComponent {
 							<View style={styles.addInputWrapper}>
 								<View style={styles.input}>
 									<TrackingTextInput
-										{...testID('send-to-alias-field')}
+										{...testID('send-flow-send-to-alias-field')}
 										autoFocus
 										autoCapitalize="none"
 										autoCorrect={false}
