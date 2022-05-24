@@ -7,16 +7,16 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.greytransparent,
 		width: '100%',
 		height: '100%',
-		justifyContent:'center',
-		alignItems:'center'
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	container: {
 		backgroundColor: colors.primaryFox,
-		paddingTop: 80,
-		paddingBottom:30,
+		paddingTop: 40,
+		paddingBottom: 12,
 		height: '100%',
 		width: '100%',
-		borderRadius:12
+		borderRadius: 12
 	},
 	inputView: {
 		width: '100%',
@@ -26,20 +26,15 @@ const styles = StyleSheet.create({
 	},
 	inputInner: {
 		width: '100%',
-		height: '100%',
-		borderWidth: 0.5,
-		borderColor: colors.grey,
-		borderRadius: 10,
-		paddingLeft: 10,
-		paddingRight: 30
+		height: '100%'
 	},
 	search: {
 		width: '100%',
 		height: 48,
 		paddingHorizontal: 8,
-		backgroundColor:colors.purple,
-		borderRadius:12,
-		color:colors.white
+		backgroundColor: colors.purple,
+		borderRadius: 12,
+		color: colors.white
 	},
 	delete: {
 		position: 'absolute',
@@ -87,14 +82,14 @@ const styles = StyleSheet.create({
 		height: 20,
 		resizeMode: 'contain'
 	},
-	dialCode:{
-		width:50,
-		color:colors.white
+	dialCode: {
+		width: 50,
+		color: colors.white
 	},
-	iconClose:{
-		alignSelf:"flex-end",
-		marginRight:20,
-		marginBottom:20
+	iconClose: {
+		alignSelf: 'flex-end',
+		marginRight: 20,
+		marginBottom: 20
 	}
 });
 

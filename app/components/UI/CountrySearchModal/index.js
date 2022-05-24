@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Text, Image, View, Modal, FlatList } from 'react-native';
-import { inject, observer } from 'mobx-react';
+import { TouchableOpacity, Text, View, Modal, FlatList } from 'react-native';
+import { observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import TrackingTextInput from '../TrackingTextInput';
 import { testID } from '../../../util/Logger';
@@ -42,7 +41,6 @@ export default class CountrySearchModal extends Component {
 				activeOpacity={0.1}
 				onPress={() => onSelectCountryCode && onSelectCountryCode(item)}
 			>
-				{/* <Text style={styles.flag}>{item.flag || ''}</Text> */}
 				<View style={styles.content}>
 					<Text style={styles.dialCode} numberOfLines={1}>
 						{item.dialCode ? `+${item.dialCode}` : ''}
@@ -50,7 +48,6 @@ export default class CountrySearchModal extends Component {
 					<Text style={styles.name} numberOfLines={1}>
 						{item.name || ''}
 					</Text>
-					{/* {item == selected && <Image source={{ uri: drawables.at.iconCheck }} style={styles.iconCheck} />} */}
 					{countryCode === item.dialCode && <AntDesignIcon name="check" size={20} color={colors.success} />}
 				</View>
 			</TouchableOpacity>
@@ -80,11 +77,6 @@ export default class CountrySearchModal extends Component {
 									placeholder={placeholder}
 									placeholderTextColor={colors.grey000}
 									onChangeText={e => this.onSearch(e)}
-								/>
-								<TouchableOpacity
-									style={styles.delete}
-									activeOpacity={0.85}
-									onPress={() => this.onSearch('')}
 								/>
 							</View>
 						</View>
