@@ -3,10 +3,19 @@ import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import preferences from '../../../../store/preferences';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { Chat, ChatFile, ChatProfile } from './Messages';
+import { Chat, ChatFile, ChatProfile, Typing } from './Messages';
 import MessagingWebRTC from './MessagingWebRTC';
 import { JoinFile } from '../../FilesManager/store/FileStore';
 import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
+import APIService from '../../../../services/APIService';
+
+const fetchProfile = async (address) => {
+	APIService.getWalletInfo(address, (success, json) => {
+		if (success && json) {
+			preferences.setPeerProfile(address, json.result);
+		}
+	})
+};
 
 export default class ChatService {
 	from = ''; // wallet address
@@ -32,6 +41,9 @@ export default class ChatService {
 						const webrtc = refWebRTC();
 						webrtc.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));
 					}
+				} else if (action == Typing().action) {
+					const peer = preferences.peerProfile(peerId);
+					if (!peer) fetchProfile(peerId);
 				}
 			} else {
 				const group = data.message?.group;
