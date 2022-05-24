@@ -414,7 +414,7 @@ class Chat extends Component {
 								<View
 									style={[
 										styles.isOnline,
-										(!this.isGroupActive() && !this.state.isOnline) && { backgroundColor: colors.grey300 }
+										(!this.state.isOnline) && { backgroundColor: colors.grey300 }
 									]}
 								/>
 							</View>
