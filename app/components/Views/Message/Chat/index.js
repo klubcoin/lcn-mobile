@@ -56,7 +56,7 @@ class Chat extends Component {
 	recipient = this.props.navigation.getParam('selectedContact');
 	state = {
 		contact: this.recipient,
-		group: this.props.navigation.getParam('group') || this.recipient.address,
+		group: this.props.navigation.getParam('group') || this.one2oneGroup(),
 		groupInfo: { name: this.props.navigation.getParam('name') },
 		messages: [],
 		isOnline: false,
@@ -64,6 +64,13 @@ class Chat extends Component {
 	};
 
 	RBRef = React.createRef();
+
+	one2oneGroup() {
+		const { selectedAddress } = this.props;
+		return [selectedAddress, this.recipient.address]
+			.sort((a, b) => `${a}`.localeCompare(`${b}`))
+			.join('.').toLowerCase();
+	}
 
 	groupInfo = () => {
 		const { groupInfo } = this.state;
@@ -333,7 +340,7 @@ class Chat extends Component {
 
 		if (message.group && message.group != group) return;
 		if (!message.user.name) {
-			message.user.name = marketStore.storeVendors[id].name;
+			message.user.name = preferences.peerProfile(id).name;
 		}
 
 		const peers = this.getPeers();
