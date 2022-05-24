@@ -181,7 +181,7 @@ class Preferences {
 		await this.save(kPeerProfiles, this.peerProfiles);
 	}
 
-	async peerProfile(address) {
+	peerProfile(address) {
 		const peerProfiles = this.storage[kPeerProfiles] || {};
 		return peerProfiles[address];
 	}
