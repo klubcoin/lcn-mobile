@@ -112,6 +112,7 @@ import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
 import { EXCEPTION_ACTIVE_APP } from '../../UI/TrackingTextInput';
+import { showInfo } from '../../../util/notify';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -1086,15 +1087,6 @@ const Main = props => {
 		);
 	};
 
-	const showNotice = (message, title) => {
-		Toast.show({
-			type: 'info',
-			text1: message,
-			text2: title || strings('profile.notice'),
-			visibilityTime: 1000
-		});
-	};
-
 	const onWebRtcMessage = async (data, peerId) => {
 		if (data.action) {
 			switch (data.action) {
@@ -1105,7 +1097,7 @@ const Main = props => {
 					break;
 				case ConfirmProfileRejected().action:
 					const name = `${data.firstname} ${data.lastname}`;
-					showNotice(strings('confirm_profile.peer_refuse_try_again', { name }));
+					showInfo(strings('confirm_profile.peer_refuse_try_again', { name }));
 					preferences.addNotification(data);
 					break;
 				case ConfirmProfileBlock().action:
@@ -1126,7 +1118,7 @@ const Main = props => {
 						const sender = addresses[from] || preferences.peerProfile(senderId);
 
 						const groupName = group ? messageStore.conversationInfos[group] : '';
-						showNotice(`${groupName?.name || sender?.name || from}\n${message.text}`);
+						showInfo(`${groupName?.name || sender?.name || from}\n${message.text}`);
 					}
 					break;
 				case LiquichainNameCard().action:
