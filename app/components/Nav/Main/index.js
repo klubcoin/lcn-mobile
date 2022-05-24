@@ -895,7 +895,7 @@ const Main = props => {
 
 	const getPeerInfo = async message => {
 		const address = message.from;
-		const profile = await preferences.peerProfile(address);
+		const profile = preferences.peerProfile(address);
 
 		if (profile && profile.name) {
 			Object.assign(message.data, profile, { address });
