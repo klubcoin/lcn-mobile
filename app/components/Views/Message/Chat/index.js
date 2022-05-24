@@ -53,9 +53,10 @@ class Chat extends Component {
 	contacts = {};
 	senderName = '';
 	messageIds = [];
+	recipient = this.props.navigation.getParam('selectedContact');
 	state = {
-		contact: this.props.navigation.getParam('selectedContact'),
-		group: this.props.navigation.getParam('group'),
+		contact: this.recipient,
+		group: this.props.navigation.getParam('group') || this.recipient.address,
 		groupInfo: { name: this.props.navigation.getParam('name') },
 		messages: [],
 		isOnline: false,
@@ -85,7 +86,7 @@ class Chat extends Component {
 		const members = [];
 		const peers = this.getPeers();
 		members.map(e => !peers.includes(e) && peers.push(e));
-		this.getWalletInfos(members);
+		this.getWalletInfos(peers);
 		store.saveConversationPeers(groupId, peers);
 		this.messaging.send(ChatProfile());
 	}
@@ -137,7 +138,9 @@ class Chat extends Component {
 		const peerId = contact?.address;
 		const info = store.conversationInfos[group] || {};
 
-		return info?.peers?.filter(e => e != group) || [peerId];
+		const peers = info?.peers?.filter(e => e != group) || [];
+		if (peers.indexOf(peerId) < 0) peers.push(peerId);
+		return peers;
 	}
 
 	initConnection = () => {
@@ -324,7 +327,7 @@ class Chat extends Component {
 		}
 		this.messageIds.push(message?._id);
 		const { contact, messages } = this.state;
-		const group = this.props.navigation.getParam('group');
+		const group = this.state.group;
 		const id = addHexPrefix(message.user._id);
 
 		if (message.group && message.group != group) return;
