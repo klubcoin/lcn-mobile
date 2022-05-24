@@ -197,7 +197,8 @@ class Chat extends Component {
 
 				this.setState(prevState => ({
 					...prevState,
-					messages: data
+					messages: data,
+					loading: false,
 				}));
 			})
 			.catch(error => console.log(error));
