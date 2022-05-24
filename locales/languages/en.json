@@ -1870,7 +1870,7 @@
 		"not_found": "Media not found"
 	},
 	"chat": {
-		"user_is_typing": "{{name}} is typing...",
+		"user_is_typing": " is typing...",
 		"send_transaction": "Send a transaction",
 		"request_payment": "Request payment",
 		"send_file": "Send file",
