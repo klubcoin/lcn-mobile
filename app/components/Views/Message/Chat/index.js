@@ -420,7 +420,7 @@ class Chat extends Component {
 						<View style={{ flex: 1 }}>
 							<View style={{ flexDirection: 'row' }}>
 								<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-									{groupInfo?.name || preferences.peerProfile(group)?.name || group}
+									{groupInfo?.name || preferences.peerProfile(contact.address)?.name || group}
 								</Text>
 								<View
 									style={[
