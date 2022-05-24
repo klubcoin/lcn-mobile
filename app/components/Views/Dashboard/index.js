@@ -35,6 +35,8 @@ import Modal from 'react-native-modal';
 import BigNumber from 'bignumber.js';
 import TrackingScrollView from '../../UI/TrackingScrollView';
 import { testID } from '../../../util/Logger';
+import AsyncStorage from '@react-native-community/async-storage';
+import { EXCEPTION_ACTIVE_APP } from '../../Nav/Main';
 
 /**
  * Main view for the wallet
@@ -100,7 +102,8 @@ class Dashboard extends PureComponent {
 		selectedCurrency: '',
 		isChangeCurrency: false,
 		totalBalance: '0',
-		isFetchingChartData: false
+		isFetchingChartData: false,
+		trackingChartTooltip: 0
 	};
 
 	accountOverviewRef = React.createRef();
@@ -493,9 +496,14 @@ class Dashboard extends PureComponent {
 		const minY = Math.min(...data.map(e => e.y));
 		const maxY = Math.max(...data.map(e => e.y));
 		const CustomTooltip = props => {
+			const { trackingChartTooltip } = this.state;
 			const { position, value: valueData } = props;
 			const { x, y } = position;
 			const { x: timestamp, y: value } = valueData;
+			if (timestamp !== trackingChartTooltip) {
+				this.setState({ trackingChartTooltip: timestamp });
+				AsyncStorage.setItem(EXCEPTION_ACTIVE_APP, `${new Date().getTime()}`);
+			}
 			return (
 				<>
 					<View style={[styles.dataPointVerticalContainer, { left: x + 20 }]}>
@@ -536,8 +544,8 @@ class Dashboard extends PureComponent {
 					max: Math.max(...data.map(e => e.x))
 				}}
 				yDomain={{
-					min: minY,
-					max: maxY
+					min: minY - (maxY - minY) / 7,
+					max: maxY + (maxY - minY) / 7
 				}}
 				config={{
 					insetY: 10

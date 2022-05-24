@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
-
-export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
+import { EXCEPTION_ACTIVE_APP } from '../../Nav/Main';
 
 export default class TrackingScrollView extends Component {
 	ref = React.createRef();

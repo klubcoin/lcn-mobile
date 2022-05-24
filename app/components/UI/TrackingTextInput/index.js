@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { Component } from 'react';
 import { TextInput } from 'react-native';
-
-export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
+import { EXCEPTION_ACTIVE_APP } from '../../Nav/Main';
 
 export default class TrackingTextInput extends Component {
 	ref = React.createRef();

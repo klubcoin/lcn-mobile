@@ -64,8 +64,8 @@ import routes from '../../../common/routes';
 import { fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
-import { EXCEPTION_ACTIVE_APP } from '../TrackingTextInput';
 import TrackingScrollView from '../TrackingScrollView';
+import { EXCEPTION_ACTIVE_APP } from '../../Nav/Main';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line

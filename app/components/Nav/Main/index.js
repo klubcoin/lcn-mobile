@@ -111,7 +111,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
-import { EXCEPTION_ACTIVE_APP } from '../../UI/TrackingTextInput';
+
+export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
 
 const styles = StyleSheet.create({
 	flex: {
