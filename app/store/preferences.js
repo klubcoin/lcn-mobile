@@ -183,7 +183,7 @@ class Preferences {
 
 	peerProfile(address) {
 		const peerProfiles = this.storage[kPeerProfiles] || {};
-		return peerProfiles[address];
+		return peerProfiles[address] || peerProfiles[address.toLowerCase()];
 	}
 }
 

@@ -512,7 +512,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-							swapsUtils.getSwapsContractAddress(props.chainId)))
+						swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -732,7 +732,7 @@ const Main = props => {
 			if (!credentials) return false;
 			setPassword(credentials.password);
 			onLogin(credentials.password);
-		} catch (error) {}
+		} catch (error) { }
 		return true;
 	};
 
@@ -1117,15 +1117,16 @@ const Main = props => {
 					const senderId = `${from}`.toLowerCase();
 					const activeChatPeerId = `${messageStore.activeChatPeerId}`.toLowerCase();
 
-					const { action } = message;
+					const { action, group } = message;
 					if (action) break;
 
-					if (senderId != activeChatPeerId) {
+					if (senderId != activeChatPeerId && group != activeChatPeerId) {
 						const { addressBook, network } = props;
 						const addresses = addressBook[network] || {};
-						const sender = addresses[from];
+						const sender = addresses[from] || preferences.peerProfile(senderId);
 
-						showNotice(sender?.name || from, message.text);
+						const groupName = group ? messageStore.conversationInfos[group] : '';
+						showNotice(`${groupName?.name || sender?.name || from}\n${message.text}`);
 					}
 					break;
 				case LiquichainNameCard().action:
@@ -1254,20 +1255,20 @@ Main.propTypes = {
 	 */
 	thirdPartyApiMode: PropTypes.bool,
 	/**
-    /* Hides or shows dApp transaction modal
-    */
+		/* Hides or shows dApp transaction modal
+		*/
 	toggleDappTransactionModal: PropTypes.func,
 	/**
-    /* Hides or shows approve modal
-    */
+		/* Hides or shows approve modal
+		*/
 	toggleApproveModal: PropTypes.func,
 	/**
-    /* dApp transaction modal visible or not
-    */
+		/* dApp transaction modal visible or not
+		*/
 	dappTransactionModalVisible: PropTypes.bool,
 	/**
-    /* Token approve modal visible or not
-    */
+		/* Token approve modal visible or not
+		*/
 	approveModalVisible: PropTypes.bool,
 	/**
 	 * Selected address
