@@ -851,7 +851,7 @@ const menuOptions = (group) => {
 		}
 	];
 
-	if (group) options.shift();
+	if (group && group.indexOf('0x') < 0) options.shift();
 	return options;
 }
 
