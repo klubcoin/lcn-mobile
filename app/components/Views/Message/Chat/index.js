@@ -291,6 +291,7 @@ class Chat extends Component {
 	};
 
 	onBack = () => {
+		store.setActiveChatPeerId(null);
 		this.props.navigation.goBack();
 	};
 
