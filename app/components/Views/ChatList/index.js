@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { colors } from '../../../styles/common';
 import PropTypes from 'prop-types';
@@ -9,6 +9,11 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import store from '../Message/store';
+import preferences from '../../../store/preferences';
+import { refWebRTC } from '../../../services/WebRTC';
+import MessagingWebRTC from '../Message/store/MessagingWebRTC';
+import { Chat } from '../Message/store/Messages';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -89,53 +94,52 @@ const styles = StyleSheet.create({
 	}
 });
 
-const DUMMY_CHAT_DATA = [
-	{
-		uuid: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f0',
-		name: 'Remi Doe',
-		avatar:
-			'https://cdn.xsd.cz/resize/3509b1bc606b3a1eb3b4c61e386968a8_resize=1306,1960_.jpg?hash=85a6382b4591f36e9abf639e53cdd20e',
-		lastMessageTime: 1652153685938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f1',
-		name: 'Monique Doe',
-		avatar:
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Monique_Alfradique_-_cropped.jpg/800px-Monique_Alfradique_-_cropped.jpg',
-		lastMessageTime: 1652141485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f2',
-		name: 'Renaud Doe',
-		avatar: '',
-		lastMessageTime: 1652041485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f3',
-		name: 'Paul Doe',
-		avatar:
-			'https://www.lstmed.ac.uk/sites/default/files/styles/mc-580-16x9-node/public/content/pages/images/Paul.png?itok=A9dkiQNs',
-		lastMessageTime: 1651041485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '0x8b03ac5948e261518bc29c7cca38407cdd2f50f4',
-		name: 'Pierre Doe',
-		avatar: '',
-		lastMessageTime: 1648041485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	}
-];
+const ChatList = ({ navigation, ...props }) => {
+	const [conversations, setConversations] = useState([]);
 
-const ChatList = ({ navigation }) => {
+	const initConnection = () => {
+		const messaging = new MessagingWebRTC(null, null, refWebRTC());
+		const listener = messaging.addListener('message', (data, peerId) => {
+			if (data.action == Chat().action && data.message._id) {
+				store.setConversationIsRead(data.from, false);
+				fetchHistoryMessages();
+			}
+		});
+
+		return [listener];
+	};
+
+	const fetchHistoryMessages = async () => {
+		const { selectedAddress, addressBook, network } = props;
+		const addresses = addressBook[network] || {};
+		const records = await store.getChatMessages();
+
+		const users = Object.keys(records).filter(uuid => {
+			const address = uuid.toLowerCase().replace('.', '').replace(selectedAddress.toLowerCase(), '');
+			return Object.keys(addresses).find(a => a?.toLocaleLowerCase() == address?.toLowerCase())
+				|| preferences.peerProfile(address);
+		}).map(uuid => {
+			const address = uuid.toLowerCase().replace('.', '').replace(selectedAddress.toLowerCase(), '');
+			const conversation = { address, ...records[uuid] };
+
+			conversation.lastMessage = records[uuid].messages[0];
+			conversation.isRead = records[uuid].isRead;
+			return Object.assign(conversation, preferences.peerProfile(address));
+		});
+		setConversations(users);
+	};
+
+	useEffect(() => {
+		const listeners = initConnection();
+		store.setActiveChatPeerId(null);
+		fetchHistoryMessages();
+
+		return () => {
+			listeners.forEach(listener => listener.remove());
+		};
+	}, [navigation]);
+
+
 	const onAddChat = () => {
 		navigation.navigate('NewChat');
 	};
@@ -163,9 +167,9 @@ const ChatList = ({ navigation }) => {
 	};
 
 	const renderChatItem = chat => {
-		const { uuid, name, avatar, lastMessage, lastMessageTime } = chat;
+		const { address, name, avatar, lastMessage: { text }, createdAt } = chat;
 		let displayTime = '';
-		const lastTime = moment(lastMessageTime);
+		const lastTime = moment(createdAt);
 		const currentTime = moment();
 		if (lastTime.format('YYYY MM DD') === currentTime.format('YYYY MM DD')) {
 			displayTime = lastTime.format('HH:mm');
@@ -174,7 +178,7 @@ const ChatList = ({ navigation }) => {
 		}
 		return (
 			<>
-				<TouchableOpacity key={uuid} style={styles.chatWrapper} activeOpacity={0.7} onPress={onViewChat}>
+				<TouchableOpacity key={address} style={styles.chatWrapper} activeOpacity={0.7} onPress={onViewChat}>
 					{renderAvatar(name, avatar)}
 					<View style={styles.chatContent}>
 						<View style={styles.chatContentHeader}>
@@ -182,7 +186,7 @@ const ChatList = ({ navigation }) => {
 							<Text style={styles.chatTime}>{displayTime}</Text>
 						</View>
 						<Text style={styles.chatMessage} numberOfLines={2}>
-							{lastMessage}
+							{text}
 						</Text>
 					</View>
 				</TouchableOpacity>
@@ -201,7 +205,7 @@ const ChatList = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 				{renderLine()}
-				{DUMMY_CHAT_DATA.map(chat => renderChatItem(chat))}
+				{conversations.map(chat => renderChatItem(chat))}
 			</TrackingScrollView>
 		</OnboardingScreenWithBg>
 	);
@@ -213,6 +217,10 @@ ChatList.propTypes = {
 	navigation: PropTypes.object
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
+	network: state.engine.backgroundState.NetworkController.network,
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+});
 
 export default connect(mapStateToProps)(ChatList);
