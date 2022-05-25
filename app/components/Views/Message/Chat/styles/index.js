@@ -55,10 +55,19 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		maxWidth: 160
 	},
+	body: {
+		flex: 1,
+		backgroundColor: '#110E21'
+	},
+	chatBubble: {
+		backgroundColor: colors.lightPurple,
+		borderRadius: 10
+	},
 	textMessage: {
 		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
-		padding: 10
+		padding: 10,
+		paddingTop: 5,
 	},
 	text: {
 		color: colors.white,

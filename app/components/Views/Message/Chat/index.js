@@ -638,7 +638,7 @@ class Chat extends Component {
 		const { link, amount, symbol } = payload;
 
 		const owner = user._id == selectedAddress;
-		const textColor = owner ? colors.white : colors.black;
+		const textColor = colors.white;
 
 		return (
 			<View style={{ flexDirection: 'row', padding: 10 }}>
@@ -675,7 +675,7 @@ class Chat extends Component {
 			primaryCurrency
 		};
 
-		return <ChatTransaction data={data} incoming={!sender && !groupChat} dark={!sender && groupChat} />;
+		return <ChatTransaction data={data} incoming={!sender && !groupChat} />;
 	};
 
 	renderCustomView = message => {
@@ -711,7 +711,7 @@ class Chat extends Component {
 			return <ImageMessage key={sha256(path)}	{...message} loading={isLoading} />
 		} else if (type && type?.indexOf('audio') == 0) {
 			let filePath = `file://${path}`;
-			return <AudioMessage key={sha256(path)}	{...message.payload} path={filePath} incoming={incoming} loading={isLoading} />
+			return <AudioMessage key={sha256(path)}	{...message.payload} path={filePath} loading={isLoading} />
 		}
 		return <FileMessage key={sha256(path)} {...message.payload} incoming={incoming} loading={isLoading} />
 	}
@@ -724,6 +724,7 @@ class Chat extends Component {
 			<Message
 				{...messageProps}
 				renderMessageImage={() => null}
+				renderBubble={() => this.renderBubble(currentMessage)}
 				renderCustomView={isCustom ? () => this.renderBubble(currentMessage) : null}
 			/>
 		);
@@ -751,13 +752,25 @@ class Chat extends Component {
 	}
 
 	renderBubble = (message) => {
+		const { selectedAddress } = this.props;
+		const { createdAt, text, user, payload } = message;
 		const { members } = this.groupInfo();
-		const failed = members?.length <= 2 && !this.state.group && message.payload && message.payload.failed == true;
+		const failed = members?.length <= 2 && !this.state.group && payload?.failed == true;
+		const chatTime = moment(createdAt);
+		const incoming = user._id !== selectedAddress;
+		const styleTime = { marginTop: 10, marginLeft: 10, marginRight: 10, color: incoming ? colors.pink : colors.blue }
+
 		return (
-			<>
-				{this.renderCustomView(message)}
+			<View style={styles.chatBubble}>
+				<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
+				{!!payload ?
+					this.renderCustomView(message) :
+					<View style={styles.textMessage}>
+						<Text style={styles.text}>{text}</Text>
+					</View>
+				}
 				{failed && this.renderRetry(message)}
-			</>
+			</View>
 		)
 	}
 
@@ -793,7 +806,7 @@ class Chat extends Component {
 		return (
 			<>
 				{this.renderNavBar()}
-				<View style={{ flex: 1 }}>
+				<View style={styles.body}>
 					{this.renderProfile()}
 					{
 						this.state.loading ? this.renderLoader() :
