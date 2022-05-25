@@ -21,6 +21,7 @@ import * as FilesReader from '../../../../util/files-reader';
 import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../store/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
@@ -799,6 +800,18 @@ class Chat extends Component {
 		)
 	}
 
+	renderActions = () => {
+		return (
+			<TouchableOpacity
+				onPress={this.onMoreButtonTap}
+				activeOpacity={0.7}
+				style={styles.cameraButton}
+			>
+				<EntypoIcon name={'camera'} style={styles.cameraIcon} />
+			</TouchableOpacity>
+		)
+	}
+
 	render() {
 		const { selectedAddress } = this.props;
 		const { visibleMenu, messages } = this.state;
@@ -821,7 +834,7 @@ class Chat extends Component {
 								onInputTextChanged={this.sendTyping}
 								renderFooter={this.renderTypingFooter}
 								renderMessage={this.renderMessage}
-								renderActions={() => <Actions onPressActionButton={this.onMoreButtonTap} />}
+								renderActions={this.renderActions}
 							/>
 					}
 					<RecordingBS

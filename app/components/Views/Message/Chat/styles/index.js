@@ -208,7 +208,19 @@ const styles = StyleSheet.create({
 		maxHeight: 130,
 		padding: 15,
 		backgroundColor: colors.white,
-	}
+	},
+	cameraButton: {
+		padding: 8,
+		borderRadius: 12,
+		backgroundColor: colors.lightPurple,
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 40,
+	},
+	cameraIcon: {
+		fontSize: 24,
+		color: colors.white
+	},
 });
 
 
