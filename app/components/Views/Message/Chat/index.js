@@ -299,7 +299,7 @@ class Chat extends Component {
 
 	onBack = () => {
 		store.setActiveChatPeerId(null);
-		this.props.navigation.goBack();
+		this.props.navigation.navigate('ChatList');
 	};
 
 	setTyping = (peerId) => {
