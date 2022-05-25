@@ -46,6 +46,7 @@ import styles from './styles/index'
 import { testID } from '../../../../util/Logger';
 import RecordingBS from '../../../UI/RecordingBS';
 import RemoteImage from '../../../Base/RemoteImage';
+import EthereumAddress from '../../../UI/EthereumAddress';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -66,6 +67,7 @@ class Chat extends Component {
 	RBRef = React.createRef();
 
 	one2oneGroup() {
+		this.isOne2One = true;
 		const { selectedAddress } = this.props;
 		return [selectedAddress, this.recipient.address]
 			.sort((a, b) => `${a}`.localeCompare(`${b}`))
@@ -418,23 +420,11 @@ class Chat extends Component {
 					</TouchableOpacity>
 					<View style={styles.navBarContentWrapper}>
 						<View style={{ flex: 1 }}>
-							<View style={{ flexDirection: 'row' }}>
-								<Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-									{groupInfo?.name || preferences.peerProfile(contact.address)?.name || group}
-								</Text>
-								<View
-									style={[
-										styles.isOnline,
-										(!this.state.isOnline) && { backgroundColor: colors.grey300 }
-									]}
-								/>
-							</View>
-							<Text numberOfLines={1} ellipsizeMode="middle" style={styles.address}>
-								{contact?.address}
+							<Text numberOfLines={1} ellipsizeMode="middle" style={styles.headerText}>
+								Chat
 							</Text>
 						</View>
 					</View>
-					<View style={{ flex: 1 }} />
 				</View>
 			</SafeAreaView>
 		);
@@ -782,6 +772,20 @@ class Chat extends Component {
 		)
 	}
 
+	renderProfile = () => {
+		const address = this.state.contact.address;
+		const profile = preferences.peerProfile(address);
+		return (
+			<View style={styles.profile}>
+				<Image source={{ uri: `data:image/*;base64,${profile.avatar}` }} />
+				<View>
+					<Text style={styles.name}>{profile.name}</Text>
+					<EthereumAddress address={address} style={styles.address} type={'short'} />
+				</View>
+			</View>
+		)
+	}
+
 	render() {
 		const { selectedAddress } = this.props;
 		const { visibleMenu, messages } = this.state;
@@ -790,14 +794,15 @@ class Chat extends Component {
 			<>
 				{this.renderNavBar()}
 				<View style={{ flex: 1 }}>
+					{this.renderProfile()}
 					{
 						this.state.loading ? this.renderLoader() :
 							<GiftedChat
 								messages={messages}
 								onSend={this.onSend}
 								user={{ _id: selectedAddress, name: this.senderName }}
-								renderUsernameOnMessage
-								renderAvatar={props => this.renderAvatar(props?.currentMessage?.user?._id)}
+								renderUsernameOnMessage={false}
+								renderAvatar={null}
 								showUserAvatar
 								bottomOffset={0}
 								onInputTextChanged={this.sendTyping}

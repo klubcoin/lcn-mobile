@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
 		fontSize: 22,
 		fontWeight: 'bold'
 	},
+	profile: {
+		marginHorizontal: 20,
+		paddingVertical: 20,
+		borderBottomColor: colors.blue,
+		borderBottomWidth: 2
+	},
 	name: {
 		color: colors.white,
 		fontSize: 28,
