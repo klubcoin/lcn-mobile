@@ -144,8 +144,9 @@ const ChatList = ({ navigation, ...props }) => {
 		navigation.navigate('NewChat');
 	};
 
-	const onViewChat = () => {
-		navigation.navigate('ChatMessage');
+	const onViewChat = (address) => {
+		store.setConversationIsRead(address, true);
+		navigation.navigate('Chat', { selectedContact: { address } });
 	};
 
 	const renderLine = () => {
@@ -178,7 +179,11 @@ const ChatList = ({ navigation, ...props }) => {
 		}
 		return (
 			<>
-				<TouchableOpacity key={address} style={styles.chatWrapper} activeOpacity={0.7} onPress={onViewChat}>
+				<TouchableOpacity key={address}
+					style={styles.chatWrapper}
+					activeOpacity={0.7}
+					onPress={() => onViewChat(address)}
+				>
 					{renderAvatar(name, avatar)}
 					<View style={styles.chatContent}>
 						<View style={styles.chatContentHeader}>
