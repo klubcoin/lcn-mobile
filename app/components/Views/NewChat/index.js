@@ -164,7 +164,8 @@ const NewChat = ({ navigation }) => {
 	}, [address]);
 
 	const onChat = () => {
-		navigation.navigate('ChatMessage');
+		store.setConversationIsRead(address, true);
+		navigation.navigate('Chat', { selectedContact: { address } });
 	};
 
 	return (
