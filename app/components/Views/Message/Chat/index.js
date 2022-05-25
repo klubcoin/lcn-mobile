@@ -22,6 +22,7 @@ import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../store/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
@@ -48,6 +49,7 @@ import { testID } from '../../../../util/Logger';
 import RecordingBS from '../../../UI/RecordingBS';
 import RemoteImage from '../../../Base/RemoteImage';
 import EthereumAddress from '../../../UI/EthereumAddress';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 class Chat extends Component {
 	static navigationOptions = () => ({ header: null });
@@ -63,6 +65,7 @@ class Chat extends Component {
 		messages: [],
 		isOnline: false,
 		loading: true,
+		message: ''
 	};
 
 	RBRef = React.createRef();
@@ -330,6 +333,7 @@ class Chat extends Component {
 		store.setConversationIsRead(group || peerId, true);
 
 		this.messaging.send(message[0]);
+		this.setState({ message: '' });
 	};
 
 	addNewMessage = async (message, incoming) => {
@@ -800,6 +804,48 @@ class Chat extends Component {
 		)
 	}
 
+	sendText = () => {
+		const { selectedAddress } = this.props;
+		this.onSend([
+			{
+				_id: uuid.v4(),
+				createdAt: new Date(),
+				text: this.state.message,
+				user: {
+					_id: selectedAddress,
+					name: preferences.peerProfile(selectedAddress)?.name,
+				}
+			}
+		])
+	}
+
+	renderComposer = () => {
+		const { message } = this.state;
+		const inputted = message.length != 0;
+
+		return (
+			<View style={styles.chatWrapper}>
+				{this.renderActions()}
+				<TrackingTextInput
+					style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
+					value={this.state.message}
+					onChangeText={(text) => this.setState({ message: text })}
+					placeholder={strings('chat.chat_text')}
+					placeholderTextColor={colors.grey200}
+					multiline
+					textAlignVertical={'center'}
+				/>
+				{inputted && <TouchableOpacity
+					onPress={this.sendText}
+					activeOpacity={0.7}
+					style={styles.sendButton}
+				>
+					<Ionicons name={'send'} style={styles.sendIcon} />
+				</TouchableOpacity>}
+			</View>
+		)
+	}
+
 	renderActions = () => {
 		return (
 			<TouchableOpacity
@@ -834,7 +880,7 @@ class Chat extends Component {
 								onInputTextChanged={this.sendTyping}
 								renderFooter={this.renderTypingFooter}
 								renderMessage={this.renderMessage}
-								renderActions={this.renderActions}
+								renderComposer={this.renderComposer}
 							/>
 					}
 					<RecordingBS

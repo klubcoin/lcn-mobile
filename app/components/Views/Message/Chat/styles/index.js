@@ -209,7 +209,15 @@ const styles = StyleSheet.create({
 		padding: 15,
 		backgroundColor: colors.white,
 	},
+	chatWrapper: {
+		flex: 1,
+		paddingHorizontal: 10,
+		backgroundColor: '#110E21',
+		flexDirection: 'row',
+		maxHeight: 80
+	},
 	cameraButton: {
+		marginVertical: 5,
 		padding: 8,
 		borderRadius: 12,
 		backgroundColor: colors.lightPurple,
@@ -218,6 +226,25 @@ const styles = StyleSheet.create({
 		height: 40,
 	},
 	cameraIcon: {
+		fontSize: 24,
+		color: colors.white
+	},
+	chatInput: {
+		flex: 1,
+		color: colors.white,
+		marginLeft: 8,
+		marginVertical: 5,
+		paddingHorizontal: 8,
+		paddingVertical: 5,
+		borderRadius: 12,
+		backgroundColor: colors.lightPurple,
+		textAlign: 'right'
+	},
+	sendButton: {
+		padding: 8,
+		alignSelf: 'center'
+	},
+	sendIcon: {
 		fontSize: 24,
 		color: colors.white
 	},
