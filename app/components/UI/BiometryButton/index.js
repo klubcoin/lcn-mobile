@@ -12,7 +12,8 @@ const styles = {
 	},
 	image: {
 		height: 24,
-		width: 24
+		width: 24,
+		tintColor: colors.white
 	},
 	hitSlop: {
 		top: 10,
@@ -29,18 +30,18 @@ const androidIris = require('../../../images/android-iris.png');
 const renderIcon = type => {
 	if (Platform.OS === 'ios') {
 		if (type === 'TouchID')
-			return <Ionicons color={colors.black} size={28} style={styles.fixCenterIcon} name="ios-finger-print" />;
+			return <Ionicons color={colors.white} size={28} style={styles.fixCenterIcon} name="ios-finger-print" />;
 		if (type === 'FaceID') return <ImageRN style={styles.image} source={iosFaceId} />;
 	}
 
 	if (Platform.OS === 'android') {
 		if (type === 'Fingerprint')
-			return <MaterialIcon color={colors.black} style={styles.fixCenterIcon} size={28} name="fingerprint" />;
+			return <MaterialIcon color={colors.white} style={styles.fixCenterIcon} size={28} name="fingerprint" />;
 		if (type === 'Face') return <ImageRN style={styles.image} source={androidFaceRecognition} />;
 		if (type === 'Iris') return <ImageRN style={styles.image} source={androidIris} />;
 	}
 
-	return <Ionicons color={colors.black} style={styles.fixCenterIcon} size={28} name="ios-finger-print" />;
+	return <Ionicons color={colors.white} style={styles.fixCenterIcon} size={28} name="ios-finger-print" />;
 };
 
 const BiometryButton = ({ onPress, hidden, type }) => {

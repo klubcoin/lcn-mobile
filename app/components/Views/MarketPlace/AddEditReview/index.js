@@ -1,15 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import {
-	View,
-	Text,
-	KeyboardAvoidingView,
-	ScrollView,
-	TouchableOpacity,
-	Image,
-	TextInput
-} from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import Device from '../../../../util/Device';
 import APIService from '../../../../services/APIService';
@@ -22,6 +14,8 @@ import Engine from '../../../../core/Engine';
 import { showError, showSuccess } from '../../../../util/notify';
 import { Rating } from 'react-native-ratings';
 import moment from 'moment';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export class MarketAddEditReview extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -101,7 +95,7 @@ export class MarketAddEditReview extends PureComponent {
 		return (
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
-				<ScrollView contentContainerStyle={styles.wrapper}>
+				<TrackingScrollView contentContainerStyle={styles.wrapper}>
 					<View style={styles.productSummaryContainer}>
 						<Image
 							source={{ uri: images ? images[0] : null }}
@@ -144,7 +138,7 @@ export class MarketAddEditReview extends PureComponent {
 							</Text>
 						</View>
 						<Text style={styles.header}>{strings('market.comment_header')}</Text>
-						<TextInput
+						<TrackingTextInput
 							value={this.comment}
 							onChangeText={text => (this.comment = text)}
 							style={styles.input}
@@ -161,7 +155,7 @@ export class MarketAddEditReview extends PureComponent {
 							{strings('market.cancel')}
 						</StyledButton>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</KeyboardAvoidingView>
 		);
 	}

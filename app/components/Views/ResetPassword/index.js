@@ -7,9 +7,7 @@ import {
 	Alert,
 	Text,
 	View,
-	TextInput,
 	SafeAreaView,
-	ScrollView,
 	Image,
 	InteractionManager
 } from 'react-native';
@@ -41,6 +39,8 @@ import { syncPrefs } from '../../../util/sync';
 import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingTextInput from '../../UI/TrackingTextInput';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 const RESET_PASSWORD = 'reset_password';
@@ -438,7 +438,7 @@ class ResetPassword extends PureComponent {
 								/>
 							) : (
 								<>
-									<TextInput
+									<TrackingTextInput
 										style={styles.confirm_input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
@@ -530,7 +530,7 @@ class ResetPassword extends PureComponent {
 									<Text onPress={this.toggleShowHide} style={[styles.hintLabel, styles.showPassword]}>
 										{strings(`reset_password.${secureTextEntry ? 'show' : 'hide'}`)}
 									</Text>
-									<TextInput
+									<TrackingTextInput
 										style={[styles.input, inputWidth]}
 										value={password}
 										onChangeText={this.onPasswordChangeWithValidate}
@@ -617,7 +617,7 @@ class ResetPassword extends PureComponent {
 								</View>
 								<View style={styles.field}>
 									<Text style={styles.hintLabel}>{strings('reset_password.confirm_password')}</Text>
-									<TextInput
+									<TrackingTextInput
 										ref={this.confirmPasswordInput}
 										style={[styles.input, inputWidth]}
 										value={confirmPassword}
@@ -688,13 +688,13 @@ class ResetPassword extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.mainWrapper}>
-					<ScrollView
+					<TrackingScrollView
 						contentContainerStyle={styles.scrollviewWrapper}
 						style={styles.mainWrapper}
 						testID={'account-backup-step-4-screen'}
 					>
 						{view === RESET_PASSWORD ? this.renderResetPassword() : this.renderConfirmPassword()}
-					</ScrollView>
+					</TrackingScrollView>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

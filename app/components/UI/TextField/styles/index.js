@@ -4,6 +4,7 @@ import { assignNestedObj } from '../../../../util/object';
 import brandStyles from './brand';
 
 const styles = StyleSheet.create({
+	textInputContainer: {},
 	textInput: {
 		color: colors.white,
 		backgroundColor: colors.purple,
@@ -22,7 +23,8 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		...fontStyles.bold
 	},
-	textInputWrapper:{}
+	textInputWrapper: {},
+	errorText: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

@@ -4,7 +4,6 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
-	ScrollView,
 	TouchableWithoutFeedback,
 	Image,
 	InteractionManager
@@ -20,6 +19,7 @@ import { CURRENT_APP_VERSION, LAST_APP_VERSION, WHATS_NEW_APP_VERSION_SEEN } fro
 import compareVersions from 'compare-versions';
 import scaling from '../../../util/scaling';
 import PropTypes from 'prop-types';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -194,7 +194,7 @@ const WhatsNewModal = props => {
 						</View>
 					</View>
 					{!!featuresToShow && (
-						<ScrollView>
+						<TrackingScrollView>
 							<TouchableWithoutFeedback>
 								<View>
 									{featuresToShow.map((feature, index) => (
@@ -221,7 +221,7 @@ const WhatsNewModal = props => {
 									))}
 								</View>
 							</TouchableWithoutFeedback>
-						</ScrollView>
+						</TrackingScrollView>
 					)}
 				</View>
 			</View>

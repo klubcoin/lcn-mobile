@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../../MarketPlace/store';
 import { menuKeys } from '../Drawer';
@@ -20,6 +20,7 @@ import Engline from '../../../../core/Engine';
 import { ReadFile } from '../../FilesManager/store/FileStore';
 import StoreImage from '../../MarketPlace/components/StoreImage';
 import routes from '../../../../common/routes';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 class MarketCategory extends PureComponent {
 	vendor = {};
@@ -190,9 +191,9 @@ class MarketCategory extends PureComponent {
 						onPress={this.onViewFilter}
 					/>
 				</View>
-				<ScrollView style={styles.body} nestedScrollEnabled>
+				<TrackingScrollView style={styles.body} nestedScrollEnabled>
 					{this.renderCategory()}
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

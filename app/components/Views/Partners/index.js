@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { ScrollView } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
@@ -9,6 +8,7 @@ import { strings } from '../../../../locales/i18n';
 import APIService from '../../../services/APIService';
 import { STORED_CONTENT } from '../../../constants/storage';
 import preferences from '../../../store/preferences';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 class Partners extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -50,12 +50,12 @@ class Partners extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					{this.partnerList.length > 0 &&
 						this.partnerList.map((e, index) => (
 							<PartnerItem imageSrc={e.icon} onItemPress={() => this.gotoDetails(e)} key={index} />
 						))}
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	}

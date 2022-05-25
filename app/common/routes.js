@@ -1,5 +1,5 @@
 import { displayName } from '../../app.json';
-import Config from "react-native-config";
+import Config from 'react-native-config';
 import { getContractAddress } from '../core/Erc20Service';
 
 export default {
@@ -24,14 +24,14 @@ export default {
 		helpSupportUrl: 'https://app.klubcoin.net/docs.html',
 		reportIssueUrl: 'https://github.com/klubcoin/lcn-mobile/issues',
 		portalUrl: 'https://klubcoin.net',
-		contactUrl: 'https://klubcoin.net/contact',
+		contactUrl: 'https://klubcoin.net/contact'
 	},
 	klubToken: {
 		chainId: '1662',
 		address: () => getContractAddress(),
-		symbol: "KLUB",
+		symbol: 'KLUB',
 		decimals: 18,
-		image: "https://avatars.githubusercontent.com/u/93361768?s=200&v=4"
+		image: 'https://avatars.githubusercontent.com/u/93361768?s=200&v=4'
 	},
 	basicMethod: {
 		jsonrpc: '2.0',

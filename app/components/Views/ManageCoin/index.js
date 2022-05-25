@@ -1,99 +1,85 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import {
-	ActivityIndicator,
-	BackHandler,
-	FlatList,
-	Text,
-	View,
-	ScrollView,
-	StyleSheet,
-	Alert,
-	Image,
-	InteractionManager
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import { Text, View, Image, Modal } from 'react-native';
 import StyledButton from '../../UI/StyledButton';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { baseStyles } from '../../../styles/common';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { strings } from '../../../../locales/i18n';
-import Button from 'react-native-button';
-import { connect } from 'react-redux';
-import SecureKeychain from '../../../core/SecureKeychain';
-import Engine from '../../../core/Engine';
-import FadeOutOverlay from '../../UI/FadeOutOverlay';
 import TermsAndConditions from '../TermsAndConditions';
-import Analytics from '../../../core/Analytics';
-import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import { saveOnboardingEvent } from '../../../actions/onboarding';
 import { getTransparentBackOnboardingNavbarOptions } from '../../UI/Navbar';
-import ScanStep from '../../UI/ScanStep';
-import PubNubWrapper from '../../../util/syncWithExtension';
-import ActionModal from '../../UI/ActionModal';
-import Logger from '../../../util/Logger';
-import Device from '../../../util/Device';
-import BaseNotification from '../../UI/Notification/BaseNotification';
-import Animated, { Easing } from 'react-native-reanimated';
-import ElevatedView from 'react-native-elevated-view';
-import { passwordSet, seedphraseBackedUp, loadingSet, loadingUnset } from '../../../actions/user';
-import { setLockTime } from '../../../actions/settings';
-import AppConstants from '../../../core/AppConstants';
-import AnimatedFox from 'react-native-animated-fox';
-import PreventScreenshot from '../../../core/PreventScreenshot';
-import WarningExistingUserModal from '../../UI/WarningExistingUserModal';
-import { PREVIOUS_SCREEN, ONBOARDING } from '../../../constants/navigation';
-import {
-	SEED_PHRASE_HINTS,
-	EXISTING_USER,
-	BIOMETRY_CHOICE,
-	BIOMETRY_CHOICE_DISABLED,
-	NEXT_MAKER_REMINDER,
-	METRICS_OPT_IN,
-	TRUE
-} from '../../../constants/storage';
 import styles from './styles';
-import { displayName } from '../../../../app.json';
+import QRScanner from '../../UI/QRScanner';
+import SharedDeeplinkManager from '../../../core/DeeplinkManager';
+import AppConstants from '../../../core/AppConstants';
+import { showError } from '../../../util/notify';
+import TrackingScrollView from '../../UI/TrackingScrollView';
+import { connect } from 'react-redux';
+import { newAssetTransaction } from '../../../actions/transaction';
+import { getEther } from '../../../util/transactions';
 
-/**
- * View that is displayed to first time (new) users
- */
 class ManageCoin extends PureComponent {
+	state = {
+		isScanQrPay: false,
+		isScanQrTip: false
+	};
+
 	static navigationOptions = ({ navigation }) =>
 		getTransparentBackOnboardingNavbarOptions(navigation, strings('drawer.manage_coins'));
 
-	static propTypes = {
-		/**
-		 * The navigator object
-		 */
-		navigation: PropTypes.object,
-		/**
-		 * Selected address
-		 */
-		selectedAddress: PropTypes.string,
-		/**
-		 * loading status
-		 */
-		loading: PropTypes.bool,
-		/**
-		 * loadings msg
-		 */
-		loadingMsg: PropTypes.string
+	onScanQRToCollect = () => {
+		this.props.navigation.navigate('ComingSoon');
 	};
 
-	state = {
-		loading: false
+	onScanQRToPay = () => {
+		this.setState({ isScanQrPay: true });
 	};
 
-	componentDidMount() {}
+	onScanQRToTip = () => {
+		this.setState({ isScanQrTip: true });
+	};
 
-	renderLoader = () => (
-		<View style={styles.wrapper}>
-			<View style={styles.loader}>
-				<ActivityIndicator size="small" color={colors.white}  />
-				<Text style={styles.loadingText}>{this.props.loadingMsg}</Text>
-			</View>
-		</View>
-	);
+	onSendToFriend = () => {
+		const { newAssetTransaction, navigation, ticker } = this.props;
+		newAssetTransaction(getEther(ticker));
+		navigation.navigate('SendFlowView');
+	};
+
+	onScanQRPayRead = response => {
+		// const content = response.data;
+		this.setState({ isScanQrPay: false });
+		// console.log('🚀 ~ file: index.js ~ line 42 ~ ManageCoin ~ content', content);
+		// if (content.includes('https://') || content.includes('http://')) {
+		// 	showError(strings('manage_coin.scan_qr_pay_error_title'), strings('manage_coin.scan_qr_pay_error_message'));
+		// 	return;
+		// }
+		// const handledByDeeplink = SharedDeeplinkManager.parse(content, {
+		// 	origin: AppConstants.DEEPLINKS.ORIGIN_QR_CODE,
+		// 	onHandled: () => this.props.navigation.pop(2)
+		// });
+		this.props.navigation.navigate('PurchaseOrderDetails');
+	};
+
+	onScanQRTipRead = response => {
+		this.setState({ isScanQrTip: false });
+		const content = response.data;
+		if (
+			content &&
+			content.split('//') &&
+			content.split('//')[1] &&
+			content.split('//')[1].split('/') &&
+			content.split('//')[1].split('/')[1] === 'tip'
+		) {
+			const handledByDeeplink = SharedDeeplinkManager.parse(content, {
+				origin: AppConstants.DEEPLINKS.ORIGIN_QR_CODE,
+				onHandled: () => this.props.navigation.pop(2)
+			});
+
+			if (handledByDeeplink) {
+				this.mounted = false;
+				return;
+			}
+		}
+		showError(strings('manage_coin.scan_qr_tip_error_title'));
+	};
 
 	renderContent() {
 		return (
@@ -111,7 +97,7 @@ class ManageCoin extends PureComponent {
 						<StyledButton
 							containerStyle={styles.button}
 							type={'pink-padding'}
-							onPress={this.onPressCreate}
+							onPress={this.onScanQRToCollect}
 							testID={'create-wallet-button'}
 						>
 							{strings('manage_coin.scan_qr_to_collect').toUpperCase()}
@@ -120,7 +106,7 @@ class ManageCoin extends PureComponent {
 					<View style={styles.buttonWrapper}>
 						<StyledButton
 							type={'normal-padding'}
-							onPress={this.onPressImport}
+							onPress={this.onScanQRToPay}
 							testID={'import-wallet-import-from-seed-button'}
 							containerStyle={styles.button}
 						>
@@ -131,7 +117,7 @@ class ManageCoin extends PureComponent {
 						<StyledButton
 							containerStyle={styles.button}
 							type={'normal-padding'}
-							onPress={this.onPressSync}
+							onPress={this.onScanQRToTip}
 							testID={'onboarding-import-button'}
 						>
 							{strings('manage_coin.scan_qr_to_tip').toUpperCase()}
@@ -141,7 +127,7 @@ class ManageCoin extends PureComponent {
 						<StyledButton
 							containerStyle={styles.button}
 							type={'white-padding'}
-							onPress={this.onViewPartners}
+							onPress={this.onSendToFriend}
 							testID={'onboarding-import-button'}
 						>
 							{strings('manage_coin.send_to_friend').toUpperCase()}
@@ -153,31 +139,46 @@ class ManageCoin extends PureComponent {
 	}
 
 	render() {
-		const { loading } = this.props;
-		const { qrCodeModalVisible } = this.state;
-
+		const { isScanQrPay, isScanQrTip } = this.state;
 		return (
 			<View style={baseStyles.flexGrow} testID={'onboarding-screen'}>
 				<OnboardingScreenWithBg screen={'c'}>
-					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
+					<TrackingScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>{this.renderContent()}</View>
-					</ScrollView>
+					</TrackingScrollView>
 					<View style={styles.termsAndConditions}>
 						<TermsAndConditions navigation={this.props.navigation} />
 					</View>
+					<Modal visible={isScanQrPay}>
+						<QRScanner
+							onBarCodeRead={this.onScanQRPayRead}
+							onClose={() => {
+								this.setState({ isScanQrPay: false });
+							}}
+						/>
+					</Modal>
+					<Modal visible={isScanQrTip}>
+						<QRScanner
+							onBarCodeRead={this.onScanQRTipRead}
+							onClose={() => {
+								this.setState({ isScanQrTip: false });
+							}}
+						/>
+					</Modal>
 				</OnboardingScreenWithBg>
 			</View>
 		);
 	}
 }
-
 const mapStateToProps = state => ({
-	selectedAddress: state?.engine?.backgroundState?.PreferencesController?.selectedAddress,
-	accounts: state.engine.backgroundState.AccountTrackerController.accounts,
-	passwordSet: state.user.passwordSet,
-	keycloakAuth: state.user.keycloakAuth,
-	loading: state.user.loadingSet,
-	loadingMsg: state.user.loadingMsg
+	ticker: state.engine.backgroundState.NetworkController.provider.ticker
 });
 
-export default connect(mapStateToProps)(ManageCoin);
+const mapDispatchToProps = dispatch => ({
+	newAssetTransaction: selectedAsset => dispatch(newAssetTransaction(selectedAsset))
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ManageCoin);

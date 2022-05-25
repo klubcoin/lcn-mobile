@@ -5,13 +5,11 @@ import {
 	ActivityIndicator,
 	Text,
 	View,
-	TextInput,
 	SafeAreaView,
-	ScrollView,
-	Image
+	Image,
+	TouchableOpacity
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import routes from '../../../common/routes';
 import preferences from '../../../store/preferences';
@@ -40,6 +38,10 @@ import Api from '../../../services/api';
 import * as sha3JS from 'js-sha3';
 import { showError } from '../../../util/notify';
 import CryptoSignature from '../../../core/CryptoSignature';
+import TrackingTextInput from '../../UI/TrackingTextInput';
+import TrackingScrollView from '../../UI/TrackingScrollView';
+import ActionModal from '../../UI/ActionModal';
+import { BLOCK_TIME } from '../Settings/SecuritySettings';
 
 const CHANGE_EMAIL = 'change_email';
 const CONFIRM_PASSWORD = 'confirm_password';
@@ -92,7 +94,10 @@ class ChangeEmail extends PureComponent {
 		isCheckingEmail: false,
 		isValidEmail: false,
 		isLoading: false,
-		timeoutCheckUniqueEmail: null
+		timeoutCheckUniqueEmail: null,
+		isBlockedEmail: false,
+		blockEmailTime: 0,
+		blockTimerRemaning: ''
 	};
 
 	mounted = true;
@@ -115,6 +120,37 @@ class ChangeEmail extends PureComponent {
 		}, 100);
 	}
 
+	coundown = () => {
+		const { blockEmailTime } = this.state;
+		const startCoundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
+		let startHour = Math.floor(startCoundownTime / 3600000);
+		let startMinute = Math.floor((startCoundownTime % 3600000) / 60000);
+		let startSecond = Math.floor((startCoundownTime % 60000) / 1000);
+		this.setState({
+			blockTimerRemaning: `${startHour > 9 ? startHour : `0${startHour}`}:${
+				startMinute > 9 ? startMinute : `0${startMinute}`
+			}:${startSecond > 9 ? startSecond : `0${startSecond}`}`
+		});
+		this.intevalCoundown = setInterval(() => {
+			const coundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
+			let hour = Math.floor(coundownTime / 3600000);
+			let minute = Math.floor((coundownTime % 3600000) / 60000);
+			let second = Math.floor((coundownTime % 60000) / 1000);
+			this.setState({
+				blockTimerRemaning: `${hour > 9 ? hour : `0${hour}`}:${minute > 9 ? minute : `0${minute}`}:${
+					second > 9 ? second : `0${second}`
+				}`
+			});
+		}, 1000);
+	};
+
+	onHideEmailBlocked = () => {
+		this.setState({
+			isBlockedEmail: false
+		});
+		clearInterval(this.intevalCoundown);
+	};
+
 	componentDidUpdate(prevProps, prevState) {
 		const prevLoading = prevState.loading;
 		const { loading } = this.state;
@@ -132,19 +168,35 @@ class ChangeEmail extends PureComponent {
 	}
 
 	onPressUpdate = async () => {
+		const { email } = this.state;
 		this.setState({
 			isLoading: true
 		});
+		APIService.getOtpStatus(email, (success, json) => {
+			if (json?.attempts === '5') {
+				this.setState({
+					isLoading: false,
+					isBlockedEmail: true,
+					blockEmailTime: json.lastAttemptDate
+				});
+				this.coundown();
+				return;
+			}
+			this.onUpdateEmail();
+		});
+	};
+
+	onUpdateEmail = async () => {
 		const { identities } = Engine.state.PreferencesController;
 		const { selectedAddress } = this.props;
 		const username = renderAccountName(selectedAddress, identities);
+		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { firstname, lastname, phone } = preferences?.onboardProfile ?? {};
-		const name = `${firstname} ${lastname}`;
-		const publicInfo = JSON.stringify({ name });
+		const publicInfo = JSON.stringify({ firstname, lastname });
 		const privateInfo = JSON.stringify({ emailAddress: this.state.email, phoneNumber: phone });
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-		const signature = await CryptoSignature.signMessage(selectedAddress, publicInfo);
-		const params = [username, selectedAddress, signature, publicInfo, privateInfo];
+		const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
+		const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);
+		const params = [username, lowerCaseSelectedAddress, signature, publicInfo, privateInfo];
 		Api.postRequest(
 			routes.walletUpdate,
 			params,
@@ -229,25 +281,30 @@ class ChangeEmail extends PureComponent {
 			clearTimeout(this.timeoutCheckUniqueEmail);
 		}
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
-			APIService.checkUniqueFieldInWallet('email', val.trim(), this.state.selectedAddress, (success, json) => {
-				if (this.state.email.trim() !== val.trim()) {
-					this.setState({
-						isCheckingEmail: false
-					});
-					return;
+			APIService.checkUniqueFieldInWallet(
+				'email',
+				val.trim(),
+				this.state.selectedAddress.toLowerCase(),
+				(success, json) => {
+					if (this.state.email.trim() !== val.trim()) {
+						this.setState({
+							isCheckingEmail: false
+						});
+						return;
+					}
+					if (json === SUCCESS) {
+						this.setState({
+							isCheckingEmail: false,
+							isValidEmail: true
+						});
+					} else {
+						this.setState({
+							isCheckingEmail: false,
+							isValidEmail: false
+						});
+					}
 				}
-				if (json === SUCCESS) {
-					this.setState({
-						isCheckingEmail: false,
-						isValidEmail: true
-					});
-				} else {
-					this.setState({
-						isCheckingEmail: false,
-						isValidEmail: false
-					});
-				}
-			});
+			);
 		}, 2000);
 	};
 
@@ -260,7 +317,7 @@ class ChangeEmail extends PureComponent {
 
 	renderLoader = () => (
 		<View style={styles.loader}>
-			<ActivityIndicator size="small" color={'white'}  />
+			<ActivityIndicator size="small" color={'white'} />
 		</View>
 	);
 
@@ -287,7 +344,7 @@ class ChangeEmail extends PureComponent {
 								/>
 							) : (
 								<>
-									<TextInput
+									<TrackingTextInput
 										style={styles.confirm_input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}
@@ -320,13 +377,26 @@ class ChangeEmail extends PureComponent {
 	}
 
 	renderChangeEmail() {
-		const { email, error, loading, emailFocused, isCheckingEmail, isValidEmail, isLoading } = this.state;
+		const {
+			email,
+			error,
+			loading,
+			emailFocused,
+			isCheckingEmail,
+			isValidEmail,
+			isLoading,
+			isBlockedEmail,
+			blockEmailTime,
+			blockTimerRemaning
+		} = this.state;
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		let emailErrorText = '';
 		if (!!email && validator.isEmail(email) && !isCheckingEmail && !isValidEmail) {
 			emailErrorText = strings('profile.email_used');
-		} else if (emailFocused & !email) {
+		} else if (emailFocused && !email) {
 			emailErrorText = strings('profile.email_required');
+		} else if (emailFocused && !validator.isEmail(email)) {
+			emailErrorText = strings('profile.invalid_email');
 		}
 
 		return (
@@ -408,6 +478,34 @@ class ChangeEmail extends PureComponent {
 						</KeyboardAwareScrollView>
 					</View>
 				)}
+				<ActionModal
+					modalVisible={isBlockedEmail}
+					confirmText={strings('app_settings.ok').toUpperCase()}
+					onConfirmPress={this.onHideEmailBlocked}
+					onRequestClose={this.onHideEmailBlocked}
+					confirmButtonMode={'normal'}
+					displayCancelButton={false}
+					verticalButtons
+				>
+					<View style={styles.areYouSure}>
+						<TouchableOpacity
+							style={styles.closeModalButton}
+							activeOpacity={0.7}
+							onPress={this.onHideEmailBlocked}
+						>
+							<Icon name="close" style={styles.closeModalIcon} />
+						</TouchableOpacity>
+						<Icon style={styles.warningIcon} size={46} color={colors.red} name="exclamation-triangle" />
+						<Text style={styles.emailBlockedTitle}>
+							{strings('app_settings.email_verification_blocked')}
+						</Text>
+						<Text style={styles.emailBlockedContent}>
+							{strings('app_settings.email_verification_blocked_content')}
+						</Text>
+						<Text style={styles.emailBlockedCoundown}>{blockTimerRemaning}</Text>
+						<Text style={styles.emailBlockedRemaining}>{strings('app_settings.remaining')}</Text>
+					</View>
+				</ActionModal>
 			</SafeAreaView>
 		);
 	}
@@ -418,13 +516,13 @@ class ChangeEmail extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.mainWrapper}>
-					<ScrollView
+					<TrackingScrollView
 						contentContainerStyle={styles.scrollviewWrapper}
 						style={styles.mainWrapper}
 						testID={'account-backup-step-4-screen'}
 					>
 						{view === CHANGE_EMAIL ? this.renderChangeEmail() : this.renderConfirmPassword()}
-					</ScrollView>
+					</TrackingScrollView>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

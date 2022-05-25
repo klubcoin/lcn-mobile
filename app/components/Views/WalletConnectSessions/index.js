@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Alert, ScrollView, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
@@ -9,6 +9,7 @@ import ActionSheet from 'react-native-actionsheet';
 import WalletConnect from '../../../core/WalletConnect';
 import Logger from '../../../util/Logger';
 import { WALLETCONNECT_SESSIONS } from '../../../constants/storage';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -152,9 +153,9 @@ export default class WalletConnectSessions extends PureComponent {
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'wallet-connect-sessions-screen'}>
-				<ScrollView style={styles.wrapper} contentContainerStyle={styles.scrollviewContent}>
+				<TrackingScrollView style={styles.wrapper} contentContainerStyle={styles.scrollviewContent}>
 					{sessions.length ? this.renderSessions() : this.renderEmpty()}
-				</ScrollView>
+				</TrackingScrollView>
 				<ActionSheet
 					ref={this.createActionSheetRef}
 					title={strings('walletconnect_sessions.end_session_title')}

@@ -1,29 +1,35 @@
-import Toast from 'react-native-toast-message';
-import { strings } from '../../locales/i18n';
+import { NoticeType } from '../components/UI/NotifPopup';
 
-export function showSuccess(message) {
-	Toast.show({
-		type: 'success',
-		text1: message,
-		text2: strings('profile.notice'),
-		visibilityTime: 1000
+export function showSuccess(message, options) {
+	const { duration, onPress } = options || {};
+	notifRef().show({
+		onPress,
+		title: NoticeType.success,
+		body: message,
+		slideOutTime: duration || 1000,
 	});
 }
 
-export function showError(message, subMessage = strings('profile.notice')) {
-	Toast.show({
-		type: 'error',
-		text1: message,
-		text2: subMessage,
-		visibilityTime: 1000
+export function showError(message, options) {
+	const { duration, onPress } = options || {};
+	notifRef().show({
+		onPress,
+		title: NoticeType.error,
+		body: message,
+		slideOutTime: duration || 1000,
 	});
 }
 
-export function showInfo(message) {
-	Toast.show({
-		type: 'info',
-		text1: message,
-		text2: strings('profile.notice'),
-		visibilityTime: 1000
+export function showInfo(message, options) {
+	const { type, duration, onPress } = options || {};
+	notifRef().show({
+		onPress,
+		title: type || NoticeType.info,
+		body: message,
+		slideOutTime: duration || 1000,
 	});
 }
+
+const notifPopupState = { state: null };
+export const setNotifRef = (e) => notifPopupState.state = e;
+export const notifRef = () => notifPopupState.state;

@@ -216,6 +216,7 @@
 		"missing_name": "Name is missing",
 		"missing_surname": "Surname is missing",
 		"missing_phone": "Phone is missing",
+		"missing_country_code": "Country code is missing",
 		"missing_email": "Email is missing",
 		"email_used": "This email is already in use. Please enter another email!",
 		"name_required": "Name is required!",
@@ -730,7 +731,11 @@
 		"invalid_number_leading_zeros": "Invalid number. Remove any leading zeros.",
 		"invalid_number_range": "Invalid number. Enter a number between 1 and %{maxSafeChainId}",
 		"hide_zero_balance_tokens_title": "Hide Tokens Without Balance",
-		"hide_zero_balance_tokens_desc": "Prevents tokens with no balance from displaying in your token listing."
+		"hide_zero_balance_tokens_desc": "Prevents tokens with no balance from displaying in your token listing.",
+		"email_verification_blocked": "Email Verification Blocked",
+		"email_verification_blocked_content": "You're currently blocked on verifying your email due to exceeding maximum failed attempts. Please try again later.",
+		"remaining": "Remaining",
+		"ok": "OK"
 	},
 	"app_information": {
 		"title": "Information",
@@ -949,6 +954,8 @@
 		"continueError": "I understand the risks, continue",
 		"confusable_title": "Check the recipient address",
 		"confusable_msg": "We have detected a confusable character in the ENS name. Check the ENS name to avoid a potential scam.",
+		"unrecognized_token": "Unrecognized token.",
+		"error_decimal_amount": "Amount allowed is only up to 18 decimals.",
 		"can_not_send_same_account": "Can not send to the same account"
 	},
 	"custom_gas": {
@@ -1518,6 +1525,8 @@
 		"send": "Send",
 		"with_credit_card": "With Credit/Debit Card",
 		"base_from": "Fees vary based from {{typeText}}",
+		"error_decimal_amount": "Amount allowed is only up to 18 decimals.",
+		"invalid_amount": "Invalid amount",
 		"buy_with": "Buy {{displayName}} with {{typeText}}"
 	},
 	"receive_request": {
@@ -1861,10 +1870,11 @@
 		"not_found": "Media not found"
 	},
 	"chat": {
-		"user_is_typing": "{{name}} is typing...",
+		"user_is_typing": " is typing...",
 		"send_transaction": "Send a transaction",
 		"request_payment": "Request payment",
 		"send_file": "Send file",
+		"send_voice": "Send voice message",
 		"sent_transaction": "Sent transaction",
 		"received_transaction": "Received transaction",
 		"payment_request": "Payment request",
@@ -1875,7 +1885,14 @@
 		"video": "a video file",
 		"file": "a file",
 		"failed_to_send": "Failed to send",
-		"retry": "Retry"
+		"retry": "Retry",
+		"chat": "Chat",
+		"new_chat": "New Chat",
+		"to": "To :",
+		"search_desc": "Search, public address (0x), or ENS",
+		"chat_text": "Chat text...",
+		"send_message": "Send Message",
+		"recording_audio": "Recording Audio"
 	},
 	"market": {
 		"title": "Market",
@@ -2028,6 +2045,10 @@
 		"paid": "Paid",
 		"remain": "Remain",
 		"pay_rest": "Pay the rest",
+		"scan_qr_pay_error_title": "Ooops! something went wrong...",
+		"scan_qr_tip_error_title": "Unrecognized QR Code!",
+		"scan_qr_pay_error_message": "We couldn't resolve that QR. Please make sure it was created it correctly.",
+		"scan_qr_tip_error_message": "We couldn't resolve that QR. Please make sure it was created it correctly.",
 		"no_description": "No description"
 	},
 	"order": {
@@ -2038,24 +2059,99 @@
 		"canceled": "Canceled",
 		"refunded": "Refunded"
 	},
+	"trade": {
+		"trade_methods": "Trade Methods",
+		"trade_description": "Klub Coin does not offer direct trading, to trade your Klub Coin tokens you need to use one of our listing partner.",
+		"kucoin": "KuCoin",
+		"kucoin_description": "KuCoin is a secure exchange where you can trade Klub Coin",
+		"trade": "Trade",
+		"with": "with"
+	},
 	"tipper": {
 		"tipper": "Tipper",
 		"tip_link_desc1": "Your tip link is ready to send!",
-		"tip_link_desc2": "Put this link to your social media to get the tip",
+		"tip_link_desc2": "Share this link on your social medias to receive tips",
 		"tip_for": "Tip {{amount}} {{symbol}} for {{account}}",
 		"tip": "Tip",
 		"current_balance": "Your current balance: {{balance}}",
 		"enter_amount": "Enter The {{symbol}} tip you want to send:",
+		"send_qr_cdoe": "Send QR Code",
 		"tip_through_qr": "Get a tip through QR code"
 	},
 	"paypal_checkout": {
-		"buy_crypto": "Buy Crypto to your wallet",
+		"title": "PayPal Checkout",
+		"menu": "Menu",
+		"support": "Support",
+		"privacy_policy": "Privacy Policy",
+		"terms_of_service": "Terms of Service",
+		"buy_crypto": "Buy crypto to your wallet",
+		"buy_token_to_wallet": "Buy {{token}} to your wallet",
 		"using_payment_method": "Using payment method",
 		"paypal": "PayPal",
 		"see_calculation": "See calculation",
-		"receive_estimate": "Receive(estimate)",
+		"hide_calculation": "Hide calculation",
+		"paypal_fee": "PayPal fee",
+		"token_fee": "{{token}} fee",
+		"network_exchange_fee": "Network / Exchange fee",
+		"total_fees": "Total fees",
+		"rate": "Rate",
+		"receive_estimate": "You receive (estimate)",
 		"you_pay": "You pay",
-		"proceed_checkout": "Proceed Checkout"
+		"proceed_checkout": "Proceed to Checkout",
+		"token_wallet_address": "{{token}} WALLET ADDRESS",
+		"buy_token": "Buy {{token}}",
+		"order_details": "ORDER DETAILS",
+		"maximum_boundary_error_text": "Cannot enter more than {{value}}.",
+		"minimum_boundary_error_text": "Cannot enter less than {{value}}.",
+		"rate_info": "The floating rate shown here is an estimate and the rate you receive will be determined at the time when your payment is settled. The time taken for your payment can vary depending on currency and your PayPal account.",
+		"total": "Total"
+	},
+	"wyre_checkout": {
+		"title": "Wyre Checkout",
+		"wyre_payment": "Wyre Payment",
+		"or_pay_witth_card": "Or pay with card",
+		"email": "Email",
+		"card_infomation": "Card infomation",
+		"mm_yy": "MM / YY",
+		"cvc": "CVC",
+		"name_of_card": "Name of card",
+		"country_or_region": "Country or region",
+		"pay": "Pay",
+		"menu": "Menu",
+		"support": "Support",
+		"privacy_policy": "Privacy Policy",
+		"terms_of_service": "Terms of Service",
+		"buy_crypto": "Buy crypto to your wallet",
+		"buy_token_to_wallet": "Buy {{token}} to your wallet",
+		"using_payment_method": "Using payment method",
+		"wyre": "Wyre",
+		"see_calculation": "See calculation",
+		"hide_calculation": "Hide calculation",
+		"wyre_fee": "Wyre fee",
+		"token_fee": "{{token}} fee",
+		"network_exchange_fee": "Network / Exchange fee",
+		"total_fees": "Total fees",
+		"rate": "Rate",
+		"receive_estimate": "You receive (estimate)",
+		"you_pay": "You pay",
+		"proceed_checkout": "Proceed to Checkout",
+		"token_wallet_address": "{{token}} WALLET ADDRESS",
+		"buy_token": "Buy {{token}}",
+		"order_details": "ORDER DETAILS",
+		"maximum_boundary_error_text": "Cannot enter more than {{value}}.",
+		"minimum_boundary_error_text": "Cannot enter less than {{value}}.",
+		"rate_info": "The floating rate shown here is an estimate and the rate you receive will be determined at the time when your payment is settled. The time taken for your payment can vary depending on currency and your Wyre account.",
+		"total": "Total",
+		"missing_email": "Missing Email.",
+		"invalid_email": "Invalid Email.",
+		"missing_card_number": "Missing Card Number.",
+		"invalid_card_number": "Invalid Card Number.",
+		"missing_expired_date": "Missing Expired Date.",
+		"invalid_expired_date": "Invalid Expired Date.",
+		"missing_cvc": "Missing CVC.",
+		"invalid_cvc": "Invalid CVC.",
+		"missing_name_of_card": "Missing Name of Card.",
+		"missing_country_or_region": "Missing Country or Region."
 	},
 	"lock_modal": {
 		"title": "Authenticate to continue!"
@@ -2090,5 +2186,24 @@
 	"coming_soon": {
 		"coming_soon": "Coming Soon",
 		"stay_in_touch_with_us": "Stay in touch with us :"
+	},
+	"purchase_order_details": {
+		"title": "Purchase Order Details",
+		"amount_to_pay": "amount to pay",
+		"order_details": "order details",
+		"order_ref_no": "Order Ref. No.",
+		"amount": "Amount",
+		"token_fee": "{{token}} fee",
+		"total": "Total",
+		"order_placed_via": "Order placed via",
+		"pay_now": "Pay Now",
+		"cancel": "Cancel",
+		"successfull_purchase_order": "Successful Purchase Order",
+		"congratulations": "Congratulations",
+		"congratulations_detail_1": "You've successfully verified your Online Purchase Order and paid via {{symbol}}!",
+		"congratulations_detail_2": "You may visit more of our ",
+		"congratulations_detail_3": "Partners' Online Stores",
+		"congratulations_detail_4": " to purchase exclusive items using your {{symbol}} tokens!",
+		"done": "Done"
 	}
 }

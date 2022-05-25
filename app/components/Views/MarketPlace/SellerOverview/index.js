@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../../MarketPlace/store';
 import { menuKeys } from '../Drawer';
@@ -15,6 +15,7 @@ import AssetIcon from '../../../UI/AssetIcon';
 import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { showError } from '../../../../util/notify';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 class MarketSellerOverview extends PureComponent {
 	activeTab = 0;
@@ -122,7 +123,7 @@ class MarketSellerOverview extends PureComponent {
 		if (searchMode) return;
 
 		return (
-			<ScrollView style={styles.tabs} horizontal>
+			<TrackingScrollView style={styles.tabs} horizontal>
 				{categories.map((e, index) => {
 					const active = index == activeTab;
 					return (
@@ -136,7 +137,7 @@ class MarketSellerOverview extends PureComponent {
 						</TouchableOpacity>
 					);
 				})}
-			</ScrollView>
+			</TrackingScrollView>
 		);
 	}
 
@@ -255,9 +256,9 @@ class MarketSellerOverview extends PureComponent {
 						onPress={this.onViewFilter}
 					/>
 				</View>
-				<ScrollView style={styles.body} nestedScrollEnabled>
+				<TrackingScrollView style={styles.body} nestedScrollEnabled>
 					{this.renderCategory()}
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

@@ -2,13 +2,14 @@ import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react'
 import moment from 'moment';
-import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableOpacity, } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, } from 'react-native'
 import { strings } from '../../../../../locales/i18n';
 import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 import NavbarTitle from '../../../UI/NavbarTitle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 
 const styles = StyleSheet.create({
@@ -135,7 +136,7 @@ export class DelegationDetails extends PureComponent {
         enabled={Device.isIos()}
       >
         {this.renderNavBar()}
-        <ScrollView contentContainerStyle={{ paddingBottom: 80, }}>
+        <TrackingScrollView contentContainerStyle={{ paddingBottom: 80, }}>
           <Text style={styles.headingTitle}>{strings('voting.delegation')}</Text>
           <View style={styles.line} />
 
@@ -150,7 +151,7 @@ export class DelegationDetails extends PureComponent {
 
           <Text style={styles.heading}>{strings('voting.to')}</Text>
           <Text style={styles.content}>{this.toDate}</Text>
-        </ScrollView>
+        </TrackingScrollView>
       </KeyboardAvoidingView>
     );
   }

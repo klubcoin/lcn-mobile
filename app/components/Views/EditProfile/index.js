@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
 	KeyboardAvoidingView,
-	ScrollView,
 	TouchableOpacity,
 	View,
 	Text,
@@ -41,8 +40,9 @@ import emojiRegex from 'emoji-regex';
 import APIService from '../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
-import { SUCCESS, ALREADY_EXISTS } from '../ProfileOnboard';
+import { SUCCESS } from '../ProfileOnboard';
 import CryptoSignature from '../../../core/CryptoSignature';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 export const REGEX_PHONE_NUMBER = /^[\d]{4,13}$/;
 
@@ -67,13 +67,19 @@ class EditProfile extends PureComponent {
 	preData = {
 		phone: '',
 		countryCode: '',
-		email: ''
+		phoneNumber: '',
+		email: '',
+		firstname: '',
+		lastname: ''
 	};
 	timeoutCheckUniqueEmail = null;
 	isValidEmail = true;
 	isValidPhoneNumber = true;
 	isCheckingEmail = false;
 	isChangedAvatar = false;
+	nameErrorText = '';
+	surnameErrorText = '';
+	phoneErrorText = '';
 
 	constructor(props) {
 		super(props);
@@ -96,7 +102,10 @@ class EditProfile extends PureComponent {
 			isValidEmail: observable,
 			isValidPhoneNumber: observable,
 			isCheckingEmail: observable,
-			isChangedAvatar: observable
+			isChangedAvatar: observable,
+			nameErrorText: observable,
+			surnameErrorText: observable,
+			phoneErrorText: observable
 		});
 	}
 
@@ -123,10 +132,48 @@ class EditProfile extends PureComponent {
 				.slice(1, phone?.split('-').length)
 				.join('-'),
 			countryCode: phone?.replace('+', '').split('-')[0],
+			phoneNumber: phone,
 			email,
 			firstname,
 			lastname
 		};
+	}
+	componentDidUpdate() {
+		this.updateProfile();
+	}
+
+	updateProfile() {
+		const { firstname, lastname, email, phone } = preferences?.onboardProfile ?? {};
+		if (
+			!this.isChangeProfile &&
+			(firstname !== this.preData.firstname ||
+				lastname !== this.preData.lastname ||
+				email !== this.preData.email ||
+				phone !== this.preData.phoneNumber)
+		) {
+			this.firstname = firstname;
+			this.lastname = lastname;
+			this.email = email;
+			this.countryCode = phone?.replace('+', '').split('-')[0];
+			this.phone =
+				phone
+					?.replace('+', '')
+					.split('-')
+					.slice(1, phone?.split('-').length)
+					.join('-') ?? undefined;
+			this.preData = {
+				phone: phone
+					?.replace('+', '')
+					.split('-')
+					.slice(1, phone?.split('-').length)
+					.join('-'),
+				countryCode: phone?.replace('+', '').split('-')[0],
+				phoneNumber: phone,
+				email,
+				firstname,
+				lastname
+			};
+		}
 	}
 
 	onEmailChange = val => {
@@ -162,11 +209,22 @@ class EditProfile extends PureComponent {
 
 	onPhoneNumberChange = (countryCode, phoneNumber) => {
 		this.phone = phoneNumber;
-		if (!REGEX_PHONE_NUMBER.test(phoneNumber)) {
+		this.onCheckPhoneNumberError();
+		if (!REGEX_PHONE_NUMBER.test(phoneNumber) || !this.countryCode) {
 			this.isValidPhoneNumber = false;
 			return;
 		}
 		this.isValidPhoneNumber = true;
+	};
+
+	onCheckPhoneNumberError = () => {
+		this.phoneErrorText = !this.countryCode
+			? strings('profile.missing_country_code')
+			: !this.phone
+			? strings('profile.missing_phone')
+			: !REGEX_PHONE_NUMBER.test(this.phone)
+			? strings('profile.invalid_phone')
+			: '';
 	};
 
 	onPickImage() {
@@ -387,13 +445,13 @@ class EditProfile extends PureComponent {
 				this.time = new Date();
 			}
 
-			const name = `${firstname} ${lastname}`;
+			const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 			// const avatarb64 = await RNFS.readFile(path, 'base64');
-			const publicInfo = JSON.stringify({ name });
+			const publicInfo = JSON.stringify({ firstname, lastname });
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
-			const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo);
-			const signature = await CryptoSignature.signMessage(selectedAddress, publicInfo);
-			const params = [username, selectedAddress, signature, publicInfo, privateInfo];
+			const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
+			const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);
+			const params = [username, lowerCaseSelectedAddress, signature, publicInfo, privateInfo];
 			//Update wallet info on server
 			Api.postRequest(
 				routes.walletUpdate,
@@ -449,10 +507,11 @@ class EditProfile extends PureComponent {
 			this.preData.email !== this.email ||
 			this.preData.firstname !== this.firstname ||
 			this.preData.lastname !== this.lastname;
+
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
-					<ScrollView>
+					<TrackingScrollView>
 						<View style={styles.body}>
 							<TouchableOpacity
 								activeOpacity={0.5}
@@ -486,6 +545,13 @@ class EditProfile extends PureComponent {
 									placeholder={strings('profile.name')}
 									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
+									onBlur={() => {
+										this.nameErrorText = !this.firstname ? strings('profile.name_required') : '';
+									}}
+									onFocus={() => {
+										this.nameErrorText = '';
+									}}
+									errorText={this.nameErrorText}
 								/>
 								<TextField
 									value={this.lastname}
@@ -493,6 +559,15 @@ class EditProfile extends PureComponent {
 									placeholder={strings('profile.surname')}
 									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
 									autoCapitalize={'words'}
+									onBlur={() => {
+										this.surnameErrorText = !this.lastname
+											? strings('profile.surname_required')
+											: '';
+									}}
+									onFocus={() => {
+										this.surnameErrorText = '';
+									}}
+									errorText={this.surnameErrorText}
 								/>
 								<TextField
 									value={this.email}
@@ -523,11 +598,11 @@ class EditProfile extends PureComponent {
 									label={strings('profile.phone')}
 									placeholder={strings('profile.phone')}
 									onChangeText={text => {
+										this.onPhoneNumberChange(this.countryCode, text);
 										if (!this.countryCode) {
 											showError(strings('profile.select_country_code_first'));
 											return;
 										}
-										this.onPhoneNumberChange(this.countryCode, text);
 									}}
 									keyboardType="number-pad"
 									countryCode={this.countryCode}
@@ -536,6 +611,7 @@ class EditProfile extends PureComponent {
 										if (!this.countryCode) {
 											showError(strings('profile.select_country_code_first'));
 										}
+										this.phoneErrorText = '';
 									}}
 									rightItem={
 										this.phone || this.countryCode ? (
@@ -546,7 +622,9 @@ class EditProfile extends PureComponent {
 											)
 										) : null
 									}
+									onBlur={this.onCheckPhoneNumberError}
 								/>
+								{!!this.phoneErrorText && <Text style={styles.errorText}>{this.phoneErrorText}</Text>}
 							</View>
 							<StyledButton
 								type={'white'}
@@ -556,13 +634,15 @@ class EditProfile extends PureComponent {
 									this.isLoading ||
 									!this.isValidEmail ||
 									!this.isValidPhoneNumber ||
-									!isChangedProfile
+									!isChangedProfile ||
+									!this.firstname ||
+									!this.lastname
 								}
 							>
 								{strings('wallet.update_profile').toUpperCase()}
 							</StyledButton>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					{this.showCountryCodePicker && (
 						<CountrySearchModal
 							placeholder={strings('profile.search')}

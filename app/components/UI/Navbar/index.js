@@ -207,6 +207,40 @@ export function getPaymentRequestOptionsTitle(title, navigation) {
 	};
 }
 
+export function getTipRequestOptionsTitle(navigation) {
+	const goBack = navigation.getParam('dispatch', undefined);
+	return {
+		headerTitleStyle: {
+			fontSize: 20,
+			color: colors.black,
+			...fontStyles.normal
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Image
+					source={klubcoin_text}
+					style={styles.metamaskName}
+					resizeMethod={'auto'}
+					resizeMode={'contain'}
+				/>
+			</View>
+		),
+		headerTintColor: colors.blue,
+		headerLeft: goBack ? (
+			<TouchableOpacity onPress={goBack} style={styles.backButton} testID={'request-search-asset-back-button'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		) : (
+			<TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		),
+		headerStyle: {
+			backgroundColor: colors.white
+		}
+	};
+}
+
 /**
  * Function that returns the navigation options
  * This is used by payment request view showing close button
@@ -466,8 +500,64 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 	};
 }
 
-export function getOnboardingWithoutBackNavbarOptions(navigation) {
+export function geChatListNavbarOptions(navigation) {
+	const navigationPop = () => navigation.pop();
 
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			// marginTop: Device.isIos() ? 20 : 0,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Image
+					source={klubcoin_text}
+					style={styles.metamaskName}
+					resizeMethod={'auto'}
+					resizeMode={'contain'}
+				/>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
+	};
+}
+
+export function geChatNavbarOptions(navigation) {
+	const navigationBack = () => navigation.navigate('ChatList');
+
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			// marginTop: Device.isIos() ? 20 : 0,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Text style={styles.header}>{strings('chat.chat')}</Text>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		headerLeft: (
+			<TouchableOpacity onPress={navigationBack} style={styles.backButton} testID={'nav-android-back'}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
+	};
+}
+
+export function getOnboardingWithoutBackNavbarOptions(navigation) {
 	return {
 		headerStyle: {
 			shadowColor: colors.transparent,
@@ -584,9 +674,7 @@ export function getComingSoonNavbarOptions(navigation) {
 			shadowColor: colors.white,
 			elevation: 0,
 			backgroundColor: colors.white,
-			borderBottomWidth: 0,
-			height: 50,
-			marginTop: 20
+			borderBottomWidth: 0
 		},
 		headerTitle: (
 			<View style={styles.optinHeaderLeft}>
@@ -744,6 +832,14 @@ export function getWalletNavbarOptions(title, navigation) {
 	};
 }
 
+export function getPurchaseOrderDetailsNavbarOptions(title, navigation) {
+	return {
+		headerTitle: <NavbarTitle title={title} />,
+		headerLeft: <View />,
+		headerRight: <View />
+	};
+}
+
 /**
  * Function that returns the navigation options containing title and network indicator
  *
@@ -825,21 +921,33 @@ export function getPaymentSelectorMethodNavbar(navigation) {
 }
 
 export function getPayPalNavbar(navigation) {
-	const rightAction = navigation.dismiss;
+	const rightAction = () => navigation.goBack();
 
 	return {
-		headerTitle: <Text style={styles.centeredTitle}>PayPal Checkout</Text>,
+		headerTitle: <Text style={styles.centeredTitle}>{strings('paypal_checkout.title')}</Text>,
 		headerLeft: (
 			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
-				<Icon name={'arrow-left'} size={16} color={colors.black} />
+				<Icon name={'arrow-left'} size={16} color={colors.black} style={styles.backIcon} />
 			</TouchableOpacity>
 		),
-		// headerRight: (
-		// 	// eslint-disable-next-line react/jsx-no-bind
-		// 	<TouchableOpacity onPress={rightAction} style={styles.closeButton}>
-		// 		<Text style={styles.closeButtonText}>{strings('navigation.cancel')}</Text>
-		// 	</TouchableOpacity>
-		// ),
+		headerRight: <View />,
+		headerStyle: {
+			backgroundColor: colors.white
+		}
+	};
+}
+
+export function getWyreNavbar(navigation) {
+	const rightAction = () => navigation.goBack();
+
+	return {
+		headerTitle: <Text style={styles.centeredTitle}>{strings('wyre_checkout.title')}</Text>,
+		headerLeft: (
+			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} color={colors.black} style={styles.backIcon} />
+			</TouchableOpacity>
+		),
+		headerRight: <View />,
 		headerStyle: {
 			backgroundColor: colors.white
 		}
@@ -863,6 +971,23 @@ export function getPurchaseMethodNavbar(navigation) {
 			// </TouchableOpacity>
 			<View />
 		),
+		headerStyle: {
+			backgroundColor: colors.white
+		}
+	};
+}
+
+export function getTradeNavbar(navigation) {
+	const rightAction = navigation.dismiss;
+
+	return {
+		headerTitle: <Text style={[styles.centeredTitle]}>{strings('trade.trade_methods')}</Text>,
+		headerLeft: (
+			<TouchableOpacity onPress={rightAction} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} color={colors.white} style={styles.backIcon} />
+			</TouchableOpacity>
+		),
+		headerRight: <View />,
 		headerStyle: {
 			backgroundColor: colors.white
 		}

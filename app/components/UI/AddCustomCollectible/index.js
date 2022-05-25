@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Alert, Text, TextInput, View, StyleSheet } from 'react-native';
-import { colors, fontStyles } from '../../../styles/common';
+import { Alert, Text, View } from 'react-native';
+import { colors } from '../../../styles/common';
 import Engine from '../../../core/Engine';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import AnalyticsV2 from '../../../util/analyticsV2';
 import { toLowerCaseCompare } from '../../../util/general';
 import styles from './styles/index';
+import TrackingTextInput from '../TrackingTextInput';
 
 /**
  * PureComponent that provides ability to add custom collectibles.
@@ -171,7 +172,7 @@ class AddCustomCollectible extends PureComponent {
 					<View>
 						<View style={styles.rowWrapper}>
 							<Text style={styles.label}>{strings('collectible.collectible_address')}</Text>
-							<TextInput
+							<TrackingTextInput
 								style={[
 									styles.textInput,
 									this.state.inputWidth ? { width: this.state.inputWidth } : {}
@@ -190,7 +191,7 @@ class AddCustomCollectible extends PureComponent {
 						</View>
 						<View style={styles.rowWrapper}>
 							<Text style={styles.label}>{strings('collectible.collectible_token_id')}</Text>
-							<TextInput
+							<TrackingTextInput
 								style={[
 									styles.textInput,
 									this.state.inputWidth ? { width: this.state.inputWidth } : {}

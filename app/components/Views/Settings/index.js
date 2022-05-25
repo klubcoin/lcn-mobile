@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { StyleSheet, ScrollView, InteractionManager } from 'react-native';
+import { StyleSheet, InteractionManager } from 'react-native';
 import SettingsDrawer from '../../UI/SettingsDrawer';
 import { colors } from '../../../styles/common';
 import { getClosableNavigationOptions } from '../../UI/Navbar';
@@ -10,6 +10,7 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { connect } from 'react-redux';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { displayName } from '../../../../app.json';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -78,7 +79,7 @@ class Settings extends PureComponent {
 		const { seedphraseBackedUp } = this.props;
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView style={styles.wrapper}>
+				<TrackingScrollView style={styles.wrapper}>
 					<SettingsDrawer
 						description={strings('app_settings.general_desc')}
 						onPress={this.onPressGeneral}
@@ -114,7 +115,7 @@ class Settings extends PureComponent {
 						title={strings('app_settings.info_title', { appName: displayName })}
 						onPress={this.onPressInfo}
 					/>
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	};

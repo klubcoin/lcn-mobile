@@ -17,11 +17,11 @@ const brandStyles = StyleSheet.create({
 	container: {
 		backgroundColor: colors.purple,
 		borderWidth: 0,
-		borderRadius:12
+		borderRadius: 12
 	},
 	input: {
-		backgroundColor: colors.grey,
-		color: colors.white
+		color: colors.white,
+		backgroundColor: colors.transparent
 	},
 	eth: {
 		color: colors.white
@@ -34,6 +34,16 @@ const brandStyles = StyleSheet.create({
 	},
 	currencySymbolSmall: {
 		color: colors.white
+	},
+	errorWrapper: {
+		padding: 16,
+		justifyContent: 'flex-start',
+		borderColor: colors.red,
+		borderWidth: 1
+	},
+	errorText: {
+		alignSelf: 'flex-start',
+		color: colors.red
 	}
 });
 

@@ -1,28 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { PureComponent } from 'react';
-import {
-	RefreshControl,
-	ScrollView,
-	InteractionManager,
-	ActivityIndicator,
-	Text,
-	View,
-	TouchableOpacity
-} from 'react-native';
+import { RefreshControl, InteractionManager, ActivityIndicator, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { colors, baseStyles } from '../../../styles/common';
 import { stripHexPrefix } from 'ethereumjs-util';
 import { getWalletNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
-import {
-	weiToFiat,
-	hexToBN,
-	BNToHex,
-	renderFromTokenMinimalUnitNumber,
-	fromTokenMinimalUnit,
-	sumFloat,
-	fromWei
-} from '../../../util/number';
+import { weiToFiat, hexToBN, BNToHex, sumFloat, fromWei } from '../../../util/number';
 import Engine from '../../../core/Engine';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -36,39 +21,29 @@ import APIService from '../../../services/APIService';
 import { setOnlinePeerWallets } from '../../../actions/contacts';
 import messageStore from '../Message/store';
 import preferences from '../../../store/preferences';
-import Device from '../../../util/Device';
 import styles from './styles/index';
 import CustomTabBar from '../../UI/CustomTabBar';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { LineChart } from 'react-native-chart-kit';
 import routes from '../../../common/routes';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Erc20Service from '../../../core/Erc20Service';
 import CryptoSignature from '../../../core/CryptoSignature';
+import { Chart, VerticalAxis, HorizontalAxis, Line, Area } from 'react-native-responsive-linechart';
+import moment from 'moment';
+import infuraCurrencies from '../../../util/infura-conversion.json';
+import Modal from 'react-native-modal';
+import BigNumber from 'bignumber.js';
+import TrackingScrollView from '../../UI/TrackingScrollView';
+
 /**
  * Main view for the wallet
  */
 
 // TODO: Remove this hardcode data.
-const DummyData = [
-	10 * 100,
-	20 * 100,
-	40 * 100,
-	40 * 100,
-	40 * 100,
-	14 * 100,
-	40 * 100,
-	40 * 100,
-	40 * 100,
-	50 * 100,
-	40 * 100,
-	100 * 100,
-	40 * 100,
-	40 * 100
-];
-const CurrenIndex = 5;
+
 export const SIGN_KEY = '0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7';
 
+const timeline = ['1d', '1w', '1m', '6m', '1y', 'all'];
 class Dashboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getWalletNavbarOptions('dashboard.title', navigation);
 
@@ -118,7 +93,13 @@ class Dashboard extends PureComponent {
 	state = {
 		refreshing: false,
 		currentConversion: null,
-		totalToken: 0
+		totalToken: 0,
+		chartData: [],
+		selectedTimeline: '1d',
+		selectedCurrency: '',
+		isChangeCurrency: false,
+		totalBalance: '0',
+		isFetchingChartData: false
 	};
 
 	accountOverviewRef = React.createRef();
@@ -127,9 +108,15 @@ class Dashboard extends PureComponent {
 
 	fetchTotalTokens() {
 		const accounts = this.getAccounts();
-		let totalToken = '0';
+		let totalToken = '';
 		for (let account of accounts) {
 			totalToken = sumFloat(totalToken, account?.balance ? fromWei(hexToBN(account?.balance)) : '0');
+		}
+		const { chartData, isFetchingChartData } = this.state;
+		if (chartData && chartData.length > 0 && !isFetchingChartData) {
+			const bigNumberTotalToken = new BigNumber(totalToken);
+			const totalBalance = bigNumberTotalToken.multipliedBy(chartData[chartData.length - 1].value);
+			this.setState({ totalBalance });
 		}
 		this.setState({
 			totalToken
@@ -141,11 +128,18 @@ class Dashboard extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		this.clearBalanceInterval();
+		this.mounted = false;
+		this.clearIntervals();
+		this.focusListener.remove();
 	}
 
-	clearBalanceInterval = () => {
-		if (this.pollTokens) clearInterval(this.pollTokens);
+	clearIntervals = () => {
+		if (this.pollTokens) {
+			clearInterval(this.pollTokens);
+		}
+		if (this.pollWalletInfo) {
+			clearInterval(this.pollWalletInfo);
+		}
 	};
 
 	pollTokenBalances = async () => {
@@ -158,9 +152,10 @@ class Dashboard extends PureComponent {
 					if (accounts[accountAddress].balance !== BNToHex(balance)) {
 						accounts[accountAddress].balance = BNToHex(balance);
 					}
-				}).then(()=>{
-					if(index===Object.keys(accounts).length-1){
-						this.fetchTotalTokens()
+				})
+				.then(() => {
+					if (index === Object.keys(accounts).length - 1) {
+						this.fetchTotalTokens();
 					}
 				})
 				.catch(err => console.error(err));
@@ -199,7 +194,46 @@ class Dashboard extends PureComponent {
 		}
 	}
 
+	featchChartData = (selectCurrency, selectedTimeline) => {
+		const toDate = new Date();
+		let fromDate = null;
+		switch (selectedTimeline) {
+			case '1d':
+				fromDate = new Date(moment().subtract(1, 'days'));
+				break;
+			case '1w':
+				fromDate = new Date(moment().subtract(7, 'days'));
+				break;
+			case '1m':
+				fromDate = new Date(moment().subtract(1, 'months'));
+				break;
+			case '6m':
+				fromDate = new Date(moment().subtract(6, 'months'));
+				break;
+			case '1y':
+				fromDate = new Date(moment().subtract(1, 'years'));
+				break;
+			case 'all':
+				fromDate = new Date(moment().subtract(100, 'years'));
+				break;
+			default: {
+				fromDate = new Date(moment().subtract(7, 'days'));
+				break;
+			}
+		}
+		APIService.getChartData('KLC', selectCurrency.toUpperCase(), fromDate, toDate, (success, json) => {
+			if (success && json?.data) {
+				this.setState({ chartData: json.data, isFetchingChartData: false });
+			}
+		});
+	};
+
 	componentDidMount = () => {
+		const { currentCurrency } = this.props;
+		const { selectedTimeline } = this.state;
+		this.setState({
+			selectedCurrency: currentCurrency
+		});
 		messageStore.setActiveChatPeerId(null);
 		requestAnimationFrame(async () => {
 			const { AssetsDetectionController, AccountTrackerController } = Engine.context;
@@ -213,7 +247,20 @@ class Dashboard extends PureComponent {
 		this.announceOnline();
 		this.addDefaultToken();
 		this.addDefaultRpcList();
+		this.featchChartData(currentCurrency, selectedTimeline);
 		this.pollTokens = setInterval(() => this.pollTokenBalances(), 1000);
+		this.pollWalletInfo = setInterval(() => this.getWalletInfo(), 10000);
+		this.focusListener = this.props.navigation.addListener('didFocus', () => {
+			const { currentCurrency: newCurrentCurrency } = this.props;
+			const { selectedTimeline: newSelectedTimeline, selectedCurrency } = this.state;
+			if (selectedCurrency !== newCurrentCurrency) {
+				this.setState({
+					selectedCurrency: newCurrentCurrency,
+					isFetchingChartData: true
+				});
+				this.featchChartData(newCurrentCurrency, newSelectedTimeline);
+			}
+		});
 	};
 
 	announceOnline() {
@@ -255,33 +302,41 @@ class Dashboard extends PureComponent {
 	async getWalletInfo() {
 		const accounts = this.getAccounts();
 		const selectedAddress = accounts[0].address;
+		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { PreferencesController } = Engine.context;
-		const message = `walletInfo,${selectedAddress},${new Date().getTime()}`;
-		const sign = await CryptoSignature.signStringMessage(selectedAddress, message)
+		const message = `walletInfo,${lowerCaseSelectedAddress},${new Date().getTime()}`;
+		const sign = await CryptoSignature.signStringMessage(lowerCaseSelectedAddress, message);
 		API.postRequest(
 			Routes.walletInfo,
-			[selectedAddress, sign, message],
+			[lowerCaseSelectedAddress, sign, message],
 			response => {
 				if (response.result) {
 					const { name } = response.result;
 
-					const { name: name2 } = response.result?.publicInfo ? JSON.parse(response.result?.publicInfo) : {};
+					const { firstname, lastname, name: name2 } = response.result?.publicInfo
+						? JSON.parse(response.result?.publicInfo)
+						: {};
 					const { emailAddress, phoneNumber } = response.result?.privateInfo
 						? JSON.parse(response.result?.privateInfo)
 						: {};
+					const currentFirstname = firstname ? firstname : name2 ? name2.split(' ')[0] : '';
+					const currentLastname = lastname
+						? lastname
+						: name2
+						? name2
+								.split(' ')
+								.slice(1, name2.split(' ').length)
+								.join(' ')
+						: '';
+
 					PreferencesController.setAccountLabel(selectedAddress, name);
 					preferences
 						.getOnboardProfile()
 						.then(value => {
 							preferences.setOnboardProfile(
 								Object.assign(value, {
-									firstname: name2 ? name2.split(' ')[0] : '',
-									lastname: name2
-										? name2
-												.split(' ')
-												.slice(1, name2.split(' ').length)
-												.join(' ')
-										: '',
+									firstname: currentFirstname,
+									lastname: currentLastname,
 									email: emailAddress?.value,
 									phone: phoneNumber?.value,
 									emailVerified: emailAddress?.verified === 'true',
@@ -297,6 +352,33 @@ class Dashboard extends PureComponent {
 			}
 		);
 	}
+
+	onCloseModal = () => {
+		this.setState({ isChangeCurrency: false });
+	};
+
+	sortedCurrencies = infuraCurrencies.objects.sort((a, b) =>
+		a.quote.code.toLocaleLowerCase().localeCompare(b.quote.code.toLocaleLowerCase())
+	);
+
+	infuraCurrencyOptions = this.sortedCurrencies.map(({ quote: { code, name, symbol } }) => ({
+		label: `${code.toUpperCase()} - ${name}`,
+		key: code,
+		value: code,
+		symbol
+	}));
+
+	onChangeCurrency = currency => {
+		const { selectedTimeline } = this.state;
+		this.setState({ selectedCurrency: currency, isChangeCurrency: false, isFetchingChartData: true });
+		this.featchChartData(currency, selectedTimeline);
+	};
+
+	onChangeTimeline = timeline => {
+		const { selectedCurrency } = this.state;
+		this.setState({ selectedTimeline: timeline, isFetchingChartData: true });
+		this.featchChartData(selectedCurrency, timeline);
+	};
 
 	getCurrentConversion = () => {
 		API.getRequest(
@@ -368,10 +450,6 @@ class Dashboard extends PureComponent {
 		// // }
 	};
 
-	componentWillUnmount() {
-		this.mounted = false;
-	}
-
 	renderTabBar() {
 		return (
 			<CustomTabBar
@@ -407,6 +485,117 @@ class Dashboard extends PureComponent {
 		);
 	};
 
+	renderChart = () => {
+		const { chartData, selectedCurrency } = this.state;
+		if (!chartData || chartData.length === 0) return;
+		const data = chartData.map(e => ({ x: e.timestamp, y: e.value }));
+		const minY = Math.min(...data.map(e => e.y));
+		const maxY = Math.max(...data.map(e => e.y));
+		const CustomTooltip = props => {
+			const { position, value: valueData } = props;
+			const { x, y } = position;
+			const { x: timestamp, y: value } = valueData;
+			return (
+				<>
+					<View style={[styles.dataPointVerticalContainer, { left: x + 20 }]}>
+						<View style={styles.dataPointVerticalWrapper}>
+							<View style={styles.dataPointVerticalDasher} />
+						</View>
+					</View>
+					<View style={[styles.dataPointWrapper, { top: y + 14, left: x + 14 }]}>
+						<Icon name="circle-o" style={styles.dataPointIcon} />
+					</View>
+					<View
+						style={[
+							styles.dataViewWrapper,
+							{
+								top: y > 80 ? y - 80 : y + 40,
+								left: x > 135 ? x - 135 : x
+							}
+						]}
+					>
+						<Text style={styles.dataViewTime}>{moment(timestamp).format('MMMM DD, YYYY hh:mm A')}</Text>
+						<View style={styles.dataViewBalanceWrapper}>
+							<Text style={styles.dataViewBalance}>{`${selectedCurrency.toUpperCase()} / ${
+								Routes.klubToken.symbol
+							}`}</Text>
+							<Text style={styles.dataViewValue}>{`${
+								this.infuraCurrencyOptions.find(e => e.key === selectedCurrency)?.symbol
+							} ${value}`}</Text>
+						</View>
+					</View>
+				</>
+			);
+		};
+		return (
+			<Chart
+				style={{ width: '100%', height: 260 }}
+				xDomain={{
+					min: Math.min(...data.map(e => e.x)),
+					max: Math.max(...data.map(e => e.x))
+				}}
+				yDomain={{
+					min: minY,
+					max: maxY
+				}}
+				config={{
+					insetY: 10
+				}}
+				padding={{ left: 20, bottom: 20, top: 20 }}
+			>
+				<VerticalAxis
+					tickCount={10}
+					theme={{
+						axis: { visible: false },
+						ticks: { visible: false },
+						grid: {
+							stroke: {
+								color: colors.white000,
+								dashArray: [8]
+							}
+						},
+						labels: { visible: false }
+					}}
+				/>
+				<HorizontalAxis
+					tickCount={15}
+					theme={{
+						axis: { visible: false },
+						ticks: { visible: false },
+						grid: {
+							stroke: {
+								color: colors.white000,
+								dashArray: [8]
+							}
+						},
+						labels: { visible: false }
+					}}
+				/>
+				<Line
+					data={data}
+					smoothing="cubic-spline"
+					theme={{
+						stroke: {
+							color: colors.blue,
+							width: 2
+						}
+					}}
+					tooltipComponent={<CustomTooltip />}
+				/>
+				<Area
+					data={data}
+					smoothing="cubic-spline"
+					theme={{
+						gradient: {
+							from: { color: colors.blue, opacity: 0.5 },
+							to: { color: colors.blue, opacity: 0 }
+						}
+					}}
+				/>
+			</Chart>
+		);
+	};
+
 	renderContent() {
 		const {
 			accounts,
@@ -420,7 +609,15 @@ class Dashboard extends PureComponent {
 			ticker
 		} = this.props;
 
-		const { currentConversion } = this.state;
+		const {
+			currentConversion,
+			selectedTimeline,
+			selectedCurrency,
+			isChangeCurrency,
+			chartData,
+			totalBalance,
+			isFetchingChartData
+		} = this.state;
 		//TODO: need to remove fixed code for TIPPER app
 		const tipper = {
 			image:
@@ -447,7 +644,6 @@ class Dashboard extends PureComponent {
 				name: 'Tipper',
 				uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
 			},
-			name: 'Tipper',
 			uuid: '8a61a394-7813-4046-9797-ee8016b1356d-test'
 		};
 
@@ -495,74 +691,84 @@ class Dashboard extends PureComponent {
 						</View>
 					</View>
 
-					<View style={[styles.card, { marginRight: 0 }]}>
+					<View style={styles.totalBalanceCard}>
 						<View style={styles.row}>
 							<Text style={styles.cardTitle}>{strings('watch_asset_request.balance')}</Text>
-							{/* <Text style={styles.extraCardTitle}>+2,4%</Text> */}
+							{chartData && chartData.length !== 0 && (
+								<Text style={styles.extraCardTitle}>{`${
+									chartData[chartData.length - 1].percentChange
+								}%`}</Text>
+							)}
 						</View>
 						<View style={[styles.cardContent, styles.row]}>
-							{/* <Text style={[styles.balance, { paddingRight: 15 }]}>
-                                $100,000,000
-                            </Text>
-                            <Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} /> */}
+							<Text style={styles.totalBalanceText}>{`${
+								this.infuraCurrencyOptions.find(e => e.key === selectedCurrency)?.symbol
+							}${totalBalance}`}</Text>
+							<TouchableOpacity
+								style={styles.arrowIconButton}
+								activeOpacity={0.7}
+								onPress={() => {
+									this.setState({
+										isChangeCurrency: true
+									});
+								}}
+							>
+								<Icon name="chevron-down" size={12} color={colors.white} style={styles.arrowIcon} />
+							</TouchableOpacity>
 							{/* <Text style={styles.comingSoon}>{balanceFiat}</Text> */}
-							<Text style={styles.comingSoon}>{strings('coming_soon.coming_soon')}</Text>
+							{/* <Text style={styles.comingSoon}>{strings('coming_soon.coming_soon')}</Text> */}
 						</View>
 					</View>
 				</View>
 
-				{/* Chart */}
 				{this.renderTitle(strings('dashboard.chart'))}
 
 				{/* //TODO: Wait to implement API for real data and feature */}
-				<View style={styles.chartBox}>
-					<Text style={styles.comingSoon}>{strings('receive_request.coming_soon')}</Text>
-					{/* <LineChart
-						onDataPointClick={({ index, dateSet }) => {
-							console.log(
-								'🚀 ~ file: index.js ~ line 415 ~ Dashboard ~ renderContent ~ dateSet',
-								dateSet
-							);
-							console.log(index);
-						}}
-						data={{
-							datasets: [
-								{
-									data: DummyData
-								}
-							]
-						}}
-						width={Device.getDeviceWidth() - 35 * 2}
-						height={Device.getDeviceWidth() - 35 * 2}
-						withOuterLines={false}
-						withHorizontalLabels={false}
-						fromZero={true}
-						segments={Math.round(DummyData.length / 2)}
-						hidePointsAtIndex={[...Array(DummyData.length).keys()].filter(i => i != CurrenIndex)}
-						chartConfig={{
-							color: (opacity = 1) => colors.blue,
-							labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-							backgroundGradientFrom: colors.purple,
-							backgroundGradientTo: colors.purple,
-							fillShadowGradient: colors.blue,
-							fillShadowGradientOpacity: 0.4,
-							strokeWidth: 1.4,
-							propsForDots: {
-								stroke: colors.white,
-								strokeWidth: 2,
-								fill: colors.black
-							},
-							propsForBackgroundLines: {
-								strokeDasharray: 5,
-								strokeDashoffset: 1,
-								stroke: colors.white000
-							}
-						}}
-						style={{
-							paddingRight: 5,
-							paddingBottom: -35 * 2
-						}}
-					/> */}
+				<View style={styles.chartContainer}>
+					<View style={styles.chartHeader}>
+						<View style={styles.chartTimelineWrapper}>
+							{timeline.map(e => (
+								<TouchableOpacity
+									key={e}
+									activeOpacity={0.7}
+									style={styles.chartTimelineButton}
+									onPress={() => {
+										this.onChangeTimeline(e);
+									}}
+								>
+									<Text
+										style={[
+											styles.chartTimelineText,
+											e === selectedTimeline && styles.chartSelectedTimelineText
+										]}
+									>
+										{e}
+									</Text>
+								</TouchableOpacity>
+							))}
+						</View>
+						<TouchableOpacity
+							onPress={() => {
+								this.setState({
+									isChangeCurrency: true
+								});
+							}}
+							style={styles.currencyWrapper}
+							activeOpacity={0.7}
+						>
+							<Text style={styles.currencyText}>{selectedCurrency.toUpperCase()}</Text>
+							<Icon name="chevron-down" style={styles.currencyIcon} />
+						</TouchableOpacity>
+					</View>
+					<View style={styles.chartWrapper}>
+						{chartData && chartData.length !== 0 && !isFetchingChartData ? (
+							this.renderChart()
+						) : (
+							<View style={styles.activityIndicatorWrapper}>
+								<ActivityIndicator size={'small'} color={'white'} />
+							</View>
+						)}
+					</View>
 				</View>
 
 				{/* Action button */}
@@ -571,7 +777,7 @@ class Dashboard extends PureComponent {
 						style={styles.btn}
 						activeOpacity={0.7}
 						onPress={() => {
-							this.props.navigation.navigate('ComingSoon');
+							this.props.navigation.navigate('PurchaseMethods');
 						}}
 					>
 						<Text style={styles.btnText}>{strings('dashboard.buy_more')}</Text>
@@ -589,6 +795,36 @@ class Dashboard extends PureComponent {
 						<Text style={styles.btnText}>{strings('dashboard.spend_coin')}</Text>
 					</TouchableOpacity>
 				</View>
+				<Modal
+					isVisible={isChangeCurrency}
+					animationIn="slideInUp"
+					animationOut="slideOutDown"
+					style={styles.modalContainer}
+					backdropOpacity={0.7}
+					animationInTiming={600}
+					animationOutTiming={600}
+					swipeDirection={'down'}
+					propagateSwipe
+					onBackdropPress={this.onCloseModal}
+					onBackButtonPress={this.onCloseModal}
+				>
+					<View style={styles.modalWrapper}>
+						<TrackingScrollView style={styles.modalScrollView}>
+							{this.infuraCurrencyOptions.map(e => (
+								<TouchableOpacity
+									key={e.key}
+									style={styles.modalItemContainer}
+									onPress={() => this.onChangeCurrency(e.value)}
+								>
+									<Text>{e.label}</Text>
+									{selectedCurrency === e.value && (
+										<Icon style={styles.modalItemIcon} name={'check'} />
+									)}
+								</TouchableOpacity>
+							))}
+						</TrackingScrollView>
+					</View>
+				</Modal>
 			</View>
 		);
 	}
@@ -616,12 +852,14 @@ class Dashboard extends PureComponent {
 	render = () => (
 		<ErrorBoundary view="Wallet">
 			<View style={baseStyles.flexGrow} testID={'wallet-screen'}>
-				<ScrollView
+				<TrackingScrollView
 					style={styles.wrapper}
-					refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.pollTokenBalances} />}
+					refreshControl={
+						<RefreshControl refreshing={this.state.refreshing} onRefresh={this.pollTokenBalances} />
+					}
 				>
 					{this.props.selectedAddress && this.props.accounts ? this.renderContent() : this.renderLoader()}
-				</ScrollView>
+				</TrackingScrollView>
 				{/* {this.renderOnboardingWizard()} */}
 			</View>
 		</ErrorBoundary>

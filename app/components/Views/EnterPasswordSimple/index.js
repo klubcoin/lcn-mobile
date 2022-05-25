@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, StyleSheet } from 'react-native';
+import { ActivityIndicator, Alert, Text, View, SafeAreaView, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import StyledButton from '../../UI/StyledButton';
 
@@ -9,6 +9,7 @@ import { strings } from '../../../../locales/i18n';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { passwordRequirementsMet } from '../../../util/password';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -85,7 +86,7 @@ export default class EnterPasswordSimple extends PureComponent {
 							<View style={baseStyles.flexGrow}>
 								<View>
 									<Text style={styles.enterPassword}>{strings('enter_password.desc')}</Text>
-									<TextInput
+									<TrackingTextInput
 										style={styles.input}
 										placeholder={strings('enter_password.password')}
 										placeholderTextColor={colors.grey100}

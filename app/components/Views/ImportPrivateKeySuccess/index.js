@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, ScrollView, Text, View, StyleSheet, InteractionManager, BackHandler } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet, InteractionManager, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { colors, fontStyles } from '../../../styles/common';
@@ -11,6 +11,7 @@ import Engine from '../../../core/Engine';
 import Logger from '../../../util/Logger';
 import PreventScreenshot from '../../../core/PreventScreenshot';
 import { displayName } from '../../../../app.json';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -116,7 +117,7 @@ class ImportPrivateKeySuccess extends PureComponent {
 	render() {
 		return (
 			<View style={styles.mainWrapper}>
-				<ScrollView
+				<TrackingScrollView
 					contentContainerStyle={styles.wrapper}
 					style={styles.mainWrapper}
 					testID={'first-incoming-transaction-screen'}
@@ -139,7 +140,7 @@ class ImportPrivateKeySuccess extends PureComponent {
 							</View>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

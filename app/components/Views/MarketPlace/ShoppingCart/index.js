@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
-import { FlatList, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -12,6 +12,7 @@ import colors from '../../../../common/colors';
 import routes from '../../../../common/routes';
 import { makeObservable, observable } from 'mobx';
 import StoreImage from '../../MarketPlace/components/StoreImage';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 class ShoppingCart extends PureComponent {
 	totalAmount = 0;
@@ -95,7 +96,7 @@ class ShoppingCart extends PureComponent {
 				>
 					<Icon style={styles.quantityIcon} name={'minus'} size={RFPercentage(2)} />
 				</TouchableOpacity>
-				<TextInput
+				<TrackingTextInput
 					value={`${quantity}`}
 					onChangeText={text => {
 						product.quantity = Number(text);

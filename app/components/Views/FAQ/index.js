@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { observer } from 'mobx-react';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
@@ -11,6 +11,7 @@ import styles from './styles';
 import { STORED_CONTENT } from '../../../constants/storage';
 import preferences from '../../../store/preferences';
 import { colors } from '../../../styles/common';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 class FAQScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.faq'), navigation);
@@ -67,11 +68,11 @@ class FAQScreen extends PureComponent {
 						<ActivityIndicator color={colors.white} />
 					</View>
 				) : (
-					<ScrollView style={styles.wrapper}>
+					<TrackingScrollView style={styles.wrapper}>
 						{this.questions.map(e => (
 							<SettingsDrawer key={e.uuid} description={e.question} onPress={() => this.gotoAnwser(e)} />
 						))}
-					</ScrollView>
+					</TrackingScrollView>
 				)}
 			</OnboardingScreenWithBg>
 		);

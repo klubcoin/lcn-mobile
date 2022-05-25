@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import store from '../../MarketPlace/store';
 import { menuKeys } from '../Drawer';
@@ -9,6 +9,7 @@ import { colors } from '../../../../styles/common';
 import Search from '../components/Search';
 import { strings } from '../../../../../locales/i18n';
 import { inject, observer } from 'mobx-react';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 class MarketSellerCategory extends PureComponent {
 	categories = [];
@@ -130,7 +131,7 @@ class MarketSellerCategory extends PureComponent {
 			<View style={{ flex: 3 }}>
 				<View style={styles.selectedCategoryWrapper}>
 					<SafeAreaView>
-						<ScrollView>
+						<TrackingScrollView>
 							{this.selectedCategory.children &&
 								this.selectedCategory.children.map(e => (
 									<View>
@@ -155,7 +156,7 @@ class MarketSellerCategory extends PureComponent {
 											e.children?.map(e => this.renderSubCategories(e))}
 									</View>
 								))}
-						</ScrollView>
+						</TrackingScrollView>
 					</SafeAreaView>
 				</View>
 			</View>

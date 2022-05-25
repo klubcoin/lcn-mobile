@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from 'react';
 import {
 	KeyboardAvoidingView,
-	ScrollView,
 	StyleSheet,
 	TouchableOpacity,
 	View,
@@ -42,6 +41,7 @@ import routes from '../../../../common/routes';
 import { showError, showSuccess } from '../../../../util/notify';
 import LocationSearchBar from '../../../UI/LocationSearch';
 import Geolocation from '@react-native-community/geolocation';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 class EditStoreProfile extends Component {
 	logoStore = '';
@@ -92,7 +92,7 @@ class EditStoreProfile extends Component {
 			err => {
 				this.readingGPS = false;
 				alert(err.message);
-			},
+			}
 		);
 	}
 
@@ -195,7 +195,7 @@ class EditStoreProfile extends Component {
 				orderPayment,
 				deliveryPayment,
 				defaultCurrency,
-				coords: this.coords,
+				coords: this.coords
 			})
 			.then(value => showSuccess(strings('market.update_success')));
 	};
@@ -274,7 +274,7 @@ class EditStoreProfile extends Component {
 	render() {
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
-				<ScrollView>
+				<TrackingScrollView>
 					{this.renderNavBar()}
 					<View style={styles.body}>
 						<TouchableOpacity
@@ -348,7 +348,11 @@ class EditStoreProfile extends Component {
 										<Icon name={'map-marker-alt'} size={22} />
 									</TouchableOpacity>
 								</View>
-								{!!this.coords && <Text>{this.coords.latitude}, {this.coords.longitude}</Text>}
+								{!!this.coords && (
+									<Text>
+										{this.coords.latitude}, {this.coords.longitude}
+									</Text>
+								)}
 								{/* <LocationSearchBar value={this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''} /> */}
 							</View>
 
@@ -422,7 +426,7 @@ class EditStoreProfile extends Component {
 							{strings('market.update')}
 						</StyledButton>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</KeyboardAvoidingView>
 		);
 	}

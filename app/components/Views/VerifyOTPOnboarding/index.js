@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, View, SafeAreaView } from 'react-native';
+import { Text, View, SafeAreaView, ActivityIndicator } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getOnboardingWithoutBackNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
-import OTPInput from './components/OTPInput';
+import OTPInput from '../../UI/OTPInput';
 import StyledButton from '../../UI/StyledButton';
 import APIService from '../../../services/APIService';
 import OnboardingProgress from '../../UI/OnboardingProgress';
@@ -14,11 +14,12 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import Emoji from 'react-native-emoji';
 import Confetti from '../../UI/Confetti';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ONBOARDING_WIZARD, METRICS_OPT_IN, SEED_PHRASE_HINTS } from '../../../constants/storage';
+import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
 import preferences from '../../../../app/store/preferences';
 import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
-import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
+import TrackingScrollView from '../../UI/TrackingScrollView';
+import { colors } from '../../../styles/common';
 
 class VerifyOTPOnboarding extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -36,7 +37,9 @@ class VerifyOTPOnboarding extends PureComponent {
 	verifySuccess = false;
 	verifySuccess = false;
 	resendOTP = false;
-	showRemindLaterModal = false;
+	sendingOTP = false;
+	gettingEmailStatus = false;
+
 	constructor(props) {
 		super(props);
 		makeObservable(this, {
@@ -51,33 +54,32 @@ class VerifyOTPOnboarding extends PureComponent {
 			tooManySendOtp: observable,
 			verifySuccess: observable,
 			resendOTP: observable,
-			showRemindLaterModal: observable
+			sendingOTP: observable,
+			gettingEmailStatus: observable
 		});
 		this.email = preferences?.onboardProfile.email;
 	}
 
 	async componentDidMount() {
-		this.timingResend = 60;
-		this.storeTimeSendEmail();
-		this.timing();
+		this.sendOTPEmail();
 	}
 
-	async storeTimeSendEmail() {
-		AsyncStorage.setItem(this.email, `${new Date().getTime()}`);
+	async storeTimeSendEmail(time) {
+		AsyncStorage.setItem(this.email, `${time}`);
 	}
 
 	sendOTPEmail() {
+		if (this.sendEmailOTP) return;
+		this.sendingOTP = true;
 		APIService.sendEmailOTP(this.email, (success, response) => {
+			this.sendingOTP = false;
 			switch (response) {
 				case 'success':
 					this.resendOTP = false;
-					this.timingResend = 60;
-					this.storeTimeSendEmail();
-					this.timing();
+					this.verifyEmail();
 					break;
 				case 'retry_later':
-					this.timingResend = 60;
-					this.timing();
+					this.verifyEmail();
 					break;
 				case 'too_many_attempts':
 					this.tooManyVerifyAttempts = true;
@@ -94,6 +96,21 @@ class VerifyOTPOnboarding extends PureComponent {
 			}
 		});
 	}
+
+	verifyEmail = () => {
+		this.gettingEmailStatus = true;
+		APIService.getOtpStatus(this.email, (success, json) => {
+			this.gettingEmailStatus = false;
+			if (!!json?.creationDate) {
+				this.storeTimeSendEmail(json?.creationDate);
+				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+				this.timing();
+			} else {
+				this.timingResend = 0;
+			}
+		});
+	};
+
 	verifyOTPEmail() {
 		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {
 			this.otpEmail = '';
@@ -116,6 +133,7 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	timing() {
+		clearInterval(this.interval);
 		this.interval = setInterval(() => {
 			this.timingResend = this.timingResend - 1;
 			if (this.timingResend <= 0) {
@@ -162,16 +180,26 @@ class VerifyOTPOnboarding extends PureComponent {
 					/>
 					{!this.tooManyVerifyAttempts &&
 						(!this.tooManySendOtp ? (
-							<Text style={styles.textWrapper}>
-								<Text>{strings('verify_otp.not_receive_code')}</Text>
-								{this.timingResend > 0 ? (
-									<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
-								) : (
-									<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
-										{strings('verify_otp.resend_now')}
-									</Text>
-								)}
-							</Text>
+							this.sendingOTP ? (
+								<View style={styles.loadingWrapper1}>
+									<ActivityIndicator color={colors.white} size={'small'} />
+								</View>
+							) : (
+								<Text style={styles.textWrapper}>
+									<Text>{strings('verify_otp.not_receive_code')}</Text>
+									{this.gettingEmailStatus ? (
+										<View style={styles.loadingWrapper}>
+											<ActivityIndicator color={colors.white} />
+										</View>
+									) : this.timingResend > 0 ? (
+										<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
+									) : (
+										<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
+											{strings('verify_otp.resend_now')}
+										</Text>
+									)}
+								</Text>
+							)
 						) : (
 							<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
 						))}
@@ -191,7 +219,6 @@ class VerifyOTPOnboarding extends PureComponent {
 						type={'normal'}
 						containerStyle={styles.skipButton}
 						onPress={() => {
-							// this.showRemindLaterModal = true;
 							this.props.navigation.navigate('HomeNav');
 							this.props.navigation.popToTop();
 							this.props.navigation.goBack(null);
@@ -205,9 +232,6 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	async onDone() {
-		// this.props.navigation.navigate('HomeNav');
-		// this.props.navigation.popToTop();
-		// this.props.navigation.goBack(null);
 		const onboardingWizard = await AsyncStorage.getItem(ONBOARDING_WIZARD);
 		// Check if user passed through metrics opt-in screen
 		const metricsOptIn = await AsyncStorage.getItem(METRICS_OPT_IN);
@@ -232,9 +256,6 @@ class VerifyOTPOnboarding extends PureComponent {
 				<Text style={styles.congratulations}>{strings('verify_otp.congratulations')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text1')}</Text>
 				<Text style={styles.congratulationsText}>{strings('verify_otp.text2')}</Text>
-				{/* <Text style={styles.learnMore} onPress={() => this.onLearnMore()}>
-					{strings('verify_otp.learn_more')}
-				</Text> */}
 				<View style={styles.footer}>
 					<StyledButton type={'normal'} onPress={() => this.onDone()}>
 						{strings('verify_otp.done')}
@@ -249,21 +270,11 @@ class VerifyOTPOnboarding extends PureComponent {
 				<SafeAreaView style={styles.mainWrapper}>
 					<View style={styles.wrapper}>
 						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={5} />
-						<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+						<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 							{!this.verifySuccess && this.renderEmailOtp()}
 							{this.verifySuccess && this.renderCongratulations()}
-						</ScrollView>
+						</TrackingScrollView>
 					</View>
-					{/* <SkipVerifyEmailModal
-						modalVisible={this.showRemindLaterModal && !this.verifySuccess}
-						onCancel={() => {
-							this.showRemindLaterModal = false;
-						}}
-						onConfirm={() => {
-							this.showRemindLaterModal = false;
-							this.onDone();
-						}}
-					/> */}
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
 	KeyboardAvoidingView,
-	ScrollView,
 	TouchableOpacity,
 	View,
 	Modal,
@@ -35,6 +34,7 @@ import emojiRegex from 'emoji-regex';
 import APIService from '../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 export const SUCCESS = 'success';
 export const ALREADY_EXISTS = 'already_exists';
@@ -372,6 +372,8 @@ class ProfileOnboard extends PureComponent {
 			emailErrorText = strings('profile.email_used');
 		} else if (this.emailFocused & !this.email) {
 			emailErrorText = strings('profile.email_required');
+		} else if (this.emailFocused && !validator.isEmail(this.email)) {
+			emailErrorText = strings('profile.invalid_email');
 		}
 
 		if (!!this.username && !this.isCheckingUsername && !this.isValidUsername) {
@@ -384,7 +386,7 @@ class ProfileOnboard extends PureComponent {
 			<OnboardingScreenWithBg screen="a">
 				<KeyboardAvoidingView style={styles.container} behavior={'padding'} enabled={Device.isIos()}>
 					<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} />
-					<ScrollView>
+					<TrackingScrollView>
 						<View style={styles.body}>
 							<TouchableOpacity
 								activeOpacity={0.5}
@@ -479,16 +481,13 @@ class ProfileOnboard extends PureComponent {
 								onPress={this.onNext.bind(this)}
 								containerStyle={styles.next}
 								disabled={
-									!this.isValidEmail ||
-									!this.isValidUsername ||
-									!this.firstname ||
-									!this.lastname 
+									!this.isValidEmail || !this.isValidUsername || !this.firstname || !this.lastname
 								}
 							>
 								{strings('choose_password.continue')}
 							</StyledButton>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
 						<TouchableOpacity
 							style={styles.centerModal}

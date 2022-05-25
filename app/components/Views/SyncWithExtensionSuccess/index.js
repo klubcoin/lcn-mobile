@@ -1,15 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	Animated,
-	BackHandler,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	View,
-	TouchableOpacity,
-	ScrollView
-} from 'react-native';
+import { Animated, BackHandler, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import routes from '../../../common/routes';
 import { strings } from '../../../../locales/i18n';
@@ -21,6 +12,7 @@ import { connect } from 'react-redux';
 import Confetti from '../../UI/Confetti';
 import { ONBOARDING_WIZARD, METRICS_OPT_IN } from '../../../constants/storage';
 import { displayName } from '../../../../app.json';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	mainWrapper: {
@@ -161,7 +153,7 @@ class SyncWithExtensionSuccess extends PureComponent {
 	render = () => (
 		<SafeAreaView style={styles.mainWrapper}>
 			<Confetti />
-			<ScrollView contentContainerStyle={styles.wrapper} testID={'sync-with-extension-screen'}>
+			<TrackingScrollView contentContainerStyle={styles.wrapper} testID={'sync-with-extension-screen'}>
 				<Animated.View
 					style={[
 						styles.iconWrapper,
@@ -192,7 +184,7 @@ class SyncWithExtensionSuccess extends PureComponent {
 						{strings('sync_with_extension_success.button_continue')}
 					</StyledButton>
 				</View>
-			</ScrollView>
+			</TrackingScrollView>
 		</SafeAreaView>
 	);
 }

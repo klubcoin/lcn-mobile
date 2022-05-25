@@ -111,6 +111,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
+import { EXCEPTION_ACTIVE_APP } from '../../UI/TrackingTextInput';
+import { showInfo } from '../../../util/notify';
 
 const styles = StyleSheet.create({
 	flex: {
@@ -203,6 +205,7 @@ const Main = props => {
 	const [password, setPassword] = useState('');
 	const [passwordErrorString, setPasswordErrorString] = useState('');
 	const [lockType, setLockType] = useState({ biometric: false, passcode: false });
+	const [lockTime, setLockTime] = useState(props.lockTime + 5000);
 
 	const passwordRef = useRef();
 
@@ -240,35 +243,50 @@ const Main = props => {
 			PanResponder.create({
 				onStartShouldSetPanResponder: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onMoveShouldSetPanResponder: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onStartShouldSetPanResponderCapture: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onMoveShouldSetPanResponderCapture: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onPanResponderTerminationRequest: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				},
 				onShouldBlockNativeResponder: () => {
 					setActiveTime(new Date());
+					setLockTime(props.lockTime + 5000);
 				}
 			})
 		);
-	}, []);
+	}, [props.lockTime]);
 
 	useEffect(() => {
 		if (props.lockTime >= 0) {
-			const timeout = setTimeout(() => {
+			const timeout = setTimeout(async () => {
+				const exceptionActiveApp = await AsyncStorage.getItem(EXCEPTION_ACTIVE_APP);
+				const currentTime = new Date().getTime();
+				if (!!exceptionActiveApp) {
+					if (+exceptionActiveApp + props.lockTime + 5000 > currentTime) {
+						setLockTime(+exceptionActiveApp + props.lockTime + 5000 - currentTime);
+						return;
+					}
+				}
+				setLockTime(props.lockTime + 5000);
 				setLock(true);
 				setPasswordErrorString('');
-			}, props.lockTime + 5000);
+			}, lockTime);
 			return () => clearTimeout(timeout);
 		}
-	}, [activeTime, props.lockTime]);
+	}, [activeTime, lockTime, props.lockTime]);
 
 	const usePrevious = value => {
 		const ref = useRef();
@@ -495,7 +513,7 @@ const Main = props => {
 					(data &&
 						data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE &&
 						decodeApproveData(data).spenderAddress?.toLowerCase() ===
-							swapsUtils.getSwapsContractAddress(props.chainId)))
+						swapsUtils.getSwapsContractAddress(props.chainId)))
 			) {
 				if (transactionMeta.origin === process.env.MM_FOX_CODE) {
 					autoSign(transactionMeta);
@@ -617,7 +635,7 @@ const Main = props => {
 
 	const renderLoader = () => (
 		<View style={styles.loader}>
-			<ActivityIndicator size="small" color={colors.white}  />
+			<ActivityIndicator size="small" color={colors.white} />
 		</View>
 	);
 
@@ -715,7 +733,7 @@ const Main = props => {
 			if (!credentials) return false;
 			setPassword(credentials.password);
 			onLogin(credentials.password);
-		} catch (error) {}
+		} catch (error) { }
 		return true;
 	};
 
@@ -878,7 +896,7 @@ const Main = props => {
 
 	const getPeerInfo = async message => {
 		const address = message.from;
-		const profile = await preferences.peerProfile(address);
+		const profile = preferences.peerProfile(address);
 
 		if (profile && profile.name) {
 			Object.assign(message.data, profile, { address });
@@ -1069,15 +1087,6 @@ const Main = props => {
 		);
 	};
 
-	const showNotice = (message, title) => {
-		Toast.show({
-			type: 'info',
-			text1: message,
-			text2: title || strings('profile.notice'),
-			visibilityTime: 1000
-		});
-	};
-
 	const onWebRtcMessage = async (data, peerId) => {
 		if (data.action) {
 			switch (data.action) {
@@ -1088,7 +1097,7 @@ const Main = props => {
 					break;
 				case ConfirmProfileRejected().action:
 					const name = `${data.firstname} ${data.lastname}`;
-					showNotice(strings('confirm_profile.peer_refuse_try_again', { name }));
+					showInfo(strings('confirm_profile.peer_refuse_try_again', { name }));
 					preferences.addNotification(data);
 					break;
 				case ConfirmProfileBlock().action:
@@ -1100,15 +1109,16 @@ const Main = props => {
 					const senderId = `${from}`.toLowerCase();
 					const activeChatPeerId = `${messageStore.activeChatPeerId}`.toLowerCase();
 
-					const { action } = message;
+					const { action, group } = message;
 					if (action) break;
 
-					if (senderId != activeChatPeerId) {
+					if (senderId != activeChatPeerId && group != activeChatPeerId) {
 						const { addressBook, network } = props;
 						const addresses = addressBook[network] || {};
-						const sender = addresses[from];
+						const sender = addresses[from] || preferences.peerProfile(senderId);
 
-						showNotice(sender?.name || from, message.text);
+						const groupName = group ? messageStore.conversationInfos[group] : '';
+						showInfo(`${groupName?.name || sender?.name || from}\n${message.text}`);
 					}
 					break;
 				case LiquichainNameCard().action:
@@ -1237,20 +1247,20 @@ Main.propTypes = {
 	 */
 	thirdPartyApiMode: PropTypes.bool,
 	/**
-    /* Hides or shows dApp transaction modal
-    */
+		/* Hides or shows dApp transaction modal
+		*/
 	toggleDappTransactionModal: PropTypes.func,
 	/**
-    /* Hides or shows approve modal
-    */
+		/* Hides or shows approve modal
+		*/
 	toggleApproveModal: PropTypes.func,
 	/**
-    /* dApp transaction modal visible or not
-    */
+		/* dApp transaction modal visible or not
+		*/
 	dappTransactionModalVisible: PropTypes.bool,
 	/**
-    /* Token approve modal visible or not
-    */
+		/* Token approve modal visible or not
+		*/
 	approveModalVisible: PropTypes.bool,
 	/**
 	 * Selected address

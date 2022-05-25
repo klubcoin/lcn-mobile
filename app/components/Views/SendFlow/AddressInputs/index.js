@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { colors, baseStyles } from '../../../../styles/common';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -11,6 +11,7 @@ import Text from '../../../Base/Text';
 import { hasZeroWidthPoints } from '../../../../util/validators';
 import styles from './styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
 
 const AddressName = ({ toAddressName, confusableCollection = [] }) => {
 	if (confusableCollection.length) {
@@ -74,7 +75,7 @@ export const AddressTo = props => {
 			{!addressToReady ? (
 				<View style={[styles.selectWrapper, highlighted ? styles.borderHighlighted : styles.borderOpaque]}>
 					<View style={styles.input}>
-						<TextInput
+						<TrackingTextInput
 							ref={inputRef}
 							autoCapitalize="none"
 							autoCorrect={false}

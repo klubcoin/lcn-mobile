@@ -6,11 +6,9 @@ import {
 	SafeAreaView,
 	View,
 	TouchableOpacity,
-	TextInput,
 	KeyboardAvoidingView,
 	FlatList,
-	InteractionManager,
-	ScrollView
+	InteractionManager
 } from 'react-native';
 import { connect } from 'react-redux';
 import { setSelectedAsset, prepareTransaction, setTransactionObject } from '../../../../actions/transaction';
@@ -61,6 +59,8 @@ import API from 'services/api';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import Erc20Service from '../../../../core/Erc20Service';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const { hexToBN, BNToHex } = util;
 
@@ -284,9 +284,12 @@ class Amount extends PureComponent {
 			maxFiatInput
 		} = this.state;
 
+		const convertInputValue =
+			inputValue.split('.')[0] +
+			(inputValue.split('.').length > 1 ? '.' + inputValue.split('.')[1].replace(/0*$/, '') : '');
 		let value;
 		if (internalPrimaryCurrencyIsCrypto || !hasExchangeRate) {
-			value = inputValue;
+			value = convertInputValue;
 		} else {
 			value = inputValueConversion;
 			if (maxFiatInput) {
@@ -297,7 +300,7 @@ class Amount extends PureComponent {
 			}
 		}
 		if (value && value.includes(',')) {
-			value = inputValue.replace(',', '.');
+			value = convertInputValue.replace(',', '.');
 		}
 
 		if (!selectedAsset.tokenId && this.validateAmount(value)) {
@@ -445,6 +448,10 @@ class Amount extends PureComponent {
 		const { accounts, selectedAddress, contractBalances, selectedAsset } = this.props;
 		const { estimatedTotalGas } = this.state;
 		let weiBalance, weiInput, amountError;
+		if (inputValue.split('.').length > 1 && inputValue.split('.')[1].replace(/0*$/, '').length > 18) {
+			this.setState({ amountError: strings('transaction.error_decimal_amount') });
+			return true;
+		}
 		try {
 			if (isDecimal(inputValue)) {
 				if (selectedAsset.isETH) {
@@ -818,7 +825,7 @@ class Amount extends PureComponent {
 						{!internalPrimaryCurrencyIsCrypto && !!inputValue && (
 							<Text style={styles.inputCurrencyText}>{`${getCurrencySymbol(currentCurrency)} `}</Text>
 						)}
-						<TextInput
+						<TrackingTextInput
 							ref={this.amountInput}
 							style={styles.textInput}
 							placeholderTextColor={colors.fontSecondary}
@@ -895,7 +902,7 @@ class Amount extends PureComponent {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView style={styles.wrapper} testID={'amount-screen'}>
-					<ScrollView style={styles.scrollWrapper}>
+					<TrackingScrollView style={styles.scrollWrapper}>
 						<View style={styles.inputWrapper}>
 							<View style={styles.actionsWrapper}>
 								<View style={styles.actionBorder} />
@@ -932,7 +939,7 @@ class Amount extends PureComponent {
 							</View>
 							{selectedAsset.tokenId ? this.renderCollectibleInput() : this.renderTokenInput()}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 
 					<KeyboardAvoidingView
 						style={styles.nextActionWrapper}

@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
-import { SafeAreaView, Text, TextInput, View, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import { colors, fontStyles } from '../../../styles/common';
 import ActionView from '../../UI/ActionView';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -96,7 +97,7 @@ export default class AddBookmark extends PureComponent {
 				<View>
 					<View style={styles.rowWrapper}>
 						<Text style={fontStyles.normal}>{strings('add_favorite.title_label')}</Text>
-						<TextInput
+						<TrackingTextInput
 							style={styles.textInput}
 							placeholder={''}
 							placeholderTextColor={colors.grey100}
@@ -110,7 +111,7 @@ export default class AddBookmark extends PureComponent {
 					</View>
 					<View style={styles.rowWrapper}>
 						<Text style={fontStyles.normal}>{strings('add_favorite.url_label')}</Text>
-						<TextInput
+						<TrackingTextInput
 							style={styles.textInput}
 							placeholder={''}
 							value={this.state.url}

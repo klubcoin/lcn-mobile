@@ -1,16 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	Switch,
-	ActivityIndicator,
-	Alert,
-	TouchableOpacity,
-	Text,
-	View,
-	TextInput,
-	SafeAreaView,
-	Modal
-} from 'react-native';
+import { Switch, ActivityIndicator, Alert, TouchableOpacity, Text, View, SafeAreaView, Modal } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
@@ -53,6 +43,7 @@ import { showError } from '../../../util/notify';
 import { MAX_LENGTH_INPUT } from '../../UI/TextField';
 import CryptoSignature from '../../../core/CryptoSignature';
 import QRScanner from '../../UI/QRScanner';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -185,7 +176,7 @@ class ImportFromSeed extends PureComponent {
 	}
 
 	async getAccountInfo(selectedAddress, metricsOptIn, onboardingWizard) {
-		const address = selectedAddress;
+		const address = selectedAddress.toLowerCase();
 		const message = `walletInfo,${address},${new Date().getTime()}`;
 		const sign = await CryptoSignature.signStringMessage(address, message);
 
@@ -194,19 +185,26 @@ class ImportFromSeed extends PureComponent {
 			[address, sign, message],
 			response => {
 				if (response.result) {
-					const { name } = response.result?.publicInfo ? JSON.parse(response.result?.publicInfo) : {};
+					const { firstname, lastname, name } = response.result?.publicInfo
+						? JSON.parse(response.result?.publicInfo)
+						: {};
 					const { emailAddress, phoneNumber } = response.result?.privateInfo
 						? JSON.parse(response.result?.privateInfo)
 						: {};
+					const currentFirstname = firstname ? firstname : name ? name.split(' ')[0] : '';
+					const currentLastname = lastname
+						? lastname
+						: name
+						? name
+								.split(' ')
+								.slice(1, name.split(' ').length)
+								.join(' ')
+						: '';
+
 					preferences.setOnboardProfile({
 						avatar: '',
-						firstname: name ? name.split(' ')[0] : '',
-						lastname: name
-							? name
-									.split(' ')
-									.slice(1, name.split(' ').length)
-									.join(' ')
-							: '',
+						firstname: currentFirstname,
+						lastname: currentLastname,
 						email: emailAddress?.value,
 						phone: phoneNumber?.value,
 						emailVerified: emailAddress?.verified === 'true',
@@ -501,7 +499,7 @@ class ImportFromSeed extends PureComponent {
 									activeLineWidth={0}
 								/>
 							) : (
-								<TextInput
+								<TrackingTextInput
 									value={seed}
 									numberOfLines={3}
 									style={[

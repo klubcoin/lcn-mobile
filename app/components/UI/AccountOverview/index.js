@@ -1,15 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	ScrollView,
-	TextInput,
-	StyleSheet,
-	Text,
-	View,
-	TouchableOpacity,
-	InteractionManager,
-	Alert
-} from 'react-native';
+import { Text, View, TouchableOpacity, InteractionManager, Alert } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { swapsUtils } from '@metamask/swaps-controller';
 import { connect } from 'react-redux';
@@ -25,10 +16,8 @@ import { protectWalletModalVisible } from '../../../actions/user';
 import { toggleAccountsModal, toggleReceiveModal } from '../../../actions/modals';
 import { newAssetTransaction } from '../../../actions/transaction';
 
-import Device from '../../../util/Device';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import { renderFiat, balanceToFiat, hexToBN, weiToFiat, fromWei } from '../../../util/number';
-import { showInfo } from '../../../util/notify';
+import { hexToBN, weiToFiat, fromWei } from '../../../util/number';
 
 import { renderAccountName } from '../../../util/address';
 import { isMainNet } from '../../../util/networks';
@@ -38,13 +27,15 @@ import { isSwapsAllowed } from '../Swaps/utils';
 import Identicon from '../Identicon';
 import AssetActionButton from '../AssetActionButton';
 import EthereumAddress from '../EthereumAddress';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import Helper from 'common/Helper';
 import RemoteImage from '../../Base/RemoteImage';
 import styles from './styles/index';
 import routes from '../../../common/routes';
+import TrackingTextInput from '../TrackingTextInput';
+import TrackingScrollView from '../TrackingScrollView';
 
 /**
  * View that's part of the <Wallet /> component
@@ -226,9 +217,11 @@ class AccountOverview extends PureComponent {
 		});
 	};
 
+	onTrade = () => {
+		this.props.navigation.navigate('Trade');
+	};
+
 	onBuy = () => {
-		this.props.navigation.navigate('ComingSoon');
-		return;
 		this.props.navigation.navigate('PurchaseMethods');
 		InteractionManager.runAfterInteractions(() => {
 			Analytics.trackEvent(ANALYTICS_EVENT_OPTS.WALLET_BUY_ETH);
@@ -260,7 +253,7 @@ class AccountOverview extends PureComponent {
 		const balanceFiat = balance ? `${fromWei(hexToBN(balance))} ${routes.klubToken.symbol}` : `0x00`; //weiToFiat(hexToBN(balance), conversionRate, currentCurrency) || 0;
 		return (
 			<View ref={this.scrollViewContainer} collapsable={false}>
-				<ScrollView
+				<TrackingScrollView
 					bounces={false}
 					keyboardShouldPersistTaps={'never'}
 					style={styles.scrollView}
@@ -288,7 +281,7 @@ class AccountOverview extends PureComponent {
 								</TouchableOpacity>
 								<View ref={this.editableLabelRef} style={styles.data} collapsable={false}>
 									{accountLabelEditable ? (
-										<TextInput
+										<TrackingTextInput
 											style={[
 												styles.label,
 												styles.labelInput,
@@ -335,7 +328,11 @@ class AccountOverview extends PureComponent {
 								<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
 							)} */}
 
-							<TouchableOpacity style={styles.addressWrapper} onPress={this.copyAccountToClipboard}>
+							<TouchableOpacity
+								style={styles.addressWrapper}
+								onPress={this.copyAccountToClipboard}
+								activeOpacity={0.6}
+							>
 								<EthereumAddress address={address} style={styles.address} type={'short'} />
 							</TouchableOpacity>
 						</View>
@@ -362,9 +359,9 @@ class AccountOverview extends PureComponent {
 							<AssetActionButton
 								icon="trade"
 								onPress={() => {
-									// showInfo('This feature in under maintain');
 									this.props.navigation.navigate('ComingSoon');
 								}}
+								// onPress={this.onTrade}
 								label={strings('asset_overview.trade')}
 								lastIcon
 							/>
@@ -383,7 +380,7 @@ class AccountOverview extends PureComponent {
 							)*/}
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

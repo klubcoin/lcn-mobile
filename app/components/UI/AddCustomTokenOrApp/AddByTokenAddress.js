@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, TextInput, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { colors, fontStyles } from '../../../styles/common';
@@ -9,6 +9,7 @@ import { strings } from '../../../../locales/i18n';
 import { isValidAddress } from 'ethereumjs-util';
 import ActionView from '../ActionView';
 import { isSmartContractAddress } from '../../../util/transactions';
+import TrackingTextInput from '../TrackingTextInput';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -123,7 +124,7 @@ export default class AddByTokenAddress extends PureComponent {
 						<Text style={[fontStyles.normal, { color: colors.white }]}>
 							{strings('token.token_address')}
 						</Text>
-						<TextInput
+						<TrackingTextInput
 							style={[styles.textInput, { color: colors.white }]}
 							placeholder={'0x...'}
 							placeholderTextColor={colors.grey300}

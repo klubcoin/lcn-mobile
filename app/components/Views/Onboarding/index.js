@@ -6,7 +6,6 @@ import {
 	FlatList,
 	Text,
 	View,
-	ScrollView,
 	StyleSheet,
 	Alert,
 	Image,
@@ -55,6 +54,7 @@ import styles from './styles';
 import { displayName } from '../../../../app.json';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const PUB_KEY = process.env.MM_PUBNUB_PUB_KEY;
 
@@ -591,7 +591,7 @@ class Onboarding extends PureComponent {
 		return (
 			<View style={baseStyles.flexGrow} testID={'onboarding-screen'}>
 				<OnboardingScreenWithBg screen={'c'}>
-					<ScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
+					<TrackingScrollView style={baseStyles.flexGrow} contentContainerStyle={styles.scroll}>
 						<View style={styles.wrapper}>
 							{loading && (
 								<View style={styles.foxWrapper}>
@@ -612,7 +612,7 @@ class Onboarding extends PureComponent {
 								</Button>
 							</View>
 						)}
-					</ScrollView>
+					</TrackingScrollView>
 					<View style={styles.termsAndConditions}>
 						<TermsAndConditions navigation={this.props.navigation} />
 					</View>

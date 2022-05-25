@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Picker } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Picker } from 'react-native';
 import { fontStyles, colors, baseStyles } from '../../../styles/common';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 import IconCheck from 'react-native-vector-icons/MaterialCommunityIcons';
 import Device from '../../../util/Device';
+import TrackingScrollView from '../TrackingScrollView';
 
 const PickerItem = Picker.Item;
 const ROW_HEIGHT = 35;
@@ -64,15 +65,15 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		flexDirection: 'row',
 		height: ROW_HEIGHT,
-		alignItems:'center'
+		alignItems: 'center'
 	},
 	optionLabel: {
 		flex: 1,
 		fontSize: 14,
-		...fontStyles.normal,
+		...fontStyles.normal
 	},
 	icon: {
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
 	},
 	listWrapper: {
 		flex: 1,
@@ -187,35 +188,38 @@ export default class SelectComponent extends PureComponent {
 				style={styles.modal}
 				useNativeDriver
 			>
-				<View style={styles.modalView}>
-					<View style={styles.accesoryBar}>
-						<Text style={styles.label}>{this.props.label}</Text>
-					</View>
-					<ScrollView style={styles.list} ref={this.scrollView}>
-						<View style={styles.listWrapper}>
-							{this.props.options.map(option => (
-								<TouchableOpacity
-									// eslint-disable-next-line react/jsx-no-bind
-									onPress={() => this.onValueChange(option.value)}
-									style={styles.optionButton}
-									key={option.key}
-								>
-									<Text style={styles.optionLabel} numberOfLines={1}>
-										{option.label}
-									</Text>
-									{this.props.selectedValue === option.value ? (
-										<IconCheck style={styles.icon} name="check" size={24} color={colors.blue} />
-									) : null}
-								</TouchableOpacity>
-							))}
+				{this.state.pickerVisible && (
+					<View style={styles.modalView}>
+						<View style={styles.accesoryBar}>
+							<Text style={styles.label}>{this.props.label}</Text>
 						</View>
-					</ScrollView>
-				</View>
+						<TrackingScrollView style={styles.list} ref={this.scrollView}>
+							<View style={styles.listWrapper}>
+								{this.props.options.map(option => (
+									<TouchableOpacity
+										// eslint-disable-next-line react/jsx-no-bind
+										onPress={() => this.onValueChange(option.value)}
+										style={styles.optionButton}
+										key={option.key}
+									>
+										<Text style={styles.optionLabel} numberOfLines={1}>
+											{option.label}
+										</Text>
+										{this.props.selectedValue === option.value ? (
+											<IconCheck style={styles.icon} name="check" size={24} color={colors.blue} />
+										) : null}
+									</TouchableOpacity>
+								))}
+							</View>
+						</TrackingScrollView>
+					</View>
+				)}
 			</Modal>
 		</View>
 	);
 
 	render = () => (
-		<View style={baseStyles.flexGrow}>{Device.isAndroid() ? this.renderAndroid() : this.renderIOS()}</View>
+		// <View style={baseStyles.flexGrow}>{Device.isAndroid() ? this.renderAndroid() : this.renderIOS()}</View>
+		<View style={baseStyles.flexGrow}>{this.renderIOS()}</View>
 	);
 }

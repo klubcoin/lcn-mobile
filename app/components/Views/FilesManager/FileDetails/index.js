@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { colors } from '../../../../styles/common';
 import * as FileIcons from '../../../../util/file-icons';
@@ -9,6 +9,7 @@ import PartItem from '../components/PartItem';
 import { strings } from '../../../../../locales/i18n';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const statuses = {
 	success: 'SUCCESS',
@@ -159,12 +160,12 @@ export default class FileDetails extends Component {
 		return (
 			<OnboardingScreenWithBg screen="a">
 				<SafeAreaView>
-					<ScrollView style={{ width: '100%' }}>
+					<TrackingScrollView style={{ width: '100%' }}>
 						<View style={styles.fileContainer}>
 							{this.renderSummary()}
 							{this.renderDetails()}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				</SafeAreaView>
 			</OnboardingScreenWithBg>
 		);

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import store from '../MarketPlace/store';
@@ -22,6 +22,7 @@ import Cart from './components/Cart';
 import { colors } from '../../../styles/common';
 import StoreImage from '../MarketPlace/components/StoreImage';
 import StripHtml from '../MarketPlace/components/StripHtml';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const window = Dimensions.get('window');
 const screenWidth = window.width;
@@ -48,7 +49,7 @@ class MarketPlace extends PureComponent {
 			categories: observable,
 			showCategories: observable,
 			vendors: observable,
-			products: observable,
+			products: observable
 		});
 	}
 
@@ -263,28 +264,33 @@ class MarketPlace extends PureComponent {
 		);
 	};
 
-	calculateDistance = (coords) => {
+	calculateDistance = coords => {
 		const shipping = store.shippingInfo?.coords || {};
-		return this.distance(coords?.latitude, coords?.longitude, shipping?.latitude, shipping?.longitude)
-	}
+		return this.distance(coords?.latitude, coords?.longitude, shipping?.latitude, shipping?.longitude);
+	};
 
 	distance(lat1, lon1, lat2, lon2, unit = 'k') {
-		if ((lat1 == lat2) && (lon1 == lon2)) {
+		if (lat1 == lat2 && lon1 == lon2) {
 			return 0;
 		} else {
-			var radlat1 = Math.PI * lat1 / 180;
-			var radlat2 = Math.PI * lat2 / 180;
+			var radlat1 = (Math.PI * lat1) / 180;
+			var radlat2 = (Math.PI * lat2) / 180;
 			var theta = lon1 - lon2;
-			var radtheta = Math.PI * theta / 180;
-			var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+			var radtheta = (Math.PI * theta) / 180;
+			var dist =
+				Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
 			if (dist > 1) {
 				dist = 1;
 			}
 			dist = Math.acos(dist);
-			dist = dist * 180 / Math.PI;
+			dist = (dist * 180) / Math.PI;
 			dist = dist * 60 * 1.1515;
-			if (unit == 'k' || unit == 'K') { dist = dist * 1.609344 }
-			if (unit == 'n' || unit == 'N') { dist = dist * 0.8684 }
+			if (unit == 'k' || unit == 'K') {
+				dist = dist * 1.609344;
+			}
+			if (unit == 'n' || unit == 'N') {
+				dist = dist * 0.8684;
+			}
 			return dist;
 		}
 	}
@@ -311,11 +317,7 @@ class MarketPlace extends PureComponent {
 	renderProducts = () => {
 		const { products } = this;
 
-		return (
-			<View style={styles.products}>
-				{products.map((e, index) => this.renderProduct(e))}
-			</View>
-		);
+		return <View style={styles.products}>{products.map((e, index) => this.renderProduct(e))}</View>;
 	};
 
 	renderProviders = () => {
@@ -370,8 +372,9 @@ class MarketPlace extends PureComponent {
 										{score.split('/').reverse()[0]}
 									</Text>
 									<Text numberOfLines={2} style={styles.priceRange}>
-										{`${priceRange.from}${priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
-											} ${currency}`}
+										{`${priceRange.from}${
+											priceRange.from == priceRange.to ? '' : ' - ' + priceRange.to
+										} ${currency}`}
 									</Text>
 									{/* 
 									<Text numberOfLines={1} style={styles.tags}>
@@ -421,7 +424,7 @@ class MarketPlace extends PureComponent {
 	};
 
 	fetchProducts = async () => {
-		const vendor = this.vendor = this.vendors[0];
+		const vendor = (this.vendor = this.vendors[0]);
 		const hash = this.category?.hash;
 
 		const storeService = refStoreService();
@@ -432,7 +435,7 @@ class MarketPlace extends PureComponent {
 				this.products = [...data.data.result];
 			}
 		});
-	}
+	};
 
 	openCart = () => {
 		this.props.navigation.navigate('ShoppingCart');
@@ -442,7 +445,9 @@ class MarketPlace extends PureComponent {
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
-					<TouchableOpacity onPress={this.toggleDrawer.bind(this)} style={styles.navButton}
+					<TouchableOpacity
+						onPress={this.toggleDrawer.bind(this)}
+						style={styles.navButton}
 						testID={'nav-menu'}
 						accessibilityLabel={'nav-menu'}
 					>
@@ -505,13 +510,13 @@ class MarketPlace extends PureComponent {
 					<Text style={styles.labelCategory}>{strings('market.in_category')} :</Text>
 					{this.renderSelector()}
 				</View>
-				<ScrollView style={styles.body} nestedScrollEnabled>
+				<TrackingScrollView style={styles.body} nestedScrollEnabled>
 					{this.renderProducts()}
 					{this.renderProviders()}
 					{this.renderRecentlyViewedProducts()}
 					{this.renderRecentlyVisitedProviders()}
 					{this.renderCategoryModal()}
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}

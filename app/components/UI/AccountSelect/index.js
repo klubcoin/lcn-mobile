@@ -2,12 +2,13 @@ import React, { PureComponent } from 'react';
 import Identicon from '../Identicon';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { connect } from 'react-redux';
 import { hexToBN, weiToFiat, renderFromWei } from '../../../util/number';
 import { getTicker } from '../../../util/transactions';
 import { safeToChecksumAddress } from '../../../util/address';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	root: {
@@ -192,7 +193,7 @@ class AccountSelect extends PureComponent {
 	renderOptionList() {
 		const { accounts, identities, onChange, openAccountSelect } = this.props;
 		return (
-			<ScrollView style={styles.componentContainer}>
+			<TrackingScrollView style={styles.componentContainer}>
 				<View style={styles.optionList}>
 					{Object.keys(identities).map(address =>
 						this.renderOption({ ...identities[address], ...accounts[address] }, () => {
@@ -202,7 +203,7 @@ class AccountSelect extends PureComponent {
 						})
 					)}
 				</View>
-			</ScrollView>
+			</TrackingScrollView>
 		);
 	}
 

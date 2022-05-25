@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Dimensions, SafeAreaView, View, ScrollView, Text, InteractionManager, TouchableOpacity } from 'react-native';
+import { Dimensions, SafeAreaView, View, Text, InteractionManager, TouchableOpacity } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { connect } from 'react-redux';
 import { colors, fontStyles } from '../../../../styles/common';
-import { getPaymentRequestSuccessOptionsTitle } from '../../../UI/Navbar';
+import { getTipRequestOptionsTitle } from '../../../UI/Navbar';
 import PropTypes from 'prop-types';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import StyledButton from '../../../UI/StyledButton';
@@ -18,13 +18,14 @@ import { renderNumber } from '../../../../util/number';
 import { strings } from '../../../../../locales/i18n';
 import { protectWalletModalVisible } from '../../../../actions/user';
 import styles from './styles/index';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { captureRef } from 'react-native-view-shot';
 
 /**
  * View to interact with a previously generated payment request link
  */
 class TipperDetails extends PureComponent {
-	static navigationOptions = ({ navigation }) =>
-		getPaymentRequestSuccessOptionsTitle(navigation, strings('tipper.tipper'));
+	static navigationOptions = ({ navigation }) => getTipRequestOptionsTitle(navigation);
 
 	static propTypes = {
 		/**
@@ -93,13 +94,15 @@ class TipperDetails extends PureComponent {
 		});
 	};
 
-	onShareQRCode = () => {
-		this.qrCodeRef.toDataURL(data => {
-			Share.open({
-				url: `data:image/png;base64,${data}`
-			}).catch(err => {
-				Logger.log('Error while trying to share payment request', err);
-			});
+	onShareQRCode = async () => {
+		const path = await captureRef(this.QRCodeWrapperRef, {
+			quality: 1,
+			format: 'png'
+		});
+		Share.open({
+			url: path
+		}).catch(err => {
+			Logger.log('Error while trying to share payment request', err);
 		});
 	};
 
@@ -123,7 +126,7 @@ class TipperDetails extends PureComponent {
 
 		return (
 			<SafeAreaView style={styles.wrapper} testID={'send-link-screen'}>
-				<ScrollView style={styles.contentWrapper} contentContainerStyle={styles.scrollViewContainer}>
+				<TrackingScrollView style={styles.contentWrapper} contentContainerStyle={styles.scrollViewContainer}>
 					<View style={styles.iconWrapper}>
 						<EvilIcons name="share-apple" size={54} style={styles.icon} />
 					</View>
@@ -140,7 +143,12 @@ class TipperDetails extends PureComponent {
 							{link}
 						</Text>
 					</View>
-					<View style={styles.qrCodeWrapper}>
+					<View
+						style={styles.qrCodeWrapper}
+						ref={ref => {
+							this.QRCodeWrapperRef = ref;
+						}}
+					>
 						{!!this.state.qrLink && (
 							<QRCode
 								value={this.state.qrLink}
@@ -164,7 +172,7 @@ class TipperDetails extends PureComponent {
 										<IonicIcon name={'ios-link'} size={18} color={colors.blue} />
 									</View>
 									<View style={styles.buttonTextWrapper}>
-										<Text style={[styles.buttonText, styles.colorBlue]}>
+										<Text style={styles.buttonText}>
 											{strings('payment_request.copy_to_clipboard')}
 										</Text>
 									</View>
@@ -181,9 +189,7 @@ class TipperDetails extends PureComponent {
 										<FontAwesome name={'qrcode'} size={18} color={colors.blue} />
 									</View>
 									<View style={styles.buttonTextWrapper}>
-										<Text style={[styles.buttonText, styles.colorBlue]}>
-											{strings('payment_request.qr_code')}
-										</Text>
+										<Text style={styles.buttonText}>{strings('tipper.send_qr_cdoe')}</Text>
 									</View>
 								</View>
 							</StyledButton>
@@ -201,7 +207,7 @@ class TipperDetails extends PureComponent {
 							</StyledButton>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				<Modal
 					isVisible={qrModalVisible}
 					onBackdropPress={this.closeQRModal}

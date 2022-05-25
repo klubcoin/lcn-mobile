@@ -1,10 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontStyles } from '../../../../styles/common';
-import Device from '../../../../util/Device';
 import { assignNestedObj } from '../../../../util/object';
 import brandStyles from './brand';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { color } from 'react-native-reanimated';
 
 const cardTextStyle = {
 	color: colors.white,
@@ -80,7 +78,37 @@ const styles = StyleSheet.create({
 		color: colors.purple
 	},
 	comingSoon: {},
-	chartBox: {}
+	chartContainer: {},
+	chartWrapper: {},
+	chartHeader: {},
+	chartTimelineWrapper: {},
+	chartTimelineButton: {},
+	chartSelectedTimelineText: {},
+	chartTimelineText: {},
+	currencyWrapper: {},
+	currencyText: {},
+	currencyIcon: {},
+	dataPointWrapper: {},
+	dataPointIcon: {},
+	dataPointVerticalContainer: {},
+	dataPointVerticalWrapper: {},
+	dataPointVerticalDasher: {},
+	dataViewWrapper: {},
+	dataViewTime: {},
+	dataViewBalanceWrapper: {},
+	dataViewBalance: {},
+	dataViewPercentChange: {},
+	dataViewValue: {},
+	modalContainer: {},
+	modalWrapper: {},
+	modalScrollView: {},
+	modalItemContainer: {},
+	modalItemIcon: {},
+	totalBalanceCard: {},
+	totalBalanceText: {},
+	activityIndicatorWrapper: {},
+	arrowIcon: {},
+	arrowIconButton: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

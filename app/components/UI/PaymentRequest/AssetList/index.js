@@ -52,11 +52,11 @@ export default class AssetList extends PureComponent {
 					const { symbol, name } = searchResults[i] || {};
 
 					return (
-
 						<TouchableOpacity
 							style={styles.item}
 							onPress={() => handleSelectAsset(searchResults[i])} // eslint-disable-line
 							key={i}
+							activeOpacity={0.7}
 						>
 							<View style={styles.assetListElement}>
 								<View style={styles.assetIcon}>{this.renderLogo(searchResults[i])}</View>

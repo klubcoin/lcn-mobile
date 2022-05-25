@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import Text from '../../Base/Text';
 import ModalDragger from '../../Base/ModalDragger';
 import StyledButton from '../StyledButton';
 import { strings } from '../../../../locales/i18n';
 import styles from './styles/index';
+import TrackingTextInput from '../TrackingTextInput';
 
 /**
  * PureComponent that renders confirm actions
@@ -60,7 +61,7 @@ export default class ConfirmInput extends PureComponent {
 						{!!message && <Text style={styles.message}>{message}</Text>}
 					</View>
 					<View style={styles.body}>
-						<TextInput
+						<TrackingTextInput
 							autoCapitalize="sentences"
 							autoCorrect={false}
 							onChangeText={this.onChange}

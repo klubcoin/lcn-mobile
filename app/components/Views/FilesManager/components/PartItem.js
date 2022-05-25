@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as Progress from 'react-native-progress';
 import Identicon from '../../../UI/Identicon';
 import { colors } from '../../../../styles/common';
 import { getStatusContent } from '../FileDetails';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export default function PartItem({ part }) {
 	const [viewMore, setViewMore] = useState(false);
@@ -53,7 +54,7 @@ export default function PartItem({ part }) {
 			</TouchableOpacity>
 			{contacts.length > 0 && viewMore && (
 				<View style={[styles.container, { marginTop: 10, maxHeight: 200 }]}>
-					<ScrollView>
+					<TrackingScrollView>
 						{contacts.length > 0 &&
 							contacts !== undefined &&
 							contacts.map(e => (
@@ -73,7 +74,7 @@ export default function PartItem({ part }) {
 									</View>
 								</View>
 							))}
-					</ScrollView>
+					</TrackingScrollView>
 				</View>
 			)}
 		</View>

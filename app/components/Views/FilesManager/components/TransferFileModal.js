@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { colors } from '../../../../styles/common';
 import Identicon from '../../../UI/Identicon';
@@ -8,6 +8,7 @@ import Device from '../../../../util/Device';
 import CustomButton from '../../../Base/CustomButton';
 import Icon from 'react-native-vector-icons/Feather';
 import { strings } from '../../../../../locales/i18n';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export default function TransferFileModal({
 	files,
@@ -65,15 +66,15 @@ export default function TransferFileModal({
 		<Modal animationType="fade" visible={visible} onBackdropPress={onClose} style={styles.container}>
 			<View style={styles.content}>
 				<Text style={styles.header}>{strings('file.share_with_contacts')}</Text>
-				<ScrollView>
+				<TrackingScrollView>
 					<Text style={styles.title}>{strings('file.your_files')}</Text>
 					{files?.length > 0 &&
 						files.map(e => (
 							<FileItem file={e} onDeleteItem={onDeleteItem} textStyle={{ color: colors.black }} />
 						))}
 					<Text style={styles.title}>{strings('file.contacts')}</Text>
-					<ScrollView horizontal>{renderContacts()}</ScrollView>
-				</ScrollView>
+					<TrackingScrollView horizontal>{renderContacts()}</TrackingScrollView>
+				</TrackingScrollView>
 				<CustomButton
 					title={strings('file.transfer')}
 					onPress={

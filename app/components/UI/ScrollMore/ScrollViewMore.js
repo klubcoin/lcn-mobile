@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
+import TrackingScrollView from '../TrackingScrollView';
 
 export default class ScrollViewMore extends Component {
 	render() {
 		const { onScroll, children, customStyle } = this.props;
 		return (
-			<ScrollView
+			<TrackingScrollView
 				scrollEventThrottle={4}
 				style={customStyle}
 				onLayout={ev => {
@@ -30,7 +30,7 @@ export default class ScrollViewMore extends Component {
 				}}
 			>
 				{children}
-			</ScrollView>
+			</TrackingScrollView>
 		);
 	}
 }

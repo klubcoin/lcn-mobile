@@ -1,14 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import {
-	View,
-	Text,
-	KeyboardAvoidingView,
-	ScrollView,
-	TouchableOpacity,
-	TextInput
-} from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors } from '../../../../styles/common';
 import Device from '../../../../util/Device';
@@ -26,6 +19,8 @@ import Routes from '../../../../common/routes';
 import preferences from '../../../../store/preferences';
 import Geolocation from '@react-native-community/geolocation';
 import isEmail from 'validator/lib/isEmail';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export class ShippingInfo extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -43,7 +38,7 @@ export class ShippingInfo extends PureComponent {
 			name: observable,
 			shippingAddress: observable,
 			coords: observable,
-			processing: observable,
+			processing: observable
 		});
 
 		const { name, phone } = store.shippingInfo || {};
@@ -71,7 +66,7 @@ export class ShippingInfo extends PureComponent {
 		this.shippingAddress.street = shippingAddress?.street || '';
 		this.shippingAddress.zipCode = shippingAddress?.zipCode || '';
 		this.shippingAddress.city = shippingAddress?.city || '';
-		this.shippingAddress.country = shippingAddress?.country || ''
+		this.shippingAddress.country = shippingAddress?.country || '';
 		this.coords = coords || null;
 	}
 
@@ -85,7 +80,7 @@ export class ShippingInfo extends PureComponent {
 	};
 
 	onSave() {
-		const {email, phone, address, street, zipCode, city, country } = this.shippingAddress;
+		const { email, phone, address, street, zipCode, city, country } = this.shippingAddress;
 
 		if (!this.name) {
 			return showError(strings('market.missing_name'));
@@ -141,13 +136,16 @@ export class ShippingInfo extends PureComponent {
 						name: account.name,
 						phone,
 						address: `${address}, ${street}, ${city} ${zipCode}, ${country}`,
-						coords: this.coords,
-					}
+						coords: this.coords
+					};
 					store.setShippingInfo(store.shippingInfo);
 					showSuccess(strings('market.saved_successfully'));
 					this.onBack();
-					preferences.getOnboardProfile()
-						.then(value => preferences.setOnboardProfile(Object.assign(value, { publicInfo: shippingAddress })))
+					preferences
+						.getOnboardProfile()
+						.then(value =>
+							preferences.setOnboardProfile(Object.assign(value, { publicInfo: shippingAddress }))
+						);
 				}
 			},
 			error => {
@@ -169,7 +167,7 @@ export class ShippingInfo extends PureComponent {
 			err => {
 				this.readingGPS = false;
 				alert(err.message);
-			},
+			}
 		);
 	}
 
@@ -183,7 +181,12 @@ export class ShippingInfo extends PureComponent {
 			<SafeAreaView>
 				<View style={styles.navBar}>
 					<TouchableOpacity onPress={this.onBack.bind(this)} style={styles.navButton}>
-						<Icon name={drawer ? 'bars' : 'arrow-left'} size={16} style={styles.backIcon} color={colors.white} />
+						<Icon
+							name={drawer ? 'bars' : 'arrow-left'}
+							size={16}
+							style={styles.backIcon}
+							color={colors.white}
+						/>
 					</TouchableOpacity>
 					<Text style={styles.titleNavBar}>{strings('market.shipping_info')}</Text>
 					<View style={styles.navButton} />
@@ -196,11 +199,11 @@ export class ShippingInfo extends PureComponent {
 		return (
 			<KeyboardAvoidingView style={styles.root} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
-				<ScrollView contentContainerStyle={styles.scroll}>
+				<TrackingScrollView contentContainerStyle={styles.scroll}>
 					<Text style={styles.desc}>{strings('market.shipping_info_desc')}</Text>
 
 					<Text style={styles.heading}>{strings('market.name')}</Text>
-					<TextInput
+					<TrackingTextInput
 						editable={false}
 						style={styles.input}
 						value={this.name}
@@ -208,7 +211,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('market.email')}</Text>
-					<TextInput
+					<TrackingTextInput
 						value={this.shippingAddress.email}
 						onChangeText={text => (this.shippingAddress.email = text)}
 						style={styles.input}
@@ -217,7 +220,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('market.phone')}</Text>
-					<TextInput
+					<TrackingTextInput
 						value={this.shippingAddress.phone}
 						onChangeText={text => (this.shippingAddress.phone = text)}
 						style={styles.input}
@@ -225,7 +228,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('market.address_name')}</Text>
-					<TextInput
+					<TrackingTextInput
 						numberOfLines={1}
 						value={this.shippingAddress.address}
 						onChangeText={text => (this.shippingAddress.address = text)}
@@ -233,7 +236,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('market.street')}</Text>
-					<TextInput
+					<TrackingTextInput
 						numberOfLines={1}
 						value={this.shippingAddress.street}
 						onChangeText={text => (this.shippingAddress.street = text)}
@@ -241,7 +244,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('market.zip_code')}</Text>
-					<TextInput
+					<TrackingTextInput
 						numberOfLines={1}
 						value={this.shippingAddress.zipCode}
 						onChangeText={text => (this.shippingAddress.zipCode = text)}
@@ -250,7 +253,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('payQR.city')}</Text>
-					<TextInput
+					<TrackingTextInput
 						numberOfLines={1}
 						value={this.shippingAddress.city}
 						onChangeText={text => (this.shippingAddress.city = text)}
@@ -258,7 +261,7 @@ export class ShippingInfo extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('payQR.country')}</Text>
-					<TextInput
+					<TrackingTextInput
 						numberOfLines={1}
 						value={this.shippingAddress.country}
 						onChangeText={text => (this.shippingAddress.country = text)}
@@ -270,27 +273,21 @@ export class ShippingInfo extends PureComponent {
 						<TouchableOpacity activeOpacity={0.6} onPress={() => this.getCurrentLocation()}>
 							<Icon name={'map-marker-alt'} size={22} />
 						</TouchableOpacity>
-						<Text style={styles.coords}>{this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''}</Text>
+						<Text style={styles.coords}>
+							{this.coords ? `${this.coords.latitude}, ${this.coords.longitude}` : ''}
+						</Text>
 					</View>
 
 					<View style={styles.buttons}>
-						<StyledButton
-							type={'confirm'}
-							containerStyle={styles.save}
-							onPress={this.onSave.bind(this)}
-						>
+						<StyledButton type={'confirm'} containerStyle={styles.save} onPress={this.onSave.bind(this)}>
 							{strings('market.save')}
 						</StyledButton>
 
-						<StyledButton
-							type={'normal'}
-							containerStyle={styles.cancel}
-							onPress={this.onCancel.bind(this)}
-						>
+						<StyledButton type={'normal'} containerStyle={styles.cancel} onPress={this.onCancel.bind(this)}>
 							{strings('market.cancel')}
 						</StyledButton>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</KeyboardAvoidingView>
 		);
 	}

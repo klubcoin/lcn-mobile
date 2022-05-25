@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import StyledButton from '../StyledButton';
@@ -8,6 +8,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import Text from '../../Base/Text';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
 import routes from '../../../common/routes';
+import TrackingScrollView from '../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	rowWrapper: {
@@ -68,7 +69,7 @@ export default class AssetList extends PureComponent {
 		const { searchResults = [], handleSelectAsset, selectedAsset, isHideLabel } = this.props;
 
 		return (
-			<ScrollView>
+			<TrackingScrollView>
 				<View style={styles.rowWrapper} testID={'add-searched-token-screen'}>
 					{searchResults.length > 0 && !isHideLabel ? (
 						<Text style={styles.normalText} testID={'select-token-title'}>
@@ -103,7 +104,7 @@ export default class AssetList extends PureComponent {
 						);
 					})}
 				</View>
-			</ScrollView>
+			</TrackingScrollView>
 		);
 	};
 }

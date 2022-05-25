@@ -90,7 +90,7 @@ export default {
 		return null;
 	},
 
-	async setGenericPassword(password, type) {
+	async setGenericPassword(password, type, disableCallBiometric = false) {
 		const authOptions = {
 			accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY
 		};
@@ -118,7 +118,7 @@ export default {
 
 			// If the user enables biometrics, we're trying to read the password
 			// immediately so we get the permission prompt
-			if (Platform.OS === 'ios') {
+			if (Platform.OS === 'ios' && !disableCallBiometric) {
 				await this.getGenericPassword();
 			}
 		} else if (type === this.TYPES.PASSCODE) {

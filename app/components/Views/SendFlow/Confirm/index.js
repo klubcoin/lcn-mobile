@@ -5,7 +5,6 @@ import {
 	SafeAreaView,
 	View,
 	Alert,
-	ScrollView,
 	TouchableOpacity,
 	ActivityIndicator,
 	DeviceEventEmitter
@@ -67,6 +66,7 @@ import { removeFavoriteCollectible } from '../../../../actions/collectibles';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import Erc20Service from '../../../../core/Erc20Service';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const EDIT = 'edit';
 const EDIT_NONCE = 'edit_nonce';
@@ -266,9 +266,9 @@ class Confirm extends PureComponent {
 		const result = await new Erc20Service().getFixedFee();
 		const base = Math.pow(10, selectedAsset.decimals);
 		const networkFee = {
-			gas: hexToBN("0x1"),
-			gasPrice: toWei((parseFloat(result) / base).toString()),
-		}
+			gas: hexToBN('0x1'),
+			gasPrice: toWei((parseFloat(result) / base).toString())
+		};
 		this.setState({ customNetworkFee: networkFee });
 		return networkFee;
 	};
@@ -870,11 +870,9 @@ class Confirm extends PureComponent {
 
 		const AdressToComponentWrap = () =>
 			!existingContact && confusableCollection.length ? (
-				<TouchableOpacity onPress={this.toggleWarningModal}>
-					<AdressToComponent />
-				</TouchableOpacity>
+				<TouchableOpacity onPress={this.toggleWarningModal}>{AdressToComponent()}</TouchableOpacity>
 			) : (
-				<AdressToComponent />
+				AdressToComponent()
 			);
 
 		const is_main_net = isMainNet(network);
@@ -893,7 +891,7 @@ class Confirm extends PureComponent {
 							fromAccountName={fromAccountName}
 							fromAccountBalance={fromAccountBalance}
 						/>
-						<AdressToComponentWrap />
+						{AdressToComponentWrap()}
 					</View>
 
 					<InfoModal
@@ -903,7 +901,7 @@ class Confirm extends PureComponent {
 						body={<Text style={styles.text}>{strings('transaction.confusable_msg')}</Text>}
 					/>
 
-					<ScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
+					<TrackingScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
 						{!selectedAsset.tokenId ? (
 							<View style={styles.amountWrapper}>
 								<Text style={styles.textAmountLabel}>{strings('transaction.amount')}</Text>
@@ -949,13 +947,13 @@ class Confirm extends PureComponent {
 						/>
 						{errorMessage && (
 							<View style={styles.errorWrapper}>
-								<TouchableOpacity onPress={errorPress}>
+								<View>
 									<Text style={styles.error}>{errorMessage}</Text>
 									{/* only show buy more on mainnet */}
 									{over && is_main_net && (
 										<Text style={[styles.error, styles.underline]}>{errorLinkText}</Text>
 									)}
-								</TouchableOpacity>
+								</View>
 							</View>
 						)}
 						{!!warningGasPriceHigh && (
@@ -970,7 +968,7 @@ class Confirm extends PureComponent {
 								</TouchableOpacity>
 							)}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 					<View style={styles.buttonNextWrapper}>
 						<StyledButton
 							type={'normal'}

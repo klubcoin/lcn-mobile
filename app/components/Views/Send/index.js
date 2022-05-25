@@ -10,7 +10,7 @@ import { toChecksumAddress } from 'ethereumjs-util';
 import { strings } from '../../../../locales/i18n';
 import { getTransactionOptionsTitle } from '../../UI/Navbar';
 import { connect } from 'react-redux';
-import { resetTransaction, setTransactionObject } from '../../../actions/transaction';
+import { resetTransaction, setTransactionObject, newAssetTransaction } from '../../../actions/transaction';
 import { toggleDappTransactionModal } from '../../../actions/modals';
 import NotificationManager from '../../../core/NotificationManager';
 import contractMap from '@metamask/contract-metadata';
@@ -29,8 +29,9 @@ import TransactionTypes from '../../../core/TransactionTypes';
 import { MAINNET } from '../../../constants/network';
 import BigNumber from 'bignumber.js';
 import { WalletDevice } from '@metamask/controllers/';
-import Erc20Service from '../../../core/Erc20Service';
+import Erc20Service, { getContractAddress } from '../../../core/Erc20Service';
 import { toWei } from 'web3-utils';
+import { showError } from '../../../util/notify';
 
 const REVIEW = 'review';
 const EDIT = 'edit';
@@ -206,7 +207,7 @@ class Send extends PureComponent {
 		if (!transactionSubmitted && !this.unmountHandled) {
 			transaction && (await this.onCancel(transaction.id));
 		}
-		this.clear();
+		// this.clear();
 		this.mounted = false;
 	}
 
@@ -265,9 +266,14 @@ class Send extends PureComponent {
 		parameters = null
 	}) => {
 		const { addressBook, network, identities, selectedAddress } = this.props;
-		if (chain_id) {
-			this.handleNetworkSwitch(chain_id);
+		if (target_address !== getContractAddress()) {
+			showError(strings('transaction.unrecognized_token'));
+			this.props.navigation.navigate('SendFlowView');
+			return;
 		}
+		// if (chain_id) {
+		// 	this.handleNetworkSwitch(chain_id);
+		// }
 
 		let newTxMeta = {};
 		switch (action) {
@@ -685,6 +691,7 @@ const mapStateToProps = state => ({
 	frequentRpcList: state.engine.backgroundState.PreferencesController.frequentRpcList,
 	contractBalances: state.engine.backgroundState.TokenBalancesController.contractBalances,
 	transaction: state.transaction,
+	ticker: state.engine.backgroundState.NetworkController.provider.ticker,
 	networkType: state.engine.backgroundState.NetworkController.provider.type,
 	tokens: state.engine.backgroundState.AssetsController.tokens,
 	network: state.engine.backgroundState.NetworkController.network,
@@ -697,6 +704,7 @@ const mapDispatchToProps = dispatch => ({
 	resetTransaction: () => dispatch(resetTransaction()),
 	setTransactionObject: transaction => dispatch(setTransactionObject(transaction)),
 	showAlert: config => dispatch(showAlert(config)),
+	newAssetTransaction: selectedAsset => dispatch(newAssetTransaction(selectedAsset)),
 	toggleDappTransactionModal: () => dispatch(toggleDappTransactionModal())
 });
 

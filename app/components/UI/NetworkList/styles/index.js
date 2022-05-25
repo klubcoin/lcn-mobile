@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
 	otherNetworkIcon: {
 		backgroundColor: colors.transparent,
 		borderColor: colors.grey100,
-		borderWidth: 2
+		borderWidth: 2,
+		borderBottomWidth:2
 	}
 });
 

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, ActivityIndicator, Alert, Text, View, TextInput, SafeAreaView, Image } from 'react-native';
+import { Switch, ActivityIndicator, Alert, Text, View, SafeAreaView, Image } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -54,6 +54,7 @@ import emojiRegex from 'emoji-regex';
 import NetInfo from '@react-native-community/netinfo';
 import { showError } from '../../../util/notify';
 import CryptoSignature from '../../../core/CryptoSignature';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 const PASSCODE_NOT_SET_ERROR = 'Error: Passcode not set.';
 
@@ -169,25 +170,24 @@ class ChoosePassword extends PureComponent {
 		this.keyringControllerPasswordSet = true;
 	};
 
-
 	async storeTimeSendEmail(email) {
 		AsyncStorage.setItem(email, `${new Date().getTime()}`);
 	}
 
 	async sendAccount() {
-		const { selectedAddress, keyringController } = this.props;
+		const { selectedAddress } = this.props;
 		if (selectedAddress == null) {
 			return;
 		}
+		const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
 		const { avatar, firstname, lastname, email } = preferences.onboardProfile;
 		const { username } = this.props.navigation.state.params;
-		const name = `${firstname} ${lastname}`;
 		// const avatarb64 = await RNFS.readFile(avatar, 'base64');
-		const publicInfo = JSON.stringify({ name });
+		const publicInfo = JSON.stringify({ firstname, lastname });
 		const privateInfo = JSON.stringify({ emailAddress: email });
-		const hash = sha3JS.keccak_256(firstname + lastname + selectedAddress + publicInfo );
-		const signature = await CryptoSignature.signMessage(selectedAddress, privateInfo);
-		const params = [username, selectedAddress, hash, signature, publicInfo, privateInfo];
+		const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
+		const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, privateInfo);
+		const params = [username, lowerCaseSelectedAddress, hash, signature, publicInfo, privateInfo];
 		API.postRequest(
 			Routes.walletCreation,
 			params,
@@ -628,7 +628,7 @@ class ChoosePassword extends PureComponent {
 															{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
 														</Text> */}
 												</View>
-												<TextInput
+												<TrackingTextInput
 													style={[styles.input, inputWidth]}
 													value={password}
 													onChangeText={this.onPasswordChange}
@@ -724,7 +724,7 @@ class ChoosePassword extends PureComponent {
 												<Text style={styles.hintLabel}>
 													{strings('choose_password.confirm_password')}
 												</Text>
-												<TextInput
+												<TrackingTextInput
 													ref={this.confirmPasswordInput}
 													style={[styles.input, inputWidth]}
 													value={confirmPassword}

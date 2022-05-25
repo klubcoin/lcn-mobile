@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { Text, ScrollView, Switch, View, Image, TouchableOpacity } from 'react-native';
+import { Text, Switch, View, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import Engine from '../../../../core/Engine';
@@ -20,6 +20,7 @@ import { toDataUrl } from '../../../../util/blockies.js';
 import Jazzicon from 'react-native-jazzicon';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const diameter = 40;
 const spacing = 8;
@@ -141,7 +142,7 @@ class Settings extends PureComponent {
 		} = this.props;
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView style={styles.wrapper}>
+				<TrackingScrollView style={styles.wrapper}>
 					<View style={styles.inner}>
 						<View style={[styles.setting, styles.firstSetting]}>
 							<Text style={styles.title}>{strings('app_settings.conversion_title')}</Text>
@@ -215,7 +216,11 @@ class Settings extends PureComponent {
 							<Text style={styles.title}>{strings('app_settings.accounts_identicon_title')}</Text>
 							<Text style={styles.desc}>{strings('app_settings.accounts_identicon_desc')}</Text>
 							<View style={styles.identicon_container}>
-								<TouchableOpacity onPress={() => setUseBlockieIcon(false)} style={styles.identicon_row}>
+								<TouchableOpacity
+									onPress={() => setUseBlockieIcon(false)}
+									style={styles.identicon_row}
+									activeOpacity={0.6}
+								>
 									<View style={[styles.border, !useBlockieIcon && styles.selected]}>
 										<Jazzicon size={diameter} address={selectedAddress} />
 									</View>
@@ -223,7 +228,11 @@ class Settings extends PureComponent {
 										{strings('app_settings.jazzicons')}
 									</Text>
 								</TouchableOpacity>
-								<TouchableOpacity onPress={() => setUseBlockieIcon(true)} style={styles.identicon_row}>
+								<TouchableOpacity
+									onPress={() => setUseBlockieIcon(true)}
+									style={styles.identicon_row}
+									activeOpacity={0.6}
+								>
 									<View style={[styles.border, useBlockieIcon && styles.selected]}>
 										<Image source={{ uri: toDataUrl(selectedAddress) }} style={styles.blockie} />
 									</View>
@@ -234,7 +243,7 @@ class Settings extends PureComponent {
 							</View>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	}

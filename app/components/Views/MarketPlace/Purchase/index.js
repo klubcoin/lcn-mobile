@@ -8,7 +8,6 @@ import {
 	View,
 	SafeAreaView,
 	InteractionManager,
-	ScrollView,
 	ActivityIndicator,
 	Alert,
 	DeviceEventEmitter,
@@ -50,6 +49,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { refStoreService } from '../../MarketPlace/store/StoreService';
 import { StoreOrder, StoreOrderStats } from '../../MarketPlace/store/StoreMessages';
 import BigNumber from 'bignumber.js';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const { hexToBN } = util;
 /**
@@ -108,14 +108,14 @@ class MarketPurchase extends PureComponent {
 		fromAccountModalVisible: false,
 		fromSelectedAddress: this.props.selectedAddress,
 		fromAccountName: this.props.identities[this.props.selectedAddress].name,
-		fromAccountBalance: undefined,
+		fromAccountBalance: undefined
 	};
 
 	constructor(props) {
-		super(props)
+		super(props);
 		makeObservable(this, {
 			processing: observable
-		})
+		});
 	}
 
 	componentDidMount = async () => {
@@ -129,7 +129,7 @@ class MarketPurchase extends PureComponent {
 		this.setState({
 			fromAccountName: ens || fromAccountName,
 			fromAccountBalance,
-			balanceIsZero: hexToBN(accounts[selectedAddress].balance).isZero(),
+			balanceIsZero: hexToBN(accounts[selectedAddress].balance).isZero()
 		});
 
 		this.isDeliveryPayment = this.props.navigation.getParam('isDeliveryPayment');
@@ -191,15 +191,13 @@ class MarketPurchase extends PureComponent {
 
 		var payment = 0;
 		if (this.isDeliveryPayment) {
-			payment = BigNumber(storeProfile.deliveryPayment || 0).times(BigNumber(order.amount))
+			payment = BigNumber(storeProfile.deliveryPayment || 0).times(BigNumber(order.amount));
 		} else {
-			payment = BigNumber(storeProfile.orderPayment || 0).times(BigNumber(order.amount))
-
+			payment = BigNumber(storeProfile.orderPayment || 0).times(BigNumber(order.amount));
 		}
 		const amount = BNToHex(toWei(payment.toNumber()));
 
-		if (!order.id)
-			order.id = this.orderId;
+		if (!order.id) order.id = this.orderId;
 		// const hexData = TRANSFER_FUNCTION_SIGNATURE + Array.prototype.map
 		// 	.call(rawEncode(
 		// 		['address', 'uint256', 'string'],
@@ -226,7 +224,7 @@ class MarketPurchase extends PureComponent {
 		//TODO: add gas price to check valid
 		const { accounts, contractBalances, selectedAddress, ticker } = this.props;
 		const { amount } = this.props.navigation.getParam('order');
-		const selectedAsset = getEther(ticker)
+		const selectedAsset = getEther(ticker);
 
 		let weiBalance, weiInput, amountError;
 		if (isDecimal(amount)) {
@@ -238,8 +236,7 @@ class MarketPurchase extends PureComponent {
 				weiInput = toTokenMinimalUnit(amount, selectedAsset.decimals);
 			}
 			amountError = weiBalance?.gte(weiInput) ? undefined : strings('transaction.insufficient');
-		}
-		else {
+		} else {
 			amountError = weiBalance?.gte(weiInput) ? undefined : strings('transaction.invalid_amount');
 		}
 		return amountError;
@@ -253,8 +250,7 @@ class MarketPurchase extends PureComponent {
 		const order = navigation.getParam('order');
 		if (this.isDeliveryPayment) {
 			this.sendTransaction();
-		}
-		else {
+		} else {
 			const storeService = refStoreService();
 			const hash = storeService?.sendOrder(order);
 
@@ -266,7 +262,7 @@ class MarketPurchase extends PureComponent {
 				}
 			});
 		}
-	}
+	};
 
 	sendTransaction = async () => {
 		const { TransactionController } = Engine.context;
@@ -289,7 +285,7 @@ class MarketPurchase extends PureComponent {
 			InteractionManager.runAfterInteractions(() => {
 				DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
 				NotificationManager.watchSubmittedTransaction({
-					...transactionMeta,
+					...transactionMeta
 				});
 			});
 			this.processing = false;
@@ -301,7 +297,7 @@ class MarketPurchase extends PureComponent {
 				{ text: strings('navigation.ok') }
 			]);
 		}
-	}
+	};
 
 	goToBuy = () => {
 		this.props.navigation.navigate('PurchaseMethods');
@@ -342,20 +338,15 @@ class MarketPurchase extends PureComponent {
 
 	render = () => {
 		const { ticker, navigation } = this.props;
-		const {
-			fromSelectedAddress,
-			fromAccountName,
-			fromAccountBalance,
-			balanceIsZero,
-		} = this.state;
+		const { fromSelectedAddress, fromAccountName, fromAccountBalance, balanceIsZero } = this.state;
 
 		const { products, profile, to, amount, currencyUnit } = navigation.getParam('order');
 		const isDeliveryPayment = navigation.getParam('isDeliveryPayment');
 
 		const payment = {
 			order: BigNumber(profile?.orderPayment || 0).times(BigNumber(amount)),
-			delivery: BigNumber(profile?.deliveryPayment || 0).times(BigNumber(amount)),
-		}
+			delivery: BigNumber(profile?.deliveryPayment || 0).times(BigNumber(amount))
+		};
 
 		return (
 			<View style={styles.root}>
@@ -368,13 +359,9 @@ class MarketPurchase extends PureComponent {
 							fromAccountName={fromAccountName}
 							fromAccountBalance={fromAccountBalance}
 						/>
-						<AddressTo
-							addressToReady
-							toAddressName={profile?.storeName}
-							toSelectedAddress={to}
-						/>
+						<AddressTo addressToReady toAddressName={profile?.storeName} toSelectedAddress={to} />
 					</View>
-					<ScrollView>
+					<TrackingScrollView>
 						<MarketOrderSummary
 							products={products}
 							amount={amount}
@@ -396,7 +383,7 @@ class MarketPurchase extends PureComponent {
 								/>
 							</View>
 						)}
-					</ScrollView>
+					</TrackingScrollView>
 
 					<View style={styles.buttonNextWrapper}>
 						<StyledButton

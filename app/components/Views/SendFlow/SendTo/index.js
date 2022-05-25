@@ -3,15 +3,7 @@ import { colors, baseStyles } from '../../../../styles/common';
 import { getSendFlowTitle } from '../../../UI/Navbar';
 import AddressList from '../AddressList';
 import PropTypes from 'prop-types';
-import {
-	View,
-	TouchableOpacity,
-	TextInput,
-	SafeAreaView,
-	InteractionManager,
-	ScrollView,
-	Modal as ReactNativeModal
-} from 'react-native';
+import { View, TouchableOpacity, SafeAreaView, InteractionManager, Modal as ReactNativeModal } from 'react-native';
 import { AddressFrom, AddressTo } from '../AddressInputs';
 import Modal from 'react-native-modal';
 import AccountList from '../../../UI/AccountList';
@@ -52,6 +44,8 @@ import { parse } from 'eth-url-parser';
 import { showError } from '../../../../util/notify';
 import SharedDeeplinkManager from '../../../../core/DeeplinkManager';
 import AppConstants from '../../../../core/AppConstants';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 const { hexToBN } = util;
 const dummy = () => true;
@@ -415,7 +409,7 @@ class SendFlow extends PureComponent {
 			return;
 		}
 		if (content.split('ethereum:').length > 1 && !parse(content).function_name) {
-			data = parse(content);
+			let data = parse(content);
 			const action = 'send-eth';
 			data = { ...data, action };
 			if (data.target_address) {
@@ -476,7 +470,7 @@ class SendFlow extends PureComponent {
 							<Text style={styles.addTextSubtitle}>{strings('address_book.enter_an_alias')}</Text>
 							<View style={styles.addInputWrapper}>
 								<View style={styles.input}>
-									<TextInput
+									<TrackingTextInput
 										autoFocus
 										autoCapitalize="none"
 										autoCorrect={false}
@@ -618,7 +612,7 @@ class SendFlow extends PureComponent {
 						/>
 					) : (
 						<View style={styles.nextActionWrapper}>
-							<ScrollView>
+							<TrackingScrollView>
 								{addressError && (
 									<View style={styles.addressErrorWrapper} testID={'address-error'}>
 										<ErrorMessage
@@ -674,7 +668,7 @@ class SendFlow extends PureComponent {
 										/>
 									</View>
 								)}
-							</ScrollView>
+							</TrackingScrollView>
 							<View style={styles.footerContainer} testID={'no-eth-message'}>
 								{!errorContinue && (
 									<View style={styles.buttonNextWrapper}>

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, View, Image, StyleSheet, Text, ScrollView, InteractionManager } from 'react-native';
+import { TouchableOpacity, View, Image, Text, InteractionManager, PanResponder } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,7 +11,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import { colors, fontStyles } from '../../../styles/common';
+import { colors } from '../../../styles/common';
 import { hasBlockExplorer, findBlockExplorerForRpc, getBlockExplorerName, isMainNet } from '../../../util/networks';
 import Identicon from '../Identicon';
 import StyledButton from '../StyledButton';
@@ -31,13 +31,11 @@ import { showAlert } from '../../../actions/alert';
 import { getEtherscanAddressUrl, getEtherscanBaseUrl } from '../../../util/etherscan';
 import Engine from '../../../core/Engine';
 import Logger from '../../../util/Logger';
-import Device from '../../../util/Device';
 import OnboardingWizard from '../OnboardingWizard';
 import ReceiveRequest from '../ReceiveRequest';
 import Analytics from '../../../core/Analytics';
 import AppConstants from '../../../core/AppConstants';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
-import URL from 'url-parse';
 import EthereumAddress from '../EthereumAddress';
 import { getEther } from '../../../util/transactions';
 import { newAssetTransaction } from '../../../actions/transaction';
@@ -49,7 +47,6 @@ import InvalidCustomNetworkAlert from '../InvalidCustomNetworkAlert';
 import { RPC } from '../../../constants/network';
 import { findBottomTabRouteNameFromNavigatorState, findRouteNameFromNavigatorState } from '../../../util/general';
 import { ANALYTICS_EVENTS_V2 } from '../../../util/analyticsV2';
-import Colors from 'common/colors';
 import Helper from 'common/Helper';
 import Routes from '../../../common/routes';
 import ConfirmLogout from '../ConfirmLogout';
@@ -64,9 +61,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { BIOMETRY_CHOICE_DISABLED, PASSCODE_DISABLED, TRUE } from '../../../constants/storage';
 import * as RNFS from 'react-native-fs';
 import routes from '../../../common/routes';
-import { BNToHex, fromWei, weiToFiat } from '../../../util/number';
+import {  fromWei, weiToFiat } from '../../../util/number';
 import { hexToBN } from '@metamask/controllers/dist/util';
 import NetInfo from '@react-native-community/netinfo';
+import { EXCEPTION_ACTIVE_APP } from '../TrackingTextInput';
+import TrackingScrollView from '../TrackingScrollView';
 
 const metamask_name = require('../../../images/metamask-name.png'); // eslint-disable-line
 const metamask_fox = require('../../../images/fox.png'); // eslint-disable-line
@@ -207,6 +206,34 @@ class DrawerView extends PureComponent {
 		showProtectWalletModal: undefined,
 		file: '',
 		time: new Date()
+	};
+
+	constructor(props) {
+		super(props);
+		this._panResponder = PanResponder.create({
+			onStartShouldSetPanResponder: () => {
+				this.onTrackingDrawerAction();
+			},
+			onMoveShouldSetPanResponder: () => {
+				this.onTrackingDrawerAction();
+			},
+			onStartShouldSetPanResponderCapture: () => {
+				this.onTrackingDrawerAction();
+			},
+			onMoveShouldSetPanResponderCapture: () => {
+				this.onTrackingDrawerAction();
+			},
+			onPanResponderTerminationRequest: () => {
+				this.onTrackingDrawerAction();
+			},
+			onShouldBlockNativeResponder: () => {
+				this.onTrackingDrawerAction();
+			}
+		});
+	}
+
+	onTrackingDrawerAction = () => {
+		AsyncStorage.setItem(EXCEPTION_ACTIVE_APP, `${new Date().getTime()}`);
 	};
 
 	browserSectionRef = React.createRef();
@@ -387,11 +414,8 @@ class DrawerView extends PureComponent {
 		});
 	};
 
-	onReceive = () => {
-		this.props.navigation.navigate('ComingSoon');
-		return;
-		this.toggleReceiveModal();
-		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_RECEIVE);
+	onBuy = () => {
+		this.props.navigation.navigate('PurchaseMethods');
 	};
 
 	onSend = async () => {
@@ -446,16 +470,21 @@ class DrawerView extends PureComponent {
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_PARTNERS);
 	};
 
+	gotoChat = () => {
+		this.props.navigation.navigate('ChatList');
+		this.hideDrawer();
+	};
+
 	gotoManageCoin = () => {
-		// this.props.navigation.navigate('ManageCoinFlow');
-		this.props.navigation.navigate('ComingSoon');
+		this.props.navigation.navigate('ManageCoinFlow');
+		// this.props.navigation.navigate('ComingSoon');
 		this.hideDrawer();
 		this.trackEvent(ANALYTICS_EVENT_OPTS.NAVIGATION_TAPS_MANAGE_COIN);
 	};
 
 	gotoTipper = () => {
-		// this.props.navigation.navigate('TipperApp');
-		this.props.navigation.navigate('ComingSoon');
+		this.props.navigation.navigate('TipperApp');
+		// this.props.navigation.navigate('ComingSoon');
 		this.hideDrawer();
 	};
 
@@ -722,7 +751,7 @@ class DrawerView extends PureComponent {
 					action: this.goToCollect
 				},
 				{
-				name: strings('drawer.receive_tips'),
+					name: strings('drawer.receive_tips'),
 					icon: this.getImageIcon('receiveTip'),
 					selectedIcon: this.getImageIcon('receiveTip'),
 					action: this.gotoTipper
@@ -735,8 +764,7 @@ class DrawerView extends PureComponent {
 				{
 					name: strings('drawer.chat'),
 					icon: this.getIonIcon('chatbox'),
-					// action: this.onShare
-					action: this.comingSoon
+					action: this.gotoChat
 				}
 			],
 			[
@@ -886,13 +914,15 @@ class DrawerView extends PureComponent {
 			// 		? accounts[selectedAddress].conversion
 			// 		: null;
 		}
-		
+
 		const currentRoute = findRouteNameFromNavigatorState(this.props.navigation.state);
-		const balanceFiat = account?.balance ? `${fromWei(hexToBN(account?.balance))} ${routes.klubToken.symbol}` : `0x00`;// weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
+		const balanceFiat = account?.balance
+			? `${fromWei(hexToBN(account?.balance))} ${routes.klubToken.symbol}`
+			: `0x00`; // weiToFiat(hexToBN(account?.balance || '0x0'), conversionRate, currentCurrency) || 0;
 
 		return (
-			<View style={styles.wrapper} testID={'drawer-screen'}>
-				<ScrollView>
+			<View style={styles.wrapper} testID={'drawer-screen'} {...this._panResponder.panHandlers}>
+				<TrackingScrollView>
 					{/* <View style={styles.header}>
 						<View style={styles.metamaskLogo}>
 							<Image source={metamask_fox} style={styles.metamaskFox} resizeMethod={'auto'} />
@@ -931,6 +961,7 @@ class DrawerView extends PureComponent {
 									style={styles.identiconWrapper}
 									onPress={this.toggleEditWalletName}
 									testID={'navbar-account-identicon'}
+									activeOpacity={0.6}
 								>
 									<View style={styles.identiconBorder}>
 										{!!avatar ? (
@@ -996,18 +1027,16 @@ class DrawerView extends PureComponent {
 							testID={'drawer-send-button'}
 						>
 							<View style={styles.buttonContent}>
-								{/* {this.getIcon('paper-plane', 16, Colors.primary)} */}
 								<Text style={styles.buttonText}>{strings('drawer.send_button').toUpperCase()}</Text>
 							</View>
 						</StyledButton>
 						<StyledButton
 							type={'normal'}
-							onPress={this.onReceive}
+							onPress={this.onBuy}
 							containerStyle={[styles.button, styles.rightButton]}
 							testID={'drawer-receive-button'}
 						>
 							<View style={styles.buttonContent}>
-								{/* {this.getIcon('dollar', 16, Colors.primary)} */}
 								<Text style={styles.buttonText}>
 									{strings('asset_overview.buy_button').toUpperCase()}
 								</Text>
@@ -1046,6 +1075,7 @@ class DrawerView extends PureComponent {
 														this.browserSectionRef
 													}
 													onPress={() => item.action()} // eslint-disable-line
+													activeOpacity={0.6}
 												>
 													{item.icon ? (
 														item.routeNames && item.routeNames.includes(currentRoute) ? (
@@ -1082,7 +1112,7 @@ class DrawerView extends PureComponent {
 								)
 						)}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				<Modal
 					isVisible={this.props.networkModalVisible}
 					onBackdropPress={this.toggleNetworksModal}

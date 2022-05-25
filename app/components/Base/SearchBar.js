@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../styles/common';
+import TrackingTextInput from '../UI/TrackingTextInput';
 
 export default function SearchBar({ value, onChange, hideIcon, placeholder, containerStyle }) {
 	return (
 		<View style={[styles.searchSection, containerStyle]}>
 			{!hideIcon && <Icon name="search" size={22} style={styles.icon} color={colors.white} />}
-			<TextInput
+			<TrackingTextInput
 				style={styles.textInput}
 				value={value}
 				placeholder={placeholder}

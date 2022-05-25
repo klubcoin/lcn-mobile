@@ -108,3 +108,8 @@ export default class Logger {
 		}
 	}
 }
+
+export const testID = (key) => ({
+	testID: key,
+	accessibilityLabel: key
+})

@@ -1,16 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import {
-	View,
-	Text,
-	KeyboardAvoidingView,
-	ScrollView,
-	TouchableOpacity,
-	ActivityIndicator,
-	Image,
-	TextInput
-} from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { strings } from '../../../../../locales/i18n';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
@@ -36,6 +27,8 @@ import routes from '../../../../common/routes';
 import NetworkMainAssetLogo from '../../../UI/NetworkMainAssetLogo';
 import { showError, showSuccess } from '../../../../util/notify';
 import { refStoreService } from '../../MarketPlace/store/StoreService';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 export class MarketAddEditProduct extends PureComponent {
 	static navigationOptions = () => ({ header: null });
@@ -317,13 +310,13 @@ export class MarketAddEditProduct extends PureComponent {
 		this.showAddTag = true;
 	};
 
-	deleteTag = (tag) => {
+	deleteTag = tag => {
 		this.tags.splice(this.tags.indexOf(tag), 1);
-	}
+	};
 
-	deleteImage = (image) => {
+	deleteImage = image => {
 		this.images.splice(this.images.indexOf(image), 1);
-	}
+	};
 
 	render() {
 		const editing = !!this.uuid && this.product;
@@ -332,9 +325,13 @@ export class MarketAddEditProduct extends PureComponent {
 		return (
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled={Device.isIos()}>
 				{this.renderNavBar()}
-				<ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+				<TrackingScrollView contentContainerStyle={{ paddingBottom: 80 }}>
 					<Text style={styles.heading}>{strings('market.product_title')}</Text>
-					<TextInput value={this.title} onChangeText={text => (this.title = text)} style={styles.input} />
+					<TrackingTextInput
+						value={this.title}
+						onChangeText={text => (this.title = text)}
+						style={styles.input}
+					/>
 
 					<Text style={styles.heading}>{strings('market.category')}</Text>
 					{this.renderSelector({
@@ -344,7 +341,7 @@ export class MarketAddEditProduct extends PureComponent {
 
 					<Text style={styles.heading}>{strings('market.price')}</Text>
 					<View style={[styles.input, styles.containerPrice]}>
-						<TextInput
+						<TrackingTextInput
 							value={this.price}
 							onChangeText={text => (this.price = text)}
 							style={styles.price}
@@ -361,7 +358,7 @@ export class MarketAddEditProduct extends PureComponent {
 					</View>
 
 					<Text style={styles.heading}>{strings('market.quantity')}</Text>
-					<TextInput
+					<TrackingTextInput
 						value={this.quantity}
 						onChangeText={text => (this.quantity = text)}
 						style={styles.input}
@@ -369,7 +366,7 @@ export class MarketAddEditProduct extends PureComponent {
 					/>
 
 					<Text style={styles.heading}>{strings('market.desc')}</Text>
-					<TextInput
+					<TrackingTextInput
 						multiline={true}
 						numberOfLines={5}
 						value={this.description}
@@ -434,7 +431,7 @@ export class MarketAddEditProduct extends PureComponent {
 							</StyledButton>
 						)}
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 
 				{this.renderCategoryModal()}
 				{this.renderAddTagModal()}

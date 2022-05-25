@@ -4,19 +4,19 @@ import PropTypes from 'prop-types';
 import RevealPrivateCredential from '../RevealPrivateCredential';
 import Logger from '../../../util/Logger';
 import routes from '../../../common/routes';
-import { ScrollView } from 'react-native-gesture-handler';
 import Clipboard from '@react-native-community/clipboard';
 import { strings } from '../../../../locales/i18n';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import drawables from '../../../common/drawables';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 // eslint-disable-next-line import/no-commonjs
 const metamaskErrorImage = drawables.logo;
 
 const Fallback = props => (
 	<SafeAreaView style={styles.container}>
-		<ScrollView style={styles.content}>
+		<TrackingScrollView style={styles.content}>
 			<View style={styles.header}>
 				<Image source={metamaskErrorImage} style={styles.errorImage} />
 				<Text style={styles.title}>{strings('error_screen.title')}</Text>
@@ -72,7 +72,7 @@ const Fallback = props => (
 					{strings('error_screen.save_seedphrase_3')}
 				</Text>
 			</View>
-		</ScrollView>
+		</TrackingScrollView>
 	</SafeAreaView>
 );
 

@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { observer } from 'mobx-react';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import { getNavigationOptionsTitle } from '../../../UI/Navbar';
 import { strings } from '../../../../../locales/i18n';
 import styles from './styles';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
 
 class FAQAnswer extends PureComponent {
     static navigationOptions = ({ navigation }) => getNavigationOptionsTitle(strings('drawer.faq_answer'), navigation);
@@ -14,10 +15,10 @@ class FAQAnswer extends PureComponent {
 
         return (
             <OnboardingScreenWithBg screen="a">
-                <ScrollView style={styles.wrapper}>
+                <TrackingScrollView style={styles.wrapper}>
                     <Text style={styles.question}>{question}</Text>
                     <Text style={styles.answer}>{answer}</Text>
-                </ScrollView>
+                </TrackingScrollView>
             </OnboardingScreenWithBg>
         );
     }

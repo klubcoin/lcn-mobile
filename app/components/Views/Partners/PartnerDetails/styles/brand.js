@@ -1,5 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
-import { colors, fontStyles, baseStyles } from '../../../../styles/common';
+import { StyleSheet } from 'react-native';
 
 const brandStyles = StyleSheet.create({});
 

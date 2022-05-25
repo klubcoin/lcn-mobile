@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, TextInput, Text, Image, View, Modal, FlatList } from 'react-native';
+import { TouchableOpacity, Text, Image, View, Modal, FlatList } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import TrackingTextInput from '../TrackingTextInput';
 
 export default class CountrySearchModal extends Component {
 	searchText = '';
@@ -33,7 +34,7 @@ export default class CountrySearchModal extends Component {
 	}
 
 	renderItem(item) {
-		const { onSelectCountryCode ,countryCode } = this.props;
+		const { onSelectCountryCode, countryCode } = this.props;
 		return (
 			<TouchableOpacity
 				style={styles.option}
@@ -43,13 +44,13 @@ export default class CountrySearchModal extends Component {
 				{/* <Text style={styles.flag}>{item.flag || ''}</Text> */}
 				<View style={styles.content}>
 					<Text style={styles.dialCode} numberOfLines={1}>
-						{item.dialCode ?`+${item.dialCode}`: ''}
+						{item.dialCode ? `+${item.dialCode}` : ''}
 					</Text>
 					<Text style={styles.name} numberOfLines={1}>
 						{item.name || ''}
 					</Text>
 					{/* {item == selected && <Image source={{ uri: drawables.at.iconCheck }} style={styles.iconCheck} />} */}
-						{countryCode===item.dialCode	&&<AntDesignIcon name="check" size={20} color={colors.success} />}
+					{countryCode === item.dialCode && <AntDesignIcon name="check" size={20} color={colors.success} />}
 				</View>
 			</TouchableOpacity>
 		);
@@ -70,7 +71,7 @@ export default class CountrySearchModal extends Component {
 						</TouchableOpacity>
 						<View style={styles.inputView}>
 							<View style={styles.inputInner}>
-								<TextInput
+								<TrackingTextInput
 									autoFocus={true}
 									value={this.searchText}
 									style={styles.search}
@@ -82,8 +83,7 @@ export default class CountrySearchModal extends Component {
 									style={styles.delete}
 									activeOpacity={0.85}
 									onPress={() => this.onSearch('')}
-								>
-								</TouchableOpacity>
+								/>
 							</View>
 						</View>
 						<FlatList

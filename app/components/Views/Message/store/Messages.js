@@ -1,17 +1,25 @@
 import { sha256 } from '../../../../core/CryptoSignature';
 import uuid from 'react-native-uuid';
 
-export const Chat = (message, from, to) => ({
+export const Chat = (message, from, to, group) => ({
 	action: 'chat',
 	message,
 	from,
 	to,
+	group,
 	checksum: sha256(message + uuid.v4()),
 	createdAt: new Date().getTime()
 });
 
-export const Typing = () => ({
-	action: 'typing'
+export const Typing = (name, group) => ({
+	action: 'typing',
+	name,
+	group,
+});
+
+export const JoinUpdate = (address) => ({
+	action: 'join_peer',
+	from: address,
 });
 
 export const ChatProfile = profile => ({
@@ -21,7 +29,7 @@ export const ChatProfile = profile => ({
 
 export const RequestPayment = (to, request) => ({
 	action: 'payment_request',
-	to: `${to}`.toLowerCase(),
+	to: `${to}`,
 	...request
 });
 
@@ -32,7 +40,7 @@ export const TransactionSync = (transaction) => ({
 
 export const ChatFile = (to, fileInfo) => ({
 	action: 'chat_file',
-	to: `${to}`.toLowerCase(),
+	to: `${to}`,
 	loading: true,
 	...fileInfo,
 })

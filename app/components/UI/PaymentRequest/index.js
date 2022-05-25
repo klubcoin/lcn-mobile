@@ -1,15 +1,7 @@
 import React, { PureComponent } from 'react';
-import {
-	SafeAreaView,
-	TextInput,
-	Text,
-	View,
-	TouchableOpacity,
-	KeyboardAvoidingView,
-	InteractionManager
-} from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, InteractionManager } from 'react-native';
 import { connect } from 'react-redux';
-import { colors, fontStyles, baseStyles } from '../../../styles/common';
+import { colors, baseStyles } from '../../../styles/common';
 import { getPaymentRequestOptionsTitle } from '../../UI/Navbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import contractMap from '@metamask/contract-metadata';
@@ -41,6 +33,7 @@ import { getTicker } from '../../../util/transactions';
 import { toLowerCaseCompare } from '../../../util/general';
 import styles from './styles/index';
 import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
+import TrackingTextInput from '../TrackingTextInput';
 
 const KEYBOARD_OFFSET = 120;
 
@@ -127,8 +120,6 @@ class PaymentRequest extends PureComponent {
 		ticker: PropTypes.string
 	};
 
-	amountInput = React.createRef();
-
 	state = {
 		searchInputValue: '',
 		results: [],
@@ -141,7 +132,8 @@ class PaymentRequest extends PureComponent {
 		symbol: undefined,
 		showError: false,
 		inputWidth: { width: '99%' },
-		disabledButton: false
+		disabledButton: false,
+		errorMessage: ''
 	};
 
 	/**
@@ -157,12 +149,6 @@ class PaymentRequest extends PureComponent {
 		if (receiveAsset) {
 			this.goToAmountInput(receiveAsset);
 		}
-	};
-
-	componentDidUpdate = () => {
-		InteractionManager.runAfterInteractions(() => {
-			this.amountInput.current && this.amountInput.current.focus();
-		});
 	};
 
 	/**
@@ -237,7 +223,7 @@ class PaymentRequest extends PureComponent {
 				</View>
 				{chainId === '1' && (
 					<View style={styles.searchWrapper}>
-						<TextInput
+						<TrackingTextInput
 							style={[styles.searchInput, inputWidth]}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -358,6 +344,9 @@ class PaymentRequest extends PureComponent {
 					.replace(/\./g, '')
 					.replace(/#/, '.')
 			: null;
+		let convertAmount =
+			rawAmount?.split('.')[0] +
+			(rawAmount?.split('.').length > 1 ? '.' + rawAmount?.split('.')[1].replace(/0*$/, '') : '');
 		this.setState({ amount: rawAmount });
 		const { internalPrimaryCurrency, selectedAsset } = this.state;
 		const { conversionRate, contractExchangeRates, currentCurrency } = this.props;
@@ -367,15 +356,15 @@ class PaymentRequest extends PureComponent {
 		// If primary currency is not crypo we need to know if there are conversion and exchange rates to handle0,
 		// fiat conversion for the payment request
 		if (internalPrimaryCurrency !== 'ETH' && conversionRate && (exchangeRate || selectedAsset.isETH)) {
-			res = this.handleFiatPrimaryCurrency(rawAmount && rawAmount.replace(',', '.'));
+			res = this.handleFiatPrimaryCurrency(convertAmount && convertAmount.replace(',', '.'));
 		} else {
-			res = this.handleETHPrimaryCurrency(rawAmount && rawAmount.replace(',', '.'));
+			res = this.handleETHPrimaryCurrency(convertAmount && convertAmount.replace(',', '.'));
 		}
 		const { cryptoAmount, symbol } = res;
-		if (rawAmount && rawAmount[0] === currencySymbol) rawAmount = rawAmount.substr(1);
+		if (convertAmount && convertAmount[0] === currencySymbol) convertAmount = convertAmount.substr(1);
 		if (res.secondaryAmount && res.secondaryAmount[0] === currencySymbol)
 			res.secondaryAmount = res.secondaryAmount.substr(1);
-		if (rawAmount && rawAmount === '0') rawAmount = undefined;
+		if (convertAmount && convertAmount === '0') convertAmount = undefined;
 
 		try {
 			if (
@@ -455,6 +444,20 @@ class PaymentRequest extends PureComponent {
 	/**
 	 * Renders a view that allows user to set payment request amount
 	 */
+
+	onValidateAmount = () => {
+		const { amount } = this.state;
+		if (!amount || /^[0.]*$/.test(amount)) {
+			this.setState({ errorMessage: strings('payment_request.invalid_amount') });
+			return;
+		}
+		if (amount.split('.').length > 1 && amount.split('.')[1].replace(/0*$/, '').length > 18) {
+			this.setState({ errorMessage: strings('payment_request.error_decimal_amount') });
+			return;
+		}
+		this.setState({ errorMessage: '' });
+	};
+
 	renderEnterAmount = () => {
 		const { conversionRate, contractExchangeRates, currentCurrency, navigation } = this.props;
 		const {
@@ -464,7 +467,8 @@ class PaymentRequest extends PureComponent {
 			cryptoAmount,
 			showError,
 			selectedAsset,
-			internalPrimaryCurrency
+			internalPrimaryCurrency,
+			errorMessage
 		} = this.state;
 		const onRequest = navigation && navigation.getParam('onRequest', false);
 		const currencySymbol = currencySymbols[currentCurrency];
@@ -488,7 +492,7 @@ class PaymentRequest extends PureComponent {
 									{internalPrimaryCurrency !== 'ETH' && (
 										<Text style={styles.currencySymbol}>{currencySymbol}</Text>
 									)}
-									<TextInput
+									<TrackingTextInput
 										autoCapitalize="none"
 										autoCorrect={false}
 										keyboardType="numeric"
@@ -500,9 +504,9 @@ class PaymentRequest extends PureComponent {
 										style={styles.input}
 										value={amount}
 										onSubmitEditing={this.onNext}
-										ref={this.amountInput}
 										testID={'request-amount-input'}
 										maxLength={256}
+										onBlur={this.onValidateAmount}
 									/>
 									<Text style={styles.eth} numberOfLines={1}>
 										{symbol}
@@ -537,9 +541,11 @@ class PaymentRequest extends PureComponent {
 							)}
 						</View>
 					</View>
-					{showError && (
+					{(showError || !!errorMessage) && (
 						<View style={styles.errorWrapper}>
-							<Text style={styles.errorText}>{strings('payment_request.request_error')}</Text>
+							<Text style={styles.errorText}>
+								{errorMessage ?? strings('payment_request.request_error')}
+							</Text>
 						</View>
 					)}
 				</View>

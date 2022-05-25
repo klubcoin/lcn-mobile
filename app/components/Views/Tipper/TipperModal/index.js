@@ -4,7 +4,6 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
-	TextInput,
 	Alert,
 	InteractionManager,
 	DeviceEventEmitter,
@@ -30,9 +29,12 @@ import * as sha3JS from 'js-sha3';
 import { WalletDevice } from '@metamask/controllers';
 import TransactionTypes from '../../../../core/TransactionTypes';
 import NotificationManager from '../../../../core/NotificationManager';
-import { ScrollView } from 'react-native-gesture-handler';
 import { getGasPriceByChainId } from '../../../../util/custom-gas';
 import Erc20Service from '../../../../core/Erc20Service';
+import TrackingTextInput from '../../../UI/TrackingTextInput';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Identicon from '../../../UI/Identicon';
 
 export default class TipperModal extends PureComponent {
 	static propTypes = {
@@ -89,7 +91,6 @@ export default class TipperModal extends PureComponent {
 
 	componentDidMount() {
 		this.initData();
-		this.prepareTransaction();
 	}
 
 	initData = () => {
@@ -186,6 +187,8 @@ export default class TipperModal extends PureComponent {
 		const { visible, hideModal } = this.props;
 
 		try {
+			await this.prepareTransaction();
+		 
 			const transaction = this.prepareTransactionToSend();
 			// return
 			const { result, transactionMeta } = await TransactionController.addTransaction(
@@ -226,22 +229,29 @@ export default class TipperModal extends PureComponent {
 	};
 
 	updateAmount = value => {
-		value = `${value}`
+		let newValue = value;
+		newValue = `${newValue}`
 			.replace(/[^\w.,]|_|[a-zA-Z]/g, '')
 			.replace(/,/g, '.')
 			.replace(/\./, '#')
 			.replace(/\./g, '')
 			.replace(/#/, '.');
-		if (value[1] !== '.') {
-			value = value.replace(/0/, '');
+		if (newValue[1] !== '.') {
+			newValue = newValue.replace(/^0/, '');
 		}
-		if (!value) value = '0';
-		this.amount = value;
+		if (!newValue) {
+			newValue = '0';
+		}
+		const newNumbers = newValue.split('.');
+		if (newNumbers.length > 1) {
+			newValue = `${newNumbers[0]}.${newNumbers[1].slice(0, Math.min(18, newNumbers[1].length))}`;
+		}
+		this.amount = newValue;
 		const { isETH } = this.tipData;
 		if (isETH) {
-			this.tipData.value = toWei(value).toString();
+			this.tipData.value = toWei(newValue).toString();
 		} else {
-			this.tipData.value = toTokenMinimalUnit(value, this.tipData.decimals).toString();
+			this.tipData.value = toTokenMinimalUnit(newValue, this.tipData.decimals).toString();
 		}
 	};
 
@@ -282,7 +292,7 @@ export default class TipperModal extends PureComponent {
 		})}?`;
 		return (
 			<View style={styles.root}>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<TransactionHeader
 						currentPageInformation={meta}
 						titleStyle={styles.transactionHeaderTitle}
@@ -301,7 +311,7 @@ export default class TipperModal extends PureComponent {
 						{this.renderBalance()}
 					</View>
 					{this.renderActions()}
-				</ScrollView>
+				</TrackingScrollView>
 			</View>
 		);
 	}
@@ -314,7 +324,9 @@ export default class TipperModal extends PureComponent {
 		return (
 			<View style={styles.profile}>
 				<View style={styles.avatarView}>
-					<RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${tipData?.avatar}` }} />
+					{/* <RemoteImage style={styles.avatar} source={{ uri: `data:image/png;base64,${tipData?.avatar}` }} /> */}
+					{/* <Ionicons name="person" style={styles.avatar} /> */}
+					<Identicon diameter={50} address={tipData?.receiverAddress} />
 				</View>
 				<TouchableOpacity activeOpacity={0.6} onPress={this.toggleAddress}>
 					<EthereumAddress
@@ -334,11 +346,10 @@ export default class TipperModal extends PureComponent {
 
 		return (
 			<View style={styles.amountInput}>
-				<TextInput
+				<TrackingTextInput
 					autoCapitalize="none"
 					autoCorrect={false}
 					keyboardType="numeric"
-					multiline={true}
 					onChangeText={value => this.updateAmount(value.replace(',', '.'))}
 					placeholder={strings('payment_request.amount_placeholder')}
 					placeholderTextColor={colors.grey100}
@@ -347,6 +358,7 @@ export default class TipperModal extends PureComponent {
 					value={this.amount}
 					ref={this.amountInput}
 					testID={'request-amount-input'}
+					maxLength={256}
 				/>
 
 				<Text style={styles.eth}>{symbol}</Text>
@@ -377,14 +389,14 @@ export default class TipperModal extends PureComponent {
 	renderActions() {
 		const { confirmLabel, cancelLabel } = this.props;
 		const { value } = this.tipData;
-
+		const disableSend = this.loading || this.tipping || value === '0' || !!this.errorMessage;
 		return (
 			<View style={styles.buttons}>
 				<StyledButton
-					type={!!this.errorMessage || value == 0 ? 'cancel' : 'normal'}
+					type={'normal'}
 					containerStyle={styles.accept}
 					onPress={!this.errorMessage && value !== 0 && !this.processing ? () => this.onConfirm() : null}
-					disabled={this.loading || this.tipping}
+					disabled={disableSend}
 				>
 					{this.loading || this.tipping ? <ActivityIndicator color={colors.white} /> : confirmLabel}
 				</StyledButton>

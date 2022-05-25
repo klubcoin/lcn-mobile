@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-community/async-storage';
 import StyledButton from '../../UI/StyledButton';
@@ -14,11 +14,22 @@ import { CHOOSE_PASSWORD_STEPS } from '../../../constants/onboarding';
 import SkipVerifyEmailModal from '../../UI/SkipVerifyEmailModal';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingScrollView from '../../UI/TrackingScrollView';
+import preferences from '../../../../app/store/preferences';
+import APIService from '../../../services/APIService';
+import ActionModal from '../../UI/ActionModal';
+import { colors } from '../../../styles/common';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { BLOCK_TIME } from '../Settings/SecuritySettings';
 
 const EmailVerifyOnboarding = props => {
 	const [showRemindLaterModal, setRemindLaterModal] = useState(false);
 	const [skipCheckbox, setToggleSkipCheckbox] = useState(false);
 	const [hasFunds, setHasFunds] = useState(false);
+	const [isBlockedEmail, setIsBlockedEmail] = useState(false);
+	const [blockEmailTime, setBlockEmailTime] = useState(0);
+	const [blockTimerRemaning, setBlockTimerRemaning] = useState('');
+	const [isCoundown, setIsCoundown] = useState(false);
 
 	useEffect(
 		() => {
@@ -39,8 +50,53 @@ const EmailVerifyOnboarding = props => {
 		[] // Run only when component mounts
 	);
 
+	useEffect(() => {
+		if (isCoundown) {
+			const intevalCoundown = setInterval(() => {
+				const coundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
+				let hour = Math.floor(coundownTime / 3600000);
+				let minute = Math.floor((coundownTime % 3600000) / 60000);
+				let second = Math.floor((coundownTime % 60000) / 1000);
+				setBlockTimerRemaning(
+					`${hour > 9 ? hour : `0${hour}`}:${minute > 9 ? minute : `0${minute}`}:${
+						second > 9 ? second : `0${second}`
+					}`
+				);
+			}, 1000);
+			return () => {
+				clearInterval(intevalCoundown);
+			};
+		}
+	}, [isCoundown]);
+
+	const coundown = () => {
+		const startCoundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
+		let startHour = Math.floor(startCoundownTime / 3600000);
+		let startMinute = Math.floor((startCoundownTime % 3600000) / 60000);
+		let startSecond = Math.floor((startCoundownTime % 60000) / 1000);
+		setBlockTimerRemaning(
+			`${startHour > 9 ? startHour : `0${startHour}`}:${startMinute > 9 ? startMinute : `0${startMinute}`}:${
+				startSecond > 9 ? startSecond : `0${startSecond}`
+			}`
+		);
+		setIsCoundown(true);
+	};
+
 	const goNext = () => {
-		props.navigation.navigate('VerifyOTPOnboarding');
+		APIService.getOtpStatus(preferences.onboardProfile?.email, (success, json) => {
+			if (json?.attempts === '5') {
+				setIsBlockedEmail(true);
+				setBlockEmailTime(json.lastAttemptDate);
+				coundown();
+				return;
+			}
+			props.navigation.navigate('VerifyOTPOnboarding');
+		});
+	};
+
+	const onHideEmailBlocked = () => {
+		setIsBlockedEmail(false);
+		setIsCoundown(false);
 	};
 
 	const showRemindLater = () => {
@@ -86,7 +142,7 @@ const EmailVerifyOnboarding = props => {
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.mainWrapper}>
 				<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={4} />
-				<ScrollView
+				<TrackingScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
 					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
@@ -138,7 +194,35 @@ const EmailVerifyOnboarding = props => {
 							</View>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
+				<ActionModal
+					modalVisible={isBlockedEmail}
+					confirmText={strings('app_settings.ok').toUpperCase()}
+					onConfirmPress={onHideEmailBlocked}
+					onRequestClose={onHideEmailBlocked}
+					confirmButtonMode={'normal'}
+					displayCancelButton={false}
+					verticalButtons
+				>
+					<View style={styles.areYouSure}>
+						<TouchableOpacity
+							style={styles.closeModalButton}
+							activeOpacity={0.7}
+							onPress={onHideEmailBlocked}
+						>
+							<Icon name="close" style={styles.closeModalIcon} />
+						</TouchableOpacity>
+						<Icon style={styles.warningIcon} size={46} color={colors.red} name="exclamation-triangle" />
+						<Text style={styles.emailBlockedTitle}>
+							{strings('app_settings.email_verification_blocked')}
+						</Text>
+						<Text style={styles.emailBlockedContent}>
+							{strings('app_settings.email_verification_blocked_content')}
+						</Text>
+						<Text style={styles.emailBlockedCoundown}>{blockTimerRemaning}</Text>
+						<Text style={styles.emailBlockedRemaining}>{strings('app_settings.remaining')}</Text>
+					</View>
+				</ActionModal>
 				{/* {Device.isAndroid() && <AndroidBackHandler customBackPress={showRemindLater} />} */}
 				<SkipVerifyEmailModal
 					modalVisible={showRemindLaterModal}
@@ -153,8 +237,8 @@ const EmailVerifyOnboarding = props => {
 
 EmailVerifyOnboarding.propTypes = {
 	/**
-	/* navigation object required to push and pop other views
-	*/
+    /* navigation object required to push and pop other views
+    */
 	navigation: PropTypes.object
 };
 

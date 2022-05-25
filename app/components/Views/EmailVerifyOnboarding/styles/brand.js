@@ -3,10 +3,13 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { colors, fontStyles } from '../../../../styles/common';
 import Device from '../../../../util/Device';
 
+const deviceHeight = Device.getDeviceHeight();
+const breakPoint = deviceHeight < 700;
+
 const brandStyles = StyleSheet.create({
 	mainWrapper: {
 		backgroundColor: colors.transparent,
-		marginTop:30
+		marginTop: 30
 	},
 	wrapper: {
 		marginTop: 20
@@ -44,6 +47,53 @@ const brandStyles = StyleSheet.create({
 		paddingVertical: 25,
 		borderRadius: 10,
 		marginBottom: 5
+	},
+	areYouSure: {
+		width: '100%',
+		padding: breakPoint ? 16 : 24,
+		justifyContent: 'center',
+		alignSelf: 'center',
+		alignItems: 'center'
+	},
+	warningIcon: {
+		alignSelf: 'center',
+		color: colors.red,
+		marginVertical: 10
+	},
+	emailBlockedTitle: {
+		color: colors.red,
+		fontWeight: 'bold',
+		fontSize: 24,
+		textAlign: 'center'
+	},
+	emailBlockedContent: {
+		color: colors.grey300,
+		fontWeight: '600',
+		marginTop: 8,
+		textAlign: 'center'
+	},
+	emailBlockedCoundown: {
+		color: colors.red,
+		fontWeight: 'bold',
+		fontSize: 24,
+		textAlign: 'center',
+		marginTop: 16
+	},
+	emailBlockedRemaining: {
+		color: colors.grey300,
+		fontWeight: '600',
+		marginTop: 8,
+		textAlign: 'center'
+	},
+	closeModalButton: {
+		position: 'absolute',
+		top: 10,
+		right: 10,
+		padding: 12
+	},
+	closeModalIcon: {
+		color: colors.grey400,
+		fontSize: 24
 	}
 });
 

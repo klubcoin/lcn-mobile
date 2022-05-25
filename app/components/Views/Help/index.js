@@ -1,14 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-	SafeAreaView,
-	StyleSheet,
-	Image,
-	Text,
-	InteractionManager,
-	View,
-	ScrollView,
-	TouchableOpacity
-} from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Text, InteractionManager, View, TouchableOpacity } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import routes from '../../../common/routes';
 import { strings } from '../../../../locales/i18n';
@@ -16,6 +7,7 @@ import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -118,7 +110,7 @@ export default class Help extends PureComponent {
 	render = () => (
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.wrapper} testID={'app-settings-screen'}>
-				<ScrollView contentContainerStyle={styles.wrapperContent}>
+				<TrackingScrollView contentContainerStyle={styles.wrapperContent}>
 					<View style={styles.logoWrapper}>
 						<Image source={foxImage} style={styles.image} resizeMethod={'auto'} />
 					</View>
@@ -143,7 +135,7 @@ export default class Help extends PureComponent {
 							<Text style={styles.link}>{strings('help.contact_us')}</Text>
 						</TouchableOpacity>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 			</SafeAreaView>
 		</OnboardingScreenWithBg>
 	);

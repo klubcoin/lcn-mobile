@@ -50,7 +50,7 @@ class AddressElement extends PureComponent {
 	};
 
 	fetchProfile = async address => {
-		const profile = await preferences.peerProfile(address);
+		const profile = preferences.peerProfile(address);
 		if (profile) this.setState({ profile });
 	};
 

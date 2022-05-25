@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Animated } from 'react-native';
 import { colors, fontStyles } from '../../../styles/common';
 import { strings } from '../../../../locales/i18n';
 import { getRenderableEthGasFee, getRenderableFiatGasFee, apiEstimateModifiedToWEI } from '../../../util/custom-gas';
@@ -17,6 +17,7 @@ import AnalyticsV2 from '../../../util/analyticsV2';
 import { isMainnetByChainId } from '../../../util/networks';
 import { displayName } from '../../../../app.json';
 import styles from './styles/index';
+import TrackingTextInput from '../TrackingTextInput';
 
 /**
  * PureComponent that renders a selector to choose either fast, average or slow gas fee
@@ -512,7 +513,7 @@ class CustomGas extends PureComponent {
 				</View>
 				<View style={styles.valueRow}>
 					<Text style={styles.advancedOptionsText}>{strings('custom_gas.gas_limit')}</Text>
-					<TextInput
+					<TrackingTextInput
 						keyboardType="numeric"
 						style={styles.gasInput}
 						onChangeText={this.onGasLimitChange}
@@ -522,7 +523,7 @@ class CustomGas extends PureComponent {
 				</View>
 				<View style={styles.valueRow}>
 					<Text style={styles.advancedOptionsText}>{strings('custom_gas.gas_price')}</Text>
-					<TextInput
+					<TrackingTextInput
 						keyboardType="numeric"
 						style={warningGasPriceHigh ? styles.gasInputError : styles.gasInput}
 						onChangeText={this.onGasPriceChange}

@@ -5,13 +5,20 @@ import Text from '../../../Base/Text';
 import { colors } from '../../../../styles/common';
 import { strings } from '../../../../../locales/i18n';
 import decodeTransaction from '../../../UI/TransactionElement/utils';
+import Engine from '../../../../core/Engine';
 
-const ChatTransaction = ({ data, incoming }) => {
+const ChatTransaction = ({ data, incoming, dark }) => {
   const [details, setDetails] = useState({});
   const sender = !incoming;
   const title = sender ? strings('chat.sent_transaction') : strings('chat.received_transaction');
 
   const decodeTrans = async () => {
+    const { tokens } = Engine.state.AssetsController;
+    data.tokens = tokens.reduce((tokens, token) => {
+      tokens[token.address] = token;
+      return tokens;
+    }, {});
+    data.contractExchangeRates = {};
     const [details] = await decodeTransaction(data);
     setDetails(details);
   }
@@ -24,8 +31,8 @@ const ChatTransaction = ({ data, incoming }) => {
     <View style={styles.root}>
       <Icon name={incoming ? 'dollar' : 'send'} size={24} style={[styles.icon, incoming && styles.highlight]} />
       <View style={styles.bubble}>
-        <Text style={[sender && styles.textWhite]}>{title}</Text>
-        <Text style={[sender && styles.textWhite, styles.bold]}>{details?.value || ''}</Text>
+        <Text style={[sender && !dark && styles.textWhite]}>{title}</Text>
+        <Text style={[sender && !dark && styles.textWhite, styles.bold]}>{details?.value || ''}</Text>
       </View>
     </View>
   )

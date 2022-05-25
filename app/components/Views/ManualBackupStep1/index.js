@@ -6,7 +6,6 @@ import {
 	StyleSheet,
 	ActivityIndicator,
 	InteractionManager,
-	TextInput,
 	KeyboardAvoidingView,
 	TouchableOpacity
 } from 'react-native';
@@ -35,6 +34,7 @@ import {
 } from '../../../constants/onboarding';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
+import TrackingTextInput from '../../UI/TrackingTextInput';
 
 /**
  * View that's shown during the second step of
@@ -177,7 +177,7 @@ export class ManualBackupStep1 extends PureComponent {
 								/>
 							) : (
 								<>
-									<TextInput
+									<TrackingTextInput
 										style={styles.input}
 										placeholder={'Password'}
 										placeholderTextColor={colors.grey100}

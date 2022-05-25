@@ -26,7 +26,7 @@ export default class TermsAndConditions extends PureComponent {
 
 	render() {
 		return (
-			<TouchableOpacity onPress={this.press}>
+			<TouchableOpacity onPress={this.press} activeOpacity={0.6}>
 				<Text style={styles.text}>
 					{strings('terms_and_conditions.description')}
 					<Text style={styles.link}>{strings('terms_and_conditions.terms')}</Text>.

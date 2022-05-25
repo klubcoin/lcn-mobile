@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, ScrollView, TouchableOpacity, LayoutAnimation, UIManager, Platform } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
@@ -20,6 +20,7 @@ import { colors } from '../../../../styles/common';
 import Text from '../../../Base/Text';
 import Title from '../../../Base/Title';
 import Ratio from './Ratio';
+import TrackingScrollView from '../../TrackingScrollView';
 
 const styles = StyleSheet.create({
 	modalView: {
@@ -240,7 +241,7 @@ function QuotesModal({
 					</TouchableOpacity>
 				</View>
 				{displayDetails ? (
-					<ScrollView key="details" style={styles.body}>
+					<TrackingScrollView key="details" style={styles.body}>
 						<View onStartShouldSetResponder={() => true}>
 							{!!selectedDetailsQuote && !!selectedDetailsQuoteValues && (
 								<>
@@ -324,9 +325,9 @@ function QuotesModal({
 								</>
 							)}
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				) : (
-					<ScrollView key="list" style={styles.body}>
+					<TrackingScrollView key="list" style={styles.body}>
 						<View onStartShouldSetResponder={() => true}>
 							<View style={styles.body}>
 								<View style={styles.row}>
@@ -439,7 +440,7 @@ function QuotesModal({
 								</View>
 							</View>
 						</View>
-					</ScrollView>
+					</TrackingScrollView>
 				)}
 			</SafeAreaView>
 		</Modal>

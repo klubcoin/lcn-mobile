@@ -62,7 +62,10 @@ const OfflineMode = ({ navigation, infuraBlocked }) => {
 	};
 
 	useEffect(() => {
-		BackHandler.addEventListener('hardwareBackPress', () => onBack());
+		BackHandler.addEventListener('hardwareBackPress', onBack);
+		return () => {
+			BackHandler.removeEventListener('hardwareBackPress', onBack);
+		};
 	}, []);
 
 	const onBack = () => {

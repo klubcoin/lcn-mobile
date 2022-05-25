@@ -1,6 +1,6 @@
 import PropTypes, { string } from 'prop-types';
 import React, { PureComponent } from 'react';
-import { StyleSheet, Text, View, TextInput, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { colors, fontStyles } from '../../../../../styles/common';
 import { getNavigationOptionsTitle } from '../../../../UI/Navbar';
@@ -21,6 +21,7 @@ import AnalyticsV2 from '../../../../../util/analyticsV2';
 import OnboardingScreenWithBg from '../../../../UI/OnboardingScreenWithBg';
 import { MAINNET } from '../../../../../constants/network';
 import routes from '../../../../../common/routes';
+import TrackingTextInput from '../../../../UI/TrackingTextInput';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -470,7 +471,7 @@ class NetworkSettings extends PureComponent {
 							{addMode && <Text style={styles.desc}>{strings('app_settings.rpc_desc')}</Text>}
 
 							<Text style={styles.label}>{strings('app_settings.network_name_label')}</Text>
-							<TextInput
+							<TrackingTextInput
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
 								autoCorrect={false}
@@ -484,7 +485,7 @@ class NetworkSettings extends PureComponent {
 								maxLength={256}
 							/>
 							<Text style={styles.label}>{strings('app_settings.network_rpc_url_label')}</Text>
-							<TextInput
+							<TrackingTextInput
 								ref={this.inputRpcURL}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
@@ -506,7 +507,7 @@ class NetworkSettings extends PureComponent {
 							)}
 
 							<Text style={styles.label}>{strings('app_settings.network_chain_id_label')}</Text>
-							<TextInput
+							<TrackingTextInput
 								ref={this.inputChainId}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
@@ -529,7 +530,7 @@ class NetworkSettings extends PureComponent {
 							) : null}
 
 							<Text style={styles.label}>{strings('app_settings.network_symbol_label')}</Text>
-							<TextInput
+							<TrackingTextInput
 								ref={this.inputSymbol}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}
@@ -544,7 +545,7 @@ class NetworkSettings extends PureComponent {
 								maxLength={256}
 							/>
 							<Text style={styles.label}>{strings('app_settings.network_block_explorer_label')}</Text>
-							<TextInput
+							<TrackingTextInput
 								ref={this.inputBlockExplorerURL}
 								style={[styles.input, inputWidth]}
 								autoCapitalize={'none'}

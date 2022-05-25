@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, TextInput, Dimensions, Text } from 'react-native';
-import { colors } from '../../../../styles/common';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Dimensions, Text } from 'react-native';
+import { colors } from '../../../styles/common';
+import TrackingTextInput from '../TrackingTextInput';
 
 const { width } = Dimensions.get('screen');
 export default function OTPInput({ style, value, onChange, disable = false }) {
@@ -47,6 +48,12 @@ export default function OTPInput({ style, value, onChange, disable = false }) {
 	// 	setOtp(text);
 	// };
 
+	useEffect(() => {
+		if (disable) {
+			inputRef.current.blur();
+		}
+	}, [disable]);
+
 	const onFocus = () => {
 		inputRef.current.focus();
 	};
@@ -59,7 +66,7 @@ export default function OTPInput({ style, value, onChange, disable = false }) {
 			style={[styles.wrapper, style]}
 			underlayColor={colors.grey}
 		>
-			<TextInput
+			<TrackingTextInput
 				style={styles.input}
 				maxLength={6}
 				keyboardType={'number-pad'}

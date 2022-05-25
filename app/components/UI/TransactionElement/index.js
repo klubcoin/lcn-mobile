@@ -121,14 +121,15 @@ class TransactionElement extends PureComponent {
 		const { tx, selectedAddress } = this.props;
 		const incoming = safeToChecksumAddress(tx.transaction.to) === selectedAddress;
 		const selfSent = incoming && safeToChecksumAddress(tx.transaction.from) === selectedAddress;
-		return `#${parseInt(tx.transaction.nonce, 16)} - ${(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
-			? `${toDateFormat(tx.time)} ${strings(
-				'transactions.from_device_label'
-				// eslint-disable-next-line no-mixed-spaces-and-tabs
-			)}`
-			: `${toDateFormat(tx.time)}
+		return `#${parseInt(tx.transaction.nonce, 16)} - ${
+			(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
+				? `${toDateFormat(tx.time)} ${strings(
+						'transactions.from_device_label'
+						// eslint-disable-next-line no-mixed-spaces-and-tabs
+				  )}`
+				: `${toDateFormat(tx.time)}
 			`
-			}`;
+		}`;
 	};
 
 	/**
@@ -141,7 +142,11 @@ class TransactionElement extends PureComponent {
 		if (tx.insertImportTime && accountImportTime) {
 			return (
 				<>
-					<TouchableOpacity onPress={this.onPressImportWalletTip} style={styles.importRowBody}>
+					<TouchableOpacity
+						onPress={this.onPressImportWalletTip}
+						style={styles.importRowBody}
+						activeOpacity={0.6}
+					>
 						<Text style={styles.importText}>
 							{`${strings('transactions.import_wallet_row')} `}
 							<FAIcon name="info-circle" style={styles.infoIcon} />
@@ -207,7 +212,7 @@ class TransactionElement extends PureComponent {
 						</ListItem.Body>
 						{Boolean(value) && (
 							<ListItem.Amounts>
-								<ListItem.Amount style={{textAlign: 'right'}}>{value}</ListItem.Amount>
+								<ListItem.Amount style={{ textAlign: 'right' }}>{value}</ListItem.Amount>
 								{isMainNet(chainId) && <ListItem.FiatAmount>{fiatValue}</ListItem.FiatAmount>}
 							</ListItem.Amounts>
 						)}

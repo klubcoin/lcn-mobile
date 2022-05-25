@@ -12,15 +12,11 @@ const brandStyles = StyleSheet.create({
 		fontWeight: '700'
 	},
 	resendButton: {},
-	resendText: {
-		color: colors.white,
-		fontSize: 20,
-		fontWeight: 'bold'
-	},
 	textWrapper: {
 		fontSize: 16,
 		color: colors.white,
-		marginTop: 10
+		marginTop: 15,
+		lineHeight: 15
 	},
 	text: {},
 	resendText: {
@@ -85,6 +81,13 @@ const brandStyles = StyleSheet.create({
 		padding: 12
 	},
 	skipButton: {
+		marginTop: 12
+	},
+	loadingWrapper: {
+		paddingHorizontal: 20,
+		height: '100%'
+	},
+	loadingWrapper1: {
 		marginTop: 12
 	}
 });

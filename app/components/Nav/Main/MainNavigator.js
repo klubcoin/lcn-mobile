@@ -53,6 +53,7 @@ import ActivityView from '../../Views/ActivityView';
 import SwapsAmountView from '../../UI/Swaps';
 import SwapsQuotesView from '../../UI/Swaps/QuotesView';
 import PayPal from '../../UI/FiatOrders/Payments/PayPal';
+import Wyre from '../../UI/FiatOrders/Payments/Wyre';
 import PurchaseMethods from '../../UI/FiatOrders/Payments/Purchase';
 import PayQR from '../../Views/PayQRFlow/PayQR';
 import VotingApp from '../../Views/VotingApp';
@@ -106,6 +107,12 @@ import FAQAnswer from '../../Views/FAQ/FAQAnswer';
 import VerifyOTP from '../../Views/VerifyOTP';
 import ComingSoon from '../../Views/ComingSoon';
 import Help from '../../Views/Help';
+import Trade from '../../Views/Trade';
+import PurchaseOrderDetails from '../../Views/PurchaseOrderDetails';
+import PurchaseSuccess from '../../Views/PurchaseSuccess';
+import ChatList from '../../Views/ChatList';
+import NewChat from '../../Views/NewChat';
+import ChatMessage from '../../Views/ChatMessage';
 
 const styles = StyleSheet.create({
 	headerLogo: {
@@ -201,6 +208,15 @@ export default createStackNavigator(
 						},
 						Collect: {
 							screen: Collect
+						},
+						ChatList: {
+							screen: ChatList
+						},
+						NewChat: {
+							screen: NewChat
+						},
+						ChatMessage: {
+							screen: ChatMessage
 						}
 					}),
 					VotingAppHome: createDrawerNavigator({
@@ -244,7 +260,19 @@ export default createStackNavigator(
 					}),
 					ManageCoinFlow: {
 						screen: createStackNavigator({
-							ManageCoin: ManageCoin
+							ManageCoin: ManageCoin,
+							ComingSoon: {
+								screen: ComingSoon
+							},
+							PurchaseOrderDetails: {
+								screen: PurchaseOrderDetails
+							},
+							PurchaseSuccess: {
+								screen: PurchaseSuccess
+							},
+							Partners: {
+								screen: Partners
+							}
 						})
 					}
 				},
@@ -570,11 +598,13 @@ export default createStackNavigator(
 		},
 		FiatOnRamp: {
 			screen: createStackNavigator({
+				PurchaseMethods: { screen: PurchaseMethods },
 				PaymentMethodSelector: { screen: PaymentMethodSelector },
 				PaymentMethodApplePay: { screen: PaymentMethodApplePay },
 				TransakFlow: { screen: TransakWebView },
-				PurchaseMethods: { screen: PurchaseMethods },
-				BuyWithPayPal: { screen: PayPal }
+				Trade: { screen: Trade },
+				BuyWithPayPal: { screen: PayPal },
+				BuyWithWyre: { screen: Wyre }
 			})
 		},
 		Swaps: {

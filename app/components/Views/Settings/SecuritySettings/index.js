@@ -4,7 +4,6 @@ import {
 	Alert,
 	Switch,
 	Text,
-	ScrollView,
 	View,
 	ActivityIndicator,
 	TouchableOpacity,
@@ -58,9 +57,14 @@ import styles from './styles/index';
 import OnboardingScreenWithBg from '../../../UI/OnboardingScreenWithBg';
 import ledgerAccessories from '../../../../images/ledger_accessories.jpg';
 import ScaleImage from 'react-native-scalable-image';
+import TrackingScrollView from '../../../UI/TrackingScrollView';
+import APIService from '../../../../services/APIService';
 
 const isIos = Device.isIos();
 const { width } = Dimensions.get('window');
+
+export const BLOCK_TIME = 7200000;
+
 const Heading = ({ children, first }) => (
 	<View style={[styles.setting, first && styles.firstSetting]}>
 		<Text style={[styles.title, styles.heading]}>{children}</Text>
@@ -160,7 +164,10 @@ class Settings extends PureComponent {
 		showHint: false,
 		hintText: '',
 		loading: false,
-		emailVerified: preferences?.onboardProfile?.emailVerified
+		emailVerified: preferences?.onboardProfile?.emailVerified,
+		isBlockedEmail: false,
+		blockEmailTime: 0,
+		blockTimerRemaning: ''
 	};
 
 	autolockOptions = [
@@ -257,6 +264,37 @@ class Settings extends PureComponent {
 			});
 		}
 		return unsubscribe;
+	};
+
+	coundown = () => {
+		const { blockEmailTime } = this.state;
+		const startCoundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
+		let startHour = Math.floor(startCoundownTime / 3600000);
+		let startMinute = Math.floor((startCoundownTime % 3600000) / 60000);
+		let startSecond = Math.floor((startCoundownTime % 60000) / 1000);
+		this.setState({
+			blockTimerRemaning: `${startHour > 9 ? startHour : `0${startHour}`}:${
+				startMinute > 9 ? startMinute : `0${startMinute}`
+			}:${startSecond > 9 ? startSecond : `0${startSecond}`}`
+		});
+		this.intevalCoundown = setInterval(() => {
+			const coundownTime = +blockEmailTime + BLOCK_TIME - new Date().getTime();
+			let hour = Math.floor(coundownTime / 3600000);
+			let minute = Math.floor((coundownTime % 3600000) / 60000);
+			let second = Math.floor((coundownTime % 60000) / 1000);
+			this.setState({
+				blockTimerRemaning: `${hour > 9 ? hour : `0${hour}`}:${minute > 9 ? minute : `0${minute}`}:${
+					second > 9 ? second : `0${second}`
+				}`
+			});
+		}, 1000);
+	};
+
+	onHideEmailBlocked = () => {
+		this.setState({
+			isBlockedEmail: false
+		});
+		clearInterval(this.intevalCoundown);
 	};
 
 	onSingInWithBiometrics = async enabled => {
@@ -415,7 +453,17 @@ class Settings extends PureComponent {
 	};
 
 	verifyEmail = () => {
-		this.props.navigation.navigate('VerifyOTP', { email: preferences.onboardProfile?.email });
+		APIService.getOtpStatus(preferences.onboardProfile?.email, (success, json) => {
+			if (json?.attempts === '5') {
+				this.setState({
+					isBlockedEmail: true,
+					blockEmailTime: json.lastAttemptDate
+				});
+				this.coundown();
+				return;
+			}
+			this.props.navigation.navigate('VerifyOTP', { email: preferences.onboardProfile?.email });
+		});
 	};
 
 	changeEmail = () => {
@@ -530,7 +578,10 @@ class Settings extends PureComponent {
 			loading,
 			hintText,
 			privateKeyBackupStats,
-			emailVerified
+			emailVerified,
+			isBlockedEmail,
+			blockEmailTime,
+			blockTimerRemaning
 		} = this.state;
 		const { accounts, identities, selectedAddress } = this.props;
 		const account = { address: selectedAddress, ...identities[selectedAddress], ...accounts[selectedAddress] };
@@ -544,7 +595,7 @@ class Settings extends PureComponent {
 
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<ScrollView
+				<TrackingScrollView
 					style={styles.wrapper}
 					contentContainerStyle={styles.wrapperContainer}
 					testID={'security-settings-scrollview'}
@@ -883,8 +934,36 @@ class Settings extends PureComponent {
 							<Text style={styles.modalText}>{strings('app_settings.clear_cookies_modal_message')}</Text>
 						</View>
 					</ActionModal> */}
+					<ActionModal
+						modalVisible={isBlockedEmail}
+						confirmText={strings('app_settings.ok').toUpperCase()}
+						onConfirmPress={this.onHideEmailBlocked}
+						onRequestClose={this.onHideEmailBlocked}
+						confirmButtonMode={'normal'}
+						displayCancelButton={false}
+						verticalButtons
+					>
+						<View style={styles.areYouSure}>
+							<TouchableOpacity
+								style={styles.closeModalButton}
+								activeOpacity={0.7}
+								onPress={this.onHideEmailBlocked}
+							>
+								<Icon name="close" style={styles.closeModalIcon} />
+							</TouchableOpacity>
+							<Icon style={styles.warningIcon} size={46} color={colors.red} name="exclamation-triangle" />
+							<Text style={styles.emailBlockedTitle}>
+								{strings('app_settings.email_verification_blocked')}
+							</Text>
+							<Text style={styles.emailBlockedContent}>
+								{strings('app_settings.email_verification_blocked_content')}
+							</Text>
+							<Text style={styles.emailBlockedCoundown}>{blockTimerRemaning}</Text>
+							<Text style={styles.emailBlockedRemaining}>{strings('app_settings.remaining')}</Text>
+						</View>
+					</ActionModal>
 					{this.renderHint()}
-				</ScrollView>
+				</TrackingScrollView>
 			</OnboardingScreenWithBg>
 		);
 	};

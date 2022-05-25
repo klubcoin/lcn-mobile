@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity, Text, View, SafeAreaView, StyleSheet, Image, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, Image, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import routes from '../../../common/routes';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,6 +17,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import { displayName } from '../../../../app.json';
 import AppConstants from '../../../core/AppConstants';
+import TrackingScrollView from '../../UI/TrackingScrollView';
 
 const explain_backup_seedphrase = require('../../../images/explain-backup-seedphrase.png'); // eslint-disable-line
 
@@ -51,7 +52,7 @@ const AccountBackupStep1B = props => {
 	return (
 		<OnboardingScreenWithBg screen="a">
 			<SafeAreaView style={styles.mainWrapper}>
-				<ScrollView
+				<TrackingScrollView
 					contentContainerStyle={styles.scrollviewWrapper}
 					style={styles.mainWrapper}
 					testID={'account-backup-step-1-screen'}
@@ -105,7 +106,7 @@ const AccountBackupStep1B = props => {
 							</StyledButton>
 						</View>
 					</View>
-				</ScrollView>
+				</TrackingScrollView>
 				{Device.isAndroid() && <AndroidBackHandler customBackPress={dismiss} />}
 				<ActionModal
 					modalVisible={showWhySecureWalletModal}
