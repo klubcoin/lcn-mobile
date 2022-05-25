@@ -31,19 +31,31 @@ const styles = StyleSheet.create({
 	backIcon: {
 		color: colors.primaryFox
 	},
+	headerText: {
+		fontSize: 22,
+		fontWeight: 'bold'
+	},
 	name: {
-		fontSize: RFValue(18),
-		fontWeight: '500'
+		color: colors.white,
+		fontSize: 28,
+		fontWeight: '700'
 	},
 	amountMember: {
 		fontSize: RFValue(13),
 		fontWeight: '300'
 	},
 	address: {
+		color: colors.blue,
 		fontSize: 16,
-		fontWeight: '300',
-		color: colors.grey,
-		maxWidth: 180
+		maxWidth: 160
+	},
+	textMessage: {
+		backgroundColor: colors.lightPurple,
+		borderRadius: 10,
+		padding: 10
+	},
+	text: {
+		color: colors.white,
 	},
 	typing: {
 		fontStyle: 'italic',
