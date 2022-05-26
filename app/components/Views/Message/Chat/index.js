@@ -830,7 +830,10 @@ class Chat extends Component {
 				<TrackingTextInput
 					style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
 					value={this.state.message}
-					onChangeText={(text) => this.setState({ message: text })}
+					onChangeText={(text) => {
+						this.sendTyping(text);
+						this.setState({ message: text })
+					}}
 					placeholder={strings('chat.chat_text')}
 					placeholderTextColor={colors.grey200}
 					multiline

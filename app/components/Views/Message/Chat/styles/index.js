@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
 		color: colors.white,
 	},
 	typing: {
+		color: colors.white,
 		fontStyle: 'italic',
 		marginVertical: 3,
 		marginLeft: 5,
