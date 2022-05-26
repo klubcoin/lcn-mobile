@@ -1889,6 +1889,7 @@
 		"chat": "Chat",
 		"new_chat": "New Chat",
 		"to": "To :",
+		"send": "Send",
 		"search_desc": "Search, public address (0x), or ENS",
 		"chat_text": "Chat text...",
 		"send_message": "Send Message",
