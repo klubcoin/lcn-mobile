@@ -110,9 +110,10 @@ class Chat extends Component {
 	}
 
 	getWalletInfo = async (address) => {
+		const peerProfile = preferences.peerProfile(address) || {};
 		APIService.getWalletInfo(address, (success, json) => {
 			if (success && json) {
-				preferences.setPeerProfile(address, json.result);
+				preferences.setPeerProfile(address, { ...peerProfile, ...json.result });
 			}
 		})
 	};
