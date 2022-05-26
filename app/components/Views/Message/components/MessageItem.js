@@ -35,9 +35,10 @@ export default class MessageItem extends Component {
 
 	getWalletProfile = async (address) => {
 		return new Promise((resolve) => {
+			const profile = preferences.peerProfile(address) || {};
 			APIService.getWalletInfo(address, (success, json) => {
 				if (success && json) {
-					preferences.setPeerProfile(address, json.result);
+					preferences.setPeerProfile(address, { ...profile, ...json.result });
 					resolve(json.result);
 				}
 			})
