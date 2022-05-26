@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const ChatList = ({ navigation, ...props }) => {
+const ChatList = ({ route, navigation, ...props }) => {
 	const [conversations, setConversations] = useState([]);
 
 	const initConnection = () => {
@@ -137,7 +137,7 @@ const ChatList = ({ navigation, ...props }) => {
 		return () => {
 			listeners.forEach(listener => listener.remove());
 		};
-	}, [navigation]);
+	}, [route, navigation]);
 
 
 	const onAddChat = () => {

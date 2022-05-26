@@ -305,7 +305,7 @@ class Chat extends Component {
 
 	onBack = () => {
 		store.setActiveChatPeerId(null);
-		this.props.navigation.navigate('ChatList');
+		this.props.navigation.navigate('ChatList', { nonce: uuid.v4() });
 	};
 
 	setTyping = (peerId) => {
