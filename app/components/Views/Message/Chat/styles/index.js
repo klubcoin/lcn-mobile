@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
 	cameraButton: {
 		marginVertical: 5,
 		padding: 8,
-		borderRadius: 12,
+		borderRadius: 20,
 		backgroundColor: colors.lightPurple,
 		alignItems: 'center',
 		justifyContent: 'center',

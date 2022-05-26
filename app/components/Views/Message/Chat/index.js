@@ -853,7 +853,7 @@ class Chat extends Component {
 				activeOpacity={0.7}
 				style={styles.cameraButton}
 			>
-				<EntypoIcon name={'camera'} style={styles.cameraIcon} />
+				<EntypoIcon name={'plus'} style={styles.cameraIcon} />
 			</TouchableOpacity>
 		)
 	}
@@ -915,17 +915,17 @@ const menuOptions = (group) => {
 			key: menuKeys.requestPayment,
 			value: strings('chat.request_payment'),
 			icon: <Icon name={'dollar'} size={24} style={styles.menuIcon} />
-		},
-		{
-			key: menuKeys.sendFile,
-			value: strings('chat.send_file'),
-			icon: <Icon name={'file'} size={24} style={styles.menuIcon} />
-		},
-		{
-			key: menuKeys.sendVoice,
-			value: strings('chat.send_voice'),
-			icon: <Icon name={'microphone'} size={24} style={styles.menuIcon} />
 		}
+		// {
+		// 	key: menuKeys.sendFile,
+		// 	value: strings('chat.send_file'),
+		// 	icon: <Icon name={'file'} size={24} style={styles.menuIcon} />
+		// },
+		// {
+		// 	key: menuKeys.sendVoice,
+		// 	value: strings('chat.send_voice'),
+		// 	icon: <Icon name={'microphone'} size={24} style={styles.menuIcon} />
+		// }
 	];
 
 	if (group && group.indexOf('0x') < 0) options.shift();
