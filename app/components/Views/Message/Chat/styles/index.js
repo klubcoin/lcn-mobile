@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
 	typing: {
 		color: colors.white,
 		fontStyle: 'italic',
-		marginVertical: 3,
+		marginBottom: 10,
 		marginLeft: 5,
 		fontSize: 12,
 		opacity: 0.5
