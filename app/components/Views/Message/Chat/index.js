@@ -166,10 +166,16 @@ class Chat extends Component {
 			if (data.action) {
 				const { action } = data;
 				if (action == ChatProfile().action) {
+					const peerProfile = preferences.peerProfile(peerId);
+					if (peerProfile) {
+						peerProfile.avatar = data.profile.avatar;
+						preferences.setPeerProfile(peerProfile);
+					}
 					this.setState(prevState => ({
 						...prevState,
 						isOnline: true,
-						update: new Date()
+						update: new Date(),
+						avatar: data.profile.avatar,
 					}));
 				}
 			}
@@ -796,7 +802,7 @@ class Chat extends Component {
 		const profile = preferences.peerProfile(address);
 		return (
 			<View style={styles.profile}>
-				<Image source={{ uri: `data:image/*;base64,${profile?.avatar}` }} />
+				<Image style={styles.avatar} source={{ uri: `data:image/*;base64,${this.state.avatar || profile?.avatar}` }} />
 				<View>
 					<Text style={styles.name}>{profile?.name}</Text>
 					<EthereumAddress address={address} style={styles.address} type={'short'} />
