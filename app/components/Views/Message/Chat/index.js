@@ -418,7 +418,7 @@ class Chat extends Component {
 
 	renderLoader = () => (
 		<View style={styles.emptyContainer}>
-			<ActivityIndicator style={styles.loader} size="small" />
+			<ActivityIndicator style={styles.loader} size="small" color={colors.white} />
 		</View>
 	);
 
