@@ -14,6 +14,7 @@ import { parse } from 'eth-url-parser';
 import { isValidAddress } from 'ethereumjs-util';
 import TrackingTextInput from '../../UI/TrackingTextInput';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import store from '../Message/store';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {

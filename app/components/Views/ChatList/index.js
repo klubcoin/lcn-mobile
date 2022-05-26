@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const ChatList = ({ navigation, ...props }) => {
+const ChatList = ({ route, navigation, ...props }) => {
 	const [conversations, setConversations] = useState([]);
 
 	const initConnection = () => {
@@ -137,7 +137,7 @@ const ChatList = ({ navigation, ...props }) => {
 		return () => {
 			listeners.forEach(listener => listener.remove());
 		};
-	}, [navigation]);
+	}, [route, navigation]);
 
 
 	const onAddChat = () => {
@@ -177,6 +177,7 @@ const ChatList = ({ navigation, ...props }) => {
 		} else {
 			displayTime = lastTime.fromNow();
 		}
+		const profile = preferences.peerProfile(address);
 		return (
 			<>
 				<TouchableOpacity key={address}
@@ -184,7 +185,7 @@ const ChatList = ({ navigation, ...props }) => {
 					activeOpacity={0.7}
 					onPress={() => onViewChat(address)}
 				>
-					{renderAvatar(name, avatar)}
+					{renderAvatar(name, profile?.avatar ? `data:image/*;base64,${profile.avatar}` : avatar)}
 					<View style={styles.chatContent}>
 						<View style={styles.chatContentHeader}>
 							<Text style={styles.chatName}>{name}</Text>
