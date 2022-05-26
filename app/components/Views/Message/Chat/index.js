@@ -74,7 +74,7 @@ class Chat extends Component {
 		this.isOne2One = true;
 		const { selectedAddress } = this.props;
 		return [selectedAddress, this.recipient.address]
-			.sort((a, b) => `${a}`.localeCompare(`${b}`))
+			.sort((a, b) => `${a}`.toLowerCase().localeCompare(`${b}`.toLowerCase()))
 			.join('.').toLowerCase();
 	}
 
