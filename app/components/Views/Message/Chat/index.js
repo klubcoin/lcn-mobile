@@ -105,7 +105,8 @@ class Chat extends Component {
 	}
 
 	getWalletInfos = (members) => {
-		members.forEach(e => this.getWalletInfo(e))
+		const { selectedAddress } = this.props;
+		[selectedAddress, ...members].forEach(e => this.getWalletInfo(e))
 	}
 
 	getWalletInfo = async (address) => {
