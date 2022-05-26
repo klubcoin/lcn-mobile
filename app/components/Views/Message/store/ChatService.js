@@ -10,9 +10,10 @@ import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import APIService from '../../../../services/APIService';
 
 const fetchProfile = async (address) => {
+	const profile = preferences.peerProfile(address) || {};
 	APIService.getWalletInfo(address, (success, json) => {
 		if (success && json) {
-			preferences.setPeerProfile(address, json.result);
+			preferences.setPeerProfile(address, { ...profile, ...json.result });
 		}
 	})
 };
