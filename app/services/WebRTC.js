@@ -9,9 +9,10 @@ import { AckWebRTC } from './Messages';
 import preferences from '../store/preferences';
 import { WalletProfile } from '../components/Views/Contacts/FriendRequestMessages';
 import assert from 'assert';
+import { addHexPrefix } from 'ethereumjs-util';
 
-const useSocketIO = false;
-const SignalServer = useSocketIO && 'http://192.168.1.5:9000';
+const useSocketIO = true;
+const SignalServer = useSocketIO && 'http://socket.telecelplay.io';
 
 export default class WebRTC {
 	fromUserId = '';
@@ -69,12 +70,12 @@ export default class WebRTC {
 
 			this.socketRef.on(WSEvent.connected, this.handleConnected.bind(this));
 			this.socketRef.on(WSEvent.message, this.handleWebRtcSignal.bind(this));
+		} else {
+			this.messaging = new Messaging(this.fromUserId);
+			this.messaging.on(WSEvent.ready, this.handleConnected.bind(this));
+			this.messaging.on(WSEvent.message, this.handleWebRtcSignal.bind(this));
+			this.messaging.initConnection();
 		}
-
-		this.messaging = new Messaging(this.fromUserId);
-		this.messaging.on(WSEvent.ready, this.handleConnected.bind(this));
-		this.messaging.on(WSEvent.message, this.handleWebRtcSignal.bind(this));
-		this.messaging.initConnection();
 	};
 
 	handleWebRtcSignal = message => {
@@ -93,7 +94,8 @@ export default class WebRTC {
 						break;
 				}
 			} else if (data.action && data.from) {
-				this.handleWebSocketMessage(message, data.from?.toLowerCase())
+				this.handleWebRtcMessage(message, data.from.toLowerCase());
+				this.handleWebSocketMessage(message, data.from.toLowerCase())
 			}
 		} catch (e) {}
 	};
@@ -147,8 +149,10 @@ export default class WebRTC {
 			this.sendChannels[peerId] = event.channel;
 			this.sendChannels[peerId].onmessage = message => this.handleReceiveMessage(message, peerId);
 			this.sendChannels[peerId].ready = true;
-			console.log('[SUCCESS] Connection established');
-			this._sendToPeer(peerId, { action: 'ping', publicKey: this.publicKey });
+			console.log('🚀 [SUCCESS] Connection established', peerId);
+			const pingPublicKey = { action: 'ping', publicKey: this.publicKey };
+			this._sendToPeer(peerId, pingPublicKey);
+			this.sendWebSocketMessage(Message(peerId, pingPublicKey));
 			// if (this.onReady) this.onReady(this.sendChannels[peerId]);
 			this.events.ready.map(callback => callback(this.sendChannels[peerId], peerId));
 		};
@@ -294,12 +298,12 @@ export default class WebRTC {
 			]
 		});
 		peer.peerId = peerId;
-		peer.onicecandidate = this.handleICECandidateEvent;
+		peer.onicecandidate = (e) => this.handleICECandidateEvent(e, peerId);
 		peer.onnegotiationneeded = () => this.handleNegotiationNeededEvent(peerId);
 		return peer;
 	};
 
-	handleICECandidateEvent = e => {
+	handleICECandidateEvent = (e, peerId) => {
 		/*
 			ICE stands for Interactive Connectivity Establishment. Using this
 			peers exchange information over the intenet. When establishing a
@@ -309,7 +313,7 @@ export default class WebRTC {
 		*/
 		if (e.candidate) {
 			const payload = {
-				target: e.target.peerId,
+				target: e.target?.peerId || peerId,
 				caller: this.fromUserId,
 				candidate: e.candidate
 			};
@@ -362,6 +366,8 @@ export default class WebRTC {
 	}
 
 	_handleTimeout = (peerId, data) => {
+		const message = Message(peerId, data);
+		this.sendWebSocketMessage(message);
 		this.events.error.map(callback => callback && callback(data, peerId));
 	}
 
@@ -374,16 +380,28 @@ export default class WebRTC {
 		});
 	};
 
-	sendToPeer = async (addr, data) => {
+	sendToPeer = async (addr, data, retry) => {
+		if (!addr) return;
 		const address = addr.toLowerCase();
+		if (addHexPrefix(address) == addHexPrefix(this.fromUserId)) return;
+
 		if (!data.checksum) data.checksum = sha256(JSON.stringify(data));
 		if (!data.reqId) data.reqId = Math.random() * new Date().getTime() + data.checksum;
 		if (!this.hasChannel(address)) {
 			this.connectAndSend(address, data);
 		} else if (!this.channelReady(address)) {
-			setTimeout(() => this.sendToPeer(address, data), 1000);
+			const attempt = !retry ? 1 : retry + 1;
+			if (attempt == 5) {
+				this.sendChannels[address] = null;
+				const message = Message(address, data);
+				this.sendWebSocketMessage(message);
+				return;
+			}
+			setTimeout(() => this.sendToPeer(address, data, attempt), 500);
 		} else {
-			this.monitors[data.reqId] = setTimeout(() => this.connectAndSend(address, data), 5000);
+			if (!Object.keys(this.monitors).includes(data.reqId)) {
+				this.monitors[data.reqId] = setTimeout(() => this.connectAndSend(address, data), 2500);
+			}
 			this._sendToPeer(address, data);
 		}
 	}

@@ -111,6 +111,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
+import { showInfo } from '../../../util/notify';
 
 export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
 
@@ -896,7 +897,7 @@ const Main = props => {
 
 	const getPeerInfo = async message => {
 		const address = message.from;
-		const profile = await preferences.peerProfile(address);
+		const profile = preferences.peerProfile(address);
 
 		if (profile && profile.name) {
 			Object.assign(message.data, profile, { address });
@@ -1087,15 +1088,6 @@ const Main = props => {
 		);
 	};
 
-	const showNotice = (message, title) => {
-		Toast.show({
-			type: 'info',
-			text1: message,
-			text2: title || strings('profile.notice'),
-			visibilityTime: 1000
-		});
-	};
-
 	const onWebRtcMessage = async (data, peerId) => {
 		if (data.action) {
 			switch (data.action) {
@@ -1106,7 +1098,7 @@ const Main = props => {
 					break;
 				case ConfirmProfileRejected().action:
 					const name = `${data.firstname} ${data.lastname}`;
-					showNotice(strings('confirm_profile.peer_refuse_try_again', { name }));
+					showInfo(strings('confirm_profile.peer_refuse_try_again', { name }));
 					preferences.addNotification(data);
 					break;
 				case ConfirmProfileBlock().action:
@@ -1118,15 +1110,16 @@ const Main = props => {
 					const senderId = `${from}`.toLowerCase();
 					const activeChatPeerId = `${messageStore.activeChatPeerId}`.toLowerCase();
 
-					const { action } = message;
+					const { action, group } = message;
 					if (action) break;
 
-					if (senderId != activeChatPeerId) {
+					if (senderId != activeChatPeerId && group != activeChatPeerId) {
 						const { addressBook, network } = props;
 						const addresses = addressBook[network] || {};
-						const sender = addresses[from];
+						const sender = addresses[from] || preferences.peerProfile(senderId);
 
-						showNotice(sender?.name || from, message.text);
+						const groupName = group ? messageStore.conversationInfos[group] : '';
+						showInfo(`${groupName?.name || sender?.name || from}\n${message.text}`);
 					}
 					break;
 				case LiquichainNameCard().action:
@@ -1255,20 +1248,20 @@ Main.propTypes = {
 	 */
 	thirdPartyApiMode: PropTypes.bool,
 	/**
-    /* Hides or shows dApp transaction modal
-    */
+		/* Hides or shows dApp transaction modal
+		*/
 	toggleDappTransactionModal: PropTypes.func,
 	/**
-    /* Hides or shows approve modal
-    */
+		/* Hides or shows approve modal
+		*/
 	toggleApproveModal: PropTypes.func,
 	/**
-    /* dApp transaction modal visible or not
-    */
+		/* dApp transaction modal visible or not
+		*/
 	dappTransactionModalVisible: PropTypes.bool,
 	/**
-    /* Token approve modal visible or not
-    */
+		/* Token approve modal visible or not
+		*/
 	approveModalVisible: PropTypes.bool,
 	/**
 	 * Selected address

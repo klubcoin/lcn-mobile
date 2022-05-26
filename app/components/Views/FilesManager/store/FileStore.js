@@ -21,13 +21,14 @@ export const StoreFile = (from, to, hash, name, createdTimestamp, totalPart, par
    parts
 });
 
-export const JoinFile = (from, to, hash, name, totalPart) => ({
+export const JoinFile = (from, to, hash, name, totalPart, uuid) => ({
    action: 'join_file',
    from,
    to,
    hash,
    name,
    totalPart,
+   uuid,
 });
 
 export const SavedFile = (hash, name, createdTimestamp, parts) => ({

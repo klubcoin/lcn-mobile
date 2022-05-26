@@ -78,6 +78,10 @@ class Preferences {
 		await AsyncStorage.setItem(key, JSON.stringify(value));
 	}
 
+	async remove(key) {
+		await AsyncStorage.removeItem(key);
+	}
+
 	async saveStorage(key) {
 		await this.save(key, this.storage[key]);
 	}
@@ -102,6 +106,10 @@ class Preferences {
 
 	async setKeycloakHash(encryptedHash) {
 		await this.save(kSecureHashKeycloak, encryptedHash);
+	}
+
+	async deleteKeycloakHash() {
+		await this.remove(kSecureHashKeycloak);
 	}
 
 	async getKeycloakHash() {
@@ -181,9 +189,10 @@ class Preferences {
 		await this.save(kPeerProfiles, this.peerProfiles);
 	}
 
-	async peerProfile(address) {
+	peerProfile(address) {
+		if (!address) return;
 		const peerProfiles = this.storage[kPeerProfiles] || {};
-		return peerProfiles[address];
+		return peerProfiles[address] || peerProfiles[address.toLowerCase()];
 	}
 }
 

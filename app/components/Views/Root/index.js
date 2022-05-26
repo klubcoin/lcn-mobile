@@ -20,6 +20,7 @@ import TrackPlayer from 'react-native-track-player';
 import preferences from '../../../../app/store/preferences'
 import messageStore from '../../../../app/components/Views/Message/store';
 import marketStore from '../../../../app/components/Views/MarketPlace/store';
+import NotifPopup from '../../UI/NotifPopup';
 
 messageStore.load();
 preferences.load();
@@ -85,6 +86,7 @@ export default class Root extends PureComponent {
 						<ErrorBoundary onError={this.errorHandler} view="Root">
 							<App />
 							<Toast ref={e => Toast.setRef(e)} />
+							<NotifPopup />
 						</ErrorBoundary>
 					</PersistGate>
 				</ProviderMobX>

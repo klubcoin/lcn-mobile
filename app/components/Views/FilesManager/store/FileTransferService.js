@@ -13,7 +13,7 @@ export default class FileTransferService {
 		this.from = address.toLowerCase();
 
 		this.webRTC = refWebRTC();
-		this.webRTC.addListener('message', this.handleFileTransfer);
+		this.webRTC?.addListener('message', this.handleFileTransfer);
 	}
 
 	sendFile = async (request) => {

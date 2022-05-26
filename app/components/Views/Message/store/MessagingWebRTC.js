@@ -7,16 +7,16 @@ export default class MessagingWebRTC {
 	evtMessage = null;
 
 	from = null;
-	toPeer = null;
+	getPeers = null;
 	data = null;
 
-	constructor(from, to, webrtc) {
+	constructor(from, peersFunc, webrtc) {
 		this.from = from;
-		this.toPeer = to;
+		this.getPeers = peersFunc;
 		this.webrtc = webrtc;
 
-		this.revokeMessageEvt = webrtc.addListener('message', this._onMessage);
-		this.revokeErrorEvt = webrtc.addListener('error', this._onError);
+		this.revokeMessageEvt = webrtc?.addListener('message', this._onMessage);
+		this.revokeErrorEvt = webrtc?.addListener('error', this._onError);
 	}
 
 	addListener(type, callback) {
@@ -58,12 +58,15 @@ export default class MessagingWebRTC {
 		}
 	}
 
-	send(data) {
-		const address = this.toPeer;
-		this.data = Chat(data, this.from, this.toPeer);
+	send(data, peers) {
+		const addresses = (peers?.length != 0 && peers) || (this.getPeers && this.getPeers());
+		if (!addresses) return;
 
-		if (this.webrtc && this.webrtc.sendToPeer) {
-			this.webrtc.sendToPeer(address, this.data);
+		for (let address of addresses) {
+			this.data = Chat(data, this.from, address);
+			if (this.webrtc && this.webrtc.sendToPeer) {
+				this.webrtc.sendToPeer(address, this.data);
+			}
 		}
 	}
 }

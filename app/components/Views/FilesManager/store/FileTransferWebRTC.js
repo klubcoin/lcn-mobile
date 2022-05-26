@@ -30,21 +30,21 @@ export default class FileTransferWebRTC {
 	constructor(data, from, addresses, webrtc, params) {
 		this.from = from.toLowerCase();
 		this.data = data;
-		this.addresses = addresses;
+		this.addresses = addresses.map(e => e?.toLowerCase());
 		this.webrtc = webrtc;
 		this.directToPeer = params?.direct;
+		this.group = params?.group;
 
 		if (data && !data.action && !(params && params.fullSend)) {
 			this._prepareQueue();
 		}
 
-		this.revokeMessageEvt = webrtc.addListener('message', (data, peer) => this._onMessage(data, peer));
+		this.revokeMessageEvt = webrtc?.addListener('message', (data, peer) => this._onMessage(data, peer));
 	}
 
 	_onMessage(data, peerId) {
 		if (data.action) {
 			if (data.action == ContainFiles().action && peerId == this.awaitingPeer) {
-				if (this.monitorFailure) clearTimeout(this.monitorFailure);
 				this._nextQueue();
 				this._updateSent(data);
 			} else if (data.action == 'ping') {
@@ -204,7 +204,7 @@ export default class FileTransferWebRTC {
 			.map((e, index) => {
 				return {
 					index: index + 1,
-					address: addresses[index % addresses.length].toLowerCase(),
+					address: addresses[index % addresses.length],
 					status: 0
 				};
 			});
@@ -226,23 +226,9 @@ export default class FileTransferWebRTC {
 		const storeFile = StoreFile(from, address, checksum, name, timestamp, partCount, [part]);
 
 		if (this.webrtc && this.webrtc.sendToPeer) {
-			const connectAndSend = () => {
-				this.webrtc.connectTo(address);
-				this.monitorFailure = setTimeout(() => this._reportFailure(address), 8000);
-				DeviceEventEmitter.once(`WebRtcPeer:${address}`, () => {
-					this._onProgress(address);
-					this.awaitingPeer = address;
-					this.webrtc.sendToPeer(address, storeFile);
-				});
-			};
-			if (!this.webrtc.hasChannel(address)) {
-				connectAndSend();
-			} else {
-				this._onProgress(address);
-				this.awaitingPeer = address;
-				this.webrtc.sendToPeer(address, storeFile);
-				this.monitorFailure = setTimeout(() => connectAndSend(), 5000);
-			}
+			this._onProgress(address);
+			this.awaitingPeer = address;
+			this.webrtc.sendToPeer(address, storeFile);
 		}
 	}
 
@@ -285,7 +271,7 @@ export default class FileTransferWebRTC {
 
 		if (this.directToPeer) {
 			const address = addresses[0];
-			const action = JoinFile(from, address, checksum, name, partCount);
+			const action = JoinFile(from, address, checksum, name, partCount, this.group);
 			this.webrtc.sendToPeer(address, action);
 		}
 	}

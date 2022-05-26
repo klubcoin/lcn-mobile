@@ -1870,10 +1870,11 @@
 		"not_found": "Media not found"
 	},
 	"chat": {
-		"user_is_typing": "{{name}} is typing...",
+		"user_is_typing": " is typing...",
 		"send_transaction": "Send a transaction",
 		"request_payment": "Request payment",
 		"send_file": "Send file",
+		"send_voice": "Send voice message",
 		"sent_transaction": "Sent transaction",
 		"received_transaction": "Received transaction",
 		"payment_request": "Payment request",
@@ -1890,7 +1891,8 @@
 		"to": "To :",
 		"search_desc": "Search, public address (0x), or ENS",
 		"chat_text": "Chat text...",
-		"send_message": "Send Message"
+		"send_message": "Send Message",
+		"recording_audio": "Recording Audio"
 	},
 	"market": {
 		"title": "Market",
