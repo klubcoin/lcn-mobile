@@ -795,9 +795,9 @@ class Chat extends Component {
 		const profile = preferences.peerProfile(address);
 		return (
 			<View style={styles.profile}>
-				<Image source={{ uri: `data:image/*;base64,${profile.avatar}` }} />
+				<Image source={{ uri: `data:image/*;base64,${profile?.avatar}` }} />
 				<View>
-					<Text style={styles.name}>{profile.name}</Text>
+					<Text style={styles.name}>{profile?.name}</Text>
 					<EthereumAddress address={address} style={styles.address} type={'short'} />
 				</View>
 			</View>
