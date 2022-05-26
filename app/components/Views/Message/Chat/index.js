@@ -105,13 +105,15 @@ class Chat extends Component {
 	}
 
 	getWalletInfos = (members) => {
-		members.forEach(e => this.getWalletInfo(e))
+		const { selectedAddress } = this.props;
+		[selectedAddress, ...members].forEach(e => this.getWalletInfo(e))
 	}
 
 	getWalletInfo = async (address) => {
+		const peerProfile = preferences.peerProfile(address) || {};
 		APIService.getWalletInfo(address, (success, json) => {
 			if (success && json) {
-				preferences.setPeerProfile(address, json.result);
+				preferences.setPeerProfile(address, { ...peerProfile, ...json.result });
 			}
 		})
 	};
@@ -165,10 +167,16 @@ class Chat extends Component {
 			if (data.action) {
 				const { action } = data;
 				if (action == ChatProfile().action) {
+					const peerProfile = preferences.peerProfile(peerId);
+					if (peerProfile) {
+						peerProfile.avatar = data.profile.avatar;
+						preferences.setPeerProfile(peerProfile);
+					}
 					this.setState(prevState => ({
 						...prevState,
 						isOnline: true,
-						update: new Date()
+						update: new Date(),
+						avatar: data.profile.avatar,
 					}));
 				}
 			}
@@ -305,7 +313,7 @@ class Chat extends Component {
 
 	onBack = () => {
 		store.setActiveChatPeerId(null);
-		this.props.navigation.navigate('ChatList');
+		this.props.navigation.navigate('ChatList', { nonce: uuid.v4() });
 	};
 
 	setTyping = (peerId) => {
@@ -795,9 +803,9 @@ class Chat extends Component {
 		const profile = preferences.peerProfile(address);
 		return (
 			<View style={styles.profile}>
-				<Image source={{ uri: `data:image/*;base64,${profile.avatar}` }} />
+				<Image style={styles.avatar} source={{ uri: `data:image/*;base64,${this.state.avatar || profile?.avatar}` }} />
 				<View>
-					<Text style={styles.name}>{profile.name}</Text>
+					<Text style={styles.name}>{profile?.name}</Text>
 					<EthereumAddress address={address} style={styles.address} type={'short'} />
 				</View>
 			</View>
@@ -829,7 +837,10 @@ class Chat extends Component {
 				<TrackingTextInput
 					style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
 					value={this.state.message}
-					onChangeText={(text) => this.setState({ message: text })}
+					onChangeText={(text) => {
+						this.sendTyping(text);
+						this.setState({ message: text })
+					}}
 					placeholder={strings('chat.chat_text')}
 					placeholderTextColor={colors.grey200}
 					multiline

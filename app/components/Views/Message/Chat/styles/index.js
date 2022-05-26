@@ -36,10 +36,17 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 	profile: {
+		flexDirection: 'row',
 		marginHorizontal: 20,
 		paddingVertical: 20,
 		borderBottomColor: colors.blue,
 		borderBottomWidth: 2
+	},
+	avatar: {
+		width: 60,
+		height: 60,
+		borderRadius: 100,
+		marginRight: 12
 	},
 	name: {
 		color: colors.white,
@@ -73,8 +80,9 @@ const styles = StyleSheet.create({
 		color: colors.white,
 	},
 	typing: {
+		color: colors.white,
 		fontStyle: 'italic',
-		marginVertical: 3,
+		marginBottom: 10,
 		marginLeft: 5,
 		fontSize: 12,
 		opacity: 0.5
