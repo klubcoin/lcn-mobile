@@ -12612,6 +12612,13 @@ react-native-progress@5.0.0:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-push-notification-popup@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification-popup/-/react-native-push-notification-popup-1.6.0.tgz#bbca3e68cf62cd5d47d718dd6d1f1e8e01f562f9"
+  integrity sha512-QBWDXzhxgegck3PQxop7/xo34k8CkU51y+uHujXVpx/GjpUeEA9gh8W2aFULslkp1T7fq1YSCpWXkQxieKweqA==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-push-notification@^7.4.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-7.4.0.tgz#81192356eddfee8eeaf72a9a696c7c90bf5b0ece"
@@ -12751,6 +12758,16 @@ react-native-snap-carousel@^3.9.1:
   dependencies:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
+
+react-native-sound-recorder@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-sound-recorder/-/react-native-sound-recorder-1.5.0.tgz#a130db4d5e026cf2487afabaced6f7eb197b13a3"
+  integrity sha512-u7b9WQgsIqbOAwnu/tkWIcef++VLEkkCoax2iZ3ooE6ga7OcavlPG+mX2N0KCre8uH+FnsgGrIWZO7RY402uvA==
+
+react-native-sound@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.2.tgz#e542dc5b9e16ab4b3ac7e6eaddb1fc8d98da9038"
+  integrity sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==
 
 "react-native-splash-screen@git+https://github.com/MetaMask/react-native-splash-screen.git":
   version "3.2.0"
