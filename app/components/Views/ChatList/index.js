@@ -162,17 +162,11 @@ const ChatList = ({ route, navigation, ...props }) => {
 		return <View style={styles.line} />;
 	};
 
-	const renderAvatar = (name, avatarURL) => {
+	const renderAvatar = (firstname, lastname, avatarURL) => {
 		if (avatarURL) {
 			return <Image source={{ uri: avatarURL }} style={styles.avatar} />;
 		}
-		const nameArr = name.split(' ');
-		const avatarName =
-			nameArr.length > 1
-				? nameArr.reduce((pre, cur, curIndex) => {
-						return curIndex > 2 ? pre : curIndex === 1 ? pre[0] + cur[0] : pre + cur[0];
-				  })
-				: nameArr[0][0];
+		const avatarName = `${firstname.length > 0 ? firstname[0] : ''} ${lastname.length > 0 ? lastname[0] : ''}`;
 		return (
 			<View style={styles.noAvatarWrapper}>
 				<Text style={styles.noAvatarName}>{avatarName}</Text>
@@ -183,11 +177,13 @@ const ChatList = ({ route, navigation, ...props }) => {
 	const renderChatItem = chat => {
 		const {
 			address,
-			name,
+			firstname,
+			lastname,
 			avatar,
 			lastMessage: { text },
 			createdAt
 		} = chat;
+		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
 		const lastTime = moment(createdAt);
 		const currentTime = moment();
@@ -205,7 +201,11 @@ const ChatList = ({ route, navigation, ...props }) => {
 					activeOpacity={0.7}
 					onPress={() => onViewChat(address)}
 				>
-					{renderAvatar(name, profile?.avatar ? `data:image/*;base64,${profile.avatar}` : avatar)}
+					{renderAvatar(
+						firstname,
+						lastname,
+						profile?.avatar ? `data:image/*;base64,${profile.avatar}` : avatar
+					)}
 					<View style={styles.chatContent}>
 						<View style={styles.chatContentHeader}>
 							<Text style={styles.chatName}>{name}</Text>

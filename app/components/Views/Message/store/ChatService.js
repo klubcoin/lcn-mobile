@@ -9,13 +9,13 @@ import { JoinFile } from '../../FilesManager/store/FileStore';
 import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import APIService from '../../../../services/APIService';
 
-const fetchProfile = async (address) => {
+const fetchProfile = async address => {
 	const profile = preferences.peerProfile(address) || {};
 	APIService.getWalletInfo(address, (success, json) => {
 		if (success && json) {
-			preferences.setPeerProfile(address, { ...profile, ...json.result });
+			preferences.setPeerProfile(address, { ...profile, ...JSON.parse(json.result.publicInfo) });
 		}
-	})
+	});
 };
 
 export default class ChatService {
@@ -37,7 +37,7 @@ export default class ChatService {
 					if (!profile) {
 						const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
 						const name = `${firstname} ${lastname}`;
-						const hasAvatar = avatar && await RNFS.exists(avatar);
+						const hasAvatar = avatar && (await RNFS.exists(avatar));
 						const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
 						const webrtc = refWebRTC();
 						webrtc.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));

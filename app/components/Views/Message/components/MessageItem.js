@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { TransactionSync, RequestPayment, ChatFile } from '../store/Messages';
 import { strings } from '../../../../../locales/i18n';
 import { testID } from '../../../../util/Logger';
-import marketStore from '../../MarketPlace/store'
+import marketStore from '../../MarketPlace/store';
 import { addHexPrefix } from '@walletconnect/utils';
 import drawables from '../../../../common/drawables';
 import APIService from '../../../../services/APIService';
@@ -14,13 +14,12 @@ import preferences from '../../../../store/preferences';
 
 const StatusColors = {
 	ACTIVE: colors.green500,
-	ARCHIVED: colors.gray,
-}
+	ARCHIVED: colors.gray
+};
 export default class MessageItem extends Component {
-
 	state = {
 		creatorProfile: {}
-	}
+	};
 
 	componentDidMount() {
 		this.getCreatorProfile();
@@ -31,18 +30,18 @@ export default class MessageItem extends Component {
 		const creatorAddress = creator && addHexPrefix(creator?.uuid);
 		const creatorProfile = await this.getWalletProfile(creatorAddress);
 		this.setState({ creatorProfile });
-	}
+	};
 
-	getWalletProfile = async (address) => {
-		return new Promise((resolve) => {
+	getWalletProfile = async address => {
+		return new Promise(resolve => {
 			const profile = preferences.peerProfile(address) || {};
 			APIService.getWalletInfo(address, (success, json) => {
 				if (success && json) {
-					preferences.setPeerProfile(address, { ...profile, ...json.result });
+					preferences.setPeerProfile(address, { ...profile, ...JSON.parse(json.result.publicInfo) });
 					resolve(json.result);
 				}
-			})
-		})
+			});
+		});
 	};
 
 	renderAvatar = () => {
@@ -52,7 +51,9 @@ export default class MessageItem extends Component {
 			return (
 				<View style={styles.bubble}>
 					<Image
-						source={recipient.avatar ? { uri: `data:image/jpeg;base64,${recipient.avatar}` } : drawables.users}
+						source={
+							recipient.avatar ? { uri: `data:image/jpeg;base64,${recipient.avatar}` } : drawables.users
+						}
 						style={styles.proImg}
 						resizeMode="contain"
 						resizeMethod="scale"
@@ -72,7 +73,7 @@ export default class MessageItem extends Component {
 		const creationMessage = {
 			text: !!name ? strings('chat.group_created_by', { name }) : strings('chat.group_creation'),
 			createdAt: recipient.creationDate
-		}
+		};
 
 		if (payload) {
 			switch (payload.action) {
@@ -82,8 +83,10 @@ export default class MessageItem extends Component {
 						text: strings('chat.payment_request')
 					};
 				case TransactionSync().action: {
-					const incoming = payload.transaction && payload.transaction.from
-						&& payload.transaction.from.toLowerCase() == recipient.address?.toLowerCase();
+					const incoming =
+						payload.transaction &&
+						payload.transaction.from &&
+						payload.transaction.from.toLowerCase() == recipient.address?.toLowerCase();
 					return {
 						...lastMessage,
 						text: incoming ? strings('chat.received_transaction') : strings('chat.sent_transaction')
@@ -91,12 +94,19 @@ export default class MessageItem extends Component {
 				}
 				case ChatFile().action: {
 					const { type } = payload;
-					const mimeType = type?.indexOf('image') == 0 ? strings('chat.image')
-						: type?.indexOf('audio') == 0 ? strings('chat.audio')
-							: type?.indexOf('video') == 0 ? strings('chat.video') : strings('chat.file');
+					const mimeType =
+						type?.indexOf('image') == 0
+							? strings('chat.image')
+							: type?.indexOf('audio') == 0
+							? strings('chat.audio')
+							: type?.indexOf('video') == 0
+							? strings('chat.video')
+							: strings('chat.file');
 
-					const incoming = lastMessage.user && lastMessage.user._id
-						&& lastMessage.user._id.toLowerCase() == recipient.address?.toLowerCase();
+					const incoming =
+						lastMessage.user &&
+						lastMessage.user._id &&
+						lastMessage.user._id.toLowerCase() == recipient.address?.toLowerCase();
 					const action = incoming ? strings('chat.received') : strings('chat.sent');
 
 					return {
@@ -105,7 +115,6 @@ export default class MessageItem extends Component {
 					};
 				}
 				default:
-
 					break;
 			}
 		}
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
 	},
 	status: {
 		fontSize: 12,
-		textTransform: 'capitalize',
+		textTransform: 'capitalize'
 	},
 	hasMessage: {
 		width: 10,

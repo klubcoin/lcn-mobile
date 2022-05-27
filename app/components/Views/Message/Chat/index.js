@@ -44,7 +44,7 @@ import FileMessage from '../components/FileMessage';
 import ImageMessage from '../components/ImageMessage';
 import store from '../store';
 import marketStore from '../../MarketPlace/store';
-import styles from './styles/index'
+import styles from './styles/index';
 import { testID } from '../../../../util/Logger';
 import RecordingBS from '../../../UI/RecordingBS';
 import RemoteImage from '../../../Base/RemoteImage';
@@ -75,13 +75,14 @@ class Chat extends Component {
 		const { selectedAddress } = this.props;
 		return [selectedAddress, this.recipient.address]
 			.sort((a, b) => `${a}`.toLowerCase().localeCompare(`${b}`.toLowerCase()))
-			.join('.').toLowerCase();
+			.join('.')
+			.toLowerCase();
 	}
 
 	groupInfo = () => {
 		const { groupInfo } = this.state;
 		return groupInfo || {};
-	}
+	};
 
 	componentDidMount() {
 		store.setActiveChatPeerId(this.state.group);
@@ -104,18 +105,18 @@ class Chat extends Component {
 		this.messaging.send(ChatProfile());
 	}
 
-	getWalletInfos = (members) => {
+	getWalletInfos = members => {
 		const { selectedAddress } = this.props;
-		[selectedAddress, ...members].forEach(e => this.getWalletInfo(e))
-	}
+		[selectedAddress, ...members].forEach(e => this.getWalletInfo(e));
+	};
 
-	getWalletInfo = async (address) => {
+	getWalletInfo = async address => {
 		const peerProfile = preferences.peerProfile(address) || {};
 		APIService.getWalletInfo(address, (success, json) => {
 			if (success && json) {
-				preferences.setPeerProfile(address, { ...peerProfile, ...json.result });
+				preferences.setPeerProfile(address, { ...peerProfile, ...JSON.parse(json.result.publicInfo) });
 			}
-		})
+		});
 	};
 
 	bindContactForAddress() {
@@ -131,12 +132,14 @@ class Chat extends Component {
 		if (group) {
 			const groupInfo = store.conversationInfos[group] || { peers: [] };
 
-			groupInfo.peers.filter(e => !!e).map(e => {
-				const address = e;
-				const user = addresses[address] || addresses[address?.toLowerCase()];
+			groupInfo.peers
+				.filter(e => !!e)
+				.map(e => {
+					const address = e;
+					const user = addresses[address] || addresses[address?.toLowerCase()];
 
-				this.contacts[address] = { name: user?.name || '' };
-			})
+					this.contacts[address] = { name: user?.name || '' };
+				});
 		}
 	}
 
@@ -156,27 +159,26 @@ class Chat extends Component {
 		const peers = info?.peers?.filter(e => e != group) || [];
 		if (peers.indexOf(peerId) < 0) peers.push(peerId);
 		return peers;
-	}
+	};
 
 	initConnection = () => {
 		const { selectedAddress } = this.props;
 		this.messaging = new MessagingWebRTC(selectedAddress, this.getPeers, refWebRTC());
 
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
-
 			if (data.action) {
 				const { action } = data;
 				if (action == ChatProfile().action) {
 					const peerProfile = preferences.peerProfile(peerId);
 					if (peerProfile) {
 						peerProfile.avatar = data.profile.avatar;
-						preferences.setPeerProfile(peerProfile);
+						preferences.setPeerProfile(peerId, peerProfile);
 					}
 					this.setState(prevState => ({
 						...prevState,
 						isOnline: true,
 						update: new Date(),
-						avatar: data.profile.avatar,
+						avatar: data.profile.avatar
 					}));
 				}
 			}
@@ -217,12 +219,12 @@ class Chat extends Component {
 		Promise.all([this.fetchTransactionHistory(), this.fetchMessages()])
 			.then(values => {
 				const data = [...values[0], ...values[1]];
-				data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+				data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
 				this.setState(prevState => ({
 					...prevState,
 					messages: data,
-					loading: false,
+					loading: false
 				}));
 			})
 			.catch(error => console.log(error));
@@ -274,28 +276,27 @@ class Chat extends Component {
 
 		const data = await store.getChatMessages(group || peerAddr);
 		if (!data) return Promise.resolve([]);
-		const messages = data.messages
-			.filter(e => {
-				if (this.state.group) return true;
-				const senderAddr = e.user._id;
-				if (e.payload) {
-					if (e.transaction || e.payload.action == TransactionSync().action) {
-						return false;
-					} else {
-						const {
-							payload: { from, to }
-						} = e;
-						return from == peerAddr || to == peerAddr || senderAddr == peerAddr;
-					}
+		const messages = data.messages.filter(e => {
+			if (this.state.group) return true;
+			const senderAddr = e.user._id;
+			if (e.payload) {
+				if (e.transaction || e.payload.action == TransactionSync().action) {
+					return false;
 				} else {
-					return senderAddr == address || senderAddr == peerAddr;
+					const {
+						payload: { from, to }
+					} = e;
+					return from == peerAddr || to == peerAddr || senderAddr == peerAddr;
 				}
-			});
+			} else {
+				return senderAddr == address || senderAddr == peerAddr;
+			}
+		});
 		messages.reverse().map(e => {
 			const { _id, user } = e;
 			this.messageIds.push(_id);
-			this.contacts[user?._id] = { name: user?.name || '' };
-		})
+			this.contacts[(user?._id)] = { name: user?.name || '' };
+		});
 		return Promise.resolve(messages.reverse());
 	};
 
@@ -304,7 +305,7 @@ class Chat extends Component {
 		if (selectedContact) {
 			const profile = preferences.peerProfile(selectedContact?.address);
 			if (profile) {
-				this.state.contact = { ...selectedContact, ...profile }
+				this.state.contact = { ...selectedContact, ...profile };
 			}
 		}
 		const { firstname, lastname } = preferences.onboardProfile || {};
@@ -316,14 +317,14 @@ class Chat extends Component {
 		this.props.navigation.navigate('ChatList', { nonce: uuid.v4() });
 	};
 
-	setTyping = (peerId) => {
+	setTyping = peerId => {
 		this.setState({ typing: peerId });
 		if (this.typingTimeout) clearTimeout(this.typingTimeout);
 
 		this.typingTimeout = setTimeout(() => this.setState({ typing: false }), 3000);
 	};
 
-	sendTyping = (text) => {
+	sendTyping = text => {
 		if (this.sentTyping || !this.initialized || text?.length == 0) return;
 		this.sentTyping = true;
 
@@ -332,7 +333,7 @@ class Chat extends Component {
 		setTimeout(() => (this.sentTyping = false), 2000);
 	};
 
-	onSend = async (message) => {
+	onSend = async message => {
 		const { group, contact } = this.state;
 		const peerId = contact?.address;
 		message[0].group = group;
@@ -365,7 +366,7 @@ class Chat extends Component {
 		}
 
 		var newMessages = GiftedChat.append(messages, message);
-		newMessages.sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
+		newMessages.sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix());
 
 		this.setState(prevState => ({
 			...prevState,
@@ -384,10 +385,12 @@ class Chat extends Component {
 		const { selectedAddress } = this.props;
 		const { avatar } = preferences.onboardProfile || {};
 
-		return !!avatar
-			? <RemoteImage source={{ uri: `file://${avatar}` }} style={styles.proImg} />
-			: <Identicon diameter={35} address={selectedAddress} />
-	}
+		return !!avatar ? (
+			<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.proImg} />
+		) : (
+			<Identicon diameter={35} address={selectedAddress} />
+		);
+	};
 
 	renderAvatar = (userAddress, big) => {
 		const { selectedAddress } = this.props;
@@ -401,7 +404,9 @@ class Chat extends Component {
 			return (
 				<View style={[styles.bubble, bigSize]}>
 					<Image
-						source={{ uri: `data:image/jpeg;base64,${contact?.avatar || contact?.publicInfo?.base64Avatar}` }}
+						source={{
+							uri: `data:image/jpeg;base64,${contact?.avatar || contact?.publicInfo?.base64Avatar}`
+						}}
 						style={[styles.proImg, bigSize]}
 						resizeMode="contain"
 						resizeMethod="scale"
@@ -428,7 +433,7 @@ class Chat extends Component {
 		return (
 			<SafeAreaView>
 				<View style={styles.navBar}>
-					<TouchableOpacity	{...testID('nav-back')} onPress={this.onBack} style={styles.navButton}>
+					<TouchableOpacity {...testID('nav-back')} onPress={this.onBack} style={styles.navButton}>
 						<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
 					</TouchableOpacity>
 					<View style={styles.navBarContentWrapper}>
@@ -472,15 +477,18 @@ class Chat extends Component {
 
 		peerAddrs.forEach(address => {
 			if (!address || address.toLowerCase() == selectedAddress.toLowerCase()) return;
-			const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [address], webrtc, { direct: true, group: this.state.group });
+			const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [address], webrtc, {
+				direct: true,
+				group: this.state.group
+			});
 			ft.setOnError(() => {
 				alert(`Error: Failed to send to ${address}`);
 				this.onSendError(message);
 			});
-		})
+		});
 	};
 
-	sendVoice = async (voiceFilePath) => {
+	sendVoice = async voiceFilePath => {
 		if (!voiceFilePath) return;
 		const uri = `file://${voiceFilePath}`;
 		const { size } = await RNFS.stat(uri);
@@ -495,16 +503,16 @@ class Chat extends Component {
 
 		this.sendFile(voiceObj);
 		this.RBRef.current.close();
-	}
+	};
 
-	sendMessage = (message) => {
+	sendMessage = message => {
 		this.messaging.send(message);
 		return message;
-	}
+	};
 
 	addFile = async file => {
 		const { fileCopyUri, uri, name } = file;
-		const decodedURL = decodeURIComponent((fileCopyUri || uri).replace("file://", ''));
+		const decodedURL = decodeURIComponent((fileCopyUri || uri).replace('file://', ''));
 
 		try {
 			const folder = `${RNFS.DocumentDirectoryPath}/${this.state.group}`;
@@ -513,13 +521,11 @@ class Chat extends Component {
 			const fileName = `${name}`;
 			const path = `${folder}/${fileName}`;
 			if (await RNFS.exists(path)) {
-				RNFS.unlink(path)
+				RNFS.unlink(path);
 			}
 			await RNFS.copyFile(decodedURL, path);
 			file.uri = `file://${path}`;
-		} catch (error) {
-			console.log("🚀 ~ file: index.js ~ line 586 ~ Chat ~ error", error)
-		}
+		} catch (error) {}
 
 		const selectedContact = this.state.contact;
 		const peerAddr = selectedContact?.address;
@@ -527,7 +533,7 @@ class Chat extends Component {
 		return await this.sendPayloadMessage(ChatFile(peerAddr, file));
 	};
 
-	onSendError = async (message) => {
+	onSendError = async message => {
 		const conversation = await store.getChatMessages(message.group);
 		const { messages } = conversation || { messages: [] };
 
@@ -540,7 +546,7 @@ class Chat extends Component {
 
 			store.saveChatMessages(message.group, { messages });
 		}
-	}
+	};
 
 	onFileReceived = async ({ data, path }) => {
 		const peerId = data.uuid || data.from;
@@ -559,7 +565,7 @@ class Chat extends Component {
 			message.payload.loading = false;
 			this.setState({ messages });
 		}
-	}
+	};
 
 	sendPayloadMessage = async (payload, append = true) => {
 		const { selectedAddress } = this.props;
@@ -632,11 +638,19 @@ class Chat extends Component {
 		if (!typing) return null;
 
 		const senderContact = this.contacts[typing];
-		const contact = senderContact && senderContact.name.length > 0 ? senderContact : marketStore.storeVendors[typing];
+		const contact =
+			senderContact && senderContact.name.length > 0 ? senderContact : marketStore.storeVendors[typing];
 
 		return (
 			<Text style={styles.typing}>
-				{!typing ? ' ' : <><Text style={styles.bold}>{contact?.name || ''}</Text>{strings('chat.user_is_typing')}</>}
+				{!typing ? (
+					' '
+				) : (
+					<>
+						<Text style={styles.bold}>{contact?.name || ''}</Text>
+						{strings('chat.user_is_typing')}
+					</>
+				)}
 			</Text>
 		);
 	};
@@ -655,7 +669,13 @@ class Chat extends Component {
 
 		return (
 			<View style={{ flexDirection: 'row', padding: 10 }}>
-				{owner ? <Icon name={'dollar'} size={24} style={{ color: colors.white }} /> : <View style={styles.qrView}><QRCode value={link} /></View>}
+				{owner ? (
+					<Icon name={'dollar'} size={24} style={{ color: colors.white }} />
+				) : (
+					<View style={styles.qrView}>
+						<QRCode value={link} />
+					</View>
+				)}
 				<View style={{ maxWidth: 200, marginLeft: 10 }}>
 					<Text style={{ color: textColor }}>Payment Request</Text>
 					<Text style={{ color: textColor, fontWeight: '600' }}>
@@ -708,7 +728,7 @@ class Chat extends Component {
 		}
 	};
 
-	renderMedia = (message) => {
+	renderMedia = message => {
 		const { selectedAddress } = this.props;
 		const { fileCopyUri, uri, type, loading } = message.payload;
 		const path = decodeURIComponent(uri || fileCopyUri).replace('file://', '');
@@ -721,13 +741,13 @@ class Chat extends Component {
 
 		if (type && type?.indexOf('image') == 0) {
 			message.image = `file://${path}`;
-			return <ImageMessage key={sha256(path)}	{...message} loading={isLoading} />
+			return <ImageMessage key={sha256(path)} {...message} loading={isLoading} />;
 		} else if (type && type?.indexOf('audio') == 0) {
 			let filePath = `file://${path}`;
-			return <AudioMessage key={sha256(path)}	{...message.payload} path={filePath} loading={isLoading} />
+			return <AudioMessage key={sha256(path)} {...message.payload} path={filePath} loading={isLoading} />;
 		}
-		return <FileMessage key={sha256(path)} {...message.payload} incoming={incoming} loading={isLoading} />
-	}
+		return <FileMessage key={sha256(path)} {...message.payload} incoming={incoming} loading={isLoading} />;
+	};
 
 	renderMessage = messageProps => {
 		const { currentMessage } = messageProps;
@@ -743,15 +763,15 @@ class Chat extends Component {
 		);
 	};
 
-	onRetry = async (message) => {
+	onRetry = async message => {
 		const { messages } = this.state;
 		message.payload.failed = false;
 
 		this.setState({ messages });
 		this.retrySending(message);
-	}
+	};
 
-	retrySending = async (message) => {
+	retrySending = async message => {
 		const { payload } = message || {};
 		switch (payload.action) {
 			case RequestPayment().action:
@@ -762,32 +782,38 @@ class Chat extends Component {
 				this.sendFile(payload, message);
 				break;
 		}
-	}
+	};
 
-	renderBubble = (message) => {
+	renderBubble = message => {
 		const { selectedAddress } = this.props;
 		const { createdAt, text, user, payload } = message;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed == true;
 		const chatTime = moment(createdAt);
 		const incoming = user._id !== selectedAddress;
-		const styleTime = { marginTop: 10, marginLeft: 10, marginRight: 10, color: incoming ? colors.pink : colors.blue }
+		const styleTime = {
+			marginTop: 10,
+			marginLeft: 10,
+			marginRight: 10,
+			color: incoming ? colors.pink : colors.blue
+		};
 
 		return (
 			<View style={styles.chatBubble}>
 				<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
-				{!!payload ?
-					this.renderCustomView(message) :
+				{!!payload ? (
+					this.renderCustomView(message)
+				) : (
 					<View style={styles.textMessage}>
 						<Text style={styles.text}>{text}</Text>
 					</View>
-				}
+				)}
 				{failed && this.renderRetry(message)}
 			</View>
-		)
-	}
+		);
+	};
 
-	renderRetry = (message) => {
+	renderRetry = message => {
 		return (
 			<View style={styles.failure}>
 				<Text style={styles.failedText}>{strings('chat.failed_to_send')}.</Text>
@@ -795,22 +821,36 @@ class Chat extends Component {
 					<Text style={styles.retry}> {strings('chat.retry')}</Text>
 				</TouchableOpacity>
 			</View>
-		)
-	}
+		);
+	};
 
 	renderProfile = () => {
 		const address = this.state.contact.address;
 		const profile = preferences.peerProfile(address);
+
+		const avatarName = `${profile?.firstname.length > 0 ? profile?.firstname[0] : ''} ${
+			profile?.lastname.length > 0 ? profile?.lastname[0] : ''
+		}`;
+
 		return (
 			<View style={styles.profile}>
-				<Image style={styles.avatar} source={{ uri: `data:image/*;base64,${this.state.avatar || profile?.avatar}` }} />
+				{this.state.avatar || profile?.avatar ? (
+					<Image
+						style={styles.avatar}
+						source={{ uri: `data:image/*;base64,${this.state.avatar || profile?.avatar}` }}
+					/>
+				) : (
+					<View style={styles.noAvatarWrapper}>
+						<Text style={styles.noAvatarName}>{avatarName}</Text>
+					</View>
+				)}
 				<View>
-					<Text style={styles.name}>{profile?.name}</Text>
+					<Text style={styles.name}>{`${profile?.firstname} ${profile?.lastname}`}</Text>
 					<EthereumAddress address={address} style={styles.address} type={'short'} />
 				</View>
 			</View>
-		)
-	}
+		);
+	};
 
 	sendText = () => {
 		const { selectedAddress } = this.props;
@@ -821,11 +861,11 @@ class Chat extends Component {
 				text: this.state.message,
 				user: {
 					_id: selectedAddress,
-					name: preferences.peerProfile(selectedAddress)?.name,
+					name: preferences.peerProfile(selectedAddress)?.name
 				}
 			}
-		])
-	}
+		]);
+	};
 
 	renderComposer = () => {
 		const { message } = this.state;
@@ -837,37 +877,31 @@ class Chat extends Component {
 				<TrackingTextInput
 					style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
 					value={this.state.message}
-					onChangeText={(text) => {
+					onChangeText={text => {
 						this.sendTyping(text);
-						this.setState({ message: text })
+						this.setState({ message: text });
 					}}
 					placeholder={strings('chat.chat_text')}
 					placeholderTextColor={colors.grey200}
 					multiline
 					textAlignVertical={'center'}
 				/>
-				{inputted && <TouchableOpacity
-					onPress={this.sendText}
-					activeOpacity={0.7}
-					style={styles.sendButton}
-				>
-					<Ionicons name={'send'} style={styles.sendIcon} />
-				</TouchableOpacity>}
+				{inputted && (
+					<TouchableOpacity onPress={this.sendText} activeOpacity={0.7} style={styles.sendButton}>
+						<Ionicons name={'send'} style={styles.sendIcon} />
+					</TouchableOpacity>
+				)}
 			</View>
-		)
-	}
+		);
+	};
 
 	renderActions = () => {
 		return (
-			<TouchableOpacity
-				onPress={this.onMoreButtonTap}
-				activeOpacity={0.7}
-				style={styles.cameraButton}
-			>
+			<TouchableOpacity onPress={this.onMoreButtonTap} activeOpacity={0.7} style={styles.cameraButton}>
 				<EntypoIcon name={'plus'} style={styles.cameraIcon} />
 			</TouchableOpacity>
-		)
-	}
+		);
+	};
 
 	render() {
 		const { selectedAddress } = this.props;
@@ -878,22 +912,23 @@ class Chat extends Component {
 				{this.renderNavBar()}
 				<View style={styles.body}>
 					{this.renderProfile()}
-					{
-						this.state.loading ? this.renderLoader() :
-							<GiftedChat
-								messages={messages}
-								onSend={this.onSend}
-								user={{ _id: selectedAddress, name: this.senderName }}
-								renderUsernameOnMessage={false}
-								renderAvatar={null}
-								showUserAvatar
-								bottomOffset={0}
-								onInputTextChanged={this.sendTyping}
-								renderFooter={this.renderTypingFooter}
-								renderMessage={this.renderMessage}
-								renderComposer={this.renderComposer}
-							/>
-					}
+					{this.state.loading ? (
+						this.renderLoader()
+					) : (
+						<GiftedChat
+							messages={messages}
+							onSend={this.onSend}
+							user={{ _id: selectedAddress, name: this.senderName }}
+							renderUsernameOnMessage={false}
+							renderAvatar={null}
+							showUserAvatar
+							bottomOffset={0}
+							onInputTextChanged={this.sendTyping}
+							renderFooter={this.renderTypingFooter}
+							renderMessage={this.renderMessage}
+							renderComposer={this.renderComposer}
+						/>
+					)}
 					<RecordingBS
 						RBRef={this.RBRef}
 						onHide={() => this.RBRef.current.close()}
@@ -907,7 +942,6 @@ class Chat extends Component {
 	}
 }
 
-
 const menuKeys = {
 	sendCoin: 'sendCoin',
 	requestPayment: 'requestPayment',
@@ -915,7 +949,7 @@ const menuKeys = {
 	sendVoice: 'sendVoice'
 };
 
-const menuOptions = (group) => {
+const menuOptions = group => {
 	const options = [
 		{
 			key: menuKeys.sendCoin,
@@ -941,7 +975,7 @@ const menuOptions = (group) => {
 
 	if (group && group.indexOf('0x') < 0) options.shift();
 	return options;
-}
+};
 
 const mapStateToProps = state => ({
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts,

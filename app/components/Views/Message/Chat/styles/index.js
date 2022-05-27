@@ -74,10 +74,10 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
 		padding: 10,
-		paddingTop: 5,
+		paddingTop: 5
 	},
 	text: {
-		color: colors.white,
+		color: colors.white
 	},
 	typing: {
 		color: colors.white,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
 		marginBottom: 5
 	},
 	failedText: {
-		color: colors.red,
+		color: colors.red
 	},
 	retry: {
 		color: colors.red,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		maxHeight: 150,
 		flexDirection: 'row',
-		padding: 16,
+		padding: 16
 	},
 	productInfo: {
 		flex: 3,
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
 	},
 	requestModalSubContent: {
 		fontSize: RFValue(13),
-		color: colors.grey500,
+		color: colors.grey500
 	},
 	actionsWrapper: {
 		flexDirection: 'row',
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
 	qrView: {
 		maxHeight: 130,
 		padding: 15,
-		backgroundColor: colors.white,
+		backgroundColor: colors.white
 	},
 	chatWrapper: {
 		flex: 1,
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.lightPurple,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: 40,
+		height: 40
 	},
 	cameraIcon: {
 		fontSize: 24,
@@ -256,7 +256,20 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		color: colors.white
 	},
+	noAvatarWrapper: {
+		width: 60,
+		height: 60,
+		borderRadius: 100,
+		backgroundColor: colors.white,
+		marginRight: 12,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	noAvatarName: {
+		fontWeight: '600',
+		fontSize: 24,
+		color: colors.black
+	}
 });
-
 
 export default assignNestedObj(styles, brandStyles);
