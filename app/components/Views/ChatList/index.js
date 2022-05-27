@@ -114,18 +114,28 @@ const ChatList = ({ route, navigation, ...props }) => {
 		const addresses = addressBook[network] || {};
 		const records = await store.getChatMessages();
 
-		const users = Object.keys(records).filter(uuid => {
-			const address = uuid.toLowerCase().replace('.', '').replace(selectedAddress.toLowerCase(), '');
-			return Object.keys(addresses).find(a => a?.toLocaleLowerCase() == address?.toLowerCase())
-				|| preferences.peerProfile(address);
-		}).map(uuid => {
-			const address = uuid.toLowerCase().replace('.', '').replace(selectedAddress.toLowerCase(), '');
-			const conversation = { address, ...records[uuid] };
+		const users = Object.keys(records)
+			.filter(uuid => {
+				const address = uuid
+					.toLowerCase()
+					.replace('.', '')
+					.replace(selectedAddress.toLowerCase(), '');
+				return (
+					Object.keys(addresses).find(a => a?.toLocaleLowerCase() == address?.toLowerCase()) ||
+					preferences.peerProfile(address)
+				);
+			})
+			.map(uuid => {
+				const address = uuid
+					.toLowerCase()
+					.replace('.', '')
+					.replace(selectedAddress.toLowerCase(), '');
+				const conversation = { address, ...records[uuid] };
 
-			conversation.lastMessage = records[uuid].messages[0];
-			conversation.isRead = records[uuid].isRead;
-			return Object.assign(conversation, preferences.peerProfile(address));
-		});
+				conversation.lastMessage = records[uuid].messages[0];
+				conversation.isRead = records[uuid].isRead;
+				return Object.assign(conversation, preferences.peerProfile(address));
+			});
 		setConversations(users);
 	};
 
@@ -139,12 +149,11 @@ const ChatList = ({ route, navigation, ...props }) => {
 		};
 	}, [route, navigation]);
 
-
 	const onAddChat = () => {
 		navigation.navigate('NewChat');
 	};
 
-	const onViewChat = (address) => {
+	const onViewChat = address => {
 		store.setConversationIsRead(address, true);
 		navigation.navigate('Chat', { selectedContact: { address } });
 	};
@@ -157,9 +166,13 @@ const ChatList = ({ route, navigation, ...props }) => {
 		if (avatarURL) {
 			return <Image source={{ uri: avatarURL }} style={styles.avatar} />;
 		}
-		const avatarName = name.split(' ').reduce((pre, cur, curIndex) => {
-			return curIndex > 2 ? pre : curIndex === 1 ? pre[0] + cur[0] : pre + cur[0];
-		});
+		const nameArr = name.split(' ');
+		const avatarName =
+			nameArr.length > 1
+				? nameArr.reduce((pre, cur, curIndex) => {
+						return curIndex > 2 ? pre : curIndex === 1 ? pre[0] + cur[0] : pre + cur[0];
+				  })
+				: nameArr[0][0];
 		return (
 			<View style={styles.noAvatarWrapper}>
 				<Text style={styles.noAvatarName}>{avatarName}</Text>
@@ -168,7 +181,13 @@ const ChatList = ({ route, navigation, ...props }) => {
 	};
 
 	const renderChatItem = chat => {
-		const { address, name, avatar, lastMessage: { text }, createdAt } = chat;
+		const {
+			address,
+			name,
+			avatar,
+			lastMessage: { text },
+			createdAt
+		} = chat;
 		let displayTime = '';
 		const lastTime = moment(createdAt);
 		const currentTime = moment();
@@ -180,7 +199,8 @@ const ChatList = ({ route, navigation, ...props }) => {
 		const profile = preferences.peerProfile(address);
 		return (
 			<>
-				<TouchableOpacity key={address}
+				<TouchableOpacity
+					key={address}
 					style={styles.chatWrapper}
 					activeOpacity={0.7}
 					onPress={() => onViewChat(address)}
@@ -226,7 +246,7 @@ ChatList.propTypes = {
 const mapStateToProps = state => ({
 	addressBook: state.engine.backgroundState.AddressBookController.addressBook,
 	network: state.engine.backgroundState.NetworkController.network,
-	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress,
+	selectedAddress: state.engine.backgroundState.PreferencesController.selectedAddress
 });
 
 export default connect(mapStateToProps)(ChatList);
