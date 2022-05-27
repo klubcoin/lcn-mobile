@@ -40,7 +40,7 @@ export default class ChatService {
 						const hasAvatar = avatar && (await RNFS.exists(avatar));
 						const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
 						const webrtc = refWebRTC();
-						webrtc.sendToPeer(peerId, ChatProfile({ name, avatar: avatarb64 }));
+						webrtc.sendToPeer(peerId, ChatProfile({ name, firstname, lastname, avatar: avatarb64 }));
 					}
 				} else if (action == Typing().action) {
 					const peer = preferences.peerProfile(peerId);
