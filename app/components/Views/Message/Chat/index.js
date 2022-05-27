@@ -8,7 +8,8 @@ import {
 	Platform,
 	Image,
 	DeviceEventEmitter,
-	ActivityIndicator
+	ActivityIndicator,
+	BackHandler
 } from 'react-native';
 import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
@@ -50,9 +51,10 @@ import RecordingBS from '../../../UI/RecordingBS';
 import RemoteImage from '../../../Base/RemoteImage';
 import EthereumAddress from '../../../UI/EthereumAddress';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
+import { getChatNavigationOptionsTitle } from '../../../UI/Navbar';
 
 class Chat extends Component {
-	static navigationOptions = () => ({ header: null });
+	static navigationOptions = ({ navigation }) => getChatNavigationOptionsTitle('Chat', navigation);
 	messaging;
 	contacts = {};
 	senderName = '';
@@ -85,6 +87,7 @@ class Chat extends Component {
 	};
 
 	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.onBack);
 		store.setActiveChatPeerId(this.state.group);
 		this.bindContactForAddress();
 		this.fetchConversation();
@@ -144,6 +147,7 @@ class Chat extends Component {
 	}
 
 	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.onBack);
 		if (this.listener) this.listener.remove();
 		if (this.fileReceivedEvt) this.fileReceivedEvt.remove();
 		if (this.transactionListener) this.transactionListener.remove();
@@ -315,6 +319,8 @@ class Chat extends Component {
 	onBack = () => {
 		store.setActiveChatPeerId(null);
 		this.props.navigation.navigate('ChatList', { nonce: uuid.v4() });
+		BackHandler.removeEventListener('hardwareBackPress', this.onBack);
+		return true;
 	};
 
 	setTyping = peerId => {
@@ -828,8 +834,8 @@ class Chat extends Component {
 		const address = this.state.contact.address;
 		const profile = preferences.peerProfile(address);
 
-		const avatarName = `${profile?.firstname.length > 0 ? profile?.firstname[0] : ''} ${
-			profile?.lastname.length > 0 ? profile?.lastname[0] : ''
+		const avatarName = `${profile?.firstname?.length > 0 ? profile?.firstname[0] : ''} ${
+			profile?.lastname?.length > 0 ? profile?.lastname[0] : ''
 		}`;
 
 		return (
@@ -909,7 +915,7 @@ class Chat extends Component {
 
 		return (
 			<>
-				{this.renderNavBar()}
+				{/* {this.renderNavBar()} */}
 				<View style={styles.body}>
 					{this.renderProfile()}
 					{this.state.loading ? (

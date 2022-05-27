@@ -215,9 +215,12 @@ export default createStackNavigator(
 						NewChat: {
 							screen: NewChat
 						},
-						ChatMessage: {
-							screen: ChatMessage
+						Chat: {
+							screen: Chat
 						}
+						// ChatMessage: {
+						// 	screen: ChatMessage
+						// }
 					}),
 					VotingAppHome: createDrawerNavigator({
 						VotingApp: {
@@ -283,14 +286,14 @@ export default createStackNavigator(
 				}
 			)
 		},
-		MessageApp: createStackNavigator({
-			Message: {
-				screen: Message
-			},
-			Chat: {
-				screen: Chat
-			}
-		}),
+		// MessageApp: createStackNavigator({
+		// 	Message: {
+		// 		screen: Message
+		// 	},
+		// 	Chat: {
+		// 		screen: Chat
+		// 	}
+		// }),
 		MarketPlaceApp: createDrawerNavigator(
 			{
 				MarketPlace: createStackNavigator(

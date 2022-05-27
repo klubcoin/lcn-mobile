@@ -22,6 +22,8 @@ import { getHost } from '../../../util/browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { displayName } from '../../../../app.json';
 import styles from './styles/index';
+import store from '../../Views/Message/store';
+import uuid from 'react-native-uuid';
 
 const { HOMEPAGE_URL } = AppConstants;
 
@@ -79,6 +81,35 @@ export default function getNavbarOptions(title, navigation, disableNetwork = fal
  */
 export function getNavigationOptionsTitle(title, navigation) {
 	const navigationPop = () => navigation.pop();
+
+	return {
+		headerStyle: {
+			shadowColor: colors.transparent,
+			elevation: 0,
+			backgroundColor: colors.white,
+			borderBottomWidth: 0
+		},
+		headerTitle: (
+			<View style={styles.metamaskNameTransparentWrapper}>
+				<Text style={styles.header}>{title}</Text>
+			</View>
+		),
+		headerBackTitle: strings('navigation.back'),
+		headerRight: <View />,
+		// headerLeft: headerLeftHide
+		headerLeft: (
+			<TouchableOpacity onPress={navigationPop} style={styles.backButton}>
+				<Icon name={'arrow-left'} size={16} style={styles.backIcon} />
+			</TouchableOpacity>
+		)
+	};
+}
+
+export function getChatNavigationOptionsTitle(title, navigation, onBack) {
+	const navigationPop = () => {
+		store.setActiveChatPeerId(null);
+		navigation.navigate('ChatList', { nonce: uuid.v4() });
+	};
 
 	return {
 		headerStyle: {
