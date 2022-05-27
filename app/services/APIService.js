@@ -45,8 +45,11 @@ export default class APIService {
 	static apiVerifyEmailOTP = email => `${APIService.routeMeveoAPI()}/rest/verifyOtp/${email}`;
 	static apiGetChartData = (from, to) => `${APIService.routeMeveoAPI()}/rest/exchangeRate/${from}/${to}`;
 	static apiOtpStatus = email => `${APIService.routeMeveoAPI()}/rest/otpStatus/${email}`;
+	static apiGetPaymentDetail = orderId => `${APIService.routeMeveoAPI()}/rest/pg/v1/orders/${orderId}`;
 
-	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${config.googleApi.key}`;
+	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
+		config.googleApi.key
+	}`;
 	static apiFAQs = () => APIService.routePersistenceAPI() + 'FrequentlyAskedQuestion';
 
 	static announcePeerOnlineStatus(peerId, callback) {
@@ -318,6 +321,10 @@ export default class APIService {
 			[address],
 			response => callback && callback(true, response),
 			error => callback && callback(false, error)
-		)
+		);
+	}
+
+	static getPaymentInfo(orderId, callback) {
+		WebService.sendGetDirect(this.apiGetPaymentDetail(orderId), {}, callback);
 	}
 }

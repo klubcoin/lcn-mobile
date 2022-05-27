@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, View, StyleSheet, BackHandler, ScrollView } from 'react-native';
+import { Image, View, StyleSheet, BackHandler, ScrollView, ActivityIndicator } from 'react-native';
 import Text from '../../Base/Text';
 import { colors } from '../../../styles/common';
 import PropTypes from 'prop-types';
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
 	},
 	avatar: {
 		width: 90,
-		height: 90
+		height: 90,
+		borderRadius: 45
 	},
 	partnerLogo: {
 		width: 90,
@@ -93,15 +94,23 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.blue,
 		marginVertical: 4
 	},
-	itemText: {
+	itemTextTitle: {
 		color: colors.white,
-		fontWeight: '500'
+		fontWeight: '500',
+		marginRight: 10
+	},
+	itemText: {
+		flex: 1,
+		color: colors.white,
+		fontWeight: '500',
+		textAlign: 'right'
 	},
 	totalText: {
 		color: colors.white,
 		fontWeight: 'bold'
 	},
 	rightWrapper: {
+		flex: 1,
 		alignItems: 'flex-end'
 	},
 	actionsWrapper: {
@@ -134,12 +143,26 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	const [balance, setBalance] = useState('0');
 	const [currencies, setCurrencies] = useState([]);
 	const [price, setPrice] = useState('');
+	const [orderDetail, setOrderDetail] = useState({});
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		BackHandler.addEventListener('hardwareBackPress', onBack);
 		return () => {
 			BackHandler.removeEventListener('hardwareBackPress', onBack);
 		};
+	}, []);
+
+	useEffect(() => {
+		const orderId = navigation?.state?.params?.orderId;
+		if (orderId) {
+			setLoading(true);
+			APIService.getPaymentInfo(orderId, (success, json) => {
+				setOrderDetail(json);
+				setCurrency(json?.lines[0]?.unitPrice?.currency?.toLowerCase());
+				setLoading(false);
+			});
+		}
 	}, []);
 
 	useEffect(() => {
@@ -193,7 +216,19 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	};
 
 	const onPurchase = () => {
+		onPurchaseSuccess();
+	};
+
+	const onPurchaseSuccess = () => {
 		navigation.navigate('PurchaseSuccess');
+	};
+
+	const renderLoading = () => {
+		return (
+			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+				<ActivityIndicator color={colors.white} />
+			</View>
+		);
 	};
 
 	const renderOrderDetail = () => {
@@ -214,7 +249,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					<Text style={styles.amountToPay}>
 						{strings('purchase_order_details.amount_to_pay').toUpperCase()}
 					</Text>
-					<Text style={styles.price}>{`${currencySymbol} 188.58`}</Text>
+					<Text style={styles.price}>{`${currencySymbol} ${orderDetail?.lines[0].unitPrice.value}`}</Text>
 				</View>
 				<View style={styles.orderDetailWrapper}>
 					<View style={styles.rowItem}>
@@ -223,30 +258,43 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 						</Text>
 						<Text>
 							<Text style={styles.orderRefNoTitle}>{strings('purchase_order_details.order_ref_no')}</Text>
-							<Text style={styles.orderRefNo}> 695-1023</Text>
+							<Text style={styles.orderRefNo}> {orderDetail?.metadata?.order_id}</Text>
 						</Text>
 					</View>
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
-						<Text style={styles.itemText}>{strings('purchase_order_details.amount')}</Text>
-						<Text style={styles.itemText}>{`188.58 ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.amount')}</Text>
+						<Text style={styles.itemText}>{`${
+							orderDetail?.lines[0].unitPrice.value
+						} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.rowItem}>
-						<Text style={styles.itemText}>
+						<Text style={styles.itemTextTitle}>
 							{strings('purchase_order_details.token_fee', { token: Routes.mainNetWork.coin })}
 						</Text>
-						<Text style={styles.itemText}>{`2.99 ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.itemText}>{`${
+							orderDetail?.lines[0].vatAmount.value
+						} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
 						<Text style={styles.totalText}>{strings('purchase_order_details.total')}</Text>
-						<Text style={styles.totalText}>{`191.57 ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.totalText}>{`${
+							orderDetail?.lines[0].totalAmount.value
+						} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.rowItem}>
-						<Text style={styles.itemText}>{strings('purchase_order_details.order_placed_via')}</Text>
+						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.order_placed_via')}</Text>
 						<View style={styles.rightWrapper}>
-							<Text style={styles.itemText}>https://clubbingtv.com/store/</Text>
-							<Text style={styles.itemText}>{moment().format('MMM DD,YYYY [at] h:mm A')}</Text>
+							<Text style={styles.itemText} numberOfLines={2}>
+								{orderDetail?.redirectUrl
+									.split('/')
+									.slice(0, 4)
+									.join('/')}
+							</Text>
+							<Text style={styles.itemText}>
+								{moment(orderDetail?.createdAt).format('MMM DD,YYYY [at] h:mm A')}
+							</Text>
 						</View>
 					</View>
 					<View style={styles.actionsWrapper}>
@@ -275,7 +323,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	return (
 		<OnboardingScreenWithBg screen="a">
 			<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContainer}>
-				{renderOrderDetail()}
+				{loading ? renderLoading() : renderOrderDetail()}
 			</ScrollView>
 		</OnboardingScreenWithBg>
 	);
