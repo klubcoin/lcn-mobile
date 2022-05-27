@@ -1893,7 +1893,10 @@
 		"search_desc": "Search, public address (0x), or ENS",
 		"chat_text": "Chat text...",
 		"send_message": "Send Message",
-		"recording_audio": "Recording Audio"
+		"recording_audio": "Recording Audio",
+		"amount": "Amount",
+		"payment_request": "Patment Request",
+		"chat": "Chat"
 	},
 	"market": {
 		"title": "Market",

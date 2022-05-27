@@ -172,7 +172,7 @@ class Chat extends Component {
 		this.listener = this.messaging.addListener('message', (data, peerId) => {
 			if (data.action) {
 				const { action } = data;
-				if (action == ChatProfile().action) {
+				if (action === ChatProfile().action) {
 					const peerProfile = preferences.peerProfile(peerId);
 					if (peerProfile) {
 						peerProfile.avatar = data.profile.avatar;
@@ -190,13 +190,13 @@ class Chat extends Component {
 			const { action, name, group } = data.message || {};
 			if (group && group != this.state.group) return;
 
-			if (action == ChatProfile().action) {
+			if (action === ChatProfile().action) {
 				this.setState(prevState => ({
 					...prevState,
 					isOnline: true,
 					update: new Date()
 				}));
-			} else if (action && action == Typing().action) {
+			} else if (action && action === Typing().action) {
 				if (name) this.contacts[peerId] = { name };
 				this.setTyping(peerId);
 
@@ -205,7 +205,7 @@ class Chat extends Component {
 						...prevState,
 						isOnline: true
 					}));
-			} else if (action && action == JoinUpdate().action) {
+			} else if (action && action === JoinUpdate().action) {
 				this.fetchGroupDetails(this.state.group);
 			} else if (data.message?.user) {
 				data.message.user['_id'] = peerId;
@@ -243,14 +243,14 @@ class Chat extends Component {
 			APIService.getTransactionHistory(selectedAddress, (success, response) => {
 				if (success && response) {
 					const trans = response.result.map(
-						e => transactions.find(t => t.transactionHash == e.hash) || map3rdPartyTransaction(e)
+						e => transactions.find(t => t.transactionHash === e.hash) || map3rdPartyTransaction(e)
 					);
 
 					const filteredTransactions = trans.filter(e => {
 						const { transaction } = e;
 						return (
 							parseInt(transaction.value, 16) > 0 &&
-							(transaction.from == address || transaction.to == address)
+							(transaction.from === address || transaction.to === address)
 						);
 					});
 					const data = filteredTransactions.map(e => ({
@@ -284,16 +284,16 @@ class Chat extends Component {
 			if (this.state.group) return true;
 			const senderAddr = e.user._id;
 			if (e.payload) {
-				if (e.transaction || e.payload.action == TransactionSync().action) {
+				if (e.transaction || e.payload.action === TransactionSync().action) {
 					return false;
 				} else {
 					const {
 						payload: { from, to }
 					} = e;
-					return from == peerAddr || to == peerAddr || senderAddr == peerAddr;
+					return from === peerAddr || to === peerAddr || senderAddr === peerAddr;
 				}
 			} else {
-				return senderAddr == address || senderAddr == peerAddr;
+				return senderAddr === address || senderAddr === peerAddr;
 			}
 		});
 		messages.reverse().map(e => {
@@ -331,7 +331,7 @@ class Chat extends Component {
 	};
 
 	sendTyping = text => {
-		if (this.sentTyping || !this.initialized || text?.length == 0) return;
+		if (this.sentTyping || !this.initialized || text?.length === 0) return;
 		this.sentTyping = true;
 
 		if (this.messaging) this.messaging.send(Typing(this.senderName, this.state.group));
@@ -401,7 +401,7 @@ class Chat extends Component {
 	renderAvatar = (userAddress, big) => {
 		const { selectedAddress } = this.props;
 
-		if (!userAddress || userAddress == selectedAddress) return this.renderOwnAvatar();
+		if (!userAddress || userAddress === selectedAddress) return this.renderOwnAvatar();
 
 		const bigSize = big && styles.bigBubble;
 		const contact = preferences.peerProfile(userAddress);
@@ -445,7 +445,7 @@ class Chat extends Component {
 					<View style={styles.navBarContentWrapper}>
 						<View style={{ flex: 1 }}>
 							<Text numberOfLines={1} ellipsizeMode="middle" style={styles.headerText}>
-								Chat
+								{strings('chat.chat')}
 							</Text>
 						</View>
 					</View>
@@ -482,7 +482,7 @@ class Chat extends Component {
 		const peerAddrs = this.getPeers().filter(e => e !== selectedAddress.toLocaleLowerCase());
 
 		peerAddrs.forEach(address => {
-			if (!address || address.toLowerCase() == selectedAddress.toLowerCase()) return;
+			if (!address || address.toLowerCase() === selectedAddress.toLowerCase()) return;
 			const ft = FileTransferWebRTC.sendAsParts(data, name, selectedAddress, [address], webrtc, {
 				direct: true,
 				group: this.state.group
@@ -546,7 +546,7 @@ class Chat extends Component {
 		if (message.payload) {
 			message.payload.failed = true;
 
-			const m = messages.find(e => e._id == message._id);
+			const m = messages.find(e => e._id === message._id);
 			Object.assign(m, message);
 			this.setState({ messages });
 
@@ -561,8 +561,8 @@ class Chat extends Component {
 
 		const message = messages.find(e => {
 			const { payload } = e;
-			if (payload && payload.action == ChatFile().action) {
-				return payload.name == data.name;
+			if (payload && payload.action === ChatFile().action) {
+				return payload.name === data.name;
 			}
 		});
 
@@ -583,7 +583,9 @@ class Chat extends Component {
 			group: this.state.group,
 			user: { _id: selectedAddress }
 		};
-		if (append) this.addNewMessage(message);
+		if (append) {
+			this.addNewMessage(message);
+		}
 		this.messaging.send(message);
 
 		return message;
@@ -670,11 +672,11 @@ class Chat extends Component {
 		const { user, payload } = message;
 		const { link, amount, symbol } = payload;
 
-		const owner = user._id == selectedAddress;
+		const owner = user._id === selectedAddress;
 		const textColor = colors.white;
 
 		return (
-			<View style={{ flexDirection: 'row', padding: 10 }}>
+			<View style={styles.paymentRequestWrapper}>
 				{owner ? (
 					<Icon name={'dollar'} size={24} style={{ color: colors.white }} />
 				) : (
@@ -682,10 +684,10 @@ class Chat extends Component {
 						<QRCode value={link} />
 					</View>
 				)}
-				<View style={{ maxWidth: 200, marginLeft: 10 }}>
-					<Text style={{ color: textColor }}>Payment Request</Text>
+				<View style={{ marginLeft: 10, flex: 1 }}>
+					<Text style={{ color: textColor }}>{strings('chat.payment_request')}</Text>
 					<Text style={{ color: textColor, fontWeight: '600' }}>
-						Amount: {amount} {symbol}
+						{`${strings('chat.amount')}: ${amount} ${symbol}`}
 					</Text>
 					{!owner && (
 						<TouchableOpacity activeOpacity={0.6} onPress={() => this.handlePayment(payload)}>
@@ -703,7 +705,7 @@ class Chat extends Component {
 		const { user, payload } = message;
 
 		const groupChat = !!this.state.group;
-		const sender = user._id == selectedAddress;
+		const sender = user._id === selectedAddress;
 		const data = {
 			tx: payload,
 			selectedAddress,
@@ -719,7 +721,7 @@ class Chat extends Component {
 
 	renderCustomView = message => {
 		const { payload } = message;
-		if (message.transaction || payload.action == TransactionSync().action) {
+		if (message.transaction || payload.action === TransactionSync().action) {
 			return this.renderTransaction(message);
 		}
 		switch (payload.action) {
@@ -745,10 +747,10 @@ class Chat extends Component {
 
 		delete message.image;
 
-		if (type && type?.indexOf('image') == 0) {
+		if (type && type?.indexOf('image') === 0) {
 			message.image = `file://${path}`;
 			return <ImageMessage key={sha256(path)} {...message} loading={isLoading} />;
-		} else if (type && type?.indexOf('audio') == 0) {
+		} else if (type && type?.indexOf('audio') === 0) {
 			let filePath = `file://${path}`;
 			return <AudioMessage key={sha256(path)} {...message.payload} path={filePath} loading={isLoading} />;
 		}
@@ -794,7 +796,7 @@ class Chat extends Component {
 		const { selectedAddress } = this.props;
 		const { createdAt, text, user, payload } = message;
 		const { members } = this.groupInfo();
-		const failed = members?.length <= 2 && !this.state.group && payload?.failed == true;
+		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
 		const chatTime = moment(createdAt);
 		const incoming = user._id !== selectedAddress;
 		const styleTime = {

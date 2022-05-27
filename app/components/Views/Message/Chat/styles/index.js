@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { colors } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
 import { assignNestedObj } from '../../../../../util/object';
 import brandStyles from './brand';
 
+const { width } = Dimensions.get('screen');
 const styles = StyleSheet.create({
 	flex: {
 		flex: 1
@@ -68,7 +69,13 @@ const styles = StyleSheet.create({
 	},
 	chatBubble: {
 		backgroundColor: colors.lightPurple,
-		borderRadius: 10
+		borderRadius: 10,
+		maxWidth: width * 0.8
+	},
+	paymentRequestWrapper: {
+		width: width * 0.8,
+		flexDirection: 'row',
+		padding: 10
 	},
 	textMessage: {
 		backgroundColor: colors.lightPurple,
@@ -213,8 +220,8 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 	qrView: {
-		maxHeight: 130,
-		padding: 15,
+		maxHeight: 110,
+		padding: 5,
 		backgroundColor: colors.white
 	},
 	chatWrapper: {
