@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Image, View, StyleSheet, BackHandler, ScrollView, ActivityIndicator } from 'react-native';
+import {
+	Image,
+	View,
+	StyleSheet,
+	BackHandler,
+	ScrollView,
+	ActivityIndicator,
+	DeviceEventEmitter,
+	InteractionManager
+} from 'react-native';
 import Text from '../../Base/Text';
 import { colors } from '../../../styles/common';
 import PropTypes from 'prop-types';
@@ -10,12 +19,24 @@ import { connect } from 'react-redux';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import preferences from '../../../store/preferences';
 import drawables from '../../../common/drawables';
-import { hexToBN, fromWei } from '../../../util/number';
+import { hexToBN, fromWei, toWei, BNToHex, toTokenMinimalUnit } from '../../../util/number';
 import Routes from 'common/routes';
 import moment from 'moment';
 import APIService from '../../../services/APIService';
 import infuraCurrencies from '../../../util/infura-conversion.json';
 import BigNumber from 'bignumber.js';
+import API from 'services/api';
+import Erc20Service from '../../../core/Erc20Service';
+import { generateTransferData } from '../../../util/transactions';
+import { getGasPriceByChainId } from '../../../util/custom-gas';
+import Engine from '../../../core/Engine';
+import TransactionTypes from '../../../core/TransactionTypes';
+import { TransactionStatus, WalletDevice } from '@metamask/controllers';
+import NotificationManager from '../../../core/NotificationManager';
+import { resetTransaction } from '../../../actions/transaction';
+import RawTransaction from '../../../services/RawTransaction';
+import { showError } from '../../../util/notify';
+import Transaction from 'ethereumjs-tx';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -135,17 +156,29 @@ const styles = StyleSheet.create({
 
 const PARTNER_LOGO = require('../../../images/clubbingtv_logo.jpeg');
 
-const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identities }) => {
+const GENESIS_ADDRESS = '0xb4bF880BAfaF68eC8B5ea83FaA394f5133BB9623';
+
+const ASSET_TYPE = 'ERC20';
+
+const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identities, resetTransaction }) => {
 	const [account, setAccount] = useState({});
 	const [avatar, setAvatar] = useState('');
 	const [currency, setCurrency] = useState('usd');
 	const [currencySymbol, setCurrencySymbol] = useState('usd');
 	const [balance, setBalance] = useState('0');
 	const [currencies, setCurrencies] = useState([]);
-	const [price, setPrice] = useState('');
-	const [orderDetail, setOrderDetail] = useState({});
+	const [currencyRates, setCurrencyRates] = useState([]);
+	const [price, setPrice] = useState({
+		klubToCurrency: '',
+		currencyToKlub: ''
+	});
+	const [purchasing, setPurchasing] = useState(false);
+	// const [orderDetail, setOrderDetail] = useState({});
+	const [orderDetail, setOrderDetail] = useState();
 	const [loading, setLoading] = useState(true);
+	const [customNetworkFee, setCustomNetworkFee] = useState({});
 
+	const klubToken = Routes.klubToken;
 	useEffect(() => {
 		BackHandler.addEventListener('hardwareBackPress', onBack);
 		return () => {
@@ -196,27 +229,134 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	useEffect(() => {
 		if (account.decBalance) {
 			const bigNumberTotalToken = new BigNumber(account?.decBalance);
-			const totalBalance = bigNumberTotalToken.multipliedBy(`${price}`);
+			const totalBalance = bigNumberTotalToken.multipliedBy(`${price.klubToCurrency}`);
 			setBalance(totalBalance.toString());
 		}
 	}, [account.decBalance, price]);
 
 	const featchPrice = () => {
-		const toDate = new Date();
-		let fromDate = new Date(moment().subtract(1, 'days'));
-		APIService.getChartData('KLC', currency.toUpperCase(), fromDate, toDate, (success, json) => {
-			if (success && json?.data && Array.isArray(json.data)) {
-				setPrice(json.data[json.data.length - 1].value);
+		API.getRequest(
+			Routes.getConversions,
+			response => {
+				setLoading(false);
+				if (response.data.length > 0) {
+					setCurrencyRates(response.data);
+				} else {
+					setCurrencyRates([]);
+				}
+			},
+			error => {
+				setLoading(false);
+				console.log(error);
 			}
-		});
+		);
 	};
+
+	useEffect(() => {
+		setPrice({
+			klubToCurrency: currencyRates.find(
+				e => e?.from?.currency === klubToken.symbol && e?.to?.currency === currency.toUpperCase()
+			)?.to?.value,
+			currencyToKlub: currencyRates.find(
+				e => e?.to?.currency === klubToken.symbol && e?.from?.currency === currency.toUpperCase()
+			)?.to?.value
+		});
+	}, [currencyRates, currency]);
 
 	const onCancel = () => {
 		navigation.goBack();
 	};
 
-	const onPurchase = () => {
-		onPurchaseSuccess();
+	useEffect(() => {
+		getCustomNetworkFee();
+	}, []);
+
+	const getCustomNetworkFee = async () => {
+		const { selectedAsset } = this.props;
+		const result = await new Erc20Service().getFixedFee();
+		const base = Math.pow(10, selectedAsset.decimals);
+		const networkFee = {
+			gas: hexToBN('0x1'),
+			gasPrice: toWei((parseFloat(result) / base).toString())
+		};
+		setCustomNetworkFee(networkFee);
+		return networkFee;
+	};
+
+	const onPurchase = async () => {
+		try {
+			const { TransactionController, NetworkController, KeyringController } = Engine.context;
+			setPurchasing(true);
+
+			const totalAmount = new BigNumber(orderDetail?.lines[0].totalAmount.value);
+			const totalToken = totalAmount.multipliedBy(price.currencyToKlub);
+			let transaction = {};
+			transaction.data = generateTransferData('transfer', {
+				toAddress: GENESIS_ADDRESS,
+				amount: BNToHex(toTokenMinimalUnit(totalToken, klubToken.decimals))
+			});
+			transaction.to = klubToken.address();
+			transaction.value = '0x0';
+			transaction.from = selectedAddress;
+			transaction.chainId = parseInt(Routes.mainNetWork.chainId);
+			const estimation = await estimateGas(transaction);
+			transaction = { ...transaction, gas: BNToHex(estimation.gas), gasPrice: BNToHex(estimation.gasPrice) };
+			let payOrderRawTransaction = new RawTransaction(() => NetworkController.provider);
+			transaction.nonce = await payOrderRawTransaction.getNonce(transaction.from);
+			const rawTX = new Transaction(Object.assign({}, transaction));
+			const rawTransaction = await KeyringController.signTransaction(rawTX, transaction.from);
+			const rawTransactionHex = rawTransaction.serialize().toString('hex');
+
+			let { result, transactionMeta } = await TransactionController.addTransaction(
+				transaction,
+				TransactionTypes.MMM,
+				WalletDevice.MM_MOBILE
+			);
+			APIService.sendPaymentRawTransaction(orderDetail.id, rawTransactionHex, async (success, json) => {
+				if (success && json?.result?.status === 'paid') {
+					if (transactionMeta.error) {
+						throw transactionMeta.error;
+					}
+					transactionMeta.transactionHash = rawTransactionHex;
+					transactionMeta.status = TransactionStatus.confirmed;
+					transactionMeta.transaction.gas = customNetworkFee.gas;
+					transactionMeta.transaction.gasPrice = customNetworkFee.gasPrice;
+
+					await TransactionController.updateTransaction(transactionMeta);
+					// await TransactionController.queryTransactionStatuses();
+					// await TransactionController.hub.emit(`${transactionMeta.id}:finished`, transactionMeta);
+					// await new Promise(resolve => resolve(result));
+					setPurchasing(false);
+
+					InteractionManager.runAfterInteractions(async () => {
+						DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
+						NotificationManager.watchSubmittedTransaction({
+							...transactionMeta,
+							ASSET_TYPE
+						});
+						resetTransaction();
+						onPurchaseSuccess();
+						// navigation && navigation.dismiss();
+					});
+				} else {
+					setPurchasing(false);
+					showError(strings('purchase_order_details.payment_error'));
+				}
+			});
+		} catch (err) {
+			console.warn(err);
+		}
+	};
+
+	const estimateGas = async transaction => {
+		const { value, data, to, from } = transaction;
+
+		return await getGasPriceByChainId({
+			value,
+			from,
+			data,
+			to
+		});
 	};
 
 	const onPurchaseSuccess = () => {
@@ -240,16 +380,14 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 						style={styles.avatar}
 					/>
 					<Text style={styles.name}>{account.name}</Text>
-					<Text style={styles.balance}>{`${fromWei(hexToBN(account?.balance))} ${
-						Routes.klubToken.symbol
-					}`}</Text>
+					<Text style={styles.balance}>{`${fromWei(hexToBN(account?.balance))} ${klubToken.symbol}`}</Text>
 					<Text style={styles.balance}>{`${currencySymbol} ${balance}`}</Text>
 					<View style={styles.line} />
 					<Image source={PARTNER_LOGO} style={styles.partnerLogo} />
 					<Text style={styles.amountToPay}>
 						{strings('purchase_order_details.amount_to_pay').toUpperCase()}
 					</Text>
-					<Text style={styles.price}>{`${currencySymbol} ${orderDetail?.lines[0].unitPrice.value}`}</Text>
+					<Text style={styles.price}>{`${currencySymbol} ${orderDetail?.amount}`}</Text>
 				</View>
 				<View style={styles.orderDetailWrapper}>
 					<View style={styles.rowItem}>
@@ -264,9 +402,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.amount')}</Text>
-						<Text style={styles.itemText}>{`${
-							orderDetail?.lines[0].unitPrice.value
-						} ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.itemText}>{`${orderDetail?.amount} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>
@@ -303,14 +439,20 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 							type={'normal'}
 							containerStyle={styles.actionButton}
 							onPress={onPurchase}
+							disabled={purchasing}
 						>
-							<Text style={styles.payNow}>{strings('purchase_order_details.pay_now')}</Text>
+							{purchasing ? (
+								<ActivityIndicator color={colors.white} />
+							) : (
+								<Text style={styles.payNow}>{strings('purchase_order_details.pay_now')}</Text>
+							)}
 						</StyledButton>
 						<StyledButton
 							testID={'purchase-order-detail-cancel-button'}
 							type={'warning'}
 							containerStyle={styles.actionButton}
 							onPress={onCancel}
+							disabled={purchasing}
 						>
 							<Text style={styles.cancel}>{strings('purchase_order_details.cancel')}</Text>
 						</StyledButton>
@@ -341,5 +483,11 @@ const mapStateToProps = state => ({
 	identities: state.engine.backgroundState.PreferencesController.identities,
 	accounts: state.engine.backgroundState.AccountTrackerController.accounts
 });
+const mapDispatchToProps = dispatch => ({
+	resetTransaction: () => dispatch(resetTransaction())
+});
 
-export default connect(mapStateToProps)(PurchaseOrderDetails);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(PurchaseOrderDetails);

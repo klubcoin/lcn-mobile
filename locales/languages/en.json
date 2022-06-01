@@ -2208,6 +2208,7 @@
 		"congratulations_detail_2": "You may visit more of our ",
 		"congratulations_detail_3": "Partners' Online Stores",
 		"congratulations_detail_4": " to purchase exclusive items using your {{symbol}} tokens!",
-		"done": "Done"
+		"done": "Done",
+		"payment_error": "Payment error"
 	}
 }

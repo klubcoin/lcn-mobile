@@ -46,6 +46,7 @@ export default class APIService {
 	static apiGetChartData = (from, to) => `${APIService.routeMeveoAPI()}/rest/exchangeRate/${from}/${to}`;
 	static apiOtpStatus = email => `${APIService.routeMeveoAPI()}/rest/otpStatus/${email}`;
 	static apiGetPaymentDetail = orderId => `${APIService.routeMeveoAPI()}/rest/pg/v1/orders/${orderId}`;
+	static apiSendPayment = orderId => `${APIService.routeMeveoAPI()}/rest/pg/v1/payOrder/${orderId}`;
 
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
@@ -326,5 +327,10 @@ export default class APIService {
 
 	static getPaymentInfo(orderId, callback) {
 		WebService.sendGetDirect(this.apiGetPaymentDetail(orderId), {}, callback);
+	}
+
+	static sendPaymentRawTransaction(orderId, rawTransaction, callback) {
+		const data = { data: rawTransaction };
+		WebService.sendPostDirect(this.apiSendPayment(orderId), data, callback);
 	}
 }
