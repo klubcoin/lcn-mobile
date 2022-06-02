@@ -1160,6 +1160,14 @@ const Main = props => {
 										<Text style={{ fontWeight: 'bold' }}>{`${groupName?.name ||
 											sender?.name ||
 											from}\n`}</Text>
+										<Text>
+											{message.text.length <= 90
+												? message.text
+												: `${message.text.slice(0, 90)}...`}
+										</Text>
+									</>
+								);
+						}
 					}
 					break;
 				case LiquichainNameCard().action:
