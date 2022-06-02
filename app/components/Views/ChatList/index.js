@@ -91,6 +91,10 @@ const styles = StyleSheet.create({
 	chatMessage: {
 		color: colors.grey200,
 		marginRight: 24
+	},
+	chatAction: {
+		fontWeight: 'bold',
+		color: colors.blue
 	}
 });
 
@@ -180,9 +184,10 @@ const ChatList = ({ route, navigation, ...props }) => {
 			firstname,
 			lastname,
 			avatar,
-			lastMessage: { text },
+			lastMessage: { text, payload },
 			createdAt
 		} = chat;
+		console.log('🚀 ~ file: index.js ~ line 186 ~ ChatList ~ lastMessage', chat.lastMessage);
 		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
 		const lastTime = moment(createdAt);
@@ -211,8 +216,19 @@ const ChatList = ({ route, navigation, ...props }) => {
 							<Text style={styles.chatName}>{name}</Text>
 							<Text style={styles.chatTime}>{displayTime}</Text>
 						</View>
-						<Text style={styles.chatMessage} numberOfLines={2}>
-							{text}
+						<Text
+							style={[
+								styles.chatMessage,
+								(payload?.action === 'payment_request' || payload?.action === 'transaction_sync') &&
+									styles.chatAction
+							]}
+							numberOfLines={2}
+						>
+							{payload?.action === 'payment_request'
+								? strings('chat.message_payment_request')
+								: payload?.action === 'transaction_sync'
+								? strings('chat.message_transaction')
+								: text}
 						</Text>
 					</View>
 				</TouchableOpacity>

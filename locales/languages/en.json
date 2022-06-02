@@ -1877,7 +1877,6 @@
 		"send_voice": "Send voice message",
 		"sent_transaction": "Sent transaction",
 		"received_transaction": "Received transaction",
-		"payment_request": "Payment request",
 		"sent": "Sent",
 		"received": "Received",
 		"image": "an image",
@@ -1886,7 +1885,6 @@
 		"file": "a file",
 		"failed_to_send": "Failed to send",
 		"retry": "Retry",
-		"chat": "Chat",
 		"new_chat": "New Chat",
 		"to": "To :",
 		"send": "Send",
@@ -1895,8 +1893,12 @@
 		"send_message": "Send Message",
 		"recording_audio": "Recording Audio",
 		"amount": "Amount",
-		"payment_request": "Patment Request",
-		"chat": "Chat"
+		"payment_request": "Payment Request",
+		"chat": "Chat",
+		"sent_payment_request": "sent a payment request.",
+		"sent_a_transaction": "sent a transaction.",
+		"message_payment_request": "[ Payment Request ]",
+		"message_transaction": "[ Transaction ]"
 	},
 	"market": {
 		"title": "Market",
