@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { colors } from '../../../../../styles/common';
 import Device from '../../../../../util/Device';
@@ -229,7 +229,8 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		backgroundColor: '#110E21',
 		flexDirection: 'row',
-		maxHeight: 80
+		maxHeight: 100,
+		paddingVertical: Platform.OS === 'android' ? 6 : 0
 	},
 	cameraButton: {
 		marginVertical: 5,

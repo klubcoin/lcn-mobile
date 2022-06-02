@@ -67,7 +67,8 @@ class Chat extends Component {
 		messages: [],
 		isOnline: false,
 		loading: true,
-		message: ''
+		message: '',
+		composerHeight: 44
 	};
 
 	RBRef = React.createRef();
@@ -642,23 +643,17 @@ class Chat extends Component {
 	};
 
 	renderTypingFooter = () => {
-		const { typing } = this.state;
-		if (!typing) return null;
+		const { typing, composerHeight } = this.state;
+		if (!typing) return <View style={{ height: composerHeight - 40 }} />;
 
 		const senderContact = this.contacts[typing];
 		const contact =
 			senderContact && senderContact.name.length > 0 ? senderContact : marketStore.storeVendors[typing];
 
 		return (
-			<Text style={styles.typing}>
-				{!typing ? (
-					' '
-				) : (
-					<>
-						<Text style={styles.bold}>{contact?.name || ''}</Text>
-						{strings('chat.user_is_typing')}
-					</>
-				)}
+			<Text style={[styles.typing, { marginBottom: composerHeight - 38 }]}>
+				<Text style={styles.bold}>{contact?.name || ''}</Text>
+				{strings('chat.user_is_typing')}
 			</Text>
 		);
 	};
@@ -880,7 +875,13 @@ class Chat extends Component {
 		const inputted = message.length != 0;
 
 		return (
-			<View style={styles.chatWrapper}>
+			<View
+				style={styles.chatWrapper}
+				onLayout={e => {
+					console.log(e.nativeEvent);
+					this.setState({ composerHeight: e?.nativeEvent?.layout?.height });
+				}}
+			>
 				{this.renderActions()}
 				<TrackingTextInput
 					style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
