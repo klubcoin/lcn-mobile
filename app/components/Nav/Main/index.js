@@ -1119,7 +1119,47 @@ const Main = props => {
 						const sender = addresses[from] || preferences.peerProfile(senderId);
 
 						const groupName = group ? messageStore.conversationInfos[group] : '';
-						showInfo(`${groupName?.name || sender?.name || from}\n${message.text}`);
+						switch (message?.payload?.action) {
+							case 'chat':
+								showInfo(
+									<>
+										<Text style={{ fontWeight: 'bold' }}>
+											{`${groupName?.name || sender?.name || from}\n`}
+										</Text>
+										<Text>
+											{message.text.length <= 90
+												? message.text
+												: `${message.text.slice(0, 90)}...`}
+										</Text>
+									</>
+								);
+								break;
+							case 'payment_request':
+								showInfo(
+									<>
+										<Text style={{ fontWeight: 'bold' }}>
+											{`${groupName?.name || sender?.name || from} `}
+										</Text>
+										<Text>{strings('chat.sent_payment_request')}</Text>
+									</>
+								);
+								break;
+							case 'transaction_sync':
+								showInfo(
+									<>
+										<Text style={{ fontWeight: 'bold' }}>
+											{`${groupName?.name || sender?.name || from} `}
+										</Text>
+										<Text>{strings('chat.sent_a_transaction')}</Text>
+									</>
+								);
+								break;
+							default:
+								showInfo(
+									<>
+										<Text style={{ fontWeight: 'bold' }}>{`${groupName?.name ||
+											sender?.name ||
+											from}\n`}</Text>
 					}
 					break;
 				case LiquichainNameCard().action:
