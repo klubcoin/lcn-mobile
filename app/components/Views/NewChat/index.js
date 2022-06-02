@@ -16,6 +16,8 @@ import TrackingTextInput from '../../UI/TrackingTextInput';
 import TrackingScrollView from '../../UI/TrackingScrollView';
 import { testID } from '../../../util/Logger';
 import store from '../Message/store';
+import API from 'services/api';
+import Routes from 'common/routes';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -166,8 +168,15 @@ const NewChat = ({ navigation }) => {
 	}, [address]);
 
 	const onChat = () => {
-		store.setConversationIsRead(address, true);
-		navigation.navigate('Chat', { selectedContact: { address } });
+		API.postRequest(Routes.walletInfo, [address.toLowerCase()], response => {
+			if (response.result) {
+				store.setConversationIsRead(address, true);
+				navigation.navigate('Chat', { selectedContact: { address } });
+			} else {
+				showError(strings('chat.new_chat_error'));
+			}
+		});
+		return;
 	};
 
 	return (
