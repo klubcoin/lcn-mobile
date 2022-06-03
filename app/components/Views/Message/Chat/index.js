@@ -53,6 +53,9 @@ import EthereumAddress from '../../../UI/EthereumAddress';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import { getChatNavigationOptionsTitle } from '../../../UI/Navbar';
 
+const LIMIT_MESSAGE_DISPLAY = 2048;
+const LIMIT_MESSAGE_LENGTH = 65536;
+
 class Chat extends Component {
 	static navigationOptions = ({ navigation }) => getChatNavigationOptionsTitle('Chat', navigation);
 	messaging;
@@ -225,10 +228,9 @@ class Chat extends Component {
 			.then(values => {
 				const data = [...values[0], ...values[1]];
 				data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
 				this.setState(prevState => ({
 					...prevState,
-					messages: data,
+					messages: data.map(e => ({ ...e, hided: e?.text?.length > LIMIT_MESSAGE_DISPLAY })),
 					loading: false
 				}));
 			})
@@ -787,9 +789,17 @@ class Chat extends Component {
 		}
 	};
 
+	onPressMessage = (message, hided) => {
+		if (message?.text?.length <= LIMIT_MESSAGE_DISPLAY) {
+			return;
+		}
+		const { messages } = this.state;
+		this.setState({ messages: messages.map(e => ({ ...e, hided: e._id === message._id ? !hided : e.hided })) });
+	};
+
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
-		const { createdAt, text, user, payload } = message;
+		const { createdAt, text, user, payload, hided } = message;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
 		const chatTime = moment(createdAt);
@@ -808,7 +818,19 @@ class Chat extends Component {
 					this.renderCustomView(message)
 				) : (
 					<View style={styles.textMessage}>
-						<Text style={styles.text}>{text}</Text>
+						<Text>
+							<Text style={styles.text}>{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}</Text>
+							{text?.length > LIMIT_MESSAGE_DISPLAY &&
+								(hided ? (
+									<Text style={styles.readMore} onPress={() => this.onPressMessage(message, hided)}>
+										{`...${strings('chat.read_more')}`}
+									</Text>
+								) : (
+									<Text style={styles.readMore} onPress={() => this.onPressMessage(message, hided)}>
+										{`   ${strings('chat.hide')}`}
+									</Text>
+								))}
+						</Text>
 					</View>
 				)}
 				{failed && this.renderRetry(message)}
@@ -847,8 +869,8 @@ class Chat extends Component {
 						<Text style={styles.noAvatarName}>{avatarName}</Text>
 					</View>
 				)}
-				<View>
-					<Text style={styles.name}>{`${profile?.firstname} ${profile?.lastname}`}</Text>
+				<View style={{ flex: 1 }}>
+					<Text style={styles.name} numberOfLines={2}>{`${profile?.firstname} ${profile?.lastname}`}</Text>
 					<EthereumAddress address={address} style={styles.address} type={'short'} />
 				</View>
 			</View>
@@ -894,6 +916,7 @@ class Chat extends Component {
 					placeholderTextColor={colors.grey200}
 					multiline
 					textAlignVertical={'center'}
+					maxLength={LIMIT_MESSAGE_LENGTH}
 				/>
 				{inputted && (
 					<TouchableOpacity onPress={this.sendText} activeOpacity={0.7} style={styles.sendButton}>

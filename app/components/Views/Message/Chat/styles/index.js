@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		backgroundColor: '#110E21',
 		flexDirection: 'row',
-		maxHeight: 100,
+		maxHeight: 132,
 		paddingVertical: Platform.OS === 'android' ? 6 : 0
 	},
 	cameraButton: {
@@ -277,6 +277,10 @@ const styles = StyleSheet.create({
 		fontWeight: '600',
 		fontSize: 24,
 		color: colors.black
+	},
+	readMore: {
+		fontWeight: 'bold',
+		color: colors.grey200
 	}
 });
 
