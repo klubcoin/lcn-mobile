@@ -573,7 +573,7 @@ class SendFlow extends PureComponent {
 
 		const checksummedAddress = toSelectedAddress && toChecksumAddress(toSelectedAddress);
 		const existingContact = checksummedAddress && addressBook[network] && addressBook[network][checksummedAddress];
-		const displayConfusableWarning = !existingContact && confusableCollection && !!confusableCollection.length;
+		// const displayConfusableWarning = !existingContact && confusableCollection && !!confusableCollection.length;
 		const displayAsWarning =
 			confusableCollection && confusableCollection.length && !confusableCollection.some(hasZeroWidthPoints);
 
@@ -625,7 +625,7 @@ class SendFlow extends PureComponent {
 										/>
 									</View>
 								)}
-								{displayConfusableWarning && (
+								{/* {displayConfusableWarning && (
 									<View style={[styles.confusabeError, displayAsWarning && styles.confusabeWarning]}>
 										<View style={styles.warningIcon}>
 											<Icon
@@ -643,7 +643,7 @@ class SendFlow extends PureComponent {
 											</Text>
 										</View>
 									</View>
-								)}
+								)} */}
 								{addToAddressToAddressBook && (
 									<TouchableOpacity
 										style={styles.myAccountsTouchable}

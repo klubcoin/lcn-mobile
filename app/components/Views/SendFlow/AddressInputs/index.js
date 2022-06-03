@@ -15,30 +15,30 @@ import TrackingTextInput from '../../../UI/TrackingTextInput';
 import { testID } from '../../../../util/Logger';
 
 const AddressName = ({ toAddressName, confusableCollection = [] }) => {
-	if (confusableCollection.length) {
-		const texts = toAddressName.split('').map((char, index) => {
-			// if text has a confusable highlight it red
-			if (confusableCollection.includes(char)) {
-				// if the confusable is zero width, replace it with `?`
-				const replacement = hasZeroWidthPoints(char) ? '?' : char;
-				return (
-					<Text red key={index}>
-						{replacement}
-					</Text>
-				);
-			}
-			return (
-				<Text black key={index}>
-					{char}
-				</Text>
-			);
-		});
-		return (
-			<Text style={styles.textAddress} numberOfLines={1}>
-				{texts}
-			</Text>
-		);
-	}
+	// if (confusableCollection.length) {
+	// 	const texts = toAddressName.split('').map((char, index) => {
+	// 		// if text has a confusable highlight it red
+	// 		if (confusableCollection.includes(char)) {
+	// 			// if the confusable is zero width, replace it with `?`
+	// 			const replacement = hasZeroWidthPoints(char) ? '?' : char;
+	// 			return (
+	// 				<Text red key={index}>
+	// 					{replacement}
+	// 				</Text>
+	// 			);
+	// 		}
+	// 		return (
+	// 			<Text black key={index}>
+	// 				{char}
+	// 			</Text>
+	// 		);
+	// 	});
+	// 	return (
+	// 		<Text style={styles.textAddress} numberOfLines={1}>
+	// 			{texts}
+	// 		</Text>
+	// 	);
+	// }
 	return (
 		<Text style={styles.textAddress} numberOfLines={1}>
 			{toAddressName}
@@ -108,11 +108,11 @@ export const AddressTo = props => {
 				<View style={[styles.selectWrapper, highlighted ? styles.borderHighlighted : styles.borderOpaque]}>
 					<View style={styles.addressToInformation}>
 						<Identicon address={toSelectedAddress} diameter={30} />
-						{displayExclamation && (
+						{/* {displayExclamation && (
 							<View style={styles.exclamation}>
 								<FontAwesome color={colors.red} name="exclamation-circle" size={14} />
 							</View>
-						)}
+						)} */}
 						<View style={styles.toInputWrapper}>
 							<View style={[styles.address, styles.checkAddress]}>
 								{toAddressName && (

@@ -196,7 +196,7 @@ class Confirm extends PureComponent {
 		transactionTotalAmountFiat: undefined,
 		errorMessage: undefined,
 		fromAccountModalVisible: false,
-		warningModalVisible: false,
+		// warningModalVisible: false,
 		mode: REVIEW,
 		over: false,
 		customNetworkFee: {}
@@ -245,7 +245,7 @@ class Confirm extends PureComponent {
 		}
 	};
 
-	toggleWarningModal = () => this.setState(state => ({ warningModalVisible: !state.warningModalVisible }));
+	// toggleWarningModal = () => this.setState(state => ({ warningModalVisible: !state.warningModalVisible }));
 
 	componentDidMount = async () => {
 		// For analytics
@@ -850,8 +850,8 @@ class Confirm extends PureComponent {
 			warningGasPriceHigh,
 			confusableCollection,
 			mode,
-			over,
-			warningModalVisible
+			over
+			// warningModalVisible
 		} = this.state;
 
 		const checksummedAddress = transactionTo && toChecksumAddress(transactionTo);
@@ -869,11 +869,11 @@ class Confirm extends PureComponent {
 		);
 
 		const AdressToComponentWrap = () =>
-			!existingContact && confusableCollection.length ? (
-				<TouchableOpacity onPress={this.toggleWarningModal}>{AdressToComponent()}</TouchableOpacity>
-			) : (
-				AdressToComponent()
-			);
+			// !existingContact && confusableCollection.length ? (
+			// 	<TouchableOpacity onPress={this.toggleWarningModal}>{AdressToComponent()}</TouchableOpacity>
+			// ) : (
+			AdressToComponent();
+		// );
 
 		const is_main_net = isMainNet(network);
 		const errorPress = is_main_net ? this.buyEth : this.gotoFaucet;
@@ -894,12 +894,12 @@ class Confirm extends PureComponent {
 						{AdressToComponentWrap()}
 					</View>
 
-					<InfoModal
+					{/* <InfoModal
 						isVisible={warningModalVisible}
 						toggleModal={this.toggleWarningModal}
 						title={strings('transaction.confusable_title')}
 						body={<Text style={styles.text}>{strings('transaction.confusable_msg')}</Text>}
-					/>
+					/> */}
 
 					<TrackingScrollView style={baseStyles.flexGrow} ref={this.setScrollViewRef}>
 						{!selectedAsset.tokenId ? (
