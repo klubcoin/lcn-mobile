@@ -1899,7 +1899,9 @@
 		"sent_a_transaction": "sent a transaction.",
 		"message_payment_request": "[ Payment Request ]",
 		"message_transaction": "[ Transaction ]",
-		"new_chat_error":"Could not find this user!"
+		"new_chat_error": "Could not find this user!",
+		"read_more": "Read More",
+		"hide": "Hide"
 	},
 	"market": {
 		"title": "Market",

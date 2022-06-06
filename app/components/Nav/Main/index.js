@@ -112,7 +112,7 @@ import { toLowerCaseCompare } from '../../../util/general';
 import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
 import { showInfo } from '../../../util/notify';
-
+import Notifications from '../../../services/Notification';
 export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
 
 const styles = StyleSheet.create({
@@ -204,6 +204,7 @@ const Main = props => {
 	const [lock, setLock] = useState(false);
 	const [activeTime, setActiveTime] = useState(new Date());
 	const [password, setPassword] = useState('');
+	const [notification] = useState(new Notifications());
 	const [passwordErrorString, setPasswordErrorString] = useState('');
 	const [lockType, setLockType] = useState({ biometric: false, passcode: false });
 	const [lockTime, setLockTime] = useState(props.lockTime + 5000);
@@ -1121,51 +1122,27 @@ const Main = props => {
 						const groupName = group ? messageStore.conversationInfos[group] : '';
 						switch (message?.payload?.action) {
 							case 'chat':
-								showInfo(
-									<>
-										<Text style={{ fontWeight: 'bold' }}>
-											{`${groupName?.name || sender?.name || from}\n`}
-										</Text>
-										<Text>
-											{message.text.length <= 90
-												? message.text
-												: `${message.text.slice(0, 90)}...`}
-										</Text>
-									</>
+								notification.showNotification(
+									groupName?.name || sender?.name || from,
+									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`
 								);
 								break;
 							case 'payment_request':
-								showInfo(
-									<>
-										<Text style={{ fontWeight: 'bold' }}>
-											{`${groupName?.name || sender?.name || from} `}
-										</Text>
-										<Text>{strings('chat.sent_payment_request')}</Text>
-									</>
+								notification.showNotification(
+									'',
+									`${groupName?.name || sender?.name || from} ${strings('chat.sent_payment_request')}`
 								);
 								break;
 							case 'transaction_sync':
-								showInfo(
-									<>
-										<Text style={{ fontWeight: 'bold' }}>
-											{`${groupName?.name || sender?.name || from} `}
-										</Text>
-										<Text>{strings('chat.sent_a_transaction')}</Text>
-									</>
+								notification.showNotification(
+									'',
+									`${groupName?.name || sender?.name || from} ${strings('chat.sent_a_transaction')}`
 								);
 								break;
 							default:
-								showInfo(
-									<>
-										<Text style={{ fontWeight: 'bold' }}>{`${groupName?.name ||
-											sender?.name ||
-											from}\n`}</Text>
-										<Text>
-											{message.text.length <= 90
-												? message.text
-												: `${message.text.slice(0, 90)}...`}
-										</Text>
-									</>
+								notification.showNotification(
+									groupName?.name || sender?.name || from,
+									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`
 								);
 						}
 					}
