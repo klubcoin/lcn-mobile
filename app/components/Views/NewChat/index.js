@@ -18,6 +18,7 @@ import { testID } from '../../../util/Logger';
 import store from '../Message/store';
 import API from 'services/api';
 import Routes from 'common/routes';
+import preferences from '../../../store/preferences';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -170,6 +171,8 @@ const NewChat = ({ navigation }) => {
 	const onChat = () => {
 		API.postRequest(Routes.walletInfo, [address.toLowerCase()], response => {
 			if (response.result) {
+				const peerProfile = preferences.peerProfile(address) || {};
+				preferences.setPeerProfile(address, { ...peerProfile, ...JSON.parse(response.result.publicInfo) });
 				store.setConversationIsRead(address, true);
 				navigation.navigate('Chat', { selectedContact: { address } });
 			} else {
@@ -195,6 +198,7 @@ const NewChat = ({ navigation }) => {
 						style={styles.input}
 						placeholder={strings('chat.search_desc')}
 						placeholderTextColor={colors.grey100}
+						maxLength={256}
 					/>
 					<TouchableOpacity style={styles.scanButton} activeOpacity={0.7} onPress={onScanQR}>
 						<AntDesignIcon name={'scan1'} style={styles.scanIcon} />
