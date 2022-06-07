@@ -1126,8 +1126,11 @@ const Main = props => {
 					if (senderId != activeChatPeerId && group != activeChatPeerId) {
 						const { addressBook, network } = props;
 						const addresses = addressBook[network] || {};
-						const sender = addresses[from] || preferences.peerProfile(senderId);
-
+						const sender = addresses[from] || {
+							name: `${preferences.peerProfile(senderId)?.firstname} ${
+								preferences.peerProfile(senderId)?.lastname
+							}`
+						};
 						const groupName = group ? messageStore.conversationInfos[group] : '';
 						switch (message?.payload?.action) {
 							case 'chat':
