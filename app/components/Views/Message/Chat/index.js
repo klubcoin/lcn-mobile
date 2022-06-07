@@ -321,7 +321,7 @@ class Chat extends Component {
 
 	onBack = () => {
 		store.setActiveChatPeerId(null);
-		this.props.navigation.navigate('ChatList', { nonce: uuid.v4() });
+		this.props.navigation.goBack();
 		BackHandler.removeEventListener('hardwareBackPress', this.onBack);
 		return true;
 	};

@@ -105,10 +105,10 @@ export function getNavigationOptionsTitle(title, navigation) {
 	};
 }
 
-export function getChatNavigationOptionsTitle(title, navigation, onBack) {
+export function getChatNavigationOptionsTitle(title, navigation) {
 	const navigationPop = () => {
 		store.setActiveChatPeerId(null);
-		navigation.navigate('ChatList', { nonce: uuid.v4() });
+		navigation.goBack();
 	};
 
 	return {

@@ -187,7 +187,6 @@ const ChatList = ({ route, navigation, ...props }) => {
 			lastMessage: { text, payload },
 			createdAt
 		} = chat;
-		console.log('🚀 ~ file: index.js ~ line 186 ~ ChatList ~ lastMessage', chat.lastMessage);
 		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
 		const lastTime = moment(createdAt);

@@ -183,6 +183,10 @@ const styles = StyleSheet.create({
 	}
 });
 const Main = props => {
+	const onPressNotification = address => {
+		props.navigation.navigate('Chat', { selectedContact: { address } });
+	};
+
 	const [friendMessage, setFriendMessage] = useState(null);
 	const [acceptedNameCardVisible, showAcceptedNameCard] = useState(null);
 	const [identity2Confirm, showConfirmOtherIdentity] = useState(null);
@@ -204,7 +208,7 @@ const Main = props => {
 	const [lock, setLock] = useState(false);
 	const [activeTime, setActiveTime] = useState(new Date());
 	const [password, setPassword] = useState('');
-	const [notification] = useState(new Notifications());
+	const [notification] = useState(new Notifications(onPressNotification));
 	const [passwordErrorString, setPasswordErrorString] = useState('');
 	const [lockType, setLockType] = useState({ biometric: false, passcode: false });
 	const [lockTime, setLockTime] = useState(props.lockTime + 5000);
@@ -1124,25 +1128,31 @@ const Main = props => {
 							case 'chat':
 								notification.showNotification(
 									groupName?.name || sender?.name || from,
-									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`
+									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`,
+									from
 								);
 								break;
 							case 'payment_request':
 								notification.showNotification(
 									'',
-									`${groupName?.name || sender?.name || from} ${strings('chat.sent_payment_request')}`
+									`${groupName?.name || sender?.name || from} ${strings(
+										'chat.sent_payment_request'
+									)}`,
+									from
 								);
 								break;
 							case 'transaction_sync':
 								notification.showNotification(
 									'',
-									`${groupName?.name || sender?.name || from} ${strings('chat.sent_a_transaction')}`
+									`${groupName?.name || sender?.name || from} ${strings('chat.sent_a_transaction')}`,
+									from
 								);
 								break;
 							default:
 								notification.showNotification(
 									groupName?.name || sender?.name || from,
-									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`
+									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`,
+									from
 								);
 						}
 					}

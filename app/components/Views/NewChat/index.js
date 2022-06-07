@@ -174,7 +174,7 @@ const NewChat = ({ navigation }) => {
 				const peerProfile = preferences.peerProfile(address) || {};
 				preferences.setPeerProfile(address, { ...peerProfile, ...JSON.parse(response.result.publicInfo) });
 				store.setConversationIsRead(address, true);
-				navigation.navigate('Chat', { selectedContact: { address } });
+				navigation.replace('Chat', { selectedContact: { address } });
 			} else {
 				showError(strings('chat.new_chat_error'));
 			}

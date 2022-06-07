@@ -1,13 +1,14 @@
 import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 class Notifications {
-	constructor() {
+	constructor(onPressNotification) {
 		PushNotification.configure({
 			onRegister: function(token) {
 				console.log('TOKEN:', token);
 			},
 			onNotification: function(notification) {
 				console.log('NOTIFICATION', notification);
+				onPressNotification && onPressNotification(notification.data.address);
 			},
 			onAction: function(notification) {
 				console.log('ACTION:', notification.action);
@@ -37,13 +38,14 @@ class Notifications {
 		});
 	}
 
-	showNotification(title = '', message = '') {
+	showNotification(title = '', message = '', address = '') {
 		console.log('trying send notification');
 		PushNotification.localNotification({
 			channelId: 'reminders',
 			title,
 			message,
-			invokeApp: true
+			invokeApp: true,
+			userInfo: { title, message, address }
 		});
 	}
 }
