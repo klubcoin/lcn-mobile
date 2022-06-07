@@ -220,6 +220,7 @@ const Main = props => {
 	const lockManager = useRef();
 	const removeConnectionStatusListener = useRef();
 
+	const receivedMessages = new Set();
 	const setTransactionObject = props.setTransactionObject;
 	const toggleApproveModal = props.toggleApproveModal;
 	const toggleDappTransactionModal = props.toggleDappTransactionModal;
@@ -1112,6 +1113,10 @@ const Main = props => {
 					break;
 				case Chat().action:
 					const { from, message } = data;
+					if (receivedMessages.has(message._id)) {
+						return;
+					}
+					receivedMessages.add(message._id);
 					const senderId = `${from}`.toLowerCase();
 					const activeChatPeerId = `${messageStore.activeChatPeerId}`.toLowerCase();
 
