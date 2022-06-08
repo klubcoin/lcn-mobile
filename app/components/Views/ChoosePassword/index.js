@@ -624,6 +624,7 @@ class ChoosePassword extends PureComponent {
 														color={colors.white}
 														size={20}
 														onPress={this.toggleShowHide}
+														{...testID('choose-password-toggle-show-hide-password')}
 													/>
 													{/* <Text onPress={this.toggleShowHide} style={styles.hintLabel}>
 															{strings(`choose_password.${secureTextEntry ? 'show' : 'hide'}`)}
@@ -768,7 +769,11 @@ class ChoosePassword extends PureComponent {
 													testID={'i-understand-text'}
 												>
 													{strings('choose_password.i_understand', { appName: displayName })}{' '}
-													<Text onPress={this.learnMore} style={styles.learnMore}>
+													<Text
+														onPress={this.learnMore}
+														style={styles.learnMore}
+														{...testID('choose-password-learn-more')}
+													>
 														{strings('choose_password.learn_more')}
 													</Text>
 												</Text>

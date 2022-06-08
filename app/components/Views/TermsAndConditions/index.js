@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import AppConstants from '../../../core/AppConstants';
 import styles from './styles';
+import { testID } from '../../../util/Logger';
 
 /**
  * View that is displayed in the flow to agree terms and conditions
@@ -26,7 +27,7 @@ export default class TermsAndConditions extends PureComponent {
 
 	render() {
 		return (
-			<TouchableOpacity onPress={this.press} activeOpacity={0.6}>
+			<TouchableOpacity onPress={this.press} activeOpacity={0.6} {...testID('terms-and-conditions')}>
 				<Text style={styles.text}>
 					{strings('terms_and_conditions.description')}
 					<Text style={styles.link}>{strings('terms_and_conditions.terms')}</Text>.

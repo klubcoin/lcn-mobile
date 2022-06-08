@@ -491,7 +491,6 @@ class ImportFromSeed extends PureComponent {
 									containerStyle={inputWidth}
 									inputContainerStyle={styles.inputContainerStyle}
 									placeholder={strings('import_from_seed.seed_phrase_placeholder')}
-									testID="input-seed-phrase"
 									returnKeyType="next"
 									autoCapitalize="none"
 									secureTextEntry={hideSeedPhraseInput}
@@ -504,10 +503,11 @@ class ImportFromSeed extends PureComponent {
 									lineWidth={0}
 									ref={this.hideSeedPhraseRef}
 									activeLineWidth={0}
+									{...testID('import-from-seed-seed-phrase-field-hide')}
 								/>
 							) : (
 								<TrackingTextInput
-									{...testID('import-from-seed-seed-phrase-field')}
+									{...testID('import-from-seed-seed-phrase-field-show')}
 									value={seed}
 									numberOfLines={3}
 									style={[
@@ -565,7 +565,6 @@ class ImportFromSeed extends PureComponent {
 									inputContainerStyle={styles.inputContainerStyle}
 									ref={this.passwordInput}
 									placeholder={strings('import_from_seed.new_password')}
-									testID={'input-password-field'}
 									returnKeyType={'next'}
 									autoCapitalize="none"
 									secureTextEntry={secureTextEntry}
@@ -584,6 +583,7 @@ class ImportFromSeed extends PureComponent {
 										this.setState({ isBlurPassword: false });
 									}}
 									maxLength={MAX_LENGTH_INPUT}
+									{...testID('import-from-seed-password-field')}
 								/>
 								<Text style={styles.passwordValidateTitle}>
 									{strings(`choose_password.password_validate_title`)}
@@ -663,7 +663,6 @@ class ImportFromSeed extends PureComponent {
 									containerStyle={inputWidth}
 									inputContainerStyle={styles.inputContainerStyle}
 									ref={this.confirmPasswordInput}
-									testID={'input-password-field-confirm'}
 									onChangeText={this.onPasswordConfirmChange}
 									returnKeyType={'next'}
 									autoCapitalize="none"
@@ -677,6 +676,7 @@ class ImportFromSeed extends PureComponent {
 									lineWidth={0}
 									activeLineWidth={0}
 									maxLength={MAX_LENGTH_INPUT}
+									{...testID('import-from-seed-toggle-confirm-password-field')}
 								/>
 
 								<View style={styles.showMatchingPasswords}>
@@ -701,10 +701,10 @@ class ImportFromSeed extends PureComponent {
 
 							<View style={styles.ctaWrapper}>
 								<StyledButton
-									testID={'import-from-seed-import-button'}
 									type={'normal'}
 									onPress={this.onPressImport}
 									disabled={!(password !== '' && isValidPassword && password === confirmPassword)}
+									{...testID('import-from-seed-import-button')}
 								>
 									{loading ? (
 										<ActivityIndicator size="small" color="white" />
