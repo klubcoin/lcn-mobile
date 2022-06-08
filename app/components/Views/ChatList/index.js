@@ -101,6 +101,10 @@ const styles = StyleSheet.create({
 const ChatList = ({ route, navigation, ...props }) => {
 	const [conversations, setConversations] = useState([]);
 
+	useEffect(() => {
+		navigation.addListener('didFocus', fetchHistoryMessages);
+	});
+
 	const initConnection = () => {
 		const messaging = new MessagingWebRTC(null, null, refWebRTC());
 		const listener = messaging.addListener('message', (data, peerId) => {
