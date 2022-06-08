@@ -1901,7 +1901,12 @@
 		"message_transaction": "[ Transaction ]",
 		"new_chat_error": "Could not find this user!",
 		"read_more": "Read More",
-		"hide": "Hide"
+		"hide": "Hide",
+		"edit": "Edit",
+		"copy": "Copy",
+		"quote": "Quote",
+		"remove": "Remove",
+		"message_copied_to_clipboard": "Message copied to clipboard"
 	},
 	"market": {
 		"title": "Market",

@@ -9,7 +9,8 @@ import {
 	Image,
 	DeviceEventEmitter,
 	ActivityIndicator,
-	BackHandler
+	BackHandler,
+	Modal
 } from 'react-native';
 import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
@@ -22,6 +23,7 @@ import * as FilesReader from '../../../../util/files-reader';
 import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { refWebRTC } from '../../../../services/WebRTC';
@@ -52,6 +54,8 @@ import RemoteImage from '../../../Base/RemoteImage';
 import EthereumAddress from '../../../UI/EthereumAddress';
 import TrackingTextInput from '../../../UI/TrackingTextInput';
 import { getChatNavigationOptionsTitle } from '../../../UI/Navbar';
+import Clipboard from '@react-native-community/clipboard';
+import { showAlert } from '../../../../actions/alert';
 
 const LIMIT_MESSAGE_DISPLAY = 2048;
 const LIMIT_MESSAGE_LENGTH = 65536;
@@ -71,8 +75,41 @@ class Chat extends Component {
 		isOnline: false,
 		loading: true,
 		message: '',
-		composerHeight: 44
+		composerHeight: 44,
+		selectedMessage: null,
+		showActionModal: false,
+		quoteMessage: null
 	};
+
+	myModalActions = [
+		{
+			title: strings('chat.edit'),
+			action: message => this.onEdit(message)
+		},
+		{
+			title: strings('chat.copy'),
+			action: message => this.onCopy(message)
+		},
+		{
+			title: strings('chat.quote'),
+			action: message => this.onQuote(message)
+		},
+		{
+			title: strings('chat.remove'),
+			action: message => this.onRemove(message)
+		}
+	];
+
+	youModalActions = [
+		{
+			title: strings('chat.copy'),
+			action: message => this.onCopy(message)
+		},
+		{
+			title: strings('chat.quote'),
+			action: message => this.onQuote(message)
+		}
+	];
 
 	RBRef = React.createRef();
 
@@ -797,6 +834,44 @@ class Chat extends Component {
 		this.setState({ messages: messages.map(e => ({ ...e, hided: e._id === message._id ? !hided : e.hided })) });
 	};
 
+	onSelectMessage = message => {
+		if (message.payload) return;
+		this.setState({ selectedMessage: message, showActionModal: true });
+		console.log(message);
+	};
+
+	onHideModal = () => {
+		this.setState({ selectedMessage: '', showActionModal: false });
+	};
+
+	onQuote = message => {
+		this.setState({ quoteMessage: message, showActionModal: false });
+		console.log('Reply');
+	};
+
+	onCloseQuote = () => {
+		this.setState({ quoteMessage: null });
+	};
+
+	onCopy = message => {
+		Clipboard.setString(message.text);
+		this.props.showAlert({
+			isVisible: true,
+			autodismiss: 1500,
+			content: 'clipboard-alert',
+			data: { msg: strings('chat.message_copied_to_clipboard') }
+		});
+		this.onHideModal();
+	};
+
+	onRemove = message => {
+		console.log('Delete');
+	};
+
+	onEdit = message => {
+		this.setState({ message: message.text, showActionModal: false });
+	};
+
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
 		const { createdAt, text, user, payload, hided } = message;
@@ -812,7 +887,11 @@ class Chat extends Component {
 		};
 
 		return (
-			<View style={styles.chatBubble}>
+			<TouchableOpacity
+				style={styles.chatBubble}
+				activeOpacity={0.7}
+				onLongPress={() => this.onSelectMessage(message)}
+			>
 				<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
 				{!!payload ? (
 					this.renderCustomView(message)
@@ -834,7 +913,7 @@ class Chat extends Component {
 					</View>
 				)}
 				{failed && this.renderRetry(message)}
-			</View>
+			</TouchableOpacity>
 		);
 	};
 
@@ -891,6 +970,32 @@ class Chat extends Component {
 			}
 		]);
 	};
+	renderQuote = () => {
+		const { quoteMessage } = this.state;
+		if (!quoteMessage) return null;
+		return (
+			<View style={styles.quoteWrapper}>
+				<View style={styles.quoteContent}>
+					<View style={styles.quoteIconWrapper}>
+						<IconEntypo style={styles.quoteIcon} name="quote" />
+					</View>
+					<View style={styles.quoteMessageWrapper}>
+						<Text style={styles.quoteMessage} numberOfLines={1}>
+							{quoteMessage.text}
+						</Text>
+						<Text style={styles.quoteSender}>{`${
+							preferences.peerProfile(quoteMessage.user._id).firstname
+						} ${preferences.peerProfile(quoteMessage.user._id).lastname}, ${moment(
+							quoteMessage.createdAt
+						).format('DD/MM/YYYY')}`}</Text>
+					</View>
+				</View>
+				<TouchableOpacity activeOpacity={0.7} onPress={this.onCloseQuote} style={styles.quoteCloseButton}>
+					<IconEntypo style={styles.quoteCloseIcon} name="cross" />
+				</TouchableOpacity>
+			</View>
+		);
+	};
 
 	renderComposer = () => {
 		const { message } = this.state;
@@ -905,19 +1010,23 @@ class Chat extends Component {
 				}}
 			>
 				{this.renderActions()}
-				<TrackingTextInput
-					style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
-					value={this.state.message}
-					onChangeText={text => {
-						this.sendTyping(text);
-						this.setState({ message: text });
-					}}
-					placeholder={strings('chat.chat_text')}
-					placeholderTextColor={colors.grey200}
-					multiline
-					textAlignVertical={'center'}
-					maxLength={LIMIT_MESSAGE_LENGTH}
-				/>
+				<View style={styles.chatInputWrapper}>
+					{this.renderQuote()}
+					<TrackingTextInput
+						// style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
+						style={[styles.chatInput, { textAlign: 'left' }]}
+						value={this.state.message}
+						onChangeText={text => {
+							this.sendTyping(text);
+							this.setState({ message: text });
+						}}
+						placeholder={strings('chat.chat_text')}
+						placeholderTextColor={colors.grey200}
+						multiline
+						textAlignVertical={'center'}
+						maxLength={LIMIT_MESSAGE_LENGTH}
+					/>
+				</View>
 				{inputted && (
 					<TouchableOpacity onPress={this.sendText} activeOpacity={0.7} style={styles.sendButton}>
 						<Ionicons name={'send'} style={styles.sendIcon} />
@@ -937,7 +1046,7 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
-		const { visibleMenu, messages } = this.state;
+		const { visibleMenu, messages, selectedMessage, showActionModal } = this.state;
 
 		return (
 			<>
@@ -969,6 +1078,26 @@ class Chat extends Component {
 
 					{visibleMenu && this.renderMenu()}
 				</View>
+				<Modal visible={showActionModal} transparent animationType="slide" onRequestClose={this.onHideModal}>
+					<TouchableOpacity style={styles.backdropModal} activeOpacity={1} onPress={this.onHideModal}>
+						<View style={styles.modalContent}>
+							{[
+								...(selectedMessage?.user?._id === selectedAddress
+									? this.myModalActions
+									: this.youModalActions)
+							].map((e, index) => (
+								<TouchableOpacity
+									activeOpacity={0.7}
+									key={index}
+									style={styles.modalActionItem}
+									onPress={() => e.action(selectedMessage)}
+								>
+									<Text style={styles.modalActionItemTitle}>{e.title}</Text>
+								</TouchableOpacity>
+							))}
+						</View>
+					</TouchableOpacity>
+				</Modal>
 			</>
 		);
 	}
@@ -1022,6 +1151,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+	showAlert: config => dispatch(showAlert(config)),
 	setRecipient: (from, to, ensRecipient, transactionToName, transactionFromName) =>
 		dispatch(setRecipient(from, to, ensRecipient, transactionToName, transactionFromName)),
 	setSelectedAsset: selectedAsset => dispatch(setSelectedAsset(selectedAsset))

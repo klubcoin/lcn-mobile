@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		backgroundColor: '#110E21',
 		flexDirection: 'row',
-		maxHeight: 132,
 		paddingVertical: Platform.OS === 'android' ? 6 : 0
 	},
 	cameraButton: {
@@ -245,16 +244,20 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		color: colors.white
 	},
+	chatInputWrapper: {
+		flex: 1,
+		borderRadius: 12,
+		backgroundColor: colors.lightPurple,
+		marginLeft: 8,
+		marginVertical: 5,
+		paddingVertical: 4
+	},
 	chatInput: {
 		flex: 1,
 		color: colors.white,
-		marginLeft: 8,
-		marginVertical: 5,
 		paddingHorizontal: 8,
-		paddingVertical: 5,
-		borderRadius: 12,
-		backgroundColor: colors.lightPurple,
-		textAlign: 'right'
+		maxHeight: 110,
+		paddingVertical: 8
 	},
 	sendButton: {
 		padding: 8,
@@ -281,6 +284,66 @@ const styles = StyleSheet.create({
 	readMore: {
 		fontWeight: 'bold',
 		color: colors.grey200
+	},
+	backdropModal: {
+		backgroundColor: colors.transparent,
+		width: '100%',
+		height: '100%',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	modalContent: {
+		alignSelf: 'center',
+		backgroundColor: colors.white,
+		padding: 12,
+		borderRadius: 8,
+		width: '60%'
+	},
+	modalActionItem: {
+		paddingVertical: 12
+	},
+	modalActionItemTitle: {
+		color: colors.black,
+		fontSize: 14
+	},
+	quoteWrapper: {
+		paddingHorizontal: 12,
+		flexDirection: 'row',
+		marginBottom: 6
+	},
+	quoteContent: {
+		flexDirection: 'row',
+		flex: 1,
+		borderBottomWidth: 1,
+		borderBottomColor: colors.white
+	},
+	quoteIconWrapper: {
+		padding: 4
+	},
+	quoteIcon: {
+		color: colors.white,
+		transform: [{ rotate: '180deg' }],
+		fontSize: 16
+	},
+	quoteMessageWrapper: {
+		flex: 1
+	},
+	quoteMessage: {
+		color: colors.white,
+		marginTop: 20
+	},
+	quoteSender: {
+		color: colors.grey400,
+		fontSize: 14,
+		marginTop: 4,
+		marginBottom: 6
+	},
+	quoteCloseButton: {
+		padding: 4
+	},
+	quoteCloseIcon: {
+		fontSize: 16,
+		color: colors.white
 	}
 });
 
