@@ -194,32 +194,6 @@
                 android:resource="@xml/filepaths"
                 tools:replace="android:resource" />
         </provider>
-        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
-        <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_name" android:value="NotifcationDemo"/>
-        <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_description" android:value="NotifcationDemo Notifications"/>
-        <!-- Change the resource name to your App's accent color - or any other color you want -->
-        <meta-data android:name="com.dieam.reactnativepushnotification.notification_color" android:resource="@android:color/white"/>
-
-        <receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
-        <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            <category android:name="${applicationId}" />
-        </intent-filter>
-        </receiver>
-        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
-        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
-        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm" android:exported="false">
-            <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-        <service
-            android:name="app.notifee.core.ForegroundService"
-            android:foregroundServiceType="mediaProjection|camera|microphone" />
+        
     </application>
 </manifest>
