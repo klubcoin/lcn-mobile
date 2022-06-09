@@ -191,9 +191,14 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 		if (orderId) {
 			setLoading(true);
 			APIService.getPaymentInfo(orderId, (success, json) => {
-				setOrderDetail(json);
-				setCurrency(json?.lines[0]?.unitPrice?.currency?.toLowerCase());
-				setLoading(false);
+				if (json?.id) {
+					setOrderDetail(json);
+					setCurrency(json?.lines[0]?.unitPrice?.currency?.toLowerCase());
+					setLoading(false);
+				} else {
+					navigation.goBack();
+					showError(strings('purchase_order_details.'));
+				}
 			});
 		}
 	}, []);
