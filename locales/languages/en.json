@@ -2220,6 +2220,7 @@
 		"congratulations_detail_4": " to purchase exclusive items using your {{symbol}} tokens!",
 		"done": "Done",
 		"payment_error": "Payment error",
-		"invalid_order":"Invalid order. Please check again!"
+		"invalid_order": "Invalid order. Please check again!",
+		"order_paid": "This order has been paid"
 	}
 }
