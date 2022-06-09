@@ -27,6 +27,7 @@ import AppConstants from '../../../core/AppConstants';
 import { displayName } from '../../../../app.json';
 import OnboardingScreenWithBg from '../OnboardingScreenWithBg';
 import TrackingScrollView from '../TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	root: {
@@ -225,7 +226,7 @@ class OptinMetrics extends PureComponent {
 	 * @returns - Touchable opacity object to render with privacy policy information
 	 */
 	renderPrivacyPolicy = () => (
-		<TouchableOpacity onPress={this.onPressPolicy}>
+		<TouchableOpacity {...testID('optin-metrics-component-privacy-policy')} onPress={this.onPressPolicy}>
 			<Text style={styles.privacyPolicy}>
 				{strings('privacy_policy.description') + ' '}
 				<Text style={styles.link}>{strings('privacy_policy.here')}</Text>
@@ -255,7 +256,7 @@ class OptinMetrics extends PureComponent {
 
 						<View style={styles.actionContainer}>
 							<StyledButton
-								testID={'optim-metrics-component-decline-button'}
+								testID={'optin-metrics-component-decline-button'}
 								containerStyle={[styles.button, styles.cancel]}
 								type={'cancel'}
 								onPress={this.onCancel}
@@ -263,7 +264,7 @@ class OptinMetrics extends PureComponent {
 								{strings('privacy_policy.decline')}
 							</StyledButton>
 							<StyledButton
-								testID={'optim-metrics-component-agree-button'}
+								testID={'optin-metrics-component-agree-button'}
 								containerStyle={[styles.button, styles.confirm]}
 								type={'normal'}
 								onPress={this.onConfirm}
