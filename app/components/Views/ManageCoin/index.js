@@ -45,11 +45,12 @@ class ManageCoin extends PureComponent {
 
 	onScanQRPayRead = response => {
 		this.setState({ isScanQrPay: false });
-		if (!response || !response.data || response.data.slice(0, 4) !== 'ord_') {
+		const paymentId = response.data.split('/')[response.data.split('/').length - 1];
+		if (!response || !response.data || paymentId.slice(0, 4) !== 'ord_') {
 			showError(strings('manage_coin.scan_qr_pay_error_title'));
 			return;
 		}
-		this.props.navigation.navigate('PurchaseOrderDetails', { orderId: response.data });
+		this.props.navigation.navigate('PurchaseOrderDetails', { orderId: paymentId });
 	};
 
 	onScanQRTipRead = response => {

@@ -141,6 +141,11 @@ class DeeplinkManager {
 							);
 							break;
 						case 'payment':
+							if (urlObj && urlObj.pathname) {
+								const paymentId = urlObj.pathname.split('/')[urlObj.pathname.split('/').length - 1];
+								this.navigation.navigate('PurchaseOrderDetails', { orderId: paymentId });
+							}
+							break;
 						case 'focus':
 						case '':
 							break;
@@ -209,6 +214,11 @@ class DeeplinkManager {
 						this.handleEthereumUrl(urlObj.href.replace('klubcoin://approve/', 'ethereum:'), origin);
 						break;
 					case 'payment':
+						if (urlObj && urlObj.pathname) {
+							const paymentId = urlObj.pathname.split('/')[urlObj.pathname.split('/').length - 1];
+							this.navigation.navigate('PurchaseOrderDetails', { orderId: paymentId });
+						}
+						break;
 					case 'focus':
 					case '':
 						break;
