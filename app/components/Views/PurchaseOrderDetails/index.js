@@ -197,7 +197,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					setLoading(false);
 				} else {
 					navigation.goBack();
-					showError(strings('purchase_order_details.'));
+					showError(strings('purchase_order_details.invalid_order'));
 				}
 			});
 		}
