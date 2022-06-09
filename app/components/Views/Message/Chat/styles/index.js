@@ -238,7 +238,8 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.lightPurple,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: 40
+		height: 40,
+		alignSelf: 'flex-end'
 	},
 	cameraIcon: {
 		fontSize: 24,
@@ -261,7 +262,8 @@ const styles = StyleSheet.create({
 	},
 	sendButton: {
 		padding: 8,
-		alignSelf: 'center'
+		paddingVertical: 12,
+		alignSelf: 'flex-end'
 	},
 	sendIcon: {
 		fontSize: 24,

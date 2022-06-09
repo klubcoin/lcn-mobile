@@ -890,7 +890,7 @@ class Chat extends Component {
 			<TouchableOpacity
 				style={styles.chatBubble}
 				activeOpacity={0.7}
-				onLongPress={() => this.onSelectMessage(message)}
+				// onLongPress={() => this.onSelectMessage(message)}
 			>
 				<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
 				{!!payload ? (
