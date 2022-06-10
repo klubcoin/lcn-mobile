@@ -27,7 +27,10 @@ const styles = StyleSheet.create({
 	closeIcon: {
 		marginTop: 20,
 		marginRight: 20,
-		width: 40,
+		width: 50,
+		height: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
 		alignSelf: 'flex-end'
 	},
 	frame: {
