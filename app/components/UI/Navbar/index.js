@@ -467,7 +467,6 @@ export function getOnboardingNavbarOptions(navigation, { headerLeft } = {}) {
 }
 
 export function getOnboardingWithoutBackNavbarOptions(navigation) {
-
 	return {
 		headerStyle: {
 			shadowColor: colors.transparent,
@@ -581,12 +580,10 @@ export function getComingSoonNavbarOptions(navigation) {
 	const navigationPop = () => navigation.pop();
 	return {
 		headerStyle: {
-			shadowColor: colors.white,
+			shadowColor: colors.transparent,
 			elevation: 0,
 			backgroundColor: colors.white,
-			borderBottomWidth: 0,
-			height: 50,
-			marginTop: 20
+			borderBottomWidth: 0
 		},
 		headerTitle: (
 			<View style={styles.optinHeaderLeft}>
