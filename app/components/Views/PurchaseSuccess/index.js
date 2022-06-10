@@ -82,6 +82,7 @@ const PurchaseSuccess = ({ navigation }) => {
 
 	const onDone = () => {
 		navigation.navigate('ManageCoin');
+		navigation.navigate('TransactionsHome');
 	};
 
 	const renderOrderSuccess = () => {
