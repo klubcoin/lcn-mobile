@@ -158,7 +158,10 @@ class Chat extends Component {
 		const peerProfile = preferences.peerProfile(address) || {};
 		APIService.getWalletInfo(address, (success, json) => {
 			if (success && json) {
-				preferences.setPeerProfile(address, { ...peerProfile, ...JSON.parse(json.result.publicInfo) });
+				preferences.setPeerProfile(address.toLowerCase(), {
+					...peerProfile,
+					...JSON.parse(json.result.publicInfo)
+				});
 			}
 		});
 	};
