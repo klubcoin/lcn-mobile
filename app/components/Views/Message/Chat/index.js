@@ -10,7 +10,8 @@ import {
 	DeviceEventEmitter,
 	ActivityIndicator,
 	BackHandler,
-	Modal
+	Modal,
+	Keyboard
 } from 'react-native';
 import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
@@ -940,7 +941,13 @@ class Chat extends Component {
 		}`;
 
 		return (
-			<View style={styles.profile}>
+			<TouchableOpacity
+				style={styles.profile}
+				onPress={() => {
+					Keyboard.dismiss();
+				}}
+				activeOpacity={1}
+			>
 				{this.state.avatar || profile?.avatar ? (
 					<Image
 						style={styles.avatar}
@@ -955,7 +962,7 @@ class Chat extends Component {
 					<Text style={styles.name} numberOfLines={2}>{`${profile?.firstname} ${profile?.lastname}`}</Text>
 					<EthereumAddress address={address} style={styles.address} type={'short'} />
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	};
 
@@ -1071,6 +1078,7 @@ class Chat extends Component {
 							renderFooter={this.renderTypingFooter}
 							renderMessage={this.renderMessage}
 							renderComposer={this.renderComposer}
+							keyboardShouldPersistTaps={'never'}
 						/>
 					)}
 					<RecordingBS
