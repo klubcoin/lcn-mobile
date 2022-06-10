@@ -403,7 +403,7 @@ class Chat extends Component {
 		const { contact, messages } = this.state;
 		const group = this.state.group;
 		const id = addHexPrefix(message.user._id);
-
+		message.hided = message.text.length > LIMIT_MESSAGE_DISPLAY;
 		if (message.group && message.group != group) return;
 		if (!message.user.name) {
 			message.user.name = preferences.peerProfile(id).name;
