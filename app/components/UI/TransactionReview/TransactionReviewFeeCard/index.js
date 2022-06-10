@@ -155,7 +155,7 @@ class TransactionReviewFeeCard extends PureComponent {
 					<Summary.Row>
 						<Summary.Col>
 							<Text primary bold>
-								{strings('transaction.gas_fee')}
+								{strings('transaction.transaction_fee')}
 							</Text>
 							{/* <TouchableOpacity onPress={edit} disabled={!gasEstimationReady}>
 								<Text link bold>
