@@ -2208,6 +2208,7 @@
 		"order_ref_no": "Order Ref. No.",
 		"amount": "Amount",
 		"token_fee": "{{token}} fee",
+		"transaction_fee": "Transaction fee",
 		"total": "Total",
 		"order_placed_via": "Order placed via",
 		"pay_now": "Pay Now",

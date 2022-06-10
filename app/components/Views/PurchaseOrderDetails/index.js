@@ -380,6 +380,16 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	};
 
 	const renderOrderDetail = () => {
+		const { gas, gasPrice } = customNetworkFee ?? {};
+		const { klubToCurrency } = price;
+		const loadingFee = !gas || !gasPrice || !klubToCurrency;
+		let transactionFee = null;
+		if (!!gas && !!gasPrice && !!klubToCurrency) {
+			const totalToken = fromWei(gas.mul(gasPrice));
+			const bigNumberTotalToken = new BigNumber(totalToken);
+			const totalBalance = bigNumberTotalToken.multipliedBy(klubToCurrency);
+			transactionFee = totalBalance.toFixed(2);
+		}
 		return (
 			<>
 				<View style={styles.content}>
@@ -395,7 +405,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					<Text style={styles.amountToPay}>
 						{strings('purchase_order_details.amount_to_pay').toUpperCase()}
 					</Text>
-					<Text style={styles.price}>{`${currencySymbol} ${orderDetail?.amount}`}</Text>
+					<Text style={styles.price}>{`${currencySymbol} ${orderDetail?.lines[0].totalAmount.value}`}</Text>
 				</View>
 				<View style={styles.orderDetailWrapper}>
 					<View style={styles.rowItem}>
@@ -410,22 +420,29 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.amount')}</Text>
-						<Text style={styles.itemText}>{`${orderDetail?.amount} ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.itemText}>{`${
+							orderDetail?.lines[0].totalAmount.value
+						} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>
-							{strings('purchase_order_details.token_fee', { token: Routes.mainNetWork.coin })}
+							{strings('purchase_order_details.transaction_fee', { token: Routes.mainNetWork.coin })}
 						</Text>
-						<Text style={styles.itemText}>{`${
-							orderDetail?.lines[0].vatAmount.value
-						} ${currency.toUpperCase()}`}</Text>
+						{loadingFee ? (
+							<ActivityIndicator color={colors.white} />
+						) : (
+							<Text style={styles.itemText}>{`${transactionFee} ${currency.toUpperCase()}`}</Text>
+						)}
 					</View>
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
 						<Text style={styles.totalText}>{strings('purchase_order_details.total')}</Text>
-						<Text style={styles.totalText}>{`${
-							orderDetail?.lines[0].totalAmount.value
-						} ${currency.toUpperCase()}`}</Text>
+						{loadingFee ? (
+							<ActivityIndicator color={colors.white} />
+						) : (
+							<Text style={styles.totalText}>{`${parseFloat(orderDetail?.lines[0].totalAmount.value) +
+								parseFloat(transactionFee)} ${currency.toUpperCase()}`}</Text>
+						)}
 					</View>
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.order_placed_via')}</Text>
@@ -447,7 +464,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 							type={'normal'}
 							containerStyle={styles.actionButton}
 							onPress={onPurchase}
-							disabled={purchasing}
+							disabled={purchasing || loadingFee}
 						>
 							{purchasing ? (
 								<ActivityIndicator color={colors.white} />
@@ -460,7 +477,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 							type={'warning'}
 							containerStyle={styles.actionButton}
 							onPress={onCancel}
-							disabled={purchasing}
+							disabled={purchasing || loadingFee}
 						>
 							<Text style={styles.cancel}>{strings('purchase_order_details.cancel')}</Text>
 						</StyledButton>
