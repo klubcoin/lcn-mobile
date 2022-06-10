@@ -193,6 +193,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 			APIService.getPaymentInfo(orderId, (success, json) => {
 				if (!json?.id) {
 					navigation.goBack();
+					navigation.navigate('Dashboard');
 					showError(strings('purchase_order_details.invalid_order'));
 				} else if (json.status === 'paid') {
 					navigation.goBack();
@@ -273,6 +274,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 
 	const onCancel = () => {
 		navigation.goBack();
+		navigation.navigate('Dashboard');
 	};
 
 	useEffect(() => {
