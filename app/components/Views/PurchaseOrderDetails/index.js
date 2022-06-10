@@ -280,7 +280,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	}, []);
 
 	const getCustomNetworkFee = async () => {
-		const { selectedAsset } = this.props;
+		const selectedAsset = Routes.klubToken;
 		const result = await new Erc20Service().getFixedFee();
 		const base = Math.pow(10, selectedAsset.decimals);
 		const networkFee = {
