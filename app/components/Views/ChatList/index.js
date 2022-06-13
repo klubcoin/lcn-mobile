@@ -95,6 +95,10 @@ const styles = StyleSheet.create({
 	chatAction: {
 		fontWeight: 'bold',
 		color: colors.blue
+	},
+	removedMessage: {
+		fontWeight: 'bold',
+		color: colors.grey450
 	}
 });
 
@@ -188,7 +192,7 @@ const ChatList = ({ route, navigation, ...props }) => {
 			firstname,
 			lastname,
 			avatar,
-			lastMessage: { text, payload },
+			lastMessage: { text, payload, deleted },
 			createdAt
 		} = chat;
 		const name = `${firstname} ${lastname}`;
@@ -223,7 +227,8 @@ const ChatList = ({ route, navigation, ...props }) => {
 							style={[
 								styles.chatMessage,
 								(payload?.action === 'payment_request' || payload?.action === 'transaction_sync') &&
-									styles.chatAction
+									styles.chatAction,
+								deleted && styles.removedMessage
 							]}
 							numberOfLines={2}
 						>
@@ -231,6 +236,8 @@ const ChatList = ({ route, navigation, ...props }) => {
 								? strings('chat.message_payment_request')
 								: payload?.action === 'transaction_sync'
 								? strings('chat.message_transaction')
+								: deleted
+								? strings('chat.message_has_been_removed')
 								: text}
 						</Text>
 					</View>

@@ -70,8 +70,10 @@ const styles = StyleSheet.create({
 	chatBubble: {
 		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
+		overflow: 'hidden',
 		maxWidth: width * 0.8
 	},
+	quoteBubble: {},
 	paymentRequestWrapper: {
 		width: width * 0.8,
 		flexDirection: 'row',
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
 	},
 	textMessage: {
 		backgroundColor: colors.lightPurple,
-		borderRadius: 10,
+		// backgroundColor: 'yellow',
 		padding: 10,
 		paddingTop: 5
 	},
@@ -253,6 +255,9 @@ const styles = StyleSheet.create({
 		marginVertical: 5,
 		paddingVertical: 4
 	},
+	chatInputRow: {
+		flexDirection: 'row'
+	},
 	chatInput: {
 		flex: 1,
 		color: colors.white,
@@ -263,7 +268,15 @@ const styles = StyleSheet.create({
 	sendButton: {
 		padding: 8,
 		paddingVertical: 12,
-		alignSelf: 'flex-end'
+		alignSelf: 'flex-end',
+		marginLeft: 4
+	},
+	closeButton: {
+		padding: 8,
+		marginLeft: 4,
+		borderRadius: 40,
+		backgroundColor: colors.lightPurple,
+		alignSelf: 'center'
 	},
 	sendIcon: {
 		fontSize: 24,
@@ -320,7 +333,8 @@ const styles = StyleSheet.create({
 		borderBottomColor: colors.white
 	},
 	quoteIconWrapper: {
-		padding: 4
+		padding: 4,
+		fontSize: 14
 	},
 	quoteIcon: {
 		color: colors.white,
@@ -346,6 +360,44 @@ const styles = StyleSheet.create({
 	quoteCloseIcon: {
 		fontSize: 16,
 		color: colors.white
+	},
+	quoteBubbleWrapper: {
+		maxWidth: '100%',
+		paddingHorizontal: 0,
+		flexDirection: 'row',
+		marginBottom: 6
+	},
+	quoteBubbleContent: {
+		flexDirection: 'row',
+		borderBottomWidth: 1,
+		flexGrow: 1,
+		borderBottomColor: colors.white
+	},
+	quoteBubbleMessageWrapper: {
+		maxWidth: width * 0.8 - 44
+	},
+	editedIcon: {
+		color: colors.grey450,
+		fontSize: 16,
+		alignSelf: 'center'
+	},
+	editPencilIcon: {
+		color: colors.grey450,
+		fontSize: 16,
+		alignSelf: 'center',
+		marginRight: 6
+	},
+	warningDeleteWrapper: {
+		padding: 20,
+		justifyContent: 'center'
+	},
+	warningDeleteText: {
+		color: colors.black,
+		fontSize: 20,
+		textAlign: 'center'
+	},
+	removeMessage: {
+		color: colors.grey450
 	}
 });
 

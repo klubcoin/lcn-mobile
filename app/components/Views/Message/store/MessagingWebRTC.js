@@ -1,6 +1,6 @@
 import { DeviceEventEmitter } from 'react-native';
 import { JoinFile } from '../../FilesManager/store/FileStore';
-import { Chat, ChatProfile } from './Messages';
+import { Chat, ChatProfile, EditMessage, DeleteMessage } from './Messages';
 
 export default class MessagingWebRTC {
 	webrtc = null;
@@ -40,7 +40,9 @@ export default class MessagingWebRTC {
 			const actions = [
 				Chat().action,
 				ChatProfile().action,
-				JoinFile().action
+				JoinFile().action,
+				EditMessage().action,
+				DeleteMessage().action
 			];
 			if (actions.includes(data.action)) {
 				if (this.evtMessage) this.evtMessage(data, peerId);
@@ -56,7 +58,7 @@ export default class MessagingWebRTC {
 		if (data?.action == Chat().action && data?.message?._id) {
 			if (this.onError) this.onError(data.message, peerId);
 		}
-	}
+	};
 
 	send(data, peers) {
 		const addresses = (peers?.length != 0 && peers) || (this.getPeers && this.getPeers());

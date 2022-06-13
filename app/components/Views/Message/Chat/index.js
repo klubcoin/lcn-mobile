@@ -26,11 +26,21 @@ import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { refWebRTC } from '../../../../services/WebRTC';
 import MessagingWebRTC from '../store/MessagingWebRTC';
 import { strings } from '../../../../../locales/i18n';
-import { ChatFile, ChatProfile, JoinUpdate, RequestPayment, TransactionSync, Typing } from '../store/Messages';
+import {
+	ChatFile,
+	ChatProfile,
+	DeleteMessage,
+	EditMessage,
+	JoinUpdate,
+	RequestPayment,
+	TransactionSync,
+	Typing
+} from '../store/Messages';
 import ModalSelector from '../../../UI/AddCustomTokenOrApp/ModalSelector';
 import routes from '../../../../common/routes';
 import uuid from 'react-native-uuid';
@@ -57,6 +67,7 @@ import TrackingTextInput from '../../../UI/TrackingTextInput';
 import { getChatNavigationOptionsTitle } from '../../../UI/Navbar';
 import Clipboard from '@react-native-community/clipboard';
 import { showAlert } from '../../../../actions/alert';
+import ActionModal from '../../../UI/ActionModal';
 
 const LIMIT_MESSAGE_DISPLAY = 2048;
 const LIMIT_MESSAGE_LENGTH = 65536;
@@ -79,7 +90,9 @@ class Chat extends Component {
 		composerHeight: 44,
 		selectedMessage: null,
 		showActionModal: false,
-		quoteMessage: null
+		editMessage: null,
+		quoteMessage: null,
+		deleteMessage: null
 	};
 
 	myModalActions = [
@@ -245,13 +258,24 @@ class Chat extends Component {
 				if (name) this.contacts[peerId] = { name };
 				this.setTyping(peerId);
 
-				if (!this.state.isOnline)
+				if (!this.state.isOnline) {
 					this.setState(prevState => ({
 						...prevState,
 						isOnline: true
 					}));
+				}
 			} else if (action && action === JoinUpdate().action) {
 				this.fetchGroupDetails(this.state.group);
+			} else if (action && action === EditMessage().action) {
+				if (!marketStore.storeVendors[peerId]) {
+					this.getWalletInfo(peerId);
+				}
+				this.editMessage(data.message, true);
+			} else if (action && action === DeleteMessage().action) {
+				if (!marketStore.storeVendors[peerId]) {
+					this.getWalletInfo(peerId);
+				}
+				this.removeMessage(data.message, true);
 			} else if (data.message?.user) {
 				data.message.user['_id'] = peerId;
 				if (!marketStore.storeVendors[peerId]) {
@@ -271,7 +295,13 @@ class Chat extends Component {
 				data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 				this.setState(prevState => ({
 					...prevState,
-					messages: data.map(e => ({ ...e, hided: e?.text?.length > LIMIT_MESSAGE_DISPLAY })),
+					messages: data.map(e => ({
+						...e,
+						hided: e?.text?.length > LIMIT_MESSAGE_DISPLAY,
+						quoteHided: e.quoteId
+							? data.find(m => m._id === e.quoteId)?.text?.length > LIMIT_MESSAGE_DISPLAY
+							: null
+					})),
 					loading: false
 				}));
 			})
@@ -384,15 +414,54 @@ class Chat extends Component {
 	};
 
 	onSend = async message => {
-		const { group, contact } = this.state;
+		const { group, contact, quoteMessage } = this.state;
 		const peerId = contact?.address;
 		message[0].group = group;
+		if (quoteMessage && quoteMessage._id) {
+			message[0].quoteId = quoteMessage._id;
+		}
 
 		this.addNewMessage(message[0]);
 		store.setConversationIsRead(group || peerId, true);
 
 		this.messaging.send(message[0]);
-		this.setState({ message: '' });
+		this.setState({ message: '', quoteMessage: null });
+	};
+
+	onEditMessage = async message => {
+		const { group, contact } = this.state;
+		const peerId = contact?.address;
+		message.group = group;
+
+		this.editMessage(message);
+		store.setConversationIsRead(group || peerId, true);
+
+		this.messaging.send(EditMessage(message._id, message.group, message.text, message.user));
+		this.setState({ message: '', editMessage: null });
+	};
+
+	editMessage = async (message, incoming) => {
+		const { contact, messages } = this.state;
+		const group = this.state.group;
+		const id = addHexPrefix(message.user._id);
+		message.hided = message.text.length > LIMIT_MESSAGE_DISPLAY;
+		if (message.group && message.group != group) return;
+		if (!message.user.name) {
+			message.user.name = preferences.peerProfile(id).name;
+		}
+		const peers = this.getPeers();
+		if (!peers.includes(id)) {
+			peers.push(id);
+			store.saveConversationPeers(group, peers);
+		}
+		const newMessages = messages.map(e => (e._id === message._id ? { ...e, ...message, edited: true } : e));
+		this.setState({ messages: newMessages });
+		const peerAddr = contact?.address;
+
+		if (!incoming) await store.saveChatMessages(group || peerAddr, { messages: newMessages });
+		else {
+			store.setConversationIsRead(peerAddr, true);
+		}
 	};
 
 	addNewMessage = async (message, incoming) => {
@@ -404,6 +473,10 @@ class Chat extends Component {
 		const group = this.state.group;
 		const id = addHexPrefix(message.user._id);
 		message.hided = message.text.length > LIMIT_MESSAGE_DISPLAY;
+		if (message.quoteId) {
+			const quoteMessage = messages.find(e => e._id === message.quoteID);
+			message.quoteHided = quoteMessage?.text.length > LIMIT_MESSAGE_DISPLAY;
+		}
 		if (message.group && message.group != group) return;
 		if (!message.user.name) {
 			message.user.name = preferences.peerProfile(id).name;
@@ -450,7 +523,7 @@ class Chat extends Component {
 		const bigSize = big && styles.bigBubble;
 		const contact = preferences.peerProfile(userAddress);
 
-		if (contact?.avatar || contact?.publicInfo?.base64Avatar)
+		if (contact?.avatar || contact?.publicInfo?.base64Avatar) {
 			return (
 				<View style={[styles.bubble, bigSize]}>
 					<Image
@@ -463,7 +536,7 @@ class Chat extends Component {
 					/>
 				</View>
 			);
-
+		}
 		return <Identicon address={userAddress} diameter={35} />;
 	};
 
@@ -838,19 +911,36 @@ class Chat extends Component {
 		this.setState({ messages: messages.map(e => ({ ...e, hided: e._id === message._id ? !hided : e.hided })) });
 	};
 
+	onPressQuoteMessage = (message, quoteMessage, quoteHided) => {
+		if (quoteMessage?.text?.length <= LIMIT_MESSAGE_DISPLAY) {
+			return;
+		}
+		const { messages } = this.state;
+		this.setState({
+			messages: messages.map(e => ({ ...e, quoteHided: e._id === message._id ? !quoteHided : e.quoteHided }))
+		});
+	};
+
 	onSelectMessage = message => {
-		if (message.payload) return;
+		if (message.payload) {
+			return;
+		}
 		this.setState({ selectedMessage: message, showActionModal: true });
-		console.log(message);
 	};
 
 	onHideModal = () => {
-		this.setState({ selectedMessage: '', showActionModal: false });
+		this.setState({ selectedMessage: null, showActionModal: false });
 	};
 
 	onQuote = message => {
-		this.setState({ quoteMessage: message, showActionModal: false });
-		console.log('Reply');
+		const { message: textMessage, editMessage } = this.state;
+		this.setState({
+			selectedMessage: null,
+			quoteMessage: message,
+			showActionModal: false,
+			editMessage: null,
+			message: !editMessage ? textMessage : ''
+		});
 	};
 
 	onCloseQuote = () => {
@@ -869,16 +959,83 @@ class Chat extends Component {
 	};
 
 	onRemove = message => {
-		console.log('Delete');
+		const { quoteMessage, editMessage, message: textMessage } = this.state;
+		this.setState({
+			deleteMessage: message,
+			quoteMessage: quoteMessage?._id === message._id ? null : quoteMessage,
+			editMessage: editMessage?._id === message._id ? null : editMessage,
+			selectedAddress: null,
+			showActionModal: false,
+			message: !editMessage || editMessage?._id === message._id ? textMessage : ''
+		});
+		this.onHideModal();
+	};
+
+	onCancelRemove = () => {
+		this.setState({
+			deleteMessage: null
+		});
+	};
+
+	onConfirmRemove = () => {
+		const { group, contact, deleteMessage } = this.state;
+		if (!deleteMessage) {
+			return;
+		}
+		const peerId = contact?.address;
+		let message = DeleteMessage(deleteMessage._id, deleteMessage.group, deleteMessage.user);
+		this.removeMessage(message);
+		store.setConversationIsRead(group || peerId, true);
+		this.messaging.send(message);
+
+		this.setState({
+			deleteMessage: null
+		});
+	};
+
+	removeMessage = async (message, incoming) => {
+		const { contact, messages } = this.state;
+		const group = this.state.group;
+		const id = addHexPrefix(message.user._id);
+
+		if (message.group && message.group != group) return;
+		if (!message.user.name) {
+			message.user.name = preferences.peerProfile(id).name;
+		}
+		const peers = this.getPeers();
+
+		if (!peers.includes(id)) {
+			peers.push(id);
+			store.saveConversationPeers(group, peers);
+		}
+		const newMessages = messages.map(e => (e._id === message._id ? message : e));
+		this.setState({ messages: newMessages });
+		const peerAddr = contact?.address;
+
+		if (!incoming) await store.saveChatMessages(group || peerAddr, { messages: newMessages });
+		else {
+			store.setConversationIsRead(peerAddr, true);
+		}
+	};
+
+	onCloseEdit = () => {
+		this.setState({ message: '', editMessage: null });
 	};
 
 	onEdit = message => {
-		this.setState({ message: message.text, showActionModal: false });
+		this.setState({
+			message: message.text,
+			quoteMessage: null,
+			editMessage: message,
+			selectedMessage: null,
+			showActionModal: false
+		});
 	};
 
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
-		const { createdAt, text, user, payload, hided } = message;
+		const { createdAt, text, user, payload, hided, quoteId, edited } = message;
+		const { messages } = this.state;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
 		const chatTime = moment(createdAt);
@@ -890,34 +1047,62 @@ class Chat extends Component {
 			color: incoming ? colors.pink : colors.blue
 		};
 
-		return (
-			<TouchableOpacity
-				style={styles.chatBubble}
-				activeOpacity={0.7}
-				// onLongPress={() => this.onSelectMessage(message)}
-			>
-				<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
-				{!!payload ? (
-					this.renderCustomView(message)
-				) : (
+		let quoteMessage = null;
+		if (quoteId) {
+			quoteMessage = messages.find(e => e._id === quoteId);
+		}
+		if (message.deleted) {
+			return (
+				<View style={styles.chatBubble}>
+					<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
 					<View style={styles.textMessage}>
-						<Text>
-							<Text style={styles.text}>{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}</Text>
-							{text?.length > LIMIT_MESSAGE_DISPLAY &&
-								(hided ? (
-									<Text style={styles.readMore} onPress={() => this.onPressMessage(message, hided)}>
-										{`...${strings('chat.read_more')}`}
-									</Text>
-								) : (
-									<Text style={styles.readMore} onPress={() => this.onPressMessage(message, hided)}>
-										{`   ${strings('chat.hide')}`}
-									</Text>
-								))}
-						</Text>
+						<Text style={styles.removeMessage}>{strings('chat.remove_message')}</Text>
 					</View>
-				)}
-				{failed && this.renderRetry(message)}
-			</TouchableOpacity>
+				</View>
+			);
+		}
+
+		return (
+			<>
+				{edited && !incoming && <MaterialCommunityIcons name="pencil-outline" style={styles.editedIcon} />}
+				<TouchableOpacity
+					style={[styles.chatBubble, !!quoteMessage && styles.quoteBubble]}
+					activeOpacity={0.7}
+					onLongPress={() => this.onSelectMessage(message)}
+				>
+					<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
+					{!!payload ? (
+						this.renderCustomView(message)
+					) : (
+						<View style={styles.textMessage}>
+							{!!quoteMessage && this.renderBubbleQuote(quoteMessage, message)}
+							<Text>
+								<Text style={styles.text}>
+									{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}
+								</Text>
+								{text?.length > LIMIT_MESSAGE_DISPLAY &&
+									(hided ? (
+										<Text
+											style={styles.readMore}
+											onPress={() => this.onPressMessage(message, hided)}
+										>
+											{`...${strings('chat.read_more')}`}
+										</Text>
+									) : (
+										<Text
+											style={styles.readMore}
+											onPress={() => this.onPressMessage(message, hided)}
+										>
+											{`   ${strings('chat.hide')}`}
+										</Text>
+									))}
+							</Text>
+						</View>
+					)}
+					{failed && this.renderRetry(message)}
+				</TouchableOpacity>
+				{edited && incoming && <MaterialCommunityIcons name="pencil-outline" style={styles.editedIcon} />}
+			</>
 		);
 	};
 
@@ -968,11 +1153,16 @@ class Chat extends Component {
 
 	sendText = () => {
 		const { selectedAddress } = this.props;
+		const { editMessage, message } = this.state;
+		if (editMessage) {
+			this.onEditMessage({ ...editMessage, text: message });
+			return;
+		}
 		this.onSend([
 			{
 				_id: uuid.v4(),
 				createdAt: new Date(),
-				text: this.state.message,
+				text: message,
 				user: {
 					_id: selectedAddress,
 					name: preferences.peerProfile(selectedAddress)?.name
@@ -980,8 +1170,51 @@ class Chat extends Component {
 			}
 		]);
 	};
-	renderQuote = () => {
-		const { quoteMessage } = this.state;
+
+	renderBubbleQuote = (quoteMessage, message) => {
+		if (!quoteMessage) return null;
+		const { text } = quoteMessage;
+		const { quoteHided } = message;
+		return (
+			<View style={styles.quoteBubbleWrapper}>
+				<View style={styles.quoteBubbleContent}>
+					<View style={styles.quoteIconWrapper}>
+						<IconEntypo style={styles.quoteIcon} name="quote" />
+					</View>
+					<View style={styles.quoteBubbleMessageWrapper}>
+						<Text style={styles.quoteMessage}>
+							<Text>
+								{quoteHided ? quoteMessage?.text.slice(0, LIMIT_MESSAGE_DISPLAY) : quoteMessage?.text}
+							</Text>
+							{text?.length > LIMIT_MESSAGE_DISPLAY &&
+								(quoteHided ? (
+									<Text
+										style={styles.readMore}
+										onPress={() => this.onPressQuoteMessage(message, quoteMessage, quoteHided)}
+									>
+										{`...${strings('chat.read_more')}`}
+									</Text>
+								) : (
+									<Text
+										style={styles.readMore}
+										onPress={() => this.onPressQuoteMessage(message, quoteMessage, quoteHided)}
+									>
+										{`   ${strings('chat.hide')}`}
+									</Text>
+								))}
+						</Text>
+						<Text style={styles.quoteSender}>{`${
+							preferences.peerProfile(quoteMessage.user._id).firstname
+						} ${preferences.peerProfile(quoteMessage.user._id).lastname}, ${moment(
+							quoteMessage.createdAt
+						).format('DD/MM/YYYY')}`}</Text>
+					</View>
+				</View>
+			</View>
+		);
+	};
+
+	renderQuote = quoteMessage => {
 		if (!quoteMessage) return null;
 		return (
 			<View style={styles.quoteWrapper}>
@@ -991,7 +1224,7 @@ class Chat extends Component {
 					</View>
 					<View style={styles.quoteMessageWrapper}>
 						<Text style={styles.quoteMessage} numberOfLines={1}>
-							{quoteMessage.text}
+							{quoteMessage?.text}
 						</Text>
 						<Text style={styles.quoteSender}>{`${
 							preferences.peerProfile(quoteMessage.user._id).firstname
@@ -1008,38 +1241,46 @@ class Chat extends Component {
 	};
 
 	renderComposer = () => {
-		const { message } = this.state;
-		const inputted = message.length != 0;
-
+		const { message, quoteMessage, editMessage } = this.state;
+		const inputted = message.length !== 0 && (!editMessage || editMessage.text !== message);
 		return (
 			<View
 				style={styles.chatWrapper}
 				onLayout={e => {
-					console.log(e.nativeEvent);
 					this.setState({ composerHeight: e?.nativeEvent?.layout?.height });
 				}}
 			>
 				{this.renderActions()}
 				<View style={styles.chatInputWrapper}>
-					{this.renderQuote()}
-					<TrackingTextInput
-						// style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
-						style={[styles.chatInput, { textAlign: 'left' }]}
-						value={this.state.message}
-						onChangeText={text => {
-							this.sendTyping(text);
-							this.setState({ message: text });
-						}}
-						placeholder={strings('chat.chat_text')}
-						placeholderTextColor={colors.grey200}
-						multiline
-						textAlignVertical={'center'}
-						maxLength={LIMIT_MESSAGE_LENGTH}
-					/>
+					{this.renderQuote(quoteMessage)}
+					<View style={styles.chatInputRow}>
+						<TrackingTextInput
+							// style={[styles.chatInput, { textAlign: inputted ? 'left' : 'right' }]}
+							style={[styles.chatInput, { textAlign: 'left' }]}
+							value={message}
+							onChangeText={text => {
+								this.sendTyping(text);
+								this.setState({ message: text });
+							}}
+							placeholder={strings('chat.chat_text')}
+							placeholderTextColor={colors.grey200}
+							multiline
+							textAlignVertical={'center'}
+							maxLength={LIMIT_MESSAGE_LENGTH}
+						/>
+						{!!editMessage && (
+							<MaterialCommunityIcons name={'pencil-off-outline'} style={styles.editPencilIcon} />
+						)}
+					</View>
 				</View>
 				{inputted && (
 					<TouchableOpacity onPress={this.sendText} activeOpacity={0.7} style={styles.sendButton}>
 						<Ionicons name={'send'} style={styles.sendIcon} />
+					</TouchableOpacity>
+				)}
+				{!inputted && !!editMessage && (
+					<TouchableOpacity activeOpacity={0.7} style={styles.closeButton} onPress={this.onCloseEdit}>
+						<Ionicons name={'close'} style={styles.sendIcon} />
 					</TouchableOpacity>
 				)}
 			</View>
@@ -1056,7 +1297,7 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
-		const { visibleMenu, messages, selectedMessage, showActionModal } = this.state;
+		const { visibleMenu, messages, selectedMessage, showActionModal, deleteMessage } = this.state;
 
 		return (
 			<>
@@ -1089,6 +1330,25 @@ class Chat extends Component {
 
 					{visibleMenu && this.renderMenu()}
 				</View>
+				<ActionModal
+					modalVisible={!!deleteMessage}
+					confirmText={strings('chat.remove').toUpperCase()}
+					cancelText={strings('chat.cancel').toUpperCase()}
+					confirmTestId={'delete-chat-remove-action'}
+					confirmTestId={'delete-chat-cancel-action'}
+					onConfirmPress={this.onConfirmRemove}
+					onCancelPress={this.onCancelRemove}
+					onRequestClose={this.onCancelRemove}
+					confirmButtonMode={'warning'}
+					cancelButtonMode={'normal'}
+
+					// displayCancelButton={false}
+					// verticalButtons
+				>
+					<View style={styles.warningDeleteWrapper}>
+						<Text style={styles.warningDeleteText}>{strings('chat.delete_message_warning')}</Text>
+					</View>
+				</ActionModal>
 				<Modal visible={showActionModal} transparent animationType="slide" onRequestClose={this.onHideModal}>
 					<TouchableOpacity style={styles.backdropModal} activeOpacity={1} onPress={this.onHideModal}>
 						<View style={styles.modalContent}>

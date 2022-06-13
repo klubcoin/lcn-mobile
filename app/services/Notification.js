@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
+
 class Notifications {
 	constructor(onPressNotification) {
 		PushNotification.configure({

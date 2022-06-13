@@ -3,7 +3,7 @@ import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import preferences from '../../../../store/preferences';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { Chat, ChatFile, ChatProfile, Typing } from './Messages';
+import { Chat, ChatFile, ChatProfile, DeleteMessage, EditMessage, Typing } from './Messages';
 import MessagingWebRTC from './MessagingWebRTC';
 import { JoinFile } from '../../FilesManager/store/FileStore';
 import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
@@ -45,6 +45,34 @@ export default class ChatService {
 				} else if (action == Typing().action) {
 					const peer = preferences.peerProfile(peerId);
 					if (!peer) fetchProfile(peerId);
+				} else if (action && action === EditMessage().action) {
+					const group = data.message?.group;
+					const conversation = (await store.getChatMessages(group || peerId)) || {
+						messages: [],
+						isRead: false
+					};
+
+					const ids = conversation.messages.map(e => e?._id);
+					if (ids.includes(data.message?._id)) {
+						const newMessages = conversation.messages.map(e =>
+							e._id === data.message?._id ? { ...e, ...data.message } : e
+						);
+						store.saveChatMessages(group || peerId, { ...conversation, messages: newMessages });
+					}
+				} else if (action && action === DeleteMessage().action) {
+					const group = data.message?.group;
+					const conversation = (await store.getChatMessages(group || peerId)) || {
+						messages: [],
+						isRead: false
+					};
+
+					const ids = conversation.messages.map(e => e?._id);
+					if (ids.includes(data.message?._id)) {
+						const newMessages = conversation.messages.map(e =>
+							e._id === data.message?._id ? data.message : e
+						);
+						store.saveChatMessages(group || peerId, { ...conversation, messages: newMessages });
+					}
 				}
 			} else {
 				const group = data.message?.group;
