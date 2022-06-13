@@ -278,8 +278,13 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	};
 
 	useEffect(() => {
-		getCustomNetworkFee();
-	}, []);
+		if (!customNetworkFee.gas && !customNetworkFee.gasPrice) {
+			const fetchNetworkFee = setInterval(() => {
+				getCustomNetworkFee();
+			}, 2000);
+			return () => clearInterval(fetchNetworkFee);
+		}
+	}, [customNetworkFee]);
 
 	const getCustomNetworkFee = async () => {
 		const selectedAsset = Routes.klubToken;
