@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, ActivityIndicator, Alert, Text, View, SafeAreaView, Image } from 'react-native';
+import { Switch, ActivityIndicator, Alert, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -763,20 +763,34 @@ class ChoosePassword extends PureComponent {
 													boxType="square"
 													{...testID('choose-password-understand-box')}
 												/>
-												<Text
-													style={styles.label}
-													onPress={this.setSelection}
-													testID={'i-understand-text'}
-												>
-													{strings('choose_password.i_understand', { appName: displayName })}{' '}
-													<Text
+												<View style={styles.iUnderstandWrapper}>
+													{`${strings('choose_password.i_understand', {
+														appName: displayName
+													})} `
+														.split(' ')
+														.map((text, index) => {
+															console.log(`"${text}"`);
+															return (
+																<TouchableOpacity
+																	activeOpacity={1}
+																	onPress={this.setSelection}
+																	testID={`choose-password-understand-box-i-understand-text-${index}`}
+																>
+																	<Text style={styles.label}>{`${text} `}</Text>
+																</TouchableOpacity>
+															);
+														})}
+													<TouchableOpacity
+														activeOpacity={1}
 														onPress={this.learnMore}
 														style={styles.learnMore}
 														{...testID('choose-password-learn-more')}
 													>
-														{strings('choose_password.learn_more')}
-													</Text>
-												</Text>
+														<Text style={styles.learnMore}>
+															{strings('choose_password.learn_more')}
+														</Text>
+													</TouchableOpacity>
+												</View>
 											</View>
 
 											{!!error && <Text style={styles.errorMsg}>{error}</Text>}

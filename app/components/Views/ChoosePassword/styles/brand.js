@@ -18,7 +18,8 @@ const brandStyles = StyleSheet.create({
 		...fontStyles.bold
 	},
 	label: {
-		color: colors.white
+		color: colors.white,
+		paddingHorizontal: 0
 	},
 	input: {
 		color: colors.white,
@@ -80,6 +81,11 @@ const brandStyles = StyleSheet.create({
 		width: 12,
 		height: 12,
 		color: colors.success
+	},
+	iUnderstandWrapper: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		paddingHorizontal: 10
 	}
 });
 
