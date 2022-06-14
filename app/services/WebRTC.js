@@ -39,13 +39,13 @@ export default class WebRTC {
 
 	address = () => this.fromUserId;
 
-	addEncryptor = (encryptionLayer) => {
+	addEncryptor = encryptionLayer => {
 		this.encryptor = encryptionLayer;
-	}
+	};
 
 	once = (filter, callback) => {
 		this.onceListeners.push({ filter, callback });
-	}
+	};
 
 	addListener = (type, callback) => {
 		switch (type) {
@@ -79,8 +79,9 @@ export default class WebRTC {
 	};
 
 	handleWebRtcSignal = message => {
+		// console.log('🚀 ~ file: WebRTC.js ~ line 82 ~ WebRTC ~ message', message);
 		try {
-			const data = (message.action || message.payload) ? message : JSON.parse(message);
+			const data = message.action || message.payload ? message : JSON.parse(message);
 			if (data.webrtc) {
 				switch (data.signal) {
 					case 'offer':
@@ -95,7 +96,7 @@ export default class WebRTC {
 				}
 			} else if (data.action && data.from) {
 				this.handleWebRtcMessage(message, data.from.toLowerCase());
-				this.handleWebSocketMessage(message, data.from.toLowerCase())
+				this.handleWebSocketMessage(message, data.from.toLowerCase());
 			}
 		} catch (e) {}
 	};
@@ -104,8 +105,8 @@ export default class WebRTC {
 		try {
 			this.events.message.map(callback => callback(data, peerId));
 			this.signalOnce(data, peerId);
-		} catch (e) { }
-	}
+		} catch (e) {}
+	};
 
 	sendSignal = (signal, payload) => {
 		const message = Message(payload.target, {
@@ -117,7 +118,7 @@ export default class WebRTC {
 		this.sendWebSocketMessage(message);
 	};
 
-	sendWebSocketMessage = (message) => {
+	sendWebSocketMessage = message => {
 		if (useSocketIO) {
 			this.socketRef.emit(message.action, message);
 		} else {
@@ -195,7 +196,7 @@ export default class WebRTC {
 
 	handleReceiveMessage = (e, peer) => {
 		// Listener for receiving messages from the peer
-		console.log('[INFO] Message received from peer', peer, `${e.data}`.substr(0, 100));
+		// console.log('[INFO] Message received from peer', peer, `${e.data}`.substr(0, 100));
 
 		this.handleWebRtcMessage(e.data, peer);
 	};
@@ -219,7 +220,15 @@ export default class WebRTC {
 			} else if (data.action == 'pong') {
 				this.peerPublicKeys[peerId] = data.publicKey;
 			} else if (data.reqId || data.checksum) {
-				this._sendToPeer(peerId, AckWebRTC(data.reqId || data.checksum));
+				this._sendToPeer(
+					peerId,
+					AckWebRTC(
+						data.reqId || data.checksum,
+						data.checksum
+							? { _id: data?.message?._id, action: data?.message?.action, group: data?.message?.group }
+							: undefined
+					)
+				);
 			}
 			if (data.action == AckWebRTC().action && data.hash) {
 				if (this.monitors[data.hash]) {
@@ -247,14 +256,13 @@ export default class WebRTC {
 		this.onceListeners.map(listener => {
 			const { filter, callback } = listener;
 
-			if (filter == data.action || filter == peerId
-				|| filter == `${data.action}:${peerId}`) {
+			if (filter == data.action || filter == peerId || filter == `${data.action}:${peerId}`) {
 				const skipped = callback(data, peerId);
 				if (!skipped) removeOnces.push(listener);
 			}
-		})
+		});
 		removeOnces.map(e => this.onceListeners.splice(this.onceListeners.indexOf(e), 1));
-	}
+	};
 
 	parseSignature(data) {
 		if (!data || !data.payload || !data.signature) return;
@@ -298,7 +306,7 @@ export default class WebRTC {
 			]
 		});
 		peer.peerId = peerId;
-		peer.onicecandidate = (e) => this.handleICECandidateEvent(e, peerId);
+		peer.onicecandidate = e => this.handleICECandidateEvent(e, peerId);
 		peer.onnegotiationneeded = () => this.handleNegotiationNeededEvent(peerId);
 		return peer;
 	};
@@ -344,10 +352,10 @@ export default class WebRTC {
 		return this.sendChannels && this.sendChannels[address];
 	}
 
-	channelReady = (addr) => {
+	channelReady = addr => {
 		const address = addr.toLowerCase();
 		return this.hasChannel(address) && this.sendChannels[address].ready;
-	}
+	};
 
 	async _sendToPeer(peerId, message) {
 		const json = JSON.stringify(message);
@@ -369,7 +377,7 @@ export default class WebRTC {
 		const message = Message(peerId, data);
 		this.sendWebSocketMessage(message);
 		this.events.error.map(callback => callback && callback(data, peerId));
-	}
+	};
 
 	connectAndSend = async (address, data) => {
 		this.connectTo(address);
@@ -404,7 +412,7 @@ export default class WebRTC {
 			}
 			this._sendToPeer(address, data);
 		}
-	}
+	};
 }
 
 const state = { webrtc: null };

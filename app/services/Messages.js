@@ -30,7 +30,8 @@ export const RestoreSecretRequest = (from, firstname, lastname, avatar) => ({
 	avatar
 });
 
-export const AckWebRTC = checksum => ({
+export const AckWebRTC = (checksum, data) => ({
 	action: 'ack',
-	hash: checksum
+	hash: checksum,
+	data
 });

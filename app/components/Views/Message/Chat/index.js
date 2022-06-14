@@ -38,6 +38,7 @@ import {
 	EditMessage,
 	JoinUpdate,
 	RequestPayment,
+	SeenMessage,
 	TransactionSync,
 	Typing
 } from '../store/Messages';
@@ -68,6 +69,7 @@ import { getChatNavigationOptionsTitle } from '../../../UI/Navbar';
 import Clipboard from '@react-native-community/clipboard';
 import { showAlert } from '../../../../actions/alert';
 import ActionModal from '../../../UI/ActionModal';
+import { AckWebRTC } from '../../../../services/Messages';
 
 const LIMIT_MESSAGE_DISPLAY = 2048;
 const LIMIT_MESSAGE_LENGTH = 65536;
@@ -92,7 +94,11 @@ class Chat extends Component {
 		showActionModal: false,
 		editMessage: null,
 		quoteMessage: null,
-		deleteMessage: null
+		deleteMessage: null,
+		layoutMessages: [],
+		unSeenMessages: [],
+		savedOffset: 0,
+		savedHeight: 0
 	};
 
 	myModalActions = [
@@ -126,6 +132,17 @@ class Chat extends Component {
 	];
 
 	RBRef = React.createRef();
+
+	componentDidUpdate(prevProps, prevState) {
+		const { layoutMessages, savedOffset, savedHeight, messages } = this.state;
+		const { layoutMessages: preLayoutMessages } = prevState;
+		if (layoutMessages.length !== preLayoutMessages.length && layoutMessages.length === messages.length) {
+			console.log('componentDidUpdate', layoutMessages.length, preLayoutMessages.length);
+			setTimeout(() => {
+				this.onSeenMessages(savedOffset, savedHeight);
+			}, 1000);
+		}
+	}
 
 	one2oneGroup() {
 		this.isOne2One = true;
@@ -242,6 +259,11 @@ class Chat extends Component {
 						update: new Date(),
 						avatar: data.profile.avatar
 					}));
+				} else if (action === AckWebRTC().action) {
+					const ackData = data.data;
+					if (!!ackData._id & !ackData.action) {
+						this.sentMessage(ackData._id);
+					}
 				}
 			}
 
@@ -276,6 +298,11 @@ class Chat extends Component {
 					this.getWalletInfo(peerId);
 				}
 				this.removeMessage(data.message, true);
+			} else if (action && action === SeenMessage().action) {
+				if (!marketStore.storeVendors[peerId]) {
+					this.getWalletInfo(peerId);
+				}
+				this.seenMessage(data.message, true);
 			} else if (data.message?.user) {
 				data.message.user['_id'] = peerId;
 				if (!marketStore.storeVendors[peerId]) {
@@ -289,6 +316,7 @@ class Chat extends Component {
 	};
 
 	fetchConversation = async () => {
+		const { selectedAddress } = this.props;
 		Promise.all([this.fetchTransactionHistory(), this.fetchMessages()])
 			.then(values => {
 				const data = [...values[0], ...values[1]];
@@ -302,6 +330,7 @@ class Chat extends Component {
 							? data.find(m => m._id === e.quoteId)?.text?.length > LIMIT_MESSAGE_DISPLAY
 							: null
 					})),
+					unSeenMessages: data.filter(e => !e.isSeen && e.user._id !== selectedAddress).map(e => e._id),
 					loading: false
 				}));
 			})
@@ -343,6 +372,12 @@ class Chat extends Component {
 				}
 			})
 		);
+	};
+
+	sentMessage = async messageId => {
+		const { messages } = this.state;
+		const newMessages = messages.map(e => (e._id === messageId ? { ...e, isReceived: true } : e));
+		this.setState({ messages: newMessages });
 	};
 
 	fetchMessages = async () => {
@@ -469,7 +504,7 @@ class Chat extends Component {
 			return;
 		}
 		this.messageIds.push(message?._id);
-		const { contact, messages } = this.state;
+		const { contact, messages, unSeenMessages } = this.state;
 		const group = this.state.group;
 		const id = addHexPrefix(message.user._id);
 		message.hided = message.text.length > LIMIT_MESSAGE_DISPLAY;
@@ -494,6 +529,7 @@ class Chat extends Component {
 		this.setState(prevState => ({
 			...prevState,
 			messages: newMessages,
+			unSeenMessages: [...unSeenMessages, message._id],
 			typing: false
 		}));
 		const peerAddr = contact?.address;
@@ -871,14 +907,31 @@ class Chat extends Component {
 	renderMessage = messageProps => {
 		const { currentMessage } = messageProps;
 		const isCustom = currentMessage.payload;
-
+		const { layoutMessages } = this.state;
 		return (
-			<Message
-				{...messageProps}
-				renderMessageImage={() => null}
-				renderBubble={() => this.renderBubble(currentMessage)}
-				renderCustomView={isCustom ? () => this.renderBubble(currentMessage) : null}
-			/>
+			<View
+				onLayout={e => {
+					if (!layoutMessages.find(e => e._id === currentMessage._id)) {
+						this.setState({
+							layoutMessages: [
+								...layoutMessages,
+								{
+									_id: currentMessage._id,
+									height: e.nativeEvent.layout.height,
+									createdAt: new Date(currentMessage.createdAt).getTime()
+								}
+							].sort((a, b) => b.createdAt - a.createdAt)
+						});
+					}
+				}}
+			>
+				<Message
+					{...messageProps}
+					renderMessageImage={() => null}
+					renderBubble={e => this.renderBubble(currentMessage, e)}
+					renderCustomView={isCustom ? () => this.renderBubble(currentMessage) : null}
+				/>
+			</View>
 		);
 	};
 
@@ -1032,10 +1085,78 @@ class Chat extends Component {
 		});
 	};
 
+	renderSendingIcon = () => <Ionicons name={'md-checkmark-sharp'} style={styles.sendingIcon} />;
+	renderReceivedIcon = () => <Ionicons name={'md-checkmark-done-sharp'} style={styles.receivedIcon} />;
+	renderSeenIcon = () => <Ionicons name={'md-checkmark-done-sharp'} style={styles.seenIcon} />;
+
+	onSeenMessages = async (offset, height) => {
+		const { layoutMessages, unSeenMessages, messages, contact, group } = this.state;
+		if (unSeenMessages.length === 0) {
+			return;
+		}
+		const seenMessageIds = unSeenMessages.filter(unSeenMessage => {
+			const messageIndex = layoutMessages.findIndex(e => e._id === unSeenMessage);
+			const message = layoutMessages.find(e => e._id === unSeenMessage);
+			if (messageIndex >= 0) {
+				const messageOffset =
+					messageIndex === 0
+						? 0
+						: messageIndex === 1
+						? message.height
+						: layoutMessages
+								.slice(0, messageIndex)
+								.map(e => e.height)
+								.reduce((a, b) => a + b);
+				if (messageOffset - offset > -1 && offset + height - message.height - messageOffset > 0) {
+					return true;
+				}
+			}
+		});
+		const peerAddr = contact?.address;
+		seenMessageIds.map(messageId => this.onSeenMessage(messages.find(e => e._id === messageId)));
+		this.setState({
+			savedOffset: offset,
+			savedHeight: height,
+			unSeenMessages: unSeenMessages.filter(e => !seenMessageIds.includes(e))
+		});
+		const newMessages = messages.map(e => (seenMessageIds.includes(e._id) ? { ...e, isSeen: true } : e));
+		await store.saveChatMessages(group || peerAddr, { messages: newMessages });
+	};
+
+	onSeenMessage = seenMessage => {
+		const { group, contact } = this.state;
+		if (!seenMessage) {
+			return;
+		}
+		const peerId = contact?.address;
+		let message = SeenMessage(seenMessage._id, seenMessage.group, seenMessage.user);
+		store.setConversationIsRead(group || peerId, true);
+		this.messaging.send(message);
+	};
+
+	seenMessage = async message => {
+		const { contact, messages } = this.state;
+		const group = this.state.group;
+		const id = addHexPrefix(message.user._id);
+
+		if (message.group && message.group != group) return;
+		if (!message.user.name) {
+			message.user.name = preferences.peerProfile(id).name;
+		}
+		const peers = this.getPeers();
+
+		if (!peers.includes(id)) {
+			peers.push(id);
+			store.saveConversationPeers(group, peers);
+		}
+		const newMessages = messages.map(e => (e._id === message._id ? { ...e, isSeen: true } : e));
+		this.setState({ messages: newMessages });
+	};
+
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
-		const { createdAt, text, user, payload, hided, quoteId, edited } = message;
-		const { messages } = this.state;
+		const { createdAt, text, user, payload, hided, quoteId, edited, isReceived, isSeen } = message;
+		const { messages, layoutMessages } = this.state;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
 		const chatTime = moment(createdAt);
@@ -1070,7 +1191,16 @@ class Chat extends Component {
 					activeOpacity={0.7}
 					onLongPress={() => this.onSelectMessage(message)}
 				>
-					<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
+					<View style={styles.messageBubble}>
+						<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
+						{incoming
+							? null
+							: isSeen
+							? this.renderSeenIcon()
+							: isReceived
+							? this.renderReceivedIcon()
+							: this.renderSendingIcon()}
+					</View>
 					{!!payload ? (
 						this.renderCustomView(message)
 					) : (
@@ -1297,7 +1427,7 @@ class Chat extends Component {
 
 	render() {
 		const { selectedAddress } = this.props;
-		const { visibleMenu, messages, selectedMessage, showActionModal, deleteMessage } = this.state;
+		const { visibleMenu, messages, selectedMessage, showActionModal, deleteMessage, layoutMessages } = this.state;
 
 		return (
 			<>
@@ -1320,6 +1450,17 @@ class Chat extends Component {
 							renderMessage={this.renderMessage}
 							renderComposer={this.renderComposer}
 							keyboardShouldPersistTaps={'never'}
+							listViewProps={{
+								onScroll: e => {
+									this.onSeenMessages(
+										e.nativeEvent.contentOffset.y,
+										e.nativeEvent.layoutMeasurement.height
+									);
+								},
+								onLayout: e => {
+									this.onSeenMessages(0, e.nativeEvent.layout.height);
+								}
+							}}
 						/>
 					)}
 					<RecordingBS
@@ -1335,7 +1476,7 @@ class Chat extends Component {
 					confirmText={strings('chat.remove').toUpperCase()}
 					cancelText={strings('chat.cancel').toUpperCase()}
 					confirmTestId={'delete-chat-remove-action'}
-					confirmTestId={'delete-chat-cancel-action'}
+					cancelTestId={'delete-chat-cancel-action'}
 					onConfirmPress={this.onConfirmRemove}
 					onCancelPress={this.onCancelRemove}
 					onRequestClose={this.onCancelRemove}

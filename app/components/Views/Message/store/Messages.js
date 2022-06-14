@@ -30,6 +30,15 @@ export const EditMessage = (_id, group, text, user) => ({
 	createdAt: new Date().getTime()
 });
 
+export const SeenMessage = (_id, group, user) => ({
+	action: 'seen',
+	_id,
+	group,
+	user,
+	isSeen: true,
+	createdAt: new Date().getTime()
+});
+
 export const Typing = (name, group) => ({
 	action: 'typing',
 	name,

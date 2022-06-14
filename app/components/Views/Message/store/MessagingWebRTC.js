@@ -1,4 +1,5 @@
 import { DeviceEventEmitter } from 'react-native';
+import { AckWebRTC } from '../../../../services/Messages';
 import { JoinFile } from '../../FilesManager/store/FileStore';
 import { Chat, ChatProfile, EditMessage, DeleteMessage } from './Messages';
 
@@ -37,13 +38,7 @@ export default class MessagingWebRTC {
 			if (data.action == 'ping') {
 				DeviceEventEmitter.emit(`WebRtcPeer:${peerId}`, data);
 			}
-			const actions = [
-				Chat().action,
-				ChatProfile().action,
-				JoinFile().action,
-				EditMessage().action,
-				DeleteMessage().action
-			];
+			const actions = [Chat().action, ChatProfile().action, JoinFile().action, AckWebRTC().action];
 			if (actions.includes(data.action)) {
 				if (this.evtMessage) this.evtMessage(data, peerId);
 			}

@@ -783,7 +783,6 @@ class ChoosePassword extends PureComponent {
 													<TouchableOpacity
 														activeOpacity={1}
 														onPress={this.learnMore}
-														style={styles.learnMore}
 														{...testID('choose-password-learn-more')}
 													>
 														<Text style={styles.learnMore}>

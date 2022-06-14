@@ -86,7 +86,8 @@ const styles = StyleSheet.create({
 		paddingTop: 5
 	},
 	text: {
-		color: colors.white
+		color: colors.white,
+		flexGrow: 1
 	},
 	typing: {
 		color: colors.white,
@@ -398,6 +399,26 @@ const styles = StyleSheet.create({
 	},
 	removeMessage: {
 		color: colors.grey450
+	},
+	messageBubble: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center'
+	},
+	sendingIcon: {
+		color: colors.grey450,
+		marginHorizontal: 6,
+		fontSize: 16
+	},
+	receivedIcon: {
+		color: colors.grey450,
+		marginHorizontal: 6,
+		fontSize: 16
+	},
+	seenIcon: {
+		color: colors.blue700,
+		marginHorizontal: 6,
+		fontSize: 16
 	}
 });
 

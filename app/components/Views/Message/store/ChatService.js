@@ -3,11 +3,12 @@ import { DeviceEventEmitter } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import preferences from '../../../../store/preferences';
 import { refWebRTC } from '../../../../services/WebRTC';
-import { Chat, ChatFile, ChatProfile, DeleteMessage, EditMessage, Typing } from './Messages';
+import { Chat, ChatFile, ChatProfile, DeleteMessage, EditMessage, SeenMessage, Typing } from './Messages';
 import MessagingWebRTC from './MessagingWebRTC';
 import { JoinFile } from '../../FilesManager/store/FileStore';
 import FileTransferWebRTC from '../../FilesManager/store/FileTransferWebRTC';
 import APIService from '../../../../services/APIService';
+import { AckWebRTC } from '../../../../services/Messages';
 
 const fetchProfile = async address => {
 	const profile = preferences.peerProfile(address) || {};
@@ -73,6 +74,20 @@ export default class ChatService {
 						);
 						store.saveChatMessages(group || peerId, { ...conversation, messages: newMessages });
 					}
+				} else if (action && action === SeenMessage().action) {
+					const group = data.message?.group;
+					const conversation = (await store.getChatMessages(group || peerId)) || {
+						messages: [],
+						isRead: false
+					};
+
+					const ids = conversation.messages.map(e => e?._id);
+					if (ids.includes(data.message?._id)) {
+						const newMessages = conversation.messages.map(e =>
+							e._id === data.message?._id ? { ...e, isSeen: true } : e
+						);
+						store.saveChatMessages(group || peerId, { ...conversation, messages: newMessages });
+					}
 				}
 			} else {
 				const group = data.message?.group;
@@ -106,6 +121,23 @@ export default class ChatService {
 				}
 				DeviceEventEmitter.emit('FileTransReceived', { data, path });
 			});
+		} else if (data.action === AckWebRTC().action) {
+			const ackData = data.data;
+			if (!!ackData._id & !ackData.action) {
+				const group = ackData?.group;
+				const conversation = (await store.getChatMessages(group || peerId)) || {
+					messages: [],
+					isRead: false
+				};
+
+				const ids = conversation.messages.map(e => e?._id);
+				if (ids.includes(ackData?._id)) {
+					const newMessages = conversation.messages.map(e =>
+						e._id === ackData?._id ? { ...e, isReceived: true } : e
+					);
+					store.saveChatMessages(group || peerId, { ...conversation, messages: newMessages });
+				}
+			}
 		}
 	};
 }
