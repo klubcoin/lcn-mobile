@@ -115,8 +115,12 @@ class Chat extends Component {
 			action: message => this.onQuote(message)
 		},
 		{
-			title: strings('chat.remove'),
-			action: message => this.onRemove(message)
+			title: strings('chat.delete_for_everyone'),
+			action: message => this.onDelete(message)
+		},
+		{
+			title: strings('chat.delete_for_myself'),
+			action: message => this.onDeleteMyself(message)
 		}
 	];
 
@@ -128,6 +132,10 @@ class Chat extends Component {
 		{
 			title: strings('chat.quote'),
 			action: message => this.onQuote(message)
+		},
+		{
+			title: strings('chat.delete_for_myself'),
+			action: message => this.onDeleteMyself(message)
 		}
 	];
 	constructor(props) {
@@ -1045,7 +1053,23 @@ class Chat extends Component {
 		this.onHideModal();
 	};
 
-	onCancelRemove = () => {
+	onDeleteMyself = async () => {
+		const { contact, messages, selectedMessage } = this.state;
+		if (!selectedMessage) {
+			this.onHideModal();
+			return;
+		}
+		const group = this.state.group;
+
+		const peers = this.getPeers();
+		const newMessages = messages.filter(e => e._id !== selectedMessage._id);
+		this.setState({ messages: newMessages, selectedMessage: null, showActionModal: false });
+		const peerAddr = contact?.address;
+
+		await store.saveChatMessages(group || peerAddr, { messages: newMessages });
+	};
+
+	onCancelDelete = () => {
 		this.setState({
 			deleteMessage: null
 		});
