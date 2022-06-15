@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import {
 	SafeAreaView,
 	StyleSheet,
@@ -130,6 +130,10 @@ class Chat extends Component {
 			action: message => this.onQuote(message)
 		}
 	];
+	constructor(props) {
+		super(props);
+		this.chatRef = createRef();
+	}
 
 	RBRef = React.createRef();
 
@@ -578,6 +582,23 @@ class Chat extends Component {
 
 	onMoreButtonTap = () => {
 		this.setState({ visibleMenu: true });
+	};
+
+	onScrollToMessage = messageId => {
+		const { messages, layoutMessages } = this.state;
+		const message = messages.find(e => e._id === messageId);
+		if (!message) return;
+		const layoutMessage = layoutMessages.find(e => e._id === messageId);
+		const layoutMessageIndex = layoutMessages.findIndex(e => e._id === messageId);
+		if (!layoutMessage) {
+			this.chatRef?.current?._listRef?._scrollRef?.scrollToEnd();
+			return;
+		}
+		const height = layoutMessages
+			.slice(0, layoutMessageIndex)
+			.map(e => e.height)
+			.reduce((a, b) => a + b);
+		this.chatRef?.current?._listRef?._scrollRef.scrollTo(height);
 	};
 
 	renderLoader = () => (
@@ -1306,8 +1327,14 @@ class Chat extends Component {
 		const { text } = quoteMessage;
 		const { quoteHided } = message;
 		return (
-			<View style={styles.quoteBubbleWrapper}>
-				<View style={styles.quoteBubbleContent}>
+			<TouchableOpacity
+				activeOpacity={0.7}
+				style={styles.quoteBubbleWrapper}
+				onPress={() => {
+					this.onScrollToMessage(quoteMessage._id);
+				}}
+			>
+				<View style={[styles.quoteBubbleContent, !!message.text && styles.quoteBorderBottom]}>
 					<View style={styles.quoteIconWrapper}>
 						<IconEntypo style={styles.quoteIcon} name="quote" />
 					</View>
@@ -1340,7 +1367,7 @@ class Chat extends Component {
 						).format('DD/MM/YYYY')}`}</Text>
 					</View>
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	};
 
@@ -1459,7 +1486,8 @@ class Chat extends Component {
 								},
 								onLayout: e => {
 									this.onSeenMessages(0, e.nativeEvent.layout.height);
-								}
+								},
+								ref: this.chatRef
 							}}
 						/>
 					)}
