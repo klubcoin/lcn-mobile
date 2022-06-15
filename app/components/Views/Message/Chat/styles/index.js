@@ -370,8 +370,10 @@ const styles = StyleSheet.create({
 	},
 	quoteBubbleContent: {
 		flexDirection: 'row',
+		flexGrow: 1
+	},
+	quoteBorderBottom: {
 		borderBottomWidth: 1,
-		flexGrow: 1,
 		borderBottomColor: colors.white
 	},
 	quoteBubbleMessageWrapper: {
@@ -419,6 +421,183 @@ const styles = StyleSheet.create({
 		color: colors.blue700,
 		marginHorizontal: 6,
 		fontSize: 16
+	},
+	forwardModalWrapper: {
+		alignSelf: 'center',
+		backgroundColor: colors.white,
+		paddingVertical: 12,
+		borderRadius: 8,
+		width: '90%',
+		maxHeight: '80%'
+	},
+	forwardModalHeader: {
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	forwardModalHeaderTitleWrapper: {
+		flex: 1,
+		alignItems: 'center'
+	},
+	forwardModalHeaderTitle: {
+		fontSize: 20,
+		color: colors.black,
+		fontWeight: '500'
+	},
+	forwardModalHeaderCloseButton: {
+		width: 36,
+		height: 36,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: 'transparent',
+		borderRadius: 12
+	},
+	forwardModalHeaderCloseIcon: {
+		fontSize: 24,
+		color: colors.black
+	},
+	forwardModalQuoteField: {
+		padding: 8,
+		marginHorizontal: 12,
+		borderRadius: 8,
+		backgroundColor: colors.grey000
+	},
+	forwardQuoteWrapper: {
+		paddingHorizontal: 12,
+		flexDirection: 'row',
+		marginBottom: 6
+	},
+	forwardQuoteContent: {
+		flexDirection: 'row',
+		flex: 1,
+		borderBottomWidth: 1,
+		borderBottomColor: colors.black
+	},
+	forwardQuoteIconWrapper: {
+		padding: 4,
+		fontSize: 14
+	},
+	forwardQuoteIcon: {
+		color: colors.black,
+		transform: [{ rotate: '180deg' }],
+		fontSize: 16
+	},
+	forwardQuoteMessageWrapper: {
+		flex: 1
+	},
+	forwardQuoteMessage: {
+		color: colors.black,
+		marginTop: 20
+	},
+	forwardQuoteSender: {
+		color: colors.grey400,
+		fontSize: 14,
+		marginTop: 4,
+		marginBottom: 6
+	},
+	forwardMessage: {
+		paddingVertical: 6,
+		paddingHorizontal: 12
+	},
+	forwardSearch: {
+		marginTop: 8,
+		backgroundColor: colors.purple100,
+		padding: 12,
+		color: colors.white,
+		fontWeight: '700'
+	},
+	forwardSuggestList: {},
+	forwardSuggestTitle: {
+		marginTop: 12,
+		color: colors.grey600,
+		marginLeft: 12
+	},
+	forwardItemAvatar: {
+		width: 50,
+		height: 50,
+		borderRadius: 100,
+		marginRight: 12
+	},
+	forwardItemNoAvatarWrapper: {
+		width: 50,
+		height: 50,
+		borderRadius: 100,
+		backgroundColor: colors.grey000,
+		marginRight: 12,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	forwardItemNoAvatarName: {
+		fontWeight: '600',
+		fontSize: 18,
+		color: colors.black
+	},
+	forwardItemWrapper: {
+		flexDirection: 'row',
+		paddingHorizontal: 12,
+		marginTop: 6
+	},
+	forwardItemContent: {
+		flex: 1,
+		flexDirection: 'row',
+		marginLeft: 6,
+		alignItems: 'center',
+		paddingBottom: 6,
+		borderBottomWidth: 1,
+		borderBottomColor: colors.grey100
+	},
+	forwardItemNameWrapper: {
+		flex: 1,
+		marginRight: 6
+	},
+	forwardItemName: {
+		color: colors.black,
+		fontSize: 16
+	},
+	forwardItemAddress: {
+		color: colors.grey300,
+		fontSize: 12,
+		marginTop: 4
+	},
+	sendForwardButton: {
+		width: 70,
+		height: 30,
+		backgroundColor: colors.purple100,
+		borderRadius: 16,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	sendText: {
+		color: colors.white
+	},
+	sentForwardButton: {
+		flexDirection: 'row',
+		width: 70,
+		height: 30,
+		borderColor: colors.purple100,
+		borderWidth: 1,
+		borderRadius: 16,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	sentIcon: {
+		marginRight: 4,
+		color: colors.lightPurple
+	},
+	sentText: {
+		color: colors.lightPurple
+	},
+	forwardDoneButton: {
+		width: 80,
+		height: 40,
+		backgroundColor: colors.purple100,
+		borderRadius: 20,
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginTop: 10,
+		alignSelf: 'center'
+	},
+	forwardDoneText: {
+		color: colors.white
 	}
 });
 

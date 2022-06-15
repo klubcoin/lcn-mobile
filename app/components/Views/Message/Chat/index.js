@@ -11,7 +11,9 @@ import {
 	ActivityIndicator,
 	BackHandler,
 	Modal,
-	Keyboard
+	Keyboard,
+	TextInput,
+	ScrollView
 } from 'react-native';
 import { Actions, GiftedChat, Message } from 'react-native-gifted-chat';
 import Identicon from '../../../UI/Identicon';
@@ -24,7 +26,6 @@ import * as FilesReader from '../../../../util/files-reader';
 import { colors } from '../../../../styles/common';
 import APIService from '../../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IconEntypo from 'react-native-vector-icons/Entypo';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -77,6 +78,8 @@ const LIMIT_MESSAGE_LENGTH = 65536;
 class Chat extends Component {
 	static navigationOptions = ({ navigation }) => getChatNavigationOptionsTitle('Chat', navigation);
 	messaging;
+	forwardMessaging = {};
+	forwardListeners = {};
 	contacts = {};
 	senderName = '';
 	messageIds = [];
@@ -98,7 +101,13 @@ class Chat extends Component {
 		layoutMessages: [],
 		unSeenMessages: [],
 		savedOffset: 0,
-		savedHeight: 0
+		savedHeight: 0,
+		showForwardModal: false,
+		forwardMessage: null,
+		forwardText: '',
+		historyMessages: [],
+		forwardSentList: [],
+		forwardSearch: ''
 	};
 
 	myModalActions = [
@@ -111,7 +120,11 @@ class Chat extends Component {
 			action: message => this.onCopy(message)
 		},
 		{
-			title: strings('chat.quote'),
+			title: strings('chat.forward'),
+			action: message => this.onForward(message)
+		},
+		{
+			title: strings('chat.reply'),
 			action: message => this.onQuote(message)
 		},
 		{
@@ -130,7 +143,11 @@ class Chat extends Component {
 			action: message => this.onCopy(message)
 		},
 		{
-			title: strings('chat.quote'),
+			title: strings('chat.forward'),
+			action: message => this.onForward(message)
+		},
+		{
+			title: strings('chat.reply'),
 			action: message => this.onQuote(message)
 		},
 		{
@@ -145,21 +162,19 @@ class Chat extends Component {
 
 	RBRef = React.createRef();
 
-	componentDidUpdate(prevProps, prevState) {
-		const { layoutMessages, savedOffset, savedHeight, messages } = this.state;
-		const { layoutMessages: preLayoutMessages } = prevState;
-		if (layoutMessages.length !== preLayoutMessages.length && layoutMessages.length === messages.length) {
-			console.log('componentDidUpdate', layoutMessages.length, preLayoutMessages.length);
-			setTimeout(() => {
-				this.onSeenMessages(savedOffset, savedHeight);
-			}, 1000);
-		}
-	}
-
 	one2oneGroup() {
 		this.isOne2One = true;
 		const { selectedAddress } = this.props;
 		return [selectedAddress, this.recipient.address]
+			.sort((a, b) => `${a}`.toLowerCase().localeCompare(`${b}`.toLowerCase()))
+			.join('.')
+			.toLowerCase();
+	}
+
+	getOne2oneGroup(address) {
+		this.isOne2One = true;
+		const { selectedAddress } = this.props;
+		return [selectedAddress, address]
 			.sort((a, b) => `${a}`.toLowerCase().localeCompare(`${b}`.toLowerCase()))
 			.join('.')
 			.toLowerCase();
@@ -175,6 +190,7 @@ class Chat extends Component {
 		store.setActiveChatPeerId(this.state.group);
 		this.bindContactForAddress();
 		this.fetchConversation();
+		this.fetchHistoryMessages();
 		this.fetchProfile();
 		this.initConnection();
 
@@ -244,6 +260,15 @@ class Chat extends Component {
 
 	getPeers = () => {
 		const { group, contact } = this.state;
+		const peerId = contact?.address;
+		const info = store.conversationInfos[group] || {};
+
+		const peers = info?.peers?.filter(e => e != group) || [];
+		if (peers.indexOf(peerId) < 0) peers.push(peerId);
+		return peers;
+	};
+
+	getPeersGroup = (group, contact) => {
 		const peerId = contact?.address;
 		const info = store.conversationInfos[group] || {};
 
@@ -327,6 +352,61 @@ class Chat extends Component {
 		setTimeout(() => (this.initialized = true), 1000);
 	};
 
+	fetchHistoryMessages = async () => {
+		const { selectedAddress, addressBook, network } = this.props;
+		const addresses = addressBook[network] || {};
+		const records = await store.getChatMessages();
+
+		const historyMessages = Object.keys(records)
+			.filter(uuid => {
+				const address = uuid
+					.toLowerCase()
+					.replace('.', '')
+					.replace(selectedAddress.toLowerCase(), '');
+				return (
+					Object.keys(addresses).find(a => a?.toLocaleLowerCase() == address?.toLowerCase()) ||
+					preferences.peerProfile(address)
+				);
+			})
+			.map(uuid => {
+				const address = uuid
+					.toLowerCase()
+					.replace('.', '')
+					.replace(selectedAddress.toLowerCase(), '');
+				const conversation = { address, ...records[uuid] };
+
+				delete conversation.messages;
+				return Object.assign(conversation, preferences.peerProfile(address));
+			});
+		this.setState({ historyMessages });
+	};
+
+	onForward = message => {
+		this.setState({
+			showForwardModal: true,
+			forwardMessage: message,
+			selectedMessage: null,
+			showActionModal: false
+		});
+	};
+
+	onHideForwardModal = () => {
+		this.setState({
+			showForwardModal: false,
+			forwardMessage: null,
+			forwardSearch: '',
+			forwardSentList: [],
+			forwardText: ''
+		});
+	};
+
+	callBackSeenMessage = async => {
+		const { savedOffset, savedHeight } = this.state;
+		setTimeout(async () => {
+			this.onSeenMessages(savedOffset, savedHeight);
+		}, 2000);
+	};
+
 	fetchConversation = async () => {
 		const { selectedAddress } = this.props;
 		Promise.all([this.fetchTransactionHistory(), this.fetchMessages()])
@@ -338,9 +418,7 @@ class Chat extends Component {
 					messages: data.map(e => ({
 						...e,
 						hided: e?.text?.length > LIMIT_MESSAGE_DISPLAY,
-						quoteHided: e.quoteId
-							? data.find(m => m._id === e.quoteId)?.text?.length > LIMIT_MESSAGE_DISPLAY
-							: null
+						quoteHided: e?.quote?.text > LIMIT_MESSAGE_DISPLAY
 					})),
 					unSeenMessages: data.filter(e => !e.isSeen && e.user._id !== selectedAddress).map(e => e._id),
 					loading: false
@@ -465,7 +543,13 @@ class Chat extends Component {
 		const peerId = contact?.address;
 		message[0].group = group;
 		if (quoteMessage && quoteMessage._id) {
-			message[0].quoteId = quoteMessage._id;
+			message[0].quote = {
+				_id: quoteMessage._id,
+				createdAt: quoteMessage.createdAt,
+				group: quoteMessage.group,
+				text: quoteMessage.text,
+				user: quoteMessage.user
+			};
 		}
 
 		this.addNewMessage(message[0]);
@@ -520,9 +604,8 @@ class Chat extends Component {
 		const group = this.state.group;
 		const id = addHexPrefix(message.user._id);
 		message.hided = message.text.length > LIMIT_MESSAGE_DISPLAY;
-		if (message.quoteId) {
-			const quoteMessage = messages.find(e => e._id === message.quoteID);
-			message.quoteHided = quoteMessage?.text.length > LIMIT_MESSAGE_DISPLAY;
+		if (message.quote) {
+			message.quote.hided = message.quote?.text?.length > LIMIT_MESSAGE_DISPLAY;
 		}
 		if (message.group && message.group != group) return;
 		if (!message.user.name) {
@@ -549,6 +632,17 @@ class Chat extends Component {
 		if (!incoming) await store.saveChatMessages(group || peerAddr, { messages: newMessages });
 		else {
 			store.setConversationIsRead(peerAddr, true);
+		}
+		this.callBackSeenMessage();
+	};
+
+	addNewMessageIntoGroup = async (message, group, peerId) => {
+		const conversation = (await store.getChatMessages(group || peerId)) || { messages: [], isRead: false };
+
+		const ids = conversation.messages.map(e => e?._id);
+		if (!ids.includes(message?._id)) {
+			conversation.messages.unshift(message);
+			store.saveChatMessages(group || peerId, conversation);
 		}
 	};
 
@@ -1040,7 +1134,7 @@ class Chat extends Component {
 		this.onHideModal();
 	};
 
-	onRemove = message => {
+	onDelete = message => {
 		const { quoteMessage, editMessage, message: textMessage } = this.state;
 		this.setState({
 			deleteMessage: message,
@@ -1075,13 +1169,18 @@ class Chat extends Component {
 		});
 	};
 
-	onConfirmRemove = () => {
+	onConfirmDelete = () => {
 		const { group, contact, deleteMessage } = this.state;
 		if (!deleteMessage) {
 			return;
 		}
 		const peerId = contact?.address;
-		let message = DeleteMessage(deleteMessage._id, deleteMessage.group, deleteMessage.user);
+		let message = DeleteMessage(
+			deleteMessage._id,
+			deleteMessage.group,
+			deleteMessage.user,
+			deleteMessage.createdAt
+		);
 		this.removeMessage(message);
 		store.setConversationIsRead(group || peerId, true);
 		this.messaging.send(message);
@@ -1152,7 +1251,10 @@ class Chat extends Component {
 								.slice(0, messageIndex)
 								.map(e => e.height)
 								.reduce((a, b) => a + b);
-				if (messageOffset - offset > -1 && offset + height - message.height - messageOffset > 0) {
+				if (
+					message.height + messageOffset - offset > 40 &&
+					offset + height - message.height - messageOffset > 0
+				) {
 					return true;
 				}
 			}
@@ -1200,7 +1302,7 @@ class Chat extends Component {
 
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
-		const { createdAt, text, user, payload, hided, quoteId, edited, isReceived, isSeen } = message;
+		const { createdAt, text, user, payload, hided, quote, edited, isReceived, isSeen } = message;
 		const { messages, layoutMessages } = this.state;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
@@ -1213,10 +1315,6 @@ class Chat extends Component {
 			color: incoming ? colors.pink : colors.blue
 		};
 
-		let quoteMessage = null;
-		if (quoteId) {
-			quoteMessage = messages.find(e => e._id === quoteId);
-		}
 		if (message.deleted) {
 			return (
 				<View style={styles.chatBubble}>
@@ -1232,7 +1330,7 @@ class Chat extends Component {
 			<>
 				{edited && !incoming && <MaterialCommunityIcons name="pencil-outline" style={styles.editedIcon} />}
 				<TouchableOpacity
-					style={[styles.chatBubble, !!quoteMessage && styles.quoteBubble]}
+					style={[styles.chatBubble, !!quote && styles.quoteBubble]}
 					activeOpacity={0.7}
 					onLongPress={() => this.onSelectMessage(message)}
 				>
@@ -1250,28 +1348,30 @@ class Chat extends Component {
 						this.renderCustomView(message)
 					) : (
 						<View style={styles.textMessage}>
-							{!!quoteMessage && this.renderBubbleQuote(quoteMessage, message)}
-							<Text>
-								<Text style={styles.text}>
-									{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}
+							{!!quote && this.renderBubbleQuote(quote, message)}
+							{!!text && (
+								<Text>
+									<Text style={styles.text}>
+										{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}
+									</Text>
+									{text?.length > LIMIT_MESSAGE_DISPLAY &&
+										(hided ? (
+											<Text
+												style={styles.readMore}
+												onPress={() => this.onPressMessage(message, hided)}
+											>
+												{`...${strings('chat.read_more')}`}
+											</Text>
+										) : (
+											<Text
+												style={styles.readMore}
+												onPress={() => this.onPressMessage(message, hided)}
+											>
+												{`   ${strings('chat.hide')}`}
+											</Text>
+										))}
 								</Text>
-								{text?.length > LIMIT_MESSAGE_DISPLAY &&
-									(hided ? (
-										<Text
-											style={styles.readMore}
-											onPress={() => this.onPressMessage(message, hided)}
-										>
-											{`...${strings('chat.read_more')}`}
-										</Text>
-									) : (
-										<Text
-											style={styles.readMore}
-											onPress={() => this.onPressMessage(message, hided)}
-										>
-											{`   ${strings('chat.hide')}`}
-										</Text>
-									))}
-							</Text>
+							)}
 						</View>
 					)}
 					{failed && this.renderRetry(message)}
@@ -1350,6 +1450,9 @@ class Chat extends Component {
 		if (!quoteMessage) return null;
 		const { text } = quoteMessage;
 		const { quoteHided } = message;
+		if (!preferences.peerProfile(quoteMessage.user._id)) {
+			this.getWalletInfo(quoteMessage.user._id);
+		}
 		return (
 			<TouchableOpacity
 				activeOpacity={0.7}
@@ -1360,7 +1463,7 @@ class Chat extends Component {
 			>
 				<View style={[styles.quoteBubbleContent, !!message.text && styles.quoteBorderBottom]}>
 					<View style={styles.quoteIconWrapper}>
-						<IconEntypo style={styles.quoteIcon} name="quote" />
+						<EntypoIcon style={styles.quoteIcon} name="quote" />
 					</View>
 					<View style={styles.quoteBubbleMessageWrapper}>
 						<Text style={styles.quoteMessage}>
@@ -1385,8 +1488,8 @@ class Chat extends Component {
 								))}
 						</Text>
 						<Text style={styles.quoteSender}>{`${
-							preferences.peerProfile(quoteMessage.user._id).firstname
-						} ${preferences.peerProfile(quoteMessage.user._id).lastname}, ${moment(
+							preferences.peerProfile(quoteMessage.user._id)?.firstname
+						} ${preferences.peerProfile(quoteMessage.user._id)?.lastname}, ${moment(
 							quoteMessage.createdAt
 						).format('DD/MM/YYYY')}`}</Text>
 					</View>
@@ -1397,26 +1500,52 @@ class Chat extends Component {
 
 	renderQuote = quoteMessage => {
 		if (!quoteMessage) return null;
+		if (!preferences.peerProfile(quoteMessage.user._id)) {
+			this.getWalletInfo(quoteMessage.user._id);
+		}
 		return (
 			<View style={styles.quoteWrapper}>
 				<View style={styles.quoteContent}>
 					<View style={styles.quoteIconWrapper}>
-						<IconEntypo style={styles.quoteIcon} name="quote" />
+						<EntypoIcon style={styles.quoteIcon} name="quote" />
 					</View>
 					<View style={styles.quoteMessageWrapper}>
 						<Text style={styles.quoteMessage} numberOfLines={1}>
 							{quoteMessage?.text}
 						</Text>
 						<Text style={styles.quoteSender}>{`${
-							preferences.peerProfile(quoteMessage.user._id).firstname
-						} ${preferences.peerProfile(quoteMessage.user._id).lastname}, ${moment(
+							preferences.peerProfile(quoteMessage.user._id)?.firstname
+						} ${preferences.peerProfile(quoteMessage.user._id)?.lastname}, ${moment(
 							quoteMessage.createdAt
 						).format('DD/MM/YYYY')}`}</Text>
 					</View>
 				</View>
 				<TouchableOpacity activeOpacity={0.7} onPress={this.onCloseQuote} style={styles.quoteCloseButton}>
-					<IconEntypo style={styles.quoteCloseIcon} name="cross" />
+					<EntypoIcon style={styles.quoteCloseIcon} name="cross" />
 				</TouchableOpacity>
+			</View>
+		);
+	};
+
+	renderForward = forwardMessage => {
+		if (!forwardMessage) return null;
+		return (
+			<View style={styles.forwardQuoteWrapper}>
+				<View style={styles.forwardQuoteContent}>
+					<View style={styles.forwardQuoteIconWrapper}>
+						<EntypoIcon style={styles.forwardQuoteIcon} name="quote" />
+					</View>
+					<View style={styles.forwardQuoteMessageWrapper}>
+						<Text style={styles.forwardQuoteMessage} numberOfLines={1}>
+							{forwardMessage?.text}
+						</Text>
+						<Text style={styles.forwardQuoteSender}>{`${
+							preferences.peerProfile(forwardMessage.user._id).firstname
+						} ${preferences.peerProfile(forwardMessage.user._id).lastname}, ${moment(
+							forwardMessage.createdAt
+						).format('DD/MM/YYYY')}`}</Text>
+					</View>
+				</View>
 			</View>
 		);
 	};
@@ -1454,7 +1583,7 @@ class Chat extends Component {
 						)}
 					</View>
 				</View>
-				{inputted && (
+				{(inputted || quoteMessage) && (
 					<TouchableOpacity onPress={this.sendText} activeOpacity={0.7} style={styles.sendButton}>
 						<Ionicons name={'send'} style={styles.sendIcon} />
 					</TouchableOpacity>
@@ -1476,9 +1605,112 @@ class Chat extends Component {
 		);
 	};
 
+	renderForwardAvatar = (firstname, lastname, avatarURL) => {
+		if (avatarURL) {
+			return <Image source={{ uri: avatarURL }} style={styles.forwardItemAvatar} />;
+		}
+		const avatarName = `${firstname.length > 0 ? firstname[0] : ''} ${lastname.length > 0 ? lastname[0] : ''}`;
+		return (
+			<View style={styles.forwardItemNoAvatarWrapper}>
+				<Text style={styles.forwardItemNoAvatarName}>{avatarName}</Text>
+			</View>
+		);
+	};
+
+	onSendForward = async address => {
+		const { selectedAddress } = this.props;
+		const { forwardMessage, forwardText, forwardSentList } = this.state;
+		const group = this.getOne2oneGroup(address);
+		const contact = { address };
+		if (!this.forwardMessaging[address]) {
+			this.forwardMessaging[address] = new MessagingWebRTC(
+				selectedAddress,
+				() => this.getPeersGroup(group, contact),
+				refWebRTC()
+			);
+			this.forwardListeners[address] = this.messaging.addListener('message', (data, peerId) => {});
+			this.forwardMessaging[address].setOnError(this.onSendError);
+		}
+		const peerId = address;
+		let message = {
+			_id: uuid.v4(),
+			createdAt: new Date(),
+			text: forwardText,
+			group,
+			user: {
+				_id: selectedAddress,
+				name: preferences.peerProfile(selectedAddress)?.name
+			},
+			quote: {
+				_id: forwardMessage._id,
+				createdAt: forwardMessage.createdAt,
+				group: forwardMessage.group,
+				text: forwardMessage.text,
+				user: forwardMessage.user
+			}
+		};
+		this.forwardMessaging[address].send(message);
+		this.setState({
+			forwardSentList: forwardSentList.includes(address) ? forwardSentList : [...forwardSentList, address]
+		});
+		this.addNewMessageIntoGroup(message, group, peerId);
+	};
+
+	renderForwardItem = item => {
+		const { forwardSentList } = this.state;
+		const { address, firstname, lastname, avatar } = item;
+		const profile = preferences.peerProfile(address);
+		return (
+			<View style={styles.forwardItemWrapper}>
+				{this.renderForwardAvatar(
+					firstname,
+					lastname,
+					profile?.avatar ? `data:image/*;base64,${profile.avatar}` : avatar
+				)}
+				<View style={styles.forwardItemContent}>
+					<View style={styles.forwardItemNameWrapper}>
+						<Text style={styles.forwardItemName}>{`${firstname} ${lastname}`}</Text>
+						<Text style={styles.forwardItemAddress} numberOfLines={2} lineBreakMode={'middle'}>
+							{address}
+						</Text>
+					</View>
+					{forwardSentList.includes(address) ? (
+						<TouchableOpacity
+							style={styles.sentForwardButton}
+							activeOpacity={0.7}
+							onPress={() => this.onSendForward(address.toLowerCase())}
+						>
+							<MaterialCommunityIcons name="check" style={styles.sentIcon} />
+							<Text style={styles.sentText}>{strings('chat.sent')}</Text>
+						</TouchableOpacity>
+					) : (
+						<TouchableOpacity
+							style={styles.sendForwardButton}
+							activeOpacity={0.7}
+							onPress={() => this.onSendForward(address)}
+						>
+							<Text style={styles.sendText}>{strings('chat.send')}</Text>
+						</TouchableOpacity>
+					)}
+				</View>
+			</View>
+		);
+	};
+
 	render() {
 		const { selectedAddress } = this.props;
-		const { visibleMenu, messages, selectedMessage, showActionModal, deleteMessage, layoutMessages } = this.state;
+		const {
+			visibleMenu,
+			messages,
+			selectedMessage,
+			showActionModal,
+			deleteMessage,
+			showForwardModal,
+			forwardMessage,
+			forwardText,
+			forwardSearch,
+			historyMessages
+		} = this.state;
 
 		return (
 			<>
@@ -1529,14 +1761,11 @@ class Chat extends Component {
 					cancelText={strings('chat.cancel').toUpperCase()}
 					confirmTestId={'delete-chat-remove-action'}
 					cancelTestId={'delete-chat-cancel-action'}
-					onConfirmPress={this.onConfirmRemove}
-					onCancelPress={this.onCancelRemove}
-					onRequestClose={this.onCancelRemove}
+					onConfirmPress={this.onConfirmDelete}
+					onCancelPress={this.onCancelDelete}
+					onRequestClose={this.onCancelDelete}
 					confirmButtonMode={'warning'}
 					cancelButtonMode={'normal'}
-
-					// displayCancelButton={false}
-					// verticalButtons
 				>
 					<View style={styles.warningDeleteWrapper}>
 						<Text style={styles.warningDeleteText}>{strings('chat.delete_message_warning')}</Text>
@@ -1559,6 +1788,65 @@ class Chat extends Component {
 									<Text style={styles.modalActionItemTitle}>{e.title}</Text>
 								</TouchableOpacity>
 							))}
+						</View>
+					</TouchableOpacity>
+				</Modal>
+				<Modal
+					visible={showForwardModal}
+					// visible={true}
+					transparent
+					animationType="slide"
+					onRequestClose={this.onHideForwardModal}
+				>
+					<TouchableOpacity activeOpacity={1} style={styles.backdropModal}>
+						<View style={styles.forwardModalWrapper}>
+							<View style={styles.forwardModalHeader}>
+								<View style={styles.forwardModalHeaderTitleWrapper}>
+									<Text style={styles.forwardModalHeaderTitle}>
+										{strings('chat.forward_message')}
+									</Text>
+								</View>
+								<TouchableOpacity
+									activeOpacity={0.7}
+									style={styles.forwardModalHeaderCloseButton}
+									onPress={this.onHideForwardModal}
+								>
+									<MaterialCommunityIcons name="close" style={styles.forwardModalHeaderCloseIcon} />
+								</TouchableOpacity>
+							</View>
+							<View style={styles.forwardModalQuoteField}>
+								{this.renderForward(forwardMessage)}
+								<TextInput
+									style={styles.forwardMessage}
+									value={forwardText}
+									onChangeText={e => this.setState({ forwardText: e })}
+									placeholder={strings('chat.typing_a_message_here')}
+								/>
+							</View>
+							<TextInput
+								style={styles.forwardSearch}
+								value={forwardSearch}
+								onChangeText={e => this.setState({ forwardSearch: e })}
+								placeholder={strings('chat.search')}
+								placeholderTextColor={colors.grey200}
+							/>
+							<ScrollView style={styles.forwardSuggestList}>
+								<Text style={styles.forwardSuggestTitle}>{strings('chat.suggested')}</Text>
+								{historyMessages
+									.filter(
+										e =>
+											`${e?.firstname} ${e?.lastname}`.includes(forwardSearch) ||
+											e?.address.includes(forwardSearch)
+									)
+									.map(e => this.renderForwardItem(e))}
+							</ScrollView>
+							<TouchableOpacity
+								activeOpacity={0.7}
+								style={styles.forwardDoneButton}
+								onPress={this.onHideForwardModal}
+							>
+								<Text style={styles.forwardDoneText}>{strings('chat.done')}</Text>
+							</TouchableOpacity>
 						</View>
 					</TouchableOpacity>
 				</Modal>

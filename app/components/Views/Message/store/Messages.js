@@ -11,13 +11,14 @@ export const Chat = (message, from, to, group) => ({
 	createdAt: new Date().getTime()
 });
 
-export const DeleteMessage = (_id, group, user) => ({
+export const DeleteMessage = (_id, group, user, createdAt) => ({
 	action: 'delete',
 	_id,
 	group,
 	deleted: true,
 	user,
-	createdAt: new Date().getTime()
+	createdAt,
+	updatedAt: new Date().getTime()
 });
 
 export const EditMessage = (_id, group, text, user) => ({

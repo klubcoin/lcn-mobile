@@ -192,8 +192,7 @@ const ChatList = ({ route, navigation, ...props }) => {
 			firstname,
 			lastname,
 			avatar,
-			lastMessage: { text, payload, deleted },
-			createdAt
+			lastMessage: { text, payload, deleted, createdAt }
 		} = chat;
 		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
