@@ -624,7 +624,10 @@ class Chat extends Component {
 		this.setState(prevState => ({
 			...prevState,
 			messages: newMessages,
-			unSeenMessages: [...unSeenMessages, message._id],
+			unSeenMessages:
+				message.user._id.toLowerCase() !== selectedAddress.toLowerCase()
+					? [...unSeenMessages, message._id]
+					: unSeenMessages,
 			typing: false
 		}));
 		const peerAddr = contact?.address;
@@ -1148,7 +1151,7 @@ class Chat extends Component {
 	};
 
 	onDeleteMyself = async () => {
-		const { contact, messages, selectedMessage } = this.state;
+		const { contact, messages, selectedMessage, layoutMessages } = this.state;
 		if (!selectedMessage) {
 			this.onHideModal();
 			return;
@@ -1157,7 +1160,12 @@ class Chat extends Component {
 
 		const peers = this.getPeers();
 		const newMessages = messages.filter(e => e._id !== selectedMessage._id);
-		this.setState({ messages: newMessages, selectedMessage: null, showActionModal: false });
+		this.setState({
+			messages: newMessages,
+			selectedMessage: null,
+			showActionModal: false,
+			layoutMessages: layoutMessages.filter(e => e._id !== selectedMessage._id)
+		});
 		const peerAddr = contact?.address;
 
 		await store.saveChatMessages(group || peerAddr, { messages: newMessages });
