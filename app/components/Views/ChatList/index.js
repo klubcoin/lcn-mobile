@@ -181,7 +181,7 @@ const ChatList = ({ route, navigation, ...props }) => {
 		if (avatarURL) {
 			return <Image source={{ uri: avatarURL }} style={styles.avatar} />;
 		}
-		const avatarName = `${firstname.length > 0 ? firstname[0] : ''} ${lastname.length > 0 ? lastname[0] : ''}`;
+		const avatarName = `${firstname?.length > 0 ? firstname[0] : ''} ${lastname?.length > 0 ? lastname[0] : ''}`;
 		return (
 			<View style={styles.noAvatarWrapper}>
 				<Text style={styles.noAvatarName}>{avatarName}</Text>

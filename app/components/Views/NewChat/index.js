@@ -86,52 +86,6 @@ const styles = StyleSheet.create({
 	}
 });
 
-const DUMMY_CHAT_DATA = [
-	{
-		uuid: '1',
-		name: 'Remi Doe',
-		avatar:
-			'https://cdn.xsd.cz/resize/3509b1bc606b3a1eb3b4c61e386968a8_resize=1306,1960_.jpg?hash=85a6382b4591f36e9abf639e53cdd20e',
-		lastMessageTime: 1652153685938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '2',
-		name: 'Monique Doe',
-		avatar:
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Monique_Alfradique_-_cropped.jpg/800px-Monique_Alfradique_-_cropped.jpg',
-		lastMessageTime: 1652141485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '3',
-		name: 'Renaud Doe',
-		avatar: '',
-		lastMessageTime: 1652041485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '4',
-		name: 'Paul Doe',
-		avatar:
-			'https://www.lstmed.ac.uk/sites/default/files/styles/mc-580-16x9-node/public/content/pages/images/Paul.png?itok=A9dkiQNs',
-		lastMessageTime: 1651041485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	},
-	{
-		uuid: '5',
-		name: 'Pierre Doe',
-		avatar: '',
-		lastMessageTime: 1648041485938,
-		lastMessage:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod as'
-	}
-];
-
 const NewChat = ({ navigation }) => {
 	const [isScanQR, setIsScanQR] = useState(false);
 	const [address, setAddress] = useState('');

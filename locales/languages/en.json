@@ -1919,7 +1919,10 @@
 		"typing_a_message_here": "Typing a message here (optional)",
 		"search": "Search",
 		"suggested": "Suggested",
-		"done": "Done"
+		"done": "Done",
+		"received_a_message_reply": "Received a message reply",
+		"received_a_message_forward": "Received a message forward",
+		"not_found_contact": "Not found contact."
 	},
 	"market": {
 		"title": "Market",

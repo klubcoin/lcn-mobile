@@ -107,7 +107,10 @@ class Chat extends Component {
 		forwardText: '',
 		historyMessages: [],
 		forwardSentList: [],
-		forwardSearch: ''
+		forwardSearch: '',
+		forwardNewInfo: null,
+		loadingForwardNewInfo: null,
+		toQuoteMessage: this.props.navigation.getParam('toQuoteMessage')
 	};
 
 	myModalActions = [
@@ -202,6 +205,15 @@ class Chat extends Component {
 	fetchGroupDetails(groupId) {
 		const members = [];
 		const peers = this.getPeers();
+		members.map(e => !peers.includes(e) && peers.push(e));
+		this.getWalletInfos(peers);
+		store.saveConversationPeers(groupId, peers);
+		this.messaging.send(ChatProfile());
+	}
+
+	fetchGroupDetailForwards(groupId, contact) {
+		const members = [];
+		const peers = this.getPeersGroup(groupId, contact);
 		members.map(e => !peers.includes(e) && peers.push(e));
 		this.getWalletInfos(peers);
 		store.saveConversationPeers(groupId, peers);
@@ -596,6 +608,7 @@ class Chat extends Component {
 	};
 
 	addNewMessage = async (message, incoming) => {
+		const { selectedAddress } = this.props;
 		if (this.messageIds.includes(message?._id)) {
 			return;
 		}
@@ -640,6 +653,27 @@ class Chat extends Component {
 	};
 
 	addNewMessageIntoGroup = async (message, group, peerId) => {
+		const { selectedAddress } = this.props;
+		const { group: currentGroup, messages, unSeenMessages } = this.state;
+		const id = addHexPrefix(message.user._id);
+		const peers = this.getPeersGroup(group, { address: peerId });
+		if (!peers.includes(id)) {
+			peers.push(id);
+			store.saveConversationPeers(group, peers);
+		}
+
+		if (group === currentGroup) {
+			var newMessages = GiftedChat.append(messages, message);
+			newMessages.sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix());
+			this.setState({
+				messages: newMessages,
+				unSeenMessages:
+					message.user._id.toLowerCase() !== selectedAddress.toLowerCase()
+						? [...unSeenMessages, message._id]
+						: unSeenMessages
+			});
+		}
+
 		const conversation = (await store.getChatMessages(group || peerId)) || { messages: [], isRead: false };
 
 		const ids = conversation.messages.map(e => e?._id);
@@ -689,14 +723,19 @@ class Chat extends Component {
 		this.setState({ visibleMenu: true });
 	};
 
-	onScrollToMessage = messageId => {
+	onScrollToMessage = quoteMessage => {
 		const { messages, layoutMessages } = this.state;
+		const messageId = quoteMessage._id;
 		const message = messages.find(e => e._id === messageId);
-		if (!message) return;
+		if (!message) {
+			this.setState({ toQuoteMessage: '' });
+			return;
+		}
 		const layoutMessage = layoutMessages.find(e => e._id === messageId);
 		const layoutMessageIndex = layoutMessages.findIndex(e => e._id === messageId);
 		if (!layoutMessage) {
-			this.chatRef?.current?._listRef?._scrollRef?.scrollToEnd();
+			this.chatRef?.current?._listRef?._scrollRef?.scrollToEnd({ animated: false });
+			this.setState({ toQuoteMessage: messageId });
 			return;
 		}
 		const height = layoutMessages
@@ -704,6 +743,7 @@ class Chat extends Component {
 			.map(e => e.height)
 			.reduce((a, b) => a + b);
 		this.chatRef?.current?._listRef?._scrollRef.scrollTo(height);
+		this.setState({ toQuoteMessage: '' });
 	};
 
 	renderLoader = () => (
@@ -1308,6 +1348,51 @@ class Chat extends Component {
 		this.setState({ messages: newMessages });
 	};
 
+	onChangeForwardSearch = text => {
+		const { historyMessages } = this.state;
+		this.setState({ forwardSearch: text, forwardNewInfo: null });
+		if (
+			historyMessages.filter(
+				e =>
+					`${e?.firstname} ${e?.lastname}`.toLowerCase().includes(text.toLowerCase()) ||
+					e?.address.toLowerCase().includes(text.toLowerCase())
+			).length === 0
+		) {
+			this.setState({ loadingForwardNewInfo: true });
+			setTimeout(() => {
+				this.getInfo(text);
+			}, 2000);
+		}
+	};
+
+	getInfo = address => {
+		const { forwardSearch } = this.state;
+		if (forwardSearch === address) {
+			APIService.getWalletInfo(address, (success, json) => {
+				this.onAddForwardInfo(json, address);
+			});
+		}
+	};
+
+	onAddForwardInfo = (json, searchAddress) => {
+		const { forwardSearch } = this.state;
+		if (forwardSearch === searchAddress) {
+			if (json.result) {
+				this.setState({
+					forwardNewInfo: {
+						address: searchAddress,
+						...JSON.parse(json.result.publicInfo)
+					},
+					loadingForwardNewInfo: false
+				});
+				return;
+			}
+			this.setState({
+				loadingForwardNewInfo: false
+			});
+		}
+	};
+
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
 		const { createdAt, text, user, payload, hided, quote, edited, isReceived, isSeen } = message;
@@ -1467,7 +1552,7 @@ class Chat extends Component {
 				activeOpacity={0.7}
 				style={styles.quoteBubbleWrapper}
 				onPress={() => {
-					this.onScrollToMessage(quoteMessage._id);
+					this.onScrollToMessage(quoteMessage);
 				}}
 			>
 				<View style={[styles.quoteBubbleContent, !!message.text && styles.quoteBorderBottom]}>
@@ -1618,7 +1703,7 @@ class Chat extends Component {
 		if (avatarURL) {
 			return <Image source={{ uri: avatarURL }} style={styles.forwardItemAvatar} />;
 		}
-		const avatarName = `${firstname.length > 0 ? firstname[0] : ''} ${lastname.length > 0 ? lastname[0] : ''}`;
+		const avatarName = `${firstname?.length > 0 ? firstname[0] : ''} ${lastname?.length > 0 ? lastname[0] : ''}`;
 		return (
 			<View style={styles.forwardItemNoAvatarWrapper}>
 				<Text style={styles.forwardItemNoAvatarName}>{avatarName}</Text>
@@ -1662,6 +1747,7 @@ class Chat extends Component {
 		this.setState({
 			forwardSentList: forwardSentList.includes(address) ? forwardSentList : [...forwardSentList, address]
 		});
+		this.fetchGroupDetailForwards(group, { address: peerId });
 		this.addNewMessageIntoGroup(message, group, peerId);
 	};
 
@@ -1718,9 +1804,15 @@ class Chat extends Component {
 			forwardMessage,
 			forwardText,
 			forwardSearch,
-			historyMessages
+			historyMessages,
+			forwardNewInfo,
+			loadingForwardNewInfo
 		} = this.state;
-
+		const displayHistoryMessage = historyMessages.filter(
+			e =>
+				`${e?.firstname} ${e?.lastname}`.toLowerCase().includes(forwardSearch.toLowerCase()) ||
+				e?.address.toLowerCase().includes(forwardSearch.toLowerCase())
+		);
 		return (
 			<>
 				{/* {this.renderNavBar()} */}
@@ -1802,7 +1894,6 @@ class Chat extends Component {
 				</Modal>
 				<Modal
 					visible={showForwardModal}
-					// visible={true}
 					transparent
 					animationType="slide"
 					onRequestClose={this.onHideForwardModal}
@@ -1835,19 +1926,18 @@ class Chat extends Component {
 							<TextInput
 								style={styles.forwardSearch}
 								value={forwardSearch}
-								onChangeText={e => this.setState({ forwardSearch: e })}
+								onChangeText={this.onChangeForwardSearch}
 								placeholder={strings('chat.search')}
 								placeholderTextColor={colors.grey200}
 							/>
 							<ScrollView style={styles.forwardSuggestList}>
 								<Text style={styles.forwardSuggestTitle}>{strings('chat.suggested')}</Text>
-								{historyMessages
-									.filter(
-										e =>
-											`${e?.firstname} ${e?.lastname}`.includes(forwardSearch) ||
-											e?.address.includes(forwardSearch)
-									)
-									.map(e => this.renderForwardItem(e))}
+								{displayHistoryMessage.map(e => this.renderForwardItem(e))}
+								{forwardNewInfo && this.renderForwardItem(forwardNewInfo)}
+								{loadingForwardNewInfo && <ActivityIndicator color={colors.black} />}
+								{!loadingForwardNewInfo && displayHistoryMessage.length === 0 && !forwardNewInfo && (
+									<Text style={styles.notFoundContact}>{strings('chat.not_found_contact')}</Text>
+								)}
 							</ScrollView>
 							<TouchableOpacity
 								activeOpacity={0.7}

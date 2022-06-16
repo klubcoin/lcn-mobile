@@ -617,6 +617,10 @@ const styles = StyleSheet.create({
 	},
 	forwardDoneText: {
 		color: colors.white
+	},
+	notFoundContact: {
+		color: colors.grey500,
+		alignSelf: 'center'
 	}
 });
 
