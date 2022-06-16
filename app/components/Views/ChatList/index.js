@@ -147,7 +147,10 @@ const ChatList = ({ route, navigation, ...props }) => {
 				conversation.lastMessage = records[uuid].messages[0];
 				conversation.isRead = records[uuid].isRead;
 				return Object.assign(conversation, preferences.peerProfile(address));
-			});
+			})
+			.sort(
+				(a, b) => new Date(b?.lastMessage?.createdAt).getTime() - new Date(a?.lastMessage?.createdAt).getTime()
+			);
 		setConversations(users);
 	};
 
