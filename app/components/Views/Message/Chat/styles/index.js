@@ -68,10 +68,23 @@ const styles = StyleSheet.create({
 		backgroundColor: '#110E21'
 	},
 	chatBubble: {
+		flexDirection: 'row',
 		backgroundColor: colors.lightPurple,
 		borderRadius: 10,
 		overflow: 'hidden',
 		maxWidth: width * 0.8
+	},
+	chatBubbleDelete: {
+		backgroundColor: colors.lightPurple,
+		borderRadius: 10,
+		overflow: 'hidden',
+		maxWidth: width * 0.8
+	},
+	chatBubbleContentYou: {
+		maxWidth: width * 0.8
+	},
+	chatBubbleContentMe: {
+		maxWidth: width * 0.8 - 20
 	},
 	quoteBubble: {},
 	paymentRequestWrapper: {
@@ -408,18 +421,24 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	sendingIcon: {
+		alignSelf: 'flex-end',
 		color: colors.grey450,
-		marginHorizontal: 6,
+		marginBottom: 6,
+		marginRight: 6,
 		fontSize: 16
 	},
 	receivedIcon: {
+		alignSelf: 'flex-end',
 		color: colors.grey450,
-		marginHorizontal: 6,
+		marginBottom: 6,
+		marginRight: 6,
 		fontSize: 16
 	},
 	seenIcon: {
+		alignSelf: 'flex-end',
 		color: colors.blue700,
-		marginHorizontal: 6,
+		marginBottom: 6,
+		marginRight: 6,
 		fontSize: 16
 	},
 	forwardModalWrapper: {

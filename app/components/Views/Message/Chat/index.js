@@ -339,7 +339,7 @@ class Chat extends Component {
 				if (!marketStore.storeVendors[peerId]) {
 					this.getWalletInfo(peerId);
 				}
-				this.seenMessage(data.message, true);
+				this.seenMessage(data.message);
 			} else if (data.message?.user) {
 				data.message.user['_id'] = peerId;
 				if (!marketStore.storeVendors[peerId]) {
@@ -1317,7 +1317,7 @@ class Chat extends Component {
 
 		if (message.deleted) {
 			return (
-				<View style={styles.chatBubble}>
+				<View style={styles.chatBubbleDelete}>
 					<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
 					<View style={styles.textMessage}>
 						<Text style={styles.removeMessage}>{strings('chat.remove_message')}</Text>
@@ -1334,47 +1334,48 @@ class Chat extends Component {
 					activeOpacity={0.7}
 					onLongPress={() => this.onSelectMessage(message)}
 				>
-					<View style={styles.messageBubble}>
-						<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
-						{incoming
-							? null
-							: isSeen
-							? this.renderSeenIcon()
-							: isReceived
-							? this.renderReceivedIcon()
-							: this.renderSendingIcon()}
-					</View>
-					{!!payload ? (
-						this.renderCustomView(message)
-					) : (
-						<View style={styles.textMessage}>
-							{!!quote && this.renderBubbleQuote(quote, message)}
-							{!!text && (
-								<Text>
-									<Text style={styles.text}>
-										{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}
-									</Text>
-									{text?.length > LIMIT_MESSAGE_DISPLAY &&
-										(hided ? (
-											<Text
-												style={styles.readMore}
-												onPress={() => this.onPressMessage(message, hided)}
-											>
-												{`...${strings('chat.read_more')}`}
-											</Text>
-										) : (
-											<Text
-												style={styles.readMore}
-												onPress={() => this.onPressMessage(message, hided)}
-											>
-												{`   ${strings('chat.hide')}`}
-											</Text>
-										))}
-								</Text>
-							)}
+					<View style={incoming ? styles.chatBubbleContentYou : styles.chatBubbleContentMe}>
+						<View style={styles.messageBubble}>
+							<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
 						</View>
-					)}
-					{failed && this.renderRetry(message)}
+						{!!payload ? (
+							this.renderCustomView(message)
+						) : (
+							<View style={styles.textMessage}>
+								{!!quote && this.renderBubbleQuote(quote, message)}
+								{!!text && (
+									<Text>
+										<Text style={styles.text}>
+											{hided ? `${text.slice(0, LIMIT_MESSAGE_DISPLAY)}` : text}
+										</Text>
+										{text?.length > LIMIT_MESSAGE_DISPLAY &&
+											(hided ? (
+												<Text
+													style={styles.readMore}
+													onPress={() => this.onPressMessage(message, hided)}
+												>
+													{`...${strings('chat.read_more')}`}
+												</Text>
+											) : (
+												<Text
+													style={styles.readMore}
+													onPress={() => this.onPressMessage(message, hided)}
+												>
+													{`   ${strings('chat.hide')}`}
+												</Text>
+											))}
+									</Text>
+								)}
+							</View>
+						)}
+					</View>
+					{incoming
+						? null
+						: isSeen
+						? this.renderSeenIcon()
+						: isReceived
+						? this.renderReceivedIcon()
+						: this.renderSendingIcon()}
 				</TouchableOpacity>
 				{edited && incoming && <MaterialCommunityIcons name="pencil-outline" style={styles.editedIcon} />}
 			</>
