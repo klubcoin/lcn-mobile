@@ -1713,17 +1713,33 @@ class Chat extends Component {
 
 	onSendForward = async address => {
 		const { selectedAddress } = this.props;
-		const { forwardMessage, forwardText, forwardSentList } = this.state;
+		const { forwardMessage, forwardText, forwardSentList, contact: currentContact } = this.state;
 		const group = this.getOne2oneGroup(address);
 		const contact = { address };
 		if (!this.forwardMessaging[address]) {
-			this.forwardMessaging[address] = new MessagingWebRTC(
-				selectedAddress,
-				() => this.getPeersGroup(group, contact),
-				refWebRTC()
-			);
-			this.forwardListeners[address] = this.messaging.addListener('message', (data, peerId) => {});
-			this.forwardMessaging[address].setOnError(this.onSendError);
+			if (address.toLowerCase() === currentContact?.address.toLowerCase()) {
+				this.forwardMessaging[address] = this.messaging;
+				this.forwardListeners[address] = this.listener;
+			} else {
+				this.forwardMessaging[address] = new MessagingWebRTC(
+					selectedAddress,
+					() => this.getPeersGroup(group, contact),
+					refWebRTC()
+				);
+				this.forwardListeners[address] = this.messaging.addListener('message', (data, peerId) => {
+					if (data.action) {
+						const { action } = data;
+						if (action === ChatProfile().action) {
+							const peerProfile = preferences.peerProfile(peerId);
+							if (peerProfile) {
+								peerProfile.avatar = data.profile.avatar;
+								preferences.setPeerProfile(peerId, peerProfile);
+							}
+						}
+					}
+				});
+				this.forwardMessaging[address].setOnError(this.onSendError);
+			}
 		}
 		const peerId = address;
 		let message = {
