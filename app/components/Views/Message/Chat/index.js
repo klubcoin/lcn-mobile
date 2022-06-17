@@ -1395,7 +1395,7 @@ class Chat extends Component {
 
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
-		const { createdAt, text, user, payload, hided, quote, edited, isReceived, isSeen } = message;
+		const { createdAt, text, user, payload, hided, quote, edited, isReceived, isSeen, forward } = message;
 		const { messages, layoutMessages } = this.state;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
@@ -1435,7 +1435,7 @@ class Chat extends Component {
 							this.renderCustomView(message)
 						) : (
 							<View style={styles.textMessage}>
-								{!!quote && this.renderBubbleQuote(quote, message)}
+								{(!!quote || !!forward) && this.renderBubbleQuote(quote ?? forward, message)}
 								{!!text && (
 									<Text>
 										<Text style={styles.text}>
@@ -1735,7 +1735,7 @@ class Chat extends Component {
 				_id: selectedAddress,
 				name: preferences.peerProfile(selectedAddress)?.name
 			},
-			quote: {
+			forward: {
 				_id: forwardMessage._id,
 				createdAt: forwardMessage.createdAt,
 				group: forwardMessage.group,

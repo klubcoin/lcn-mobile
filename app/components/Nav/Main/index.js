@@ -1136,7 +1136,15 @@ const Main = props => {
 							case 'chat':
 								notification.showNotification(
 									groupName?.name || sender?.name || from,
-									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`,
+									!!message.text
+										? message.text.length <= 90
+											? message.text
+											: `${message.text.slice(0, 90)}...`
+										: message.quote
+										? strings('chat.received_a_message_reply')
+										: message.forward
+										? strings('chat.received_a_message_forward')
+										: '',
 									from
 								);
 								break;
@@ -1159,7 +1167,15 @@ const Main = props => {
 							default:
 								notification.showNotification(
 									groupName?.name || sender?.name || from,
-									message.text.length <= 90 ? message.text : `${message.text.slice(0, 90)}...`,
+									!!message.text
+										? message.text.length <= 90
+											? message.text
+											: `${message.text.slice(0, 90)}...`
+										: message.quote
+										? strings('chat.received_a_message_reply')
+										: message.forward
+										? strings('chat.received_a_message_forward')
+										: '',
 									from
 								);
 						}

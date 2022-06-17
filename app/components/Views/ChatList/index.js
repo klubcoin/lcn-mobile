@@ -195,7 +195,7 @@ const ChatList = ({ route, navigation, ...props }) => {
 			firstname,
 			lastname,
 			avatar,
-			lastMessage: { text, payload, deleted, createdAt }
+			lastMessage: { text, payload, deleted, createdAt, quote, forward }
 		} = chat;
 		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
@@ -230,7 +230,7 @@ const ChatList = ({ route, navigation, ...props }) => {
 								styles.chatMessage,
 								(payload?.action === 'payment_request' || payload?.action === 'transaction_sync') &&
 									styles.chatAction,
-								deleted && styles.removedMessage
+								deleted || (!text && styles.removedMessage)
 							]}
 							numberOfLines={2}
 						>
@@ -240,6 +240,12 @@ const ChatList = ({ route, navigation, ...props }) => {
 								? strings('chat.message_transaction')
 								: deleted
 								? strings('chat.message_has_been_removed')
+								: !!text
+								? text
+								: quote
+								? strings('chat.received_a_message_reply')
+								: forward
+								? strings('chat.received_a_message_forward')
 								: text}
 						</Text>
 					</View>
