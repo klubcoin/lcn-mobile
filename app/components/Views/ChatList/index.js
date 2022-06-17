@@ -243,9 +243,9 @@ const ChatList = ({ route, navigation, ...props }) => {
 								: !!text
 								? text
 								: quote
-								? strings('chat.received_a_message_reply')
+								? strings('chat.sent_a_message_reply')
 								: forward
-								? strings('chat.received_a_message_forward')
+								? strings('chat.forwarded_a_message')
 								: text}
 						</Text>
 					</View>

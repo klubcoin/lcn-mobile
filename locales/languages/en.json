@@ -1922,7 +1922,9 @@
 		"suggested": "Suggested",
 		"done": "Done",
 		"received_a_message_reply": "Received a message reply",
-		"received_a_message_forward": "Received a message forward",
+		"received_a_forwarded_message": "Received a forwarded message",
+		"sent_a_message_reply": "Sent a message reply",
+		"forwarded_a_message": "Forwarded a message",
 		"not_found_contact": "Not found contact."
 	},
 	"market": {
