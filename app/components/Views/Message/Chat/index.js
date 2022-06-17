@@ -1862,6 +1862,9 @@ class Chat extends Component {
 								},
 								ref: this.chatRef
 							}}
+							shouldUpdateMessage={(preState, nextState) => {
+								return preState?.currentMessage?.isSeen !== nextState?.currentMessage?.isSeen;
+							}}
 						/>
 					)}
 					<RecordingBS
