@@ -73,7 +73,7 @@ import ActionModal from '../../../UI/ActionModal';
 import { AckWebRTC } from '../../../../services/Messages';
 
 const LIMIT_MESSAGE_DISPLAY = 2048;
-const LIMIT_MESSAGE_LENGTH = 65536;
+const LIMIT_MESSAGE_LENGTH = 25000;
 
 class Chat extends Component {
 	static navigationOptions = ({ navigation }) => getChatNavigationOptionsTitle('Chat', navigation);
