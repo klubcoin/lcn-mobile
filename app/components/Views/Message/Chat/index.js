@@ -1874,7 +1874,7 @@ class Chat extends Component {
 				</View>
 				<ActionModal
 					modalVisible={!!deleteMessage}
-					confirmText={strings('chat.remove').toUpperCase()}
+					confirmText={strings('chat.delete').toUpperCase()}
 					cancelText={strings('chat.cancel').toUpperCase()}
 					confirmTestId={'delete-chat-remove-action'}
 					cancelTestId={'delete-chat-cancel-action'}

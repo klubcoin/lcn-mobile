@@ -97,7 +97,7 @@ export default function ActionContent({
 							onPress={onConfirmPress}
 							containerStyle={[styles.button, !verticalButtons && styles.buttonHorizontal]}
 							disabled={confirmDisabled}
-							{...testID(confirmTestId ?? '')}
+							{...testID(cancelTestId ?? '')}
 						>
 							{confirmText}
 						</StyledButton>
