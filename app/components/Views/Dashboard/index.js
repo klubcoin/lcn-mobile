@@ -120,7 +120,9 @@ class Dashboard extends PureComponent {
 		if (chartData && chartData.length > 0 && !isFetchingChartData) {
 			const bigNumberTotalToken = new BigNumber(totalToken);
 			const totalBalance = bigNumberTotalToken.multipliedBy(chartData[chartData.length - 1].value);
-			this.setState({ totalBalance });
+			this.setState({
+				totalBalance: totalBalance.toFixed(Math.min(totalBalance.toFixed().split('.')[1]?.length, 18))
+			});
 		}
 		this.setState({
 			totalToken
