@@ -190,13 +190,8 @@ const ChatList = ({ route, navigation, ...props }) => {
 	};
 
 	const renderChatItem = chat => {
-		const {
-			address,
-			firstname,
-			lastname,
-			avatar,
-			lastMessage: { text, payload, deleted, createdAt, quote, forward }
-		} = chat;
+		const { address, firstname, lastname, avatar, lastMessage } = chat;
+		const { text, payload, deleted, createdAt, quote, forward } = lastMessage || {};
 		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
 		const lastTime = moment(createdAt);
