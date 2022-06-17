@@ -1143,7 +1143,7 @@ const Main = props => {
 										: message.quote
 										? strings('chat.received_a_message_reply')
 										: message.forward
-										? strings('chat.received_a_message_forward')
+										? strings('chat.received_a_forwarded_message')
 										: '',
 									from
 								);
@@ -1174,7 +1174,7 @@ const Main = props => {
 										: message.quote
 										? strings('chat.received_a_message_reply')
 										: message.forward
-										? strings('chat.received_a_message_forward')
+										? strings('chat.received_a_forwarded_message')
 										: '',
 									from
 								);

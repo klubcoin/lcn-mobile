@@ -341,7 +341,6 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					// await TransactionController.queryTransactionStatuses();
 					// await TransactionController.hub.emit(`${transactionMeta.id}:finished`, transactionMeta);
 					// await new Promise(resolve => resolve(result));
-					setPurchasing(false);
 
 					InteractionManager.runAfterInteractions(async () => {
 						DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
