@@ -95,6 +95,19 @@ class TransactionElement extends PureComponent {
 		this.mounted && this.setState({ transactionElement, transactionDetails });
 	};
 
+	async componentDidUpdate(prevProps) {
+		if (this.props.loading !== prevProps.loading) {
+			const [transactionElement, transactionDetails] = await decodeTransaction({
+				...this.props,
+				swapsTransactions: this.props.swapsTransactions,
+				swapsTokens: this.props.swapsTokens,
+				assetSymbol: this.props.assetSymbol
+			});
+			this.mounted = true;
+			this.mounted && this.setState({ transactionElement, transactionDetails });
+		}
+	}
+
 	componentWillUnmount() {
 		this.mounted = false;
 	}
@@ -121,15 +134,14 @@ class TransactionElement extends PureComponent {
 		const { tx, selectedAddress } = this.props;
 		const incoming = safeToChecksumAddress(tx.transaction.to) === selectedAddress;
 		const selfSent = incoming && safeToChecksumAddress(tx.transaction.from) === selectedAddress;
-		return `#${parseInt(tx.transaction.nonce, 16)} - ${
-			(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
-				? `${toDateFormat(tx.time)} ${strings(
-						'transactions.from_device_label'
-						// eslint-disable-next-line no-mixed-spaces-and-tabs
-				  )}`
-				: `${toDateFormat(tx.time)}
+		return `#${parseInt(tx.transaction.nonce, 16)} - ${(!incoming || selfSent) && tx.deviceConfirmedOn === WalletDevice.MM_MOBILE
+			? `${toDateFormat(tx.time)} ${strings(
+				'transactions.from_device_label'
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+			)}`
+			: `${toDateFormat(tx.time)}
 			`
-		}`;
+			}`;
 	};
 
 	/**

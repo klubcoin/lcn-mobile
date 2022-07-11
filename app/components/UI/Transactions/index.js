@@ -367,11 +367,12 @@ class Transactions extends PureComponent {
 			conversionRate={this.props.conversionRate}
 			currentCurrency={this.props.currentCurrency}
 			navigation={this.props.navigation}
+			loading={this.props.loading}
 		/>
 	);
 
 	render = () => {
-		if (!this.state.ready || this.props.loading) {
+		if (!this.state.ready) {
 			return this.renderLoader();
 		}
 
@@ -384,8 +385,8 @@ class Transactions extends PureComponent {
 		const transactions = this.uses3rdPartyAPI
 			? this.transactions
 			: submittedTransactions && submittedTransactions.length
-			? submittedTransactions.concat(confirmedTransactions)
-			: this.props.transactions;
+				? submittedTransactions.concat(confirmedTransactions)
+				: this.props.transactions;
 
 		transactions.sort((a, b) => b.time - a.time);
 

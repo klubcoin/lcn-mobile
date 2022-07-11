@@ -108,9 +108,6 @@ const TransactionsView = ({
 
 	useEffect(() => {
 		setLoading(true);
-	}, []);
-
-	useEffect(() => {
 		/*
 		Since this screen is always mounted and computations happen on this screen everytime the user changes network
 		using the InteractionManager will help by giving enough time for any animations/screen transactions before it starts
