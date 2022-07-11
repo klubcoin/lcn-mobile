@@ -933,6 +933,7 @@ class Amount extends PureComponent {
 											style={styles.actionMaxTouchable}
 											disabled={!estimatedTotalGas}
 											onPress={this.useMax}
+											{...testID('send-flow-amount-use-max-button')}
 										>
 											<Text style={styles.maxText}>{strings('transaction.use_max')}</Text>
 										</TouchableOpacity>

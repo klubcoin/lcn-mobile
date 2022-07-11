@@ -4,6 +4,7 @@ import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { colors } from '../../../styles/common';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from 'common/colors';
+import { testID } from '../../../util/Logger';
 const styles = StyleSheet.create({
 	itemWrapper: {
 		flex: 1,
@@ -56,12 +57,13 @@ export default class AssetElement extends PureComponent {
 	};
 
 	render = () => {
-		const { children } = this.props;
+		const { children, testID: testId } = this.props;
 		return (
 			<TouchableOpacity
 				onPress={this.handleOnPress}
 				onLongPress={this.handleOnLongPress}
 				style={styles.itemWrapper}
+				{...testID(testId)}
 			>
 				{children}
 				<View styles={styles.arrow}>

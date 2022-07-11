@@ -186,8 +186,8 @@ class Tokens extends PureComponent {
 		const balance = asset.balance
 			? renderFromWei(asset.balance)
 			: itemAddress in tokenBalances
-			? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), asset.decimals)
-			: 0;
+				? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), asset.decimals)
+				: 0;
 		// const balanceFiat =
 		// 	isMainNet(chainId) || asset.symbol == Routes.mainNetWork.ticker
 		// 		? asset.balanceFiat || balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency)
@@ -229,7 +229,7 @@ class Tokens extends PureComponent {
 		return (
 			<AssetElement
 				key={itemAddress || '0x'}
-				testID={'asset'}
+				testID={`asset-element-${itemAddress}`}
 				onPress={this.onItemPress}
 				onLongPress={asset.isETH ? null : this.showRemoveMenu}
 				asset={asset}
@@ -304,10 +304,10 @@ class Tokens extends PureComponent {
 		const { tokens, hideZeroBalanceTokens, tokenBalances } = this.props;
 		const tokensToDisplay = hideZeroBalanceTokens
 			? tokens.filter(token => {
-					const { address, isETH } = token;
-					return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
-					// eslint-disable-next-line no-mixed-spaces-and-tabs
-			  })
+				const { address, isETH } = token;
+				return (tokenBalances[address] && !tokenBalances[address]?.isZero?.()) || isETH;
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+			})
 			: tokens;
 
 		return (

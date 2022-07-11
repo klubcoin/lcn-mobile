@@ -14,6 +14,7 @@ import Text from '../../Base/Text';
 import AppConstants from '../../../core/AppConstants';
 import { toLowerCaseCompare } from '../../../util/general';
 import styles from './styles/index';
+import { testID } from '../../../util/Logger';
 
 /**
  * View that renders a list of CollectibleContract
@@ -43,7 +44,11 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 
 	const renderFooter = () => (
 		<View style={styles.footer} key={'collectible-contracts-footer'}>
-			<TouchableOpacity style={styles.add} onPress={goToAddCollectible} testID={'add-collectible-button'}>
+			<TouchableOpacity
+				style={styles.add}
+				onPress={goToAddCollectible}
+				{...testID('collectible-contracts.component-add-collectibles')}
+			>
 				<Icon name="plus" size={16} color={colors.blue} />
 				<Text style={styles.addText}>{strings('wallet.add_collectibles')}</Text>
 			</TouchableOpacity>
@@ -60,6 +65,7 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 					onPress={onItemPress}
 					asset={item}
 					key={item.address}
+					testID={item.address}
 					contractCollectibles={contractCollectibles}
 					collectiblesVisible={index === 0}
 				/>
@@ -113,9 +119,11 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 				<Text center style={styles.emptyTitleText} bold>
 					{strings('wallet.no_nfts_yet')}
 				</Text>
-				<Text center big link onPress={goToLearnMore}>
-					{strings('wallet.learn_more')}
-				</Text>
+				<TouchableOpacity activeOpacity={0.7} {...testID('collectible-contracts-learm-more-button')}>
+					<Text center big link onPress={goToLearnMore}>
+						{strings('wallet.learn_more')}
+					</Text>
+				</TouchableOpacity>
 			</View>
 			<Text big style={styles.emptyText}>
 				{strings('wallet.no_collectibles')}

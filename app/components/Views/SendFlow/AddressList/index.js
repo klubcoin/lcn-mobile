@@ -13,6 +13,7 @@ import {
 } from '../../../../util/transactions';
 import styles from './styles/index';
 import TrackingScrollView from '../../../UI/TrackingScrollView';
+import { testID } from '../../../../util/Logger';
 
 const LabelElement = label => (
 	<View key={label} style={styles.labelElementWrapper}>
@@ -57,7 +58,8 @@ class AddressList extends PureComponent {
 		 * Whether it only has to render address book
 		 */
 		onlyRenderAddressBook: PropTypes.bool,
-		reloadAddressList: PropTypes.bool
+		reloadAddressList: PropTypes.bool,
+		prefixTestIdElement: PropTypes.string
 	};
 
 	state = {
@@ -185,7 +187,7 @@ class AddressList extends PureComponent {
 	};
 
 	renderMyAccounts = () => {
-		const { identities, onAccountPress, inputSearch, onAccountLongPress } = this.props;
+		const { identities, onAccountPress, inputSearch, onAccountLongPress, prefixTestIdElement } = this.props;
 		const { myAccountsOpened } = this.state;
 		if (inputSearch) return;
 		return !myAccountsOpened ? (
@@ -193,6 +195,7 @@ class AddressList extends PureComponent {
 				style={styles.myAccountsTouchable}
 				onPress={this.openMyAccounts}
 				testID={'my-accounts-button'}
+				{...testID('address-list-component-open-my-account-component')}
 			>
 				<Text style={[styles.messageText, styles.messageLeft]}>{strings('address_book.between_account')}</Text>
 			</TouchableOpacity>
@@ -205,7 +208,7 @@ class AddressList extends PureComponent {
 						name={identities[address].name}
 						onAccountPress={onAccountPress}
 						onAccountLongPress={onAccountLongPress}
-						testID={'account-identity'}
+						testID={`${prefixTestIdElement}-my-account-${address}`}
 					/>
 				))}
 			</View>
@@ -218,7 +221,7 @@ class AddressList extends PureComponent {
 	};
 
 	renderElement = ({ item: element }) => {
-		const { onAccountPress, onAccountLongPress } = this.props;
+		const { onAccountPress, onAccountLongPress, prefixTestIdElement } = this.props;
 		if (typeof element === 'string') {
 			return LabelElement(element);
 		}
@@ -228,13 +231,14 @@ class AddressList extends PureComponent {
 				name={element.name}
 				onAccountPress={onAccountPress}
 				onAccountLongPress={onAccountLongPress}
+				testID={`${prefixTestIdElement}-${element.address}`}
 			/>
 		);
 	};
 
 	render = () => {
 		const { processedRecentsList, contactElements } = this.state;
-		const { onlyRenderAddressBook } = this.props;
+		const { onlyRenderAddressBook, } = this.props;
 		return (
 			<View style={styles.root}>
 				<TrackingScrollView style={styles.myAccountsWrapper}>

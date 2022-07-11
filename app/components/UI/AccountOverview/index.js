@@ -305,7 +305,10 @@ class AccountOverview extends PureComponent {
 											numberOfLines={1}
 										/>
 									) : (
-										<TouchableOpacity onLongPress={this.setAccountLabelEditable}>
+										<TouchableOpacity
+											onLongPress={this.setAccountLabelEditable}
+											{...testID('account-overview-name-button')}
+										>
 											<Text
 												style={[
 													styles.label,
@@ -333,6 +336,7 @@ class AccountOverview extends PureComponent {
 								style={styles.addressWrapper}
 								onPress={this.copyAccountToClipboard}
 								activeOpacity={0.6}
+								{...testID('account-overview-address-button')}
 							>
 								<EthereumAddress address={address} style={styles.address} type={'short'} />
 							</TouchableOpacity>
@@ -343,19 +347,21 @@ class AccountOverview extends PureComponent {
 								icon="receive"
 								onPress={this.onReceive}
 								label={strings('asset_overview.receive_button')}
+								testID={'account-overview-receive-button'}
 							/>
 							{/* {allowedToBuy(chainId) && ( */}
 							<AssetActionButton
 								icon="buy"
 								onPress={this.onBuy}
 								label={strings('asset_overview.buy_button')}
+								testID={'account-overview-buy-button'}
 							/>
 							{/* )} */}
 							<AssetActionButton
-								testID={'token-send-button'}
 								icon="send"
 								onPress={this.onSend}
 								label={strings('asset_overview.send_button')}
+								testID={'account-overview-send-button'}
 							/>
 							<AssetActionButton
 								icon="trade"
@@ -365,6 +371,7 @@ class AccountOverview extends PureComponent {
 								// onPress={this.onTrade}
 								label={strings('asset_overview.trade')}
 								lastIcon
+								testID={'account-overview-trade-button'}
 							/>
 							{/* <AssetActionButton
 								icon="send"

@@ -13,6 +13,7 @@ import Text from '../../Base/Text';
 import Colors from 'common/colors';
 import styles from './styles/index';
 import drawables from '../../../common/drawables';
+import { testID } from '../../../util/Logger';
 
 function getImageIcon(name) {
 	return <Image source={drawables[name]} style={styles.imageIcon} resizeMode={'contain'} />;
@@ -77,13 +78,14 @@ function getLabelIcon(type) {
 	}
 }
 
-function AssetActionButton({ onPress, icon, label, disabled, lastIcon = false }) {
+function AssetActionButton({ onPress, icon, label, disabled, lastIcon = false, testID: testId = '' }) {
 	return (
 		<TouchableOpacity
 			onPress={onPress}
 			style={[styles.button, disabled && styles.disabledButton, { marginRight: lastIcon ? 0 : 6 }]}
 			disabled={disabled}
 			activeOpacity={0.6}
+			{...testID(testId)}
 		>
 			<View style={styles.buttonIconWrapper}>
 				{icon && (typeof icon === 'string' ? getImageIcon(icon) : icon)}

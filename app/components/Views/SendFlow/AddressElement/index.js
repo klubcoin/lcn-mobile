@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import preferences from '../../../../store/preferences';
 import RemoteImage from '../../../Base/RemoteImage';
 import styles from './styles/index';
+import { testID } from '../../../../util/Logger';
 
 class AddressElement extends PureComponent {
 	static propTypes = {
@@ -30,7 +31,8 @@ class AddressElement extends PureComponent {
 		/**
 		 * Network id
 		 */
-		network: PropTypes.string
+		network: PropTypes.string,
+		testID: PropTypes.string
 	};
 
 	state = {
@@ -55,8 +57,12 @@ class AddressElement extends PureComponent {
 	};
 
 	render = () => {
-		const { onAccountPress, onAccountLongPress } = this.props;
-		const { name, address, profile: { avatar } } = this.state;
+		const { onAccountPress, onAccountLongPress, testID: testId } = this.props;
+		const {
+			name,
+			address,
+			profile: { avatar }
+		} = this.state;
 		const primaryLabel = name && name[0] !== ' ' ? (name?.name || name) : renderShortAddress(address);
 		const secondaryLabel = name && name[0] !== ' ' && renderShortAddress(address);
 		return (
@@ -65,6 +71,7 @@ class AddressElement extends PureComponent {
 				onLongPress={() => onAccountLongPress(address)} /* eslint-disable-line */
 				key={address}
 				style={styles.addressElementWrapper}
+				{...testID(testId)}
 			>
 				<View style={styles.addressIdenticon}>
 					{avatar && avatar.length != 0 ? (

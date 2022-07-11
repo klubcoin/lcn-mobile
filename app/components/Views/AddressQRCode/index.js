@@ -11,6 +11,7 @@ import Device from '../../../util/Device';
 import { showAlert } from '../../../actions/alert';
 import GlobalAlert from '../../UI/GlobalAlert';
 import { protectWalletModalVisible } from '../../../actions/user';
+import { testID } from '../../../util/Logger';
 
 const WIDTH = Dimensions.get('window').width - 88;
 
@@ -118,25 +119,34 @@ class AddressQRCode extends PureComponent {
 	};
 
 	render() {
+		const { prefixTestID } = this.props;
 		return (
 			<View style={styles.root}>
 				<View style={styles.wrapper}>
-					<TouchableOpacity style={styles.closeIcon} onPress={this.closeQrModal} testID={'close-qr-modal'}>
+					<TouchableOpacity
+						style={styles.closeIcon}
+						onPress={this.closeQrModal}
+						testID={'close-qr-modal'}
+						{...testID(`${prefixTestID}-address-qr-code-component-close-button`)}
+					>
 						<IonicIcon name={'ios-close'} size={38} color={colors.white} />
 					</TouchableOpacity>
 					<View style={styles.qrCode}>
 						<QRCode
 							value={`ethereum:${this.props.selectedAddress}`}
 							size={Dimensions.get('window').width - 160}
-                            logoSize={50} 
-                            logoBackgroundColor='black'
-                            logoBorderRadius={100}
-                            logoMargin={5}
+							logoSize={50}
+							logoBackgroundColor={'black'}
+							logoBorderRadius={100}
+							logoMargin={5}
 						/>
 					</View>
 					<View style={styles.addressWrapper}>
 						<Text style={styles.addressTitle}>{strings('receive_request.public_address_qr_code')}</Text>
-						<TouchableOpacity onPress={this.copyAccountToClipboard}>
+						<TouchableOpacity
+							onPress={this.copyAccountToClipboard}
+							{...testID(`${prefixTestID}-address-qr-code-component-address-button`)}
+						>
 							<Text style={styles.address} testID={'public-address-input'}>
 								{this.processAddress()}
 							</Text>

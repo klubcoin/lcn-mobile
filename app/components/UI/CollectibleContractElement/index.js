@@ -12,6 +12,7 @@ import ActionSheet from 'react-native-actionsheet';
 import { strings } from '../../../../locales/i18n';
 import Engine from '../../../core/Engine';
 import { removeFavoriteCollectible } from '../../../actions/collectibles';
+import { testID } from '../../../util/Logger';
 
 const DEVICE_WIDTH = Device.getDeviceWidth();
 const COLLECTIBLE_WIDTH = (DEVICE_WIDTH - 30 - 16) / 3;
@@ -83,7 +84,8 @@ function CollectibleContractElement({
 	collectibleContracts,
 	chainId,
 	selectedAddress,
-	removeFavoriteCollectible
+	removeFavoriteCollectible,
+	testID: testId
 }) {
 	const [collectiblesGrid, setCollectiblesGrid] = useState([]);
 	const [collectiblesVisible, setCollectiblesVisible] = useState(propsCollectiblesVisible);
@@ -144,7 +146,7 @@ function CollectibleContractElement({
 
 	return (
 		<View style={styles.itemWrapper}>
-			<TouchableOpacity onPress={toggleCollectibles} style={styles.titleContainer}>
+			<TouchableOpacity onPress={toggleCollectibles} style={styles.titleContainer} {...testID(testId)}>
 				<View style={styles.verticalAlignedContainer}>
 					<Icon
 						name={`ios-arrow-${collectiblesVisible ? 'down' : 'forward'}`}

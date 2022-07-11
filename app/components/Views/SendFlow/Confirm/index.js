@@ -39,7 +39,7 @@ import {
 	getBasicGasEstimatesByChainId
 } from '../../../../util/custom-gas';
 import Engine from '../../../../core/Engine';
-import Logger from '../../../../util/Logger';
+import Logger, { testID } from '../../../../util/Logger';
 import AccountList from '../../../UI/AccountList';
 import CustomNonceModal from '../../../UI/CustomNonceModal';
 import AnimatedTransactionModal from '../../../UI/AnimatedTransactionModal';
@@ -975,7 +975,7 @@ class Confirm extends PureComponent {
 							disabled={!gasEstimationReady || Boolean(errorMessage) || transactionConfirmed}
 							containerStyle={styles.buttonNext}
 							onPress={this.onNext}
-							testID={'txn-confirm-send-button'}
+							{...testID('send-flow-confirm-send-button')}
 						>
 							{transactionConfirmed ? (
 								<ActivityIndicator size="small" color="white" />

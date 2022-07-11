@@ -427,9 +427,8 @@ function PayPal({ selectedAddress, ...props }) {
 							if (from.amount < +boundary[from.currency].min) {
 								showError(
 									strings('paypal_checkout.minimum_boundary_error_text', {
-										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
-											boundary[from.currency]?.min
-										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${boundary[from.currency]?.min
+											}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 									})
 								);
 								setFrom(pre => ({ ...pre, amount: boundary[from.currency]?.min }));
@@ -450,9 +449,8 @@ function PayPal({ selectedAddress, ...props }) {
 							if (+convertInputAmount > boundary[from.currency]?.max) {
 								showError(
 									strings('paypal_checkout.maximum_boundary_error_text', {
-										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
-											boundary[from.currency]?.max
-										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${boundary[from.currency]?.max
+											}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 									})
 								);
 								return;
@@ -517,6 +515,7 @@ function PayPal({ selectedAddress, ...props }) {
 									activeOpacity={0.7}
 									style={styles.menuButton}
 									onPress={() => onViewMenu(true)}
+									{...testID('buy-with-paypal-screen-content-menu-button')}
 								>
 									<Icon name="bars" style={styles.menuIcon} />
 								</TouchableOpacity>
@@ -528,15 +527,14 @@ function PayPal({ selectedAddress, ...props }) {
 						</View>
 						<View style={styles.fromWrapper}>
 							<StyledButton
-								testID={'paypal-component-proceed-checkout-button'}
+								testID={'buy-with-paypal-screen-content-checkout-button'}
 								type="normal"
 								onPress={() => {
 									if (from.amount < +boundary[from.currency].min) {
 										showError(
 											strings('paypal_checkout.minimum_boundary_error_text', {
-												value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
-													boundary[from.currency]?.min
-												}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+												value: `${currencyData.find(e => e.key === from.currency).symbol}${`${boundary[from.currency]?.min
+													}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 											})
 										);
 										return;
@@ -602,12 +600,13 @@ function PayPal({ selectedAddress, ...props }) {
 			</>
 		);
 	};
-	const renderMenuItem = (item, isBorderBottom) => {
+	const renderMenuItem = (item, isBorderBottom, index) => {
 		return (
 			<TouchableOpacity
 				activeOpacity={0.7}
 				style={[styles.menuItem, isBorderBottom && styles.menuItemBorderBottom]}
 				onPress={() => onViewMenuContent(item.title, item.url)}
+				{...testID(`buy-with-paypal-screen-menu-item-${index}`)}
 			>
 				<Icon name={item.icon} style={styles.menuItemLeftIcon} />
 				<Text style={styles.menuItemTitle}>{item.title}</Text>
@@ -626,12 +625,13 @@ function PayPal({ selectedAddress, ...props }) {
 							activeOpacity={0.7}
 							style={styles.menuButton}
 							onPress={() => onViewMenu(false)}
+							{...testID('buy-with-paypal-screen-menu-close-button')}
 						>
 							<Icon name="close" style={styles.menuIcon} />
 						</TouchableOpacity>
 					</View>
 					<View style={styles.menuContent}>
-						{menuData.map((item, index) => renderMenuItem(item, index !== menuData.length - 1))}
+						{menuData.map((item, index) => renderMenuItem(item, index !== menuData.length - 1, index))}
 					</View>
 				</View>
 			</TrackingScrollView>
@@ -702,9 +702,8 @@ function PayPal({ selectedAddress, ...props }) {
 							<Text style={styles.confirmSectionTitle}>{strings('paypal_checkout.order_details')}</Text>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
-								<Text style={styles.confirmContentLeft}>{`${to.amount} ${
-									to.currency
-								} @ ${priceOneToken} ${from.currency}`}</Text>
+								<Text style={styles.confirmContentLeft}>{`${to.amount} ${to.currency
+									} @ ${priceOneToken} ${from.currency}`}</Text>
 								<Text style={styles.confirmContentRight}>{`${from.amount} ${from.currency}`}</Text>
 							</View>
 							{/* {renderDasher()}

@@ -271,11 +271,11 @@ class SendFlow extends PureComponent {
 	onToSelectedAddressChange = async toSelectedAddress => {
 		/^0x[0-9a-fA-Z]{0,40}$/.test(toSelectedAddress) || toSelectedAddress === '' || toSelectedAddress === '0'
 			? this.setState({
-					isValidInputAddress: true
-			  })
+				isValidInputAddress: true
+			})
 			: this.setState({
-					isValidInputAddress: false
-			  });
+				isValidInputAddress: false
+			});
 		const { AssetsContractController } = Engine.context;
 		const { addressBook, network, identities, providerType } = this.props;
 		const networkAddressBook = addressBook[network] || {};
@@ -588,6 +588,7 @@ class SendFlow extends PureComponent {
 							fromAccountBalance={fromAccountBalance}
 						/>
 						<AddressTo
+							prefixTestId={'send-flow'}
 							inputRef={this.addressToInputRef}
 							highlighted={toInputHighlighted}
 							addressToReady={toSelectedAddressReady}
@@ -611,6 +612,7 @@ class SendFlow extends PureComponent {
 							inputSearch={toSelectedAddress}
 							onAccountPress={this.onToSelectedAddressChangeDirect}
 							onAccountLongPress={dummy}
+							prefixTestIdElement={'send-to-screen'}
 						/>
 					) : (
 						<View style={styles.nextActionWrapper}>

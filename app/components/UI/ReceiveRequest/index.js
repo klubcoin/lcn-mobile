@@ -9,7 +9,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { connect } from 'react-redux';
 
 import Analytics from '../../../core/Analytics';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import Device from '../../../util/Device';
 import { strings } from '../../../../locales/i18n';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
@@ -179,6 +179,7 @@ class ReceiveRequest extends PureComponent {
 											Analytics.trackEvent(ANALYTICS_EVENT_OPTS.RECEIVE_OPTIONS_QR_CODE);
 										});
 									}}
+									{...testID('receive-request-component-qrcode')}
 								>
 									<QRCode
 										value={`ethereum:${this.props.selectedAddress}`}
@@ -199,7 +200,10 @@ class ReceiveRequest extends PureComponent {
 									propagateSwipe
 									testID={'qr-modal'}
 								>
-									<AddressQRCode closeQrModal={() => this.closeQrModal(toggleModal)} />
+									<AddressQRCode
+										closeQrModal={() => this.closeQrModal(toggleModal)}
+										prefixTestID={'receive-request-component'}
+									/>
 								</Modal>
 							</>
 						)}
@@ -210,7 +214,7 @@ class ReceiveRequest extends PureComponent {
 					<TouchableOpacity
 						style={styles.addressWrapper}
 						onPress={this.copyAccountToClipboard}
-						testID={'account-address'}
+						{...testID('receive-request-component-address-button')}
 					>
 						<Text>
 							<EthereumAddress address={this.props.selectedAddress} type={'short'} />
@@ -218,7 +222,7 @@ class ReceiveRequest extends PureComponent {
 						<Text style={styles.copyButton} small>
 							{strings('receive_request.copy')}
 						</Text>
-						<TouchableOpacity onPress={this.onShare}>
+						<TouchableOpacity onPress={this.onShare} {...testID('receive-request-component-share-button')}>
 							<EvilIcons
 								name={Device.isIos() ? 'share-apple' : 'share-google'}
 								size={25}

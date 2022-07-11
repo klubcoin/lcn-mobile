@@ -66,7 +66,8 @@ export const AddressTo = props => {
 		onInputBlur,
 		inputWidth,
 		confusableCollection,
-		displayExclamation
+		displayExclamation,
+		prefixTestId
 	} = props;
 	return (
 		<View style={styles.wrapper}>
@@ -77,7 +78,7 @@ export const AddressTo = props => {
 				<View style={[styles.selectWrapper, highlighted ? styles.borderHighlighted : styles.borderOpaque]}>
 					<View style={styles.input}>
 						<TrackingTextInput
-							{...testID('send-flow-address-input-field')}
+							{...testID(`${prefixTestId}-address-to-address-input-field`)}
 							ref={inputRef}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -95,7 +96,11 @@ export const AddressTo = props => {
 						/>
 					</View>
 					{!!onScan && (
-						<TouchableOpacity onPress={onScan} style={styles.iconWrapper}>
+						<TouchableOpacity
+							onPress={onScan}
+							{...testID(`${prefixTestId}-address-to-scan-button`)}
+							style={styles.iconWrapper}
+						>
 							<AntIcon
 								name="scan1"
 								size={20}
@@ -136,7 +141,12 @@ export const AddressTo = props => {
 						</View>
 					</View>
 					{!!onClear && (
-						<TouchableOpacity onPress={onClear} style={styles.iconWrapper} testID={'clear-address-button'}>
+						<TouchableOpacity
+							onPress={onClear}
+							style={styles.iconWrapper}
+							{...testID(`${prefixTestId}-address-to-clear-button`)}
+							testID={'clear-address-button'}
+						>
 							<AntIcon
 								name="close"
 								size={20}

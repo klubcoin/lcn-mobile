@@ -11,6 +11,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import { colors } from '../../../styles/common';
+import { testID } from '../../../util/Logger';
 
 const CustomTabBar = CreateReactClass({
     propTypes: {
@@ -39,14 +40,15 @@ const CustomTabBar = CreateReactClass({
         const textColor = isTabActive ? activeTextColor : inactiveTextColor;
         const fontWeight = isTabActive ? 'bold' : 'normal';
         const backgroundColor = isTabActive ? colors.lightPurple : colors.purple;
-        
+
         return <TouchableWithoutFeedback
             style={{ flex: 1, }}
             key={name}
             accessible={true}
             onPress={() => onPressHandler(page)}
+            {...testID(`custom-tab-bar-${name}${page}`)}
         >
-            <View style={[styles.tab, this.props.tabStyle, {backgroundColor}]}>
+            <View style={[styles.tab, this.props.tabStyle, { backgroundColor }]}>
                 <Text style={[{ color: textColor, fontWeight, }, textStyle,]}>
                     {name}
                 </Text>
