@@ -191,7 +191,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 		if (orderId) {
 			setLoading(true);
 			APIService.getPaymentInfo(orderId, (success, json) => {
-				if (!json?.id) {
+				if (!json?.id || !json?.lines || json?.lines?.length === 0) {
 					navigation.goBack();
 					navigation.navigate('Dashboard');
 					showError(strings('purchase_order_details.invalid_order'));
@@ -426,9 +426,8 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.amount')}</Text>
-						<Text style={styles.itemText}>{`${
-							orderDetail?.lines[0].totalAmount.value
-						} ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.itemText}>{`${orderDetail?.lines[0].totalAmount.value
+							} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>
