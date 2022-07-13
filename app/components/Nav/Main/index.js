@@ -113,6 +113,8 @@ import { displayName } from '../../../../app.json';
 import { OutlinedTextField, FilledTextField } from 'react-native-material-textfield';
 import { showInfo } from '../../../util/notify';
 import Notifications from '../../../services/Notification';
+import Api from '../../../services/api';
+import routes from '../../../common/routes';
 export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
 
 const styles = StyleSheet.create({
@@ -1127,15 +1129,30 @@ const Main = props => {
 						const { addressBook, network } = props;
 						const addresses = addressBook[network] || {};
 						const sender = addresses[from] || {
-							name: `${preferences.peerProfile(senderId)?.firstname} ${
-								preferences.peerProfile(senderId)?.lastname
-							}`
+							name:
+								!!preferences.peerProfile(senderId)?.firstname &&
+								!!preferences.peerProfile(senderId)?.lastname
+									? `${preferences.peerProfile(senderId)?.firstname} ${
+											preferences.peerProfile(senderId)?.lastname
+									  }`
+									: ''
 						};
+
+						let nameFromServer = '';
+						if (!sender?.name) {
+							const userData = await Api.postRequestAsync(routes.walletInfo, [from]);
+							const publicInfo = userData?.result?.publicInfo
+								? JSON.parse(userData?.result?.publicInfo)
+								: { firstname: '', lastname: '' };
+							nameFromServer = `${publicInfo.firstname} ${publicInfo.lastname}`;
+						}
+
 						const groupName = group ? messageStore.conversationInfos[group] : '';
+
 						switch (message?.payload?.action) {
 							case 'chat':
 								notification.showNotification(
-									groupName?.name || sender?.name || from,
+									groupName?.name || sender?.name || nameFromServer,
 									!!message.text
 										? message.text.length <= 90
 											? message.text
@@ -1151,7 +1168,7 @@ const Main = props => {
 							case 'payment_request':
 								notification.showNotification(
 									'',
-									`${groupName?.name || sender?.name || from} ${strings(
+									`${groupName?.name || sender?.name || nameFromServer} ${strings(
 										'chat.sent_payment_request'
 									)}`,
 									from
@@ -1160,13 +1177,15 @@ const Main = props => {
 							case 'transaction_sync':
 								notification.showNotification(
 									'',
-									`${groupName?.name || sender?.name || from} ${strings('chat.sent_a_transaction')}`,
+									`${groupName?.name || sender?.name || nameFromServer} ${strings(
+										'chat.sent_a_transaction'
+									)}`,
 									from
 								);
 								break;
 							default:
 								notification.showNotification(
-									groupName?.name || sender?.name || from,
+									groupName?.name || sender?.name || nameFromServer,
 									!!message.text
 										? message.text.length <= 90
 											? message.text

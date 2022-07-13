@@ -28,6 +28,25 @@ const Api = {
 				}
 			});
 	},
+	postRequestAsync: async (method, parameters) => {
+		let url = routes.mainNetWork.url;
+		const fetchOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				...routes.basicMethod,
+				method: method,
+				params: parameters
+			})
+		};
+		try {
+			const response = await fetch(url, fetchOptions);
+			const responseJson = await response.json();
+			return responseJson;
+		} catch (error) {
+			return { error };
+		}
+	},
 	directPostRequest: (url, parameters, callback, errorCallback = null) => {
 		const headers = { 'Content-Type': 'application/json' };
 
@@ -89,7 +108,7 @@ const Api = {
 				try {
 					return JSON.parse(text);
 				} catch (e) {
-					console.log('error', route, e)
+					console.log('error', route, e);
 					return text;
 				}
 			})
