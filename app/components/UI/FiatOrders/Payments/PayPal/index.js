@@ -81,7 +81,7 @@ function PayPal({ selectedAddress, ...props }) {
 	const [viewFeeCalculation, setViewFeeCalculation] = useState(false);
 	const [isChangeCurrency, setIsChangeCurrency] = useState(false);
 	const [currencyData, setCurrencyData] = useState([]);
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [isViewMenu, setIsViewMenu] = useState(false);
 	const [priceOneToken, setPriceOneToken] = useState(0);
 	const [paypalFee, setPaypalFee] = useState(7.98);
@@ -117,12 +117,11 @@ function PayPal({ selectedAddress, ...props }) {
 		if (currencies.length == 0) {
 			CookieManager.clearAll(true);
 
-			setLoading(true);
 			API.getRequest(
 				Routes.getConversions,
 				response => {
-					setLoading(false);
 					if (response.data.length > 0) {
+						setLoading(false);
 						setCurrencies(response.data);
 						// manageCurrencies();
 					} else {
@@ -130,7 +129,6 @@ function PayPal({ selectedAddress, ...props }) {
 					}
 				},
 				error => {
-					setLoading(false);
 					console.log(error);
 				}
 			);
@@ -427,8 +425,9 @@ function PayPal({ selectedAddress, ...props }) {
 							if (from.amount < +boundary[from.currency].min) {
 								showError(
 									strings('paypal_checkout.minimum_boundary_error_text', {
-										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${boundary[from.currency]?.min
-											}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+											boundary[from.currency]?.min
+										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 									})
 								);
 								setFrom(pre => ({ ...pre, amount: boundary[from.currency]?.min }));
@@ -449,8 +448,9 @@ function PayPal({ selectedAddress, ...props }) {
 							if (+convertInputAmount > boundary[from.currency]?.max) {
 								showError(
 									strings('paypal_checkout.maximum_boundary_error_text', {
-										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${boundary[from.currency]?.max
-											}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+										value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+											boundary[from.currency]?.max
+										}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 									})
 								);
 								return;
@@ -533,8 +533,9 @@ function PayPal({ selectedAddress, ...props }) {
 									if (from.amount < +boundary[from.currency].min) {
 										showError(
 											strings('paypal_checkout.minimum_boundary_error_text', {
-												value: `${currencyData.find(e => e.key === from.currency).symbol}${`${boundary[from.currency]?.min
-													}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+												value: `${currencyData.find(e => e.key === from.currency).symbol}${`${
+													boundary[from.currency]?.min
+												}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 											})
 										);
 										return;
@@ -702,8 +703,9 @@ function PayPal({ selectedAddress, ...props }) {
 							<Text style={styles.confirmSectionTitle}>{strings('paypal_checkout.order_details')}</Text>
 							{renderDasher()}
 							<View style={styles.confirmContentItemWrapper}>
-								<Text style={styles.confirmContentLeft}>{`${to.amount} ${to.currency
-									} @ ${priceOneToken} ${from.currency}`}</Text>
+								<Text style={styles.confirmContentLeft}>{`${to.amount} ${
+									to.currency
+								} @ ${priceOneToken} ${from.currency}`}</Text>
 								<Text style={styles.confirmContentRight}>{`${from.amount} ${from.currency}`}</Text>
 							</View>
 							{/* {renderDasher()}
