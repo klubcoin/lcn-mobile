@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { InteractionManager, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { InteractionManager, StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native';
 import PropTypes from 'prop-types';
 import { swapsUtils } from '@metamask/swaps-controller';
 import AssetIcon from '../AssetIcon';
@@ -11,7 +11,14 @@ import { strings } from '../../../../locales/i18n';
 import { toggleReceiveModal } from '../../../actions/modals';
 import { connect } from 'react-redux';
 import routes from '../../../common/routes';
-import { renderFromTokenMinimalUnit, balanceToFiat, renderFromWei, weiToFiat, hexToBN, fromTokenMinimalUnitString } from '../../../util/number';
+import {
+	renderFromTokenMinimalUnit,
+	balanceToFiat,
+	renderFromWei,
+	weiToFiat,
+	hexToBN,
+	fromTokenMinimalUnitString
+} from '../../../util/number';
 import { safeToChecksumAddress } from '../../../util/address';
 import { isMainNet } from '../../../util/networks';
 import { getEther } from '../../../util/transactions';
@@ -25,7 +32,7 @@ import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import { allowedToBuy } from '../FiatOrders';
 import AssetSwapButton from '../Swaps/components/AssetSwapButton';
 import NetworkMainAssetLogo from '../NetworkMainAssetLogo';
-import Helper from 'common/Helper'
+import Helper from 'common/Helper';
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -186,20 +193,18 @@ class AssetOverview extends PureComponent {
 	};
 
 	goToBrowserUrl(url) {
-		this.props.navigation.navigate('BrowserView', {
-			newTabUrl: url
-		});
+		Linking.openURL(url);
 	}
 
 	renderLogo = () => {
 		const {
 			asset: { address, image, logo, isETH }
 		} = this.props;
-		
+
 		if (isETH) {
 			return <NetworkMainAssetLogo biggest style={styles.ethLogo} />;
 		}
-		
+
 		const watchedAsset = image !== undefined;
 		return logo || image ? (
 			<AssetIcon watchedAsset={watchedAsset} logo={image || logo} />
@@ -281,7 +286,9 @@ class AssetOverview extends PureComponent {
 		} else {
 			const exchangeRate = itemAddress in tokenExchangeRates ? tokenExchangeRates[itemAddress] : undefined;
 			balance =
-				itemAddress in tokenBalances ? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), decimals) : 0;
+				itemAddress in tokenBalances
+					? fromTokenMinimalUnitString(tokenBalances[itemAddress]?.toString(10), decimals)
+					: 0;
 			balanceFiat = balanceToFiat(balance, conversionRate, exchangeRate, currentCurrency);
 		}
 		// choose balances depending on 'primaryCurrency'
@@ -292,7 +299,11 @@ class AssetOverview extends PureComponent {
 			mainBalance = !balanceFiat ? `${balance} ${symbol}` : balanceFiat;
 			secondaryBalance = !balanceFiat ? balanceFiat : `${balance} ${symbol}`;
 		}
-		const conversion = typeof accounts[selectedAddress] != 'undefined' && typeof accounts[selectedAddress].conversion != 'undefined' ? accounts[selectedAddress].conversion : null
+		const conversion =
+			typeof accounts[selectedAddress] != 'undefined' &&
+			typeof accounts[selectedAddress].conversion != 'undefined'
+				? accounts[selectedAddress].conversion
+				: null;
 		return (
 			<View style={styles.wrapper} testID={'token-asset-overview'}>
 				<View style={styles.assetLogo}>{this.renderLogo()}</View>
@@ -301,13 +312,18 @@ class AssetOverview extends PureComponent {
 						this.renderWarning()
 					) : (
 						<>
-							<Text style={{
-								...styles.amount,
-								fontSize: 16
-							}} testID={'token-amount'}>
+							<Text
+								style={{
+									...styles.amount,
+									fontSize: 16
+								}}
+								testID={'token-amount'}
+							>
 								{mainBalance}
 							</Text>
-							{secondaryBalance && <Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>}
+							{secondaryBalance && (
+								<Text style={styles.amountFiat}>{Helper.convertToEur(balance, conversion)}</Text>
+							)}
 						</>
 					)}
 				</View>
