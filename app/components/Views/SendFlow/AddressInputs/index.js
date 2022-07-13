@@ -93,6 +93,7 @@ export const AddressTo = props => {
 							onSubmitEditing={onSubmit}
 							value={toSelectedAddress}
 							testID={'txn-to-address-input'}
+							maxLength={256}
 						/>
 					</View>
 					{!!onScan && (
