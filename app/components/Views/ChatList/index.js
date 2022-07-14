@@ -190,8 +190,9 @@ const ChatList = ({ route, navigation, ...props }) => {
 	};
 
 	const renderChatItem = chat => {
+		const { selectedAddress } = props;
 		const { address, firstname, lastname, avatar, lastMessage } = chat;
-		const { text, payload, deleted, createdAt, quote, forward } = lastMessage || {};
+		const { text, payload, deleted, createdAt, quote, forward, user } = lastMessage || {};
 		const name = `${firstname} ${lastname}`;
 		let displayTime = '';
 		const lastTime = moment(createdAt);
@@ -240,7 +241,9 @@ const ChatList = ({ route, navigation, ...props }) => {
 								: quote
 								? strings('chat.sent_a_message_reply')
 								: forward
-								? strings('chat.forwarded_a_message')
+								? user._id.toLowerCase() === selectedAddress.toLowerCase()
+									? strings('chat.forwarded_a_message')
+									: strings('chat.received_a_forwarded_message')
 								: text}
 						</Text>
 					</View>
