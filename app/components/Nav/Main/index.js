@@ -120,7 +120,8 @@ export const EXCEPTION_ACTIVE_APP = 'EXCEPTION_ACTIVE_APP';
 const styles = StyleSheet.create({
 	flex: {
 		flex: 1,
-		paddingTop: Device.isIos() ? 20 : 0
+		paddingTop: Device.isIos() ? 20 : 0,
+		backgroundColor: colors.white
 	},
 	loader: {
 		backgroundColor: colors.white,
