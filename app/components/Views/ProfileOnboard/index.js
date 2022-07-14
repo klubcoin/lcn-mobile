@@ -40,6 +40,7 @@ import { testID } from '../../../util/Logger';
 export const SUCCESS = 'success';
 export const ALREADY_EXISTS = 'already_exists';
 
+const emailNameRegex = /^[0-9a-zA-Z.]*$/;
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
 
@@ -115,7 +116,11 @@ class ProfileOnboard extends PureComponent {
 	onEmailChange = val => {
 		this.emailFocused = false;
 		this.email = val.replace(this.regex, '');
-		if (!validator.isEmail(val.trim())) {
+		if (
+			!validator.isEmail(val.trim()) ||
+			!emailNameRegex.test(val.trim().split('@')[0]) ||
+			!emailNameRegex.test(val.trim().split('@')[1])
+		) {
 			this.isCheckingEmail = false;
 			this.isValidEmail = false;
 			return;
@@ -311,7 +316,11 @@ class ProfileOnboard extends PureComponent {
 			showError(strings('profile.missing_email'));
 			return;
 		}
-		if (!validator.isEmail(email)) {
+		if (
+			!validator.isEmail(email) ||
+			!emailNameRegex.test(email.trim().split('@')[0]) ||
+			!emailNameRegex.test(email.trim().split('@')[1])
+		) {
 			showError(strings('profile.invalid_email'));
 			return;
 		}
@@ -369,11 +378,22 @@ class ProfileOnboard extends PureComponent {
 			surnameErrorText = strings('profile.surname_required');
 		}
 
-		if (!!this.email && validator.isEmail(this.email) && !this.isCheckingEmail && !this.isValidEmail) {
+		if (
+			!!this.email &&
+			validator.isEmail(this.email) &&
+			emailNameRegex.test(this.email.trim().split('@')[0]) &&
+			emailNameRegex.test(this.email.trim().split('@')[1]) &&
+			!this.isCheckingEmail &&
+			!this.isValidEmail
+		) {
 			emailErrorText = strings('profile.email_used');
 		} else if (this.emailFocused & !this.email) {
 			emailErrorText = strings('profile.email_required');
-		} else if (this.emailFocused && !validator.isEmail(this.email)) {
+		} else if (
+			(this.emailFocused && !validator.isEmail(this.email)) ||
+			!emailNameRegex.test(this.email.trim().split('@')[0]) ||
+			!emailNameRegex.test(this.email.trim().split('@')[1])
+		) {
 			emailErrorText = strings('profile.invalid_email');
 		}
 
