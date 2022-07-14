@@ -32,7 +32,7 @@ import TextField from '../../UI/TextField';
 import emojiRegex from 'emoji-regex';
 import APIService from '../../../services/APIService';
 import validator from 'validator';
-import { SUCCESS } from '../ProfileOnboard';
+import { emailNameRegex, SUCCESS } from '../ProfileOnboard';
 import { renderAccountName } from '../../../util/address';
 import Api from '../../../services/api';
 import * as sha3JS from 'js-sha3';
@@ -267,7 +267,11 @@ class ChangeEmail extends PureComponent {
 
 	onEmailChange = val => {
 		this.setState({ email: val.replace(this.regex, ''), emailFocused: false });
-		if (!validator.isEmail(val.trim())) {
+		if (
+			!validator.isEmail(val.trim()) ||
+			!emailNameRegex.test(val.trim().split('@')[0]) ||
+			!emailNameRegex.test(val.trim().split('@')[1])
+		) {
 			this.setState({
 				isCheckingEmail: false,
 				isValidEmail: false
@@ -392,11 +396,23 @@ class ChangeEmail extends PureComponent {
 		} = this.state;
 		const previousScreen = this.props.navigation.getParam(PREVIOUS_SCREEN);
 		let emailErrorText = '';
-		if (!!email && validator.isEmail(email) && !isCheckingEmail && !isValidEmail) {
+		if (
+			!!email &&
+			validator.isEmail(email) &&
+			emailNameRegex.test(email.trim().split('@')[0]) &&
+			emailNameRegex.test(email.trim().split('@')[1]) &&
+			!isCheckingEmail &&
+			!isValidEmail
+		) {
 			emailErrorText = strings('profile.email_used');
 		} else if (emailFocused && !email) {
 			emailErrorText = strings('profile.email_required');
-		} else if (emailFocused && !validator.isEmail(email)) {
+		} else if (
+			emailFocused &&
+			(!validator.isEmail(email) ||
+				!emailNameRegex.test(email.trim().split('@')[0]) ||
+				!emailNameRegex.test(email.trim().split('@')[1]))
+		) {
 			emailErrorText = strings('profile.invalid_email');
 		}
 
