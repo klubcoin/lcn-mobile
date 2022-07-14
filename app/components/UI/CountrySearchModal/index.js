@@ -40,6 +40,7 @@ export default class CountrySearchModal extends Component {
 				style={styles.option}
 				activeOpacity={0.1}
 				onPress={() => onSelectCountryCode && onSelectCountryCode(item)}
+				{...testID(`country-search-modal-country-item-${item.dialCode}`)}
 			>
 				<View style={styles.content}>
 					<Text style={styles.dialCode} numberOfLines={1}>
@@ -64,6 +65,7 @@ export default class CountrySearchModal extends Component {
 							style={styles.iconClose}
 							activeOpacity={0.7}
 							onPress={() => onClose && onClose()}
+							{...testID('country-search-modal-close-button')}
 						>
 							<AntDesignIcon name="closecircle" size={20} color={colors.white} />
 						</TouchableOpacity>

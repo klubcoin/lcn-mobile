@@ -16,7 +16,11 @@ const PaymentMethodItem = ({ onBuy, displayName, image, typeText }) => {
 			<Text style={styles.creditCard}>{strings('payment_request.with_credit_card')}</Text>
 			<Text style={styles.fee}>{strings('payment_request.base_from', { typeText })}</Text>
 			<View style={{ marginBottom: 5 }}>
-				<StyledButton testID={'purchase-method-component-buy-button'} type={'white'} onPress={onBuy}>
+				<StyledButton
+					testID={`purchase-method-component-buy-button-${typeText}`}
+					type={'white'}
+					onPress={onBuy}
+				>
 					{strings('payment_request.buy_with', { typeText, displayName })}
 				</StyledButton>
 			</View>

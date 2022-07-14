@@ -5,6 +5,7 @@ import { colors } from '../../../styles/common';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { strings } from '../../../../locales/i18n';
+import { testID } from '../../../util/Logger';
 
 const styles = StyleSheet.create({
 	container: {
@@ -67,7 +68,11 @@ export default class QRScanner extends PureComponent {
 					onStatusChange={this.onStatusChange}
 				>
 					<SafeAreaView style={styles.innerView}>
-						<TouchableOpacity style={styles.closeIcon} onPress={this.props.onClose}>
+						<TouchableOpacity
+							style={styles.closeIcon}
+							onPress={this.props.onClose}
+							{...testID('qr-scanner-component-close-button')}
+						>
 							<Icon name={'ios-close'} size={50} color={'white'} />
 						</TouchableOpacity>
 						<Image source={frameImage} style={styles.frame} />

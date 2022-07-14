@@ -26,7 +26,11 @@ export default class PhoneTextField extends Component {
 			<View style={containerStyle}>
 				{label && <Text style={styles.hintLabel}>{label}</Text>}
 				<View style={styles.phoneWrapper}>
-					<TouchableOpacity style={styles.countryCodePicker} onPress={onPressCountryCode}>
+					<TouchableOpacity
+						style={styles.countryCodePicker}
+						onPress={onPressCountryCode}
+						{...testID('phone-text-field-dropdown-button')}
+					>
 						{!!countryCode && <Text style={styles.countryCode}>+{countryCode}</Text>}
 						<Icon name="caret-down" style={styles.dropdownIcon} />
 					</TouchableOpacity>

@@ -18,7 +18,7 @@ import { colors, fontStyles } from '../../../styles/common';
 import Device from '../../../util/Device';
 import { strings } from '../../../../locales/i18n';
 import { toChecksumAddress } from 'ethereumjs-util';
-import Logger from '../../../util/Logger';
+import Logger, { testID } from '../../../util/Logger';
 import Analytics from '../../../core/Analytics';
 import { ANALYTICS_EVENT_OPTS } from '../../../util/analytics';
 import AccountElement from './AccountElement';
@@ -223,14 +223,17 @@ class AccountList extends PureComponent {
 		const avatarb64 = await RNFS.readFile(avatar, 'base64');
 		const hash = sha3JS.keccak_256(firstname + lastname + account.address + avatarb64);
 
-		API.postRequest(Routes.walletCreation, [
-			name, account.address, hash, JSON.stringify({})
-		], response => {
-			console.log('account creation', response)
-			// this.getBalance(account.address)
-		}, error => {
-			console.log('error account', error)
-		})
+		API.postRequest(
+			Routes.walletCreation,
+			[name, account.address, hash, JSON.stringify({})],
+			response => {
+				console.log('account creation', response);
+				// this.getBalance(account.address)
+			},
+			error => {
+				console.log('error account', error);
+			}
+		);
 	}
 
 	getBalance = async selectedAddress => {
@@ -256,9 +259,9 @@ class AccountList extends PureComponent {
 
 	addAccount = async () => {
 		const state = await NetInfo.fetch();
-		if(!state.isConnected){
+		if (!state.isConnected) {
 			showError(strings('import_from_seed.network_error'), strings('import_from_seed.no_connection'));
-			return
+			return;
 		}
 		if (this.state.loading) return;
 		this.mounted && this.setState({ loading: true });
@@ -402,6 +405,7 @@ class AccountList extends PureComponent {
 							disabled={false}
 							containerStyle={styles.footerButton}
 							onPress={this.addAccount}
+							testID={'account-list-component-add-account-button'}
 						>
 							{this.state.loading ? (
 								<ActivityIndicator size="small" color={colors.white} />
@@ -414,12 +418,12 @@ class AccountList extends PureComponent {
 							disabled={false}
 							containerStyle={styles.footerButton}
 							onPress={this.importAccount}
+							testID={'account-list-component-import-account-button'}
 						>
 							{strings('accounts.import_account')}
 						</StyledButton>
 					</View>
 				)}
-
 			</SafeAreaView>
 		);
 	}

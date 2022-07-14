@@ -271,11 +271,11 @@ class SendFlow extends PureComponent {
 	onToSelectedAddressChange = async toSelectedAddress => {
 		/^0x[0-9a-fA-Z]{0,40}$/.test(toSelectedAddress) || toSelectedAddress === '' || toSelectedAddress === '0'
 			? this.setState({
-				isValidInputAddress: true
-			})
+					isValidInputAddress: true
+			  })
 			: this.setState({
-				isValidInputAddress: false
-			});
+					isValidInputAddress: false
+			  });
 		const { AssetsContractController } = Engine.context;
 		const { addressBook, network, identities, providerType } = this.props;
 		const networkAddressBook = addressBook[network] || {};
@@ -650,7 +650,7 @@ class SendFlow extends PureComponent {
 									<TouchableOpacity
 										style={styles.myAccountsTouchable}
 										onPress={this.toggleAddToAddressBookModal}
-										testID={'add-address-button'}
+										{...testID('send-flow-send-to-add-address-button')}
 									>
 										<Text style={styles.myAccountsText}>
 											{strings('address_book.add_this_address')}
@@ -680,7 +680,7 @@ class SendFlow extends PureComponent {
 											type={'normal'}
 											containerStyle={styles.buttonNext}
 											onPress={this.onTransactionDirectionSet}
-											testID={'address-book-next-button'}
+											testID={'send-flow-send-to-address-book-next-button'}
 											disabled={balanceIsZero}
 										>
 											{strings('address_book.next')}

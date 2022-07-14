@@ -321,7 +321,11 @@ function PayPal({ selectedAddress, ...props }) {
 						<View style={styles.sMark} />
 						<Text style={styles.markText}>{strings('paypal_checkout.using_payment_method')}</Text>
 					</View>
-					<TouchableOpacity style={styles.stepperButton} activeOpacity={0.7}>
+					<TouchableOpacity
+						style={styles.stepperButton}
+						activeOpacity={0.7}
+						{...testID('buy-with-paypal-screen-stepper-paypal')}
+					>
 						<View style={styles.stepperButtonContent}>
 							<Icon name={'paypal'} size={22} color={colors.white} />
 							<Text style={styles.stepperButtonText}>{strings('paypal_checkout.paypal')}</Text>
@@ -394,6 +398,7 @@ function PayPal({ selectedAddress, ...props }) {
 						onPress={() => {
 							setIsViewInfoRate(pre => !pre);
 						}}
+						{...testID('buy-with-paypal-screen-info-button')}
 					>
 						<Icon name="info" style={styles.iIcon} />
 					</TouchableOpacity>
@@ -465,7 +470,12 @@ function PayPal({ selectedAddress, ...props }) {
 				<View style={styles.amountButton2}>
 					<Image source={FLAGS[from.currency]} style={styles.flag} />
 					{from && <Text style={styles.fromText}>{from.currency}</Text>}
-					<TouchableOpacity style={styles.dropdownButton} activeOpacity={0.7} onPress={onOpenModal}>
+					<TouchableOpacity
+						style={styles.dropdownButton}
+						activeOpacity={0.7}
+						onPress={onOpenModal}
+						{...testID('buy-with-paypal-screen-country-dropdown-button')}
+					>
 						<Icon name="chevron-down" style={styles.dropdownIcon} />
 					</TouchableOpacity>
 				</View>
@@ -572,6 +582,7 @@ function PayPal({ selectedAddress, ...props }) {
 								<TouchableOpacity
 									style={styles.modalItemContainer}
 									onPress={() => onChangeCurrency(e.value)}
+									{...testID(`buy-with-paypal-screen-currency-item-${e.key}`)}
 								>
 									<Text>{e.label}</Text>
 									{from.currency === e.value && <Icon style={styles.modalItemIcon} name={'check'} />}
@@ -660,6 +671,7 @@ function PayPal({ selectedAddress, ...props }) {
 									activeOpacity={0.7}
 									style={styles.menuButton}
 									onPress={() => setIsConfirm(false)}
+									{...testID('buy-with-paypal-screen-confirm-back-button')}
 								>
 									<Icon name="arrow-left" style={styles.menuIcon} />
 								</TouchableOpacity>
@@ -670,6 +682,7 @@ function PayPal({ selectedAddress, ...props }) {
 									activeOpacity={0.7}
 									style={styles.menuButton}
 									onPress={() => onViewMenu(true)}
+									{...testID('buy-with-paypal-screen-confirm-bars-button')}
 								>
 									<Icon name="bars" style={styles.menuIcon} />
 								</TouchableOpacity>
@@ -692,6 +705,7 @@ function PayPal({ selectedAddress, ...props }) {
 								activeOpacity={0.7}
 								onPress={onPressAddress}
 								onLongPress={onLongPressAddress}
+								{...testID('buy-with-paypal-screen-confirm-address-field')}
 							>
 								{/* <TrackingScrollView style={styles.addressScroll} horizontal> */}
 								<Text style={styles.address} numberOfLines={isViewFullAddress ? 10 : 1}>

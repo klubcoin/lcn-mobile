@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { strings } from '../../../../../locales/i18n';
 import Alert from '../../../Base/Alert';
 import Text from '../../../Base/Text';
+import { testID } from '../../../../util/Logger';
 
 const styles = StyleSheet.create({
 	button: {
@@ -22,7 +23,11 @@ export default function ErrorMessage(props) {
 						{errorMessage}
 					</Text>
 					{errorContinue && (
-						<TouchableOpacity onPress={onContinue} style={styles.button}>
+						<TouchableOpacity
+							onPress={onContinue}
+							style={styles.button}
+							{...testID('error-message-component-continue-button')}
+						>
 							<Text small link centered>
 								{strings('transaction.continueError')}
 							</Text>

@@ -115,7 +115,14 @@ class AddressList extends PureComponent {
 	};
 
 	getRecentAddresses = inputSearch => {
-		const { transactions, network, identities, onAccountPress, onAccountLongPress } = this.props;
+		const {
+			transactions,
+			network,
+			identities,
+			onAccountPress,
+			onAccountLongPress,
+			prefixTestIdElement
+		} = this.props;
 		const recents = [];
 		const parsedRecents = [];
 		if (!inputSearch) {
@@ -140,6 +147,7 @@ class AddressList extends PureComponent {
 							<AddressElement
 								key={checksummedTo}
 								address={checksummedTo}
+								testID={`${prefixTestIdElement}-element-address-${checksummedTo}`}
 								name={this.networkAddressBook[checksummedTo].name}
 								onAccountPress={onAccountPress}
 								onAccountLongPress={onAccountLongPress}
@@ -150,6 +158,7 @@ class AddressList extends PureComponent {
 							<AddressElement
 								key={checksummedTo}
 								address={checksummedTo}
+								testID={`${prefixTestIdElement}-element-address-${checksummedTo}`}
 								onAccountPress={onAccountPress}
 								onAccountLongPress={onAccountLongPress}
 							/>
@@ -238,7 +247,7 @@ class AddressList extends PureComponent {
 
 	render = () => {
 		const { processedRecentsList, contactElements } = this.state;
-		const { onlyRenderAddressBook, } = this.props;
+		const { onlyRenderAddressBook } = this.props;
 		return (
 			<View style={styles.root}>
 				<TrackingScrollView style={styles.myAccountsWrapper}>

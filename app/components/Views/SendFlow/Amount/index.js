@@ -701,6 +701,7 @@ class Amount extends PureComponent {
 				style={styles.assetElementWrapper}
 				// eslint-disable-next-line react/jsx-no-bind
 				onPress={() => this.pickSelectedAsset(token)}
+				{...testID(`send-flow-amount-token-button-${index}`)}
 			>
 				<View style={styles.assetElement}>
 					{token.isETH ? (
@@ -728,6 +729,7 @@ class Amount extends PureComponent {
 				style={styles.assetElementWrapper}
 				// eslint-disable-next-line react/jsx-no-bind
 				onPress={() => this.pickSelectedAsset(collectible)}
+				{...testID(`end-flow-amount-collectible-button-${index}`)}
 			>
 				<View style={styles.assetElement}>
 					<CollectibleMedia
@@ -843,7 +845,11 @@ class Amount extends PureComponent {
 				{hasExchangeRate && (
 					<View style={styles.actionsWrapper}>
 						<View style={styles.action}>
-							<TouchableOpacity style={styles.actionSwitch} onPress={this.switchCurrency}>
+							<TouchableOpacity
+								style={styles.actionSwitch}
+								onPress={this.switchCurrency}
+								{...testID('send-flow-amount-switch-currency-button')}
+							>
 								<Text style={styles.textSwitch} numberOfLines={1}>
 									{renderableInputValueConversion}
 								</Text>
@@ -913,6 +919,7 @@ class Amount extends PureComponent {
 										style={styles.actionDropdown}
 										disabled={isPaymentRequest}
 										onPress={this.toggleAssetsModal}
+										{...testID('send-flow-amount-dropdown-button')}
 									>
 										<Text style={styles.textDropdown}>
 											{selectedAsset.symbol || strings('wallet.collectible')}
@@ -956,7 +963,7 @@ class Amount extends PureComponent {
 								containerStyle={styles.buttonNext}
 								disabled={!estimatedTotalGas}
 								onPress={this.onNext}
-								testID={'txn-amount-next-button'}
+								testID={'send-flow-amount-next-button'}
 							>
 								{strings('transaction.next')}
 							</StyledButton>

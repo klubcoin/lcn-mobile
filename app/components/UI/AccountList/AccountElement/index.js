@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import RemoteImage from '../../../Base/RemoteImage';
 import EthereumAddress from '../../../UI/EthereumAddress';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { testID } from '../../../../util/Logger';
 
 const EMPTY = '0x0';
 const BALANCE_KEY = 'balance';
@@ -156,6 +157,7 @@ class AccountElement extends PureComponent {
 					onLongPress={this.onLongPress}
 					disabled={disabled}
 					activeOpacity={0.7}
+					{...testID(`account-element-component-${address}`)}
 				>
 					{!!avatar ? (
 						<RemoteImage source={{ uri: `file://${avatar}` }} style={styles.avatar} />

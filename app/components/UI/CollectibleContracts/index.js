@@ -119,7 +119,7 @@ const CollectibleContracts = ({ collectibleContracts, collectibles, navigation, 
 				<Text center style={styles.emptyTitleText} bold>
 					{strings('wallet.no_nfts_yet')}
 				</Text>
-				<TouchableOpacity activeOpacity={0.7} {...testID('collectible-contracts-learm-more-button')}>
+				<TouchableOpacity activeOpacity={0.7} {...testID('collectible-contracts-learn-more-button')}>
 					<Text center big link onPress={goToLearnMore}>
 						{strings('wallet.learn_more')}
 					</Text>

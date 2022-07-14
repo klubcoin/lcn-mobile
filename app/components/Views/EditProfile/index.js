@@ -43,6 +43,7 @@ import { colors } from '../../../styles/common';
 import { SUCCESS } from '../ProfileOnboard';
 import CryptoSignature from '../../../core/CryptoSignature';
 import TrackingScrollView from '../../UI/TrackingScrollView';
+import { testID } from '../../../util/Logger';
 
 export const REGEX_PHONE_NUMBER = /^[\d]{4,13}$/;
 
@@ -517,6 +518,7 @@ class EditProfile extends PureComponent {
 								activeOpacity={0.5}
 								style={styles.avatarView}
 								onPress={() => this.onOpenModal()}
+								{...testID('edit-profile-screen-avatar-button')}
 							>
 								<RemoteImage
 									source={
@@ -538,7 +540,7 @@ class EditProfile extends PureComponent {
 									label={strings('choose_password.username')}
 									placeholder={strings('choose_password.username')}
 									onChangeText={text => (this.username = text.replace(this.regex, ''))}
-									testId={'edit-profile-username-field'}
+									testID={'edit-profile-username-field'}
 								/>
 								<TextField
 									value={this.firstname}
@@ -553,7 +555,7 @@ class EditProfile extends PureComponent {
 										this.nameErrorText = '';
 									}}
 									errorText={this.nameErrorText}
-									testId={'edit-profile-name-field'}
+									testID={'edit-profile-name-field'}
 								/>
 								<TextField
 									value={this.lastname}
@@ -570,7 +572,7 @@ class EditProfile extends PureComponent {
 										this.surnameErrorText = '';
 									}}
 									errorText={this.surnameErrorText}
-									testId={'edit-profile-surname-field'}
+									testID={'edit-profile-surname-field'}
 								/>
 								<TextField
 									value={this.email}
@@ -589,7 +591,7 @@ class EditProfile extends PureComponent {
 											<Icon name="remove" size={16} color={colors.fontError} />
 										)
 									}
-									testId={'edit-profile-email-field'}
+									testID={'edit-profile-email-field'}
 								/>
 								{!!this.email &&
 									validator.isEmail(this.email) &&
@@ -668,6 +670,7 @@ class EditProfile extends PureComponent {
 								this.isViewModal = false;
 							}}
 							activeOpacity={1}
+							{...testID('edit-profile-screen-change-avatar-modal')}
 						>
 							<View style={styles.contentModal}>
 								<StyledButton

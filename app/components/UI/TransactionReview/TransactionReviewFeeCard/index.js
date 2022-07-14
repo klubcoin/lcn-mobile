@@ -5,6 +5,7 @@ import { colors } from '../../../../styles/common';
 import { strings } from '../../../../../locales/i18n';
 import Summary from '../../../Base/Summary';
 import Text from '../../../Base/Text';
+import { testID } from '../../../../util/Logger';
 
 const styles = StyleSheet.create({
 	overview: {
@@ -182,7 +183,11 @@ class TransactionReviewFeeCard extends PureComponent {
 					</Summary.Row>
 				</Summary>
 				{showCustomNonce && (
-					<TouchableOpacity style={styles.customNonce} onPress={onNonceEdit}>
+					<TouchableOpacity
+						style={styles.customNonce}
+						onPress={onNonceEdit}
+						{...testID('transaction-review-fee-card-component-custom-nonce')}
+					>
 						<Text bold style={{ color: colors.fontPrimary }}>
 							{strings('transaction.custom_nonce')}
 						</Text>

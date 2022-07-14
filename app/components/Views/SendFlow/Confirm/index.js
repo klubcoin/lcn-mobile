@@ -773,7 +773,11 @@ class Confirm extends PureComponent {
 				propagateSwipe
 			>
 				<View style={styles.hexDataWrapper}>
-					<TouchableOpacity style={styles.hexDataClose} onPress={this.toggleHexDataModal}>
+					<TouchableOpacity
+						style={styles.hexDataClose}
+						onPress={this.toggleHexDataModal}
+						{...testID('send-flow-confirm-toggle-hex-data-button')}
+					>
 						<IonicIcon name={'ios-close'} size={28} color={colors.black} />
 					</TouchableOpacity>
 					<View style={styles.qrCode}>
@@ -865,6 +869,7 @@ class Confirm extends PureComponent {
 				onToSelectedAddressChange={this.onToSelectedAddressChange}
 				confusableCollection={(!existingContact && confusableCollection) || []}
 				displayExclamation={displayExclamation}
+				prefixTestId={'send-flow-confirm'}
 			/>
 		);
 
@@ -963,7 +968,11 @@ class Confirm extends PureComponent {
 						)}
 						<View style={styles.actionsWrapper}>
 							{showHexData && (
-								<TouchableOpacity style={styles.actionTouchable} onPress={this.toggleHexDataModal}>
+								<TouchableOpacity
+									style={styles.actionTouchable}
+									onPress={this.toggleHexDataModal}
+									{...testID('send-flow-confirm-toggle-hex-data-button-2')}
+								>
 									<Text style={styles.actionText}>{strings('transaction.hex_data')}</Text>
 								</TouchableOpacity>
 							)}
@@ -975,7 +984,7 @@ class Confirm extends PureComponent {
 							disabled={!gasEstimationReady || Boolean(errorMessage) || transactionConfirmed}
 							containerStyle={styles.buttonNext}
 							onPress={this.onNext}
-							{...testID('send-flow-confirm-send-button')}
+							testID={'send-flow-confirm-send-button'}
 						>
 							{transactionConfirmed ? (
 								<ActivityIndicator size="small" color="white" />
