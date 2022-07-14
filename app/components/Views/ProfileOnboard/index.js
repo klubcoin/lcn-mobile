@@ -40,7 +40,7 @@ import { testID } from '../../../util/Logger';
 export const SUCCESS = 'success';
 export const ALREADY_EXISTS = 'already_exists';
 
-const emailNameRegex = /^[0-9a-zA-Z.]*$/;
+export const emailNameRegex = /^[0-9a-zA-Z.]*$/;
 class ProfileOnboard extends PureComponent {
 	static navigationOptions = ({ navigation }) => getOnboardingNavbarOptions(navigation);
 
