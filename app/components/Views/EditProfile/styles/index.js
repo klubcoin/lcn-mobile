@@ -1,4 +1,4 @@
-import { colors, fontStyles } from '../../../../styles/common';
+import { colors } from '../../../../styles/common';
 import { StyleSheet } from 'react-native';
 import { assignNestedObj } from '../../../../util/object';
 import brandStyles from './brand';
@@ -35,21 +35,9 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 		marginBottom: 30
 	},
-	textInput: {
-		height: 45,
-		...fontStyles.normal,
-		borderWidth: StyleSheet.hairlineWidth,
-		borderRadius: 25,
-		paddingHorizontal: 10,
-		marginBottom: 20,
-		fontSize: 18,
-		alignItems: 'center',
-		textAlign: 'center'
-	},
 	next: {
 		width: 240
 	},
-	hintLabel: {},
 	fullname: {},
 	centerModal: {},
 	contentModal: {},

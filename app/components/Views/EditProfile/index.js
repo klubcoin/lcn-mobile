@@ -20,7 +20,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import StyledButton from '../../UI/StyledButton';
 import { strings } from '../../../../locales/i18n';
 import Device from '../../../util/Device';
-import Toast from 'react-native-toast-message';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import styles from './styles/index';
 import TextField from '../../UI/TextField';
@@ -31,7 +30,6 @@ import { showError, showSuccess } from '../../../util/notify';
 import Api from '../../../services/api';
 import routes from '../../../common/routes';
 import Engine from '../../../core/Engine';
-import * as sha3JS from 'js-sha3';
 import { setOnboardProfile } from '../../../actions/user';
 import { renderAccountName } from '../../../util/address';
 import { allCountries } from 'country-telephone-data';
@@ -139,6 +137,7 @@ class EditProfile extends PureComponent {
 			lastname
 		};
 	}
+
 	componentDidUpdate() {
 		this.updateProfile();
 	}
@@ -211,7 +210,7 @@ class EditProfile extends PureComponent {
 	onPhoneNumberChange = (countryCode, phoneNumber) => {
 		this.phone = phoneNumber;
 		this.onCheckPhoneNumberError();
-		if (!REGEX_PHONE_NUMBER.test(phoneNumber) || !this.countryCode) {
+		if (!REGEX_PHONE_NUMBER.test(phoneNumber) || !countryCode) {
 			this.isValidPhoneNumber = false;
 			return;
 		}
@@ -245,11 +244,12 @@ class EditProfile extends PureComponent {
 									this.isChangedAvatar = true;
 								})
 								.catch(err => {
+									console.log(err);
 									this.notiMessage = strings('profile.grant_permission_gallery_notification');
 									PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
-										res => {
+										response => {
 											this.isViewModal = false;
-											this.notiPermissionCamera = !res;
+											this.notiPermissionCamera = !response;
 										}
 									);
 								});
@@ -271,11 +271,14 @@ class EditProfile extends PureComponent {
 							this.isChangedAvatar = true;
 						})
 						.catch(err => {
+							console.log(err);
 							this.notiMessage = strings('profile.grant_permission_gallery_notification');
-							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
-								this.isViewModal = false;
-								this.notiPermissionCamera = !res;
-							});
+							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
+								response => {
+									this.isViewModal = false;
+									this.notiPermissionCamera = !response;
+								}
+							);
 						});
 				}
 			});
@@ -292,6 +295,7 @@ class EditProfile extends PureComponent {
 					this.isChangedAvatar = true;
 				})
 				.catch(err => {
+					console.log(err);
 					this.notiMessage = strings('profile.grant_permission_gallery_notification');
 					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
 						.then(result => {
@@ -331,6 +335,7 @@ class EditProfile extends PureComponent {
 				this.isChangedAvatar = true;
 			})
 			.catch(err => {
+				console.log(err);
 				this.notiMessage = strings('profile.grant_permission_camera_notification');
 				if (Platform.OS === 'android') {
 					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
@@ -369,25 +374,11 @@ class EditProfile extends PureComponent {
 		this.isViewModal = true;
 	}
 
-	showNotice(message) {
-		Toast.show({
-			type: 'error',
-			text1: message,
-			text2: strings('profile.notice'),
-			visibilityTime: 1000
-		});
-	}
-
 	isDataValid() {
 		const firstname = this.firstname?.trim();
 		const lastname = this.lastname?.trim();
 		const email = this.email?.trim();
 		const phone = this.phone?.trim();
-
-		// if (!this.avatar) {
-		// 	showError(strings('profile.missing_photo'));
-		// 	return;
-		// }
 		if (!firstname) {
 			showError(strings('profile.missing_name'));
 			return;
@@ -404,10 +395,6 @@ class EditProfile extends PureComponent {
 			showError(strings('profile.invalid_email'));
 			return;
 		}
-		// if (!phone) {
-		// 	showError(strings('profile.missing_phone'));
-		// 	return;
-		// }
 		if (phone && (!REGEX_PHONE_NUMBER.test(phone) || !this.countryCode)) {
 			showError(strings('profile.invalid_phone'));
 			return;
@@ -419,8 +406,16 @@ class EditProfile extends PureComponent {
 		this.onUpdate();
 	}
 
+	onSelectCountryCode = item => {
+		this.countryCode = item.dialCode;
+		this.onPhoneNumberChange(item.dialCode, this.phone);
+		this.showCountryCodePicker = false;
+	};
+
 	async onUpdate() {
-		if (this.isLoading) return;
+		if (this.isLoading) {
+			return;
+		}
 		this.isLoading = true;
 
 		const username = this.username?.trim();
@@ -438,9 +433,10 @@ class EditProfile extends PureComponent {
 		try {
 			const selectedAddress = Engine.state.PreferencesController.selectedAddress;
 			const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
-
 			if (this.avatar && this.avatar !== path) {
-				if (await RNFS.exists(path)) await RNFS.unlink(path); //remove existing file
+				if (await RNFS.exists(path)) {
+					await RNFS.unlink(path);
+				} //remove existing file
 				await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
 				this.avatar = path;
 				this.time = new Date();
@@ -450,7 +446,6 @@ class EditProfile extends PureComponent {
 			// const avatarb64 = await RNFS.readFile(path, 'base64');
 			const publicInfo = JSON.stringify({ firstname, lastname });
 			const privateInfo = JSON.stringify({ emailAddress: email, phoneNumber: phone });
-			const hash = sha3JS.keccak_256(firstname + lastname + lowerCaseSelectedAddress + publicInfo);
 			const signature = await CryptoSignature.signMessage(lowerCaseSelectedAddress, publicInfo);
 			const params = [username, lowerCaseSelectedAddress, signature, publicInfo, privateInfo];
 			//Update wallet info on server
@@ -655,11 +650,7 @@ class EditProfile extends PureComponent {
 							placeholder={strings('profile.search')}
 							items={allCountries}
 							countryCode={this.countryCode}
-							onSelectCountryCode={item => {
-								this.countryCode = item.dialCode;
-								this.onPhoneNumberChange(item.dialCode, this.phone);
-								this.showCountryCodePicker = false;
-							}}
+							onSelectCountryCode={this.onSelectCountryCode}
 							onClose={() => (this.showCountryCodePicker = false)}
 						/>
 					)}
