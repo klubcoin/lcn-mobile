@@ -65,10 +65,10 @@ class VerifyOTP extends PureComponent {
 				this.isSentEmail = true;
 				this.timing();
 			} else {
-				this.sendOTPEmail();
+				this.verifyEmailBeforeSendOTP();
 			}
 		} else {
-			this.sendOTPEmail();
+			this.verifyEmailBeforeSendOTP();
 		}
 		BackHandler.addEventListener('hardwareBackPress', this.disableBackAction);
 	}
@@ -95,10 +95,8 @@ class VerifyOTP extends PureComponent {
 				case 'success':
 					this.resendOTP = false;
 					this.isSentEmail = false;
-					this.verifyEmail();
 					break;
 				case 'retry_later':
-					this.verifyEmail();
 					break;
 				case 'too_many_requests':
 					this.tooManySendOtp = true;
@@ -124,6 +122,7 @@ class VerifyOTP extends PureComponent {
 					this.timingResend = 60;
 					this.timing();
 			}
+			this.verifyEmail();
 		});
 	}
 
@@ -131,12 +130,34 @@ class VerifyOTP extends PureComponent {
 		this.gettingEmailStatus = true;
 		APIService.getOtpStatus(this.email, (success, json) => {
 			this.gettingEmailStatus = false;
-			if (!!json?.creationDate) {
+			if (+json.attempts >= 5) {
+				this.tooManyVerifyAttempts = true;
+			} else if (!!json?.creationDate) {
 				this.storeTimeSendEmail(json?.creationDate);
 				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
 				this.timing();
 			} else {
 				this.timingResend = 0;
+			}
+		});
+	};
+
+	verifyEmailBeforeSendOTP = () => {
+		this.gettingEmailStatus = true;
+		APIService.getOtpStatus(this.email, (success, json) => {
+			this.gettingEmailStatus = false;
+			if (+json.attempts >= 5) {
+				this.tooManyVerifyAttempts = true;
+			} else if (!!json?.creationDate) {
+				this.storeTimeSendEmail(json?.creationDate);
+				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+				this.timing();
+				if (this.timingResend <= 0) {
+					this.sendOTPEmail();
+				}
+			} else {
+				this.timingResend = 0;
+				this.sendOTPEmail();
 			}
 		});
 	};
@@ -171,6 +192,7 @@ class VerifyOTP extends PureComponent {
 					break;
 				default:
 			}
+			this.verifyEmail();
 		});
 	}
 
@@ -230,7 +252,7 @@ class VerifyOTP extends PureComponent {
 								) : this.timingResend > 0 ? (
 									<Text>{strings('verify_otp.resend_in', { second: this.timingResend })}</Text>
 								) : (
-									<Text style={styles.resendText} onPress={() => this.sendOTPEmail()}>
+									<Text style={styles.resendText} onPress={() => this.verifyEmailBeforeSendOTP()}>
 										{strings('verify_otp.resend_now')}
 									</Text>
 								)}
