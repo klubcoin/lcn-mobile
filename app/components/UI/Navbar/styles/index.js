@@ -49,7 +49,10 @@ const styles = StyleSheet.create({
 	backButton: {
 		paddingLeft: Device.isAndroid() ? 22 : 18,
 		paddingRight: Device.isAndroid() ? 22 : 18,
-		marginTop: 5
+		marginTop: 5,
+		height: 48,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	closeButton: {
 		paddingHorizontal: Device.isAndroid() ? 22 : 18,
@@ -119,10 +122,10 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	centeredWhiteTitle: {
-		color: colors.white,
+		color: colors.white
 	},
 	headerBackground: {
-		backgroundColor: colors.white,
+		backgroundColor: colors.white
 	}
 });
 

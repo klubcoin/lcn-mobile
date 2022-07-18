@@ -4,8 +4,8 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Toast from 'react-native-toast-message';
 
-import { ReactNativeKeycloakProvider } from '@react-keycloak/native';
-import keycloak from '../../../../keycloak';
+// import { ReactNativeKeycloakProvider } from '@react-keycloak/native';
+// import keycloak from '../../../../keycloak';
 
 import { store, persistor } from '../../../store/';
 import SplashScreen from 'react-native-splash-screen';
@@ -15,9 +15,9 @@ import SecureKeychain from '../../../core/SecureKeychain';
 import EntryScriptWeb3 from '../../../core/EntryScriptWeb3';
 import Logger from '../../../util/Logger';
 import ErrorBoundary from '../ErrorBoundary';
-import { Provider as ProviderMobX } from 'mobx-react'
+import { Provider as ProviderMobX } from 'mobx-react';
 import TrackPlayer from 'react-native-track-player';
-import preferences from '../../../../app/store/preferences'
+import preferences from '../../../../app/store/preferences';
 import messageStore from '../../../../app/components/Views/Message/store';
 import marketStore from '../../../../app/components/Views/MarketPlace/store';
 import NotifPopup from '../../UI/NotifPopup';
@@ -28,16 +28,8 @@ preferences.load();
 TrackPlayer.setupPlayer().then(async () => {
 	TrackPlayer.updateOptions({
 		stopWithApp: true,
-		capabilities: [
-			TrackPlayer.CAPABILITY_PLAY,
-			TrackPlayer.CAPABILITY_PAUSE,
-			TrackPlayer.CAPABILITY_STOP,
-		],
-		compactCapabilities: [
-			TrackPlayer.CAPABILITY_PLAY,
-			TrackPlayer.CAPABILITY_PAUSE,
-			TrackPlayer.CAPABILITY_STOP,
-		],
+		capabilities: [TrackPlayer.CAPABILITY_PLAY, TrackPlayer.CAPABILITY_PAUSE, TrackPlayer.CAPABILITY_STOP],
+		compactCapabilities: [TrackPlayer.CAPABILITY_PLAY, TrackPlayer.CAPABILITY_PAUSE, TrackPlayer.CAPABILITY_STOP]
 	});
 });
 
@@ -67,30 +59,29 @@ export default class Root extends PureComponent {
 	}
 
 	render = () => (
-		<ReactNativeKeycloakProvider
-			authClient={keycloak}
-			initOptions={{
-				redirectUri: 'liquichain://auth',
-				inAppBrowserOptions: {},
-			}}
-			onEvent={(event, error) => {
-				console.log('=======>keycloak onEvent', event, error);
-			}}
-			onTokens={(tokens) => {
-				console.log('=========>keycloak onTokens', tokens);
-			}}
-		>
-			<Provider store={store}>
-				<ProviderMobX store={preferences} market={marketStore} messageStore={messageStore}>
-					<PersistGate persistor={persistor}>
-						<ErrorBoundary onError={this.errorHandler} view="Root">
-							<App />
-							<Toast ref={e => Toast.setRef(e)} />
-							<NotifPopup />
-						</ErrorBoundary>
-					</PersistGate>
-				</ProviderMobX>
-			</Provider>
-		</ReactNativeKeycloakProvider>
+		// <ReactNativeKeycloakProvider
+		// 	authClient={keycloak}
+		// 	initOptions={{
+		// 		redirectUri: 'liquichain://auth',
+		// 		inAppBrowserOptions: {},
+		// 	}}
+		// 	onEvent={(event, error) => {
+		// 		console.log('=======>keycloak onEvent', event, error);
+		// 	}}
+		// 	onTokens={(tokens) => {
+		// 		console.log('=========>keycloak onTokens', tokens);
+		// 	}}
+		// >
+		<Provider store={store}>
+			<ProviderMobX store={preferences} market={marketStore} messageStore={messageStore}>
+				<PersistGate persistor={persistor}>
+					<ErrorBoundary onError={this.errorHandler} view="Root">
+						<App />
+						<Toast ref={e => Toast.setRef(e)} />
+					</ErrorBoundary>
+				</PersistGate>
+			</ProviderMobX>
+		</Provider>
+		// </ReactNativeKeycloakProvider>
 	);
 }

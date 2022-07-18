@@ -702,7 +702,7 @@ export function getComingSoonNavbarOptions(navigation) {
 	const navigationPop = () => navigation.pop();
 	return {
 		headerStyle: {
-			shadowColor: colors.white,
+			shadowColor: colors.transparent,
 			elevation: 0,
 			backgroundColor: colors.white,
 			borderBottomWidth: 0
