@@ -35,14 +35,15 @@ export default class ChatService {
 			if (action) {
 				if (action == ChatProfile().action) {
 					const { profile } = data.message;
-					if (!profile) {
-						const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
-						const name = `${firstname} ${lastname}`;
-						const hasAvatar = avatar && (await RNFS.exists(avatar));
-						const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
-						const webrtc = refWebRTC();
-						webrtc.sendToPeer(peerId, ChatProfile({ name, firstname, lastname, avatar: avatarb64 }));
+					if (profile) {
+						await preferences.setPeerProfile(peerId, profile);
 					}
+					const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
+					const name = `${firstname} ${lastname}`;
+					const hasAvatar = avatar && (await RNFS.exists(avatar));
+					const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
+					const webrtc = refWebRTC();
+					webrtc.sendToPeer(peerId, ChatProfile({ name, firstname, lastname, avatar: avatarb64 }));
 				} else if (action == Typing().action) {
 					const peer = preferences.peerProfile(peerId);
 					if (!peer) fetchProfile(peerId);
@@ -140,6 +141,11 @@ export default class ChatService {
 			}
 		}
 	};
+
+	send(peerId, data) {
+		const webrtc = refWebRTC();
+		webrtc.sendToPeer(peerId, data);
+	}
 }
 
 const state = { chatService: null };

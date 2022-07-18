@@ -208,7 +208,15 @@ class Chat extends Component {
 		members.map(e => !peers.includes(e) && peers.push(e));
 		this.getWalletInfos(peers);
 		store.saveConversationPeers(groupId, peers);
-		this.messaging.send(ChatProfile());
+		this.sendChatProfile();
+	}
+
+	async sendChatProfile() {
+		const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
+		const name = `${firstname} ${lastname}`;
+		const hasAvatar = avatar && (await RNFS.exists(avatar));
+		const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
+		this.messaging.send(ChatProfile({ name, firstname, lastname, avatar: avatarb64 }));
 	}
 
 	fetchGroupDetailForwards(groupId, contact) {
@@ -217,7 +225,7 @@ class Chat extends Component {
 		members.map(e => !peers.includes(e) && peers.push(e));
 		this.getWalletInfos(peers);
 		store.saveConversationPeers(groupId, peers);
-		this.messaging.send(ChatProfile());
+		this.sendChatProfile();
 	}
 
 	getWalletInfos = members => {

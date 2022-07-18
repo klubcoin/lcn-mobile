@@ -13,7 +13,9 @@ import store from '../Message/store';
 import preferences from '../../../store/preferences';
 import { refWebRTC } from '../../../services/WebRTC';
 import MessagingWebRTC from '../Message/store/MessagingWebRTC';
-import { Chat } from '../Message/store/Messages';
+import { Chat, ChatProfile } from '../Message/store/Messages';
+import { refChatService } from '../Message/store/ChatService';
+import * as RNFS from 'react-native-fs';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -104,10 +106,45 @@ const styles = StyleSheet.create({
 
 const ChatList = ({ route, navigation, ...props }) => {
 	const [conversations, setConversations] = useState([]);
+	const [chatService, setChatService] = useState(null);
 
 	useEffect(() => {
 		navigation.addListener('didFocus', fetchHistoryMessages);
 	});
+
+	useEffect(() => {
+		setChatService(refChatService());
+	}, []);
+
+	useEffect(() => {
+		if (conversations.length > 0 && chatService) {
+			const peers = conversations.map(conversation => conversation.address);
+			peers.forEach(peer => {
+				sendProfile(peer);
+			});
+		}
+	}, [chatService, conversations]);
+
+	useEffect(() => {
+		const listeners = initConnection();
+		store.setActiveChatPeerId(null);
+		fetchHistoryMessages();
+
+		return () => {
+			listeners.forEach(listener => listener.remove());
+		};
+	}, [route, navigation]);
+
+	const sendProfile = async peerId => {
+		const { avatar, firstname, lastname } = await preferences.getOnboardProfile();
+		const name = `${firstname} ${lastname}`;
+		const hasAvatar = avatar && (await RNFS.exists(avatar));
+		const avatarb64 = hasAvatar ? await RNFS.readFile(avatar, 'base64') : '';
+		chatService.send(
+			peerId,
+			Chat(ChatProfile({ name, firstname, lastname, avatar: avatarb64 }), props.selectedAddress, peerId)
+		);
+	};
 
 	const initConnection = () => {
 		const messaging = new MessagingWebRTC(null, null, refWebRTC());
@@ -153,17 +190,6 @@ const ChatList = ({ route, navigation, ...props }) => {
 			);
 		setConversations(users);
 	};
-
-	useEffect(() => {
-		const listeners = initConnection();
-		store.setActiveChatPeerId(null);
-		fetchHistoryMessages();
-
-		return () => {
-			listeners.forEach(listener => listener.remove());
-		};
-	}, [route, navigation]);
-
 	const onAddChat = () => {
 		navigation.navigate('NewChat');
 	};
