@@ -2241,6 +2241,9 @@
 		"done": "Done",
 		"payment_error": "Payment error",
 		"invalid_order": "Invalid order. Please check again!",
-		"order_paid": "This order has been paid"
+		"order_paid": "This order has been paid",
+		"cancel_order_title": "Cancel this order?",
+		"confirm": "Confirm",
+		"dismiss": "Dismiss"
 	}
 }

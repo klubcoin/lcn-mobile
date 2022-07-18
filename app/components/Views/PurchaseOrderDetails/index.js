@@ -7,10 +7,12 @@ import {
 	ScrollView,
 	ActivityIndicator,
 	DeviceEventEmitter,
-	InteractionManager
+	InteractionManager,
+	Modal,
+	TouchableOpacity
 } from 'react-native';
 import Text from '../../Base/Text';
-import { colors } from '../../../styles/common';
+import { colors, fontStyles } from '../../../styles/common';
 import PropTypes from 'prop-types';
 import { strings } from '../../../../locales/i18n';
 import StyledButton from '../../UI/StyledButton';
@@ -37,6 +39,8 @@ import { resetTransaction } from '../../../actions/transaction';
 import RawTransaction from '../../../services/RawTransaction';
 import { showError } from '../../../util/notify';
 import Transaction from 'ethereumjs-tx';
+import ActionModal from '../../UI/ActionModal';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const styles = StyleSheet.create({
 	scrollViewContainer: {
@@ -151,6 +155,32 @@ const styles = StyleSheet.create({
 	cancel: {
 		fontWeight: '700',
 		color: colors.white
+	},
+	modalNoBorder: {
+		borderTopWidth: 0
+	},
+	skipModalContainer: {
+		flex: 1,
+		margin: 12,
+		flexDirection: 'column'
+	},
+	imageWarning: {
+		width: 100,
+		height: 100,
+		alignSelf: 'center'
+	},
+	skipTitle: {
+		fontSize: 24,
+		marginTop: 12,
+		marginBottom: 16,
+		color: colors.red,
+		textAlign: 'center',
+		...fontStyles.bold
+	},
+	loadingWrapper: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
 	}
 });
 
@@ -159,6 +189,7 @@ const PARTNER_LOGO = require('../../../images/clubbingtv_logo.jpeg');
 const GENESIS_ADDRESS = '0xb4bF880BAfaF68eC8B5ea83FaA394f5133BB9623';
 
 const ASSET_TYPE = 'ERC20';
+const warning_skip_backup = require('../../../images/warning.png');
 
 const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identities, resetTransaction }) => {
 	const [account, setAccount] = useState({});
@@ -177,6 +208,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	const [orderDetail, setOrderDetail] = useState();
 	const [loading, setLoading] = useState(true);
 	const [customNetworkFee, setCustomNetworkFee] = useState({});
+	const [showCancelModal, setShowCancelModal] = useState(false);
 
 	const klubToken = Routes.klubToken;
 	useEffect(() => {
@@ -272,7 +304,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 		});
 	}, [currencyRates, currency]);
 
-	const onCancel = () => {
+	const onCancelPurchase = () => {
 		navigation.goBack();
 		navigation.navigate('Dashboard');
 	};
@@ -343,7 +375,7 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					// await new Promise(resolve => resolve(result));
 
 					InteractionManager.runAfterInteractions(async () => {
-						DeviceEventEmitter.emit(`SubmitTransaction`, transactionMeta);
+						DeviceEventEmitter.emit('SubmitTransaction', transactionMeta);
 						NotificationManager.watchSubmittedTransaction({
 							...transactionMeta,
 							ASSET_TYPE
@@ -377,9 +409,16 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 		navigation.navigate('PurchaseSuccess');
 	};
 
+	const onShowCancelModal = () => {
+		setShowCancelModal(true);
+	};
+	const onHideCancelModal = () => {
+		setShowCancelModal(false);
+	};
+
 	const renderLoading = () => {
 		return (
-			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+			<View style={styles.loadingWrapper}>
 				<ActivityIndicator color={colors.white} />
 			</View>
 		);
@@ -426,8 +465,9 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 					<View style={styles.lineBlue} />
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>{strings('purchase_order_details.amount')}</Text>
-						<Text style={styles.itemText}>{`${orderDetail?.lines[0].totalAmount.value
-							} ${currency.toUpperCase()}`}</Text>
+						<Text style={styles.itemText}>{`${
+							orderDetail?.lines[0].totalAmount.value
+						} ${currency.toUpperCase()}`}</Text>
 					</View>
 					<View style={styles.rowItem}>
 						<Text style={styles.itemTextTitle}>
@@ -481,13 +521,35 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 							testID={'purchase-order-detail-cancel-button'}
 							type={'warning'}
 							containerStyle={styles.actionButton}
-							onPress={onCancel}
+							onPress={onShowCancelModal}
 							disabled={purchasing || loadingFee}
 						>
 							<Text style={styles.cancel}>{strings('purchase_order_details.cancel')}</Text>
 						</StyledButton>
 					</View>
 				</View>
+				<ActionModal
+					confirmText={strings('purchase_order_details.confirm').toUpperCase()}
+					cancelText={strings('purchase_order_details.dismiss').toUpperCase()}
+					confirmButtonMode={'warning'}
+					displayCancelButton
+					cancelButtonMode={'normal'}
+					modalVisible={showCancelModal}
+					actionContainerStyle={styles.modalNoBorder}
+					onCancelPress={onHideCancelModal}
+					onConfirmPress={onCancelPurchase}
+					verticalButtons
+				>
+					<View style={styles.skipModalContainer}>
+						<Image
+							source={warning_skip_backup}
+							style={styles.imageWarning}
+							resizeMethod={'auto'}
+							testID={'skip_backup_warning'}
+						/>
+						<Text style={styles.skipTitle}>{strings('purchase_order_details.cancel_order_title')}</Text>
+					</View>
+				</ActionModal>
 			</>
 		);
 	};
