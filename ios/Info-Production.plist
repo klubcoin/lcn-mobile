@@ -26,12 +26,13 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>liquichain</string>
+			<string>klubcoin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>liquichain</string>
+				<string>klubcoin</string>
 			</array>
 		</dict>
+		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
