@@ -330,7 +330,26 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 		return networkFee;
 	};
 
+	const checkAmount = () => {
+		const { gas, gasPrice } = customNetworkFee ?? {};
+		const totalTokenFee = fromWei(gas.mul(gasPrice));
+		const totalAmount = new BigNumber(orderDetail?.lines[0].totalAmount.value);
+		const totalToken = totalAmount.multipliedBy(price.currencyToKlub);
+		const amount = BNToHex(toTokenMinimalUnit(totalToken, klubToken.decimals));
+		const amountDec = fromWei(amount);
+		const accountBalance = fromWei(account.balance);
+		const totalAmountPaid = new BigNumber(totalTokenFee).plus(amountDec);
+		if (totalAmountPaid.gt(accountBalance)) {
+			showError(strings('transaction.insufficient'));
+			return false;
+		}
+		return true;
+	};
+
 	const onPurchase = async () => {
+		if (!checkAmount()) {
+			return;
+		}
 		try {
 			const { TransactionController, NetworkController, KeyringController } = Engine.context;
 			setPurchasing(true);

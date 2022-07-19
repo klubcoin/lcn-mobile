@@ -78,6 +78,7 @@ export default class Root extends PureComponent {
 					<ErrorBoundary onError={this.errorHandler} view="Root">
 						<App />
 						<Toast ref={e => Toast.setRef(e)} />
+						<NotifPopup />
 					</ErrorBoundary>
 				</PersistGate>
 			</ProviderMobX>
