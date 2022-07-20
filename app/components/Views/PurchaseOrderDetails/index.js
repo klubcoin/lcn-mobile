@@ -305,8 +305,13 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 	}, [currencyRates, currency]);
 
 	const onCancelPurchase = () => {
-		navigation.goBack();
-		navigation.navigate('Dashboard');
+		const orderId = navigation?.state?.params?.orderId;
+		APIService.cancelPayment(orderId, (success, json) => {
+			if (!!json.id) {
+				navigation.goBack();
+				navigation.navigate('Dashboard');
+			}
+		});
 	};
 
 	useEffect(() => {

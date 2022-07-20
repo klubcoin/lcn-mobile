@@ -1403,7 +1403,7 @@ class Chat extends Component {
 
 	renderBubble = message => {
 		const { selectedAddress } = this.props;
-		const { createdAt, text, user, payload, hided, quote, edited, isReceived, isSeen, forward } = message;
+		const { createdAt, text, user, payload, hided, quote, edited, isReceived, isSeen, forward, _id } = message;
 		const { messages, layoutMessages } = this.state;
 		const { members } = this.groupInfo();
 		const failed = members?.length <= 2 && !this.state.group && payload?.failed === true;
@@ -1418,7 +1418,7 @@ class Chat extends Component {
 
 		if (message.deleted) {
 			return (
-				<View style={styles.chatBubbleDelete}>
+				<View style={styles.chatBubbleDelete} key={_id}>
 					<Text style={[styles.time, styleTime]}>{chatTime.format('dddd DD MMMM, HH:mm')}</Text>
 					<View style={styles.textMessage}>
 						<Text style={styles.removeMessage}>{strings('chat.remove_message')}</Text>
@@ -1428,7 +1428,7 @@ class Chat extends Component {
 		}
 
 		return (
-			<>
+			<View key={_id}>
 				{edited && !incoming && <MaterialCommunityIcons name="pencil-outline" style={styles.editedIcon} />}
 				<TouchableOpacity
 					style={[styles.chatBubble, !!quote && styles.quoteBubble]}
@@ -1479,7 +1479,7 @@ class Chat extends Component {
 						: this.renderSendingIcon()}
 				</TouchableOpacity>
 				{edited && incoming && <MaterialCommunityIcons name="pencil-outline" style={styles.editedIcon} />}
-			</>
+			</View>
 		);
 	};
 
@@ -1775,12 +1775,12 @@ class Chat extends Component {
 		this.addNewMessageIntoGroup(message, group, peerId);
 	};
 
-	renderForwardItem = item => {
+	renderForwardItem = (item, index) => {
 		const { forwardSentList } = this.state;
 		const { address, firstname, lastname, avatar } = item;
 		const profile = preferences.peerProfile(address);
 		return (
-			<View style={styles.forwardItemWrapper}>
+			<View style={styles.forwardItemWrapper} key={index}>
 				{this.renderForwardAvatar(
 					firstname,
 					lastname,
@@ -1959,8 +1959,8 @@ class Chat extends Component {
 							/>
 							<ScrollView style={styles.forwardSuggestList}>
 								<Text style={styles.forwardSuggestTitle}>{strings('chat.suggested')}</Text>
-								{displayHistoryMessage.map(e => this.renderForwardItem(e))}
-								{forwardNewInfo && this.renderForwardItem(forwardNewInfo)}
+								{displayHistoryMessage.map((e, index) => this.renderForwardItem(e, index))}
+								{forwardNewInfo && this.renderForwardItem(forwardNewInfo, 'i')}
 								{loadingForwardNewInfo && <ActivityIndicator color={colors.black} />}
 								{!loadingForwardNewInfo && displayHistoryMessage.length === 0 && !forwardNewInfo && (
 									<Text style={styles.notFoundContact}>{strings('chat.not_found_contact')}</Text>

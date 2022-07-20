@@ -230,13 +230,8 @@ const ChatList = ({ route, navigation, ...props }) => {
 		}
 		const profile = preferences.peerProfile(address);
 		return (
-			<>
-				<TouchableOpacity
-					key={address}
-					style={styles.chatWrapper}
-					activeOpacity={0.7}
-					onPress={() => onViewChat(address)}
-				>
+			<View key={address}>
+				<TouchableOpacity style={styles.chatWrapper} activeOpacity={0.7} onPress={() => onViewChat(address)}>
 					{renderAvatar(
 						firstname,
 						lastname,
@@ -275,7 +270,7 @@ const ChatList = ({ route, navigation, ...props }) => {
 					</View>
 				</TouchableOpacity>
 				{renderLine()}
-			</>
+			</View>
 		);
 	};
 

@@ -47,6 +47,7 @@ export default class APIService {
 	static apiOtpStatus = email => `${APIService.routeMeveoAPI()}/rest/otpStatus/${email}`;
 	static apiGetPaymentDetail = orderId => `${APIService.routeMeveoAPI()}/rest/pg/v1/orders/${orderId}`;
 	static apiSendPayment = orderId => `${APIService.routeMeveoAPI()}/rest/pg/v1/payOrder/${orderId}`;
+	static apiCancelPayment = orderId => `${APIService.routeMeveoAPI()}/rest/pg/v1/orders`;
 
 	static apiGooglePlaceSearch = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=%%query%%&key=${
 		config.googleApi.key
@@ -327,6 +328,14 @@ export default class APIService {
 
 	static getPaymentInfo(orderId, callback) {
 		WebService.sendGetDirect(this.apiGetPaymentDetail(orderId), {}, callback);
+	}
+
+	static cancelPayment(orderId, callback) {
+		const data = {
+			id: orderId,
+			status: 'canceled'
+		};
+		WebService.sendPostDirect(this.apiCancelPayment(), data, callback);
 	}
 
 	static sendPaymentRawTransaction(orderId, rawTransaction, callback) {
