@@ -16,7 +16,6 @@ const brandStyles = StyleSheet.create({
 		fontSize: 16,
 		color: colors.white,
 		marginTop: 15,
-		lineHeight: 15
 	},
 	text: {},
 	resendText: {
