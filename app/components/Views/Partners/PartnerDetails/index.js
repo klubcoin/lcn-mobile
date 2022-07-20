@@ -35,11 +35,9 @@ class PartnerDetails extends PureComponent {
 	}
 
 	async onViewPartners() {
-		const supported = await Linking.canOpenURL(this.websiteUrl);
-
-		if (supported) {
+		try {
 			await Linking.openURL(this.websiteUrl);
-		} else {
+		} catch (err) {
 			Alert.alert(`Don't know how to open this URL: ${this.websiteUrl}`);
 		}
 	}
