@@ -15,8 +15,6 @@ const Api = {
 				params: parameters
 			})
 		};
-		console.log('url', url);
-		console.log('fetchOptions', fetchOptions);
 		fetch(url, fetchOptions)
 			.then(response => response.json())
 			.then(json => {
@@ -65,8 +63,6 @@ const Api = {
 			headers,
 			body: JSON.stringify(parameters?.rawBody ? parameters.rawBody : parameters)
 		};
-		console.log('url', url);
-		console.log('fetchOptions', fetchOptions);
 		fetch(url, fetchOptions)
 			.then(response => response.text())
 			.then(text => {
@@ -160,7 +156,6 @@ const Api = {
 			},
 			body: 'grant_type=client_credentials'
 		};
-		console.log(fetchOptions);
 		fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', fetchOptions)
 			.then(response => response.json())
 			.then(json => {
@@ -181,7 +176,6 @@ const Api = {
 			},
 			body: JSON.stringify(data)
 		};
-		console.log(fetchOptions);
 		fetch('https://api-m.sandbox.paypal.com/v2/checkout/orders', fetchOptions)
 			.then(response => response.json())
 			.then(json => {

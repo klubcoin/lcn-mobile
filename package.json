@@ -61,7 +61,7 @@
 		"codePush:android": "appcenter codepush release-react -a long-phan-pv6o/LiquiChain -d Staging",
 		"codePush:ios": "appcenter codepush release-react -a long-phan-pv6o/LiquiChain-1 -d Staging",
 		"rn-nodeify": "./node_modules/.bin/rn-nodeify 'stream,crypto,react-native-randombytes,os' --hack",
-		"adbRev": "adb reverse tcp:8081 tcp:8081"
+		"adb": "adb reverse tcp:8081 tcp:8081"
 	},
 	"prettier": {
 		"printWidth": 120,

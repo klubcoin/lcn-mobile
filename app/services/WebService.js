@@ -59,8 +59,6 @@ export default class WebService {
       headers,
       body: JSON.stringify(parameters?.rawBody ? parameters.rawBody : parameters)
     }
-    console.log('url', url)
-    console.log('fetchOptions', fetchOptions)
     fetch(url, fetchOptions)
       .then(response => response.text())
       .then(text => {

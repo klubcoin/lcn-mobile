@@ -374,8 +374,8 @@ PODS:
     - React-Core
     - React-RCTImage
     - TOCropViewController
-  - RNKeychain (6.2.0):
-    - React
+  - RNKeychain (8.0.0):
+    - React-Core
   - RNOS (1.2.6):
     - React
   - RNPermissions (3.3.1):
@@ -762,7 +762,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNI18n: e2f7e76389fcc6e84f2c8733ea89b92502351fd8
   RNImageCropPicker: 73891a709e6fd8a47d32104d942757971f220aee
-  RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
+  RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926

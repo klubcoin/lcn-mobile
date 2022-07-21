@@ -68,6 +68,7 @@ class ComingSoon extends PureComponent {
 					<Text style={styles.text2}>{strings(`coming_soon.stay_in_touch_with_us`)}</Text>
 					{data.map(e => (
 						<TouchableOpacity
+							key={data.title}
 							activeOpacity={0.7}
 							style={styles.itemWrapper}
 							onPress={() => this.goTo(e.url, e.title)}

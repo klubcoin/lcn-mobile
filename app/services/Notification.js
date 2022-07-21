@@ -34,13 +34,10 @@ class Notifications {
 			},
 			() => {}
 		);
-		PushNotification.getScheduledLocalNotifications(rn => {
-			console.log('SN --- ', rn);
-		});
+		PushNotification.getScheduledLocalNotifications(rn => {});
 	}
 
 	showNotification(title = '', message = '', address = '') {
-		console.log('trying send notification');
 		PushNotification.localNotification({
 			channelId: 'reminders',
 			title,
