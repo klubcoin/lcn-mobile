@@ -457,8 +457,12 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 			const totalToken = fromWei(gas.mul(gasPrice));
 			const bigNumberTotalToken = new BigNumber(totalToken);
 			const totalBalance = bigNumberTotalToken.multipliedBy(klubToCurrency);
-			transactionFee = totalBalance.toFixed(2);
+			transactionFee = totalBalance.toFixed(8);
+			if (/./.test(transactionFee)) {
+				transactionFee = transactionFee.replace(/[^1-9]0*$/, '');
+			}
 		}
+
 		return (
 			<>
 				<View style={styles.content}>
