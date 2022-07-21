@@ -768,18 +768,16 @@ class ChoosePassword extends PureComponent {
 														appName: displayName
 													})} `
 														.split(' ')
-														.map((text, index) => {
-															console.log(`"${text}"`);
-															return (
-																<TouchableOpacity
-																	activeOpacity={1}
-																	onPress={this.setSelection}
-																	testID={`choose-password-understand-box-i-understand-text-${index}`}
-																>
-																	<Text style={styles.label}>{`${text} `}</Text>
-																</TouchableOpacity>
-															);
-														})}
+														.map((text, index) => (
+															<TouchableOpacity
+																key={index}
+																activeOpacity={1}
+																onPress={this.setSelection}
+																testID={`choose-password-understand-box-i-understand-text-${index}`}
+															>
+																<Text style={styles.label}>{`${text} `}</Text>
+															</TouchableOpacity>
+														))}
 													<TouchableOpacity
 														activeOpacity={1}
 														onPress={this.learnMore}

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Text, View, BackHandler, ActivityIndicator } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getNavigationWithoutBackOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
@@ -25,7 +25,7 @@ class VerifyOTP extends PureComponent {
 	timingResend = 0;
 	interval = null;
 	resendAble = true;
-	incorrentOTP = false;
+	incorrectOTP = false;
 	tooManyVerifyAttempts = false;
 	tooManySendOtp = false;
 	callback = null;
@@ -43,7 +43,7 @@ class VerifyOTP extends PureComponent {
 			timingResend: observable,
 			interval: observable,
 			resendAble: observable,
-			incorrentOTP: observable,
+			incorrectOTP: observable,
 			tooManyVerifyAttempts: observable,
 			tooManySendOtp: observable,
 			resendOTP: observable,
@@ -59,14 +59,16 @@ class VerifyOTP extends PureComponent {
 	async componentDidMount() {
 		const sentEmail = await AsyncStorage.getItem(this.email);
 		if (sentEmail) {
-			const timeResent = Math.ceil(60 - (new Date().getTime() - +sentEmail) / 1000);
-			this.timingResend = timeResent;
-			if (timeResent > 0) {
-				this.isSentEmail = true;
-				this.timing();
-			} else {
-				this.verifyEmailBeforeSendOTP();
-			}
+			runInAction(() => {
+				const timeResent = Math.ceil(60 - (new Date().getTime() - +sentEmail) / 1000);
+				this.timingResend = timeResent;
+				if (timeResent > 0) {
+					this.isSentEmail = true;
+					this.timing();
+				} else {
+					this.verifyEmailBeforeSendOTP();
+				}
+			});
 		} else {
 			this.verifyEmailBeforeSendOTP();
 		}
@@ -87,127 +89,147 @@ class VerifyOTP extends PureComponent {
 	}
 
 	sendOTPEmail() {
-		if (this.sendEmailOTP) return;
-		this.sendingOTP = true;
+		if (this.sendEmailOTP) {
+			return;
+		}
+		runInAction(() => {
+			this.sendingOTP = true;
+		});
 		APIService.sendEmailOTP(this.email, (success, response) => {
-			this.sendingOTP = false;
-			switch (response) {
-				case 'success':
-					this.resendOTP = false;
-					this.isSentEmail = false;
-					break;
-				case 'retry_later':
-					break;
-				case 'too_many_requests':
-					this.tooManySendOtp = true;
-					break;
-				case 'too_many_attempts':
-					this.tooManyVerifyAttempts = true;
-					break;
-				case 'already_verified':
-					showSuccess(strings('verify_otp.email_already_verified'));
-					preferences
-						.getOnboardProfile()
-						.then(value =>
-							preferences.setOnboardProfile(
-								Object.assign(value, {
-									emailVerified: true
-								})
+			runInAction(() => {
+				this.sendingOTP = false;
+				switch (response) {
+					case 'success':
+						this.resendOTP = false;
+						this.isSentEmail = false;
+						break;
+					case 'retry_later':
+						break;
+					case 'too_many_requests':
+						this.tooManySendOtp = true;
+						break;
+					case 'too_many_attempts':
+						this.tooManyVerifyAttempts = true;
+						break;
+					case 'already_verified':
+						showSuccess(strings('verify_otp.email_already_verified'));
+						preferences
+							.getOnboardProfile()
+							.then(value =>
+								preferences.setOnboardProfile(
+									Object.assign(value, {
+										emailVerified: true
+									})
+								)
 							)
-						)
-						.catch(e => console.log('profile onboarding error', e));
-					this.props.navigation.navigate('SecuritySettings');
-					break;
-				default:
-					this.timingResend = 60;
-					this.timing();
-			}
-			this.verifyEmail();
+							.catch(e => console.log('profile onboarding error', e));
+						this.props.navigation.navigate('SecuritySettings');
+						break;
+					default:
+						this.timingResend = 60;
+						this.timing();
+				}
+				this.verifyEmail();
+			});
 		});
 	}
 
 	verifyEmail = () => {
-		this.gettingEmailStatus = true;
+		runInAction(() => {
+			this.gettingEmailStatus = true;
+		});
 		APIService.getOtpStatus(this.email, (success, json) => {
-			this.gettingEmailStatus = false;
-			if (+json.attempts >= 5) {
-				this.tooManyVerifyAttempts = true;
-			} else if (!!json?.creationDate) {
-				this.storeTimeSendEmail(json?.creationDate);
-				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
-				this.timing();
-			} else {
-				this.timingResend = 0;
-			}
+			runInAction(() => {
+				this.gettingEmailStatus = false;
+				if (+json.attempts >= 5) {
+					this.tooManyVerifyAttempts = true;
+				} else if (!!json?.creationDate) {
+					this.storeTimeSendEmail(json?.creationDate);
+					this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+					this.timing();
+				} else {
+					this.timingResend = 0;
+				}
+			});
 		});
 	};
 
 	verifyEmailBeforeSendOTP = () => {
-		this.gettingEmailStatus = true;
+		runInAction(() => {
+			this.gettingEmailStatus = true;
+		});
 		APIService.getOtpStatus(this.email, (success, json) => {
-			this.gettingEmailStatus = false;
-			if (+json.attempts >= 5) {
-				this.tooManyVerifyAttempts = true;
-			} else if (!!json?.creationDate) {
-				this.storeTimeSendEmail(json?.creationDate);
-				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
-				this.timing();
-				if (this.timingResend <= 0) {
+			runInAction(() => {
+				this.gettingEmailStatus = false;
+				if (+json.attempts >= 5) {
+					this.tooManyVerifyAttempts = true;
+				} else if (!!json?.creationDate) {
+					this.storeTimeSendEmail(json?.creationDate);
+					this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+					this.timing();
+					if (this.timingResend <= 0) {
+						this.sendOTPEmail();
+					}
+				} else {
+					this.timingResend = 0;
 					this.sendOTPEmail();
 				}
-			} else {
-				this.timingResend = 0;
-				this.sendOTPEmail();
-			}
+			});
 		});
 	};
 
 	verifyOTPEmail() {
 		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {
-			this.otpEmail = '';
-			switch (response) {
-				case 'success':
-					showSuccess(strings('verify_otp.verify_success'));
-					preferences
-						.getOnboardProfile()
-						.then(value =>
-							preferences.setOnboardProfile(
-								Object.assign(value, {
-									email: this.email,
-									emailVerified: true
-								})
+			runInAction(() => {
+				this.otpEmail = '';
+				switch (response) {
+					case 'success':
+						showSuccess(strings('verify_otp.verify_success'));
+						preferences
+							.getOnboardProfile()
+							.then(value =>
+								preferences.setOnboardProfile(
+									Object.assign(value, {
+										email: this.email,
+										emailVerified: true
+									})
+								)
 							)
-						)
-						.catch(e => console.log('profile onboarding error', e));
-					this.props.navigation.navigate('SecuritySettings');
-					break;
-				case 'invalid_code':
-					this.incorrentOTP = true;
-					break;
-				case 'too_many_attempts':
-					this.tooManyVerifyAttempts = true;
-					break;
-				case 'invalid_request':
-					this.resendOTP = true;
-					break;
-				default:
-			}
-			this.verifyEmail();
+							.catch(e => console.log('profile onboarding error', e));
+						this.props.navigation.navigate('SecuritySettings');
+						break;
+					case 'invalid_code':
+						this.incorrectOTP = true;
+						break;
+					case 'too_many_attempts':
+						this.tooManyVerifyAttempts = true;
+						break;
+					case 'invalid_request':
+						this.resendOTP = true;
+						break;
+					default:
+				}
+				this.verifyEmail();
+			});
 		});
 	}
 
 	timing() {
 		clearInterval(this.interval);
 		this.interval = setInterval(() => {
-			this.timingResend = this.timingResend - 1;
-			if (this.timingResend <= 0) {
-				clearInterval(this.interval);
-			}
+			runInAction(() => {
+				this.timingResend = this.timingResend - 1;
+				if (this.timingResend <= 0) {
+					clearInterval(this.interval);
+				}
+			});
 		}, 1000);
 	}
 
 	setOtpEmail(text) {
-		this.otpEmail = text.replace(/\D/g, '');
+		runInAction(() => {
+			this.otpEmail = text.replace(/\D/g, '');
+		});
 	}
 
 	renderEmailOtp() {
@@ -261,7 +283,7 @@ class VerifyOTP extends PureComponent {
 					) : (
 						<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
 					))}
-				{this.incorrentOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
+				{this.incorrectOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
 				{this.tooManyVerifyAttempts && (
 					<Text>
 						<Text style={styles.errorTextBold}>{strings('verify_otp.exceeded_attempts')}</Text>
@@ -276,9 +298,9 @@ class VerifyOTP extends PureComponent {
 	render() {
 		return (
 			<OnboardingScreenWithBg screen="a">
-				<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<TrackingScrollView contentContainerStyle={styles.flexGrow}>
 					{this.email && this.email !== '' && this.renderEmailOtp()}
-					<View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', padding: 12 }}>
+					<View style={styles.buttonWrapper}>
 						<StyledButton
 							type={'normal'}
 							containerStyle={styles.skipButton}

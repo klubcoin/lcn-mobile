@@ -583,6 +583,7 @@ function PayPal({ selectedAddress, ...props }) {
 									style={styles.modalItemContainer}
 									onPress={() => onChangeCurrency(e.value)}
 									{...testID(`buy-with-paypal-screen-currency-item-${e.key}`)}
+									key={e.label}
 								>
 									<Text>{e.label}</Text>
 									{from.currency === e.value && <Icon style={styles.modalItemIcon} name={'check'} />}
@@ -619,6 +620,7 @@ function PayPal({ selectedAddress, ...props }) {
 				style={[styles.menuItem, isBorderBottom && styles.menuItemBorderBottom]}
 				onPress={() => onViewMenuContent(item.title, item.url)}
 				{...testID(`buy-with-paypal-screen-menu-item-${index}`)}
+				key={index}
 			>
 				<Icon name={item.icon} style={styles.menuItemLeftIcon} />
 				<Text style={styles.menuItemTitle}>{item.title}</Text>

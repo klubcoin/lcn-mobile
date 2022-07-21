@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Text, View, SafeAreaView, ActivityIndicator } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getOnboardingWithoutBackNavbarOptions } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
@@ -31,7 +31,7 @@ class VerifyOTPOnboarding extends PureComponent {
 	timingResend = 0;
 	interval = null;
 	resendAble = true;
-	incorrentOTP = false;
+	incorrectOTP = false;
 	tooManyVerifyAttempts = false;
 	tooManySendOtp = false;
 	verifySuccess = false;
@@ -49,7 +49,7 @@ class VerifyOTPOnboarding extends PureComponent {
 			timingResend: observable,
 			interval: observable,
 			resendAble: observable,
-			incorrentOTP: observable,
+			incorrectOTP: observable,
 			tooManyVerifyAttempts: observable,
 			tooManySendOtp: observable,
 			verifySuccess: observable,
@@ -69,81 +69,99 @@ class VerifyOTPOnboarding extends PureComponent {
 	}
 
 	sendOTPEmail() {
-		if (this.sendEmailOTP) return;
-		this.sendingOTP = true;
+		if (this.sendEmailOTP) {
+			return;
+		}
+		runInAction(() => {
+			this.sendingOTP = true;
+		});
 		APIService.sendEmailOTP(this.email, (success, response) => {
-			this.sendingOTP = false;
-			switch (response) {
-				case 'success':
-					this.resendOTP = false;
-					this.verifyEmail();
-					break;
-				case 'retry_later':
-					this.verifyEmail();
-					break;
-				case 'too_many_attempts':
-					this.tooManyVerifyAttempts = true;
-					break;
-				case 'already_verified':
-					this.verifySuccess = true;
-					break;
-				case 'too_many_requests':
-					this.tooManySendOtp = true;
-					break;
-				default:
-					this.timingResend = 60;
-					this.timing();
-			}
+			runInAction(() => {
+				this.sendingOTP = false;
+				switch (response) {
+					case 'success':
+						this.resendOTP = false;
+						this.verifyEmail();
+						break;
+					case 'retry_later':
+						this.verifyEmail();
+						break;
+					case 'too_many_attempts':
+						this.tooManyVerifyAttempts = true;
+						break;
+					case 'already_verified':
+						this.verifySuccess = true;
+						break;
+					case 'too_many_requests':
+						this.tooManySendOtp = true;
+						break;
+					default:
+						this.timingResend = 60;
+						this.timing();
+				}
+			});
 		});
 	}
 
 	verifyEmail = () => {
-		this.gettingEmailStatus = true;
+		runInAction(() => {
+			this.gettingEmailStatus = true;
+		});
 		APIService.getOtpStatus(this.email, (success, json) => {
-			this.gettingEmailStatus = false;
-			if (!!json?.creationDate) {
-				this.storeTimeSendEmail(json?.creationDate);
-				this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
-				this.timing();
-			} else {
-				this.timingResend = 0;
-			}
+			runInAction(() => {
+				this.gettingEmailStatus = false;
+				if (!!json?.creationDate) {
+					this.storeTimeSendEmail(json?.creationDate);
+					this.timingResend = Math.ceil(60 - (new Date().getTime() - +json.creationDate) / 1000);
+					this.timing();
+				} else {
+					this.timingResend = 0;
+				}
+			});
 		});
 	};
 
 	verifyOTPEmail() {
 		APIService.verifyEmailOTP(this.email, this.otpEmail, (success, response) => {
-			this.otpEmail = '';
-			switch (response) {
-				case 'success':
-					this.verifySuccess = true;
-					break;
-				case 'invalid_code':
-					this.incorrentOTP = true;
-					break;
-				case 'too_many_attempts':
-					this.tooManyVerifyAttempts = true;
-					break;
-				case 'invalid_request':
-					this.resendOTP = true;
-					break;
-				default:
-			}
+			runInAction(() => {
+				this.otpEmail = '';
+				switch (response) {
+					case 'success':
+						this.verifySuccess = true;
+						break;
+					case 'invalid_code':
+						this.incorrectOTP = true;
+						break;
+					case 'too_many_attempts':
+						this.tooManyVerifyAttempts = true;
+						break;
+					case 'invalid_request':
+						this.resendOTP = true;
+						break;
+					default:
+				}
+			});
 		});
 	}
 
 	timing() {
 		clearInterval(this.interval);
-		this.interval = setInterval(() => {
-			this.timingResend = this.timingResend - 1;
-			if (this.timingResend <= 0) {
-				clearInterval(this.interval);
-			}
-		}, 1000);
+		runInAction(() => {
+			this.interval = setInterval(() => {
+				runInAction(() => {
+					this.timingResend = this.timingResend - 1;
+					if (this.timingResend <= 0) {
+						clearInterval(this.interval);
+					}
+				});
+			}, 1000);
+		});
 	}
 
 	setOtpEmail(text) {
-		this.otpEmail = text.replace(/\D/g, '');
+		runInAction(() => {
+			this.otpEmail = text.replace(/\D/g, '');
+		});
 	}
 
 	onLearnMore() {
@@ -205,7 +223,7 @@ class VerifyOTPOnboarding extends PureComponent {
 						) : (
 							<Text style={styles.errorText}>{strings('verify_otp.exceeded_send_otp')}</Text>
 						))}
-					{this.incorrentOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
+					{this.incorrectOTP && <Text style={styles.errorText}>{strings('verify_otp.incorrect_otp')}</Text>}
 					{this.tooManyVerifyAttempts && (
 						<Text>
 							<Text style={styles.errorTextBold}>{strings('verify_otp.exceeded_attempts')}</Text>
@@ -216,7 +234,7 @@ class VerifyOTPOnboarding extends PureComponent {
 					)}
 					{this.resendOTP && <Text style={styles.errorText}>{strings('verify_otp.resend_otp')}</Text>}
 				</View>
-				<View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', padding: 12 }}>
+				<View style={styles.buttonWrapper}>
 					<StyledButton
 						type={'normal'}
 						containerStyle={styles.skipButton}
@@ -277,7 +295,7 @@ class VerifyOTPOnboarding extends PureComponent {
 				<SafeAreaView style={styles.mainWrapper}>
 					<View style={styles.wrapper}>
 						<OnboardingProgress steps={CHOOSE_PASSWORD_STEPS} currentStep={5} />
-						<TrackingScrollView contentContainerStyle={{ flexGrow: 1 }}>
+						<TrackingScrollView contentContainerStyle={styles.flexGrow}>
 							{!this.verifySuccess && this.renderEmailOtp()}
 							{this.verifySuccess && this.renderCongratulations()}
 						</TrackingScrollView>

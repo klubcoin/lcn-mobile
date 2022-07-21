@@ -66,9 +66,9 @@ class ComingSoon extends PureComponent {
 					<ScaleImage style={styles.imageText} source={klubcoin_text} width={220} />
 					<Text style={styles.text1}>{strings(`coming_soon.coming_soon`)}...</Text>
 					<Text style={styles.text2}>{strings(`coming_soon.stay_in_touch_with_us`)}</Text>
-					{data.map(e => (
+					{data.map((e, index) => (
 						<TouchableOpacity
-							key={data.title}
+							key={index}
 							activeOpacity={0.7}
 							style={styles.itemWrapper}
 							onPress={() => this.goTo(e.url, e.title)}

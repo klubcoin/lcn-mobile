@@ -15,7 +15,7 @@ const brandStyles = StyleSheet.create({
 	textWrapper: {
 		fontSize: 16,
 		color: colors.white,
-		marginTop: 15,
+		marginTop: 15
 	},
 	text: {},
 	resendText: {
@@ -88,6 +88,15 @@ const brandStyles = StyleSheet.create({
 	},
 	loadingWrapper1: {
 		marginTop: 12
+	},
+	flexGrow: {
+		flexGrow: 1
+	},
+	buttonWrapper: {
+		flex: 1,
+		width: '100%',
+		justifyContent: 'flex-end',
+		padding: 12
 	}
 });
 

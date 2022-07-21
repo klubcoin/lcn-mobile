@@ -14,7 +14,9 @@ const styles = StyleSheet.create({
 	text: {},
 	skipButton: {},
 	loadingWrapper: {},
-	loadingWrapper1: {}
+	loadingWrapper1: {},
+	flexGrow: {},
+	buttonWrapper: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

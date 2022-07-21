@@ -211,7 +211,6 @@ class Wallet extends PureComponent {
 	getBalance = async () => {
 		const { selectedAddress } = this.props;
 		const result = await new Erc20Service().getBalance(selectedAddress);
-		console.log('🚀 ~ file: index.js ~ line 216 ~ Wallet ~ getBalance= ~ result', result);
 		// const { accounts, selectedAddress, identities } = this.props;
 		// // for(const account in accounts){
 		// let params = [selectedAddress];

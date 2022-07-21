@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, Text, View, Modal, FlatList } from 'react-native';
 import { observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import { colors } from '../../../styles/common';
 import styles from './styles/index';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
@@ -25,12 +25,14 @@ export default class CountrySearchModal extends Component {
 	}
 
 	onSearch(text) {
-		this.searchText = text;
-		this.items = this.rootItems.filter(
-			e =>
-				(e.dialCode && e.dialCode.indexOf(this.searchText) >= 0) ||
-				e.name.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0
-		);
+		runInAction(() => {
+			this.searchText = text;
+			this.items = this.rootItems.filter(
+				e =>
+					(e.dialCode && e.dialCode.indexOf(this.searchText) >= 0) ||
+					e.name.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0
+			);
+		});
 	}
 
 	renderItem(item) {

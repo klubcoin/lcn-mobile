@@ -10,7 +10,7 @@ import {
 	ActivityIndicator
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import preferences from '../../../store/preferences';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import RemoteImage from '../../Base/RemoteImage';
@@ -35,10 +35,8 @@ import { renderAccountName } from '../../../util/address';
 import { allCountries } from 'country-telephone-data';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import emojiRegex from 'emoji-regex';
-import APIService from '../../../services/APIService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../../styles/common';
-import { SUCCESS } from '../ProfileOnboard';
 import CryptoSignature from '../../../core/CryptoSignature';
 import TrackingScrollView from '../../UI/TrackingScrollView';
 import { testID } from '../../../util/Logger';
@@ -112,45 +110,9 @@ class EditProfile extends PureComponent {
 		const { selectedAddress } = Engine.state.PreferencesController;
 		const { identities } = Engine.state.PreferencesController;
 		const { avatar, firstname, lastname, email, phone } = preferences?.onboardProfile ?? {};
-		this.username = renderAccountName(selectedAddress, identities);
-		this.avatar = avatar;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.countryCode = phone?.replace('+', '').split('-')[0];
-		this.phone =
-			phone
-				?.replace('+', '')
-				.split('-')
-				.slice(1, phone?.split('-').length)
-				.join('-') ?? undefined;
-		this.preData = {
-			phone: phone
-				?.replace('+', '')
-				.split('-')
-				.slice(1, phone?.split('-').length)
-				.join('-'),
-			countryCode: phone?.replace('+', '').split('-')[0],
-			phoneNumber: phone,
-			email,
-			firstname,
-			lastname
-		};
-	}
-
-	componentDidUpdate() {
-		this.updateProfile();
-	}
-
-	updateProfile() {
-		const { firstname, lastname, email, phone } = preferences?.onboardProfile ?? {};
-		if (
-			!this.isChangeProfile &&
-			(firstname !== this.preData.firstname ||
-				lastname !== this.preData.lastname ||
-				email !== this.preData.email ||
-				phone !== this.preData.phoneNumber)
-		) {
+		runInAction(() => {
+			this.username = renderAccountName(selectedAddress, identities);
+			this.avatar = avatar;
 			this.firstname = firstname;
 			this.lastname = lastname;
 			this.email = email;
@@ -173,58 +135,71 @@ class EditProfile extends PureComponent {
 				firstname,
 				lastname
 			};
+		});
+	}
+
+	componentDidUpdate() {
+		this.updateProfile();
+	}
+
+	updateProfile() {
+		const { firstname, lastname, email, phone } = preferences?.onboardProfile ?? {};
+		if (
+			!this.isChangeProfile &&
+			(firstname !== this.preData.firstname ||
+				lastname !== this.preData.lastname ||
+				email !== this.preData.email ||
+				phone !== this.preData.phoneNumber)
+		) {
+			runInAction(() => {
+				this.firstname = firstname;
+				this.lastname = lastname;
+				this.email = email;
+				this.countryCode = phone?.replace('+', '').split('-')[0];
+				this.phone =
+					phone
+						?.replace('+', '')
+						.split('-')
+						.slice(1, phone?.split('-').length)
+						.join('-') ?? undefined;
+				this.preData = {
+					phone: phone
+						?.replace('+', '')
+						.split('-')
+						.slice(1, phone?.split('-').length)
+						.join('-'),
+					countryCode: phone?.replace('+', '').split('-')[0],
+					phoneNumber: phone,
+					email,
+					firstname,
+					lastname
+				};
+			});
 		}
 	}
 
-	onEmailChange = val => {
-		const email = val.replace(this.regex, '').trim();
-		this.email = val.replace(this.regex, '');
-		if (this.preData.email === email) {
-			return;
-		}
-		if (!validator.isEmail(email)) {
-			this.isCheckingEmail = false;
-			this.isValidEmail = false;
-			return;
-		}
-		this.isCheckingEmail = true;
-		this.isValidEmail = false;
-		if (this.timeoutCheckUniqueEmail) {
-			clearTimeout(this.timeoutCheckUniqueEmail);
-		}
-		this.timeoutCheckUniqueEmail = setTimeout(() => {
-			APIService.checkUniqueField('email', email, (success, json) => {
-				this.isCheckingEmail = false;
-				if (this.email !== email) {
-					return;
-				}
-				if (json === SUCCESS) {
-					this.isValidEmail = true;
-				} else {
-					this.isValidEmail = false;
-				}
-			});
-		}, 2000);
-	};
-
 	onPhoneNumberChange = (countryCode, phoneNumber) => {
-		this.phone = phoneNumber;
-		this.onCheckPhoneNumberError();
-		if (!REGEX_PHONE_NUMBER.test(phoneNumber) || !countryCode) {
-			this.isValidPhoneNumber = false;
-			return;
-		}
-		this.isValidPhoneNumber = true;
+		runInAction(() => {
+			this.phone = phoneNumber;
+			this.onCheckPhoneNumberError();
+			if (!REGEX_PHONE_NUMBER.test(phoneNumber) || !countryCode) {
+				this.isValidPhoneNumber = false;
+				return;
+			}
+			this.isValidPhoneNumber = true;
+		});
 	};
 
 	onCheckPhoneNumberError = () => {
-		this.phoneErrorText = !this.countryCode
-			? strings('profile.missing_country_code')
-			: !this.phone
-			? strings('profile.missing_phone')
-			: !REGEX_PHONE_NUMBER.test(this.phone)
-			? strings('profile.invalid_phone')
-			: '';
+		runInAction(() => {
+			this.phoneErrorText = !this.countryCode
+				? strings('profile.missing_country_code')
+				: !this.phone
+				? strings('profile.missing_phone')
+				: !REGEX_PHONE_NUMBER.test(this.phone)
+				? strings('profile.invalid_phone')
+				: '';
+		});
 	};
 
 	onPickImage() {
@@ -239,24 +214,32 @@ class EditProfile extends PureComponent {
 								cropping: true
 							})
 								.then(image => {
-									this.isViewModal = false;
-									this.avatar = image.path;
-									this.isChangedAvatar = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.avatar = image.path;
+										this.isChangedAvatar = true;
+									});
 								})
 								.catch(err => {
 									console.log(err);
-									this.notiMessage = strings('profile.grant_permission_gallery_notification');
+									runInAction(() => {
+										this.notiMessage = strings('profile.grant_permission_gallery_notification');
+									});
 									PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
 										response => {
-											this.isViewModal = false;
-											this.notiPermissionCamera = !response;
+											runInAction(() => {
+												this.isViewModal = false;
+												this.notiPermissionCamera = !response;
+											});
 										}
 									);
 								});
 						} else {
-							this.notiMessage = strings('profile.grant_permission_gallery_notification');
-							this.isViewModal = false;
-							this.notiPermissionCamera = !res;
+							runInAction(() => {
+								this.notiMessage = strings('profile.grant_permission_gallery_notification');
+								this.isViewModal = false;
+								this.notiPermissionCamera = !res;
+							});
 						}
 					});
 				} else {
@@ -266,17 +249,23 @@ class EditProfile extends PureComponent {
 						cropping: true
 					})
 						.then(image => {
-							this.isViewModal = false;
-							this.avatar = image.path;
-							this.isChangedAvatar = true;
+							runInAction(() => {
+								this.isViewModal = false;
+								this.avatar = image.path;
+								this.isChangedAvatar = true;
+							});
 						})
 						.catch(err => {
 							console.log(err);
-							this.notiMessage = strings('profile.grant_permission_gallery_notification');
+							runInAction(() => {
+								this.notiMessage = strings('profile.grant_permission_gallery_notification');
+							});
 							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
 								response => {
-									this.isViewModal = false;
-									this.notiPermissionCamera = !response;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = !response;
+									});
 								}
 							);
 						});
@@ -290,29 +279,37 @@ class EditProfile extends PureComponent {
 				cropping: true
 			})
 				.then(image => {
-					this.isViewModal = false;
-					this.avatar = image.path;
-					this.isChangedAvatar = true;
+					runInAction(() => {
+						this.isViewModal = false;
+						this.avatar = image.path;
+						this.isChangedAvatar = true;
+					});
 				})
 				.catch(err => {
 					console.log(err);
-					this.notiMessage = strings('profile.grant_permission_gallery_notification');
+					runInAction(() => {
+						this.notiMessage = strings('profile.grant_permission_gallery_notification');
+					});
 					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
 						.then(result => {
 							switch (result) {
 								case RESULTS.UNAVAILABLE:
 									break;
 								case RESULTS.DENIED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 								case RESULTS.LIMITED:
 									break;
 								case RESULTS.GRANTED:
 									break;
 								case RESULTS.BLOCKED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 							}
 						})
@@ -330,17 +327,23 @@ class EditProfile extends PureComponent {
 			cropping: true
 		})
 			.then(image => {
-				this.isViewModal = false;
-				this.avatar = image.path;
-				this.isChangedAvatar = true;
+				runInAction(() => {
+					this.isViewModal = false;
+					this.avatar = image.path;
+					this.isChangedAvatar = true;
+				});
 			})
 			.catch(err => {
 				console.log(err);
-				this.notiMessage = strings('profile.grant_permission_camera_notification');
+				runInAction(() => {
+					this.notiMessage = strings('profile.grant_permission_camera_notification');
+				});
 				if (Platform.OS === 'android') {
 					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
-						this.isViewModal = false;
-						this.notiPermissionCamera = !res;
+						runInAction(() => {
+							this.isViewModal = false;
+							this.notiPermissionCamera = !res;
+						});
 					});
 				}
 				if (Platform.OS === 'ios') {
@@ -350,16 +353,20 @@ class EditProfile extends PureComponent {
 								case RESULTS.UNAVAILABLE:
 									break;
 								case RESULTS.DENIED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 								case RESULTS.LIMITED:
 									break;
 								case RESULTS.GRANTED:
 									break;
 								case RESULTS.BLOCKED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 							}
 						})
@@ -371,7 +378,9 @@ class EditProfile extends PureComponent {
 	}
 
 	onOpenModal() {
-		this.isViewModal = true;
+		runInAction(() => {
+			this.isViewModal = true;
+		});
 	}
 
 	isDataValid() {
@@ -407,16 +416,20 @@ class EditProfile extends PureComponent {
 	}
 
 	onSelectCountryCode = item => {
-		this.countryCode = item.dialCode;
-		this.onPhoneNumberChange(item.dialCode, this.phone);
-		this.showCountryCodePicker = false;
+		runInAction(() => {
+			this.countryCode = item.dialCode;
+			this.onPhoneNumberChange(item.dialCode, this.phone);
+			this.showCountryCodePicker = false;
+		});
 	};
 
 	async onUpdate() {
 		if (this.isLoading) {
 			return;
 		}
-		this.isLoading = true;
+		runInAction(() => {
+			this.isLoading = true;
+		});
 
 		const username = this.username?.trim();
 		const firstname = this.firstname?.trim();
@@ -426,7 +439,9 @@ class EditProfile extends PureComponent {
 
 		const isValid = this.isDataValid();
 		if (!isValid) {
-			this.isLoading = false;
+			runInAction(() => {
+				this.isLoading = false;
+			});
 			return;
 		}
 
@@ -438,8 +453,10 @@ class EditProfile extends PureComponent {
 					await RNFS.unlink(path);
 				} //remove existing file
 				await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
-				this.avatar = path;
-				this.time = new Date();
+				runInAction(() => {
+					this.avatar = path;
+					this.time = new Date();
+				});
 			}
 
 			const lowerCaseSelectedAddress = selectedAddress.toLowerCase();
@@ -453,45 +470,51 @@ class EditProfile extends PureComponent {
 				routes.walletUpdate,
 				params,
 				response => {
-					if (response.error) {
-						alert(`${response.error.message}`);
-					} else {
-						const { PreferencesController } = Engine.context;
-						PreferencesController.setAccountLabel(selectedAddress, username);
-						showSuccess(strings('wallet.update_profile_success'));
-						const profile = {
-							avatar: this.avatar ? path : '',
-							firstname,
-							lastname,
-							email,
-							phone
-						};
-						preferences
-							.getOnboardProfile()
-							.then(value => {
-								preferences.setOnboardProfile(Object.assign(value, profile));
-							})
-							.catch(e => console.log('profile onboarding error', e));
-						setOnboardProfile(profile);
-						this.preData = {
-							email,
-							phone: this.phone,
-							countryCode: this.countryCode,
-							firstname,
-							lastname
-						};
-						this.isChangedAvatar = false;
-					}
-					this.isLoading = false;
+					runInAction(() => {
+						if (response.error) {
+							alert(`${response.error.message}`);
+						} else {
+							const { PreferencesController } = Engine.context;
+							PreferencesController.setAccountLabel(selectedAddress, username);
+							showSuccess(strings('wallet.update_profile_success'));
+							const profile = {
+								avatar: this.avatar ? path : '',
+								firstname,
+								lastname,
+								email,
+								phone
+							};
+							preferences
+								.getOnboardProfile()
+								.then(value => {
+									preferences.setOnboardProfile(Object.assign(value, profile));
+								})
+								.catch(e => console.log('profile onboarding error', e));
+							setOnboardProfile(profile);
+							this.preData = {
+								email,
+								phone: this.phone,
+								countryCode: this.countryCode,
+								firstname,
+								lastname
+							};
+							this.isChangedAvatar = false;
+						}
+						this.isLoading = false;
+					});
 				},
 				error => {
-					this.isLoading = false;
-					alert(`${error.toString()}`);
+					runInAction(() => {
+						this.isLoading = false;
+						alert(`${error.toString()}`);
+					});
 				}
 			);
 		} catch (error) {
-			this.isLoading = false;
-			console.log('update wallet failed', error);
+			runInAction(() => {
+				this.isLoading = false;
+				console.log('update wallet failed', error);
+			});
 		}
 	}
 
@@ -534,20 +557,29 @@ class EditProfile extends PureComponent {
 									disabled
 									label={strings('choose_password.username')}
 									placeholder={strings('choose_password.username')}
-									onChangeText={text => (this.username = text.replace(this.regex, ''))}
 									testID={'edit-profile-username-field'}
 								/>
 								<TextField
 									value={this.firstname}
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
-									onChangeText={text => (this.firstname = text.replace(this.regex, ''))}
+									onChangeText={text => {
+										runInAction(() => {
+											this.firstname = text.replace(this.regex, '');
+										});
+									}}
 									autoCapitalize={'words'}
 									onBlur={() => {
-										this.nameErrorText = !this.firstname ? strings('profile.name_required') : '';
+										runInAction(() => {
+											this.nameErrorText = !this.firstname
+												? strings('profile.name_required')
+												: '';
+										});
 									}}
 									onFocus={() => {
-										this.nameErrorText = '';
+										runInAction(() => {
+											this.nameErrorText = '';
+										});
 									}}
 									errorText={this.nameErrorText}
 									testID={'edit-profile-name-field'}
@@ -556,15 +588,23 @@ class EditProfile extends PureComponent {
 									value={this.lastname}
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
-									onChangeText={text => (this.lastname = text.replace(this.regex, ''))}
+									onChangeText={text => {
+										runInAction(() => {
+											this.lastname = text.replace(this.regex, '');
+										});
+									}}
 									autoCapitalize={'words'}
 									onBlur={() => {
-										this.surnameErrorText = !this.lastname
-											? strings('profile.surname_required')
-											: '';
+										runInAction(() => {
+											this.surnameErrorText = !this.lastname
+												? strings('profile.surname_required')
+												: '';
+										});
 									}}
 									onFocus={() => {
-										this.surnameErrorText = '';
+										runInAction(() => {
+											this.surnameErrorText = '';
+										});
 									}}
 									errorText={this.surnameErrorText}
 									testID={'edit-profile-surname-field'}
@@ -573,7 +613,6 @@ class EditProfile extends PureComponent {
 									value={this.email}
 									label={strings('login.email')}
 									placeholder={strings('login.email')}
-									onChangeText={text => this.onEmailChange(text)}
 									keyboardType="email-address"
 									disabled
 									rightItem={
@@ -607,12 +646,18 @@ class EditProfile extends PureComponent {
 									}}
 									keyboardType="number-pad"
 									countryCode={this.countryCode}
-									onPressCountryCode={() => (this.showCountryCodePicker = true)}
+									onPressCountryCode={() => {
+										runInAction(() => {
+											this.showCountryCodePicker = true;
+										});
+									}}
 									onFocus={() => {
-										if (!this.countryCode) {
-											showError(strings('profile.select_country_code_first'));
-										}
-										this.phoneErrorText = '';
+										runInAction(() => {
+											if (!this.countryCode) {
+												showError(strings('profile.select_country_code_first'));
+											}
+											this.phoneErrorText = '';
+										});
 									}}
 									rightItem={
 										this.phone || this.countryCode ? (
@@ -651,14 +696,20 @@ class EditProfile extends PureComponent {
 							items={allCountries}
 							countryCode={this.countryCode}
 							onSelectCountryCode={this.onSelectCountryCode}
-							onClose={() => (this.showCountryCodePicker = false)}
+							onClose={() => {
+								runInAction(() => {
+									this.showCountryCodePicker = false;
+								});
+							}}
 						/>
 					)}
 					<Modal visible={this.isViewModal} animationType="fade" transparent style={styles.modal}>
 						<TouchableOpacity
 							style={styles.centerModal}
 							onPress={() => {
-								this.isViewModal = false;
+								runInAction(() => {
+									this.isViewModal = false;
+								});
 							}}
 							activeOpacity={1}
 							{...testID('edit-profile-screen-change-avatar-modal')}
@@ -691,7 +742,9 @@ class EditProfile extends PureComponent {
 									testID={'edit-profile-close-button'}
 									type={'normal'}
 									onPress={() => {
-										this.notiPermissionCamera = false;
+										runInAction(() => {
+											this.notiPermissionCamera = false;
+										});
 									}}
 									containerStyle={styles.notiButtonModal}
 								>

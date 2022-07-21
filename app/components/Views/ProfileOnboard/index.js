@@ -10,7 +10,7 @@ import {
 	ActivityIndicator
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import preferences from '../../../store/preferences';
 import { getOnboardingNavbarOptions } from '../../UI/Navbar';
 import RemoteImage from '../../Base/RemoteImage';
@@ -91,56 +91,68 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	onUsernameChange = val => {
-		this.usernameFocused = false;
-		this.username = val.replace(this.regex, '');
-		this.isCheckingUsername = true;
-		this.isValidUsername = false;
+		runInAction(() => {
+			this.usernameFocused = false;
+			this.username = val.replace(this.regex, '');
+			this.isCheckingUsername = true;
+			this.isValidUsername = false;
+		});
 		if (this.timeoutCheckUniqueUsername) {
 			clearTimeout(this.timeoutCheckUniqueUsername);
 		}
 		this.timeoutCheckUniqueUsername = setTimeout(() => {
 			APIService.checkUniqueField('name', val, (success, json) => {
-				this.isCheckingUsername = false;
-				if (this.username !== val) {
-					return;
-				}
-				if (json === SUCCESS) {
-					this.isValidUsername = true;
-				} else {
-					this.isValidUsername = false;
-				}
+				runInAction(() => {
+					this.isCheckingUsername = false;
+					if (this.username !== val) {
+						return;
+					}
+					if (json === SUCCESS) {
+						this.isValidUsername = true;
+					} else {
+						this.isValidUsername = false;
+					}
+				});
 			});
 		}, 2000);
 	};
 
 	onEmailChange = val => {
-		this.emailFocused = false;
-		this.email = val.replace(this.regex, '');
+		runInAction(() => {
+			this.emailFocused = false;
+			this.email = val.replace(this.regex, '');
+		});
 		if (
 			!validator.isEmail(val.trim()) ||
 			!emailNameRegex.test(val.trim().split('@')[0]) ||
 			!emailNameRegex.test(val.trim().split('@')[1])
 		) {
-			this.isCheckingEmail = false;
-			this.isValidEmail = false;
+			runInAction(() => {
+				this.isCheckingEmail = false;
+				this.isValidEmail = false;
+			});
 			return;
 		}
-		this.isCheckingEmail = true;
-		this.isValidEmail = false;
+		runInAction(() => {
+			this.isCheckingEmail = true;
+			this.isValidEmail = false;
+		});
 		if (this.timeoutCheckUniqueEmail) {
 			clearTimeout(this.timeoutCheckUniqueEmail);
 		}
 		this.timeoutCheckUniqueEmail = setTimeout(() => {
 			APIService.checkUniqueField('email', val.trim(), (success, json) => {
-				this.isCheckingEmail = false;
-				if (this.email.trim() !== val.trim()) {
-					return;
-				}
-				if (json === SUCCESS) {
-					this.isValidEmail = true;
-				} else {
-					this.isValidEmail = false;
-				}
+				runInAction(() => {
+					this.isCheckingEmail = false;
+					if (this.email.trim() !== val.trim()) {
+						return;
+					}
+					if (json === SUCCESS) {
+						this.isValidEmail = true;
+					} else {
+						this.isValidEmail = false;
+					}
+				});
 			});
 		}, 2000);
 	};
@@ -157,23 +169,32 @@ class ProfileOnboard extends PureComponent {
 								cropping: true
 							})
 								.then(image => {
-									this.isViewModal = false;
-									this.avatar = image.path;
-									this.hasUpdateAvatar = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.avatar = image.path;
+										this.hasUpdateAvatar = true;
+									});
 								})
 								.catch(err => {
-									this.notiMessage = strings('profile.grant_permission_gallery_notification');
+									console.warn(err);
+									runInAction(() => {
+										this.notiMessage = strings('profile.grant_permission_gallery_notification');
+									});
 									PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
-										res => {
-											this.isViewModal = false;
-											this.notiPermissionCamera = !res;
+										response => {
+											runInAction(() => {
+												this.isViewModal = false;
+												this.notiPermissionCamera = !response;
+											});
 										}
 									);
 								});
 						} else {
-							this.notiMessage = strings('profile.grant_permission_gallery_notification');
-							this.isViewModal = false;
-							this.notiPermissionCamera = !res;
+							runInAction(() => {
+								this.notiMessage = strings('profile.grant_permission_gallery_notification');
+								this.isViewModal = false;
+								this.notiPermissionCamera = !res;
+							});
 						}
 					});
 				} else {
@@ -183,16 +204,25 @@ class ProfileOnboard extends PureComponent {
 						cropping: true
 					})
 						.then(image => {
-							this.isViewModal = false;
-							this.avatar = image.path;
-							this.hasUpdateAvatar = true;
+							runInAction(() => {
+								this.isViewModal = false;
+								this.avatar = image.path;
+								this.hasUpdateAvatar = true;
+							});
 						})
 						.catch(err => {
-							this.notiMessage = strings('profile.grant_permission_gallery_notification');
-							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(res => {
-								this.isViewModal = false;
-								this.notiPermissionCamera = !res;
+							console.warn(err);
+							runInAction(() => {
+								this.notiMessage = strings('profile.grant_permission_gallery_notification');
 							});
+							PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(
+								response => {
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = !response;
+									});
+								}
+							);
 						});
 				}
 			});
@@ -204,28 +234,37 @@ class ProfileOnboard extends PureComponent {
 				cropping: true
 			})
 				.then(image => {
-					this.isViewModal = false;
-					this.avatar = image.path;
-					this.hasUpdateAvatar = true;
+					runInAction(() => {
+						this.isViewModal = false;
+						this.avatar = image.path;
+						this.hasUpdateAvatar = true;
+					});
 				})
 				.catch(err => {
-					this.notiMessage = strings('profile.grant_permission_gallery_notification');
+					console.warn(err);
+					runInAction(() => {
+						this.notiMessage = strings('profile.grant_permission_gallery_notification');
+					});
 					check(PERMISSIONS.IOS.PHOTO_LIBRARY)
 						.then(result => {
 							switch (result) {
 								case RESULTS.UNAVAILABLE:
 									break;
 								case RESULTS.DENIED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 								case RESULTS.LIMITED:
 									break;
 								case RESULTS.GRANTED:
 									break;
 								case RESULTS.BLOCKED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 							}
 						})
@@ -243,16 +282,23 @@ class ProfileOnboard extends PureComponent {
 			cropping: true
 		})
 			.then(image => {
-				this.isViewModal = false;
-				this.avatar = image.path;
-				this.hasUpdateAvatar = true;
+				runInAction(() => {
+					this.isViewModal = false;
+					this.avatar = image.path;
+					this.hasUpdateAvatar = true;
+				});
 			})
 			.catch(err => {
-				this.notiMessage = strings('profile.grant_permission_camera_notification');
+				console.warn(err);
+				runInAction(() => {
+					this.notiMessage = strings('profile.grant_permission_camera_notification');
+				});
 				if (Platform.OS === 'android') {
 					PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA).then(res => {
-						this.isViewModal = false;
-						this.notiPermissionCamera = !res;
+						runInAction(() => {
+							this.isViewModal = false;
+							this.notiPermissionCamera = !res;
+						});
 					});
 				}
 				if (Platform.OS === 'ios') {
@@ -262,16 +308,20 @@ class ProfileOnboard extends PureComponent {
 								case RESULTS.UNAVAILABLE:
 									break;
 								case RESULTS.DENIED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 								case RESULTS.LIMITED:
 									break;
 								case RESULTS.GRANTED:
 									break;
 								case RESULTS.BLOCKED:
-									this.isViewModal = false;
-									this.notiPermissionCamera = true;
+									runInAction(() => {
+										this.isViewModal = false;
+										this.notiPermissionCamera = true;
+									});
 									break;
 							}
 						})
@@ -283,7 +333,9 @@ class ProfileOnboard extends PureComponent {
 	}
 
 	onOpenModal() {
-		this.isViewModal = true;
+		runInAction(() => {
+			this.isViewModal = true;
+		});
 	}
 
 	showNotice(message) {
@@ -300,10 +352,6 @@ class ProfileOnboard extends PureComponent {
 		const lastname = this.lastname.trim();
 		const email = this.email.trim();
 		const username = this.username.trim();
-		// if (!this.avatar) {
-		// 	showError(strings('profile.missing_photo'));
-		// 	return;
-		// }
 		if (!firstname) {
 			showError(strings('profile.missing_name'));
 			return;
@@ -338,14 +386,20 @@ class ProfileOnboard extends PureComponent {
 		const username = this.username;
 
 		const isValid = this.isDataValid();
-		if (!isValid) return;
+		if (!isValid) {
+			return;
+		}
 		const path = `${RNFS.DocumentDirectoryPath}/avatar.png`;
 		if (this.avatar && this.hasUpdateAvatar) {
 			//remove existing file
 			try {
-				if (await RNFS.exists(path)) await RNFS.unlink(path);
+				if (await RNFS.exists(path)) {
+					await RNFS.unlink(path);
+				}
 				await RNFS.moveFile(this.avatar, path); // copy temporary file to persist
-				this.hasUpdateAvatar = false;
+				runInAction(() => {
+					this.hasUpdateAvatar = false;
+				});
 			} catch (err) {
 				console.log(err);
 			}
@@ -387,7 +441,7 @@ class ProfileOnboard extends PureComponent {
 			!this.isValidEmail
 		) {
 			emailErrorText = strings('profile.email_used');
-		} else if (this.emailFocused & !this.email) {
+		} else if (this.emailFocused && !this.email) {
 			emailErrorText = strings('profile.email_required');
 		} else if (
 			(this.emailFocused && !validator.isEmail(this.email)) ||
@@ -427,14 +481,18 @@ class ProfileOnboard extends PureComponent {
 									label={strings('profile.name')}
 									placeholder={strings('profile.name')}
 									onChangeText={text => {
-										this.firstname = text.replace(this.regex, '');
-										this.nameFocused = false;
+										runInAction(() => {
+											this.firstname = text.replace(this.regex, '');
+											this.nameFocused = false;
+										});
 									}}
 									autoCapitalize={'words'}
 									textInputWrapperStyle={styles.textInputWrapperStyle}
 									containerStyle={styles.textContainerStyle}
 									onBlur={() => {
-										this.nameFocused = true;
+										runInAction(() => {
+											this.nameFocused = true;
+										});
 									}}
 									testID={'profile-onboard-name-field'}
 								/>
@@ -444,14 +502,18 @@ class ProfileOnboard extends PureComponent {
 									label={strings('profile.surname')}
 									placeholder={strings('profile.surname')}
 									onChangeText={text => {
-										this.lastname = text.replace(this.regex, '');
-										this.surnameFocused = false;
+										runInAction(() => {
+											this.lastname = text.replace(this.regex, '');
+											this.surnameFocused = false;
+										});
 									}}
 									autoCapitalize={'words'}
 									textInputWrapperStyle={styles.textInputWrapperStyle}
 									containerStyle={styles.textContainerStyle}
 									onBlur={() => {
-										this.surnameFocused = true;
+										runInAction(() => {
+											this.surnameFocused = true;
+										});
 									}}
 									testID={'profile-onboard-surname-field'}
 								/>
@@ -474,7 +536,9 @@ class ProfileOnboard extends PureComponent {
 										)
 									}
 									onBlur={() => {
-										this.emailFocused = true;
+										runInAction(() => {
+											this.emailFocused = true;
+										});
 									}}
 									testID={'profile-onboard-email-field'}
 								/>
@@ -496,7 +560,9 @@ class ProfileOnboard extends PureComponent {
 										)
 									}
 									onBlur={() => {
-										this.usernameFocused = true;
+										runInAction(() => {
+											this.usernameFocused = true;
+										});
 									}}
 									testID={'profile-onboard-username-field'}
 								/>
@@ -525,7 +591,9 @@ class ProfileOnboard extends PureComponent {
 						<TouchableOpacity
 							style={styles.centerModal}
 							onPress={() => {
-								this.isViewModal = false;
+								runInAction(() => {
+									this.isViewModal = false;
+								});
 							}}
 							activeOpacity={1}
 						>
@@ -557,7 +625,9 @@ class ProfileOnboard extends PureComponent {
 									testID={'profile-onboard-noti-permission-camera-close-button'}
 									type={'normal'}
 									onPress={() => {
-										this.notiPermissionCamera = false;
+										runInAction(() => {
+											this.notiPermissionCamera = false;
+										});
 									}}
 									containerStyle={styles.notiButtonModal}
 								>

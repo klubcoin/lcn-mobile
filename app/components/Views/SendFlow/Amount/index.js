@@ -208,9 +208,6 @@ class Amount extends PureComponent {
 			Routes.getConversions,
 			response => {
 				if (response.data.length > 0) {
-					console.log({
-						currentConversion: response.data[1].to
-					});
 					this.setState({
 						currentConversion: response.data[1].to
 					});
@@ -614,9 +611,6 @@ class Amount extends PureComponent {
 		if (comma) inputValue = inputValue && inputValue.replace('.', ',');
 		inputValueConversion = inputValueConversion === '0' ? undefined : inputValueConversion;
 
-		console.log({
-			currentConversion
-		});
 		const conversionValue = currentConversion?.value || 2;
 		this.setState({
 			inputValue,

@@ -223,13 +223,13 @@ export default class AppInformation extends PureComponent {
 						<Text style={styles.buttonTopText}>{strings('app_information.attributions')}</Text>
 					</TouchableOpacity>
 					<View style={styles.space} />
-					{data.map(e => (
+					{data.map((e, index) => (
 						<TouchableOpacity
 							activeOpacity={0.7}
 							style={styles.buttonBottom}
 							onPress={() => this.goTo(e.url, e.title)}
 							{...testID(`app-infomation-${e.title}`)}
-							key={data.title}
+							key={index}
 						>
 							<IconFontisto name={e.icon} style={styles.buttonIcon} size={20} />
 							<Text style={styles.buttonBottomText}>{e.title}</Text>

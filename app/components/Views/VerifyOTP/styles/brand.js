@@ -46,6 +46,15 @@ const brandStyles = StyleSheet.create({
 	},
 	loadingWrapper1: {
 		marginTop: 12
+	},
+	flexGrow: {
+		flexGrow: 1
+	},
+	buttonWrapper: {
+		flex: 1,
+		width: '100%',
+		justifyContent: 'flex-end',
+		padding: 12
 	}
 });
 

@@ -21,7 +21,9 @@ const styles = StyleSheet.create({
 	footer: {},
 	skipButton: {},
 	loadingWrapper: {},
-	loadingWrapper1: {}
+	loadingWrapper1: {},
+	flexGrow: {},
+	buttonWrapper: {}
 });
 
 export default assignNestedObj(styles, brandStyles);

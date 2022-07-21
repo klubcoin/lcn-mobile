@@ -5,7 +5,7 @@ import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
 import { strings } from '../../../../locales/i18n';
 import SettingsDrawer from '../../UI/SettingsDrawer';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import APIService from '../../../services/APIService';
 import styles from './styles';
 import { STORED_CONTENT } from '../../../constants/storage';
@@ -35,17 +35,21 @@ class FAQScreen extends PureComponent {
 	async componentDidMount() {
 		const FAQS = await preferences.fetch(STORED_CONTENT.FAQS);
 		if (FAQS) {
-			this.questions = FAQS;
-			this.loading = false;
+			runInAction(() => {
+				this.questions = FAQS;
+				this.loading = false;
+			});
 		}
 		this.fetchQuestions();
 	}
 
 	async fetchQuestions() {
 		APIService.getFAQs((success, json) => {
-			this.questions = [...json.filter(faq => this.isValidFAQ(faq))];
-			preferences.save(STORED_CONTENT.FAQS, this.questions);
-			this.loading = false;
+			runInAction(() => {
+				this.questions = [...json.filter(faq => this.isValidFAQ(faq))];
+				preferences.save(STORED_CONTENT.FAQS, this.questions);
+				this.loading = false;
+			});
 		});
 	}
 

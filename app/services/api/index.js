@@ -125,7 +125,6 @@ const Api = {
 				Accept: 'application/json'
 			}
 		};
-		console.log(route);
 		fetch(url, fetchOptions)
 			.then(response => response.text())
 			.then(text => {
