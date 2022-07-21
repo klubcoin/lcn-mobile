@@ -229,6 +229,7 @@ export default class AppInformation extends PureComponent {
 							style={styles.buttonBottom}
 							onPress={() => this.goTo(e.url, e.title)}
 							{...testID(`app-infomation-${e.title}`)}
+							key={data.title}
 						>
 							<IconFontisto name={e.icon} style={styles.buttonIcon} size={20} />
 							<Text style={styles.buttonBottomText}>{e.title}</Text>
