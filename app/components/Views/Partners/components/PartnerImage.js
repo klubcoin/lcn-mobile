@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet, View, ActivityIndicator } from 'react-native';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import * as base64 from 'base-64';
 import * as RNFS from 'react-native-fs';
@@ -89,7 +89,9 @@ class PartnerImage extends Component {
 					style={[styles.image, imageStyle]}
 					source={{ uri: this.image }}
 					onLoadEnd={() => {
-						this.isLoadedImg = true;
+						runInAction(() => {
+							this.isLoadedImg = true;
+						});
 					}}
 				/>
 			</View>

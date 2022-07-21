@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 import OnboardingScreenWithBg from '../../UI/OnboardingScreenWithBg';
 import PartnerItem from './components/PartnerItem';
 import { getNavigationOptionsTitle } from '../../UI/Navbar';
@@ -32,7 +32,9 @@ class Partners extends PureComponent {
 		});
 		const PARTNERS = await preferences.fetch(STORED_CONTENT.PARTNERS);
 		if (PARTNERS) {
-			this.partnerList = PARTNERS;
+			runInAction(() => {
+				this.partnerList = PARTNERS;
+			});
 		}
 	}
 
@@ -41,7 +43,9 @@ class Partners extends PureComponent {
 			if (success && Array.isArray(json)) {
 				const data = json;
 				data.sort((a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase()));
-				this.partnerList = data;
+				runInAction(() => {
+					this.partnerList = data;
+				});
 				preferences.save(STORED_CONTENT.PARTNERS, data);
 			}
 		});
