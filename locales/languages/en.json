@@ -2242,6 +2242,7 @@
 		"payment_error": "Payment error",
 		"invalid_order": "Invalid order. Please check again!",
 		"order_paid": "This order has been paid",
+		"order_canceled": "QR Code may seem expired / incorrect. Please try again",
 		"cancel_order_title": "Cancel this order?",
 		"confirm": "Confirm",
 		"dismiss": "Dismiss"

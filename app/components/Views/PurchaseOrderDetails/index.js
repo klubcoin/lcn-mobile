@@ -230,6 +230,9 @@ const PurchaseOrderDetails = ({ navigation, selectedAddress, accounts, identitie
 				} else if (json.status === 'paid') {
 					navigation.goBack();
 					showError(strings('purchase_order_details.order_paid'));
+				} else if (json.status === 'canceled') {
+					navigation.goBack();
+					showError(strings('purchase_order_details.order_canceled'));
 				} else {
 					setOrderDetail(json);
 					setCurrency(json?.lines[0]?.unitPrice?.currency?.toLowerCase());
